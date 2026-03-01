@@ -1,0 +1,234 @@
+{
+  "timestamp": "2026-03-01T18:10:25.622Z",
+  "current_phase": 10,
+  "active_agents": [
+    {
+      "id": "communication-agent",
+      "name": "Communication Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "send-email",
+        "post-slack",
+        "translate",
+        "parse-message"
+      ]
+    },
+    {
+      "id": "task-execution-agent",
+      "name": "Task Execution Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "crm-update",
+        "file-migration",
+        "script-execution",
+        "data-transformation"
+      ]
+    },
+    {
+      "id": "knowledge-agent",
+      "name": "Knowledge Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "vector-search",
+        "context-retrieval",
+        "document-indexing",
+        "history-lookup"
+      ]
+    },
+    {
+      "id": "scheduling-agent",
+      "name": "Scheduling Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "create-event",
+        "check-conflicts",
+        "sync-calendars",
+        "convert-timezone"
+      ]
+    },
+    {
+      "id": "content-agent",
+      "name": "Content Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "copywriting",
+        "visual-generation",
+        "brand-check",
+        "tone-adaptation"
+      ]
+    },
+    {
+      "id": "social-media-agent",
+      "name": "Social Media Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "post-linkedin",
+        "post-x",
+        "post-instagram",
+        "schedule-post",
+        "track-engagement"
+      ]
+    },
+    {
+      "id": "monitoring-agent",
+      "name": "Monitoring Agent",
+      "level": 1,
+      "status": "IDLE",
+      "capabilities": [
+        "check-latency",
+        "log-error",
+        "token-report",
+        "container-health",
+        "avatar-cache"
+      ]
+    },
+    {
+      "id": "operations-manager",
+      "name": "Operations Manager",
+      "level": 2,
+      "status": "IDLE",
+      "capabilities": [
+        "task-decomposition",
+        "resource-allocation",
+        "operation-reporting",
+        "escalation-handling"
+      ]
+    },
+    {
+      "id": "growth-manager",
+      "name": "Growth Manager",
+      "level": 2,
+      "status": "IDLE",
+      "capabilities": [
+        "engagement-analysis",
+        "campaign-strategy",
+        "ab-testing",
+        "market-analysis",
+        "opportunity-detection"
+      ]
+    },
+    {
+      "id": "technical-manager",
+      "name": "Technical Manager",
+      "level": 2,
+      "status": "IDLE",
+      "capabilities": [
+        "tech-debt-tracking",
+        "infra-assessment",
+        "performance-optimization",
+        "token-optimization",
+        "avatar-pipeline-monitoring"
+      ]
+    },
+    {
+      "id": "knowledge-manager",
+      "name": "Knowledge Manager",
+      "level": 2,
+      "status": "IDLE",
+      "capabilities": [
+        "knowledge-audit",
+        "embedding-management",
+        "context-freshness",
+        "gap-analysis",
+        "indexing-strategy"
+      ]
+    },
+    {
+      "id": "chief-orchestration",
+      "name": "Chief Orchestration Agent",
+      "level": 3,
+      "status": "IDLE",
+      "capabilities": [
+        "system-wide-coordination",
+        "directive-issuance",
+        "conflict-resolution",
+        "global-state-management",
+        "mission-oversight"
+      ]
+    },
+    {
+      "id": "strategy-agent",
+      "name": "Strategy Agent",
+      "level": 3,
+      "status": "IDLE",
+      "capabilities": [
+        "market-strategy",
+        "pivot-recommendation",
+        "long-term-planning",
+        "competitive-analysis",
+        "growth-roadmap"
+      ]
+    },
+    {
+      "id": "self-improvement-agent",
+      "name": "Self-Improvement Agent",
+      "level": 3,
+      "status": "IDLE",
+      "capabilities": [
+        "performance-optimization",
+        "code-improvement",
+        "process-refinement",
+        "metrics-tracking",
+        "system-evolution"
+      ]
+    },
+    {
+      "id": "autonomy-expansion-agent",
+      "name": "Autonomy Expansion Agent",
+      "level": 3,
+      "status": "IDLE",
+      "capabilities": [
+        "autonomy-assessment",
+        "blocker-identification",
+        "automation-design",
+        "capability-expansion",
+        "human-dependency-reduction"
+      ]
+    }
+  ],
+  "disabled_agents": [],
+  "unfinished_systems": [],
+  "known_bugs": [],
+  "security_risk_vectors": [],
+  "api_token_burn_rate": {
+    "daily_average": 0,
+    "by_agent": {},
+    "budget_remaining": 0
+  },
+  "avatar_system": {
+    "founder_avatars": {
+      "sarah": {
+        "status": "not_deployed",
+        "sessions_today": 0
+      },
+      "emmanuel": {
+        "status": "not_deployed",
+        "sessions_today": 0
+      }
+    },
+    "client_avatars_deployed": 0,
+    "cache_hit_rate_by_preset": {},
+    "did_api_usage_today": 0,
+    "tts_api_usage_today": 0,
+    "asr_requests_today": 0,
+    "active_calls": 0,
+    "active_conversations": 0,
+    "pipeline_latency_avg_ms": 0
+  },
+  "infrastructure": {
+    "docker_containers": {},
+    "database_size_mb": 0,
+    "redis_memory_mb": 0,
+    "uptime_hours": 0
+  },
+  "tasks_in_progress": [],
+  "blocked_tasks": [],
+  "last_self_improvement_cycle": "2026-03-01T18:00:18.493Z",
+  "autonomy_score": 90
+}

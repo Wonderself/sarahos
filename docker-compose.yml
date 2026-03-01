@@ -1,0 +1,93 @@
+version: '3.9'
+
+services:
+  # ── PostgreSQL + pgvector ──
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: sarah-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sarah_os
+      POSTGRES_USER: sarah
+      POSTGRES_PASSWORD: sarah_secret
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U sarah -d sarah_os']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──
+  redis:
+    image: redis:7-alpine
+    container_name: sarah-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── SARAH OS Backend (Node.js) ──
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sarah-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # Override host names for Docker network
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://sarah:sarah_secret@postgres:5432/sarah_os
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: sarah_os
+      DB_USER: sarah
+      DB_PASSWORD: sarah_secret
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DASHBOARD_ORIGIN: http://localhost:3001
+      AVATAR_PYTHON_URL: http://localhost:8000
+      RATE_LIMIT_MAX: 1000
+      RATE_LIMIT_WINDOW_MS: 60000
+    ports:
+      - '3010:3000'
+    volumes:
+      - ./state:/app/state
+      - ./roadmap:/app/roadmap
+
+  # ── Dashboard (Next.js) ──
+  dashboard:
+    build:
+      context: ./src/dashboard
+      dockerfile: Dockerfile
+    container_name: sarah-dashboard
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:3000
+    ports:
+      - '3001:3000'
+
+volumes:
+  postgres_data:
+  redis_data:

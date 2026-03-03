@@ -38,6 +38,7 @@ const NAV_SECTIONS = [
     title: 'Configuration',
     links: [
       { href: '/client/onboarding', icon: '🏢', label: 'Mon entreprise' },
+      { href: '/client/whatsapp', icon: '📱', label: 'WhatsApp' },
       { href: '/client/account', icon: '👤', label: 'Compte & Credits' },
       { href: '/client/referrals', icon: '🎁', label: 'Parrainer' },
     ],

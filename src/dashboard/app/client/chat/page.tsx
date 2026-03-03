@@ -739,6 +739,35 @@ export default function ChatPage() {
               );
             })()}
 
+            {/* Test Scenarios — visible only for Répondeur */}
+            {selectedAgent.id === 'sarah-repondeur' && (
+              <div className="mt-24" style={{ maxWidth: 600, margin: '24px auto 0' }}>
+                <div className="text-sm font-bold text-secondary mb-8">Tester le répondeur avec un scénario</div>
+                <div className="grid-2" style={{ gap: 6 }}>
+                  {[
+                    { icon: '😡', label: 'Client en colère', msg: 'Bonjour, c\'est inadmissible ! Cela fait 3 fois que j\'appelle et personne ne me rappelle. Mon colis n\'est toujours pas arrivé depuis 2 semaines et je veux un remboursement immédiat. Votre service est lamentable !' },
+                    { icon: '👋', label: 'Nouveau client', msg: 'Bonjour, je suis intéressé par vos services. J\'ai une entreprise de 15 personnes dans le secteur du conseil et je cherche une solution de gestion. Pouvez-vous me présenter vos offres ?' },
+                    { icon: '🚨', label: 'Urgence critique', msg: 'URGENT ! Notre système de paiement est en panne totale depuis 30 minutes. Les clients ne peuvent plus payer sur le site. Il nous faut quelqu\'un immédiatement, c\'est une urgence absolue !' },
+                    { icon: '🧾', label: 'Question facturation', msg: 'Bonjour, j\'ai reçu une facture de 2 450 EUR mais mon contrat prévoit un forfait de 1 800 EUR par mois. Pouvez-vous m\'expliquer cet écart ? Référence facture : FAC-2024-0847.' },
+                    { icon: '📞', label: 'Demande de rappel', msg: 'Bonjour, je suis M. Dupont de la société Nexatech. Je souhaiterais être rappelé par votre directeur commercial concernant un projet de déploiement à grande échelle. Mon numéro est le 06 12 34 56 78, je suis disponible demain matin.' },
+                    { icon: '🔥', label: 'Lead qualifié', msg: 'Bonjour, nous sommes une entreprise du CAC 40 avec un budget de 500K EUR pour la digitalisation de nos processus RH. Nous avons comparé 3 solutions et la vôtre nous intéresse beaucoup. Qui est le bon interlocuteur ?' },
+                    { icon: '🔧', label: 'Support technique N1', msg: 'Bonjour, je n\'arrive pas à me connecter à mon espace client depuis ce matin. J\'ai essayé de réinitialiser mon mot de passe mais je ne reçois pas l\'email. Mon identifiant est client-8847@nexatech.fr.' },
+                    { icon: '🚪', label: 'Demande de résiliation', msg: 'Bonjour, je souhaite résilier mon abonnement Pro à compter du mois prochain. Nous n\'utilisons plus suffisamment le service pour justifier le coût. Quelle est la procédure ? Y a-t-il des frais de résiliation ?' },
+                  ].map(scenario => (
+                    <button
+                      key={scenario.label}
+                      onClick={() => { setInput(scenario.msg); inputRef.current?.focus(); }}
+                      className="btn btn-ghost text-left flex items-center gap-6"
+                      style={{ padding: '6px 10px', fontSize: 12, justifyContent: 'flex-start' }}
+                    >
+                      <span style={{ fontSize: 16 }}>{scenario.icon}</span>
+                      <span>{scenario.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="flex gap-8 flex-center flex-wrap mt-24">
               {(selectedAgent.id === 'sarah-repondeur' ? [
                 'Configure mon message d\'accueil',
@@ -790,6 +819,56 @@ export default function ChatPage() {
                 'Analyse mon positionnement marche',
                 'Comment structurer ma croissance ?',
                 'Conseille-moi sur la levee de fonds',
+              ] : selectedAgent.id === 'sarah-qualite' ? [
+                'Lance un audit qualite interne',
+                'Analyse cette non-conformite avec Ishikawa',
+                'Prepare ma certification ISO 9001',
+                'Cree un plan DMAIC pour ce probleme',
+              ] : selectedAgent.id === 'sarah-data' ? [
+                'Analyse ce dataset et trouve des insights',
+                'Conçois un dashboard pour mes KPIs',
+                'Quel modele ML pour ce probleme ?',
+                'Aide-moi a structurer ma data governance',
+              ] : selectedAgent.id === 'sarah-product' ? [
+                'Structure ma roadmap produit Q2',
+                'Priorise mon backlog avec RICE',
+                'Redige des user stories pour cette feature',
+                'Lance un discovery sprint',
+              ] : selectedAgent.id === 'sarah-csm' ? [
+                'Analyse le risque de churn de mes clients',
+                'Structure mon onboarding client',
+                'Prepare une QBR pour ce client',
+                'Comment ameliorer mon NPS ?',
+              ] : selectedAgent.id === 'sarah-rse' ? [
+                'Realise mon bilan carbone simplifie',
+                'Prepare mon reporting CSRD',
+                'Definis ma strategie RSE',
+                'Quels ODD prioriser pour mon secteur ?',
+              ] : selectedAgent.id === 'sarah-operations' ? [
+                'Optimise ce processus avec le Lean',
+                'Cartographie ma supply chain',
+                'Identifie les goulots d\'etranglement',
+                'Planifie ce projet complexe',
+              ] : selectedAgent.id === 'sarah-design' ? [
+                'Cree un brief creatif pour ce projet',
+                'Audite l\'UX de mon application',
+                'Structure mon design system',
+                'Comment ameliorer l\'accessibilite ?',
+              ] : selectedAgent.id === 'sarah-formation' ? [
+                'Conçois un module de formation',
+                'Elabore mon plan de formation annuel',
+                'Evalue l\'impact de cette formation',
+                'Cree un parcours d\'onboarding',
+              ] : selectedAgent.id === 'sarah-innovation' ? [
+                'Anime un Design Sprint',
+                'Genere des idees avec SCAMPER',
+                'Evalue cette idee avec Impact/Effort',
+                'Definis un MVP pour ce concept',
+              ] : selectedAgent.id === 'sarah-international' ? [
+                'Analyse ce marche etranger (PESTEL)',
+                'Quel mode d\'entree pour ce pays ?',
+                'Adapte ma strategie a cette culture',
+                'Aide-moi avec les Incoterms',
               ] : [
                 'Pose-moi ta question',
                 'Comment puis-je t\'aider ?',

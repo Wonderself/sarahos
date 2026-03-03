@@ -40,6 +40,11 @@ function buildTeamAgents(tier: string): TeamAgent[] {
     'sarah-rh': 'rh', 'sarah-communication': 'communication',
     'sarah-finance': 'cfo', 'sarah-dev': 'cto',
     'sarah-juridique': 'juridique', 'sarah-dg': 'dg',
+    'sarah-qualite': 'qualite', 'sarah-data': 'data',
+    'sarah-product': 'product', 'sarah-csm': 'csm',
+    'sarah-rse': 'rse', 'sarah-operations': 'operations',
+    'sarah-design': 'design', 'sarah-formation': 'formation',
+    'sarah-innovation': 'innovation', 'sarah-international': 'international',
   };
 
   return DEFAULT_AGENTS.map(def => {

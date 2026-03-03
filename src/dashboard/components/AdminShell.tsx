@@ -78,7 +78,7 @@ export default function AdminShell({
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
             />
             <div>
-              <div className="sidebar-logo-version">v0.10.0 — Phase 10</div>
+              <div className="sidebar-logo-version">v0.11.0 — Phase 11</div>
             </div>
           </div>
         </div>

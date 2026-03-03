@@ -2,11 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const DEEPGRAM_API_KEY = process.env['DEEPGRAM_API_KEY'];
 
-// Voice models per gender
-const VOICE_MODELS = {
-  F: 'aura-2-agathe-fr',    // French feminine voice
-  M: 'aura-2-theron-en',    // Masculine voice (best available, EN fallback)
-} as const;
+// 8 voice models — named voices for each agent personality
+const VOICE_MODELS: Record<string, string> = {
+  // French feminine voices
+  'camille': 'aura-2-agathe-fr',       // FR féminin chaleureux (default)
+  'claire': 'aura-2-luna-fr',          // FR féminin clair
+  'sophie': 'aura-2-angelia-fr',       // FR féminin professionnel
+  'emma': 'aura-2-athena-en',          // EN féminin international
+  // French masculine voices
+  'thomas': 'aura-2-orpheus-fr',       // FR masculin dynamique
+  'marc': 'aura-2-arcas-fr',           // FR masculin posé
+  'hugo': 'aura-2-helios-en',          // EN masculin tech
+  'adam': 'aura-2-perseus-en',         // EN masculin international
+};
+
+// Fallback mapping: gender → default voice
+const GENDER_DEFAULT: Record<string, string> = {
+  'F': 'aura-2-agathe-fr',
+  'M': 'aura-2-orpheus-fr',
+};
 
 export async function POST(req: NextRequest) {
   if (!DEEPGRAM_API_KEY) {
@@ -14,7 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { text, gender } = await req.json();
+    const { text, gender, voice } = await req.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
@@ -22,7 +36,8 @@ export async function POST(req: NextRequest) {
 
     // Truncate very long texts (Deepgram limit)
     const truncated = text.slice(0, 2000);
-    const model = VOICE_MODELS[gender as keyof typeof VOICE_MODELS] || VOICE_MODELS.F;
+    // Priority: named voice > gender fallback > default feminine
+    const model = (voice && VOICE_MODELS[voice]) || GENDER_DEFAULT[gender] || GENDER_DEFAULT['F'];
 
     const res = await fetch(
       `https://api.deepgram.com/v1/speak?model=${model}`,

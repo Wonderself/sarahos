@@ -20,6 +20,7 @@ const NAV_SECTIONS = [
     title: 'Espace de travail',
     links: [
       { href: '/client/dashboard', icon: '🏠', label: 'Accueil' },
+      { href: '/client/repondeur', icon: '📞', label: 'Répondeur' },
       { href: '/client/briefing', icon: '☀️', label: 'Briefing du jour' },
       { href: '/client/chat', icon: '💬', label: 'Discuter' },
       { href: '/client/meeting', icon: '🏛️', label: 'Réunion' },

@@ -107,7 +107,7 @@ class AppCache {
   /** Remove all entries whose keys match the given glob pattern. */
   invalidatePattern(pattern: string): void {
     const keysToRemove: string[] = [];
-    for (const key of this.memoryCache.keys()) {
+    for (const key of Array.from(this.memoryCache.keys())) {
       if (matchGlob(pattern, key)) {
         keysToRemove.push(key);
       }

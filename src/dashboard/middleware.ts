@@ -2,27 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
-const PROTECTED_PATHS = ['/client'];
-const ADMIN_PATHS = ['/admin'];
-const PUBLIC_PATHS = ['/login', '/plans', '/api/', '/_next/', '/favicon.ico'];
-
+/**
+ * Middleware — Admin routes only.
+ *
+ * /client/* routes are protected client-side by client/layout.tsx
+ * which checks localStorage for sarah_session and redirects to /login.
+ * Middleware can't read localStorage, so client-side auth is the right approach.
+ *
+ * /admin/* routes need server-side protection since they contain
+ * sensitive user data that should never be visible without auth.
+ */
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Allow public paths
-  if (PUBLIC_PATHS.some(p => pathname.startsWith(p)) || pathname === '/') {
-    return NextResponse.next();
-  }
-
-  // Check if path needs protection
-  const needsAuth = PROTECTED_PATHS.some(p => pathname.startsWith(p));
-  const needsAdmin = ADMIN_PATHS.some(p => pathname.startsWith(p));
-
-  if (!needsAuth && !needsAdmin) {
-    return NextResponse.next();
-  }
-
-  // Extract token from cookie or sarah_session
+  // Extract token from cookie
   const sessionCookie = req.cookies.get('sarah_session')?.value;
   let token: string | null = null;
 
@@ -31,7 +24,15 @@ export async function middleware(req: NextRequest) {
       const session = JSON.parse(sessionCookie);
       token = session.token ?? null;
     } catch {
-      token = sessionCookie; // Direct token value
+      token = sessionCookie;
+    }
+  }
+
+  // Also check Authorization header
+  if (!token) {
+    const authHeader = req.headers.get('authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      token = authHeader.slice(7);
     }
   }
 
@@ -41,7 +42,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Validate token server-side
+  // Validate token and check admin role
   try {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -53,11 +54,9 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    if (needsAdmin) {
-      const data = await res.json();
-      if (data.role !== 'admin') {
-        return NextResponse.redirect(new URL('/client/dashboard', req.url));
-      }
+    const data = await res.json();
+    if (data.role !== 'admin') {
+      return NextResponse.redirect(new URL('/client/dashboard', req.url));
     }
   } catch {
     // Auth service down — let through (graceful degradation)
@@ -68,5 +67,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/client/:path*', '/admin/:path*'],
+  matcher: ['/admin/:path*'],
 };

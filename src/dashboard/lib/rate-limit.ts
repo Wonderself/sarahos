@@ -28,7 +28,7 @@ export function rateLimit(options: RateLimitOptions) {
   // Periodic cleanup of expired entries
   const cleanupInterval = setInterval(() => {
     const now = Date.now();
-    for (const [key, entry] of tokenMap) {
+    for (const [key, entry] of Array.from(tokenMap.entries())) {
       if (now >= entry.expiresAt) {
         tokenMap.delete(key);
       }

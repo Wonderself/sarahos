@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
-const ALLOWED_PATHS = ['/portal/wallet', '/portal/usage', '/portal/dashboard', '/portal/profile'];
+const ALLOWED_PATHS = ['/portal/wallet', '/portal/usage', '/portal/dashboard', '/portal/profile', '/portal/referrals', '/portal/active-agents'];
 
 // POST handler (secure — token in body, not URL)
 export async function POST(req: NextRequest) {

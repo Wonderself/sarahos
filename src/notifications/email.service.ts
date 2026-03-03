@@ -53,7 +53,12 @@ async function sendEmail(params: SendEmailParams): Promise<boolean> {
   }
 }
 
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function emailTemplate(title: string, body: string): string {
+  const safeTitle = escapeHtml(title);
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -61,7 +66,7 @@ function emailTemplate(title: string, body: string): string {
   <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
     <div style="background:linear-gradient(135deg,#6366f1,#a855f7);padding:32px 24px;text-align:center;">
       <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.2);display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;">S</div>
-      <h1 style="color:white;font-size:22px;margin:12px 0 0;font-weight:700;">${title}</h1>
+      <h1 style="color:white;font-size:22px;margin:12px 0 0;font-weight:700;">${safeTitle}</h1>
     </div>
     <div style="padding:32px 24px;">
       ${body}
@@ -77,9 +82,10 @@ function emailTemplate(title: string, body: string): string {
 
 export async function sendConfirmationEmail(email: string, name: string, token: string): Promise<boolean> {
   const confirmUrl = `${config.APP_URL}/api/auth/confirm-email?token=${token}`;
+  const safeName = escapeHtml(name);
 
   const body = `
-    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${name}</strong>,</p>
+    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${safeName}</strong>,</p>
     <p style="font-size:15px;color:#4b5563;line-height:1.6;">
       Merci de vous etre inscrit(e) sur SARAH OS ! Pour confirmer votre adresse email, cliquez sur le bouton ci-dessous :
     </p>
@@ -108,9 +114,10 @@ export async function sendConfirmationEmail(email: string, name: string, token: 
 
 export async function sendPasswordResetEmail(email: string, name: string, token: string): Promise<boolean> {
   const resetUrl = `${config.APP_URL}/login?mode=reset&token=${token}`;
+  const safeName = escapeHtml(name);
 
   const body = `
-    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${name}</strong>,</p>
+    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${safeName}</strong>,</p>
     <p style="font-size:15px;color:#4b5563;line-height:1.6;">
       Vous avez demande la reinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :
     </p>

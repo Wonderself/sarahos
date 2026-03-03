@@ -31,6 +31,59 @@ function getSession() {
   try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
 }
 
+function TagInput({ tags, onChange, placeholder }: { tags: string[]; onChange: (t: string[]) => void; placeholder: string }) {
+  const [input, setInput] = useState('');
+  return (
+    <div>
+      <div className="flex flex-wrap gap-6 mb-8">
+        {tags.map((t, i) => (
+          <span key={i} style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px',
+            borderRadius: 20, background: 'var(--accent-muted)', color: 'var(--accent)', fontSize: 12, fontWeight: 600,
+          }}>
+            {t}
+            <button onClick={() => onChange(tags.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent)', fontSize: 14, padding: 0, marginLeft: 2 }}>×</button>
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-6">
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { onChange([...tags, input.trim()]); setInput(''); e.preventDefault(); } }}
+          className="input input-sm flex-1"
+          placeholder={placeholder}
+        />
+        <button onClick={() => { if (input.trim()) { onChange([...tags, input.trim()]); setInput(''); } }} className="btn btn-ghost btn-sm">+</button>
+      </div>
+    </div>
+  );
+}
+
+function RuleList({ rules, onChange, placeholder: _placeholder }: { rules: string[]; onChange: (r: string[]) => void; placeholder?: string }) {
+  return (
+    <div className="flex flex-col gap-6">
+      {rules.map((rule, i) => (
+        <div key={i} className="flex gap-6 items-center">
+          <input
+            value={rule}
+            onChange={e => { const updated = [...rules]; updated[i] = e.target.value; onChange(updated); }}
+            className="input input-sm flex-1"
+          />
+          <button onClick={() => onChange(rules.filter((_, j) => j !== i))} className="btn btn-ghost btn-xs" style={{ color: 'var(--danger)' }}>✕</button>
+        </div>
+      ))}
+      <button
+        onClick={() => onChange([...rules, ''])}
+        className="btn btn-ghost btn-sm"
+        style={{ alignSelf: 'flex-start' }}
+      >
+        + Ajouter une regle
+      </button>
+    </div>
+  );
+}
+
 export default function AgentCustomizePage() {
   const [step, setStep] = useState(0);
   const [selectedAgentId, setSelectedAgentId] = useState<AgentTypeId>('sarah-assistante');
@@ -178,61 +231,6 @@ export default function AgentCustomizePage() {
 
   const agentDef = DEFAULT_AGENTS.find(a => a.id === selectedAgentId)!;
   const customizedCount = Object.keys(allConfigs.configs).length;
-
-  // ─── Tag Input Helper ───
-  function TagInput({ tags, onChange, placeholder }: { tags: string[]; onChange: (t: string[]) => void; placeholder: string }) {
-    const [input, setInput] = useState('');
-    return (
-      <div>
-        <div className="flex flex-wrap gap-6 mb-8">
-          {tags.map((t, i) => (
-            <span key={i} style={{
-              display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px',
-              borderRadius: 20, background: 'var(--accent-muted)', color: 'var(--accent)', fontSize: 12, fontWeight: 600,
-            }}>
-              {t}
-              <button onClick={() => onChange(tags.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent)', fontSize: 14, padding: 0, marginLeft: 2 }}>×</button>
-            </span>
-          ))}
-        </div>
-        <div className="flex gap-6">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { onChange([...tags, input.trim()]); setInput(''); e.preventDefault(); } }}
-            className="input input-sm flex-1"
-            placeholder={placeholder}
-          />
-          <button onClick={() => { if (input.trim()) { onChange([...tags, input.trim()]); setInput(''); } }} className="btn btn-ghost btn-sm">+</button>
-        </div>
-      </div>
-    );
-  }
-
-  // ─── Rule List Helper ───
-  function RuleList({ rules, onChange, placeholder }: { rules: string[]; onChange: (r: string[]) => void; placeholder: string }) {
-    return (
-      <div className="flex flex-col gap-6">
-        {rules.map((rule, i) => (
-          <div key={i} className="flex gap-6 items-center">
-            <input
-              value={rule}
-              onChange={e => { const updated = [...rules]; updated[i] = e.target.value; onChange(updated); }}
-              className="input input-sm flex-1"
-            />
-            <button onClick={() => onChange(rules.filter((_, j) => j !== i))} className="btn btn-ghost btn-xs" style={{ color: 'var(--danger)' }}>✕</button>
-          </div>
-        ))}
-        <button
-          onClick={() => onChange([...rules, ''])}
-          className="btn btn-ghost btn-sm"
-          style={{ alignSelf: 'flex-start' }}
-        >
-          + Ajouter une règle
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div>

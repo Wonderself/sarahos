@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyApiToken, isAuthError } from '../_auth';
 
 const WHATSAPP_API_KEY = process.env['WHATSAPP_API_KEY'];
 const WHATSAPP_PHONE_NUMBER_ID = process.env['WHATSAPP_PHONE_NUMBER_ID'];
 
 // Send a WhatsApp message
 export async function POST(req: NextRequest) {
+  const auth = await verifyApiToken(req);
+  if (isAuthError(auth)) return auth;
+
   if (!WHATSAPP_API_KEY || !WHATSAPP_PHONE_NUMBER_ID) {
     return NextResponse.json({
       error: 'WhatsApp not configured',

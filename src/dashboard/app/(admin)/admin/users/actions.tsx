@@ -35,12 +35,12 @@ export function UserActions({ userId, userName, isActive }: { userId: string; us
         onClick={() => {
           const amount = window.prompt('Crédits à déposer (en micro-credits, ex: 100000000 = 100 cr):');
           if (!amount) return;
-          doAction('depositCrédits', { userId, amount: Number(amount) });
+          doAction('depositCredits', { userId, amount: Number(amount) });
         }}
         className="btn btn-primary btn-xs"
-        disabled={loading === 'depositCrédits'}
+        disabled={loading === 'depositCredits'}
       >
-        {loading === 'depositCrédits' ? '...' : '💰 Crédits'}
+        {loading === 'depositCredits' ? '...' : '💰 Crédits'}
       </button>
       <button
         onClick={() => {
@@ -253,7 +253,7 @@ export function DepositButton({ userId }: { userId: string }) {
     if (!amount) return;
     setLoading(true);
     try {
-      await callAction('depositCrédits', { userId, amount: Number(amount) });
+      await callAction('depositCredits', { userId, amount: Number(amount) });
       window.location.reload();
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Erreur');

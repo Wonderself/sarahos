@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyApiToken, isAuthError } from '../_auth';
 
 const DID_API_KEY = process.env['DID_API_KEY'];
 
 export async function POST(req: NextRequest) {
+  const auth = await verifyApiToken(req);
+  if (isAuthError(auth)) return auth;
+
   if (!DID_API_KEY) {
     return NextResponse.json({ error: 'D-ID API key not configured' }, { status: 500 });
   }
@@ -46,6 +50,9 @@ export async function POST(req: NextRequest) {
 
 // Poll video status
 export async function GET(req: NextRequest) {
+  const auth = await verifyApiToken(req);
+  if (isAuthError(auth)) return auth;
+
   if (!DID_API_KEY) {
     return NextResponse.json({ error: 'D-ID API key not configured' }, { status: 500 });
   }

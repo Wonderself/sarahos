@@ -155,12 +155,20 @@ export class NotificationService {
     );
   }
 
-  async markAsRead(id: string): Promise<void> {
+  async markAsRead(id: string, userId?: string): Promise<void> {
     if (!dbClient.isConnected()) return;
-    await dbClient.query(
-      `UPDATE notifications SET status = 'read', read_at = NOW() WHERE id = $1`,
-      [id],
-    );
+    if (userId) {
+      // Ownership check: only mark as read if notification belongs to user
+      await dbClient.query(
+        `UPDATE notifications SET status = 'read', read_at = NOW() WHERE id = $1 AND user_id = $2`,
+        [id, userId],
+      );
+    } else {
+      await dbClient.query(
+        `UPDATE notifications SET status = 'read', read_at = NOW() WHERE id = $1`,
+        [id],
+      );
+    }
   }
 
   async getByUser(userId: string, limit = 50): Promise<Notification[]> {

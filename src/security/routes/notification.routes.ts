@@ -39,9 +39,13 @@ export function createNotificationRouter(): Router {
    * POST /notifications/:id/read — Mark notification as read
    */
   router.post('/notifications/:id/read', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
     const notificationId = req.params['id'] as string;
     const { notificationService } = await import('../../notifications/notification.service');
-    await notificationService.markAsRead(notificationId);
+    await notificationService.markAsRead(notificationId, userId);
     res.json({ message: 'Notification marked as read' });
   }));
 

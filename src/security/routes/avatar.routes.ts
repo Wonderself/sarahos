@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { verifyToken, requireRole } from '../auth.middleware';
+import { asyncHandler } from '../async-handler';
 import { validateBody } from '../validation.middleware';
 import {
   conversationStartSchema,
@@ -19,15 +20,15 @@ export function createAvatarRouter(): Router {
   router.use(verifyToken);
 
   // Conversation endpoints
-  router.post('/avatar/conversation/start', requireRole('operator', 'system'), validateBody(conversationStartSchema), async (req, res) => {
+  router.post('/avatar/conversation/start', requireRole('operator', 'system'), validateBody(conversationStartSchema), asyncHandler(async (req, res) => {
     const { sessionId, avatarBase, personaId, config } = req.body as {
       sessionId: string; avatarBase: 'sarah' | 'emmanuel'; personaId: string; config?: Record<string, unknown>;
     };
     const session = await conversationManager.startSession(sessionId, avatarBase, personaId, config);
     res.json(session);
-  });
+  }));
 
-  router.post('/avatar/conversation/turn', requireRole('operator', 'system'), validateBody(conversationTurnSchema), async (req, res) => {
+  router.post('/avatar/conversation/turn', requireRole('operator', 'system'), validateBody(conversationTurnSchema), asyncHandler(async (req, res) => {
     const { sessionId, textInput } = req.body as { sessionId: string; textInput?: string };
     try {
       const result = await conversationManager.processTurn({ sessionId, textInput });
@@ -35,20 +36,20 @@ export function createAvatarRouter(): Router {
     } catch (error: unknown) {
       res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
     }
-  });
+  }));
 
-  router.post('/avatar/conversation/end', requireRole('operator', 'system'), validateBody(conversationEndSchema), async (req, res) => {
+  router.post('/avatar/conversation/end', requireRole('operator', 'system'), validateBody(conversationEndSchema), asyncHandler(async (req, res) => {
     const { sessionId } = req.body as { sessionId: string };
     await conversationManager.endSession(sessionId);
     res.json({ status: 'ended', sessionId });
-  });
+  }));
 
   router.get('/avatar/conversations/active', requireRole('operator', 'system'), (_req, res) => {
     res.json(conversationManager.getActiveSessions());
   });
 
   // ASR endpoint
-  router.post('/avatar/asr/transcribe', requireRole('operator', 'system'), validateBody(asrTranscribeSchema), async (req, res) => {
+  router.post('/avatar/asr/transcribe', requireRole('operator', 'system'), validateBody(asrTranscribeSchema), asyncHandler(async (req, res) => {
     const { sessionId, text } = req.body as { sessionId: string; text: string };
     const result = await asrService.transcribe({
       sessionId,
@@ -56,10 +57,10 @@ export function createAvatarRouter(): Router {
       config: asrService.getConfigForAvatar('sarah'),
     });
     res.json(result);
-  });
+  }));
 
   // TTS endpoint
-  router.post('/avatar/tts/synthesize', requireRole('operator', 'system'), validateBody(ttsSynthesizeSchema), async (req, res) => {
+  router.post('/avatar/tts/synthesize', requireRole('operator', 'system'), validateBody(ttsSynthesizeSchema), asyncHandler(async (req, res) => {
     const { sessionId, text } = req.body as { sessionId: string; text: string };
     const result = await ttsService.synthesize({
       sessionId,
@@ -74,20 +75,20 @@ export function createAvatarRouter(): Router {
       characterCount: result.characterCount,
       cached: result.cached,
     });
-  });
+  }));
 
   // Telephony endpoints
-  router.post('/avatar/telephony/call', requireRole('operator', 'system'), validateBody(telephonyCallSchema), async (req, res) => {
+  router.post('/avatar/telephony/call', requireRole('operator', 'system'), validateBody(telephonyCallSchema), asyncHandler(async (req, res) => {
     const { to, avatarBase, sessionId } = req.body as { to: string; avatarBase: 'sarah' | 'emmanuel'; sessionId: string };
     const call = await telephonyService.initiateOutboundCall({ to, avatarBase, sessionId });
     res.json(call);
-  });
+  }));
 
-  router.post('/avatar/telephony/webhook', requireRole('operator', 'system'), async (req, res) => {
+  router.post('/avatar/telephony/webhook', requireRole('operator', 'system'), asyncHandler(async (req, res) => {
     const call = await telephonyService.handleIncomingCall(req.body);
     const twiml = telephonyService.generateTwiMLResponse(call.avatarBase, 'Bonjour, je suis Sarah. Comment puis-je vous aider ?');
     res.type('text/xml').send(twiml);
-  });
+  }));
 
   router.get('/avatar/telephony/calls', requireRole('operator', 'system'), (_req, res) => {
     res.json({ active: telephonyService.getActiveCalls(), history: telephonyService.getCallHistory() });
@@ -98,10 +99,10 @@ export function createAvatarRouter(): Router {
     res.json(personaManager.getAllPersonas());
   });
 
-  router.post('/avatar/personas/switch', requireRole('operator', 'system'), validateBody(personaSwitchSchema), async (req, res) => {
+  router.post('/avatar/personas/switch', requireRole('operator', 'system'), validateBody(personaSwitchSchema), asyncHandler(async (req, res) => {
     const result = await personaManager.switchPersona(req.body);
     res.json(result);
-  });
+  }));
 
   // Pipeline metrics
   router.get('/avatar/pipeline/metrics', requireRole('operator', 'system'), (_req, res) => {

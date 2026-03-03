@@ -43,19 +43,18 @@ export class WalletService {
   async getOrCreateWallet(userId: string): Promise<Wallet | null> {
     if (!dbClient.isConnected()) return null;
 
-    // Try to find existing
-    const existing = await dbClient.query('SELECT * FROM wallets WHERE user_id = $1', [userId]);
-    if (existing.rows[0]) {
-      return rowToWallet(existing.rows[0] as Record<string, unknown>);
-    }
-
-    // Create new wallet
+    // Upsert: INSERT with ON CONFLICT to avoid TOCTOU race
     const id = uuidv4();
-    const result = await dbClient.query(
-      `INSERT INTO wallets (id, user_id) VALUES ($1, $2) RETURNING *`,
+    await dbClient.query(
+      `INSERT INTO wallets (id, user_id) VALUES ($1, $2)
+       ON CONFLICT (user_id) DO NOTHING`,
       [id, userId],
     );
-    return result.rows[0] ? rowToWallet(result.rows[0] as Record<string, unknown>) : null;
+
+    // Always SELECT to get the actual row (whether just inserted or already existed)
+    const existing = await dbClient.query('SELECT * FROM wallets WHERE user_id = $1', [userId]);
+    if (!existing.rows[0]) return null;
+    return rowToWallet(existing.rows[0] as Record<string, unknown>);
   }
 
   async getWalletByUserId(userId: string): Promise<Wallet | null> {
@@ -112,33 +111,35 @@ export class WalletService {
   ): Promise<WalletTransaction | null> {
     if (!dbClient.isConnected()) return null;
 
-    const wallet = await this.getWalletByUserId(userId);
-    if (!wallet) return null;
-
-    if (wallet.balanceCredits < amount) {
-      logger.warn('Insufficient wallet balance', { userId, balance: wallet.balanceCredits, required: amount });
-      return null; // Insufficient funds
-    }
-
-    const newBalance = wallet.balanceCredits - amount;
     const txId = uuidv4();
 
     await dbClient.query('BEGIN');
     try {
-      await dbClient.query(
-        `UPDATE wallets SET balance_credits = $1, total_spent = total_spent + $2, updated_at = NOW() WHERE id = $3`,
-        [newBalance, amount, wallet.id],
+      // Atomic: debit only if sufficient balance (prevents double-spend race)
+      const updateResult = await dbClient.query(
+        `UPDATE wallets SET balance_credits = balance_credits - $1, total_spent = total_spent + $1, updated_at = NOW()
+         WHERE user_id = $2 AND balance_credits >= $1
+         RETURNING *`,
+        [amount, userId],
       );
+
+      if (!updateResult.rows[0]) {
+        await dbClient.query('ROLLBACK');
+        logger.warn('Insufficient wallet balance or wallet not found', { userId, required: amount });
+        return null;
+      }
+
+      const wallet = rowToWallet(updateResult.rows[0] as Record<string, unknown>);
 
       const txResult = await dbClient.query(
         `INSERT INTO wallet_transactions (id, wallet_id, user_id, type, amount, balance_after, description, reference_type, reference_id)
          VALUES ($1, $2, $3, 'withdrawal', $4, $5, $6, $7, $8) RETURNING *`,
-        [txId, wallet.id, userId, -amount, newBalance, description, referenceType, referenceId ?? null],
+        [txId, wallet.id, userId, -amount, wallet.balanceCredits, description, referenceType, referenceId ?? null],
       );
 
       await dbClient.query('COMMIT');
 
-      logger.info('Wallet withdrawal', { userId, amount, newBalance });
+      logger.info('Wallet withdrawal', { userId, amount, newBalance: wallet.balanceCredits });
       return txResult.rows[0] ? rowToTransaction(txResult.rows[0] as Record<string, unknown>) : null;
     } catch (error) {
       await dbClient.query('ROLLBACK');

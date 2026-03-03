@@ -43,7 +43,11 @@ export default function ReferralsPage() {
 
     if (session.token) {
       try {
-        const res = await fetch(`/api/portal?path=/portal/referrals&token=${session.token}`);
+        const res = await fetch('/api/portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: '/portal/referrals', token: session.token }),
+        });
         if (res.ok) {
           const data = await res.json();
           setReferrals(data.referrals ?? []);

@@ -213,7 +213,7 @@ export default function PlansPage() {
               <div style={{ fontSize: 32, marginBottom: 8, marginTop: opt.popular ? 6 : 0 }}>{opt.icon}</div>
               <div style={{ fontSize: 28, fontWeight: 800 }}>{opt.amount}€</div>
               <div className="text-md text-secondary mb-8">{opt.credits} credits</div>
-              <Link href="/login?mode=register" className="btn btn-primary btn-sm w-full"
+              <Link href="/client/account" className="btn btn-primary btn-sm w-full"
                 style={{ background: opt.popular ? '#6366f1' : undefined }}>
                 Deposer
               </Link>

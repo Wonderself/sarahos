@@ -48,7 +48,9 @@ const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
 
 async function bootstrap(): Promise<void> {
   logger.info('═══ SARAH OS — Starting ═══');
-  logger.info(`Version: 0.9.0 | Phase: 9 — SaaS Billing & Client Platform`);
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { version } = require('../package.json') as { version: string };
+  logger.info(`Version: ${version} | Phase: 9 — SaaS Billing & Client Platform`);
 
   // Load state
   const state = await stateManager.load();
@@ -189,7 +191,7 @@ async function bootstrap(): Promise<void> {
   logger.info('SSE Manager initialized');
 
   // Start server
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     logger.info(`SARAH OS API listening on port ${PORT}`);
   });
 
@@ -219,6 +221,7 @@ async function bootstrap(): Promise<void> {
     }, 10000);
     forceExit.unref();
 
+    try { server.close(); } catch (e) { logger.error('HTTP server close error', { error: String(e) }); }
     try { sseManager.teardown(); } catch (e) { logger.error('SSE teardown error', { error: String(e) }); }
     try { cronService.stop(); } catch (e) { logger.error('Cron service stop error', { error: String(e) }); }
     try { recurringScheduler.stop(); } catch (e) { logger.error('Scheduler stop error', { error: String(e) }); }

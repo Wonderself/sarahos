@@ -124,7 +124,11 @@ export default function OnboardingPage() {
     const session = getSession();
     if (!session?.token) return;
     try {
-      const res = await fetch(`/api/company?token=${encodeURIComponent(session.token)}`);
+      const res = await fetch('/api/company', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: session.token, action: 'get-profile' }),
+      });
       if (res.ok) {
         const data = await res.json();
         if (data.profile) setProfile(p => ({ ...p, ...data.profile }));

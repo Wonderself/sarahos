@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { DEFAULT_AGENTS } from '../../../lib/agent-config';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -47,7 +48,13 @@ interface Message {
 
 function getToken(): string {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('sarah_token') || '';
+    try {
+      const raw = localStorage.getItem('sarah_session');
+      if (raw) {
+        const session = JSON.parse(raw);
+        return session.token || '';
+      }
+    } catch { /* invalid session */ }
   }
   return '';
 }
@@ -277,8 +284,9 @@ export default function WhatsAppPage() {
                     onChange={(e) => handleSettingsUpdate({ preferredAgent: e.target.value })}
                     className="select"
                   >
-                    <option value="sarah">Sarah</option>
-                    <option value="emmanuel">Emmanuel</option>
+                    {DEFAULT_AGENTS.map(agent => (
+                      <option key={agent.id} value={agent.id}>{agent.emoji} {agent.name} — {agent.role}</option>
+                    ))}
                   </select>
                 </label>
 

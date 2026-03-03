@@ -235,112 +235,7 @@ export default function ChatPage() {
     saveFaq(updated);
   }
 
-  async function sendMessage() {
-    if (!input.trim() || loading || !selectedAgent) return;
-    const session = getSession();
-    if (!session.token) { window.location.href = '/login'; return; }
-
-    const userMsg: Message = { role: 'user', content: input.trim(), timestamp: new Date().toISOString() };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    setInput('');
-    setFollowUpQuestions([]);
-    setFaqMatch(null);
-    setLoading(true);
-
-    try {
-      // Build API messages with truncation: system prompt + last N messages
-      const conversationMsgs = newMessages
-        .filter(m => m.role === 'user' || m.role === 'assistant')
-        .map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }));
-
-      // Truncate: keep only last MAX_CONTEXT_MESSAGES
-      const truncated = conversationMsgs.length > MAX_CONTEXT_MESSAGES
-        ? conversationMsgs.slice(-MAX_CONTEXT_MESSAGES)
-        : conversationMsgs;
-
-      const apiMessages = [
-        { role: 'user' as const, content: selectedAgent.systemPrompt },
-        { role: 'assistant' as const, content: `Compris, je suis ${selectedAgent.name}, ${selectedAgent.role}. Comment puis-je vous aider?` },
-        ...(conversationMsgs.length > MAX_CONTEXT_MESSAGES
-          ? [{ role: 'user' as const, content: '[Note: messages précédents résumés pour optimiser les tokens. Concentre-toi sur les messages récents ci-dessous.]' },
-             { role: 'assistant' as const, content: 'Compris, je me concentre sur la conversation récente.' }]
-          : []),
-        ...truncated,
-      ];
-
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: session.token,
-          model: selectedAgent.model,
-          messages: apiMessages,
-          maxTokens: 4096,
-          agentName: selectedAgent.id,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const errorMsg = data.error ?? data.message ?? `Erreur ${res.status}`;
-        setMessages(prev => [...prev, {
-          role: 'system',
-          content: res.status === 402
-            ? `Crédits insuffisants. Rechargez votre compte dans Mon Compte > Wallet.`
-            : `Erreur: ${errorMsg}`,
-          timestamp: new Date().toISOString(),
-        }]);
-      } else {
-        const tokens = Number(data.totalTokens ?? 0);
-        const cost = Number(data.billedCredits ?? 0);
-        setTotalTokens(t => t + tokens);
-        setTotalCost(c => c + cost);
-        const rawContent = data.content ?? data.text ?? 'Pas de réponse';
-        const { cleanContent, questions } = parseFollowUps(rawContent);
-        setFollowUpQuestions(questions);
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: cleanContent,
-          tokens,
-          cost,
-          timestamp: new Date().toISOString(),
-        }]);
-        // Track gamification
-        const result = recordEvent({ type: 'message', tokens, cost });
-        if (result.leveledUp) {
-          setMessages(prev => [...prev, {
-            role: 'system',
-            content: `🎉 Niveau ${result.state.level} atteint! Bravo, continuez comme ca!`,
-            timestamp: new Date().toISOString(),
-          }]);
-        }
-        if (result.newAchievements.length > 0) {
-          setMessages(prev => [...prev, {
-            role: 'system',
-            content: `🏆 Nouveau succès débloqué : ${result.newAchievements.join(', ')}! +50 XP`,
-            timestamp: new Date().toISOString(),
-          }]);
-        }
-        // Check if question asked 3+ times -> suggest FAQ
-        if (selectedAgent && trackQuestion(userMsg.content, faqEntries, selectedAgent.id)) {
-          setFaqSuggestion(true);
-        }
-      }
-    } catch (e) {
-      setMessages(prev => [...prev, {
-        role: 'system',
-        content: `Erreur de connexion: ${e instanceof Error ? e.message : 'inconnue'}`,
-        timestamp: new Date().toISOString(),
-      }]);
-    } finally {
-      setLoading(false);
-      inputRef.current?.focus();
-    }
-  }
-
-  // ─── SSE Streaming version of sendMessage ───
+  // ─── SSE Streaming sendMessage ───
   async function sendMessageStream() {
     if (!input.trim() || loading || !selectedAgent) return;
     if (sendingRef.current) return;
@@ -548,6 +443,7 @@ export default function ChatPage() {
   }
 
   function clearHistory() {
+    if (!confirm('Effacer tout l\'historique de conversation ?')) return;
     setHistory([]);
     try { localStorage.removeItem('sarah_chat_history'); } catch { /* */ }
   }

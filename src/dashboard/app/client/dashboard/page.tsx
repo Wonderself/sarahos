@@ -25,6 +25,8 @@ interface WeeklySummary {
   tokens: number;
 }
 
+const ASSISTANTE = DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante') ?? DEFAULT_AGENTS[0];
+
 export default function ClientDashboard() {
   const [stats, setStats] = useState<UsageStats>({
     totalTokens: 0, totalCost: 0, totalMessages: 0, totalDocuments: 0,
@@ -103,7 +105,11 @@ export default function ClientDashboard() {
     const session = getSession();
     if (!session.token) return;
     try {
-      const res = await fetch(`/api/portal?path=/portal/wallet&token=${session.token}`);
+      const res = await fetch('/api/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: '/portal/wallet', token: session.token }),
+      });
       const data = await res.json();
       setWalletBalance(data.balance ?? data.wallet?.balance ?? 0);
     } catch { /* */ }
@@ -141,7 +147,7 @@ export default function ClientDashboard() {
         body: JSON.stringify({
           token: session.token,
           model: 'claude-sonnet-4-20250514',
-          messages: [{ role: 'user', content: `Tu es ${DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.name}, ${DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.role}. Donne UN conseil personnalisé et actionnable pour améliorer la productivité aujourd'hui. Le client a ${stats.totalMessages} messages, ${stats.totalDocuments} documents générés, une équipe de ${teamSize} agents, et un streak de ${stats.streak} jours. Réponse en 2 phrases max, en français.` }],
+          messages: [{ role: 'user', content: `Tu es ${ASSISTANTE.name}, ${ASSISTANTE.role}. Donne UN conseil personnalisé et actionnable pour améliorer la productivité aujourd'hui. Le client a ${stats.totalMessages} messages, ${stats.totalDocuments} documents générés, une équipe de ${teamSize} agents, et un streak de ${stats.streak} jours. Réponse en 2 phrases max, en français.` }],
           maxTokens: 256,
           agentName: 'sarah-assistante',
         }),
@@ -161,7 +167,7 @@ export default function ClientDashboard() {
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
 
   const availableAgents = getAgentsForTier(tier);
-  const agentDetails = availableAgents.map(id => DEFAULT_AGENTS.find(a => a.id === id)!).filter(Boolean);
+  const agentDetails = availableAgents.map(id => DEFAULT_AGENTS.find(a => a.id === id)).filter((a): a is NonNullable<typeof a> => !!a);
 
   // Split agents into active (user-selected) and inactive
   const activeAgents = agentDetails.filter(a => activeAgentIds.includes(a.id));
@@ -182,10 +188,10 @@ export default function ClientDashboard() {
     // Persist to backend
     const s = getSession();
     if (s.token) {
-      fetch('/api/portal?path=/portal/active-agents', {
+      fetch('/api/portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: s.token, agents: updated }),
+        body: JSON.stringify({ path: '/portal/active-agents', token: s.token, agents: updated }),
       }).catch(() => {});
     }
   }
@@ -445,13 +451,13 @@ export default function ClientDashboard() {
 
         <div className="card">
           <div className="flex-between items-center mb-12">
-            <div className="text-base font-bold">Conseil de {DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.name}</div>
+            <div className="text-base font-bold">Conseil de {ASSISTANTE.name}</div>
             <button onClick={getAiTip} disabled={tipLoading} className="btn btn-ghost btn-sm">
               {tipLoading ? '...' : '✨ Nouveau conseil'}
             </button>
           </div>
           <div className="text-md text-secondary" style={{ lineHeight: 1.6, fontStyle: aiTip ? 'normal' : 'italic' }}>
-            {aiTip || `Cliquez sur "Nouveau conseil" pour recevoir un conseil personnalisé de ${DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.name}.`}
+            {aiTip || `Cliquez sur "Nouveau conseil" pour recevoir un conseil personnalisé de ${ASSISTANTE.name}.`}
           </div>
         </div>
       </div>

@@ -133,7 +133,7 @@ interface UserEntry {
   dailyApiCalls: number;
   dailyApiLimit: number;
   createdAt: string;
-  lastLoginAt?: string;
+  lastLoginAt: string | null;
 }
 
 function getInitials(name: string) {

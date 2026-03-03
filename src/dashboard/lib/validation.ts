@@ -106,7 +106,7 @@ export const walletDepositSchema = z.object({
     .min(1, 'Le montant minimum est 1 EUR')
     .max(10000, 'Le montant maximum est 10 000 EUR'),
   paymentMethod: z.enum(['card', 'bank_transfer', 'paypal', 'crypto'], {
-    errorMap: () => ({ message: 'Méthode de paiement invalide' }),
+    message: 'Méthode de paiement invalide',
   }),
 });
 
@@ -131,9 +131,9 @@ export function validateBody<T>(
   }
 
   // Flatten Zod errors into a human-readable string
-  const messages = result.error.errors.map((err) => {
-    const path = err.path.length > 0 ? `${err.path.join('.')}: ` : '';
-    return `${path}${err.message}`;
+  const messages = result.error.issues.map((issue) => {
+    const path = issue.path.length > 0 ? `${issue.path.join('.')}: ` : '';
+    return `${path}${issue.message}`;
   });
 
   return { success: false, error: messages.join('; ') };

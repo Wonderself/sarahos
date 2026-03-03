@@ -1,0 +1,14 @@
+{
+  "name": "SARAH OS",
+  "short_name": "SARAH",
+  "description": "Répondeur Intelligent & Agents IA pour PME",
+  "start_url": "/client/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src": "/images/logo.jpg", "sizes": "192x192", "type": "image/jpeg"},
+    {"src": "/images/logo.jpg", "sizes": "512x512", "type": "image/jpeg"}
+  ]
+}

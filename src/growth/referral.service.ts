@@ -1,16 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
 import { dbClient } from '../infra';
-import { walletService } from '../billing/wallet.service';
 import { logger } from '../utils/logger';
+import { walletService } from '../billing/wallet.service';
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const REFERRER_REWARD_CREDITS = 25_000_000; // 25 credits in micro-credits
-const REFERRED_REWARD_CREDITS = 10_000_000; // 10 credits in micro-credits
-const REFERRAL_CODE_LENGTH = 8;
+/** Credits awarded to the referrer when a referral is completed. */
+const REFERRER_REWARD_CREDITS = 25;
+
+/** Credits awarded to the referred user when they sign up via a referral. */
+const REFERRED_REWARD_CREDITS = 10;
 
 // ---------------------------------------------------------------------------
 // Types
@@ -19,7 +21,7 @@ const REFERRAL_CODE_LENGTH = 8;
 export interface Referral {
   id: string;
   referrerId: string;
-  referredId: string;
+  referredId: string | null;
   code: string;
   status: 'pending' | 'completed' | 'expired';
   rewardCredits: number;
@@ -40,96 +42,68 @@ export interface LeaderboardEntry {
 }
 
 // ---------------------------------------------------------------------------
-// SQL — table definition (run via migration or seed)
-// ---------------------------------------------------------------------------
-// CREATE TABLE IF NOT EXISTS referrals (
-//   id SERIAL PRIMARY KEY,
-//   referrer_id TEXT NOT NULL,
-//   referred_id TEXT,
-//   code TEXT NOT NULL,
-//   status TEXT DEFAULT 'pending',
-//   reward_credits INT DEFAULT 0,
-//   created_at TIMESTAMPTZ DEFAULT NOW()
-// );
-// CREATE UNIQUE INDEX IF NOT EXISTS idx_referrals_code ON referrals (code);
-// CREATE INDEX IF NOT EXISTS idx_referrals_referrer_id ON referrals (referrer_id);
-// CREATE INDEX IF NOT EXISTS idx_referrals_referred_id ON referrals (referred_id);
-
-// ---------------------------------------------------------------------------
 // In-memory fallback store
 // ---------------------------------------------------------------------------
 
 class InMemoryReferralStore {
   private referrals: Referral[] = [];
   private codeMap = new Map<string, Referral>();
-  private idCounter = 0;
+  private userCodeMap = new Map<string, string>();
 
-  addCode(referrerId: string, code: string): Referral {
-    // Check if referrer already has a code
-    const existing = this.referrals.find(
-      (r) => r.referrerId === referrerId && !r.referredId,
-    );
-    if (existing) return existing;
-
-    const referral: Referral = {
-      id: String(++this.idCounter),
-      referrerId,
-      referredId: '',
-      code,
-      status: 'pending',
-      rewardCredits: 0,
-      createdAt: new Date(),
-    };
+  add(referral: Referral): void {
     this.referrals.push(referral);
-    this.codeMap.set(code, referral);
-    return referral;
+    this.codeMap.set(referral.code, referral);
+    if (!this.userCodeMap.has(referral.referrerId)) {
+      this.userCodeMap.set(referral.referrerId, referral.code);
+    }
   }
 
-  findByCode(code: string): Referral | undefined {
+  getByCode(code: string): Referral | undefined {
     return this.codeMap.get(code);
+  }
+
+  getCodeForUser(userId: string): string | undefined {
+    return this.userCodeMap.get(userId);
   }
 
   getByReferrer(referrerId: string): Referral[] {
     return this.referrals.filter((r) => r.referrerId === referrerId);
   }
 
-  applyReferral(code: string, referredId: string): Referral | undefined {
+  update(code: string, updates: Partial<Referral>): void {
     const referral = this.codeMap.get(code);
-    if (!referral) return undefined;
-
-    // Create a new completed referral record
-    const completed: Referral = {
-      id: String(++this.idCounter),
-      referrerId: referral.referrerId,
-      referredId,
-      code,
-      status: 'completed',
-      rewardCredits: REFERRER_REWARD_CREDITS,
-      createdAt: new Date(),
-    };
-    this.referrals.push(completed);
-    return completed;
+    if (referral) {
+      Object.assign(referral, updates);
+    }
   }
 
-  getLeaderboard(limit: number): LeaderboardEntry[] {
-    const stats = new Map<string, { totalReferrals: number; totalEarned: number }>();
-    for (const r of this.referrals) {
-      if (r.status === 'completed' && r.referredId) {
-        const entry = stats.get(r.referrerId) ?? { totalReferrals: 0, totalEarned: 0 };
-        entry.totalReferrals++;
-        entry.totalEarned += r.rewardCredits;
-        stats.set(r.referrerId, entry);
-      }
-    }
-    return Array.from(stats.entries())
-      .map(([userId, data]) => ({ userId, ...data }))
-      .sort((a, b) => b.totalReferrals - a.totalReferrals)
-      .slice(0, limit);
+  getAll(): Referral[] {
+    return [...this.referrals];
   }
 }
 
 // ---------------------------------------------------------------------------
-// Service
+// SQL table definition (for reference / migrations)
+// ---------------------------------------------------------------------------
+
+/*
+CREATE TABLE IF NOT EXISTS referrals (
+  id SERIAL,
+  referrer_id TEXT NOT NULL,
+  referred_id TEXT,
+  code TEXT NOT NULL UNIQUE,
+  status TEXT DEFAULT 'pending',
+  reward_credits INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_referrals_referrer_id ON referrals (referrer_id);
+CREATE INDEX IF NOT EXISTS idx_referrals_code ON referrals (code);
+CREATE INDEX IF NOT EXISTS idx_referrals_referred_id ON referrals (referred_id);
+*/
+
+// ---------------------------------------------------------------------------
+// Referral Service
 // ---------------------------------------------------------------------------
 
 export class ReferralService {
@@ -139,53 +113,18 @@ export class ReferralService {
     return dbClient.isConnected();
   }
 
-  // -----------------------------------------------------------------------
-  // Ensure table exists (idempotent)
-  // -----------------------------------------------------------------------
-
-  async ensureTable(): Promise<void> {
-    if (!this.useDb()) return;
-
-    try {
-      await dbClient.query(`
-        CREATE TABLE IF NOT EXISTS referrals (
-          id SERIAL PRIMARY KEY,
-          referrer_id TEXT NOT NULL,
-          referred_id TEXT,
-          code TEXT NOT NULL,
-          status TEXT DEFAULT 'pending',
-          reward_credits INT DEFAULT 0,
-          created_at TIMESTAMPTZ DEFAULT NOW()
-        )
-      `);
-      await dbClient.query(
-        `CREATE UNIQUE INDEX IF NOT EXISTS idx_referrals_code ON referrals (code) WHERE referred_id IS NULL`,
-      );
-      await dbClient.query(
-        `CREATE INDEX IF NOT EXISTS idx_referrals_referrer_id ON referrals (referrer_id)`,
-      );
-      await dbClient.query(
-        `CREATE INDEX IF NOT EXISTS idx_referrals_referred_id ON referrals (referred_id)`,
-      );
-    } catch (error) {
-      logger.warn('ReferralService: failed to ensure table', {
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  }
-
-  // -----------------------------------------------------------------------
-  // generateReferralCode
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Generate a unique referral code for a user
+  // -------------------------------------------------------------------------
 
   /**
    * Generate a unique 8-character alphanumeric referral code for a user.
-   * If the user already has a code, returns the existing one.
+   * If the user already has a code, return the existing one.
    */
   async generateReferralCode(userId: string): Promise<string> {
+    // Check if user already has a code
     if (this.useDb()) {
       try {
-        // Check if user already has a referral code (a referral row with no referred_id)
         const existing = await dbClient.query(
           `SELECT code FROM referrals WHERE referrer_id = $1 AND referred_id IS NULL LIMIT 1`,
           [userId],
@@ -195,38 +134,50 @@ export class ReferralService {
         }
 
         // Generate a unique code
-        const code = this.createAlphanumericCode();
+        const code = this.createCode();
+        const id = uuidv4();
 
         await dbClient.query(
-          `INSERT INTO referrals (referrer_id, code, status) VALUES ($1, $2, 'pending')`,
-          [userId, code],
+          `INSERT INTO referrals (id, referrer_id, code, status, reward_credits)
+           VALUES ($1, $2, $3, 'pending', 0)`,
+          [id, userId, code],
         );
 
         logger.info('Referral code generated', { userId, code });
         return code;
       } catch (error) {
-        logger.warn('ReferralService: generateReferralCode DB error, using fallback', {
+        logger.warn('Failed to generate referral code in DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
-    // Fallback
-    const existingMem = this.fallbackStore.getByReferrer(userId).find((r) => !r.referredId);
-    if (existingMem) return existingMem.code;
+    // Fallback: in-memory
+    const existingCode = this.fallbackStore.getCodeForUser(userId);
+    if (existingCode) return existingCode;
 
-    const code = this.createAlphanumericCode();
-    this.fallbackStore.addCode(userId, code);
-    logger.info('Referral code generated (in-memory)', { userId, code });
+    const code = this.createCode();
+    this.fallbackStore.add({
+      id: uuidv4(),
+      referrerId: userId,
+      referredId: null,
+      code,
+      status: 'pending',
+      rewardCredits: 0,
+      createdAt: new Date(),
+    });
+
+    logger.info('Referral code generated (in-memory fallback)', { userId, code });
     return code;
   }
 
-  // -----------------------------------------------------------------------
-  // validateReferralCode
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Validate a referral code
+  // -------------------------------------------------------------------------
 
   /**
-   * Validate a referral code and return the referrer's user ID if valid.
+   * Check if a referral code is valid and return the referrer's userId.
+   * Returns null if the code is invalid or already fully used.
    */
   async validateReferralCode(
     code: string,
@@ -234,169 +185,192 @@ export class ReferralService {
     if (this.useDb()) {
       try {
         const result = await dbClient.query(
-          `SELECT referrer_id FROM referrals WHERE code = $1 AND referred_id IS NULL AND status = 'pending' LIMIT 1`,
-          [code.toUpperCase()],
+          `SELECT referrer_id, status FROM referrals WHERE code = $1 LIMIT 1`,
+          [code],
         );
-        if (result.rows[0]) {
-          return {
-            valid: true,
-            referrerId: (result.rows[0] as Record<string, unknown>)['referrer_id'] as string,
-          };
+
+        if (!result.rows[0]) {
+          return { valid: false };
         }
-        return { valid: false };
+
+        const row = result.rows[0] as Record<string, unknown>;
+        const referrerId = row['referrer_id'] as string;
+
+        return { valid: true, referrerId };
       } catch (error) {
-        logger.warn('ReferralService: validateReferralCode DB error', {
+        logger.warn('Failed to validate referral code in DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
     // Fallback
-    const referral = this.fallbackStore.findByCode(code.toUpperCase());
-    if (referral && !referral.referredId) {
-      return { valid: true, referrerId: referral.referrerId };
-    }
-    return { valid: false };
+    const referral = this.fallbackStore.getByCode(code);
+    if (!referral) return { valid: false };
+    return { valid: true, referrerId: referral.referrerId };
   }
 
-  // -----------------------------------------------------------------------
-  // applyReferral
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Apply a referral (reward both users)
+  // -------------------------------------------------------------------------
 
   /**
-   * Apply a referral: credit both the referrer (25 credits) and the referred user (10 credits).
+   * Apply a referral: credit both the referrer and the referred user.
+   * - Referrer gets REFERRER_REWARD_CREDITS credits
+   * - Referred user gets REFERRED_REWARD_CREDITS credits
    */
-  async applyReferral(referrerId: string, referredUserId: string): Promise<boolean> {
+  async applyReferral(
+    referrerId: string,
+    referredUserId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    // Prevent self-referral
     if (referrerId === referredUserId) {
-      logger.warn('ReferralService: user tried to refer themselves', { referrerId });
-      return false;
+      return { success: false, error: 'Cannot refer yourself' };
     }
 
     if (this.useDb()) {
       try {
-        // Mark the referral as completed by inserting a completed record
-        await dbClient.query(
-          `INSERT INTO referrals (referrer_id, referred_id, code, status, reward_credits)
-           VALUES ($1, $2, $3, 'completed', $4)`,
-          [
+        // Check if this referred user was already referred
+        const existingRef = await dbClient.query(
+          `SELECT id FROM referrals WHERE referred_id = $1 AND status = 'completed' LIMIT 1`,
+          [referredUserId],
+        );
+        if (existingRef.rows[0]) {
+          return { success: false, error: 'User has already been referred' };
+        }
+
+        await dbClient.query('BEGIN');
+
+        try {
+          // Record the referral
+          const id = uuidv4();
+          await dbClient.query(
+            `INSERT INTO referrals (id, referrer_id, referred_id, code, status, reward_credits)
+             VALUES ($1, $2, $3, $4, 'completed', $5)`,
+            [id, referrerId, referredUserId, this.createCode(), REFERRER_REWARD_CREDITS],
+          );
+
+          // Credit the referrer
+          await walletService.deposit({
+            userId: referrerId,
+            amount: REFERRER_REWARD_CREDITS * 1_000_000, // Convert to micro-credits
+            description: `Bonus parrainage — nouvel utilisateur parraine`,
+            referenceType: 'referral_reward',
+            referenceId: id,
+          });
+
+          // Credit the referred user
+          await walletService.deposit({
+            userId: referredUserId,
+            amount: REFERRED_REWARD_CREDITS * 1_000_000, // Convert to micro-credits
+            description: `Bonus de bienvenue — inscription via parrainage`,
+            referenceType: 'referral_bonus',
+            referenceId: id,
+          });
+
+          await dbClient.query('COMMIT');
+
+          logger.info('Referral applied successfully', {
             referrerId,
             referredUserId,
-            `REF-${referredUserId.substring(0, 8)}`,
-            REFERRER_REWARD_CREDITS,
-          ],
-        );
+            referrerReward: REFERRER_REWARD_CREDITS,
+            referredReward: REFERRED_REWARD_CREDITS,
+          });
 
-        // Credit the referrer
-        await walletService.deposit({
-          userId: referrerId,
-          amount: REFERRER_REWARD_CREDITS,
-          description: `Bonus parrainage — nouvel utilisateur ${referredUserId.substring(0, 8)}`,
-          referenceType: 'referral_reward',
-          referenceId: referredUserId,
-        });
-
-        // Credit the referred user
-        await walletService.deposit({
-          userId: referredUserId,
-          amount: REFERRED_REWARD_CREDITS,
-          description: `Bonus de bienvenue — parraine par ${referrerId.substring(0, 8)}`,
-          referenceType: 'referral_bonus',
-          referenceId: referrerId,
-        });
-
-        logger.info('Referral applied successfully', {
-          referrerId,
-          referredUserId,
-          referrerReward: REFERRER_REWARD_CREDITS,
-          referredReward: REFERRED_REWARD_CREDITS,
-        });
-
-        return true;
+          return { success: true };
+        } catch (error) {
+          await dbClient.query('ROLLBACK');
+          throw error;
+        }
       } catch (error) {
-        logger.error('ReferralService: applyReferral failed', {
-          error: error instanceof Error ? error.message : String(error),
-          referrerId,
-          referredUserId,
-        });
-        return false;
+        const msg = error instanceof Error ? error.message : String(error);
+        logger.error('Failed to apply referral', { referrerId, referredUserId, error: msg });
+        return { success: false, error: msg };
       }
     }
 
-    // Fallback: in-memory (no wallet operations possible without DB)
-    const referrerReferrals = this.fallbackStore.getByReferrer(referrerId);
-    const codeRecord = referrerReferrals.find((r) => !r.referredId);
-    if (codeRecord) {
-      this.fallbackStore.applyReferral(codeRecord.code, referredUserId);
-    }
-    logger.info('Referral applied (in-memory, no wallet credit)', { referrerId, referredUserId });
-    return true;
+    // Fallback: in-memory (no wallet interaction)
+    this.fallbackStore.add({
+      id: uuidv4(),
+      referrerId,
+      referredId: referredUserId,
+      code: this.createCode(),
+      status: 'completed',
+      rewardCredits: REFERRER_REWARD_CREDITS,
+      createdAt: new Date(),
+    });
+
+    logger.info('Referral applied (in-memory fallback)', { referrerId, referredUserId });
+    return { success: true };
   }
 
-  // -----------------------------------------------------------------------
-  // getReferralStats
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Referral stats for a user
+  // -------------------------------------------------------------------------
 
-  /**
-   * Get referral statistics for a user.
-   */
   async getReferralStats(userId: string): Promise<ReferralStats> {
-    // First, ensure the user has a referral code
-    const referralCode = await this.generateReferralCode(userId);
-
     if (this.useDb()) {
       try {
-        const result = await dbClient.query(
+        // Get or generate the user's referral code
+        const code = await this.generateReferralCode(userId);
+
+        // Aggregate stats
+        const statsResult = await dbClient.query(
           `SELECT
-             COUNT(*) FILTER (WHERE referred_id IS NOT NULL)::int AS total_referrals,
-             COUNT(*) FILTER (WHERE status = 'pending' AND referred_id IS NOT NULL)::int AS pending_rewards,
-             COALESCE(SUM(reward_credits) FILTER (WHERE status = 'completed'), 0)::bigint AS total_earned
+             COUNT(*)::int AS total_referrals,
+             COALESCE(SUM(CASE WHEN status = 'pending' THEN reward_credits ELSE 0 END), 0)::int AS pending_rewards,
+             COALESCE(SUM(CASE WHEN status = 'completed' THEN reward_credits ELSE 0 END), 0)::int AS total_earned
            FROM referrals
-           WHERE referrer_id = $1`,
+           WHERE referrer_id = $1 AND referred_id IS NOT NULL`,
           [userId],
         );
 
-        const row = result.rows[0] as Record<string, unknown>;
+        const row = statsResult.rows[0] as Record<string, unknown>;
         return {
           totalReferrals: Number(row['total_referrals']),
           pendingRewards: Number(row['pending_rewards']),
           totalEarned: Number(row['total_earned']),
-          referralCode,
+          referralCode: code,
         };
       } catch (error) {
-        logger.warn('ReferralService: getReferralStats DB error', {
+        logger.warn('Failed to get referral stats from DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
     // Fallback
-    const referrals = this.fallbackStore.getByReferrer(userId);
-    const completed = referrals.filter((r) => r.status === 'completed' && r.referredId);
+    const code = await this.generateReferralCode(userId);
+    const referrals = this.fallbackStore.getByReferrer(userId).filter((r) => r.referredId);
+    const pending = referrals
+      .filter((r) => r.status === 'pending')
+      .reduce((sum, r) => sum + r.rewardCredits, 0);
+    const earned = referrals
+      .filter((r) => r.status === 'completed')
+      .reduce((sum, r) => sum + r.rewardCredits, 0);
+
     return {
-      totalReferrals: completed.length,
-      pendingRewards: 0,
-      totalEarned: completed.reduce((sum, r) => sum + r.rewardCredits, 0),
-      referralCode,
+      totalReferrals: referrals.length,
+      pendingRewards: pending,
+      totalEarned: earned,
+      referralCode: code,
     };
   }
 
-  // -----------------------------------------------------------------------
-  // getReferralLeaderboard
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Leaderboard
+  // -------------------------------------------------------------------------
 
-  /**
-   * Get the top referrers by number of completed referrals.
-   */
   async getReferralLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
     if (this.useDb()) {
       try {
         const result = await dbClient.query(
           `SELECT
-             referrer_id,
+             referrer_id AS user_id,
              COUNT(*)::int AS total_referrals,
-             COALESCE(SUM(reward_credits), 0)::bigint AS total_earned
+             COALESCE(SUM(reward_credits), 0)::int AS total_earned
            FROM referrals
-           WHERE status = 'completed' AND referred_id IS NOT NULL
+           WHERE referred_id IS NOT NULL AND status = 'completed'
            GROUP BY referrer_id
            ORDER BY total_referrals DESC
            LIMIT $1`,
@@ -406,33 +380,53 @@ export class ReferralService {
         return result.rows.map((row) => {
           const r = row as Record<string, unknown>;
           return {
-            userId: r['referrer_id'] as string,
+            userId: r['user_id'] as string,
             totalReferrals: Number(r['total_referrals']),
             totalEarned: Number(r['total_earned']),
           };
         });
       } catch (error) {
-        logger.warn('ReferralService: getReferralLeaderboard DB error', {
+        logger.warn('Failed to get referral leaderboard from DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
-    return this.fallbackStore.getLeaderboard(limit);
+    // Fallback: in-memory aggregation
+    const all = this.fallbackStore.getAll().filter(
+      (r) => r.referredId && r.status === 'completed',
+    );
+
+    const byReferrer = new Map<string, { count: number; earned: number }>();
+    for (const r of all) {
+      const entry = byReferrer.get(r.referrerId) ?? { count: 0, earned: 0 };
+      entry.count++;
+      entry.earned += r.rewardCredits;
+      byReferrer.set(r.referrerId, entry);
+    }
+
+    return Array.from(byReferrer.entries())
+      .map(([userId, data]) => ({
+        userId,
+        totalReferrals: data.count,
+        totalEarned: data.earned,
+      }))
+      .sort((a, b) => b.totalReferrals - a.totalReferrals)
+      .slice(0, limit);
   }
 
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
   // Helpers
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
 
   /**
-   * Create an 8-character alphanumeric code (uppercase).
+   * Generate an 8-character alphanumeric code.
    */
-  private createAlphanumericCode(): string {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Exclude ambiguous I/O/0/1
-    const bytes = crypto.randomBytes(REFERRAL_CODE_LENGTH);
+  private createCode(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const bytes = crypto.randomBytes(8);
     let code = '';
-    for (let i = 0; i < REFERRAL_CODE_LENGTH; i++) {
+    for (let i = 0; i < 8; i++) {
       code += chars[bytes[i] % chars.length];
     }
     return code;

@@ -29,34 +29,14 @@ interface RetentionResult {
 }
 
 // ---------------------------------------------------------------------------
-// SQL — table definition (run via migration or seed)
-// ---------------------------------------------------------------------------
-// CREATE TABLE IF NOT EXISTS usage_events (
-//   id SERIAL PRIMARY KEY,
-//   user_id TEXT NOT NULL,
-//   event TEXT NOT NULL,
-//   metadata JSONB DEFAULT '{}',
-//   created_at TIMESTAMPTZ DEFAULT NOW()
-// );
-// CREATE INDEX IF NOT EXISTS idx_usage_events_user_id ON usage_events (user_id);
-// CREATE INDEX IF NOT EXISTS idx_usage_events_event ON usage_events (event);
-// CREATE INDEX IF NOT EXISTS idx_usage_events_created_at ON usage_events (created_at);
-
-// ---------------------------------------------------------------------------
 // In-memory fallback store
 // ---------------------------------------------------------------------------
 
 class InMemoryEventStore {
   private events: StoredUsageEvent[] = [];
-  private idCounter = 0;
 
-  add(event: UsageEvent): StoredUsageEvent {
-    const stored: StoredUsageEvent = {
-      id: String(++this.idCounter),
-      ...event,
-    };
-    this.events.push(stored);
-    return stored;
+  add(event: StoredUsageEvent): void {
+    this.events.push(event);
   }
 
   getByUser(userId: string, startDate?: Date, endDate?: Date): StoredUsageEvent[] {
@@ -70,8 +50,8 @@ class InMemoryEventStore {
 
   getPopularFeatures(limit: number): FeatureCount[] {
     const counts = new Map<string, number>();
-    for (const e of this.events) {
-      counts.set(e.event, (counts.get(e.event) ?? 0) + 1);
+    for (const event of this.events) {
+      counts.set(event.event, (counts.get(event.event) ?? 0) + 1);
     }
     return Array.from(counts.entries())
       .map(([event, count]) => ({ event, count }))
@@ -86,59 +66,50 @@ class InMemoryEventStore {
     dayEnd.setHours(23, 59, 59, 999);
 
     const uniqueUsers = new Set<string>();
-    for (const e of this.events) {
-      if (e.timestamp >= dayStart && e.timestamp <= dayEnd) {
-        uniqueUsers.add(e.userId);
+    for (const event of this.events) {
+      if (event.timestamp >= dayStart && event.timestamp <= dayEnd) {
+        uniqueUsers.add(event.userId);
       }
     }
     return uniqueUsers.size;
   }
 
-  getRetentionRate(cohortDate: Date, days: number): RetentionResult {
-    const cohortStart = new Date(cohortDate);
-    cohortStart.setHours(0, 0, 0, 0);
-    const cohortEnd = new Date(cohortDate);
-    cohortEnd.setHours(23, 59, 59, 999);
+  getUsersActiveOnDate(date: Date): Set<string> {
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
 
-    // Users who were active on the cohort date
-    const cohortUsers = new Set<string>();
-    for (const e of this.events) {
-      if (e.timestamp >= cohortStart && e.timestamp <= cohortEnd) {
-        cohortUsers.add(e.userId);
+    const users = new Set<string>();
+    for (const event of this.events) {
+      if (event.timestamp >= dayStart && event.timestamp <= dayEnd) {
+        users.add(event.userId);
       }
     }
-
-    if (cohortUsers.size === 0) {
-      return { cohortSize: 0, retainedUsers: 0, retentionRate: 0 };
-    }
-
-    // Check which cohort users are active N days later
-    const targetStart = new Date(cohortStart);
-    targetStart.setDate(targetStart.getDate() + days);
-    const targetEnd = new Date(targetStart);
-    targetEnd.setHours(23, 59, 59, 999);
-
-    const retainedUsers = new Set<string>();
-    for (const e of this.events) {
-      if (
-        e.timestamp >= targetStart &&
-        e.timestamp <= targetEnd &&
-        cohortUsers.has(e.userId)
-      ) {
-        retainedUsers.add(e.userId);
-      }
-    }
-
-    return {
-      cohortSize: cohortUsers.size,
-      retainedUsers: retainedUsers.size,
-      retentionRate: retainedUsers.size / cohortUsers.size,
-    };
+    return users;
   }
 }
 
 // ---------------------------------------------------------------------------
-// Service
+// SQL table definition (for reference / migrations)
+// ---------------------------------------------------------------------------
+
+/*
+CREATE TABLE IF NOT EXISTS usage_events (
+  id SERIAL,
+  user_id TEXT NOT NULL,
+  event TEXT NOT NULL,
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_usage_events_user_id ON usage_events (user_id);
+CREATE INDEX IF NOT EXISTS idx_usage_events_event ON usage_events (event);
+CREATE INDEX IF NOT EXISTS idx_usage_events_created_at ON usage_events (created_at);
+*/
+
+// ---------------------------------------------------------------------------
+// Usage Analytics Service
 // ---------------------------------------------------------------------------
 
 export class UsageAnalyticsService {
@@ -148,78 +119,47 @@ export class UsageAnalyticsService {
     return dbClient.isConnected();
   }
 
-  // -----------------------------------------------------------------------
-  // Ensure table exists (idempotent)
-  // -----------------------------------------------------------------------
-
-  async ensureTable(): Promise<void> {
-    if (!this.useDb()) return;
-
-    try {
-      await dbClient.query(`
-        CREATE TABLE IF NOT EXISTS usage_events (
-          id SERIAL PRIMARY KEY,
-          user_id TEXT NOT NULL,
-          event TEXT NOT NULL,
-          metadata JSONB DEFAULT '{}',
-          created_at TIMESTAMPTZ DEFAULT NOW()
-        )
-      `);
-      await dbClient.query(
-        `CREATE INDEX IF NOT EXISTS idx_usage_events_user_id ON usage_events (user_id)`,
-      );
-      await dbClient.query(
-        `CREATE INDEX IF NOT EXISTS idx_usage_events_event ON usage_events (event)`,
-      );
-      await dbClient.query(
-        `CREATE INDEX IF NOT EXISTS idx_usage_events_created_at ON usage_events (created_at)`,
-      );
-    } catch (error) {
-      logger.warn('UsageAnalyticsService: failed to ensure table', {
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  }
-
-  // -----------------------------------------------------------------------
-  // trackEvent
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Track an event
+  // -------------------------------------------------------------------------
 
   async trackEvent(
     userId: string,
     event: string,
     metadata?: Record<string, any>,
   ): Promise<void> {
-    const usageEvent: UsageEvent = {
-      userId,
-      event,
-      metadata: metadata ?? {},
-      timestamp: new Date(),
-    };
+    const timestamp = new Date();
 
     if (this.useDb()) {
       try {
         await dbClient.query(
-          `INSERT INTO usage_events (user_id, event, metadata) VALUES ($1, $2, $3)`,
-          [userId, event, JSON.stringify(metadata ?? {})],
+          `INSERT INTO usage_events (user_id, event, metadata, created_at)
+           VALUES ($1, $2, $3, $4)`,
+          [userId, event, metadata ? JSON.stringify(metadata) : null, timestamp],
         );
         logger.debug('Usage event tracked', { userId, event });
         return;
       } catch (error) {
-        logger.warn('UsageAnalyticsService: DB insert failed, falling back to in-memory', {
+        logger.warn('Failed to persist usage event to DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
     // Fallback to in-memory
-    this.fallbackStore.add(usageEvent);
-    logger.debug('Usage event tracked (in-memory)', { userId, event });
+    this.fallbackStore.add({
+      id: uuidv4(),
+      userId,
+      event,
+      metadata,
+      timestamp,
+    });
+    logger.debug('Usage event tracked (in-memory fallback)', { userId, event });
   }
 
-  // -----------------------------------------------------------------------
-  // getEventsByUser
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Query events by user
+  // -------------------------------------------------------------------------
 
   async getEventsByUser(
     userId: string,
@@ -228,43 +168,44 @@ export class UsageAnalyticsService {
   ): Promise<UsageEvent[]> {
     if (this.useDb()) {
       try {
-        let sql = `SELECT user_id, event, metadata, created_at FROM usage_events WHERE user_id = $1`;
+        let query = 'SELECT user_id, event, metadata, created_at FROM usage_events WHERE user_id = $1';
         const params: unknown[] = [userId];
 
         if (startDate) {
           params.push(startDate);
-          sql += ` AND created_at >= $${params.length}`;
+          query += ` AND created_at >= $${params.length}`;
         }
         if (endDate) {
           params.push(endDate);
-          sql += ` AND created_at <= $${params.length}`;
+          query += ` AND created_at <= $${params.length}`;
         }
 
-        sql += ` ORDER BY created_at DESC`;
+        query += ' ORDER BY created_at DESC';
 
-        const result = await dbClient.query(sql, params);
+        const result = await dbClient.query(query, params);
         return result.rows.map((row) => {
           const r = row as Record<string, unknown>;
           return {
             userId: r['user_id'] as string,
             event: r['event'] as string,
-            metadata: (r['metadata'] as Record<string, any>) ?? {},
+            metadata: (r['metadata'] as Record<string, any>) ?? undefined,
             timestamp: new Date(r['created_at'] as string),
           };
         });
       } catch (error) {
-        logger.warn('UsageAnalyticsService: DB query failed, falling back to in-memory', {
+        logger.warn('Failed to query usage events from DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
+    // Fallback
     return this.fallbackStore.getByUser(userId, startDate, endDate);
   }
 
-  // -----------------------------------------------------------------------
-  // getPopularFeatures
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Popular features (aggregated counts)
+  // -------------------------------------------------------------------------
 
   async getPopularFeatures(limit = 10): Promise<FeatureCount[]> {
     if (this.useDb()) {
@@ -285,7 +226,7 @@ export class UsageAnalyticsService {
           };
         });
       } catch (error) {
-        logger.warn('UsageAnalyticsService: getPopularFeatures DB query failed', {
+        logger.warn('Failed to query popular features from DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
@@ -294,26 +235,28 @@ export class UsageAnalyticsService {
     return this.fallbackStore.getPopularFeatures(limit);
   }
 
-  // -----------------------------------------------------------------------
-  // getDailyActiveUsers
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Daily Active Users
+  // -------------------------------------------------------------------------
 
   async getDailyActiveUsers(date?: Date): Promise<number> {
     const targetDate = date ?? new Date();
+    const dayStart = new Date(targetDate);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(targetDate);
+    dayEnd.setHours(23, 59, 59, 999);
 
     if (this.useDb()) {
       try {
         const result = await dbClient.query(
           `SELECT COUNT(DISTINCT user_id)::int AS dau
            FROM usage_events
-           WHERE created_at >= $1::date
-             AND created_at < ($1::date + INTERVAL '1 day')`,
-          [targetDate],
+           WHERE created_at >= $1 AND created_at <= $2`,
+          [dayStart, dayEnd],
         );
-        const row = result.rows[0] as Record<string, unknown>;
-        return Number(row['dau']);
+        return Number((result.rows[0] as Record<string, unknown>)['dau']);
       } catch (error) {
-        logger.warn('UsageAnalyticsService: getDailyActiveUsers DB query failed', {
+        logger.warn('Failed to query DAU from DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
@@ -322,61 +265,88 @@ export class UsageAnalyticsService {
     return this.fallbackStore.getDailyActiveUsers(targetDate);
   }
 
-  // -----------------------------------------------------------------------
-  // getRetentionRate
-  // -----------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Basic retention rate
+  // -------------------------------------------------------------------------
 
+  /**
+   * Calculate retention rate for a cohort.
+   * A cohort is defined as users who had at least one event on `cohortDate`.
+   * Retention is the fraction of those users who also had at least one event
+   * exactly `days` days later.
+   */
   async getRetentionRate(cohortDate: Date, days: number): Promise<RetentionResult> {
+    const cohortStart = new Date(cohortDate);
+    cohortStart.setHours(0, 0, 0, 0);
+    const cohortEnd = new Date(cohortDate);
+    cohortEnd.setHours(23, 59, 59, 999);
+
+    const returnDate = new Date(cohortStart);
+    returnDate.setDate(returnDate.getDate() + days);
+    const returnEnd = new Date(returnDate);
+    returnEnd.setHours(23, 59, 59, 999);
+
     if (this.useDb()) {
       try {
-        // Get cohort: distinct users active on cohortDate
+        // Get cohort users
         const cohortResult = await dbClient.query(
-          `SELECT DISTINCT user_id
-           FROM usage_events
-           WHERE created_at >= $1::date
-             AND created_at < ($1::date + INTERVAL '1 day')`,
-          [cohortDate],
+          `SELECT DISTINCT user_id FROM usage_events
+           WHERE created_at >= $1 AND created_at <= $2`,
+          [cohortStart, cohortEnd],
+        );
+        const cohortUsers = new Set(
+          cohortResult.rows.map((r) => (r as Record<string, unknown>)['user_id'] as string),
         );
 
-        const cohortUsers = cohortResult.rows.map(
-          (r) => (r as Record<string, unknown>)['user_id'] as string,
-        );
-
-        if (cohortUsers.length === 0) {
+        if (cohortUsers.size === 0) {
           return { cohortSize: 0, retainedUsers: 0, retentionRate: 0 };
         }
 
-        // Target date = cohortDate + N days
-        const targetDate = new Date(cohortDate);
-        targetDate.setDate(targetDate.getDate() + days);
-
-        // Count how many cohort users were active on the target date
-        const retainedResult = await dbClient.query(
-          `SELECT COUNT(DISTINCT user_id)::int AS retained
-           FROM usage_events
-           WHERE user_id = ANY($1)
-             AND created_at >= $2::date
-             AND created_at < ($2::date + INTERVAL '1 day')`,
-          [cohortUsers, targetDate],
+        // Get users active on return date
+        const returnResult = await dbClient.query(
+          `SELECT DISTINCT user_id FROM usage_events
+           WHERE created_at >= $1 AND created_at <= $2`,
+          [returnDate, returnEnd],
+        );
+        const returnUsers = new Set(
+          returnResult.rows.map((r) => (r as Record<string, unknown>)['user_id'] as string),
         );
 
-        const retained = Number(
-          (retainedResult.rows[0] as Record<string, unknown>)['retained'],
-        );
+        // Intersection
+        let retained = 0;
+        for (const userId of cohortUsers) {
+          if (returnUsers.has(userId)) retained++;
+        }
 
         return {
-          cohortSize: cohortUsers.length,
+          cohortSize: cohortUsers.size,
           retainedUsers: retained,
-          retentionRate: retained / cohortUsers.length,
+          retentionRate: cohortUsers.size > 0 ? retained / cohortUsers.size : 0,
         };
       } catch (error) {
-        logger.warn('UsageAnalyticsService: getRetentionRate DB query failed', {
+        logger.warn('Failed to query retention from DB, using fallback', {
           error: error instanceof Error ? error.message : String(error),
         });
       }
     }
 
-    return this.fallbackStore.getRetentionRate(cohortDate, days);
+    // Fallback: in-memory
+    const cohortUsers = this.fallbackStore.getUsersActiveOnDate(cohortStart);
+    if (cohortUsers.size === 0) {
+      return { cohortSize: 0, retainedUsers: 0, retentionRate: 0 };
+    }
+
+    const returnUsers = this.fallbackStore.getUsersActiveOnDate(returnDate);
+    let retained = 0;
+    for (const userId of cohortUsers) {
+      if (returnUsers.has(userId)) retained++;
+    }
+
+    return {
+      cohortSize: cohortUsers.size,
+      retainedUsers: retained,
+      retentionRate: cohortUsers.size > 0 ? retained / cohortUsers.size : 0,
+    };
   }
 }
 

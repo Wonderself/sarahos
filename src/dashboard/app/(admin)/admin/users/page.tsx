@@ -1,5 +1,5 @@
 import { api, type UserEntry, type AdminStats } from '@/lib/api-client';
-import { UserActions, CreateUserButton, DepositButton } from './actions';
+import { UserActions, CreateUserButton, DepositButton, PaginatedUserTable } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 10;
@@ -137,72 +137,8 @@ export default async function UsersPage() {
         </div>
       </div>
 
-      {/* Full User Table */}
-      <div className="section">
-        <div className="section-title">
-          Tous les utilisateurs
-          <span className="section-subtitle">— {users.length} enregistrés</span>
-        </div>
-        <div className="card table-responsive" style={{ padding: 0 }}>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Utilisateur</th>
-                <th>Rôle</th>
-                <th>Tier</th>
-                <th className="text-center">API / jour</th>
-                <th className="text-center">Statut</th>
-                <th>Inscription</th>
-                <th>Dernier login</th>
-                <th className="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((user) => (
-                <tr key={user.id}>
-                  <td>
-                    <div className="flex items-center" style={{ gap: 10 }}>
-                      <div className="avatar avatar-sm" style={{ background: avatarColor(user.email) }}>
-                        {getInitials(user.displayName)}
-                      </div>
-                      <div>
-                        <div className="font-medium text-md">{user.displayName}</div>
-                        <div className="text-xs text-tertiary">{user.email}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span className={`badge ${roleColors[user.role] ?? 'badge-neutral'}`}>{user.role}</span></td>
-                  <td><span className={`badge ${tierColors[user.tier] ?? 'badge-neutral'}`}>{user.tier}</span></td>
-                  <td className="text-center">
-                    <div className="text-md font-semibold">{user.dailyApiCalls}</div>
-                    <div style={{ fontSize: 10 }} className="text-muted">/ {user.dailyApiLimit}</div>
-                    <div className="progress-bar" style={{ marginTop: 4, maxWidth: 80, margin: '4px auto 0' }}>
-                      <div className="progress-bar-fill" style={{
-                        width: `${Math.min((user.dailyApiCalls / user.dailyApiLimit) * 100, 100)}%`,
-                        background: user.dailyApiCalls > user.dailyApiLimit * 0.9 ? 'var(--danger)' : user.dailyApiCalls > user.dailyApiLimit * 0.7 ? 'var(--warning)' : 'var(--success)',
-                      }} />
-                    </div>
-                  </td>
-                  <td className="text-center">
-                    <span className={`badge ${user.isActive ? 'badge-success' : 'badge-danger'}`}>
-                      {user.isActive ? 'Actif' : 'Inactif'}
-                    </span>
-                  </td>
-                  <td className="text-sm text-tertiary">
-                    {new Date(user.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </td>
-                  <td className="text-sm text-tertiary">
-                    {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) : '—'}
-                  </td>
-                  <td className="text-center">
-                    <UserActions userId={user.id} userName={user.displayName} isActive={user.isActive} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Full User Table — Paginated */}
+      <PaginatedUserTable users={sorted} tierColors={tierColors} roleColors={roleColors} />
 
       <div className="text-xs text-muted mt-8">
         API: POST /admin/users (créer) | PATCH /admin/users/:id (modifier) | DELETE /admin/users/:id (désactiver) | POST /admin/users/:id/reset-key (régénérer clé)

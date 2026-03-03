@@ -3,6 +3,7 @@
 import { useState, useRef, useMemo } from 'react';
 import { DEFAULT_AGENTS } from '../../../lib/agent-config';
 import VoiceInput from '../../../components/VoiceInput';
+import EmptyState from '../../../components/ui/EmptyState';
 
 function escapeHtml(text: string): string {
   return text
@@ -316,6 +317,7 @@ export default function DocumentsPage() {
   }
 
   function deleteDoc(id: string) {
+    if (!confirm('Etes-vous sur de vouloir supprimer ce document ?')) return;
     const updated = generatedDocs.filter(d => d.id !== id);
     setGeneratedDocs(updated);
     localStorage.setItem('sarah_docs', JSON.stringify(updated));
@@ -538,6 +540,13 @@ export default function DocumentsPage() {
       </div>
 
       {/* Generated Documents History */}
+      {generatedDocs.length === 0 && (
+        <EmptyState
+          icon="📄"
+          title="Aucun document genere"
+          description="Choisissez un modele ci-dessus pour generer votre premier document avec Sarah."
+        />
+      )}
       {generatedDocs.length > 0 && (
         <div className="section">
           <div className="section-title">Mes documents ({generatedDocs.length})</div>

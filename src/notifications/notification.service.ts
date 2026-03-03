@@ -98,22 +98,21 @@ export class NotificationService {
       }
 
       case 'email':
-        // TODO: SendGrid/SES integration
-        logger.info('Email notification queued (not connected)', {
+        logger.warn('Email channel not configured — notification stored but not delivered. Configure SendGrid/SES to enable.', {
           notificationId: notification.id,
           type: notification.type,
           userId: notification.userId,
         });
-        await this.markAsSent(notification.id, `email-pending-${notification.id}`);
+        await this.markAsFailed(notification.id, 'Email channel not configured');
         break;
 
       case 'sms':
-        // TODO: Twilio SMS integration
-        logger.info('SMS notification queued (not connected)', {
+        logger.warn('SMS channel not configured — notification stored but not delivered. Configure Twilio to enable.', {
           notificationId: notification.id,
           type: notification.type,
+          userId: notification.userId,
         });
-        await this.markAsSent(notification.id, `sms-pending-${notification.id}`);
+        await this.markAsFailed(notification.id, 'SMS channel not configured');
         break;
 
       case 'in_app':
@@ -122,9 +121,12 @@ export class NotificationService {
         break;
 
       case 'webhook':
-        // TODO: Custom webhook delivery
-        logger.info('Webhook notification queued', { notificationId: notification.id });
-        await this.markAsSent(notification.id, `webhook-pending-${notification.id}`);
+        logger.warn('Webhook channel not configured — notification stored but not delivered.', {
+          notificationId: notification.id,
+          type: notification.type,
+          userId: notification.userId,
+        });
+        await this.markAsFailed(notification.id, 'Webhook channel not configured');
         break;
     }
   }

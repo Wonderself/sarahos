@@ -18,6 +18,35 @@ export default function LoginPage() {
   const [refCode, setRefCode] = useState('');
   const [selectedAgents, setSelectedAgents] = useState<AgentTypeId[]>(['sarah-repondeur']);
   const [registeredSession, setRegisteredSession] = useState<Record<string, unknown> | null>(null);
+  const [emailError, setEmailError] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState<{ score: number; label: string; color: string }>({ score: 0, label: '', color: '' });
+
+  function validateEmail(val: string) {
+    setEmail(val);
+    if (!val) { setEmailError(''); return; }
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    setEmailError(valid ? '' : 'Adresse email invalide');
+  }
+
+  function evaluatePassword(val: string) {
+    setPassword(val);
+    if (!val) { setPasswordStrength({ score: 0, label: '', color: '' }); return; }
+    let score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const levels = [
+      { label: 'Tres faible', color: '#dc2626' },
+      { label: 'Faible', color: '#ef4444' },
+      { label: 'Moyen', color: '#f59e0b' },
+      { label: 'Bon', color: '#22c55e' },
+      { label: 'Fort', color: '#16a34a' },
+      { label: 'Excellent', color: '#059669' },
+    ];
+    setPasswordStrength({ score, ...levels[score] });
+  }
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,11 +54,16 @@ export default function LoginPage() {
     const token = params.get('token');
     const emailConfirmed = params.get('emailConfirmed');
     const ref = params.get('ref');
+    const redirect = params.get('redirect');
 
     if (urlMode === 'register') setMode('register');
     else if (urlMode === 'reset' && token) { setMode('reset'); setResetToken(token); }
     if (emailConfirmed === 'true') setSuccess('Email confirme avec succes ! Vous pouvez maintenant vous connecter.');
     if (ref) setRefCode(ref);
+    // Store redirect destination for after login
+    if (redirect) {
+      try { sessionStorage.setItem('sarah_login_redirect', redirect); } catch { /* */ }
+    }
   }, []);
 
   function toggleAgentSelection(id: AgentTypeId) {
@@ -155,7 +189,16 @@ export default function LoginPage() {
       }));
       if (data.activeAgents) setActiveAgentIds(data.activeAgents);
       localStorage.setItem('sarah_welcome_pending', 'true');
-      window.location.href = '/client/dashboard';
+      // Use redirect param if present, otherwise default to dashboard
+      let redirectTo = '/client/dashboard';
+      try {
+        const savedRedirect = sessionStorage.getItem('sarah_login_redirect');
+        if (savedRedirect && savedRedirect.startsWith('/')) {
+          redirectTo = savedRedirect;
+          sessionStorage.removeItem('sarah_login_redirect');
+        }
+      } catch { /* */ }
+      window.location.href = redirectTo;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur de connexion');
     } finally {
@@ -375,14 +418,29 @@ export default function LoginPage() {
                       Email professionnel
                     </label>
                     <input type="email" className="input w-full" placeholder="marie@entreprise.com"
-                      value={email} onChange={e => setEmail(e.target.value)} required />
+                      value={email} onChange={e => validateEmail(e.target.value)} required
+                      style={emailError ? { borderColor: 'var(--danger)' } : undefined} />
+                    {emailError && <div className="text-xs" style={{ color: 'var(--danger)', marginTop: 4 }}>{emailError}</div>}
                   </div>
                   <div className="mb-12">
                     <label className="text-sm font-semibold text-secondary" style={{ display: 'block', marginBottom: 6 }}>
                       Mot de passe
                     </label>
                     <input type="password" className="input w-full" placeholder="Minimum 6 caracteres"
-                      value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
+                      value={password} onChange={e => evaluatePassword(e.target.value)} required minLength={6} />
+                    {passwordStrength.label && (
+                      <div style={{ marginTop: 6 }}>
+                        <div style={{ display: 'flex', gap: 3 }}>
+                          {[...Array(5)].map((_, i) => (
+                            <div key={i} style={{
+                              flex: 1, height: 3, borderRadius: 2,
+                              background: i < passwordStrength.score ? passwordStrength.color : 'var(--border-secondary)',
+                            }} />
+                          ))}
+                        </div>
+                        <div className="text-xs" style={{ color: passwordStrength.color, marginTop: 2 }}>{passwordStrength.label}</div>
+                      </div>
+                    )}
                   </div>
                   <div className="alert alert-success mb-12">
                     <div className="text-sm font-semibold">

@@ -2,17 +2,23 @@ import { Router } from 'express';
 import crypto from 'crypto';
 import { authService } from './auth.service';
 import { verifyToken } from './auth.middleware';
+import { createRateLimitMiddleware } from './rate-limit.middleware';
 import type { AuthenticatedRequest } from './auth.types';
 import { logger } from '../utils/logger';
 import { config } from '../utils/config';
 
 const SIGNUP_BONUS_MICROCREDITS = 50_000_000; // 50 credits
 
+// Strict rate limits for auth endpoints to prevent brute-force
+const loginRateLimit = createRateLimitMiddleware({ maxRequests: 10, windowMs: 60_000 });       // 10 req/min
+const registerRateLimit = createRateLimitMiddleware({ maxRequests: 5, windowMs: 60_000 });     // 5 req/min
+const forgotPasswordRateLimit = createRateLimitMiddleware({ maxRequests: 3, windowMs: 60_000 }); // 3 req/min
+
 export function createAuthRouter(): Router {
   const router = Router();
 
   // ── Login by API key ──
-  router.post('/auth/login', async (req, res) => {
+  router.post('/auth/login', loginRateLimit, async (req, res) => {
     const { apiKey, email, password } = req.body as { apiKey?: string; email?: string; password?: string };
 
     // Login by email + password
@@ -73,7 +79,7 @@ export function createAuthRouter(): Router {
   });
 
   // ── Register with email + password ──
-  router.post('/auth/register', async (req, res) => {
+  router.post('/auth/register', registerRateLimit, async (req, res) => {
     const { email, displayName, password, activeAgents, referredBy } = req.body as { email?: string; displayName?: string; password?: string; activeAgents?: string[]; referredBy?: string };
 
     if (!email || typeof email !== 'string' || !email.includes('@')) {
@@ -203,7 +209,7 @@ export function createAuthRouter(): Router {
   });
 
   // ── Forgot password ──
-  router.post('/auth/forgot-password', async (req, res) => {
+  router.post('/auth/forgot-password', forgotPasswordRateLimit, async (req, res) => {
     const { email } = req.body as { email?: string };
     if (!email || typeof email !== 'string' || !email.includes('@')) {
       res.status(400).json({ error: 'Email valide requis' });

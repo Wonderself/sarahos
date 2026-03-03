@@ -18,10 +18,23 @@ export class RedisClient {
 
     try {
       const url = urlOverride ?? getRedisUrl();
-      this.client = new Redis(url, { maxRetriesPerRequest: 3, lazyConnect: true });
+      const redisOptions = {
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+        retryStrategy: (times: number): number | null => {
+          if (times > 10) {
+            logger.error('Redis max reconnection attempts reached, giving up');
+            return null; // stop retrying
+          }
+          const delay = Math.min(times * 100, 5000);
+          logger.warn(`Redis reconnecting (attempt ${times}), next retry in ${delay}ms`);
+          return delay;
+        },
+      };
+      this.client = new Redis(url, redisOptions);
       await this.client.connect();
 
-      this.subscriber = new Redis(url, { maxRetriesPerRequest: 3, lazyConnect: true });
+      this.subscriber = new Redis(url, redisOptions);
       await this.subscriber.connect();
 
       this.subscriber.on('message', (channel: string, message: string) => {

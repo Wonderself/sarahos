@@ -142,8 +142,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   if (loading) {
     return (
-      <div className="flex-center" style={{ height: '100vh', background: 'var(--bg-primary)' }}>
-        <div className="animate-pulse text-lg text-tertiary">Chargement...</div>
+      <div className="flex-center" style={{ height: '100vh', background: 'var(--bg-primary)', flexDirection: 'column', gap: 16 }}>
+        <img
+          src="/images/logo.jpg"
+          alt="SARAH OS"
+          style={{ height: 40, borderRadius: 10, opacity: 0.6 }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 240 }}>
+          <div className="animate-pulse" style={{ height: 10, borderRadius: 6, background: 'var(--bg-tertiary)' }} />
+          <div className="animate-pulse" style={{ height: 10, borderRadius: 6, background: 'var(--bg-tertiary)', width: '70%' }} />
+          <div className="animate-pulse" style={{ height: 10, borderRadius: 6, background: 'var(--bg-tertiary)', width: '50%' }} />
+        </div>
       </div>
     );
   }
@@ -292,16 +302,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 className={`theme-toggle-btn${theme === 'white' ? ' active' : ''}`}
                 onClick={() => switchTheme('white')}
                 title="Clair & espace"
+                aria-label="Theme clair"
               >☀️</button>
               <button
                 className={`theme-toggle-btn${theme === 'normal' ? ' active' : ''}`}
                 onClick={() => switchTheme('normal')}
                 title="Normal"
+                aria-label="Theme normal"
               >🔲</button>
               <button
                 className={`theme-toggle-btn${theme === 'dark' ? ' active' : ''}`}
                 onClick={() => switchTheme('dark')}
                 title="Sombre & compact"
+                aria-label="Theme sombre"
               >🌙</button>
             </div>
           </div>
@@ -338,7 +351,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <Link href="/client/account" className="text-sm text-accent font-semibold" style={{ textDecoration: 'none' }}>
                 Recharger
               </Link>
-              <button onClick={dismissLowCredit} className="text-muted pointer" style={{
+              <button onClick={dismissLowCredit} className="text-muted pointer" aria-label="Fermer l'alerte credits" style={{
                 fontSize: 16, background: 'none', border: 'none', padding: '0 4px',
               }}>×</button>
             </div>

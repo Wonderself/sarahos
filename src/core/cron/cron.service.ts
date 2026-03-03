@@ -39,6 +39,11 @@ export class CronService {
         handler: () => this.expireDemoAccounts(),
       },
       {
+        name: 'demo_expiry_warnings',
+        intervalMs: 6 * 60 * 60 * 1000, // Check every 6 hours
+        handler: () => this.sendDemoExpiryWarnings(),
+      },
+      {
         name: 'low_balance_alerts',
         intervalMs: 6 * 60 * 60 * 1000, // Every 6 hours
         handler: () => this.checkLowBalances(),
@@ -200,6 +205,53 @@ export class CronService {
 
     if (result.rows.length > 0) {
       logger.info('Low balance alerts sent', { count: result.rows.length });
+    }
+  }
+
+  /**
+   * Send warning notifications to demo users 24h before expiry.
+   */
+  private async sendDemoExpiryWarnings(): Promise<void> {
+    if (!dbClient.isConnected()) return;
+
+    // Find demo users expiring in the next 24 hours who haven't been warned yet
+    const result = await dbClient.query(
+      `SELECT id, email, display_name, demo_expires_at
+       FROM users
+       WHERE tier = 'demo'
+         AND is_active = TRUE
+         AND demo_expires_at IS NOT NULL
+         AND demo_expires_at > NOW()
+         AND demo_expires_at < NOW() + INTERVAL '24 hours'
+         AND NOT EXISTS (
+           SELECT 1 FROM notifications n
+           WHERE n.user_id = users.id
+             AND n.type = 'demo_expiry_warning'
+             AND n.created_at > NOW() - INTERVAL '48 hours'
+         )`,
+    );
+
+    for (const row of result.rows) {
+      const r = row as Record<string, unknown>;
+      try {
+        await dbClient.query(
+          `INSERT INTO notifications (id, user_id, channel, type, subject, body, metadata, status)
+           VALUES ($1, $2, 'in_app', 'demo_expiry_warning', $3, $4, $5, 'sent')`,
+          [
+            uuidv4(),
+            r['id'],
+            'Votre periode demo expire bientot',
+            'Votre acces demo expire dans moins de 24h. Passez a un plan payant pour continuer a utiliser tous vos agents IA.',
+            JSON.stringify({ expiresAt: r['demo_expires_at'] }),
+          ],
+        );
+      } catch {
+        // Continue with other users if one fails
+      }
+    }
+
+    if (result.rows.length > 0) {
+      logger.info('Demo expiry warnings sent', { count: result.rows.length });
     }
   }
 

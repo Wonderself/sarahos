@@ -4,10 +4,11 @@ import { eventBus } from '../core/event-bus/event-bus';
 import type { SystemEvent } from '../core/event-bus/event.types';
 
 export class SSEManager {
-  private clients = new Map<string, { res: Response; types?: string[]; lastActivity: number }>();
+  private clients = new Map<string, { res: Response; types?: string[]; lastActivity: number; droppedMessages: number }>();
   private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
   private unsubscribe: (() => void) | null = null;
   private static readonly DEAD_CLIENT_TIMEOUT_MS = 90000;
+  private static readonly MAX_DROPPED_MESSAGES = 50;
 
   initialize(): void {
     this.unsubscribe = eventBus.subscribeAll(async (event: SystemEvent) => {
@@ -18,7 +19,7 @@ export class SSEManager {
   }
 
   addClient(clientId: string, res: Response, types?: string[]): void {
-    this.clients.set(clientId, { res, types, lastActivity: Date.now() });
+    this.clients.set(clientId, { res, types, lastActivity: Date.now(), droppedMessages: 0 });
     logger.debug('SSE client connected', { clientId, clientCount: this.clients.size });
   }
 
@@ -37,8 +38,19 @@ export class SSEManager {
       }
 
       try {
-        client.res.write(data);
-        client.lastActivity = Date.now();
+        const flushed = client.res.write(data);
+        if (flushed) {
+          client.lastActivity = Date.now();
+          client.droppedMessages = 0;
+        } else {
+          // Backpressure: client's buffer is full (slow consumer)
+          client.droppedMessages++;
+          if (client.droppedMessages >= SSEManager.MAX_DROPPED_MESSAGES) {
+            logger.warn('SSE client too slow, disconnecting', { clientId, droppedMessages: client.droppedMessages });
+            try { client.res.end(); } catch { /* already closed */ }
+            this.removeClient(clientId);
+          }
+        }
       } catch {
         this.removeClient(clientId);
       }

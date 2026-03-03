@@ -45,6 +45,21 @@ export function createBillingRouter(): Router {
     const { walletService } = await import('../../billing/wallet.service');
     const tx = await walletService.deposit({ userId, amount, description, referenceType, referenceId });
     if (!tx) { res.status(500).json({ error: 'Deposit failed' }); return; }
+
+    // Notify user about the deposit
+    try {
+      const { notificationService } = await import('../../notifications/notification.service');
+      const creditAmount = (amount / 1_000_000).toFixed(1);
+      await notificationService.send({
+        userId,
+        channel: 'in_app',
+        type: 'wallet_deposit',
+        subject: 'Credits ajoutes a votre wallet',
+        body: `${creditAmount} credits ont ete ajoutes a votre wallet.${description ? ` Motif : ${description}` : ''}`,
+        metadata: { amount, referenceType },
+      });
+    } catch { /* best-effort notification */ }
+
     res.status(201).json({ transaction: tx });
   }));
 

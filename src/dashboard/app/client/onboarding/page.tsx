@@ -99,6 +99,7 @@ export default function OnboardingPage() {
   const [analyzeError, setAnalyzeError] = useState('');
   const [prefilled, setPrefilled] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const lastFocusedFieldRef = useRef<keyof CompanyProfile | ''>('');
 
   useEffect(() => {
@@ -107,6 +108,17 @@ export default function OnboardingPage() {
     try { setCompactMode(localStorage.getItem('sarah_onboarding_compact') === 'true'); } catch { /* */ }
     // If profile already exists, skip step 0
   }, []);
+
+  // Warn user about unsaved changes before leaving
+  useEffect(() => {
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      if (isDirty) {
+        e.preventDefault();
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   async function loadProfile() {
     const session = getSession();
@@ -129,6 +141,7 @@ export default function OnboardingPage() {
 
   function updateField(field: keyof CompanyProfile, value: string | string[]) {
     setProfile(p => ({ ...p, [field]: value }));
+    setIsDirty(true);
   }
 
   function toggleArray(field: 'aiPriorities' | 'languages', value: string) {
@@ -136,6 +149,7 @@ export default function OnboardingPage() {
       const arr = p[field] as string[];
       return { ...p, [field]: arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value] };
     });
+    setIsDirty(true);
   }
 
   async function saveProfile(complete = false) {
@@ -150,6 +164,7 @@ export default function OnboardingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: session.token, profile: toSave }),
       });
+      setIsDirty(false);
       if (complete) window.location.href = '/client/chat';
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Erreur de sauvegarde');

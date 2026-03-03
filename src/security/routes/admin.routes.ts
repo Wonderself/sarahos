@@ -95,6 +95,22 @@ export function createAdminRouter(): Router {
         input.demoExpiresAt = new Date(input.demoExpiresAt);
       }
       const user = await userService.updateUser(userId, input);
+
+      // Notify user about tier or role changes
+      try {
+        const { notificationService } = await import('../../notifications/notification.service');
+        if (input.tier) {
+          await notificationService.send({
+            userId,
+            channel: 'in_app',
+            type: 'tier_change',
+            subject: 'Votre plan a ete mis a jour',
+            body: `Votre plan a ete change vers : ${input.tier}.`,
+            metadata: { newTier: input.tier },
+          });
+        }
+      } catch { /* best-effort notification */ }
+
       res.json(user);
     } catch (error: unknown) {
       if (error instanceof Error && error.message === 'User not found') {
@@ -115,6 +131,19 @@ export function createAdminRouter(): Router {
         res.status(404).json({ error: 'User not found' });
         return;
       }
+
+      // Notify user about deactivation
+      try {
+        const { notificationService } = await import('../../notifications/notification.service');
+        await notificationService.send({
+          userId,
+          channel: 'in_app',
+          type: 'account_deactivated',
+          subject: 'Compte desactive',
+          body: 'Votre compte a ete desactive par un administrateur. Contactez le support pour plus d\'informations.',
+        });
+      } catch { /* best-effort notification */ }
+
       res.json({ status: 'deactivated', userId });
     } catch (error) {
       next(error);

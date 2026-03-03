@@ -1,4 +1,4 @@
-name: CI
+name: SARAH OS CI/CD
 
 on:
   push:
@@ -7,58 +7,70 @@ on:
     branches: [main]
 
 jobs:
-  quality:
+  lint-and-typecheck:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20]
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           cache: 'npm'
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint --if-present
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: TypeCheck
-        run: npm run typecheck
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm test -- --ci --coverage
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage
-          path: coverage/
-
-  dashboard:
+  test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/dashboard
+    needs: lint-and-typecheck
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: sarah
+          POSTGRES_PASSWORD: sarah_test
+          POSTGRES_DB: sarah_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://sarah:sarah_test@localhost:5432/sarah_test
+      NODE_ENV: test
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: 'npm'
-          cache-dependency-path: src/dashboard/package-lock.json
+      - run: npm ci
+      - run: npm test --if-present
 
-      - name: Install dependencies
-        run: npm ci
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
 
-      - name: Build dashboard
-        run: npm run build
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: sarah-os:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

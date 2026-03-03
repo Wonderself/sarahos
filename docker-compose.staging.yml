@@ -1,0 +1,113 @@
+services:
+  # ── PostgreSQL + pgvector (Staging) ──
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: sarah-staging-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sarah_staging
+      POSTGRES_USER: sarah
+      POSTGRES_PASSWORD: sarah_staging
+    ports:
+      - '5432:5432'
+    volumes:
+      - staging_postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U sarah -d sarah_staging']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sarah-staging
+
+  # ── Redis (Staging) ──
+  redis:
+    image: redis:7-alpine
+    container_name: sarah-staging-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - staging_redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sarah-staging
+
+  # ── SARAH OS Backend (Staging) ──
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sarah-staging-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env.staging
+    environment:
+      NODE_ENV: staging
+      PORT: 3000
+      DATABASE_URL: postgresql://sarah:sarah_staging@postgres:5432/sarah_staging
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: sarah_staging
+      DB_USER: sarah
+      DB_PASSWORD: sarah_staging
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DASHBOARD_ORIGIN: http://localhost:3001
+      LOG_LEVEL: debug
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./state:/app/state
+      - ./roadmap:/app/roadmap
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -sf http://localhost:3000/health || exit 1']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sarah-staging
+
+  # ── Dashboard (Staging) ──
+  dashboard:
+    build:
+      context: ./src/dashboard
+      dockerfile: Dockerfile
+    container_name: sarah-staging-dashboard
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+    ports:
+      - '3001:3000'
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -sf http://localhost:3000 || exit 1']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sarah-staging
+
+volumes:
+  staging_postgres_data:
+  staging_redis_data:
+
+networks:
+  sarah-staging:
+    driver: bridge

@@ -291,7 +291,7 @@ export default function AccountPage() {
   const badgeColor = commissionRate === 0 ? '#22c55e' : commissionRate <= 0.05 ? '#6366f1' : '#9333ea';
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Compte & Crédits</h1>

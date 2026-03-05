@@ -148,7 +148,7 @@ export default function ProjectsPage() {
   const totalCredits = projects.reduce((s, p) => s + (p.creditsUsed ?? 0), 0);
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 0 48px' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto', padding: '0 0 48px' }}>
 
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>

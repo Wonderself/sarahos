@@ -221,7 +221,7 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* Header */}
       <div className="page-header">
         <div>

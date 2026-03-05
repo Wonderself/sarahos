@@ -92,10 +92,10 @@ export default function GuardrailsPage() {
     return () => clearInterval(interval);
   }, [autoRefresh, loadStats]);
 
-  if (loading) return <div className="p-12 text-center text-gray-500">Chargement...</div>;
+  if (loading) return <div className="p-12 text-center text-gray-500 admin-page-scrollable">Chargement...</div>;
 
   const s = stats;
-  if (!s) return <div className="p-12 text-center text-gray-500">Erreur de chargement</div>;
+  if (!s) return <div className="p-12 text-center text-gray-500 admin-page-scrollable">Erreur de chargement</div>;
 
   const totalModels = s.tokenBudget.modelDistribution.haiku + s.tokenBudget.modelDistribution.sonnet + s.tokenBudget.modelDistribution.opus;
   const haikuPct = totalModels > 0 ? Math.round((s.tokenBudget.modelDistribution.haiku / totalModels) * 100) : 0;
@@ -104,7 +104,7 @@ export default function GuardrailsPage() {
   const budgetPct = s.tokenBudget.globalHourlyBudget > 0 ? Math.round((s.tokenBudget.globalHourlyTokens / s.tokenBudget.globalHourlyBudget) * 100) : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 admin-page-scrollable">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Guardrails Monitor</h1>

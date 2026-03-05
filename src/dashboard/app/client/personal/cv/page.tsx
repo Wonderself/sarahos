@@ -219,7 +219,7 @@ export default function CVPage() {
   );
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
       {/* Header */}
       <div className="page-header">
         <div>

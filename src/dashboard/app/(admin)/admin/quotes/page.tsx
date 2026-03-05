@@ -34,7 +34,7 @@ export default async function QuotesPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Devis Entreprise</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -44,7 +44,7 @@ export default async function QuotesPage() {
   const newCount = quotes.filter(q => q['status'] === 'new').length;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Devis Entreprise</h1>

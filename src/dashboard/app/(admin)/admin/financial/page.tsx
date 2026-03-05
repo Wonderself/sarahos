@@ -22,7 +22,7 @@ export default async function FinancialPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Finances</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -49,7 +49,7 @@ export default async function FinancialPage() {
   const grossMarginPct = revCents > 0 ? ((grossMargin / revCents) * 100).toFixed(1) : '0';
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Finances</h1>

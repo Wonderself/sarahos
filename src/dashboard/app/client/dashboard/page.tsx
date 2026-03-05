@@ -46,6 +46,7 @@ export default function ClientDashboard() {
   const [briefingGeneratedAt, setBriefingGeneratedAt] = useState('');
   const [showWelcome, setShowWelcome] = useState(false);
   const [activeAgentIds, setActiveAgentIds] = useState<AgentTypeId[]>(['fz-repondeur']);
+  const [showAchievements, setShowAchievements] = useState(false);
 
   useEffect(() => {
     loadStats();
@@ -291,7 +292,7 @@ Sois concise, percutante et bienveillante. Réponds en français.` }],
   };
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* Freenzy Welcome Modal */}
       {showWelcome && (
         <FreenzyWelcome userName={userName} tier={tier} onDismiss={dismissWelcome} />
@@ -430,8 +431,8 @@ Sois concise, percutante et bienveillante. Réponds en français.` }],
         )}
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid-4 section" style={{ gap: 10 }}>
+      {/* Quick Stats — stays 2x2 on mobile */}
+      <div className="section" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
         <div className="stat-card">
           <div className="stat-label">Messages échangés</div>
           <div className="stat-value">{stats.totalMessages}</div>
@@ -472,11 +473,11 @@ Sois concise, percutante et bienveillante. Réponds en français.` }],
           </Link>
         </div>
 
-        {/* Active agents — full cards */}
-        <div className="grid-auto" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
+        {/* Active agents — horizontal scroll on mobile */}
+        <div style={{ display: 'flex', gap: 10, overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', paddingBottom: 4 }}>
           {activeAgents.map(agent => (
             <Link key={agent.id} href="/client/chat" className="flex items-center gap-8 bg-secondary rounded-md" style={{
-              padding: '8px 10px',
+              padding: '8px 10px', minWidth: 200, flexShrink: 0, scrollSnapAlign: 'start',
               border: `1px solid ${agent.color}33`, textDecoration: 'none', color: 'inherit',
               transition: 'border-color 0.15s ease',
             }}>
@@ -777,10 +778,16 @@ Sois concise, percutante et bienveillante. Réponds en français.` }],
         </div>
       </div>
 
-      {/* Achievements */}
+      {/* Achievements — collapsible */}
       <div className="section">
-        <div className="section-title">Succès & Récompenses</div>
-        <div className="grid-3" style={{ gap: 10 }}>
+        <button
+          onClick={() => setShowAchievements(v => !v)}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
+        >
+          <span className="section-title" style={{ marginBottom: 0 }}>Succès & Récompenses</span>
+          <span style={{ fontSize: 14, color: 'var(--text-muted)', transition: 'transform 0.2s', transform: showAchievements ? 'rotate(180deg)' : 'rotate(0)' }}>▼</span>
+        </button>
+        {showAchievements && <div className="grid-3 mt-12" style={{ gap: 10 }}>
           {[
             { icon: '🎯', title: 'Premier Pas', desc: 'Envoyez votre premier message', unlocked: stats.totalMessages >= 1 },
             { icon: '💬', title: 'Bavard', desc: '10 messages envoyés', unlocked: stats.totalMessages >= 10 },
@@ -807,7 +814,7 @@ Sois concise, percutante et bienveillante. Réponds en français.` }],
               {a.unlocked && <div className="text-xs text-accent font-semibold" style={{ marginTop: 6 }}>DÉBLOQUÉ</div>}
             </div>
           ))}
-        </div>
+        </div>}
       </div>
 
       {/* Level badge bottom-right */}

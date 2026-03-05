@@ -681,7 +681,7 @@ export default function StrategyPage() {
   ];
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* ─── Header ─── */}
       <div className="page-header">
         <h1 className="page-title">Plan d&apos;Attaque</h1>

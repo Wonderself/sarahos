@@ -222,7 +222,7 @@ export default function ChasseurPage() {
   );
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1200, margin: '0 auto' }}>
       {/* Header */}
       <div className="page-header">
         <div>

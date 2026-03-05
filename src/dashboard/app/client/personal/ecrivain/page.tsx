@@ -224,7 +224,7 @@ export default function EcrivainPage() {
   // ── Editor view ──
   if (selectedProject && selectedChapter) {
     return (
-      <div style={{ maxWidth: 960, margin: '0 auto' }}>
+      <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto' }}>
         {/* Breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, fontSize: 13, color: 'var(--text-tertiary)', flexWrap: 'wrap' }}>
           <button onClick={() => { setSelectedChapter(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 13 }}>
@@ -316,7 +316,7 @@ export default function EcrivainPage() {
     const pct = goalWords > 0 ? Math.min(100, Math.round((totalWords / goalWords) * 100)) : 0;
 
     return (
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+      <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
           <button onClick={() => setSelectedProject(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 13 }}>
             ← Mes projets
@@ -434,7 +434,7 @@ export default function EcrivainPage() {
 
   // ── Projects list ──
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
       <div className="page-header">
         <div>
           <div style={{ marginBottom: 4 }}>

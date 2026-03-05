@@ -449,7 +449,7 @@ export default function RepondeurPage() {
   ] as const;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 56px)' }}>
+    <div className="client-page-scrollable" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 56px)' }}>
       {toast}
 
       {/* Page header */}

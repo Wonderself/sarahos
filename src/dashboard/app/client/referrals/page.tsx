@@ -88,7 +88,7 @@ export default function ReferralsPage() {
   const totalRewards = referrals.reduce((sum, r) => sum + (r.rewardAmount || 0), 0);
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Parrainage</h1>

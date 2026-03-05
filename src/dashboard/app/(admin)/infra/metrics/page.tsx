@@ -19,7 +19,7 @@ export default async function MetricsPage() {
 
   if (error || !tokenUsage) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Metriques</h1></div>
         <div className="alert alert-danger">{error ?? 'No data'}</div>
       </div>
@@ -34,7 +34,7 @@ export default async function MetricsPage() {
   const maxAgentTokens = agentUsage.length > 0 ? agentUsage[0][1] : 1;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Metriques Systeme</h1>

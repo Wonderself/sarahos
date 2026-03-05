@@ -58,7 +58,7 @@ export default async function CampaignsPage() {
   const { campaigns, stats } = data;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Campagnes</h1>

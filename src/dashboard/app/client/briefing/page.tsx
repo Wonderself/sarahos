@@ -156,7 +156,7 @@ export default function BriefingPage() {
   const sections = briefing ? parseSections(briefing.content) : [];
 
   return (
-    <div style={{ maxWidth: 760, margin: '0 auto', padding: '24px 0' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 760, margin: '0 auto', padding: '24px 0' }}>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>

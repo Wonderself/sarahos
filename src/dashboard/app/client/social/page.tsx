@@ -499,7 +499,7 @@ export default function SocialMediaPage() {
   const analytics = getAnalytics();
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 6 }}>

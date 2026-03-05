@@ -67,7 +67,7 @@ export default function AvatarPage() {
   const serviceEntries = services ? Object.entries(services) : [];
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Avatar Pipeline</h1>

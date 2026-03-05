@@ -72,7 +72,7 @@ export default async function PersonalAgentsPage() {
   const isEmpty = data.configs.length === 0;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Agents Personnels</h1>

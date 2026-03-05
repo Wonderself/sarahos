@@ -207,7 +207,7 @@ export default function FormationsPage() {
   };
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: 80 }}>
+    <div className="client-page-scrollable" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: 80 }}>
 
       {/* ── Hero Section ── */}
       <section style={{

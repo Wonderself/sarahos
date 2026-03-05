@@ -248,7 +248,7 @@ export default function TelephonyPage() {
   const connBadge = getConnectionBadge();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <div className="admin-page-scrollable" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
 
       {/* ─── Header ─── */}
       <div>

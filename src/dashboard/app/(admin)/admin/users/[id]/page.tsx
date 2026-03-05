@@ -188,7 +188,7 @@ export default function UserDetailPage() {
 
   if (loading) {
     return (
-      <div style={styles.container}>
+      <div className="admin-page-scrollable" style={styles.container}>
         <div style={styles.loadingSpinner}>Chargement de l&apos;utilisateur...</div>
       </div>
     );
@@ -196,7 +196,7 @@ export default function UserDetailPage() {
 
   if (error || !user) {
     return (
-      <div style={styles.container}>
+      <div className="admin-page-scrollable" style={styles.container}>
         <a href="/admin/users" style={styles.backLink}>← Retour</a>
         <div style={{
           background: 'var(--danger-muted)',
@@ -213,7 +213,7 @@ export default function UserDetailPage() {
   }
 
   return (
-    <div style={styles.container}>
+    <div className="admin-page-scrollable" style={styles.container}>
       {/* Back Button */}
       <a href="/admin/users" style={styles.backLink}>← Retour aux utilisateurs</a>
 

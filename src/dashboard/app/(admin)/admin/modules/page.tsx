@@ -43,7 +43,7 @@ export default async function ModulesPage() {
   const { modules, stats, byType } = data;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Modules</h1>

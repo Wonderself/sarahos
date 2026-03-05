@@ -38,7 +38,7 @@ export default async function ReferralsPage() {
   const topReferrers = Object.values(byReferrer).sort((a, b) => b.count - a.count).slice(0, 10);
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Réseau de Parrainage</h1>

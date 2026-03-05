@@ -187,7 +187,7 @@ export default function TeamPage() {
   const lockedAgents = agents.filter(a => !a.isAvailable);
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* Header */}
       <div className="page-header">
         <div>

@@ -1420,7 +1420,7 @@ export default function JourneePage() {
   const visibleCount = WIDGETS.filter(w => isVisible(w.id)).length;
 
   return (
-    <div className="page-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '20px 16px' }}>
+    <div className="page-container client-page-scrollable" style={{ maxWidth: 1200, margin: '0 auto', padding: '20px 16px' }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
         <div style={{ fontSize: 48, marginBottom: 4 }}>{'\u{1F4C5}'}</div>

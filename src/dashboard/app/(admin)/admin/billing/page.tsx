@@ -31,7 +31,7 @@ export default async function BillingPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Facturation</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -77,7 +77,7 @@ export default async function BillingPage() {
   }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Facturation & Billing</h1>

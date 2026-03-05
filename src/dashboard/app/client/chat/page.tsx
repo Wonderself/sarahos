@@ -648,237 +648,151 @@ export default function ChatPage() {
     URL.revokeObjectURL(url);
   }
 
+  // ─── Agent bottom sheet state ───
+  const [showAgentSheet, setShowAgentSheet] = useState(false);
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  const [textareaHeight, setTextareaHeight] = useState('auto');
+
+  // Auto-resize textarea
+  function handleTextareaInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    onInputChange(e.target.value);
+    e.target.style.height = 'auto';
+    const newHeight = Math.min(e.target.scrollHeight, 200);
+    e.target.style.height = newHeight + 'px';
+    setTextareaHeight(newHeight + 'px');
+  }
+
+  // Reset textarea height after send
+  function resetTextareaHeight() {
+    setTextareaHeight('auto');
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+    }
+  }
+
+  // Keyboard detection
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    function onResize() {
+      const keyboardOpen = window.innerHeight - (vv?.height ?? window.innerHeight) > 150;
+      document.documentElement.classList.toggle('keyboard-open', keyboardOpen);
+    }
+    vv.addEventListener('resize', onResize);
+    return () => vv.removeEventListener('resize', onResize);
+  }, []);
+
   if (!selectedAgent) return <div className="animate-pulse p-24 text-center text-muted">Chargement...</div>;
 
   return (
-    <div className="chat-height flex flex-col">
-      {/* ─── PAGE HEADER ─── */}
-      <div style={{ padding: '16px 0 12px', borderBottom: '1px solid var(--border-primary)' }}>
-        {/* Row 1: Title + Actions */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
-          <div>
-            <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', margin: 0, lineHeight: 1.3 }}>
-              Chat
-            </h1>
-            <p style={{ fontSize: 12, color: 'var(--text-tertiary)', margin: '2px 0 0', lineHeight: 1.4 }}>
-              Communiquez avec vos agents — texte, voix, WhatsApp ou répondeur
-            </p>
+    <div className="chat-page">
+      {/* ═══ COMPACT HEADER ═══ */}
+      <div className="chat-header-compact">
+        {/* Agent info — clickable to open agent selector */}
+        <div className="chat-header-agent" onClick={() => setShowAgentSheet(true)}>
+          <div className="chat-header-agent-avatar" style={{ background: selectedAgent.color + '22' }}>
+            {selectedAgent.emoji}
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => { setSearchActive(s => !s); setSearchQuery(''); }}
-              className={searchActive ? 'btn btn-primary btn-xs' : 'btn btn-ghost btn-xs'}
-              title="Rechercher dans la conversation"
-            >
-              🔍
-            </button>
-            {messages.length > 0 && (
-              <button onClick={exportConversation} className="btn btn-ghost btn-xs" title="Exporter en Markdown">
-                ↓ Export
-              </button>
-            )}
-            <button onClick={() => setShowHistory(!showHistory)} className="btn btn-ghost btn-xs" title="Historique">
-              📚 {history.length > 0 && <span style={{ fontSize: 10 }}>({history.length})</span>}
-            </button>
-            {faqEntries.length > 0 && (
-              <button onClick={() => setShowFaqPanel(!showFaqPanel)} className="btn btn-ghost btn-xs" title="FAQ">
-                💡 {faqEntries.filter(e => e.agentId === selectedAgent?.id).length}
-              </button>
-            )}
-            <button onClick={startNewChat} className="btn btn-primary btn-sm" style={{ fontSize: 12, padding: '5px 12px' }}>
-              + Nouveau
-            </button>
-          </div>
-        </div>
-
-        {/* Row 2: Communication Tabs — full width */}
-        <div style={{
-          display: 'flex', width: '100%', background: 'var(--bg-secondary)',
-          borderRadius: 10, padding: 3, gap: 2, marginBottom: 10,
-        }}>
-          {COMM_TABS.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setCommMode(tab.id)}
-              style={{
-                flex: 1, textAlign: 'center', padding: '8px 6px', borderRadius: 8,
-                fontSize: 13, fontWeight: commMode === tab.id ? 600 : 400,
-                border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-                background: commMode === tab.id ? 'var(--bg-primary)' : 'transparent',
-                color: commMode === tab.id ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                boxShadow: commMode === tab.id ? 'var(--shadow-sm)' : 'none',
-              }}
-            >
-              {tab.icon} {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Row 3: Agent selector (chat mode only) */}
-        {commMode === 'chat' && (
-          <div className="flex items-center gap-8">
-            <span style={{ fontSize: 20 }}>{selectedAgent.emoji}</span>
-            <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div className="chat-header-agent-name">
               {selectedAgent.name}
-            </span>
-            {selectedAgent.isCustomized && <span className="badge badge-accent" style={{ fontSize: 10 }}>Perso</span>}
-            {/* Bonding indicator */}
-            {(() => {
-              const bond = getBond(selectedAgent.id);
-              return bond.relationshipLevel > 1 ? (
-                <span style={{
-                  fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
-                  background: bond.relationshipLevel >= 4 ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.06)',
-                  color: '#6366f1',
-                }}>
-                  {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
-                  {bond.relationshipLevel >= 3 ? ' · Cet agent vous connait bien' : ''}
-                </span>
-              ) : null;
-            })()}
-            <span className="text-xs text-tertiary" style={{ marginLeft: 'auto' }}>
+              {selectedAgent.isCustomized && <span style={{ fontSize: 9, marginLeft: 4, color: 'var(--accent)' }}>✨</span>}
+            </div>
+            <div className="chat-header-agent-status">
               {selectedAgent.role} · {totalTokens.toLocaleString()} tokens
-            </span>
-            <Link href="/client/agents/customize" className="btn btn-ghost btn-xs" title="Personnaliser">
-              🎨
-            </Link>
+              {(() => {
+                const bond = getBond(selectedAgent.id);
+                return bond.relationshipLevel > 1 ? ` · ${LEVEL_ICONS[bond.relationshipLevel]} ${LEVEL_NAMES[bond.relationshipLevel]}` : '';
+              })()}
+            </div>
           </div>
-        )}
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>&#9662;</span>
+        </div>
 
-        {/* Search bar */}
-        {searchActive && commMode === 'chat' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 8, border: '1px solid var(--border-primary)' }}>
-            <span style={{ fontSize: 14 }}>🔍</span>
-            <input
-              autoFocus
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              onKeyDown={e => e.key === 'Escape' && (setSearchActive(false), setSearchQuery(''))}
-              placeholder="Rechercher dans la conversation..."
-              style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit' }}
-            />
-            {searchQuery && (
-              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                {messages.filter(m => m.content.toLowerCase().includes(searchQuery.toLowerCase())).length} résultat(s)
-              </span>
-            )}
-            <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 14 }}>✕</button>
-          </div>
-        )}
+        {/* Actions menu */}
+        <div className="chat-header-actions" style={{ position: 'relative' }}>
+          <button onClick={startNewChat} className="chat-header-action-btn" title="Nouvelle conversation">+</button>
+          <button
+            onClick={() => setShowActionsMenu(v => !v)}
+            className="chat-header-action-btn"
+            title="Plus d'options"
+          >
+            &#8943;
+          </button>
+          {showActionsMenu && (
+            <div style={{
+              position: 'absolute', top: '100%', right: 0, marginTop: 4, zIndex: 20,
+              background: 'var(--bg-primary)', border: '1px solid var(--border-primary)',
+              borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)',
+              minWidth: 180, padding: 4,
+            }}>
+              <button onClick={() => { setSearchActive(s => !s); setSearchQuery(''); setShowActionsMenu(false); }}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
+                🔍 Rechercher
+              </button>
+              {messages.length > 0 && (
+                <button onClick={() => { exportConversation(); setShowActionsMenu(false); }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
+                  ↓ Exporter
+                </button>
+              )}
+              <button onClick={() => { setShowHistory(!showHistory); setShowActionsMenu(false); }}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
+                📚 Historique {history.length > 0 && `(${history.length})`}
+              </button>
+              {faqEntries.length > 0 && (
+                <button onClick={() => { setShowFaqPanel(!showFaqPanel); setShowActionsMenu(false); }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
+                  💡 FAQ ({faqEntries.filter(e => e.agentId === selectedAgent?.id).length})
+                </button>
+              )}
+              <button onClick={() => { setShowActionsMenu(false); }}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
+                <Link href="/client/agents/customize" style={{ color: 'inherit', textDecoration: 'none' }}>🎨 Personnaliser</Link>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* ═══ VISIO TAB ═══ */}
-      {commMode === 'visio' && (
-        <div className="flex-1" style={{ overflowY: 'auto', padding: '24px 0' }}>
-          <div style={{ marginBottom: 20 }}>
-            <h2 className="text-lg font-bold" style={{ marginBottom: 6 }}>Appel vocal avec vos agents</h2>
-            <p className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
-              Parlez en temps réel avec vos agents IA. Micro + synthèse vocale ElevenLabs.
-            </p>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
-              padding: '5px 10px', borderRadius: 8, background: 'var(--warning-muted)', border: '1px solid var(--warning)',
-              fontSize: 11, color: 'var(--warning)',
-            }}>
-              Consomme ~3x plus de crédits (STT + LLM + TTS)
-            </div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
-            {ALL_AGENTS.map(agent => (
-              <Link
-                key={agent.id}
-                href={`/client/visio/${agent.id}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <div className="card card-lift" style={{ padding: 16, textAlign: 'center' }}>
-                  <div style={{
-                    width: 52, height: 52, borderRadius: '50%', margin: '0 auto 10px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: `${agent.color}15`, border: `2px solid ${agent.color}40`, fontSize: 24,
-                  }}>
-                    {agent.emoji}
-                  </div>
-                  <div className="text-sm font-bold">{agent.name}</div>
-                  <div className="text-xs text-muted" style={{ marginTop: 2 }}>{agent.role}</div>
-                  <div className="text-xs font-semibold mt-8" style={{ color: agent.color, padding: '3px 8px', borderRadius: 6, background: `${agent.color}10`, display: 'inline-block' }}>
-                    Appeler
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="card mt-16" style={{ padding: 14 }}>
-            <div className="text-sm font-semibold mb-4">Problèmes audio ?</div>
-            <Link href="/client/visio/diagnostic" className="text-sm text-accent" style={{ textDecoration: 'none' }}>
-              Lancer le diagnostic audio →
-            </Link>
-          </div>
+      {/* Close actions menu on click outside */}
+      {showActionsMenu && <div onClick={() => setShowActionsMenu(false)} style={{ position: 'fixed', inset: 0, zIndex: 15 }} />}
+
+      {/* ═══ SEARCH BAR ═══ */}
+      {searchActive && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)' }}>
+          <span style={{ fontSize: 14 }}>🔍</span>
+          <input
+            autoFocus
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            onKeyDown={e => e.key === 'Escape' && (setSearchActive(false), setSearchQuery(''))}
+            placeholder="Rechercher dans la conversation..."
+            style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit' }}
+          />
+          {searchQuery && (
+            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+              {messages.filter(m => m.content.toLowerCase().includes(searchQuery.toLowerCase())).length} résultat(s)
+            </span>
+          )}
+          <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}>✕</button>
         </div>
       )}
 
-      {/* ═══ WHATSAPP TAB ═══ */}
-      {commMode === 'whatsapp' && (
-        <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
-          <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>📱</div>
-            <h2 className="text-xl font-bold mb-8">WhatsApp Business</h2>
-            <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
-              Discutez avec vos agents IA directement depuis WhatsApp. Liez votre numéro, envoyez des messages texte ou vocaux, recevez vos briefings et alertes.
-            </p>
-            <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
-              {['Messages texte et vocaux', 'Briefings quotidiens', 'Alertes en temps réel', 'Support multi-agents', 'Répondeur IA intégré'].map(f => (
-                <div key={f} className="flex items-center gap-8 text-sm">
-                  <span style={{ color: '#22c55e' }}>✓</span> {f}
-                </div>
-              ))}
-            </div>
-            <Link href="/client/whatsapp" className="btn btn-primary">
-              Configurer WhatsApp →
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ REPONDEUR TAB ═══ */}
-      {commMode === 'repondeur' && (
-        <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
-          <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>📞</div>
-            <h2 className="text-xl font-bold mb-8">Répondeur IA</h2>
-            <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
-              Votre standard téléphonique intelligent. Maëva ou Emmanuel répond à vos appels 24/7 avec un répondeur IA personnalisable.
-            </p>
-            <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
-              {['7 modes de fonctionnement', '7 styles de réponse', '10 compétences IA', 'FAQ automatique', 'Détection VIP & anti-spam', 'Résumés horaires/quotidiens', 'Intégration Twilio complète'].map(f => (
-                <div key={f} className="flex items-center gap-8 text-sm">
-                  <span style={{ color: '#22c55e' }}>✓</span> {f}
-                </div>
-              ))}
-            </div>
-            <Link href="/client/repondeur" className="btn btn-primary">
-              Configurer le répondeur →
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ CHAT TAB (existing chat interface) ═══ */}
-      {commMode === 'chat' && <>
-      {/* Agent Selector */}
-      {/* History Panel */}
+      {/* ═══ HISTORY PANEL ═══ */}
       {showHistory && (
-        <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)', maxHeight: 320, overflowY: 'auto' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)', maxHeight: 280, overflowY: 'auto', background: 'var(--bg-secondary)' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">Conversations récentes</span>
-            {history.length > 0 && (
-              <button onClick={clearHistory} className="btn btn-ghost btn-sm text-xs text-danger">
-                Effacer tout
-              </button>
-            )}
+            <div className="flex gap-4">
+              {history.length > 0 && (
+                <button onClick={clearHistory} className="btn btn-ghost btn-sm text-xs text-danger">Effacer tout</button>
+              )}
+              <button onClick={() => setShowHistory(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}>✕</button>
+            </div>
           </div>
-          {/* Global history search */}
           {history.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--bg-secondary)', borderRadius: 6, border: '1px solid var(--border-primary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--bg-primary)', borderRadius: 6, border: '1px solid var(--border-primary)' }}>
               <span style={{ fontSize: 13 }}>🔎</span>
               <input
                 value={historySearchQuery}
@@ -914,7 +828,7 @@ export default function ChatPage() {
                   <div className="flex-1" style={{ minWidth: 0 }}>
                     <div className="text-sm font-semibold truncate">{h.title}</div>
                     <div className="text-xs text-muted">
-                      {h.messages.length} msg • {new Date(h.date).toLocaleDateString('fr-FR')}
+                      {h.messages.length} msg · {new Date(h.date).toLocaleDateString('fr-FR')}
                     </div>
                     {matchMsg && (
                       <div className="text-xs" style={{ color: 'var(--accent)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -930,15 +844,14 @@ export default function ChatPage() {
         </div>
       )}
 
-      {/* FAQ Panel */}
+      {/* ═══ FAQ PANEL ═══ */}
       {showFaqPanel && selectedAgent && (
-        <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)', maxHeight: 300, overflowY: 'auto' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)', maxHeight: 250, overflowY: 'auto', background: 'var(--bg-secondary)' }}>
           <div className="flex flex-between items-center mb-8">
-            <span className="text-md font-bold">💡 Réponses FAQ de {selectedAgent.name}</span>
-            <span className="text-xs text-muted">
-              Les FAQ sont gratuites (0 token) et s&apos;améliorent avec l&apos;usage
-            </span>
+            <span className="text-md font-bold">💡 FAQ de {selectedAgent.name}</span>
+            <button onClick={() => setShowFaqPanel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}>✕</button>
           </div>
+          <div className="text-xs text-muted mb-8">Réponses gratuites (0 token)</div>
           {faqEntries.filter(e => e.agentId === selectedAgent.id).length === 0 ? (
             <div className="text-sm text-muted" style={{ padding: '8px 0' }}>
               Aucune FAQ pour cet agent. Cliquez &laquo; 💾 FAQ &raquo; sur une réponse pour la sauvegarder.
@@ -946,25 +859,18 @@ export default function ChatPage() {
           ) : (
             <div className="flex flex-col gap-4">
               {faqEntries.filter(e => e.agentId === selectedAgent.id).map(entry => (
-                <div key={entry.id} className="rounded-sm border" style={{ padding: '8px 12px' }}>
+                <div key={entry.id} className="rounded-sm border" style={{ padding: '8px 12px', background: 'var(--bg-primary)' }}>
                   <div className="flex flex-between items-center">
-                    <div className="text-sm font-semibold">
+                    <div className="text-sm font-semibold" style={{ flex: 1, minWidth: 0 }}>
                       Q: {entry.question.substring(0, 80)}{entry.question.length > 80 ? '...' : ''}
                     </div>
                     <div className="flex gap-4 items-center">
                       <span className="text-xs text-success">Utilisée {entry.usedCount}x</span>
-                      <button
-                        onClick={() => deleteFaqEntry(entry.id)}
-                        className="text-xs text-danger pointer"
-                        style={{ background: 'none', border: 'none', fontFamily: 'var(--font-sans)' }}
-                      >
-                        ✕
-                      </button>
+                      <button onClick={() => deleteFaqEntry(entry.id)} className="text-xs text-danger pointer"
+                        style={{ background: 'none', border: 'none', fontFamily: 'var(--font-sans)' }}>✕</button>
                     </div>
                   </div>
-                  <div className="text-xs text-muted truncate mt-4">
-                    R: {entry.answer.substring(0, 120)}...
-                  </div>
+                  <div className="text-xs text-muted truncate mt-4">R: {entry.answer.substring(0, 120)}...</div>
                 </div>
               ))}
             </div>
@@ -972,38 +878,96 @@ export default function ChatPage() {
         </div>
       )}
 
-      {/* Agent Selector */}
-      <div className="flex gap-6" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)', overflowX: 'auto' }}>
-        {agents.map(agent => (
-          <button
-            key={agent.id}
-            onClick={() => setSelectedAgent(agent)}
-            className={selectedAgent.id === agent.id ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
-            title={agent.role}
-            style={{
-              borderColor: selectedAgent.id === agent.id ? agent.color : undefined,
-              background: selectedAgent.id === agent.id ? agent.color + '22' : undefined,
-              color: selectedAgent.id === agent.id ? agent.color : undefined,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {agent.emoji} {agent.role}
-            {agent.isCustomized && <span style={{ fontSize: 8, marginLeft: 4 }}>✨</span>}
-          </button>
-        ))}
-      </div>
+      {/* ═══ VISIO TAB ═══ */}
+      {commMode === 'visio' && (
+        <div className="flex-1" style={{ overflowY: 'auto', padding: '24px 16px' }}>
+          <div style={{ marginBottom: 20 }}>
+            <h2 className="text-lg font-bold" style={{ marginBottom: 6 }}>Appel vocal avec vos agents</h2>
+            <p className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
+              Parlez en temps réel avec vos agents IA. Micro + synthèse vocale ElevenLabs.
+            </p>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
+              padding: '5px 10px', borderRadius: 8, background: 'var(--warning-muted)', border: '1px solid var(--warning)',
+              fontSize: 11, color: 'var(--warning)',
+            }}>
+              Consomme ~3x plus de crédits (STT + LLM + TTS)
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+            {ALL_AGENTS.map(agent => (
+              <Link key={agent.id} href={`/client/visio/${agent.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="card card-lift" style={{ padding: 16, textAlign: 'center' }}>
+                  <div style={{
+                    width: 52, height: 52, borderRadius: '50%', margin: '0 auto 10px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${agent.color}15`, border: `2px solid ${agent.color}40`, fontSize: 24,
+                  }}>
+                    {agent.emoji}
+                  </div>
+                  <div className="text-sm font-bold">{agent.name}</div>
+                  <div className="text-xs text-muted" style={{ marginTop: 2 }}>{agent.role}</div>
+                  <div className="text-xs font-semibold mt-8" style={{ color: agent.color, padding: '3px 8px', borderRadius: 6, background: `${agent.color}10`, display: 'inline-block' }}>
+                    Appeler
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {/* Messages */}
-      <div className="flex-1" style={{ overflowY: 'auto', padding: '16px 0' }}>
+      {/* ═══ WHATSAPP TAB ═══ */}
+      {commMode === 'whatsapp' && (
+        <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
+          <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>📱</div>
+            <h2 className="text-xl font-bold mb-8">WhatsApp Business</h2>
+            <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
+              Discutez avec vos agents IA directement depuis WhatsApp.
+            </p>
+            <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
+              {['Messages texte et vocaux', 'Briefings quotidiens', 'Alertes en temps réel', 'Support multi-agents', 'Répondeur IA intégré'].map(f => (
+                <div key={f} className="flex items-center gap-8 text-sm"><span style={{ color: '#22c55e' }}>✓</span> {f}</div>
+              ))}
+            </div>
+            <Link href="/client/whatsapp" className="btn btn-primary">Configurer WhatsApp →</Link>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ REPONDEUR TAB ═══ */}
+      {commMode === 'repondeur' && (
+        <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
+          <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>📞</div>
+            <h2 className="text-xl font-bold mb-8">Répondeur IA</h2>
+            <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
+              Votre standard téléphonique intelligent 24/7.
+            </p>
+            <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
+              {['7 modes de fonctionnement', '7 styles de réponse', '10 compétences IA', 'FAQ automatique', 'Détection VIP & anti-spam', 'Résumés horaires/quotidiens', 'Intégration Twilio complète'].map(f => (
+                <div key={f} className="flex items-center gap-8 text-sm"><span style={{ color: '#22c55e' }}>✓</span> {f}</div>
+              ))}
+            </div>
+            <Link href="/client/repondeur" className="btn btn-primary">Configurer le répondeur →</Link>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ CHAT TAB ═══ */}
+      {commMode === 'chat' && <>
+
+      {/* Messages Area */}
+      <div className="chat-messages-area">
         {messages.length === 0 && (
-          <div className="text-center text-tertiary" style={{ padding: '60px 20px' }}>
+          <div className="text-center text-tertiary" style={{ padding: '40px 12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <div className="mb-16" style={{ fontSize: 48 }}>{selectedAgent.emoji}</div>
             <div className="text-xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
               Bonjour, je suis {selectedAgent.name}
             </div>
-            <div className="text-base max-w-md" style={{ margin: '0 auto', lineHeight: 1.6 }}>
+            <div className="text-base" style={{ maxWidth: 400, margin: '0 auto', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
               Votre {selectedAgent.role}. Posez-moi vos questions, demandez-moi de rédiger, analyser, planifier...
-              Je suis la pour vous aider.
             </div>
             {/* Agent Modes */}
             {(() => {
@@ -1021,6 +985,7 @@ export default function ChatPage() {
               );
             })()}
 
+            {/* Suggested questions */}
             <div className="flex gap-8 flex-center flex-wrap mt-24">
               {(selectedAgent.id === 'fz-repondeur' ? [
                 'Configure mon message d\'accueil',
@@ -1078,19 +1043,20 @@ export default function ChatPage() {
                 'De quoi as-tu besoin ?',
                 'Décris-moi ton problème',
               ]).map(q => (
-                <button key={q} onClick={() => { setInput(q); inputRef.current?.focus(); }} className="btn btn-secondary btn-sm">
+                <button key={q} onClick={() => { setInput(q); inputRef.current?.focus(); }}
+                  className="chat-guided-option">
                   {q}
                 </button>
               ))}
-            {/* Reunions multi-agents — inside empty state */}
+            </div>
+
+            {/* Reunions multi-agents */}
             <div style={{ marginTop: 32, textAlign: 'left', maxWidth: 600, margin: '32px auto 0' }}>
               <div className="flex items-center gap-8 mb-8" style={{ justifyContent: 'center' }}>
                 <span style={{ fontSize: 20 }}>🏛️</span>
                 <span className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Reunions multi-agents</span>
               </div>
-              <div style={{
-                display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 8,
-              }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 8 }}>
                 {([
                   { id: 'lancement-projet', emoji: '🚀', title: 'Lancement de projet', desc: 'Scope, roles et timeline' },
                   { id: 'revue-trimestrielle', emoji: '📊', title: 'Revue trimestrielle', desc: 'Resultats et strategie' },
@@ -1116,76 +1082,66 @@ export default function ChatPage() {
               </div>
             </div>
 
-            {/* WhatsApp hint */}
             <div className="flex items-center gap-6 mt-16" style={{ justifyContent: 'center' }}>
               <span className="text-xs text-muted">📱 Vous pouvez aussi discuter via</span>
               <Link href="/client/whatsapp" className="text-xs font-semibold" style={{ color: 'var(--accent)', textDecoration: 'none' }}>WhatsApp</Link>
             </div>
-            </div>
           </div>
         )}
 
+        {/* Message bubbles */}
         {messages.map((msg, i) => (
-          <div key={i} className="flex mb-12" style={{
-            justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
-            padding: '0 4px',
-          }}>
-            <div style={{
-              maxWidth: '75%',
-              padding: '12px 16px',
-              borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-              background: msg.role === 'user' ? 'var(--accent)' : msg.role === 'system' ? 'var(--danger-muted)' : 'var(--bg-secondary)',
-              border: msg.role === 'assistant' ? '1px solid var(--border-primary)' : 'none',
-              color: msg.role === 'user' ? 'white' : msg.role === 'system' ? 'var(--danger)' : 'var(--text-primary)',
-            }}>
-              <div style={{ fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
-                {searchActive && searchQuery ? highlightText(msg.content, searchQuery) : msg.content}
-              </div>
-              <div className="flex flex-between items-center mt-4">
-                {msg.tokens ? (
-                  <div style={{ fontSize: 10, color: msg.role === 'user' ? 'rgba(255,255,255,0.6)' : 'var(--text-muted)' }}>
-                    {msg.tokens} tokens | {((msg.cost ?? 0) / 1_000_000).toFixed(4)} cr
-                  </div>
-                ) : <div />}
-                {msg.role === 'assistant' && (
-                  <div className="flex gap-4 items-center">
-                    <AudioPlayback text={msg.content} gender={selectedAgent?.gender ?? 'F'} size="sm" />
-                    {msg.isFaq && (
-                      <span style={{
-                        fontSize: 10, padding: '2px 6px', borderRadius: 4,
-                        background: '#22c55e15', color: '#22c55e', fontWeight: 600,
-                      }}>
-                        FAQ — 0 token
-                      </span>
+          <div key={i}>
+            <div className={`chat-msg ${msg.role === 'user' ? 'chat-msg-user' : msg.role === 'assistant' ? 'chat-msg-assistant' : ''}`}
+              style={msg.role === 'system' ? { alignSelf: 'center', maxWidth: '90%' } : undefined}>
+              {msg.role === 'assistant' && (
+                <div className="chat-msg-avatar" style={{ background: selectedAgent.color + '22' }}>
+                  {selectedAgent.emoji}
+                </div>
+              )}
+              <div>
+                <div className="chat-msg-content" style={
+                  msg.role === 'system' ? {
+                    background: 'var(--danger-muted)', color: 'var(--danger)',
+                    borderRadius: 'var(--radius-md)', fontSize: 13, fontStyle: 'italic',
+                  } : undefined
+                }>
+                  <div style={{ whiteSpace: 'pre-wrap' }}>
+                    {searchActive && searchQuery ? highlightText(msg.content, searchQuery) : msg.content}
+                    {loading && i === messages.length - 1 && msg.role === 'assistant' && msg.content && (
+                      <span className="chat-typing-cursor" />
                     )}
-                    <button
-                      onClick={() => copyMessage(msg.content, i)}
-                      style={{
-                        fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer',
-                        background: 'none', border: '1px solid var(--border-primary)',
-                        color: copiedIdx === i ? 'var(--success)' : 'var(--text-muted)',
-                        fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
-                      }}
-                      title="Copier"
-                    >
-                      {copiedIdx === i ? '✓ Copié' : '📋 Copier'}
-                    </button>
-                    {!msg.isFaq && i > 0 && messages[i - 1]?.role === 'user' && (
-                      <button
-                        onClick={() => saveAsFaq(i - 1, i)}
-                        style={{
-                          fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer',
-                          background: 'none', border: '1px solid var(--border-primary)',
-                          color: savedFaqIdx === i ? '#22c55e' : 'var(--text-muted)',
-                          fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
-                        }}
-                        title="Sauvegarder en FAQ"
-                      >
-                        {savedFaqIdx === i ? '✓ FAQ sauvée' : '💾 FAQ'}
+                  </div>
+                </div>
+                {/* Meta info — timestamp + actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+                  <div className="chat-msg-timestamp">
+                    {msg.timestamp && new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                    {msg.tokens ? ` · ${msg.tokens} tokens · ${((msg.cost ?? 0) / 1_000_000).toFixed(4)} cr` : ''}
+                  </div>
+                  {msg.role === 'assistant' && (
+                    <div className="chat-msg-actions">
+                      <AudioPlayback text={msg.content} gender={selectedAgent?.gender ?? 'F'} size="sm" />
+                      {msg.isFaq && (
+                        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#22c55e15', color: '#22c55e', fontWeight: 600 }}>
+                          FAQ
+                        </span>
+                      )}
+                      <button onClick={() => copyMessage(msg.content, i)}
+                        style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--border-primary)', color: copiedIdx === i ? 'var(--success)' : 'var(--text-muted)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
+                        title="Copier">
+                        {copiedIdx === i ? '✓' : '📋'}
                       </button>
-                    )}
-                  </div>
-                )}
+                      {!msg.isFaq && i > 0 && messages[i - 1]?.role === 'user' && (
+                        <button onClick={() => saveAsFaq(i - 1, i)}
+                          style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--border-primary)', color: savedFaqIdx === i ? '#22c55e' : 'var(--text-muted)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
+                          title="Sauvegarder en FAQ">
+                          {savedFaqIdx === i ? '✓' : '💾'}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             {/* Feedback buttons every 5th assistant message */}
@@ -1193,60 +1149,35 @@ export default function ChatPage() {
               const assistantIdx = messages.slice(0, i + 1).filter(m => m.role === 'assistant').length;
               return assistantIdx > 0 && assistantIdx % 5 === 0 && !feedbackGiven[i];
             })() && (
-              <div style={{
-                display: 'flex', gap: 6, marginTop: 6,
-                justifyContent: 'flex-start',
-              }}>
+              <div style={{ display: 'flex', gap: 6, marginTop: 6, paddingLeft: 38 }}>
                 <button
-                  onClick={() => {
-                    if (selectedAgent) {
-                      recordFeedback(selectedAgent.id, true);
-                      recordEvent({ type: 'agent_feedback' });
-                    }
-                    setFeedbackGiven(prev => ({ ...prev, [i]: 'positive' }));
-                  }}
-                  style={{
-                    fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer',
-                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
-                    color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
-                  }}
-                >
+                  onClick={() => { if (selectedAgent) { recordFeedback(selectedAgent.id, true); recordEvent({ type: 'agent_feedback' }); } setFeedbackGiven(prev => ({ ...prev, [i]: 'positive' })); }}
+                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
                   Utile 👍
                 </button>
                 <button
-                  onClick={() => {
-                    if (selectedAgent) {
-                      recordFeedback(selectedAgent.id, false);
-                      recordEvent({ type: 'agent_feedback' });
-                    }
-                    setFeedbackGiven(prev => ({ ...prev, [i]: 'negative' }));
-                  }}
-                  style={{
-                    fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer',
-                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
-                    color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
-                  }}
-                >
+                  onClick={() => { if (selectedAgent) { recordFeedback(selectedAgent.id, false); recordEvent({ type: 'agent_feedback' }); } setFeedbackGiven(prev => ({ ...prev, [i]: 'negative' })); }}
+                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
                   A ameliorer 👎
                 </button>
               </div>
             )}
-            {/* Feedback given confirmation */}
             {feedbackGiven[i] && (
-              <div style={{
-                fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#22c55e' : '#f97316',
-                marginTop: 4, fontWeight: 500,
-              }}>
+              <div style={{ fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#22c55e' : '#f97316', marginTop: 4, fontWeight: 500, paddingLeft: 38 }}>
                 {feedbackGiven[i] === 'positive' ? 'Merci pour votre retour ! 🙏' : 'Noté, on va s\'améliorer !'}
               </div>
             )}
           </div>
         ))}
 
+        {/* Loading indicator */}
         {loading && !(messages.length > 0 && messages[messages.length - 1]?.role === 'assistant' && messages[messages.length - 1]?.content) && (
-          <div className="flex mb-12" style={{ justifyContent: 'flex-start', padding: '0 4px' }}>
-            <div className="bg-secondary border" style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px' }}>
-              <div className="animate-pulse text-tertiary">
+          <div className="chat-msg chat-msg-assistant">
+            <div className="chat-msg-avatar" style={{ background: selectedAgent.color + '22' }}>
+              {selectedAgent.emoji}
+            </div>
+            <div className="chat-msg-content" style={{ background: 'var(--bg-secondary)' }}>
+              <div className="animate-pulse text-tertiary" style={{ fontSize: 14 }}>
                 {selectedAgent.name} réfléchit...
               </div>
             </div>
@@ -1255,25 +1186,11 @@ export default function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Follow-up Questions */}
-      {followUpQuestions.length > 0 && !loading && (
-        <div className="flex gap-6 flex-wrap" style={{ padding: '8px 0' }}>
-          {followUpQuestions.map((q, i) => (
-            <button
-              key={i}
-              onClick={() => { setInput(q); inputRef.current?.focus(); }}
-              className="btn btn-secondary btn-sm"
-              style={{ fontSize: 12, whiteSpace: 'normal', textAlign: 'left', maxWidth: 280 }}
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* ═══ GUIDED OPTIONS ZONE (above input) ═══ */}
 
       {/* Action Proposals */}
       {actionProposals.length > 0 && !loading && (
-        <div style={{ padding: '8px 0' }}>
+        <div style={{ padding: '8px 16px', borderTop: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', maxHeight: 200, overflowY: 'auto' }}>
           <div className="flex flex-between items-center mb-4">
             <span className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
               Actions proposées ({actionProposals.length})
@@ -1286,102 +1203,57 @@ export default function ChatPage() {
                   try {
                     const token = document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
                     const actions = actionProposals.map(p => ({
-                      type: p.type,
-                      title: p.title,
-                      description: p.description,
-                      priority: p.priority,
-                      dueDate: p.dueDate,
-                      sourceAgent: selectedAgent?.id ?? 'unknown',
+                      type: p.type, title: p.title, description: p.description,
+                      priority: p.priority, dueDate: p.dueDate, sourceAgent: selectedAgent?.id ?? 'unknown',
                     }));
                     const res = await fetch('/api/portal/actions/batch', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
                       body: JSON.stringify({ actions }),
                     });
-                    if (res.ok) {
-                      setAcceptedActions(new Set(actionProposals.map((_, i) => i)));
-                    }
+                    if (res.ok) setAcceptedActions(new Set(actionProposals.map((_, i) => i)));
                   } catch {}
                   setActionSaving(false);
                 }}
-                className="btn btn-sm"
-                style={{ fontSize: 11, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}
-              >
+                className="btn btn-sm" style={{ fontSize: 11, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}>
                 Tout accepter
               </button>
             )}
           </div>
-          <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
             {actionProposals.map((p, i) => (
-              <div
-                key={i}
-                className="rounded-sm"
-                style={{
-                  padding: '10px 12px',
-                  border: acceptedActions.has(i)
-                    ? '1px solid var(--success)44'
-                    : '1px solid var(--border)',
-                  background: acceptedActions.has(i)
-                    ? 'var(--success)08'
-                    : 'var(--bg-secondary)',
-                  opacity: acceptedActions.has(i) ? 0.7 : 1,
-                }}
-              >
-                <div className="flex items-center gap-6 mb-4">
-                  <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[p.type] ?? '⚡'}</span>
-                  <span className="text-sm font-semibold" style={{ flex: 1 }}>{p.title}</span>
-                  <span
-                    className="text-xs font-medium"
-                    style={{
-                      padding: '1px 6px',
-                      borderRadius: 4,
-                      background: `${PRIORITY_COLORS[p.priority]}22`,
-                      color: PRIORITY_COLORS[p.priority],
-                    }}
-                  >
+              <div key={i} className="rounded-sm" style={{
+                padding: '8px 12px', minWidth: 220, flexShrink: 0,
+                border: acceptedActions.has(i) ? '1px solid var(--success)' : '1px solid var(--border-primary)',
+                background: acceptedActions.has(i) ? 'var(--success-muted)' : 'var(--bg-primary)',
+                opacity: acceptedActions.has(i) ? 0.7 : 1,
+              }}>
+                <div className="flex items-center gap-6 mb-2">
+                  <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[p.type] ?? '⚡'}</span>
+                  <span className="text-xs font-semibold" style={{ flex: 1 }}>{p.title}</span>
+                  <span className="text-xs" style={{ padding: '1px 4px', borderRadius: 3, background: `${PRIORITY_COLORS[p.priority]}22`, color: PRIORITY_COLORS[p.priority] }}>
                     {PRIORITY_LABELS[p.priority] ?? p.priority}
                   </span>
                 </div>
-                {p.description && (
-                  <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                    {p.description}
-                  </p>
-                )}
+                {p.description && <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)', lineHeight: 1.3 }}>{p.description}</p>}
                 <div className="flex flex-between items-center">
-                  <div className="flex gap-6 items-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                    <span>{ACTION_TYPE_LABELS[p.type] ?? p.type}</span>
-                    {p.dueDate && <span>· {formatDueDate(p.dueDate)}</span>}
-                  </div>
+                  <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{ACTION_TYPE_LABELS[p.type] ?? p.type}{p.dueDate ? ` · ${formatDueDate(p.dueDate)}` : ''}</span>
                   {acceptedActions.has(i) ? (
-                    <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>Acceptée</span>
+                    <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>✓</span>
                   ) : (
-                    <button
-                      disabled={actionSaving}
-                      onClick={async () => {
-                        setActionSaving(true);
-                        try {
-                          const token = document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
-                          const res = await fetch('/api/portal/actions', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-                            body: JSON.stringify({
-                              type: p.type,
-                              title: p.title,
-                              description: p.description,
-                              priority: p.priority,
-                              dueDate: p.dueDate,
-                              sourceAgent: selectedAgent?.id ?? 'unknown',
-                            }),
-                          });
-                          if (res.ok) {
-                            setAcceptedActions(prev => new Set([...prev, i]));
-                          }
-                        } catch {}
-                        setActionSaving(false);
-                      }}
-                      className="btn btn-sm"
-                      style={{ fontSize: 11, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', padding: '2px 10px' }}
-                    >
+                    <button disabled={actionSaving} onClick={async () => {
+                      setActionSaving(true);
+                      try {
+                        const token = document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+                        const res = await fetch('/api/portal/actions', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+                          body: JSON.stringify({ type: p.type, title: p.title, description: p.description, priority: p.priority, dueDate: p.dueDate, sourceAgent: selectedAgent?.id ?? 'unknown' }),
+                        });
+                        if (res.ok) setAcceptedActions(prev => new Set([...prev, i]));
+                      } catch {}
+                      setActionSaving(false);
+                    }} className="btn btn-sm" style={{ fontSize: 10, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', padding: '2px 8px' }}>
                       Accepter
                     </button>
                   )}
@@ -1392,103 +1264,148 @@ export default function ChatPage() {
           {acceptedActions.size > 0 && (
             <div className="text-xs mt-4" style={{ color: 'var(--success)' }}>
               {acceptedActions.size} action{acceptedActions.size > 1 ? 's' : ''} ajoutée{acceptedActions.size > 1 ? 's' : ''} —{' '}
-              <Link href="/client/actions" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>
-                Voir le centre d&apos;actions
-              </Link>
+              <Link href="/client/actions" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Voir le centre d&apos;actions</Link>
             </div>
           )}
         </div>
       )}
 
-      {/* Auto-FAQ suggestion banner */}
+      {/* Follow-up Questions */}
+      {followUpQuestions.length > 0 && !loading && (
+        <div className="chat-guided-options">
+          <div className="chat-guided-options-list">
+            {followUpQuestions.map((q, i) => (
+              <button key={i} onClick={() => { setInput(q); inputRef.current?.focus(); }} className="chat-guided-option">
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Auto-FAQ suggestion */}
       {faqSuggestion && !loading && messages.length >= 2 && (
-        <div className="flex flex-between items-center flex-wrap gap-6 rounded-sm mb-4" style={{
-          padding: '8px 12px', background: 'var(--info)11', border: '1px solid var(--info)33',
+        <div className="flex flex-between items-center flex-wrap gap-6" style={{
+          padding: '6px 16px', background: 'var(--info-muted)', borderTop: '1px solid var(--info)',
         }}>
-          <span className="text-sm font-medium" style={{ color: 'var(--info)' }}>
-            💡 Vous posez souvent des questions similaires. Sauvegardez en FAQ pour y acceder gratuitement !
+          <span className="text-xs font-medium" style={{ color: 'var(--info)' }}>
+            💡 Question fréquente ! Sauvegardez en FAQ (gratuit).
           </span>
-          <div className="flex gap-6">
-            <button
-              onClick={() => {
-                const lastAssistantIdx = messages.length - 1;
-                const lastUserIdx = messages.length - 2;
-                if (messages[lastAssistantIdx]?.role === 'assistant' && messages[lastUserIdx]?.role === 'user') {
-                  saveAsFaq(lastUserIdx, lastAssistantIdx);
-                }
-                setFaqSuggestion(false);
-              }}
-              className="btn btn-sm"
-              style={{ fontSize: 11, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}
-            >
-              Sauvegarder en FAQ
+          <div className="flex gap-4">
+            <button onClick={() => {
+              const lastAssistantIdx = messages.length - 1;
+              const lastUserIdx = messages.length - 2;
+              if (messages[lastAssistantIdx]?.role === 'assistant' && messages[lastUserIdx]?.role === 'user') saveAsFaq(lastUserIdx, lastAssistantIdx);
+              setFaqSuggestion(false);
+            }} className="btn btn-sm" style={{ fontSize: 10, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}>
+              Sauvegarder
             </button>
-            <button onClick={() => setFaqSuggestion(false)} className="btn btn-ghost btn-sm" style={{ fontSize: 11 }}>
-              Ignorer
-            </button>
+            <button onClick={() => setFaqSuggestion(false)} className="btn btn-ghost btn-sm" style={{ fontSize: 10 }}>Ignorer</button>
           </div>
         </div>
       )}
 
       {/* FAQ match hint */}
       {faqMatch && !loading && (
-        <div className="flex flex-between items-center flex-wrap gap-6 rounded-sm" style={{
-          padding: '8px 12px', background: '#22c55e10', border: '1px solid #22c55e33',
+        <div className="flex flex-between items-center flex-wrap gap-6" style={{
+          padding: '6px 16px', background: '#22c55e10', borderTop: '1px solid #22c55e33',
         }}>
-          <span className="text-sm font-semibold text-success">
-            💡 Réponse FAQ trouvée — gratuit, 0 token
-          </span>
-          <div className="flex gap-6">
-            <button
-              onClick={() => useFaqAnswer(faqMatch)}
-              className="btn btn-sm"
-              style={{ fontSize: 11, background: '#22c55e', color: 'white', borderColor: '#22c55e' }}
-            >
-              Utiliser la réponse FAQ
-            </button>
-            <button
-              onClick={() => setFaqMatch(null)}
-              className="btn btn-ghost btn-sm"
-              style={{ fontSize: 11 }}
-            >
-              Demander a l&apos;IA
-            </button>
+          <span className="text-xs font-semibold text-success">💡 FAQ trouvée — 0 token</span>
+          <div className="flex gap-4">
+            <button onClick={() => useFaqAnswer(faqMatch)} className="btn btn-sm"
+              style={{ fontSize: 10, background: '#22c55e', color: 'white', borderColor: '#22c55e' }}>Utiliser FAQ</button>
+            <button onClick={() => setFaqMatch(null)} className="btn btn-ghost btn-sm" style={{ fontSize: 10 }}>IA</button>
           </div>
         </div>
       )}
 
-      {/* Input */}
-      <div style={{ padding: '12px 0', borderTop: '1px solid var(--border-primary)' }}>
-        <div className="flex gap-8" style={{ alignItems: 'flex-end' }}>
+      {/* ═══ INPUT BAR — ChatGPT-like ═══ */}
+      <div className="chat-input-bar">
+        <button className="chat-input-action" onClick={() => setShowActionsMenu(v => !v)} title="Plus d'options">
+          +
+        </button>
+        <div className="chat-input-wrapper">
           <textarea
             ref={inputRef}
+            className="chat-input-textarea"
             value={input}
-            onChange={e => onInputChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={`Écrivez à ${selectedAgent?.name ?? 'votre agent'} (${selectedAgent?.role ?? 'Agent'})...`}
-            className="input"
-            rows={2}
-            style={{ resize: 'none', flex: 1 }}
+            onChange={handleTextareaInput}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessageStream();
+                resetTextareaHeight();
+              }
+            }}
+            placeholder={`Écrivez à ${selectedAgent?.name ?? 'votre agent'}...`}
+            rows={1}
+            style={{ height: textareaHeight }}
           />
-          <VoiceInput
-            onTranscript={(t) => setInput(prev => prev ? prev + ' ' + t : t)}
-            disabled={loading}
-            size="md"
-          />
-          <button
-            onClick={sendMessageStream}
-            disabled={loading || !input.trim()}
-            className="btn btn-primary"
-            style={{ height: 52, padding: '0 24px' }}
-          >
-            {loading ? '...' : 'Envoyer'}
-          </button>
         </div>
-        <div className="text-xs text-muted mt-4">
-          Entrée pour envoyer | Shift+Entrée pour un saut de ligne | Modèle: {selectedAgent.model}
+        <div className="chat-send-modes">
+          {input.trim() ? (
+            <button className="chat-send-btn chat-send-text" onClick={() => { sendMessageStream(); resetTextareaHeight(); }} title="Envoyer">
+              ➤
+            </button>
+          ) : (
+            <>
+              <VoiceInput
+                onTranscript={(t) => setInput(prev => prev ? prev + ' ' + t : t)}
+                disabled={loading}
+                size="sm"
+              />
+              <Link href={`/client/visio/${selectedAgent?.id ?? 'fz-assistante'}`}>
+                <button className="chat-send-btn chat-send-visio" title="Appel visio">
+                  📹
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
+      {/* Mode pills */}
+      <div className="chat-mode-bar">
+        {COMM_TABS.map(tab => (
+          <button
+            key={tab.id}
+            className={`chat-mode-pill ${commMode === tab.id ? 'active' : ''}`}
+            onClick={() => setCommMode(tab.id)}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
+      </>}
+
+      {/* ═══ AGENT BOTTOM SHEET ═══ */}
+      {showAgentSheet && <>
+        <div className="agent-bottom-sheet-overlay open" onClick={() => setShowAgentSheet(false)} />
+        <div className="agent-bottom-sheet open">
+          <div className="agent-bottom-sheet-handle" />
+          <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Choisir un agent</div>
+          {agents.map(agent => (
+            <div
+              key={agent.id}
+              className={`agent-bottom-sheet-item ${selectedAgent.id === agent.id ? 'active' : ''}`}
+              onClick={() => { setSelectedAgent(agent); setShowAgentSheet(false); }}
+            >
+              <div style={{
+                width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: agent.color + '22', fontSize: 18, flexShrink: 0,
+              }}>
+                {agent.emoji}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{agent.name}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{agent.role}</div>
+              </div>
+              {agent.isCustomized && <span style={{ fontSize: 10, color: 'var(--accent)' }}>✨ Perso</span>}
+              {selectedAgent.id === agent.id && <span style={{ color: 'var(--accent)', fontSize: 16 }}>✓</span>}
+            </div>
+          ))}
+        </div>
       </>}
     </div>
   );

@@ -72,7 +72,7 @@ export default function SecurityPage() {
 
   if (loading) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Sécurité</h1></div>
         <div className="skeleton" style={{ height: 120, borderRadius: 'var(--radius-lg)' }} />
       </div>
@@ -80,7 +80,7 @@ export default function SecurityPage() {
   }
 
   return (
-    <div className="security-card">
+    <div className="security-card admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Sécurité du compte</h1>

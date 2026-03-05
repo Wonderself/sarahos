@@ -1073,7 +1073,7 @@ export default function DocumentsPage() {
   const filteredTemplates = filterCategory ? TEMPLATES.filter(t => t.category === filterCategory) : TEMPLATES;
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Générateur de Documents</h1>

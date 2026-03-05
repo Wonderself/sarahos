@@ -77,7 +77,7 @@ export default function AdminRepondeurPage() {
   }, [tab, loadStats, loadConfigs]);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto admin-page-scrollable">
       <div className="page-header mb-6">
         <h1 className="page-title">Répondeur IA — Admin</h1>
         <p className="page-subtitle">Statistiques globales et configurations utilisateurs</p>

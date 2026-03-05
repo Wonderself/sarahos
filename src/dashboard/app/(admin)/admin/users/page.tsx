@@ -31,7 +31,7 @@ export default async function UsersPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header">
           <h1 className="page-title">Utilisateurs</h1>
         </div>
@@ -51,7 +51,7 @@ export default async function UsersPage() {
     .slice(0, 5);
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       {/* ── Header ── */}
       <div className="page-header">
         <div>

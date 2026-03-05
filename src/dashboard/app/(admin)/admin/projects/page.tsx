@@ -32,7 +32,7 @@ export default async function ProjectsPage() {
   const { projects, stats } = data;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Projets</h1>

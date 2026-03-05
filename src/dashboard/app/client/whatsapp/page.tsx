@@ -222,7 +222,7 @@ export default function WhatsAppPage() {
   }
 
   return (
-    <div className="page-container max-w-lg">
+    <div className="page-container max-w-lg client-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">WhatsApp</h1>

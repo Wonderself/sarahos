@@ -176,7 +176,7 @@ function CreateAgentContent() {
   };
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: 680, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: '24px 20px', maxWidth: 680, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <a href="/client/agents" style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'none' }}>← Agents</a>

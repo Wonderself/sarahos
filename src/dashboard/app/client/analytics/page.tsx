@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
       {/* Header */}
       <div className="page-header">
         <div>

@@ -92,7 +92,7 @@ export default function MarketplacePage() {
   const featuredAgents = TEMPLATES.filter((t) => t.featured).slice(0, 6);
 
   return (
-    <div style={{ padding: '32px 24px', maxWidth: 1200, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: '32px 24px', maxWidth: 1200, margin: '0 auto' }}>
       {/* ── Header ── */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>

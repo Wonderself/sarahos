@@ -100,7 +100,7 @@ export default function PartnersPage() {
   const [expandedCategory, setExpandedCategory] = useState<number | null>(0);
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
           Nos Partenaires

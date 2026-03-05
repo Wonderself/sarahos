@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import NavLink from './NavLink';
 
@@ -23,11 +24,24 @@ export default function AdminShell({
   const [darkMode, setDarkMode] = useState(false);
   const [adminName, setAdminName] = useState('Admin');
   const [pendingApprovals, setPendingApprovals] = useState(0);
+  const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0]));
 
   // Close sidebar on navigation
   useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
+
+  // Auto-expand the section containing the current path
+  useEffect(() => {
+    const idx = navSections.findIndex(s => s.links.some(l => pathname.startsWith(l.href)));
+    if (idx >= 0) {
+      setExpandedSections(prev => {
+        const next = new Set(prev);
+        next.add(idx);
+        return next;
+      });
+    }
+  }, [pathname, navSections]);
 
   // Load admin session info
   useEffect(() => {
@@ -63,8 +77,6 @@ export default function AdminShell({
       try {
         const res = await fetch('/api/health', { cache: 'no-store' });
         if (res.ok) {
-          // Use a lightweight check — try to read from actions proxy
-          // For now just keep badge at 0 until we have a dedicated endpoint
           setPendingApprovals(0);
         }
       } catch { /* */ }
@@ -81,13 +93,10 @@ export default function AdminShell({
       const modKey = isMac ? e.metaKey : e.ctrlKey;
       if (!modKey) return;
 
-      // Cmd+K → global search (placeholder — will be wired in Session 5)
       if (e.key === 'k') {
         e.preventDefault();
-        // Dispatch a custom event that GlobalSearch can listen to
         document.dispatchEvent(new CustomEvent('fz:open-search'));
       }
-      // Cmd+U → navigate to users
       if (e.key === 'u') {
         e.preventDefault();
         router.push('/admin/users');
@@ -127,6 +136,15 @@ export default function AdminShell({
       .finally(() => { window.location.href = '/login'; });
   }
 
+  function toggleSection(index: number) {
+    setExpandedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  }
+
   return (
     <div className="app-shell">
       {/* Mobile Top Bar */}
@@ -136,17 +154,19 @@ export default function AdminShell({
           onClick={() => setSidebarOpen(o => !o)}
           aria-label="Menu"
         >
-          {sidebarOpen ? '✕' : '☰'}
+          {sidebarOpen ? '\u2715' : '\u2630'}
         </button>
-        <div className="flex items-center gap-8">
-          <img
-            src="/images/logo.jpg"
-            alt="Freenzy.io"
-            style={{ height: 28, borderRadius: 6 }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-          />
+        <div className="mobile-topbar-center">
           <span className="text-sm font-bold">Admin</span>
+          <span className={`admin-status-dot-mini ${systemStatus}`} />
         </div>
+        <button
+          className="mobile-topbar-action"
+          onClick={() => document.dispatchEvent(new CustomEvent('fz:open-search'))}
+          aria-label="Recherche"
+        >
+          🔍
+        </button>
       </div>
 
       {/* Sidebar Overlay */}
@@ -172,48 +192,54 @@ export default function AdminShell({
             </div>
           </div>
           <div className="sidebar-header-row">
-            {/* System status badge */}
             <div className={`status-badge status-badge-${systemStatus}`}>
               <span className="status-dot" />
-              {systemStatus === 'ok' ? 'Opérationnel' : systemStatus === 'error' ? 'Erreur' : '…'}
+              {systemStatus === 'ok' ? 'OK' : systemStatus === 'error' ? 'Erreur' : '...'}
             </div>
-            {/* Dark mode toggle */}
             <button
               className="dark-mode-toggle"
               onClick={toggleDarkMode}
               title={darkMode ? 'Mode clair' : 'Mode sombre'}
             >
-              {darkMode ? '☀️' : '🌙'}
+              {darkMode ? '\u2600\uFE0F' : '\uD83C\uDF19'}
             </button>
           </div>
         </div>
 
-        {/* Nav */}
+        {/* Nav — collapsible sections */}
         <div className="sidebar-nav">
           {navSections.map((section, i) => (
             <div key={i} className="nav-section">
-              {section.title && (
-                <div className="nav-section-title">{section.title}</div>
+              {section.title ? (
+                <button
+                  className="nav-section-toggle"
+                  onClick={() => toggleSection(i)}
+                >
+                  {section.title}
+                  <span className={`nav-chevron ${expandedSections.has(i) ? 'open' : ''}`}>&#9656;</span>
+                </button>
+              ) : null}
+              {(expandedSections.has(i) || !section.title) && (
+                <div className="nav-section-links">
+                  {section.links.map((link) => (
+                    <NavLink key={link.href} href={link.href}>
+                      <span className="nav-icon">{link.icon}</span>
+                      {link.label}
+                      {link.href === '/system/approvals' && pendingApprovals > 0 && (
+                        <span className="approval-badge">
+                          {pendingApprovals}
+                        </span>
+                      )}
+                    </NavLink>
+                  ))}
+                </div>
               )}
-              {section.links.map((link) => (
-                <NavLink key={link.href} href={link.href}>
-                  <span className="nav-icon">{link.icon}</span>
-                  {link.label}
-                  {/* Badge for pending approvals */}
-                  {link.href === '/system/approvals' && pendingApprovals > 0 && (
-                    <span className="approval-badge">
-                      {pendingApprovals}
-                    </span>
-                  )}
-                </NavLink>
-              ))}
             </div>
           ))}
         </div>
 
         {/* Footer */}
         <div className="sidebar-footer">
-          {/* Keyboard shortcuts hint */}
           <div className="sidebar-shortcuts">
             <span className="kbd">⌘K</span>
             <span className="shortcut-label">Recherche</span>
@@ -221,12 +247,10 @@ export default function AdminShell({
             <span className="shortcut-label">Users</span>
           </div>
 
-          {/* Client space link */}
           <NavLink href="/client/dashboard">
             <span className="nav-icon">🔗</span>
             Espace Client
           </NavLink>
-          {/* Admin user + logout */}
           <div className="sidebar-user-row">
             <div className="flex items-center gap-8">
               <div className="admin-avatar">
@@ -239,7 +263,7 @@ export default function AdminShell({
             <button
               className="sidebar-footer-logout"
               onClick={logout}
-              title="Déconnexion"
+              title="Deconnexion"
             >
               ⏻
             </button>
@@ -253,6 +277,30 @@ export default function AdminShell({
           {children}
         </div>
       </div>
+
+      {/* Bottom Tab Bar — mobile only */}
+      <nav className="admin-bottom-tab-bar">
+        <Link href="/admin" className={`admin-tab-item${pathname === '/admin' ? ' active' : ''}`}>
+          <span className="admin-tab-icon">📊</span>
+          <span>Accueil</span>
+        </Link>
+        <Link href="/admin/users" className={`admin-tab-item${pathname.startsWith('/admin/users') ? ' active' : ''}`}>
+          <span className="admin-tab-icon">👥</span>
+          <span>Users</span>
+        </Link>
+        <Link href="/infra/health" className={`admin-tab-item${pathname.startsWith('/infra') ? ' active' : ''}`}>
+          <span className="admin-tab-icon">❤️</span>
+          <span>Sante</span>
+        </Link>
+        <Link href="/admin/billing" className={`admin-tab-item${pathname.startsWith('/admin/billing') ? ' active' : ''}`}>
+          <span className="admin-tab-icon">💳</span>
+          <span>Billing</span>
+        </Link>
+        <button className="admin-tab-item" onClick={() => setSidebarOpen(o => !o)}>
+          <span className="admin-tab-icon">☰</span>
+          <span>Menu</span>
+        </button>
+      </nav>
     </div>
   );
 }

@@ -217,7 +217,7 @@ export default function AdminSocialPage() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-6">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-6 admin-page-scrollable">
       <h1 className="text-2xl font-bold">Social Media Hub</h1>
       <p className="text-gray-400 text-sm">Generez, planifiez et gerez vos publications sur les reseaux sociaux.</p>
 

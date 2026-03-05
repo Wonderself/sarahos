@@ -340,34 +340,31 @@ export default function VisioCallPage() {
     );
   }
 
+  const [showTranscript, setShowTranscript] = useState(false);
+
   if (!callActive) return null;
 
   return (
-    <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', background: '#0f172a' }}>
-      {/* Top bar */}
+    <div style={{ height: 'calc(100dvh - 56px)', display: 'flex', flexDirection: 'column', background: '#0f172a', position: 'relative' }}>
+      {/* Top bar — compact */}
       <div style={{
         padding: '8px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        borderBottom: '1px solid #1e293b',
+        borderBottom: '1px solid #1e293b', flexShrink: 0,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 16 }}>{agent.emoji}</span>
           <span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>{agent.name}</span>
-          <span style={{ fontSize: 11, color: '#94a3b8' }}>— {agent.role}</span>
+          <span className="hide-mobile" style={{ fontSize: 11, color: '#94a3b8' }}>— {agent.role}</span>
         </div>
         <div style={{ fontSize: 11, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 8 }}>
           {!isTextMode && !isMuted && listeningStatus === 'listening' && (
             <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#22c55e' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', animation: 'pulse 1.5s infinite' }} />
-              Ecoute active
+              <span className="hide-mobile">Ecoute active</span>
             </span>
           )}
-          {listeningStatus === 'processing' && (
-            <span style={{ color: '#f59e0b' }}>Transcription...</span>
-          )}
-          {listeningStatus === 'speaking' && (
-            <span style={{ color: '#6366f1' }}>Parle...</span>
-          )}
-          <span>~3x credits</span>
+          {listeningStatus === 'processing' && <span style={{ color: '#f59e0b' }}>Transcription...</span>}
+          {listeningStatus === 'speaking' && <span style={{ color: '#6366f1' }}>Parle...</span>}
         </div>
       </div>
 
@@ -375,77 +372,47 @@ export default function VisioCallPage() {
       {micError && (
         <div style={{
           padding: '10px 16px', background: '#fef2f2', borderBottom: '1px solid #fecaca',
-          display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+          display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', flexShrink: 0,
         }}>
           <span style={{ fontSize: 16 }}>🎙️</span>
           <span style={{ flex: 1, fontSize: 13, color: '#991b1b', lineHeight: 1.5 }}>{micError}</span>
-          <button
-            onClick={retryMic}
-            style={{
-              padding: '6px 14px', borderRadius: 6, border: '1px solid #dc2626',
-              background: 'white', color: '#dc2626', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-            }}
-          >
+          <button onClick={retryMic} style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #dc2626', background: 'white', color: '#dc2626', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
             Reessayer
           </button>
-          <a
-            href="/client/visio/diagnostic"
-            style={{ fontSize: 12, color: '#6366f1', textDecoration: 'underline' }}
-          >
-            Diagnostic audio
-          </a>
         </div>
       )}
 
-      {/* Main content */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* Agent side */}
-        <div style={{
-          flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: 'radial-gradient(circle at 50% 50%, #1e293b, #0f172a)',
-        }}>
+      {/* Main content — responsive */}
+      <div className="visio-main-layout">
+        {/* Agent center */}
+        <div className="visio-agent-area">
           <AgentAvatar
             name={agent.name}
             emoji={agent.emoji}
             color={agent.color}
             isSpeaking={isSpeaking}
-            size={180}
+            size={140}
           />
-          <div style={{ marginTop: 16, fontSize: 16, fontWeight: 700, color: 'white' }}>{agent.name}</div>
+          <div style={{ marginTop: 12, fontSize: 16, fontWeight: 700, color: 'white' }}>{agent.name}</div>
           <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
             {isSpeaking ? 'Parle...' : processing ? 'Reflechit...' : isRecording ? 'Vous ecoute...' : isTextMode ? 'Mode texte' : 'En ligne'}
           </div>
           {!isTextMode && !isMuted && !isSpeaking && !processing && (
             <div style={{ fontSize: 11, color: '#64748b', marginTop: 8, opacity: 0.7 }}>
-              Parlez normalement — transcription automatique
+              Parlez normalement
             </div>
           )}
-
-          {/* Controls */}
-          <div style={{ marginTop: 32 }}>
-            <VisioControls
-              isMuted={isMuted}
-              onToggleMute={() => setIsMuted(m => !m)}
-              isTextMode={isTextMode}
-              onToggleMode={() => setIsTextMode(m => !m)}
-              onHangup={hangup}
-              audioLevel={audioLevel}
-              startTime={startTimeRef.current}
-            />
-          </div>
         </div>
 
-        {/* Transcript side */}
-        <div style={{
-          width: 360, borderLeft: '1px solid #1e293b', display: 'flex', flexDirection: 'column',
-          background: 'white',
-        }}>
-          <div style={{
-            padding: '10px 16px', borderBottom: '1px solid #e5e7eb',
-            fontSize: 12, fontWeight: 700, color: '#6b7280',
-          }}>
-            Transcription
-          </div>
+        {/* Transcript — sidebar on desktop, bottom-sheet on mobile */}
+        <div className={`visio-transcript-panel ${showTranscript ? 'open' : ''}`}>
+          {/* Drag handle for mobile */}
+          <button className="visio-transcript-handle" onClick={() => setShowTranscript(v => !v)}>
+            <div style={{ width: 36, height: 4, background: '#d1d5db', borderRadius: 2, margin: '0 auto' }} />
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', marginTop: 6 }}>
+              Transcription {messages.length > 0 ? `(${messages.length})` : ''}
+            </span>
+          </button>
 
           <TranscriptPanel
             messages={messages}
@@ -454,8 +421,8 @@ export default function VisioCallPage() {
             agentColor={agent.color}
           />
 
-          {/* Text input (always visible in text mode, or as fallback) */}
-          <div style={{ padding: '8px 12px', borderTop: '1px solid #e5e7eb', display: 'flex', gap: 8 }}>
+          {/* Text input */}
+          <div style={{ padding: '8px 12px', borderTop: '1px solid #e5e7eb', display: 'flex', gap: 8, flexShrink: 0 }}>
             <input
               type="text"
               value={textInput}
@@ -463,24 +430,30 @@ export default function VisioCallPage() {
               onKeyDown={e => { if (e.key === 'Enter') sendTextMessage(); }}
               placeholder={isTextMode ? 'Tapez votre message...' : 'Ou tapez ici...'}
               disabled={processing}
-              style={{
-                flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb',
-                fontSize: 13, outline: 'none',
-              }}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14, outline: 'none' }}
             />
             <button
               onClick={sendTextMessage}
               disabled={processing || !textInput.trim()}
-              style={{
-                padding: '8px 16px', borderRadius: 8, border: 'none',
-                background: '#6366f1', color: 'white', fontSize: 12, fontWeight: 700,
-                cursor: processing ? 'wait' : 'pointer', opacity: processing ? 0.6 : 1,
-              }}
+              style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#6366f1', color: 'white', fontSize: 12, fontWeight: 700, cursor: processing ? 'wait' : 'pointer', opacity: processing ? 0.6 : 1 }}
             >
               ↵
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Controls — fixed at bottom, phone-call style */}
+      <div className="visio-controls-bar">
+        <VisioControls
+          isMuted={isMuted}
+          onToggleMute={() => setIsMuted(m => !m)}
+          isTextMode={isTextMode}
+          onToggleMode={() => setIsTextMode(m => !m)}
+          onHangup={hangup}
+          audioLevel={audioLevel}
+          startTime={startTimeRef.current}
+        />
       </div>
     </div>
   );

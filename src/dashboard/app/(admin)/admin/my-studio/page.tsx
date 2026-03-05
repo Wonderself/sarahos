@@ -172,7 +172,7 @@ export default function AdminMyStudioPage() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-6">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-6 admin-page-scrollable">
       <h1 className="text-2xl font-bold">Mon Studio Creatif</h1>
       <p className="text-gray-400 text-sm">Generez des photos et videos avec l&apos;IA directement depuis l&apos;admin.</p>
 

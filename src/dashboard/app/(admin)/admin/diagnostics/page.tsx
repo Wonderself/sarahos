@@ -354,7 +354,7 @@ export default function DiagnosticsPage() {
   const errCount = services.filter(s => s.status === 'error').length;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">🔍 Diagnostics</h1>

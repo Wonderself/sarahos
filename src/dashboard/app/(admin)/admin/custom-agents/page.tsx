@@ -38,7 +38,7 @@ export default async function CustomAgentsPage() {
   } catch { /* empty */ }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Agents Custom</h1>

@@ -38,9 +38,9 @@ export default function DocumentsAnalyticsPage() {
     load();
   }, []);
 
-  if (loading) return <div className="p-8"><div className="loading-spinner" /></div>;
+  if (loading) return <div className="p-8 admin-page-scrollable"><div className="loading-spinner" /></div>;
   if (error) return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto admin-page-scrollable">
       <h1 className="text-2xl font-bold mb-4">Analytics — Documents</h1>
       <div className="card p-6 text-center" style={{ color: 'var(--error, #ef4444)' }}>Erreur : {error}</div>
     </div>
@@ -55,7 +55,7 @@ export default function DocumentsAnalyticsPage() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto admin-page-scrollable">
       <h1 className="text-2xl font-bold mb-2">Analytics — Documents</h1>
       <p className="text-sm text-[var(--muted)] mb-6">Uploads, stockage et consommation tokens par contexte.</p>
 

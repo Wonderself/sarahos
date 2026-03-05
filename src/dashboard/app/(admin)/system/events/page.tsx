@@ -39,7 +39,7 @@ export default async function EventsPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Événements</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -130,7 +130,7 @@ export default async function EventsPage() {
   }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Événements</h1>

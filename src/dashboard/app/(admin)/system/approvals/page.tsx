@@ -30,7 +30,7 @@ export default async function ApprovalsPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Approbations</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -41,7 +41,7 @@ export default async function ApprovalsPage() {
   const decided = approvals.filter(a => a.status !== 'PENDING');
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Approbations</h1>

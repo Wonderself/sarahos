@@ -167,7 +167,7 @@ export default function ActionsPage() {
   const usedAgents = [...new Set(actions.map(a => a.sourceAgent).filter(Boolean))] as string[];
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* Header */}
       <div className="flex flex-between items-center mb-8 flex-wrap gap-6">
         <div>

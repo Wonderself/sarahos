@@ -593,7 +593,7 @@ export default function ControlPage() {
   const totalStub = allRoutes.filter(r => r.status === 'stub').length;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <h1 className="page-title">Centre de Contrôle</h1>
         <p className="page-subtitle">

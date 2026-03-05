@@ -466,7 +466,7 @@ export default function ReveilPage() {
   // ═══════════════════════════════════════════════════════
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* ─── STATUS BAR ─── */}
       {(error || success || saving) && (
         <div style={{ position: 'sticky', top: 0, zIndex: 30, padding: '0 0 8px' }}>

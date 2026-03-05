@@ -17,7 +17,7 @@ export default async function AgentsPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Agents IA</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -29,7 +29,7 @@ export default async function AgentsPage() {
   const errCount = agents.filter(a => a.status === 'ERROR').length;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Agents IA</h1>

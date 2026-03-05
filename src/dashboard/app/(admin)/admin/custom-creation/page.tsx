@@ -47,7 +47,7 @@ export default async function AdminCustomCreationPage() {
   }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', marginBottom: 6 }}>
         Creation sur mesure — Demandes
       </h1>

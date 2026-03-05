@@ -260,7 +260,7 @@ export default function RoadmapPage() {
   }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <h1 className="page-title">Roadmap & Intégrations</h1>
         <p className="page-subtitle">

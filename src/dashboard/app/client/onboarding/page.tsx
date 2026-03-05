@@ -424,7 +424,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 800, margin: '0 auto' }}>
       {/* Header */}
       <div className="text-center mb-24">
         <div className="flex flex-center items-center gap-16 mb-12">

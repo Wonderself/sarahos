@@ -360,7 +360,7 @@ export default function AgentCustomizePage() {
   // TagInput and RuleList moved outside component to avoid re-mount on state change
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* Header */}
       <div className="page-header">
         <div>

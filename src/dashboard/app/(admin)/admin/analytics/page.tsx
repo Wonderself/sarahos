@@ -75,7 +75,7 @@ export default function AnalyticsHubPage() {
     : [];
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       {/* ── Header ── */}
       <div className="page-header">
         <div>

@@ -13,7 +13,7 @@ export default async function TokensPage() {
   } catch { /* fallback to static */ }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <h1 className="page-title">Tokens & Coûts</h1>
         <p className="page-subtitle">Comprendre et optimiser la consommation de tokens</p>

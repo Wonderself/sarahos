@@ -197,7 +197,7 @@ export default function TelephonyPage() {
   const healthLabel = health?.status === 'ok' ? '✅ Opérationnel' : health?.status === 'degraded' ? '⚠️ Dégradé' : '❌ En panne';
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
 
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>

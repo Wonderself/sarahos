@@ -108,7 +108,7 @@ export default function ModulesPage() {
   );
 
   return (
-    <div style={{ padding: '24px 32px', maxWidth: 1100, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: '24px 32px', maxWidth: 1100, margin: '0 auto' }}>
 
       {/* ── Header ── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>

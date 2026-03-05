@@ -75,6 +75,24 @@ const ACTION_COSTS = [
   { icon: '🤝', action: 'Réunion IA structurée', model: 'Opus', count: '6 réunions', color: '#9333ea' },
 ];
 
+// ─── Stats badges (reverse ticker)
+const STATS_BADGES = [
+  { icon: '\u{1F916}', value: '72+', label: 'agents' },
+  { icon: '\u{1F9E0}', value: '6+', label: 'modeles IA' },
+  { icon: '\u26A1', value: '5 min', label: 'onboarding' },
+  { icon: '\u{1F48E}', value: '0%', label: 'commission' },
+  { icon: '\u{1F319}', value: '24/7', label: 'actifs' },
+  { icon: '\u{1F30D}', value: '50+', label: 'langues' },
+  { icon: '\u{1F4CB}', value: '103', label: 'FAQ' },
+  { icon: '\u{1F6D2}', value: '48', label: 'templates' },
+  { icon: '\u{1F4BC}', value: '12', label: 'agents Business' },
+  { icon: '\u{1F464}', value: '12', label: 'agents Perso' },
+  { icon: '\u{1F1EA}\u{1F1FA}', value: 'RGPD', label: 'conforme' },
+  { icon: '\u{1F512}', value: 'AES-256', label: 'chiffrement' },
+  { icon: '\u{1F4F1}', value: '8', label: 'modes Reveil' },
+  { icon: '\u{1F3AF}', value: '50', label: 'credits offerts' },
+];
+
 // ─── Live activity feed
 const ACTIVITY = [
   { icon: '📞', text: 'Appel traité · lead qualifié', agent: 'Répondeur', color: '#22c55e', ago: '2 min' },
@@ -230,6 +248,7 @@ export default function LandingPage() {
   const [openFaq, setOpenFaq]               = useState<number | null>(null);
   const [faqCat, setFaqCat]                 = useState(0);
   const [demoTab, setDemoTab]               = useState(0);
+  const [scenTechView, setScenTechView]     = useState<'scenarios' | 'tech'>('scenarios');
 
   const visibleAgents  = showAllAgents  ? ALL_AGENTS   : ALL_AGENTS.slice(0, AGENTS_PREVIEW);
   const visibleModels  = showAllModels  ? AI_MODELS    : AI_MODELS.slice(0, MODELS_PREVIEW);
@@ -246,12 +265,12 @@ export default function LandingPage() {
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section style={{
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
-          padding: 'clamp(40px, 5vw, 60px) 24px clamp(28px, 3vw, 40px)',
+          padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
         }}>
           <div className="lp-hero-glow-anim" style={{
             position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-            width: 600, height: 350,
+            width: '100%', maxWidth: 600, height: 350,
             background: 'radial-gradient(ellipse, rgba(99,102,241,0.14) 0%, transparent 68%)',
             pointerEvents: 'none',
           }} />
@@ -297,13 +316,14 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/login?mode=register" className="lp-cta-primary" style={{
-                padding: '13px 30px', background: '#6366f1', color: '#fff',
+                padding: '14px 30px', background: '#6366f1', color: '#fff',
                 borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: 'none',
+                minHeight: 48,
               }}>
                 Commencer gratuitement
               </Link>
               <Link href="/plans" style={{
-                padding: '13px 22px',
+                padding: '14px 22px', minHeight: 48,
                 background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.11)',
                 color: 'rgba(255,255,255,0.68)', borderRadius: 10, fontWeight: 600,
                 fontSize: 14, textDecoration: 'none',
@@ -313,10 +333,10 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="lp-hero-checkmarks" style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap', fontSize: 11, color: 'rgba(255,255,255,0.22)' }}>
-              <span>✓ Sans carte bancaire</span>
-              <span>✓ Pas de minimum</span>
-              <span>✓ Claude · GPT · Gemini · Llama · Grok</span>
+            <div className="lp-hero-steps">
+              <div className="lp-hero-step"><span className="lp-hero-step-num">01</span> Profil · 5 min</div>
+              <div className="lp-hero-step"><span className="lp-hero-step-num">02</span> Activation</div>
+              <div className="lp-hero-step"><span className="lp-hero-step-num">03</span> Operationnel</div>
             </div>
           </div>
         </section>
@@ -337,29 +357,23 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ══ STATS ═════════════════════════════════════════════ */}
-        <section style={{ background: '#0e0e18', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div className="lp-stats-strip" style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {([
-              { n: `${totalAgents}+`, label: 'agents spécialisés', c: '#a5b4fc' },
-              { n: `${AI_MODELS.length}+`, label: 'modèles IA', c: '#86efac' },
-              { n: '5 min', label: 'onboarding', c: '#fbbf24' },
-              { n: '0%', label: 'commission', c: '#f87171' },
-              { n: '24/7', label: 'vos agents travaillent', c: '#86efac' },
-            ] as const).map((s, i, arr) => (
-              <div key={i} style={{
-                flex: '1 0 120px', textAlign: 'center', padding: '18px 12px',
-                borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-              }}>
-                <div style={{ fontSize: 'clamp(18px, 2.2vw, 26px)', fontWeight: 900, color: s.c, letterSpacing: -1 }}>{s.n}</div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.27)', marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.8 }}>{s.label}</div>
-              </div>
-            ))}
+        {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
+        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+          <div className="lp-ticker-wrap">
+            <div className="lp-ticker-reverse">
+              {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
+                <div key={i} className="lp-stats-badge">
+                  <span className="lp-stats-badge-icon">{s.icon}</span>
+                  <span className="lp-stats-badge-value">{s.value}</span>
+                  <span className="lp-stats-badge-label">{s.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </section>
+        </div>
 
         {/* ══ TOUT EST INCLUS ═══════════════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Tout est inclus</p>
@@ -372,7 +386,7 @@ export default function LandingPage() {
             <div className="lp-inclus-grid">
 
               {/* ── AGENTS ── */}
-              <div style={{ border: '1px solid #e5e5e7', borderRadius: 14, padding: '20px', background: '#fff' }}>
+              <div className="lp-app-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                   <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les agents IA</span>
                   <span style={{ fontSize: 11, background: '#6366f110', color: '#6366f1', border: '1px solid #6366f122', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
@@ -398,8 +412,8 @@ export default function LandingPage() {
                 </button>
               </div>
 
-              {/* ── MODÈLES IA ── */}
-              <div style={{ border: '1px solid #e5e5e7', borderRadius: 14, padding: '20px', background: '#fff' }}>
+              {/* ── MODELES IA ── */}
+              <div className="lp-app-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                   <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les modèles IA</span>
                   <span style={{ fontSize: 11, background: '#22c55e10', color: '#22c55e', border: '1px solid #22c55e22', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
@@ -426,8 +440,8 @@ export default function LandingPage() {
                 </button>
               </div>
 
-              {/* ── ÉCOSYSTÈME ── */}
-              <div style={{ border: '1px solid #e5e5e7', borderRadius: 14, padding: '20px', background: '#fff' }}>
+              {/* ── ECOSYSTEME ── */}
+              <div className="lp-app-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                   <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>L&apos;écosystème</span>
                   <span style={{ fontSize: 11, background: '#f9731610', color: '#f97316', border: '1px solid #f9731622', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
@@ -454,7 +468,7 @@ export default function LandingPage() {
               </div>
 
               {/* ── ACTIONS ── */}
-              <div style={{ border: '1px solid #e5e5e7', borderRadius: 14, padding: '20px', background: '#fff' }}>
+              <div className="lp-app-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                   <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les types d&apos;actions</span>
                   <Link href="/tarifs-api" style={{ fontSize: 11, color: '#6366f1', textDecoration: 'none', fontWeight: 700 }}>
@@ -488,7 +502,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ DEMO INTERACTIVE ══════════════════════════════════ */}
-        <section style={{ background: '#1d1d1f', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section style={{ background: '#1d1d1f', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 860, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En action</p>
@@ -504,8 +518,8 @@ export default function LandingPage() {
                   className="lp-demo-tab"
                   onClick={() => setDemoTab(i)}
                   style={{
-                    padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
-                    border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+                    padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
+                    border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
                     background: demoTab === i ? s.color : 'rgba(255,255,255,0.06)',
                     color: demoTab === i ? '#fff' : 'rgba(255,255,255,0.45)',
                     boxShadow: demoTab === i ? `0 0 20px ${s.color}44` : 'none',
@@ -589,88 +603,77 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ SCÉNARIOS DÉTAILLÉS ═══════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        {/* ══ SCÉNARIOS & TECHNOLOGIES (fusionné) ════════════════ */}
+        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Cas d&apos;usage</p>
-              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5 }}>
-                Scénarios concrets.
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En detail</p>
+              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 18 }}>
+                {scenTechView === 'scenarios' ? 'Scenarios concrets.' : 'Les meilleurs outils du marche.'}
               </h2>
-            </div>
-            <div className="lp-scenario-steps" style={{ gap: 16 }}>
-              {SCENARIOS.map((s, i) => (
-                <div key={i} style={{
-                  background: '#fafafa', border: '1px solid #e5e5e7',
-                  borderRadius: 16, padding: '24px 20px',
-                }}>
-                  <div style={{
-                    width: 8, height: 8, borderRadius: '50%',
-                    background: s.color, marginBottom: 14,
-                  }} />
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</h3>
-                  <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    {s.steps.map((step, j) => (
-                      <div key={j} style={{
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        fontSize: 12, color: '#4b5563',
-                      }}>
-                        <span style={{
-                          width: 20, height: 20, borderRadius: '50%',
-                          background: `${s.color}14`, color: s.color,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: 10, fontWeight: 800, flexShrink: 0,
-                        }}>
-                          {j + 1}
-                        </span>
-                        {step}
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ marginTop: 14, fontSize: 11, color: '#9ca3af' }}>{s.tech}</div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div className="lp-view-toggle">
+                  <button
+                    className={`lp-view-toggle-btn ${scenTechView === 'scenarios' ? 'active' : ''}`}
+                    onClick={() => setScenTechView('scenarios')}
+                  >
+                    Cas d&apos;usage
+                  </button>
+                  <button
+                    className={`lp-view-toggle-btn ${scenTechView === 'tech' ? 'active' : ''}`}
+                    onClick={() => setScenTechView('tech')}
+                  >
+                    Technologies
+                  </button>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        </section>
 
-        {/* ══ TECHNOLOGIES ══════════════════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
-          <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Technologies</p>
-              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5 }}>
-                Les meilleurs outils du marché.
-              </h2>
-            </div>
-            <div className="lp-tech-grid">
-              {TECH_FEATURES.map((t, i) => (
-                <div key={i} style={{
-                  background: '#fff', border: '1px solid #e5e5e7',
-                  borderRadius: 16, padding: '24px 20px',
-                }}>
-                  <div style={{
-                    width: 8, height: 8, borderRadius: '50%',
-                    background: t.color, marginBottom: 14,
-                  }} />
-                  <h3 style={{ fontSize: 15, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{t.title}</h3>
-                  <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>{t.desc}</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                    {t.points.map((p, j) => (
-                      <div key={j} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
-                        <span style={{ color: '#22c55e', fontWeight: 800, fontSize: 11 }}>✓</span> {p}
-                      </div>
-                    ))}
+            <div className="lp-scenario-steps" style={{ gap: 16 }}>
+              {scenTechView === 'scenarios' ? (
+                SCENARIOS.map((s, i) => (
+                  <div key={i} className="lp-app-card">
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, marginBottom: 14 }} />
+                    <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</h3>
+                    <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {s.steps.map((step, j) => (
+                        <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#4b5563' }}>
+                          <span style={{
+                            width: 20, height: 20, borderRadius: '50%',
+                            background: `${s.color}14`, color: s.color,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 10, fontWeight: 800, flexShrink: 0,
+                          }}>{j + 1}</span>
+                          {step}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ marginTop: 14, fontSize: 11, color: '#9ca3af' }}>{s.tech}</div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                TECH_FEATURES.map((t, i) => (
+                  <div key={i} className="lp-app-card">
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, marginBottom: 14 }} />
+                    <h3 style={{ fontSize: 15, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{t.title}</h3>
+                    <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>{t.desc}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      {t.points.map((p, j) => (
+                        <div key={j} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <span style={{ color: '#22c55e', fontWeight: 800, fontSize: 11 }}>&#10003;</span> {p}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </section>
 
         {/* ══ WHATSAPP ══════════════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div className="lp-whatsapp-grid">
               <div>
@@ -716,7 +719,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ CRÉATION SUR MESURE ═════════════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#8b5cf6', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
@@ -735,10 +738,7 @@ export default function LandingPage() {
               marginBottom: 32,
             }}>
               {/* Self-service */}
-              <div style={{
-                background: '#fff', border: '1px solid #e5e5e7',
-                borderRadius: 18, padding: '32px 28px',
-              }}>
+              <div className="lp-app-card" style={{ padding: '32px 28px' }}>
                 <div style={{ fontSize: 32, marginBottom: 16 }}>🛠️</div>
                 <h3 style={{ fontSize: 17, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>
                   Vous créez
@@ -761,10 +761,7 @@ export default function LandingPage() {
               </div>
 
               {/* On-demand */}
-              <div style={{
-                background: '#fff', border: '1px solid #e5e5e7',
-                borderRadius: 18, padding: '32px 28px',
-              }}>
+              <div className="lp-app-card" style={{ padding: '32px 28px' }}>
                 <div style={{ fontSize: 32, marginBottom: 16 }}>🎯</div>
                 <h3 style={{ fontSize: 17, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>
                   On crée pour vous
@@ -788,10 +785,7 @@ export default function LandingPage() {
             </div>
 
             {/* Examples */}
-            <div style={{
-              background: '#fff', border: '1px solid #e5e5e7',
-              borderRadius: 16, padding: '24px 28px',
-            }}>
+            <div className="lp-app-card" style={{ padding: '24px 28px' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
                 Exemples de modules créés par nos utilisateurs
               </p>
@@ -818,41 +812,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ COMMENT ÇA MARCHE ═════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
-          <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
-            <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 12 }}>
-              En 5 minutes
-            </p>
-            <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 36 }}>
-              Opérationnel immédiatement.
-            </h2>
-            <div className="lp-steps-grid" style={{
-              background: '#fff', borderRadius: 16, padding: 4,
-              border: '1px solid #e5e5e7',
-            }}>
-              {[
-                { n: '01', icon: '🏢', title: 'Profil', desc: 'Secteur, style, objectifs. 5 minutes.', color: '#6366f1' },
-                { n: '02', icon: '⚡', title: 'Activation', desc: 'Vos agents apprennent votre contexte.', color: '#a5b4fc' },
-                { n: '03', icon: '🚀', title: 'Opérationnel', desc: 'Tout fonctionne. Langage naturel.', color: '#22c55e' },
-              ].map((s, i) => (
-                <div key={i} style={{
-                  padding: '24px 18px', textAlign: 'center',
-                  borderRight: i < 2 ? '1px solid #e5e5e7' : 'none',
-                }}>
-                  <div style={{ fontSize: 10, fontWeight: 800, color: '#d1d5db', letterSpacing: 4, marginBottom: 12 }}>{s.n}</div>
-                  <div style={{ fontSize: 24, marginBottom: 8 }}>{s.icon}</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1d1d1f', marginBottom: 5 }}>{s.title}</div>
-                  <div style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{s.desc}</div>
-                  <div style={{ width: 22, height: 2, background: s.color, margin: '14px auto 0', borderRadius: 2 }} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ══ POURQUOI FREENZY ═════════════════════════════════ */}
-        <section style={{ background: '#0e0e18', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section style={{ background: '#0e0e18', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
@@ -874,10 +835,7 @@ export default function LandingPage() {
                 { icon: '⚡', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
                 { icon: '🤖', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
-                <div key={i} style={{
-                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
-                  borderRadius: 16, padding: '24px 20px',
-                }}>
+                <div key={i} className="lp-app-card-dark">
                   <div style={{ fontSize: 28, marginBottom: 12 }}>{item.icon}</div>
                   <h3 style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{item.title}</h3>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>{item.desc}</p>
@@ -911,12 +869,12 @@ export default function LandingPage() {
         </section>
 
         {/* ══ ENTERPRISE ═══════════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <EnterpriseSection />
         </section>
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
-        <section id="faq" style={{ background: '#f7f7f7', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section id="faq" style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#f97316', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>FAQ</p>
@@ -939,7 +897,7 @@ export default function LandingPage() {
                   onClick={() => { setFaqCat(ci); setOpenFaq(null); }}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 5,
-                    padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700,
+                    padding: '10px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700, minHeight: 44,
                     border: 'none', cursor: 'pointer',
                     background: faqCat === ci ? cat.color : '#fff',
                     color: faqCat === ci ? '#fff' : '#6b7280',
@@ -989,7 +947,7 @@ export default function LandingPage() {
                       background: isOpen ? '#fafaff' : '#fff',
                       border: isOpen ? `1.5px solid ${catColor}40` : '1px solid #ebebeb',
                       borderLeft: `3px solid ${isOpen ? catColor : '#d1d5db'}`,
-                      borderRadius: 11, padding: '14px 18px',
+                      borderRadius: 11, padding: '16px 18px',
                       transition: 'all 0.2s', cursor: 'pointer',
                     }}
                   >
@@ -1027,7 +985,7 @@ export default function LandingPage() {
         }}>
           <div style={{
             position: 'absolute', bottom: '-10%', left: '50%', transform: 'translateX(-50%)',
-            width: 500, height: 300,
+            width: '100%', maxWidth: 500, height: 300,
             background: 'radial-gradient(ellipse, rgba(99,102,241,0.11) 0%, transparent 68%)',
             pointerEvents: 'none',
           }} />

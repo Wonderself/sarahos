@@ -60,7 +60,7 @@ export default function VisioPage() {
   const topAgent = VISIO_AGENTS.find(a => a.id === topAgentId);
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <h1 className="page-title">🎙️ Visio Agents</h1>

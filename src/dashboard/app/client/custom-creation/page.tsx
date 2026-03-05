@@ -120,7 +120,7 @@ export default function ModulesSurMesurePage() {
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
       {/* Header */}
       <div className="page-header">
         <h1 className="page-title">Modules sur mesure</h1>

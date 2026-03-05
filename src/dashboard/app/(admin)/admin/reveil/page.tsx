@@ -60,7 +60,7 @@ export default async function ReveilPage() {
   const { alarms, stats, byMode, byDelivery } = data;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Réveils Intelligents</h1>

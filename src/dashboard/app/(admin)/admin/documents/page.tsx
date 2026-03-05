@@ -54,7 +54,7 @@ export default async function DocumentsPage() {
   } catch { /* empty */ }
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Pilotage Documents</h1>

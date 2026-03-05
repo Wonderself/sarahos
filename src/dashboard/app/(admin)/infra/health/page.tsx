@@ -21,7 +21,7 @@ export default async function InfraHealthPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Infrastructure</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -68,7 +68,7 @@ export default async function InfraHealthPage() {
   const persistence = infraHealth?.['persistence'] as Record<string, unknown> | undefined;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Infrastructure</h1>

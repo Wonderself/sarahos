@@ -83,7 +83,7 @@ export default function WhatsAppHubPage() {
   ] as const;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 admin-page-scrollable">
       <div>
         <h1 className="text-2xl font-bold text-white">WhatsApp Hub</h1>
         <p className="text-gray-400 mt-1">Conversations, configuration et commandes autopilot</p>

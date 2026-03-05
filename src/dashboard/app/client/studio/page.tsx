@@ -26,7 +26,7 @@ export default function StudioPage() {
   const availablePhotoCount = PHOTO_WORKFLOWS.filter(w => w.available).length;
 
   return (
-    <div style={{ padding: 32, maxWidth: 960, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: 32, maxWidth: 960, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
           Studio Creatif

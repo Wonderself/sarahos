@@ -21,7 +21,7 @@ export default async function AutonomyPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Autonomie</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -38,7 +38,7 @@ export default async function AutonomyPage() {
   const capEntries = Object.entries(capabilities);
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Autonomie du Systeme</h1>

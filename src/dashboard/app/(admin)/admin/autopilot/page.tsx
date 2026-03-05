@@ -58,7 +58,7 @@ export default async function AutopilotPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 admin-page-scrollable">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

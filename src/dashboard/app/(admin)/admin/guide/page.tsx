@@ -56,7 +56,7 @@ const SECTIONS = [
 
 export default function GuidePage() {
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <h1 className="page-title">Guide de Gestion</h1>
         <p className="page-subtitle">

@@ -174,7 +174,7 @@ export default function MyDiscussionsPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] gap-4">
+    <div className="flex h-[calc(100vh-8rem)] gap-4 admin-page-scrollable">
       {/* Sidebar */}
       <div className="w-72 flex flex-col bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shrink-0">
         <div className="p-3 border-b border-gray-700">

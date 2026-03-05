@@ -232,7 +232,7 @@ export default function MeetingPage() {
 
   if (!meetingStarted) {
     return (
-      <div>
+      <div className="client-page-scrollable">
         <div className="page-header">
           <div>
             <h1 className="page-title">Salle de Réunion</h1>
@@ -354,7 +354,7 @@ export default function MeetingPage() {
   const activeAgents = meetingAgents.filter(a => selectedAgents.includes(a.id));
 
   return (
-    <div className="chat-height flex flex-col">
+    <div className="chat-height flex flex-col client-page-scrollable">
       {/* Meeting Header */}
       <div className="flex flex-between items-center flex-wrap gap-8" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)' }}>
         <div>

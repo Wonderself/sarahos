@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RevenueAreaChart, UserGrowthBarChart, TopClientsTable, DateRangePicker } from '../AdminCharts';
+import { RevenueAreaChart, UserGrowthBarChart, DateRangePicker } from '../AdminCharts';
 import { getToken, API_BASE } from '@/lib/client-fetch';
 
 type Period = '7d' | '30d' | '90d';
@@ -18,14 +18,11 @@ async function fetchWithToken<T>(path: string): Promise<T | null> {
 }
 
 export default function OverviewCharts() {
-  const [period, setPeriod] = useState<Period>('30d');
+  const [period, setPeriod] = useState<Period>('7d');
   const [revenue, setRevenue] = useState<Array<{ date: string; revenue: number; cost: number; margin: number }>>([]);
   const [growth, setGrowth] = useState<Array<{ date: string; newUsers: number }>>([]);
-  const [topClients, setTopClients] = useState<Array<{
-    id: string; email: string; displayName: string; tier: string;
-    totalDeposited: number; totalSpent: number; balance: number;
-  }>>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'revenue' | 'users'>('revenue');
 
   useEffect(() => {
     setLoading(true);
@@ -39,51 +36,41 @@ export default function OverviewCharts() {
     });
   }, [period]);
 
-  // Top clients: fetch once
-  useEffect(() => {
-    fetchWithToken<typeof topClients>('/analytics/top-clients?limit=10')
-      .then(data => { if (data) setTopClients(data); });
-  }, []);
-
   return (
-    <>
-      {/* ── Revenue + User Growth with period picker ── */}
-      <div className="section">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <div className="section-title" style={{ marginBottom: 0 }}>Tendances</div>
-          <DateRangePicker value={period} onChange={setPeriod} />
+    <div className="card" style={{ padding: 12, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+      {/* Header: tabs + period picker */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <button
+            onClick={() => setActiveTab('revenue')}
+            className={`chat-mode-pill${activeTab === 'revenue' ? ' active' : ''}`}
+            style={{ fontSize: 11, padding: '3px 10px' }}
+          >
+            Revenus
+          </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`chat-mode-pill${activeTab === 'users' ? ' active' : ''}`}
+            style={{ fontSize: 11, padding: '3px 10px' }}
+          >
+            Users
+          </button>
         </div>
-        <div className="grid-2">
-          <div className="card" style={{ padding: 16 }}>
-            <div className="text-md font-bold mb-12">Revenus & Marge</div>
-            {loading ? (
-              <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div className="skeleton" style={{ width: '100%', height: 160, borderRadius: 8 }} />
-              </div>
-            ) : (
-              <RevenueAreaChart data={revenue} />
-            )}
-          </div>
-          <div className="card" style={{ padding: 16 }}>
-            <div className="text-md font-bold mb-12">Nouveaux utilisateurs</div>
-            {loading ? (
-              <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div className="skeleton" style={{ width: '100%', height: 160, borderRadius: 8 }} />
-              </div>
-            ) : (
-              <UserGrowthBarChart data={growth} />
-            )}
-          </div>
-        </div>
+        <DateRangePicker value={period} onChange={setPeriod} />
       </div>
 
-      {/* ── Top clients ── */}
-      <div className="section">
-        <div className="section-title">Top 10 Clients</div>
-        <div className="card" style={{ padding: 16 }}>
-          <TopClientsTable clients={topClients} />
-        </div>
+      {/* Chart */}
+      <div className="admin-chart-compact">
+        {loading ? (
+          <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="skeleton" style={{ width: '100%', height: '80%', borderRadius: 8 }} />
+          </div>
+        ) : activeTab === 'revenue' ? (
+          <RevenueAreaChart data={revenue} />
+        ) : (
+          <UserGrowthBarChart data={growth} />
+        )}
       </div>
-    </>
+    </div>
   );
 }

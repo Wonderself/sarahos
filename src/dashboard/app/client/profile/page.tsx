@@ -8,7 +8,7 @@ export default function ProfileRedirect() {
   }, []);
 
   return (
-    <div className="flex-center" style={{ height: '60vh' }}>
+    <div className="flex-center client-page-scrollable" style={{ height: '60vh' }}>
       <div className="animate-pulse text-base text-tertiary">
         Redirection vers Mon Compte...
       </div>

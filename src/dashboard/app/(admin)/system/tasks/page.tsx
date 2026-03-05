@@ -19,7 +19,7 @@ export default async function TasksPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Taches</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -51,7 +51,7 @@ export default async function TasksPage() {
   const completionPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Taches & Roadmap</h1>

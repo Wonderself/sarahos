@@ -314,7 +314,7 @@ export default function AdminChatPage() {
   // ─── Render ───
 
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-gray-900 text-white">
+    <div className="flex h-[calc(100vh-64px)] bg-gray-900 text-white admin-page-scrollable">
       {/* ── Left Sidebar ── */}
       <div className="w-64 flex-shrink-0 bg-gray-950 border-r border-gray-800 flex flex-col">
         {/* Sidebar Tabs */}

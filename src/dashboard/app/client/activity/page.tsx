@@ -200,7 +200,7 @@ export default function ActivityPage() {
   const grouped = groupActivities(activities);
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 720, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>

@@ -1204,6 +1204,31 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </>
       )}
     </div>
+
+    {/* ═══ MOBILE BOTTOM TAB BAR ═══ */}
+    <nav className="mobile-tab-bar">
+      <Link href="/client/dashboard" className={`tab-bar-item${pathname === '/client/dashboard' ? ' active' : ''}`}>
+        <span className="tab-bar-icon">🏠</span>
+        <span>Accueil</span>
+      </Link>
+      <Link href="/client/chat" className={`tab-bar-item${pathname?.startsWith('/client/chat') ? ' active' : ''}`}>
+        <span className="tab-bar-icon">💬</span>
+        <span>Chat</span>
+      </Link>
+      <Link href="/client/studio" className={`tab-bar-item${pathname?.startsWith('/client/studio') ? ' active' : ''}`}>
+        <span className="tab-bar-icon">🎬</span>
+        <span>Studio</span>
+      </Link>
+      <Link href="/client/personal" className={`tab-bar-item${pathname?.startsWith('/client/personal') || pathname?.startsWith('/client/agents') ? ' active' : ''}`}>
+        <span className="tab-bar-icon">🤖</span>
+        <span>Agents</span>
+      </Link>
+      <button className="tab-bar-item" onClick={() => setSidebarOpen(o => !o)}>
+        <span className="tab-bar-icon">☰</span>
+        <span>Plus</span>
+      </button>
+    </nav>
+
     <OnboardingTour />
     </ToastProvider>
   );

@@ -136,7 +136,7 @@ export default function PublicNav() {
               href={link.href}
               style={{
                 fontSize: 15, fontWeight: 500, textDecoration: 'none',
-                padding: '10px 12px', borderRadius: 8,
+                padding: '14px 16px', borderRadius: 8,
                 color: pathname === link.href ? '#6366f1' : '#4b5563',
                 background: pathname === link.href ? 'rgba(99,102,241,0.06)' : 'transparent',
               }}

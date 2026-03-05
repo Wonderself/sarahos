@@ -94,7 +94,7 @@ export default function SetupPage() {
   const pct = Math.round((done / total) * 100);
 
   return (
-    <div className="setup-page">
+    <div className="setup-page admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Setup & Onboarding</h1>

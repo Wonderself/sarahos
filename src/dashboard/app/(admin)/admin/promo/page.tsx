@@ -28,7 +28,7 @@ export default async function PromoPage() {
 
   if (error) {
     return (
-      <div>
+      <div className="admin-page-scrollable">
         <div className="page-header"><h1 className="page-title">Codes Promo</h1></div>
         <div className="alert alert-danger">{error}</div>
       </div>
@@ -42,7 +42,7 @@ export default async function PromoPage() {
   const inactive = codeList.filter(c => !c.isActive);
 
   return (
-    <div>
+    <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
           <h1 className="page-title">Codes Promo</h1>

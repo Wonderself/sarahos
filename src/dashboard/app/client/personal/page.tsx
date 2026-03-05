@@ -208,7 +208,7 @@ export default function PersonalAgentsPage() {
   const totalActive = activeBusinessIds.length + activePersonalIds.length;
 
   return (
-    <div>
+    <div className="client-page-scrollable">
       {/* ─── Header ─── */}
       <div className="page-header">
         <div>

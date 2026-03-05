@@ -59,7 +59,7 @@ export default function AgentModePage() {
   if (loading) return <div className="p-12 text-center text-gray-500">Chargement...</div>;
 
   return (
-    <div className="max-w-lg mx-auto space-y-6 py-6">
+    <div className="max-w-lg mx-auto space-y-6 py-6 client-page-scrollable">
       <div>
         <h1 className="text-2xl font-bold text-white">Mode de fonctionnement</h1>
         <p className="text-gray-400 mt-1">Choisis comment tes agents travaillent</p>

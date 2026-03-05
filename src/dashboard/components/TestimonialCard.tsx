@@ -13,11 +13,14 @@ export default function TestimonialCard({
   const initials = name.split(' ').map(n => n[0]).join('');
 
   return (
-    <div className="card card-lift" style={{ padding: 24, height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div style={{
+      padding: 28, height: '100%', display: 'flex', flexDirection: 'column',
+      borderRadius: 20, background: '#fafafa',
+    }}>
       {/* Stars */}
-      <div style={{ display: 'flex', gap: 2, marginBottom: 16 }}>
+      <div style={{ display: 'flex', gap: 2, marginBottom: 18 }}>
         {Array.from({ length: 5 }).map((_, i) => (
-          <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill={i < rating ? '#f59e0b' : '#e5e7eb'}>
+          <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={i < rating ? '#f59e0b' : '#e5e7eb'}>
             <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
           </svg>
         ))}
@@ -26,8 +29,8 @@ export default function TestimonialCard({
       {/* Quote */}
       <p style={{
         flex: 1, fontSize: 14, lineHeight: 1.7,
-        color: 'var(--text-secondary)', fontStyle: 'italic',
-        margin: '0 0 20px 0',
+        color: '#6b7280', fontStyle: 'italic',
+        margin: '0 0 24px 0',
       }}>
         &laquo;&nbsp;{quote}&nbsp;&raquo;
       </p>
@@ -35,16 +38,16 @@ export default function TestimonialCard({
       {/* Author */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
-          width: 40, height: 40, borderRadius: '50%',
+          width: 36, height: 36, borderRadius: '50%',
           background: avatarColor, color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 700, fontSize: 14,
+          fontWeight: 600, fontSize: 13,
         }}>
           {initials}
         </div>
         <div>
-          <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{name}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{role}, {company}</div>
+          <div style={{ fontWeight: 600, fontSize: 14, color: '#111827' }}>{name}</div>
+          <div style={{ fontSize: 12, color: '#9ca3af' }}>{role}, {company}</div>
         </div>
       </div>
     </div>

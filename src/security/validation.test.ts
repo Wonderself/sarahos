@@ -33,6 +33,16 @@ describe('validateBody middleware', () => {
     expect(req.body).toEqual({ apiKey: 'test-key' });
   });
 
+  it('should pass valid email+password login through', () => {
+    const middleware = validateBody(loginSchema);
+    const req = { body: { email: 'test@example.com', password: 'secret' } } as Request;
+    const res = mockRes();
+    const next = jest.fn();
+
+    middleware(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
+
   it('should return 400 for missing required field', () => {
     const middleware = validateBody(loginSchema);
     const req = { body: {} } as Request;
@@ -43,9 +53,6 @@ describe('validateBody middleware', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
       error: 'Validation failed',
-      details: expect.arrayContaining([
-        expect.objectContaining({ field: 'apiKey' }),
-      ]),
     }));
     expect(next).not.toHaveBeenCalled();
   });

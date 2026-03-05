@@ -7,8 +7,53 @@ import {
   walletTransactionsQuerySchema,
   usageSummaryQuerySchema,
   llmProxyRequestSchema,
+  autoTopupSchema,
 } from '../validation.schemas';
 import type { AuthenticatedRequest } from '../auth.types';
+import { auditLog } from '../../utils/audit-logger';
+import { documentRepository } from '../../users/document.repository';
+import { MAX_CONTEXT_TOKENS } from '../../utils/text-extractor';
+
+// Map agent names to document contexts
+function agentToDocContext(agentName?: string): string {
+  if (!agentName) return 'general';
+  if (agentName.includes('repondeur')) return 'repondeur';
+  if (agentName.includes('personal') || agentName.startsWith('agent-')) return 'personal';
+  if (agentName.includes('studio-video') || agentName === 'lucas') return 'studio-video';
+  if (agentName.includes('studio-photo') || agentName === 'emma') return 'studio-photo';
+  return 'general';
+}
+
+async function injectDocumentContext(
+  messages: Array<{ role: string; content: string }>,
+  userId: string,
+  agentName?: string,
+): Promise<Array<{ role: string; content: string }>> {
+  try {
+    const context = agentToDocContext(agentName);
+    const docText = await documentRepository.getTextForContext(userId, context, MAX_CONTEXT_TOKENS);
+    if (!docText) return messages;
+
+    // Inject into first system message, or prepend a new one
+    const systemIdx = messages.findIndex(m => m.role === 'system');
+    if (systemIdx >= 0) {
+      const updated = [...messages];
+      const existing = updated[systemIdx]!;
+      updated[systemIdx] = {
+        role: existing.role,
+        content: existing.content + `\n\n[Documents de reference]\n${docText}`,
+      };
+      return updated;
+    }
+
+    return [
+      { role: 'system', content: `[Documents de reference]\n${docText}` },
+      ...messages,
+    ];
+  } catch {
+    return messages;
+  }
+}
 
 export function createBillingRouter(): Router {
   const router = Router();
@@ -29,22 +74,39 @@ export function createBillingRouter(): Router {
   }));
 
   /**
-   * POST /billing/deposit — Deposit credits (admin or self)
+   * POST /billing/deposit — Deposit credits (admin or operator only)
    */
-  router.post('/billing/deposit', verifyToken, validateBody(depositSchema), asyncHandler(async (req, res) => {
+  router.post('/billing/deposit', verifyToken, requireRole('admin', 'operator'), validateBody(depositSchema), asyncHandler(async (req, res) => {
     const authReq = req as AuthenticatedRequest;
-    const { userId, amount, description, referenceType, referenceId } = req.body;
+    const { userId, amount, description, referenceType, referenceId, idempotencyKey } = req.body;
 
-    // Non-admins can only deposit to their own wallet
     const callerUserId = authReq.user?.userId ?? authReq.user?.sub;
-    if (authReq.user?.role !== 'admin' && userId !== callerUserId) {
-      res.status(403).json({ error: 'Cannot deposit to another user\'s wallet' });
-      return;
+
+    // Idempotency check: prevent duplicate deposits (atomic with advisory lock)
+    if (idempotencyKey) {
+      const { dbClient } = await import('../../infra');
+      if (dbClient.isConnected()) {
+        // Use pg_advisory_xact_lock to serialize checks for the same key
+        const keyHash = Math.abs(idempotencyKey.split('').reduce((a: number, c: string) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0));
+        const existing = await dbClient.withTransaction(async (client) => {
+          await client.query(`SELECT pg_advisory_xact_lock($1)`, [keyHash]);
+          return client.query(
+            `SELECT id FROM wallet_transactions WHERE description LIKE $1`,
+            [`%[idempotency:${idempotencyKey}]%`],
+          );
+        });
+        if (existing.rows.length > 0) {
+          res.status(200).json({ message: 'Deposit already processed', duplicate: true });
+          return;
+        }
+      }
     }
 
+    const descWithKey = idempotencyKey ? `${description} [idempotency:${idempotencyKey}]` : description;
     const { walletService } = await import('../../billing/wallet.service');
-    const tx = await walletService.deposit({ userId, amount, description, referenceType, referenceId });
+    const tx = await walletService.deposit({ userId, amount, description: descWithKey, referenceType, referenceId });
     if (!tx) { res.status(500).json({ error: 'Deposit failed' }); return; }
+    auditLog({ actor: callerUserId ?? 'unknown', action: 'deposit', resourceType: 'wallet', resourceId: userId, details: { amount, description }, ip: authReq.ip });
     res.status(201).json({ transaction: tx });
   }));
 
@@ -103,10 +165,11 @@ export function createBillingRouter(): Router {
     if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
 
     const { llmProxyService } = await import('../../billing/llm-proxy.service');
+    const enrichedMessages = await injectDocumentContext(req.body.messages, userId, req.body.agentName);
     const result = await llmProxyService.processRequest({
       userId,
       model: req.body.model,
-      messages: req.body.messages,
+      messages: enrichedMessages,
       maxTokens: req.body.maxTokens,
       temperature: req.body.temperature,
       agentName: req.body.agentName,
@@ -133,10 +196,11 @@ export function createBillingRouter(): Router {
 
     const { llmProxyService } = await import('../../billing/llm-proxy.service');
 
+    const enrichedMessages = await injectDocumentContext(req.body.messages, userId, req.body.agentName);
     const proxyRequest = {
       userId,
       model: req.body.model,
-      messages: req.body.messages,
+      messages: enrichedMessages,
       maxTokens: req.body.maxTokens,
       temperature: req.body.temperature,
       agentName: req.body.agentName,
@@ -166,6 +230,69 @@ export function createBillingRouter(): Router {
     );
 
     res.end();
+  }));
+
+  // ── Auto-Topup Settings ──
+
+  /**
+   * GET /billing/wallet/auto-topup — Get auto-topup settings
+   */
+  router.get('/billing/wallet/auto-topup', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { walletService } = await import('../../billing/wallet.service');
+    const settings = await walletService.getAutoTopupSettings(userId);
+    res.json({ settings: settings ?? { autoTopupEnabled: false, autoTopupThreshold: 0, autoTopupAmount: 0 } });
+  }));
+
+  /**
+   * PATCH /billing/wallet/auto-topup — Update auto-topup settings
+   */
+  router.patch('/billing/wallet/auto-topup', verifyToken, validateBody(autoTopupSchema), asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { walletService } = await import('../../billing/wallet.service');
+    const wallet = await walletService.updateAutoTopupSettings(userId, req.body);
+    if (!wallet) { res.status(500).json({ error: 'Failed to update settings' }); return; }
+
+    auditLog({ actor: userId, action: 'update_auto_topup', resourceType: 'wallet', resourceId: userId, details: req.body, ip: authReq.ip });
+    res.json({ settings: { autoTopupEnabled: wallet.autoTopupEnabled, autoTopupThreshold: wallet.autoTopupThreshold, autoTopupAmount: wallet.autoTopupAmount } });
+  }));
+
+  // ── Invoices ──
+
+  /**
+   * GET /billing/invoices — List user's invoices (transaction history)
+   */
+  router.get('/billing/invoices', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { invoiceService } = await import('../../billing/invoice.service');
+    const invoices = await invoiceService.listUserInvoices(userId);
+    res.json({ invoices });
+  }));
+
+  /**
+   * GET /billing/invoices/:transactionId/html — Get HTML invoice for a transaction
+   */
+  router.get('/billing/invoices/:transactionId/html', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { invoiceService } = await import('../../billing/invoice.service');
+    const data = await invoiceService.getInvoiceData(String(req.params['transactionId']), userId);
+    if (!data) { res.status(404).json({ error: 'Transaction not found' }); return; }
+
+    const html = invoiceService.generateHtmlInvoice(data);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(html);
   }));
 
   // ── Admin Billing Stats ──

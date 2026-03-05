@@ -3,19 +3,58 @@ jest.mock('../utils/logger', () => ({
 }));
 
 const mockWalletService = {
+  hold: jest.fn(),
+  releaseHold: jest.fn(),
   hasBalance: jest.fn(),
   withdraw: jest.fn(),
   getWalletByUserId: jest.fn(),
   recordLlmUsage: jest.fn(),
+  getAutoTopupSettings: jest.fn(),
+  getUsageSummary: jest.fn(),
 };
 
 jest.mock('./wallet.service', () => ({
   walletService: mockWalletService,
 }));
 
+jest.mock('../users/user.repository', () => ({
+  userRepository: {
+    findById: jest.fn().mockResolvedValue(null),
+  },
+}));
+
 const mockCallLLM = jest.fn();
 jest.mock('../core/llm/llm-client', () => ({
   callLLM: mockCallLLM,
+}));
+
+// Mock guardrails modules
+jest.mock('../core/guardrails/token-budget-manager', () => ({
+  beforeClaudeCall: jest.fn().mockResolvedValue({ allowed: true, maxTokensAllowed: 8000, consumed: { today: 0, thisHour: 0, thisMinute: 0 } }),
+  afterClaudeCall: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock('../core/guardrails/circuit-breaker-enhanced', () => ({
+  checkAgentCircuitBreaker: jest.fn().mockResolvedValue({ allowed: true }),
+  recordAgentTokens: jest.fn().mockResolvedValue(undefined),
+  recordGlobalTokens: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock('../core/guardrails/user-mode', () => ({
+  getUserMode: jest.fn().mockResolvedValue('pro'),
+}));
+const mockSelectModel = jest.fn().mockResolvedValue('claude-sonnet-4-20250514');
+jest.mock('../core/guardrails/model-router', () => ({
+  selectModel: mockSelectModel,
+}));
+jest.mock('../core/guardrails/memory-optimizer', () => ({
+  optimizeConversationContext: jest.fn().mockRejectedValue(new Error('mock')),
+}));
+jest.mock('../core/guardrails/security-hardening', () => ({
+  getSecuritySystemPromptSuffix: jest.fn().mockReturnValue(''),
+}));
+jest.mock('../core/guardrails/loop-detector', () => ({
+  startChain: jest.fn().mockReturnValue({ chainId: 'test-chain', initiatorUserId: 'u1', callStack: [], depth: 0, totalTokens: 0, totalCost: 0, startedAt: Date.now(), maxDepth: 5, maxTokens: 100000, maxDurationMs: 120000 }),
+  recordChainTokens: jest.fn(),
+  endChain: jest.fn(),
 }));
 
 import { LlmProxyService } from './llm-proxy.service';
@@ -37,6 +76,8 @@ describe('LlmProxyService', () => {
     service = new LlmProxyService();
     jest.clearAllMocks();
     mockCallLLM.mockResolvedValue(defaultLLMResponse);
+    // Default: daily budget check passes
+    mockWalletService.getUsageSummary.mockResolvedValue({ totalBilledCredits: 0 });
   });
 
   describe('processRequest', () => {
@@ -46,8 +87,9 @@ describe('LlmProxyService', () => {
       messages: [{ role: 'user', content: 'Hello world' }],
     };
 
-    it('should return error if insufficient balance', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(false);
+    it('should return error if insufficient balance (hold fails)', async () => {
+      mockWalletService.hold.mockResolvedValue(null);
+      mockWalletService.getAutoTopupSettings.mockResolvedValue(null);
 
       const result = await service.processRequest(baseRequest);
       expect(result).toEqual({ error: 'Insufficient balance', code: 'INSUFFICIENT_BALANCE' });
@@ -55,8 +97,8 @@ describe('LlmProxyService', () => {
     });
 
     it('should process request with billing when balance available', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue({ id: 'tx1' });
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue({ id: 'w1' });
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
 
@@ -74,8 +116,8 @@ describe('LlmProxyService', () => {
     });
 
     it('should call callLLM with correctly mapped request', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue({ id: 'tx1' });
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue({ id: 'w1' });
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
 
@@ -103,11 +145,12 @@ describe('LlmProxyService', () => {
       );
     });
 
-    it('should map opus model to advanced tier', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue({ id: 'tx1' });
+    it('should map opus model to advanced tier when model router selects opus', async () => {
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue({ id: 'w1' });
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
+      mockSelectModel.mockResolvedValueOnce('claude-opus-4-6');
 
       await service.processRequest({
         ...baseRequest,
@@ -120,8 +163,8 @@ describe('LlmProxyService', () => {
     });
 
     it('should map conversation history correctly', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue({ id: 'tx1' });
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue({ id: 'w1' });
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
 
@@ -145,9 +188,9 @@ describe('LlmProxyService', () => {
       );
     });
 
-    it('should still return result if withdrawal fails', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue(null);
+    it('should still return result even when wallet lookup returns null', async () => {
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue(null);
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
 
@@ -159,8 +202,8 @@ describe('LlmProxyService', () => {
     });
 
     it('should record LLM usage after request', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue({ id: 'tx1' });
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue({ id: 'w1' });
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
 
@@ -185,8 +228,8 @@ describe('LlmProxyService', () => {
     });
 
     it('should use default system prompt when no system message provided', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
-      mockWalletService.withdraw.mockResolvedValue({ id: 'tx1' });
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockWalletService.getWalletByUserId.mockResolvedValue({ id: 'w1' });
       mockWalletService.recordLlmUsage.mockResolvedValue(undefined);
 
@@ -199,12 +242,15 @@ describe('LlmProxyService', () => {
       );
     });
 
-    it('should propagate LLM errors', async () => {
-      mockWalletService.hasBalance.mockResolvedValue(true);
+    it('should propagate LLM errors and release hold with full refund', async () => {
+      mockWalletService.hold.mockResolvedValue('hold-1');
+      mockWalletService.releaseHold.mockResolvedValue(undefined);
       mockCallLLM.mockRejectedValue(new Error('Anthropic API error'));
 
       await expect(service.processRequest(baseRequest)).rejects.toThrow('Anthropic API error');
-      expect(mockWalletService.withdraw).not.toHaveBeenCalled();
+      expect(mockWalletService.releaseHold).toHaveBeenCalledWith(
+        'u1', 'hold-1', expect.any(Number), 0,
+      );
     });
   });
 });

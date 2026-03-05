@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useToast } from '../../../../components/Toast';
 
 async function callAction(action: string, params: Record<string, unknown>) {
   const res = await fetch('/api/actions', {
@@ -15,21 +16,23 @@ async function callAction(action: string, params: Record<string, unknown>) {
 
 export function AgentActions({ agentId, status }: { agentId: string; status: string }) {
   const [loading, setLoading] = useState('');
+  const { showSuccess, showError } = useToast();
 
   async function doAction(action: string) {
     setLoading(action);
     try {
       await callAction(action, { id: agentId });
+      showSuccess(`Agent ${action === 'pauseAgent' ? 'mis en pause' : 'repris'}`);
       window.location.reload();
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
+      showError(e instanceof Error ? e.message : 'Erreur');
     } finally {
       setLoading('');
     }
   }
 
   return (
-    <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
+    <div className="flex gap-8" style={{ marginTop: 12 }}>
       {status === 'IDLE' || status === 'BUSY' ? (
         <button onClick={() => doAction('pauseAgent')} className="btn btn-danger btn-xs" disabled={!!loading}>
           {loading === 'pauseAgent' ? '...' : 'Pause'}

@@ -39,7 +39,7 @@ export async function generateCopy(
     content: '',
     wordCount: length ?? 250,
     tone: tone ?? 'professionnel',
-    suggestedTitle: `${topic} — SARAH OS`,
+    suggestedTitle: `${topic} — Freenzy.io`,
   };
 }
 
@@ -52,7 +52,7 @@ export async function createVisual(
   logger.info('Visual created (stub)', { type, description, brandColors });
   return {
     success: true,
-    imageUrl: `https://placeholder.sarah-os.com/visual/${Date.now()}`,
+    imageUrl: `https://placeholder.freenzy.io/visual/${Date.now()}`,
     dimensions: '1200x630',
     format: 'png',
   };

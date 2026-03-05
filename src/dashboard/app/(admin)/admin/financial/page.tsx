@@ -1,4 +1,5 @@
 import { api } from '@/lib/api-client';
+import ExportButton from './ExportButton';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 10;
@@ -54,6 +55,7 @@ export default async function FinancialPage() {
           <h1 className="page-title">Finances</h1>
           <p className="page-subtitle">Resume financier — {period || 'Periode courante'}</p>
         </div>
+        <ExportButton />
       </div>
 
       {/* KPIs */}

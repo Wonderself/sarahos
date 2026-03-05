@@ -8,6 +8,7 @@ export class SSEManager {
   private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
   private unsubscribe: (() => void) | null = null;
   private static readonly DEAD_CLIENT_TIMEOUT_MS = 90000;
+  private static readonly MAX_CLIENTS = Number(process.env['SSE_MAX_CLIENTS'] ?? 500);
 
   initialize(): void {
     this.unsubscribe = eventBus.subscribeAll(async (event: SystemEvent) => {
@@ -17,9 +18,20 @@ export class SSEManager {
     logger.info('SSE Manager initialized');
   }
 
-  addClient(clientId: string, res: Response, types?: string[]): void {
+  addClient(clientId: string, res: Response, types?: string[]): boolean {
+    if (this.clients.size >= SSEManager.MAX_CLIENTS) {
+      logger.warn('SSE max clients reached, rejecting', { clientId, current: this.clients.size });
+      return false;
+    }
+
+    // Auto-cleanup on client disconnect
+    res.on('close', () => {
+      this.removeClient(clientId);
+    });
+
     this.clients.set(clientId, { res, types, lastActivity: Date.now() });
     logger.debug('SSE client connected', { clientId, clientCount: this.clients.size });
+    return true;
   }
 
   removeClient(clientId: string): void {
@@ -37,8 +49,13 @@ export class SSEManager {
       }
 
       try {
-        client.res.write(data);
+        const ok = client.res.write(data);
         client.lastActivity = Date.now();
+        // Backpressure: if kernel buffer is full, drop client to prevent memory leak
+        if (!ok) {
+          logger.debug('SSE client buffer full, removing', { clientId });
+          this.removeClient(clientId);
+        }
       } catch {
         this.removeClient(clientId);
       }

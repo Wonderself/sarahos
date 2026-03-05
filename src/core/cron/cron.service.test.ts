@@ -65,7 +65,7 @@ describe('CronService', () => {
 
     it('should skip if last run was recent', async () => {
       const lastRun = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
-      mockDbClient.query.mockResolvedValueOnce({ rows: [{ started_at: lastRun }] });
+      mockDbClient.query.mockResolvedValueOnce({ rows: [{ created_at: lastRun }] });
 
       await (service as unknown as CronServicePrivate).resetDailyApiCalls();
       expect(mockDbClient.query).toHaveBeenCalledTimes(1); // Only the check query

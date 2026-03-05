@@ -13,20 +13,6 @@ export interface Wallet {
   updatedAt: Date;
 }
 
-// Commission tiers (locked at registration based on user number)
-export const COMMISSION_TIERS = [
-  { maxUserNumber: 1000, rate: 0, label: 'Early Adopter' },
-  { maxUserNumber: 100000, rate: 0.05, label: 'Standard' },
-  { maxUserNumber: Infinity, rate: 0.07, label: 'Standard+' },
-];
-
-export function getCommissionRate(userNumber: number): number {
-  for (const tier of COMMISSION_TIERS) {
-    if (userNumber <= tier.maxUserNumber) return tier.rate;
-  }
-  return 0.07;
-}
-
 export type TransactionType = 'deposit' | 'withdrawal' | 'refund' | 'bonus' | 'expiry';
 
 export interface WalletTransaction {

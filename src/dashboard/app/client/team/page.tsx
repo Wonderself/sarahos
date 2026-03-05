@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   DEFAULT_AGENTS,
@@ -35,11 +35,11 @@ interface TeamAgent {
 function buildTeamAgents(tier: string): TeamAgent[] {
   const configs = loadAgentConfigs();
   const shortIdMap: Record<string, string> = {
-    'sarah-repondeur': 'repondeur', 'sarah-assistante': 'assistante',
-    'sarah-commercial': 'commercial', 'sarah-marketing': 'marketing',
-    'sarah-rh': 'rh', 'sarah-communication': 'communication',
-    'sarah-finance': 'cfo', 'sarah-dev': 'cto',
-    'sarah-juridique': 'juridique', 'sarah-dg': 'dg',
+    'fz-repondeur': 'repondeur', 'fz-assistante': 'assistante',
+    'fz-commercial': 'commercial', 'fz-marketing': 'marketing',
+    'fz-rh': 'rh', 'fz-communication': 'communication',
+    'fz-finance': 'cfo', 'fz-dev': 'cto',
+    'fz-juridique': 'juridique', 'fz-dg': 'dg',
   };
 
   return DEFAULT_AGENTS.map(def => {
@@ -66,11 +66,23 @@ function buildTeamAgents(tier: string): TeamAgent[] {
 export default function TeamPage() {
   const [agents, setAgents] = useState<TeamAgent[]>([]);
   const [tier, setTier] = useState('guest');
-  const [activeIds, setActiveIds] = useState<AgentTypeId[]>(['sarah-repondeur']);
+  const [activeIds, setActiveIds] = useState<AgentTypeId[]>(['fz-repondeur']);
+  const [activeTab, setActiveTab] = useState<'agents' | 'workspace' | 'activity'>('agents');
+  // Workspace state
+  const [workspaces, setWorkspaces] = useState<Array<{ id: string; name: string; slug: string; plan: string; maxMembers: number }>>([]);
+  const [activeWorkspace, setActiveWorkspace] = useState<string | null>(null);
+  const [members, setMembers] = useState<Array<{ id: string; userId: string; role: string; email?: string; displayName?: string }>>([]);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('viewer');
+  const [inviting, setInviting] = useState(false);
+  const [pendingInvites, setPendingInvites] = useState<Array<{ id: string; email: string; role: string }>>([]);
+  const [wsActivity, setWsActivity] = useState<Array<{ id: string; action: string; userName?: string; createdAt: string }>>([]);
+  const [wsName, setWsName] = useState('');
+  const [creatingWs, setCreatingWs] = useState(false);
 
   useEffect(() => {
     try {
-      const session = JSON.parse(localStorage.getItem('sarah_session') ?? '{}');
+      const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
       const t = session.tier || 'guest';
       setTier(t);
       setAgents(buildTeamAgents(t));
@@ -78,19 +90,93 @@ export default function TeamPage() {
       setAgents(buildTeamAgents('guest'));
     }
     setActiveIds(getActiveAgentIds());
+    // Load workspaces
+    loadWorkspaces();
   }, []);
+
+  function getToken() {
+    return document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+  }
+
+  async function loadWorkspaces() {
+    try {
+      const token = getToken();
+      const res = await fetch('/api/portal/workspaces', { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+      if (res.ok) {
+        const data = await res.json();
+        setWorkspaces(data.workspaces ?? []);
+        if (data.workspaces?.length > 0) {
+          const first = data.workspaces[0];
+          setActiveWorkspace(first.id);
+          loadWorkspaceData(first.id);
+        }
+      }
+    } catch {}
+  }
+
+  async function loadWorkspaceData(wsId: string) {
+    const token = getToken();
+    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+    try {
+      const [membersRes, activityRes] = await Promise.all([
+        fetch(`/api/portal/workspaces/${wsId}/members`, { headers }),
+        fetch(`/api/portal/workspaces/${wsId}/activity`, { headers }),
+      ]);
+      if (membersRes.ok) { const d = await membersRes.json(); setMembers(d.members ?? []); }
+      if (activityRes.ok) { const d = await activityRes.json(); setWsActivity(d.activity ?? []); }
+    } catch {}
+  }
+
+  async function createWorkspace() {
+    if (!wsName.trim()) return;
+    setCreatingWs(true);
+    try {
+      const token = getToken();
+      const res = await fetch('/api/portal/workspaces', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ name: wsName.trim() }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setWorkspaces(prev => [...prev, data.workspace]);
+        setActiveWorkspace(data.workspace.id);
+        setWsName('');
+        loadWorkspaceData(data.workspace.id);
+      }
+    } catch {}
+    setCreatingWs(false);
+  }
+
+  async function sendInvite() {
+    if (!inviteEmail.trim() || !activeWorkspace) return;
+    setInviting(true);
+    try {
+      const token = getToken();
+      const res = await fetch(`/api/portal/workspaces/${activeWorkspace}/invite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ email: inviteEmail.trim(), role: inviteRole }),
+      });
+      if (res.ok) {
+        setInviteEmail('');
+        loadWorkspaceData(activeWorkspace);
+      }
+    } catch {}
+    setInviting(false);
+  }
 
   function handleToggleAgent(agentId: AgentTypeId) {
     const updated = toggleAgent(agentId);
     setActiveIds([...updated]);
     // Persist to backend
     try {
-      const session = JSON.parse(localStorage.getItem('sarah_session') ?? '{}');
+      const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
       if (session.token) {
-        fetch('/api/portal?path=/portal/active-agents', {
+        fetch('/api/portal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: session.token, agents: updated }),
+          body: JSON.stringify({ path: '/portal/active-agents', token: session.token, method: 'POST', data: { agents: updated } }),
         }).catch(() => {});
       }
     } catch { /* */ }
@@ -105,15 +191,50 @@ export default function TeamPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">Mon equipe IA</h1>
+          <h1 className="page-title">Mon équipe</h1>
           <p className="page-subtitle">
-            {activeAgents.length} agent{activeAgents.length > 1 ? 's' : ''} actif{activeAgents.length > 1 ? 's' : ''} sur {DEFAULT_AGENTS.length} disponibles — Acces gratuit
+            Agents IA, espace collaboratif et activité
           </p>
         </div>
         <Link href="/client/chat" className="btn btn-primary">
           Discuter &rarr;
         </Link>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-4 mb-8" style={{ borderBottom: '1px solid var(--border)' }}>
+        {([
+          { id: 'agents' as const, label: 'Mon équipe IA', icon: '🤖' },
+          { id: 'workspace' as const, label: 'Espace collaboratif', icon: '👥' },
+          { id: 'activity' as const, label: 'Activité', icon: '📊' },
+        ]).map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => {
+              setActiveTab(tab.id);
+              if (tab.id === 'workspace' && activeWorkspace) loadWorkspaceData(activeWorkspace);
+            }}
+            className="btn btn-ghost"
+            style={{
+              borderRadius: 0,
+              borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
+              color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-secondary)',
+              fontWeight: activeTab === tab.id ? 600 : 400,
+              fontSize: 13,
+              padding: '8px 16px',
+            }}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab: Agents */}
+      {activeTab === 'agents' && <>
+
+      <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+        {activeAgents.length} agent{activeAgents.length > 1 ? 's' : ''} actif{activeAgents.length > 1 ? 's' : ''} sur {DEFAULT_AGENTS.length} disponibles
+      </p>
 
       {/* Active Agents */}
       {activeAgents.length > 0 && (
@@ -199,7 +320,7 @@ export default function TeamPage() {
         <div className="section">
           <div className="section-title">Agents disponibles</div>
           <p className="text-md text-muted mb-16">
-            Cliquez sur &quot;Activer&quot; pour ajouter un agent a votre equipe.
+            Cliquez sur &quot;Activer&quot; pour ajouter un agent à votre équipe.
           </p>
           <div className="grid-2" style={{ gap: 12 }}>
             {inactiveAgents.map(agent => (
@@ -256,19 +377,198 @@ export default function TeamPage() {
           Votre équipe IA travaille ensemble
         </div>
         <p className="text-md text-secondary max-w-md" style={{ lineHeight: 1.6, margin: '0 auto 20px' }}>
-          Tous les agents sont des facettes de Sarah. Ils collaborent en arriere-plan,
-          partagent le contexte de votre entreprise, et s&apos;ameliorent avec chaque interaction.
-          Plus vous recrutez, plus votre équipe est performante.
+          Tous les agents collaborent, partagent le contexte, et s&apos;améliorent avec chaque interaction.
         </p>
         <div className="flex flex-center flex-wrap" style={{ gap: 10 }}>
-          <Link href="/client/chat" className="btn btn-primary">
-            Discuter avec mon équipe
-          </Link>
-          <Link href="/client/meeting" className="btn btn-ghost">
-            Lancer une reunion
-          </Link>
+          <Link href="/client/chat" className="btn btn-primary">Discuter avec mon équipe</Link>
+          <Link href="/client/meeting" className="btn btn-ghost">Lancer une reunion</Link>
         </div>
       </div>
+
+      </>}
+
+      {/* Tab: Workspace */}
+      {activeTab === 'workspace' && (
+        <div>
+          {workspaces.length === 0 ? (
+            <div className="text-center rounded-lg bg-secondary border" style={{ padding: '60px 20px' }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>👥</div>
+              <h3 className="text-lg font-bold mb-4">Créez votre premier espace collaboratif</h3>
+              <p className="text-sm text-secondary mb-16" style={{ maxWidth: 400, margin: '0 auto 20px' }}>
+                Invitez votre équipe pour travailler ensemble : données partagées, agents communs, actions assignées.
+              </p>
+              <div className="flex flex-center gap-6">
+                <input
+                  value={wsName}
+                  onChange={e => setWsName(e.target.value)}
+                  placeholder="Nom de l'espace (ex: Mon entreprise)"
+                  className="input"
+                  style={{ maxWidth: 300, fontSize: 13 }}
+                />
+                <button
+                  onClick={createWorkspace}
+                  disabled={!wsName.trim() || creatingWs}
+                  className="btn btn-primary"
+                >
+                  {creatingWs ? 'Création...' : 'Créer'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              {/* Workspace selector if multiple */}
+              {workspaces.length > 1 && (
+                <select
+                  value={activeWorkspace ?? ''}
+                  onChange={e => { setActiveWorkspace(e.target.value); loadWorkspaceData(e.target.value); }}
+                  className="input mb-8"
+                  style={{ fontSize: 13, width: 'auto' }}
+                >
+                  {workspaces.map(ws => (
+                    <option key={ws.id} value={ws.id}>{ws.name}</option>
+                  ))}
+                </select>
+              )}
+
+              {/* Workspace info */}
+              <div className="card mb-8" style={{ padding: 16 }}>
+                <div className="flex flex-between items-center mb-8">
+                  <h3 className="text-base font-bold">
+                    {workspaces.find(w => w.id === activeWorkspace)?.name ?? 'Espace'}
+                  </h3>
+                  <span className="text-xs font-medium" style={{
+                    padding: '2px 8px', borderRadius: 4,
+                    background: 'var(--accent)11', color: 'var(--accent)',
+                  }}>
+                    {workspaces.find(w => w.id === activeWorkspace)?.plan ?? 'team'}
+                  </span>
+                </div>
+                <p className="text-sm text-secondary">
+                  {members.length} membre{members.length > 1 ? 's' : ''} ·
+                  Max {workspaces.find(w => w.id === activeWorkspace)?.maxMembers ?? 5}
+                </p>
+              </div>
+
+              {/* Members list */}
+              <div className="section">
+                <div className="section-title">Membres</div>
+                <div className="flex flex-col gap-4">
+                  {members.map(m => (
+                    <div key={m.id} className="flex items-center gap-8 card" style={{ padding: '10px 14px' }}>
+                      <div className="flex-center rounded-full" style={{
+                        width: 36, height: 36, background: 'var(--accent)22', color: 'var(--accent)',
+                        fontSize: 14, fontWeight: 700,
+                      }}>
+                        {(m.displayName ?? m.email ?? '?')[0].toUpperCase()}
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-medium">{m.displayName ?? m.email ?? 'Utilisateur'}</div>
+                        {m.email && <div className="text-xs text-secondary">{m.email}</div>}
+                      </div>
+                      <span className="text-xs font-medium" style={{
+                        padding: '2px 8px', borderRadius: 4,
+                        background: m.role === 'owner' ? '#F59E0B22' : m.role === 'editor' ? '#3B82F622' : '#6B728022',
+                        color: m.role === 'owner' ? '#F59E0B' : m.role === 'editor' ? '#3B82F6' : '#6B7280',
+                      }}>
+                        {m.role === 'owner' ? 'Propriétaire' : m.role === 'editor' ? 'Éditeur' : 'Lecteur'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Invite section */}
+              <div className="section">
+                <div className="section-title">Inviter un membre</div>
+                <div className="flex gap-6 items-center flex-wrap">
+                  <input
+                    value={inviteEmail}
+                    onChange={e => setInviteEmail(e.target.value)}
+                    placeholder="Email du collaborateur"
+                    type="email"
+                    className="input"
+                    style={{ flex: 1, minWidth: 200, fontSize: 13 }}
+                  />
+                  <select
+                    value={inviteRole}
+                    onChange={e => setInviteRole(e.target.value)}
+                    className="input"
+                    style={{ width: 'auto', fontSize: 13 }}
+                  >
+                    <option value="viewer">Lecteur</option>
+                    <option value="editor">Éditeur</option>
+                  </select>
+                  <button
+                    onClick={sendInvite}
+                    disabled={!inviteEmail.trim() || inviting}
+                    className="btn btn-primary btn-sm"
+                  >
+                    {inviting ? 'Envoi...' : 'Inviter'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Create another workspace */}
+              <div className="section">
+                <div className="section-title">Créer un autre espace</div>
+                <div className="flex gap-6 items-center">
+                  <input
+                    value={wsName}
+                    onChange={e => setWsName(e.target.value)}
+                    placeholder="Nom du nouvel espace"
+                    className="input"
+                    style={{ flex: 1, maxWidth: 300, fontSize: 13 }}
+                  />
+                  <button
+                    onClick={createWorkspace}
+                    disabled={!wsName.trim() || creatingWs}
+                    className="btn btn-secondary btn-sm"
+                  >
+                    {creatingWs ? 'Création...' : '+ Créer'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab: Activity */}
+      {activeTab === 'activity' && (
+        <div>
+          {wsActivity.length === 0 ? (
+            <div className="text-center" style={{ padding: '60px 20px', color: 'var(--text-secondary)' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>📊</div>
+              <p className="text-sm">Aucune activité pour le moment.</p>
+              {workspaces.length === 0 && (
+                <p className="text-xs mt-4">Créez un espace collaboratif pour voir l&apos;activité de votre équipe.</p>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {wsActivity.map(entry => (
+                <div key={entry.id} className="flex items-center gap-8 card" style={{ padding: '10px 14px' }}>
+                  <div className="flex-center rounded-full" style={{
+                    width: 32, height: 32, background: 'var(--bg-tertiary)',
+                    fontSize: 12, fontWeight: 600,
+                  }}>
+                    {(entry.userName ?? '?')[0].toUpperCase()}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm">
+                      <strong>{entry.userName ?? 'Utilisateur'}</strong>{' '}
+                      {entry.action.replace(/_/g, ' ')}
+                    </div>
+                    <div className="text-xs text-secondary">
+                      {new Date(entry.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

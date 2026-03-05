@@ -2,7 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
-const ALLOWED_PATHS = ['/portal/wallet', '/portal/usage', '/portal/dashboard', '/portal/profile'];
+const ALLOWED_EXACT_PATHS = new Set(['/portal/wallet', '/portal/usage', '/portal/dashboard', '/portal/profile', '/portal/active-agents', '/custom-creation/quotes', '/documents', '/documents/storage', '/billing/wallet/auto-topup', '/portal/preferences', '/portal/company-profile', '/portal/gamification', '/portal/activity', '/portal/sessions', '/billing/invoices', '/portal/notifications/stream', '/portal/alarms', '/portal/projects', '/notifications', '/billing/usage', '/personal/config', '/campaigns', '/financial/summary', '/financial/costs', '/billing/pricing', '/avatar/personas', '/avatar/personas/switch', '/avatar/pipeline/health', '/portal/referrals', '/portal/agents/custom', '/portal/modules']);
+
+const ALLOWED_PREFIXES = ['/portal/user-data/', '/billing/invoices/', '/portal/alarms/', '/portal/projects/', '/personal/', '/notifications/', '/portal/sessions/', '/documents/', '/campaigns/', '/financial/', '/avatar/telephony/', '/avatar/pipeline/', '/avatars/', '/portal/agents/custom/', '/portal/modules/'];
+
+function isAllowedPath(path: string): boolean {
+  const cleanPath = path.split('?')[0];
+  if (ALLOWED_EXACT_PATHS.has(cleanPath)) return true;
+  return ALLOWED_PREFIXES.some(prefix => cleanPath.startsWith(prefix));
+}
 
 // POST handler (secure — token in body, not URL)
 export async function POST(req: NextRequest) {
@@ -10,17 +18,27 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const path = body.path as string;
     const token = body.token as string;
+    const method = (body.method as string)?.toUpperCase() ?? 'GET';
+    const data = body.data ?? body.agents; // support legacy "agents" field
 
     if (!path || !token) return NextResponse.json({ error: 'Missing params' }, { status: 400 });
-    if (!ALLOWED_PATHS.includes(path)) return NextResponse.json({ error: 'Path not allowed' }, { status: 403 });
+    if (!isAllowedPath(path)) return NextResponse.json({ error: 'Path not allowed' }, { status: 403 });
 
-    const res = await fetch(`${API_BASE}${path}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    const fetchOptions: RequestInit = {
+      method,
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       cache: 'no-store',
-    });
-    const data = await res.json();
-    if (!res.ok) return NextResponse.json(data, { status: res.status });
-    return NextResponse.json(data);
+    };
+
+    // For PATCH/POST/PUT, include the body data
+    if (method !== 'GET' && data !== undefined) {
+      fetchOptions.body = JSON.stringify(data);
+    }
+
+    const res = await fetch(`${API_BASE}${path}`, fetchOptions);
+    const responseData = await res.json();
+    if (!res.ok) return NextResponse.json(responseData, { status: res.status });
+    return NextResponse.json(responseData);
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Server error' }, { status: 500 });
   }
@@ -32,7 +50,7 @@ export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token');
 
   if (!path || !token) return NextResponse.json({ error: 'Missing params' }, { status: 400 });
-  if (!ALLOWED_PATHS.includes(path)) return NextResponse.json({ error: 'Path not allowed' }, { status: 403 });
+  if (!isAllowedPath(path)) return NextResponse.json({ error: 'Path not allowed' }, { status: 403 });
 
   try {
     const res = await fetch(`${API_BASE}${path}`, {

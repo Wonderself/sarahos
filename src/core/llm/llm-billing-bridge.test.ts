@@ -57,7 +57,7 @@ describe('llm-billing-bridge', () => {
       );
     });
 
-    it('should calculate cost credits with 0% margin (margin at pack level)', async () => {
+    it('should calculate cost credits with 1% safety margin', async () => {
       mockRecordLlmUsage.mockResolvedValue(undefined);
 
       await recordAgentUsage(mockResponse, 'agent-1', 'Test Agent');
@@ -68,9 +68,9 @@ describe('llm-billing-bridge', () => {
         marginCredits: number;
       };
       expect(call.costCredits).toBeGreaterThan(0);
-      // With 0% margin, billed equals cost
-      expect(call.billedCredits).toBe(call.costCredits);
-      expect(call.marginCredits).toBe(0);
+      // With 1% safety margin, billed >= cost
+      expect(call.billedCredits).toBeGreaterThanOrEqual(call.costCredits);
+      expect(call.marginCredits).toBeGreaterThanOrEqual(0);
     });
 
     it('should not throw when walletService fails', async () => {

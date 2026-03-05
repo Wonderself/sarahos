@@ -266,6 +266,63 @@ export class WhatsAppService {
       });
     }
   }
+
+  // ── Interactive Message (Buttons) ──
+
+  async sendInteractiveMessage(params: {
+    to: string;
+    body: string;
+    buttons: Array<{ id: string; title: string }>;
+    header?: string;
+    footer?: string;
+  }): Promise<string | null> {
+    if (!this.isConfigured()) return null;
+
+    // WhatsApp limits: max 3 buttons, title max 20 chars
+    const buttons = params.buttons.slice(0, 3).map(b => ({
+      type: 'reply' as const,
+      reply: { id: b.id, title: b.title.slice(0, 20) },
+    }));
+
+    try {
+      const response = await fetch(`${this.baseUrl}/messages`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to: params.to,
+          type: 'interactive',
+          interactive: {
+            type: 'button',
+            ...(params.header ? { header: { type: 'text', text: params.header } } : {}),
+            body: { text: params.body },
+            ...(params.footer ? { footer: { text: params.footer } } : {}),
+            action: { buttons },
+          },
+        }),
+      });
+
+      const data = await response.json() as { messages?: Array<{ id: string }>; error?: { message: string } };
+
+      if (!response.ok) {
+        logger.error('WhatsApp interactive message failed', { status: response.status, error: data.error?.message });
+        return null;
+      }
+
+      const waMessageId = data.messages?.[0]?.id ?? null;
+      logger.info('WhatsApp interactive message sent', { to: params.to, waMessageId, buttonCount: buttons.length });
+      return waMessageId;
+    } catch (error) {
+      logger.error('WhatsApp interactive message error', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
+  }
 }
 
 export const whatsAppService = new WhatsAppService();

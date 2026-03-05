@@ -49,27 +49,25 @@ const ROUTE_SECTIONS: RouteSection[] = [
         ],
       },
       {
-        path: '/register',
-        label: 'Inscription',
-        icon: '📝',
+        path: '/demo',
+        label: 'Demo',
+        icon: '🚀',
         status: 'fonctionnel',
-        description: 'Formulaire d\'inscription avec email, nom, mot de passe.',
+        description: 'Page demo complete avec sections technologies, WhatsApp, tarifs, enterprise.',
         testInstructions: [
-          'Créer un nouveau compte',
-          'Vérifier la validation des champs (email invalide, mot de passe court)',
-          'Vérifier la redirection après inscription',
+          'Vérifier les 4 sections (#technologies, #whatsapp, #tarifs, #enterprise)',
+          'Cliquer "Se connecter" redirige vers /login',
         ],
       },
       {
-        path: '/plans',
-        label: 'Plans & Tarifs',
-        icon: '💎',
+        path: '/reset-password',
+        label: 'Reset Password',
+        icon: '🔑',
         status: 'fonctionnel',
-        description: 'Packs de crédits (Starter 9 EUR, Pro 25 EUR, Enterprise 99 EUR), calculateur de tokens, FAQ.',
+        description: 'Réinitialisation de mot de passe par email.',
         testInstructions: [
-          'Vérifier que les 3 packs s\'affichent avec les bons prix',
-          'Vérifier le calculateur de tokens (estimations par action)',
-          'Cliquer sur "Choisir" mène à /login ou /client/account',
+          'Entrer un email existant',
+          'Vérifier l\'envoi du mail de reset',
         ],
       },
     ],
@@ -225,6 +223,93 @@ const ROUTE_SECTIONS: RouteSection[] = [
         ],
         dependencies: ['Backend /portal/wallet', '/portal/usage'],
       },
+      {
+        path: '/client/discussions',
+        label: 'Discussions Profondes',
+        icon: '🧠',
+        status: 'fonctionnel',
+        description: '85+ templates de discussions profondes (Opus). 12 sections, 17 tags, partage social, completion, export Markdown.',
+        testInstructions: [
+          'Parcourir les templates par section et tags',
+          'Lancer une discussion (utilise Opus — coûteux)',
+          'Tester le mode challenge',
+          'Tester le partage social (Twitter, LinkedIn, etc.)',
+          'Tester la conclusion de discussion',
+          'Tester l\'export Markdown',
+        ],
+        dependencies: ['Backend /billing/llm (Opus)'],
+      },
+      {
+        path: '/client/studio',
+        label: 'Studio Créatif',
+        icon: '🎨',
+        status: 'fonctionnel',
+        description: 'Hub photo (fal.ai Flux/schnell) + vidéo (fal.ai LTX + D-ID). Mode libre + demandes agents.',
+        testInstructions: [
+          'Générer une photo (8 crédits)',
+          'Vérifier la galerie photo',
+          'Basculer en mode "Demandes agents"',
+          'Tester la bibliothèque vidéo',
+        ],
+        dependencies: ['fal.ai API Key'],
+      },
+      {
+        path: '/client/repondeur',
+        label: 'Répondeur IA',
+        icon: '📞',
+        status: 'fonctionnel',
+        description: 'Config répondeur IA (7 modes, 7 styles, 10 compétences, FAQ, VIP, anti-spam) + téléphonie Twilio.',
+        testInstructions: [
+          'Configurer un mode et style de répondeur',
+          'Ajouter des entrées FAQ et VIP',
+          'Tester l\'anti-spam',
+        ],
+        dependencies: ['Twilio (optionnel)'],
+      },
+      {
+        path: '/client/marketplace',
+        label: 'Marketplace',
+        icon: '🏪',
+        status: 'fonctionnel',
+        description: 'Marketplace de 48 templates d\'agents pré-configurés (23 gratuits + 25 premium).',
+        testInstructions: [
+          'Parcourir les templates par catégorie',
+          'Filtrer gratuits vs premium',
+        ],
+      },
+      {
+        path: '/client/social',
+        label: 'Réseaux Sociaux',
+        icon: '📱',
+        status: 'fonctionnel',
+        description: 'Générateur de posts, calendrier éditorial, connexion API, analytics.',
+        testInstructions: [
+          'Générer un post pour un réseau',
+          'Vérifier le calendrier éditorial',
+        ],
+        dependencies: ['Backend /billing/llm'],
+      },
+      {
+        path: '/client/whatsapp',
+        label: 'WhatsApp',
+        icon: '💬',
+        status: 'fonctionnel',
+        description: 'Intégration WhatsApp Business via Twilio.',
+        testInstructions: ['Vérifier la liaison téléphone et conversations'],
+        dependencies: ['Twilio WhatsApp'],
+      },
+      {
+        path: '/client/reveil',
+        label: 'Réveil Intelligent',
+        icon: '⏰',
+        status: 'fonctionnel',
+        description: 'Programmation d\'appels matinaux IA (8 modes, 18 rubriques).',
+        testInstructions: [
+          'Configurer un réveil avec heure et jours',
+          'Choisir un mode et des rubriques',
+        ],
+        dependencies: ['Twilio (pour appel réel)'],
+      },
     ],
   },
   {
@@ -297,7 +382,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
         label: 'Roadmap',
         icon: '▹',
         status: 'fonctionnel',
-        description: 'Carte des 16 intégrations (actives/planifiées/futures), timeline, guide de configuration .env.',
+        description: 'Carte des intégrations (actives/planifiées/futures), timeline produit, guide de configuration .env.',
         testInstructions: [
           'Vérifier les 3 catégories d\'intégrations avec badges',
           'Vérifier la timeline (phases)',
@@ -319,10 +404,65 @@ const ROUTE_SECTIONS: RouteSection[] = [
         status: 'fonctionnel',
         description: 'Guide complet de gestion : architecture, ajouter page/agent, pricing, déploiement, troubleshooting.',
         testInstructions: [
-          'Parcourir les 7 sections',
+          'Parcourir les 8 sections',
           'Vérifier que les ancres de navigation fonctionnent',
           'Vérifier les exemples de code',
         ],
+      },
+      {
+        path: '/admin/diagnostics',
+        label: 'Diagnostics',
+        icon: '🔍',
+        status: 'fonctionnel',
+        description: 'Tests live des services : Anthropic, ElevenLabs, Email, SMS.',
+        testInstructions: [
+          'Lancer chaque test de diagnostic',
+          'Vérifier les résultats (succès/échec)',
+        ],
+        dependencies: ['Backend /admin/test/*'],
+      },
+      {
+        path: '/admin/security',
+        label: 'Sécurité',
+        icon: '🛡️',
+        status: 'fonctionnel',
+        description: '2FA TOTP, audit sécurité, configuration de sécurité.',
+        testInstructions: [
+          'Vérifier l\'affichage du statut 2FA',
+          'Tester l\'activation TOTP (scan QR code)',
+        ],
+      },
+      {
+        path: '/admin/referrals',
+        label: 'Parrainages',
+        icon: '🤝',
+        status: 'fonctionnel',
+        description: 'Gestion des parrainages, tiers de récompenses, statistiques.',
+        testInstructions: [
+          'Vérifier la liste des parrainages',
+          'Vérifier les tiers de récompenses',
+        ],
+      },
+      {
+        path: '/admin/setup',
+        label: 'Setup',
+        icon: '✅',
+        status: 'fonctionnel',
+        description: 'Checklist de configuration initiale du système.',
+        testInstructions: ['Vérifier que toutes les étapes sont cochées'],
+      },
+      {
+        path: '/admin/users/[id]',
+        label: 'Détail Utilisateur',
+        icon: '👤',
+        status: 'fonctionnel',
+        description: 'Page détail utilisateur avec Feature Flags, Danger Zone, impersonation JWT 1h.',
+        testInstructions: [
+          'Accéder via la liste des utilisateurs',
+          'Vérifier les onglets Feature Flags et Danger Zone',
+          'Tester l\'impersonation (crée un JWT temporaire 1h)',
+        ],
+        dependencies: ['Backend /admin/users/:id'],
       },
     ],
   },
@@ -335,7 +475,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
         label: 'Agents IA',
         icon: '●',
         status: 'fonctionnel',
-        description: 'Liste des 15 agents système (L1/L2/L3) avec statuts, niveaux, actions.',
+        description: 'Liste des 24 agents système (L1/L2/L3) avec statuts, niveaux, Agent Config SlideOver.',
         testInstructions: [
           'Vérifier l\'affichage des agents par niveau (L1/L2/L3)',
           'Vérifier les statuts et actions disponibles',
@@ -378,6 +518,18 @@ const ROUTE_SECTIONS: RouteSection[] = [
         testInstructions: ['Vérifier l\'affichage des tâches par statut'],
         dependencies: ['Backend /tasks'],
       },
+      {
+        path: '/system/crons',
+        label: 'Cron Jobs',
+        icon: '⏱️',
+        status: 'fonctionnel',
+        description: 'Gestion des 10+ cron jobs automatiques. Actions : lancer, pause, historique.',
+        testInstructions: [
+          'Vérifier la liste des cron jobs avec statuts',
+          'Tester les actions (lancer manuellement, pause)',
+          'Vérifier l\'historique d\'exécution',
+        ],
+      },
     ],
   },
   {
@@ -417,9 +569,12 @@ const ROUTE_SECTIONS: RouteSection[] = [
         path: '/infra/avatar',
         label: 'Avatar Pipeline',
         icon: '▸',
-        status: 'stub',
-        description: 'Pipeline TTS/ASR/Video pour les avatars Sarah et Emmanuel. Stubs uniquement — en attente des APIs ElevenLabs, Deepgram, D-ID.',
-        testInstructions: ['La page s\'affiche mais les fonctionnalités sont des placeholders'],
+        status: 'partiel',
+        description: 'Pipeline avatar : ElevenLabs TTS actif, ASR (stub), D-ID Video (stub). Visio Agents fonctionnel via navigateur.',
+        testInstructions: [
+          'Vérifier le statut des 5 services',
+          'ElevenLabs TTS doit être vert si la clé API est configurée',
+        ],
       },
     ],
   },
@@ -442,7 +597,7 @@ export default function ControlPage() {
       <div className="page-header">
         <h1 className="page-title">Centre de Contrôle</h1>
         <p className="page-subtitle">
-          Carte complète de l&apos;application SARAH OS — Testez, explorez, comprenez chaque fonctionnalité.
+          Carte complète de l&apos;application Freenzy.io — Testez, explorez, comprenez chaque fonctionnalité.
         </p>
       </div>
 
@@ -539,7 +694,7 @@ export default function ControlPage() {
       <div className="text-sm text-muted text-center mt-24 border-secondary" style={{
         padding: 16, borderTop: '1px solid var(--border-primary)',
       }}>
-        Dernière mise à jour : Mars 2026 — v0.10.0 — Phase 10
+        Dernière mise à jour : Mars 2026 — v0.17.0 — Phase 18
       </div>
     </div>
   );

@@ -60,12 +60,12 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    it('should create a paid-tier user (free access model)', async () => {
+    it('should create a free-tier user by default', async () => {
       const user = await service.createUser({ email: 'new@test.com', displayName: 'New User' });
       expect(user).toBeDefined();
       expect(user.email).toBe('test@example.com');
       expect(userRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({ email: 'new@test.com', tier: 'paid', role: 'viewer' }),
+        expect.objectContaining({ email: 'new@test.com', tier: 'free', role: 'viewer' }),
       );
     });
 
@@ -186,7 +186,7 @@ describe('UserService', () => {
     it('should update daily limit when tier changes', async () => {
       (userRepository.findById as jest.Mock).mockResolvedValueOnce({ id: 'user-1', tier: 'free' });
       await service.updateUser('user-1', { tier: 'paid' });
-      expect(userRepository.update).toHaveBeenCalledWith('user-1', expect.objectContaining({ tier: 'paid', dailyApiLimit: 10000 }));
+      expect(userRepository.update).toHaveBeenCalledWith('user-1', expect.objectContaining({ tier: 'paid', dailyApiLimit: 999_999 }));
     });
 
     it('should throw for non-existent user', async () => {

@@ -6,6 +6,7 @@ export interface TelephonyConfig {
   accountSid: string;
   authToken: string;
   phoneNumber: string;
+  whatsappFrom: string;
   webhookBaseUrl: string;
   recordCalls: boolean;
   maxCallDurationMs: number;
@@ -41,6 +42,37 @@ export interface OutboundCallRequest {
 
 export interface TelephonyHealthStatus {
   twilioAvailable: boolean;
+  twilioConfigured: boolean;
   phoneNumberActive: boolean;
   activeCallCount: number;
+  accountSid?: string;
+}
+
+export interface SmsResult {
+  messageSid: string;
+  to: string;
+  from: string;
+  status: string;
+  dateCreated: string;
+}
+
+export interface CallRecord {
+  callSid: string;
+  from: string;
+  to: string;
+  status: string;
+  direction: string;
+  duration: string;
+  startTime: string;
+  endTime: string | null;
+}
+
+export interface MessageRecord {
+  messageSid: string;
+  from: string;
+  to: string;
+  body: string;
+  status: string;
+  direction: string;
+  dateSent: string | null;
 }

@@ -15,7 +15,7 @@ jest.mock('pg', () => ({
 }));
 
 jest.mock('../../utils/config', () => ({
-  getDatabaseUrl: () => 'postgresql://sarah:secret@localhost:5432/sarah_os',
+  getDatabaseUrl: () => 'postgresql://freenzy:secret@localhost:5432/freenzy',
 }));
 
 jest.mock('../../utils/logger', () => ({

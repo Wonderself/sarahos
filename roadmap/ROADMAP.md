@@ -1,10 +1,10 @@
-# SARAH OS — ROADMAP
+# Freenzy.io — ROADMAP
 
 ## Vision
 
-SARAH OS is an autonomous multi-agent AI operating system designed to replace manual enterprise processes with specialized AI agents. The ultimate goal is maximum autonomy — the human founder intervenes only for financial approvals and major strategic pivots.
+Freenzy.io is an autonomous multi-agent AI operating system designed to replace manual enterprise processes with specialized AI agents. The ultimate goal is maximum autonomy — the human founder intervenes only for financial approvals and major strategic pivots.
 
-## Current Phase: 10 — Real Anthropic SDK Integration (Complete)
+## Current Phase: 18 — Deep Discussions (Complete)
 
 ---
 
@@ -109,7 +109,7 @@ SARAH OS is an autonomous multi-agent AI operating system designed to replace ma
   - proposeAutonomyUpgrades + getAutonomyReport
 - [x] TASK-058 — Dashboard Next.js skeleton monitoring UI (HIGH)
   - 6 pages: Overview, Agents, Events, Approvals, Avatar, Metrics
-  - API client vers backend SARAH OS
+  - API client vers backend Freenzy.io
   - Layout sidebar avec navigation
 - [x] TASK-059 — Integration bootstrap state files update (HIGH)
   - index.ts: connect DB/Redis, enable persistence, setup triggers, start scheduler
@@ -174,7 +174,7 @@ SARAH OS is an autonomous multi-agent AI operating system designed to replace ma
   - User routes: POST /promo/redeem, GET /promo/validate/:code
   - 21 unit tests (11 service + 10 route)
 - [x] TASK-073 — Seed data & test accounts (HIGH)
-  - seed-users.ts: 7 test accounts (@sarah-os.test) + 2 promo codes (WELCOME2024, DEMO30)
+  - seed-users.ts: 7 test accounts (@freenzy.test) + 2 promo codes (WELCOME2024, DEMO30)
   - remove-test-users.ts: cleanup script
   - npm run db:seed-users / db:remove-test-users
 - [x] TASK-074 — Optimizations & bug fixes (HIGH)
@@ -286,6 +286,88 @@ SARAH OS is an autonomous multi-agent AI operating system designed to replace ma
   - SQL: system user + wallet insert
   - Updated ROADMAP.md, resolved tech debt items
 
+## Phase 11: Reveil Intelligent + Repondeur IA
+- [x] TASK-097 — Reveil Intelligent (8 modes, 18 rubriques, Twilio + WhatsApp) (CRITICAL)
+- [x] TASK-098 — Repondeur IA complet (7 modes, 7 styles, 10 competences, FAQ, VIP, anti-spam) (CRITICAL)
+- [x] TASK-099 — Repondeur GDPR cleanup + summaries (hourly/daily) (HIGH)
+- [x] TASK-100 — Cron: check_alarms, repondeur summaries, GDPR cleanup (HIGH)
+
+## Phase 12: Multi-Projets + Telephonie + ElevenLabs
+- [x] TASK-101 — Multi-Projets (isolation totale par projet: agents, docs, campagnes, alarmes) (CRITICAL)
+- [x] TASK-102 — Twilio telephonie reelle (SMS, Voice, WhatsApp bidirectionnel) (CRITICAL)
+- [x] TASK-103 — ElevenLabs TTS (eleven_multilingual_v2, voix George + selection) (HIGH)
+- [x] TASK-104 — Visio Agents (STT + LLM + TTS dans le navigateur) (HIGH)
+
+## Phase 13: Enterprise + Analytics + Hardening
+- [x] TASK-105 — Routes enterprise (devis, plans, custom creation) (HIGH)
+- [x] TASK-106 — Analytics studio (photo, video, voice, documents) (HIGH)
+- [x] TASK-107 — Agents personnels complets (12 agents fz-*) (CRITICAL)
+- [x] TASK-108 — Parrainage (2 mois, seuil 9 credits, reward 20 credits) (MEDIUM)
+- [x] TASK-109 — Reset password, legal pages, cookie consent (HIGH)
+- [x] TASK-110 — Securite renforcee (audit, hardening, validation) (HIGH)
+
+## Phase 14: Rebranding Freenzy.io (SARAH OS → fz-*)
+- [x] TASK-111 — Renommage brand: SARAH OS → Freenzy.io, dashboard → Flashboard (CRITICAL)
+- [x] TASK-112 — Agent IDs: sarah-* → fz-* (24 agents renommes) (CRITICAL)
+- [x] TASK-113 — localStorage keys: sarah_* → fz_* (29+ cles) (CRITICAL)
+- [x] TASK-114 — Cookie: sarah-token → fz-token (HIGH)
+- [x] TASK-115 — DB: sarah_os → freenzy, user sarah → freenzy (HIGH)
+- [x] TASK-116 — Packages: sarah-os → freenzy-io, sarah-os-dashboard → flashboard (HIGH)
+- [x] TASK-117 — Docker: sarah-* → freenzy-* (HIGH)
+- [x] TASK-118 — Landing page v2: 11 sections, bento grid, agent tabs, pricing comparison (HIGH)
+- [x] TASK-119 — FreenzyWelcome component (SarahWelcome supprime) (MEDIUM)
+- [x] TASK-120 — Nav public: Demo + Se connecter uniquement (MEDIUM)
+
+## Phase 15: LLM Cost Optimization (v0.14.1)
+- [x] TASK-121 — Prompt Caching Anthropic sur tous les agents (−89% tokens systeme) (CRITICAL)
+- [x] TASK-122 — Tier ultra-fast (Haiku) + pricing Haiku dans billing (CRITICAL)
+- [x] TASK-123 — Redis memoization pour requetes LLM identiques (HIGH)
+- [x] TASK-124 — cacheReadTokens / cacheCreatedTokens dans LLMResponse (MEDIUM)
+- [x] TASK-125 — Batch API (llm-batch.ts) — createBatch / pollBatch / cancelBatch (CRITICAL)
+- [x] TASK-126 — Cron check_batch_results (poll toutes les 15 min) (HIGH)
+- [x] TASK-127 — Repondeur: classification → Haiku (REPONDEUR_HAIKU_SYSTEM_PROMPT) (HIGH)
+- [x] TASK-128 — Repondeur: reponse simple → Haiku (low+general+non-urgent) (MEDIUM)
+- [x] TASK-129 — Budget: categorisation → Haiku (BUDGET_HAIKU_CATEGORIZE_SYSTEM_PROMPT) (HIGH)
+- [x] TASK-130 — ADR-004 Cost Optimization Strategy (MEDIUM)
+- [x] TASK-131 — SARAH_OS_STATUS.md v0.14.1 + ROADMAP.md + ARCHITECTURE.md (HIGH)
+
+## Phase 16: Studio fal.ai + Redesign (v0.15.0)
+- [x] TASK-132 — Studio photo fal.ai Flux/schnell (synchrone, galerie, questions avancees) (CRITICAL)
+- [x] TASK-133 — Studio video fal.ai LTX Video (async queue) + D-ID talking head (CRITICAL)
+- [x] TASK-134 — Mode "Demandes agents" avec file d'attente (AgentRequestQueue) (HIGH)
+- [x] TASK-135 — VideoLibrary avec projets film, lecteur HTML5 (HIGH)
+- [x] TASK-136 — Studio costs: image 8cr, image HD 12cr, video 20cr (HIGH)
+- [x] TASK-137 — Landing page v3: 11 sections, bento grid, agent tabs, pricing (HIGH)
+- [x] TASK-138 — Navigation publique simplifiee: Demo + Se connecter (MEDIUM)
+- [x] TASK-139 — Demo page absorbe /claude, /whatsapp, /plans en sous-sections (MEDIUM)
+
+## Phase 17: Admin Dashboard Refonte (v0.16.0)
+- [x] TASK-140 — Session 1: SlideOver, Toast, SkeletonLoader composants UI (HIGH)
+- [x] TASK-141 — Session 2: AdminCharts + OverviewCharts (Recharts) + analytics hub (HIGH)
+- [x] TASK-142 — Session 3: User detail /admin/users/[id] (Feature Flags, Danger Zone, impersonation JWT 1h) (CRITICAL)
+- [x] TASK-143 — Session 4: Diagnostics live /admin/diagnostics (Anthropic, ElevenLabs, Email, SMS) (HIGH)
+- [x] TASK-144 — Session 5: GlobalSearch Cmd+K (recherche globale admin) (HIGH)
+- [x] TASK-145 — Session 6: 2FA TOTP (src/utils/totp.ts pur crypto) + /admin/security (CRITICAL)
+- [x] TASK-146 — Session 7: BillingCharts.tsx + /admin/referrals + endpoints referrals/tiers (HIGH)
+- [x] TASK-147 — Session 8: /system/crons + CronActions.tsx + /admin/setup checklist (HIGH)
+- [x] TASK-148 — Agent Config SlideOver dans /system/agents (MEDIUM)
+- [x] TASK-149 — Migration SQL: totp + agent_runtime_config tables (HIGH)
+
+## Phase 18: Deep Discussions V1-V5 (v0.17.0)
+- [x] TASK-150 — V1: Architecture de base (types, utils, page) avec 85+ templates en 12 sections (CRITICAL)
+- [x] TASK-151 — V2: Modele Opus avec Extended Thinking pour qualite maximale (CRITICAL)
+- [x] TASK-152 — V3: Alertes de sensibilite (religion, politique, mort, suicidaire) (HIGH)
+- [x] TASK-153 — V3: Mode challenge (avocat du diable) (HIGH)
+- [x] TASK-154 — V4: 13 bugfixes (key React, double-clic, emoji rendering, etc.) (HIGH)
+- [x] TASK-155 — V4: Partage social (Twitter, LinkedIn, Facebook) avec URL intents (HIGH)
+- [x] TASK-156 — V5: Tags transversaux (17 tags sur tous les templates + UI filtrage) (HIGH)
+- [x] TASK-157 — V5: Flow de completion (conclusion + bilan structure + read-only) (CRITICAL)
+- [x] TASK-158 — V5: Edition inline du titre (double-clic) (MEDIUM)
+- [x] TASK-159 — V5: WhatsApp + Email dans le partage social (5 plateformes) (MEDIUM)
+- [x] TASK-160 — V5: Prompts adaptatifs selon profondeur (3 niveaux) (HIGH)
+- [x] TASK-161 — V5: Retry on error + textarea auto-expanding (MEDIUM)
+- [x] TASK-162 — V5: Recherche templates + export Markdown (deja existant V1) (MEDIUM)
+
 ---
 
 ## Technical Debt Tracker
@@ -324,7 +406,9 @@ SARAH OS is an autonomous multi-agent AI operating system designed to replace ma
 - No Stripe integration (deposits are manual/admin only)
 - No open-source LLM integration (Mistral, Llama, etc.)
 - No automated deployment (Docker build + push)
-- ~~Dashboard Next.js build failing~~ — Resolved (34+ pages, build passing)
-- Monitoring/alerting partially addressed by RecurringScheduler + ImprovementScheduler
+- ~~Dashboard Next.js build failing~~ — Resolved (80+ pages, build passing)
 - JWT_SECRET and ENCRYPTION_KEY still use default values (must change before production)
-- No migration system (monolithic init-db.sql)
+- No migration system (monolithic init-db.sql + separate migrate-*.sql files)
+- pgvector embeddings installed but not used for semantic search yet
+- Batch API: Redis scan not implemented in RedisClient (active_batches tracked via list key)
+- Deep Discussions: localStorage only (pas de persistence serveur)

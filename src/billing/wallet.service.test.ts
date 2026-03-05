@@ -2,9 +2,14 @@ jest.mock('../utils/logger', () => ({
   logger: { info: jest.fn(), warn: jest.fn(), debug: jest.fn(), error: jest.fn() },
 }));
 
+const mockTxClient = {
+  query: jest.fn(),
+};
+
 const mockDbClient = {
   isConnected: jest.fn().mockReturnValue(true),
   query: jest.fn(),
+  withTransaction: jest.fn(),
 };
 
 jest.mock('../infra', () => ({
@@ -13,6 +18,14 @@ jest.mock('../infra', () => ({
 
 import { WalletService } from './wallet.service';
 
+const walletRow = (overrides: Record<string, unknown> = {}) => ({
+  id: 'w1', user_id: 'u1', balance_credits: 5000000, total_deposited: 10000000,
+  total_spent: 5000000, currency: 'credits', auto_topup_enabled: false,
+  auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
+  created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+  ...overrides,
+});
+
 describe('WalletService', () => {
   let service: WalletService;
 
@@ -20,18 +33,14 @@ describe('WalletService', () => {
     service = new WalletService();
     jest.clearAllMocks();
     mockDbClient.isConnected.mockReturnValue(true);
+    mockDbClient.withTransaction.mockImplementation(
+      async (fn: (client: typeof mockTxClient) => Promise<unknown>) => fn(mockTxClient),
+    );
   });
 
   describe('getOrCreateWallet', () => {
     it('should return existing wallet', async () => {
-      mockDbClient.query.mockResolvedValue({
-        rows: [{
-          id: 'w1', user_id: 'u1', balance_credits: 5000000, total_deposited: 10000000,
-          total_spent: 5000000, currency: 'credits', auto_topup_enabled: false,
-          auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-          created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-        }],
-      });
+      mockDbClient.query.mockResolvedValue({ rows: [walletRow()] });
 
       const wallet = await service.getOrCreateWallet('u1');
       expect(wallet).not.toBeNull();
@@ -40,21 +49,15 @@ describe('WalletService', () => {
     });
 
     it('should create wallet if none exists', async () => {
-      mockDbClient.query
-        .mockResolvedValueOnce({ rows: [] }) // SELECT returns empty
-        .mockResolvedValueOnce({
-          rows: [{
-            id: 'w-new', user_id: 'u2', balance_credits: 0, total_deposited: 0,
-            total_spent: 0, currency: 'credits', auto_topup_enabled: false,
-            auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-            created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-          }],
-        });
+      // Single INSERT ... ON CONFLICT query
+      mockDbClient.query.mockResolvedValueOnce({
+        rows: [walletRow({ id: 'w-new', user_id: 'u2', balance_credits: 0, total_deposited: 0, total_spent: 0 })],
+      });
 
       const wallet = await service.getOrCreateWallet('u2');
       expect(wallet).not.toBeNull();
       expect(wallet!.balanceCredits).toBe(0);
-      expect(mockDbClient.query).toHaveBeenCalledTimes(2);
+      expect(mockDbClient.query).toHaveBeenCalledTimes(1);
     });
 
     it('should return null if DB not connected', async () => {
@@ -65,22 +68,20 @@ describe('WalletService', () => {
   });
 
   describe('deposit', () => {
-    it('should deposit credits atomically', async () => {
-      // getOrCreateWallet
+    it('should deposit credits atomically via withTransaction', async () => {
+      // getOrCreateWallet → existing wallet
       mockDbClient.query.mockResolvedValueOnce({
-        rows: [{
-          id: 'w1', user_id: 'u1', balance_credits: 1000, total_deposited: 5000,
-          total_spent: 4000, currency: 'credits', auto_topup_enabled: false,
-          auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-          created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-        }],
+        rows: [walletRow({ balance_credits: 1000, total_deposited: 5000, total_spent: 4000 })],
       });
-      // BEGIN
-      mockDbClient.query.mockResolvedValueOnce({});
-      // UPDATE wallet
-      mockDbClient.query.mockResolvedValueOnce({});
-      // INSERT transaction
-      mockDbClient.query.mockResolvedValueOnce({
+
+      // Inside withTransaction: SELECT FOR UPDATE
+      mockTxClient.query.mockResolvedValueOnce({
+        rows: [walletRow({ balance_credits: 1000, total_deposited: 5000, total_spent: 4000 })],
+      });
+      // UPDATE wallets
+      mockTxClient.query.mockResolvedValueOnce({});
+      // INSERT transaction RETURNING
+      mockTxClient.query.mockResolvedValueOnce({
         rows: [{
           id: 'tx1', wallet_id: 'w1', user_id: 'u1', type: 'deposit',
           amount: 5000, balance_after: 6000, description: 'Test deposit',
@@ -88,8 +89,6 @@ describe('WalletService', () => {
           created_at: new Date().toISOString(),
         }],
       });
-      // COMMIT
-      mockDbClient.query.mockResolvedValueOnce({});
 
       const tx = await service.deposit({
         userId: 'u1', amount: 5000, description: 'Test deposit', referenceType: 'manual',
@@ -97,44 +96,38 @@ describe('WalletService', () => {
 
       expect(tx).not.toBeNull();
       expect(tx!.amount).toBe(5000);
-      expect(mockDbClient.query).toHaveBeenCalledWith('BEGIN');
-      expect(mockDbClient.query).toHaveBeenCalledWith('COMMIT');
+      expect(mockDbClient.withTransaction).toHaveBeenCalled();
     });
 
-    it('should rollback on error', async () => {
+    it('should propagate error on transaction failure', async () => {
       // getOrCreateWallet
       mockDbClient.query.mockResolvedValueOnce({
-        rows: [{
-          id: 'w1', user_id: 'u1', balance_credits: 1000, total_deposited: 0,
-          total_spent: 0, currency: 'credits', auto_topup_enabled: false,
-          auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-          created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-        }],
+        rows: [walletRow({ balance_credits: 1000 })],
       });
-      // BEGIN
-      mockDbClient.query.mockResolvedValueOnce({});
+
+      // Inside withTransaction: SELECT FOR UPDATE succeeds
+      mockTxClient.query.mockResolvedValueOnce({
+        rows: [walletRow({ balance_credits: 1000 })],
+      });
       // UPDATE fails
-      mockDbClient.query.mockRejectedValueOnce(new Error('DB error'));
-      // ROLLBACK
-      mockDbClient.query.mockResolvedValueOnce({});
+      mockTxClient.query.mockRejectedValueOnce(new Error('DB error'));
 
       await expect(service.deposit({
         userId: 'u1', amount: 500, description: 'Fail', referenceType: 'test',
       })).rejects.toThrow('DB error');
-
-      expect(mockDbClient.query).toHaveBeenCalledWith('ROLLBACK');
     });
   });
 
   describe('withdraw', () => {
     it('should return null for insufficient balance', async () => {
-      mockDbClient.query.mockResolvedValue({
-        rows: [{
-          id: 'w1', user_id: 'u1', balance_credits: 100, total_deposited: 1000,
-          total_spent: 900, currency: 'credits', auto_topup_enabled: false,
-          auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-          created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-        }],
+      // getWalletByUserId
+      mockDbClient.query.mockResolvedValueOnce({
+        rows: [walletRow({ balance_credits: 100, total_deposited: 1000, total_spent: 900 })],
+      });
+
+      // Inside withTransaction: SELECT FOR UPDATE → locked wallet with 100 balance
+      mockTxClient.query.mockResolvedValueOnce({
+        rows: [walletRow({ balance_credits: 100, total_deposited: 1000, total_spent: 900 })],
       });
 
       const tx = await service.withdraw('u1', 500, 'Over-withdrawal', 'test');
@@ -151,24 +144,14 @@ describe('WalletService', () => {
   describe('hasBalance', () => {
     it('should return true if sufficient', async () => {
       mockDbClient.query.mockResolvedValue({
-        rows: [{
-          id: 'w1', user_id: 'u1', balance_credits: 10000, total_deposited: 10000,
-          total_spent: 0, currency: 'credits', auto_topup_enabled: false,
-          auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-          created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-        }],
+        rows: [walletRow({ balance_credits: 10000 })],
       });
       expect(await service.hasBalance('u1', 5000)).toBe(true);
     });
 
     it('should return false if insufficient', async () => {
       mockDbClient.query.mockResolvedValue({
-        rows: [{
-          id: 'w1', user_id: 'u1', balance_credits: 100, total_deposited: 100,
-          total_spent: 0, currency: 'credits', auto_topup_enabled: false,
-          auto_topup_threshold: 0, auto_topup_amount: 0, stripe_customer_id: null,
-          created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-        }],
+        rows: [walletRow({ balance_credits: 100 })],
       });
       expect(await service.hasBalance('u1', 5000)).toBe(false);
     });

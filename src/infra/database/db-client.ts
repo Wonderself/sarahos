@@ -1,4 +1,4 @@
-import { Pool, type PoolConfig, type QueryResult, type QueryResultRow } from 'pg';
+import { Pool, type PoolClient, type PoolConfig, type QueryResult, type QueryResultRow } from 'pg';
 import { logger } from '../../utils/logger';
 import { getDatabaseUrl } from '../../utils/config';
 import { withRetry } from '../../utils/retry';
@@ -20,6 +20,7 @@ export class DatabaseClient {
         max: 20,
         idleTimeoutMillis: 30_000,
         connectionTimeoutMillis: 5_000,
+        statement_timeout: 30_000,
         ...configOverride,
       });
 
@@ -53,6 +54,30 @@ export class DatabaseClient {
     );
   }
 
+  /**
+   * Execute a function within a database transaction using a single pooled client.
+   * Ensures BEGIN/COMMIT/ROLLBACK all happen on the same connection.
+   * Use this for operations that require atomicity (e.g., wallet updates with row locking).
+   */
+  async withTransaction<T>(fn: (client: PoolClient) => Promise<T>): Promise<T> {
+    if (!this.pool || !this.connected) {
+      throw new Error('DatabaseClient not connected. Call connect() first.');
+    }
+
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      const result = await fn(client);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   getPool(): Pool | null {
     return this.pool;
   }
@@ -70,7 +95,16 @@ export class DatabaseClient {
     }
   }
 
-  async healthCheck(): Promise<{ connected: boolean; latencyMs: number }> {
+  getPoolMetrics(): { total: number; idle: number; waiting: number } | null {
+    if (!this.pool) return null;
+    return {
+      total: this.pool.totalCount,
+      idle: this.pool.idleCount,
+      waiting: this.pool.waitingCount,
+    };
+  }
+
+  async healthCheck(): Promise<{ connected: boolean; latencyMs: number; pool?: { total: number; idle: number; waiting: number } }> {
     if (!this.pool || !this.connected) {
       return { connected: false, latencyMs: -1 };
     }
@@ -78,7 +112,7 @@ export class DatabaseClient {
     const start = Date.now();
     try {
       await this.pool.query('SELECT 1');
-      return { connected: true, latencyMs: Date.now() - start };
+      return { connected: true, latencyMs: Date.now() - start, pool: this.getPoolMetrics() ?? undefined };
     } catch {
       return { connected: false, latencyMs: Date.now() - start };
     }

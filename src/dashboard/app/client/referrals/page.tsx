@@ -34,15 +34,24 @@ export default function ReferralsPage() {
   }, []);
 
   function getSession() {
-    try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
+    try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
   }
 
   async function loadReferrals() {
     const session = getSession();
-    setReferralCode(session.referralCode ?? '');
+    // Generate referral code from userId if not stored
+    const code = session.referralCode || (session.userId ? session.userId.slice(0, 8).toUpperCase() : '');
+    setReferralCode(code);
 
     if (session.token) {
       try {
+        // Try to get referral code from backend profile
+        const profileRes = await fetch(`/api/portal?path=/portal/profile&token=${session.token}`);
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          if (profileData.referralCode) setReferralCode(profileData.referralCode);
+        }
+
         const res = await fetch(`/api/portal?path=/portal/referrals&token=${session.token}`);
         if (res.ok) {
           const data = await res.json();
@@ -67,8 +76,8 @@ export default function ReferralsPage() {
   function shareLink() {
     if (navigator.share) {
       navigator.share({
-        title: 'SARAH OS — Votre equipe IA gratuite',
-        text: 'Rejoignez SARAH OS avec mon lien et beneficiez de 50 credits offerts !',
+        title: 'Freenzy.io — Votre équipe IA gratuite',
+        text: 'Rejoignez Freenzy.io — votre équipe IA complète, 0% de commission !',
         url: getReferralLink(),
       }).catch(() => {});
     }
@@ -83,7 +92,7 @@ export default function ReferralsPage() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Parrainage</h1>
-          <p className="page-subtitle">Invitez vos amis, gagnez des credits</p>
+          <p className="page-subtitle">Invitez vos amis, gagnez des crédits</p>
         </div>
       </div>
 
@@ -96,11 +105,11 @@ export default function ReferralsPage() {
           <span style={{ fontSize: 48 }}>🎁</span>
           <div className="flex-1" style={{ minWidth: 240 }}>
             <div className="font-bold" style={{ fontSize: 20, marginBottom: 6 }}>
-              Gagnez 20 EUR de credits gratuits !
+              Gagnez 20 EUR de crédits gratuits !
             </div>
             <div className="text-md text-secondary" style={{ lineHeight: 1.6 }}>
-              Partagez votre lien d&apos;invitation. Pour chaque filleul qualifie, vous recevez
-              <strong style={{ color: 'var(--accent)' }}> 20 EUR de credits </strong>
+              Partagez votre lien d&apos;invitation. Pour chaque filleul qualifié, vous recevez
+              <strong style={{ color: 'var(--accent)' }}> 20 EUR de crédits </strong>
               (10 EUR/mois sur 2 mois).
             </div>
           </div>
@@ -143,23 +152,23 @@ export default function ReferralsPage() {
           <span className="stat-value" style={{ color: '#22c55e' }}>{qualifiedReferrals}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Credits gagnes</span>
+          <span className="stat-label">Crédits gagnés</span>
           <span className="stat-value" style={{ color: 'var(--accent)' }}>
             {totalRewards > 0 ? (totalRewards / 1_000_000).toFixed(0) : '0'}
           </span>
-          <span className="text-xs text-muted">credits</span>
+          <span className="text-xs text-muted">crédits</span>
         </div>
       </div>
 
       {/* How it works */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 16 }}>Comment ca marche</div>
+        <div className="section-title" style={{ marginBottom: 16 }}>Comment ça marche</div>
         <div className="grid-4" style={{ gap: 12 }}>
           {[
-            { step: '1', icon: '🔗', title: 'Partagez', desc: 'Envoyez votre lien a vos amis et collegues' },
+            { step: '1', icon: '🔗', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
             { step: '2', icon: '✍️', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
-            { step: '3', icon: '📊', title: 'Utilisation', desc: 'Votre filleul utilise SARAH OS pendant 2 mois' },
-            { step: '4', icon: '💰', title: 'Recompense', desc: '20 EUR de credits pour vous (10 EUR/mois)' },
+            { step: '3', icon: '📊', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
+            { step: '4', icon: '💰', title: 'Récompense', desc: '20 EUR de crédits pour vous (10 EUR/mois)' },
           ].map(s => (
             <div key={s.step} className="text-center" style={{ padding: '12px 8px' }}>
               <div className="flex-center" style={{
@@ -175,8 +184,8 @@ export default function ReferralsPage() {
         </div>
         <div className="bg-secondary border rounded-md mt-16" style={{ padding: '10px 14px' }}>
           <div className="text-xs text-muted" style={{ lineHeight: 1.6 }}>
-            <strong className="text-secondary">Condition :</strong> Votre filleul doit depenser au moins 9 EUR
-            de tokens pendant 2 mois consecutifs pour que la recompense soit validee.
+            <strong className="text-secondary">Condition :</strong> Votre filleul doit dépenser au moins 9 EUR
+            de tokens pendant 2 mois consécutifs pour que la récompense soit validée.
           </div>
         </div>
       </div>
@@ -193,7 +202,7 @@ export default function ReferralsPage() {
               Vous n&apos;avez pas encore de filleul.
             </div>
             <div className="text-sm text-muted">
-              Partagez votre lien pour commencer a gagner des credits !
+              Partagez votre lien pour commencer à gagner des crédits !
             </div>
           </div>
         ) : (

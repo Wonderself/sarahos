@@ -20,6 +20,14 @@ const config: Config = {
     '!src/**/*.interface.ts',
   ],
   coverageDirectory: 'coverage',
+  coverageThreshold: {
+    global: {
+      lines: 60,
+      functions: 50,
+      branches: 40,
+      statements: 60,
+    },
+  },
   verbose: true,
 };
 

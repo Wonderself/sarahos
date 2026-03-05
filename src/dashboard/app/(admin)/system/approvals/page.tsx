@@ -1,5 +1,5 @@
 import { api, type ApprovalEntry } from '@/lib/api-client';
-import { ApprovalActions } from './actions';
+import { ApprovalActions, BatchApproveButton } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 10;
@@ -48,10 +48,9 @@ export default async function ApprovalsPage() {
           <p className="page-subtitle">Human Override Queue — {pending.length} en attente</p>
         </div>
         {pending.length > 0 && (
-          <div className="page-actions">
-            <span className="badge badge-warning">
-              {pending.length} en attente
-            </span>
+          <div className="page-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <span className="badge badge-warning">{pending.length} en attente</span>
+            <BatchApproveButton pendingIds={pending.map(a => a.id)} />
           </div>
         )}
       </div>

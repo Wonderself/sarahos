@@ -15,6 +15,7 @@ import type { SystemEvent } from '../core/event-bus/event.types';
 const mockResponse = () => {
   const res: Partial<Response> = {
     write: jest.fn().mockReturnValue(true),
+    on: jest.fn().mockReturnThis(),
   };
   return res as Response;
 };
@@ -48,7 +49,8 @@ describe('SSEManager', () => {
 
   it('should add and remove clients', () => {
     const res = mockResponse();
-    manager.addClient('c1', res);
+    const added = manager.addClient('c1', res);
+    expect(added).toBe(true);
     expect(manager.getClientCount()).toBe(1);
 
     manager.removeClient('c1');
@@ -82,7 +84,7 @@ describe('SSEManager', () => {
   });
 
   it('should remove client on write error', () => {
-    const res = { write: jest.fn().mockImplementation(() => { throw new Error('broken'); }) } as unknown as Response;
+    const res = { write: jest.fn().mockImplementation(() => { throw new Error('broken'); }), on: jest.fn() } as unknown as Response;
     manager.addClient('c1', res);
 
     manager.broadcast(mockEvent);
@@ -118,5 +120,11 @@ describe('SSEManager', () => {
     manager.addClient('c1', mockResponse());
     manager.addClient('c2', mockResponse());
     expect(manager.getClientCount()).toBe(2);
+  });
+
+  it('should return true when adding client within limit', () => {
+    const res1 = mockResponse();
+    const added = manager.addClient('c1', res1);
+    expect(added).toBe(true);
   });
 });

@@ -43,16 +43,12 @@ export class WalletService {
   async getOrCreateWallet(userId: string): Promise<Wallet | null> {
     if (!dbClient.isConnected()) return null;
 
-    // Try to find existing
-    const existing = await dbClient.query('SELECT * FROM wallets WHERE user_id = $1', [userId]);
-    if (existing.rows[0]) {
-      return rowToWallet(existing.rows[0] as Record<string, unknown>);
-    }
-
-    // Create new wallet
+    // Atomic upsert: INSERT ... ON CONFLICT prevents race conditions
     const id = uuidv4();
     const result = await dbClient.query(
-      `INSERT INTO wallets (id, user_id) VALUES ($1, $2) RETURNING *`,
+      `INSERT INTO wallets (id, user_id) VALUES ($1, $2)
+       ON CONFLICT (user_id) DO UPDATE SET updated_at = wallets.updated_at
+       RETURNING *`,
       [id, userId],
     );
     return result.rows[0] ? rowToWallet(result.rows[0] as Record<string, unknown>) : null;
@@ -65,43 +61,47 @@ export class WalletService {
   }
 
   /**
-   * Deposit credits into a wallet (atomic transaction).
+   * Deposit credits into a wallet (atomic transaction with row-level locking).
    */
   async deposit(input: DepositInput): Promise<WalletTransaction | null> {
     if (!dbClient.isConnected()) return null;
+    if (input.amount <= 0) throw new Error('Deposit amount must be positive');
 
+    // Ensure wallet exists before entering transaction
     const wallet = await this.getOrCreateWallet(input.userId);
     if (!wallet) throw new Error('Failed to get or create wallet');
 
-    const newBalance = wallet.balanceCredits + input.amount;
-    const txId = uuidv4();
+    return dbClient.withTransaction(async (client) => {
+      // Lock the wallet row to prevent concurrent modifications
+      const lockedResult = await client.query(
+        'SELECT * FROM wallets WHERE id = $1 FOR UPDATE',
+        [wallet.id],
+      );
+      if (!lockedResult.rows[0]) return null;
+      const locked = rowToWallet(lockedResult.rows[0] as Record<string, unknown>);
 
-    // Atomic: update wallet + insert transaction
-    await dbClient.query('BEGIN');
-    try {
-      await dbClient.query(
+      const newBalance = locked.balanceCredits + input.amount;
+      const txId = uuidv4();
+
+      await client.query(
         `UPDATE wallets SET balance_credits = $1, total_deposited = total_deposited + $2, updated_at = NOW() WHERE id = $3`,
         [newBalance, input.amount, wallet.id],
       );
 
-      const txResult = await dbClient.query(
+      const txResult = await client.query(
         `INSERT INTO wallet_transactions (id, wallet_id, user_id, type, amount, balance_after, description, reference_type, reference_id)
          VALUES ($1, $2, $3, 'deposit', $4, $5, $6, $7, $8) RETURNING *`,
         [txId, wallet.id, input.userId, input.amount, newBalance, input.description, input.referenceType, input.referenceId ?? null],
       );
 
-      await dbClient.query('COMMIT');
-
       logger.info('Wallet deposit', { userId: input.userId, amount: input.amount, newBalance });
       return txResult.rows[0] ? rowToTransaction(txResult.rows[0] as Record<string, unknown>) : null;
-    } catch (error) {
-      await dbClient.query('ROLLBACK');
-      throw error;
-    }
+    });
   }
 
   /**
    * Withdraw credits (for LLM usage, etc.). Returns null if insufficient balance.
+   * Uses SELECT ... FOR UPDATE to prevent concurrent race conditions.
    */
   async withdraw(
     userId: string,
@@ -111,37 +111,49 @@ export class WalletService {
     referenceId?: string,
   ): Promise<WalletTransaction | null> {
     if (!dbClient.isConnected()) return null;
+    if (amount <= 0) throw new Error('Withdrawal amount must be positive');
 
     const wallet = await this.getWalletByUserId(userId);
     if (!wallet) return null;
 
-    if (wallet.balanceCredits < amount) {
-      logger.warn('Insufficient wallet balance', { userId, balance: wallet.balanceCredits, required: amount });
-      return null; // Insufficient funds
-    }
-
-    const newBalance = wallet.balanceCredits - amount;
-    const txId = uuidv4();
-
-    await dbClient.query('BEGIN');
     try {
-      await dbClient.query(
-        `UPDATE wallets SET balance_credits = $1, total_spent = total_spent + $2, updated_at = NOW() WHERE id = $3`,
-        [newBalance, amount, wallet.id],
-      );
+      return await dbClient.withTransaction(async (client) => {
+        // Lock the wallet row to prevent concurrent modifications
+        const lockedResult = await client.query(
+          'SELECT * FROM wallets WHERE id = $1 FOR UPDATE',
+          [wallet.id],
+        );
+        if (!lockedResult.rows[0]) return null;
+        const locked = rowToWallet(lockedResult.rows[0] as Record<string, unknown>);
 
-      const txResult = await dbClient.query(
-        `INSERT INTO wallet_transactions (id, wallet_id, user_id, type, amount, balance_after, description, reference_type, reference_id)
-         VALUES ($1, $2, $3, 'withdrawal', $4, $5, $6, $7, $8) RETURNING *`,
-        [txId, wallet.id, userId, -amount, newBalance, description, referenceType, referenceId ?? null],
-      );
+        if (locked.balanceCredits < amount) {
+          logger.warn('Insufficient wallet balance', { userId, balance: locked.balanceCredits, required: amount });
+          return null;
+        }
 
-      await dbClient.query('COMMIT');
+        const newBalance = locked.balanceCredits - amount;
+        const txId = uuidv4();
 
-      logger.info('Wallet withdrawal', { userId, amount, newBalance });
-      return txResult.rows[0] ? rowToTransaction(txResult.rows[0] as Record<string, unknown>) : null;
+        await client.query(
+          `UPDATE wallets SET balance_credits = $1, total_spent = total_spent + $2, updated_at = NOW() WHERE id = $3`,
+          [newBalance, amount, wallet.id],
+        );
+
+        const txResult = await client.query(
+          `INSERT INTO wallet_transactions (id, wallet_id, user_id, type, amount, balance_after, description, reference_type, reference_id)
+           VALUES ($1, $2, $3, 'withdrawal', $4, $5, $6, $7, $8) RETURNING *`,
+          [txId, wallet.id, userId, -amount, newBalance, description, referenceType, referenceId ?? null],
+        );
+
+        logger.info('Wallet withdrawal', { userId, amount, newBalance });
+        return txResult.rows[0] ? rowToTransaction(txResult.rows[0] as Record<string, unknown>) : null;
+      });
     } catch (error) {
-      await dbClient.query('ROLLBACK');
+      // Handle DB-level balance constraint (safety net)
+      if (error instanceof Error && error.message.includes('chk_balance_nonnegative')) {
+        logger.warn('Balance constraint prevented overdraft', { userId, amount });
+        return null;
+      }
       throw error;
     }
   }
@@ -153,6 +165,43 @@ export class WalletService {
     const wallet = await this.getWalletByUserId(userId);
     if (!wallet) return false;
     return wallet.balanceCredits >= requiredAmount;
+  }
+
+  /**
+   * Pre-authorize (hold) credits before an LLM call.
+   * Atomically deducts the estimated max cost. Returns a hold transaction ID
+   * that can be used with releaseHold() to refund the difference after actual cost is known.
+   */
+  async hold(userId: string, amount: number, description: string): Promise<string | null> {
+    const tx = await this.withdraw(userId, amount, `[HOLD] ${description}`, 'llm_hold');
+    return tx?.id ?? null;
+  }
+
+  /**
+   * Release a hold by refunding the difference between held amount and actual cost.
+   * If actualAmount >= heldAmount, no refund is issued.
+   */
+  async releaseHold(userId: string, holdId: string, heldAmount: number, actualAmount: number): Promise<void> {
+    if (actualAmount > heldAmount) {
+      // Actual cost exceeded estimate — charge the difference
+      const extraCharge = actualAmount - heldAmount;
+      await this.withdraw(userId, extraCharge, `[HOLD OVERAGE] Additional charge`, 'llm_hold_overage', holdId);
+      logger.info('Hold overage charged', { userId, holdId, heldAmount, actualAmount, extraCharge });
+      return;
+    }
+
+    const refundAmount = heldAmount - actualAmount;
+    if (refundAmount <= 0) return;
+
+    await this.deposit({
+      userId,
+      amount: refundAmount,
+      description: `[HOLD RELEASE] Refund overestimate`,
+      referenceType: 'llm_hold_release',
+      referenceId: holdId,
+    });
+
+    logger.debug('Hold released', { userId, holdId, heldAmount, actualAmount, refunded: refundAmount });
   }
 
   /**
@@ -225,12 +274,20 @@ export class WalletService {
     const result = await dbClient.query(query, params);
     const row = result.rows[0] as Record<string, unknown>;
 
-    // By model breakdown
-    const modelResult = await dbClient.query(
-      `SELECT model, COUNT(*)::int as requests, COALESCE(SUM(total_tokens), 0)::int as tokens, COALESCE(SUM(billed_credits), 0)::bigint as billed
-       FROM llm_usage_log WHERE user_id = $1 GROUP BY model`,
-      [userId],
-    );
+    // By model breakdown (same date filters as totals query)
+    let modelQuery = `SELECT model, COUNT(*)::int as requests, COALESCE(SUM(total_tokens), 0)::int as tokens, COALESCE(SUM(billed_credits), 0)::bigint as billed
+       FROM llm_usage_log WHERE user_id = $1`;
+    const modelParams: unknown[] = [userId];
+    if (startDate) {
+      modelParams.push(startDate);
+      modelQuery += ` AND created_at >= $${modelParams.length}`;
+    }
+    if (endDate) {
+      modelParams.push(endDate);
+      modelQuery += ` AND created_at <= $${modelParams.length}`;
+    }
+    modelQuery += ' GROUP BY model';
+    const modelResult = await dbClient.query(modelQuery, modelParams);
     const byModel: Record<string, { requests: number; tokens: number; billed: number }> = {};
     for (const r of modelResult.rows) {
       const mr = r as Record<string, unknown>;
@@ -250,6 +307,73 @@ export class WalletService {
       totalMarginCredits: Number(row['total_margin']),
       byModel,
     };
+  }
+
+  /**
+   * Update auto-topup settings for a user's wallet.
+   */
+  async updateAutoTopupSettings(
+    userId: string,
+    settings: { autoTopupEnabled: boolean; autoTopupThreshold?: number; autoTopupAmount?: number },
+  ): Promise<Wallet | null> {
+    if (!dbClient.isConnected()) return null;
+
+    const wallet = await this.getOrCreateWallet(userId);
+    if (!wallet) return null;
+
+    const result = await dbClient.query(
+      `UPDATE wallets SET auto_topup_enabled = $1, auto_topup_threshold = $2, auto_topup_amount = $3, updated_at = NOW()
+       WHERE id = $4 RETURNING *`,
+      [
+        settings.autoTopupEnabled,
+        settings.autoTopupThreshold ?? wallet.autoTopupThreshold,
+        settings.autoTopupAmount ?? wallet.autoTopupAmount,
+        wallet.id,
+      ],
+    );
+    return result.rows[0] ? rowToWallet(result.rows[0] as Record<string, unknown>) : null;
+  }
+
+  /**
+   * Get auto-topup settings for a user's wallet.
+   */
+  async getAutoTopupSettings(userId: string): Promise<{
+    autoTopupEnabled: boolean;
+    autoTopupThreshold: number;
+    autoTopupAmount: number;
+  } | null> {
+    const wallet = await this.getWalletByUserId(userId);
+    if (!wallet) return null;
+    return {
+      autoTopupEnabled: wallet.autoTopupEnabled,
+      autoTopupThreshold: wallet.autoTopupThreshold,
+      autoTopupAmount: wallet.autoTopupAmount,
+    };
+  }
+
+  /**
+   * Find wallets that need auto-topup (balance below threshold with auto-topup enabled).
+   */
+  async getWalletsNeedingTopup(): Promise<Array<{ userId: string; balance: number; threshold: number; amount: number }>> {
+    if (!dbClient.isConnected()) return [];
+
+    const result = await dbClient.query(
+      `SELECT user_id, balance_credits, auto_topup_threshold, auto_topup_amount
+       FROM wallets
+       WHERE auto_topup_enabled = TRUE
+         AND balance_credits < auto_topup_threshold
+         AND auto_topup_amount > 0`,
+    );
+
+    return result.rows.map((r) => {
+      const row = r as Record<string, unknown>;
+      return {
+        userId: row['user_id'] as string,
+        balance: Number(row['balance_credits']),
+        threshold: Number(row['auto_topup_threshold']),
+        amount: Number(row['auto_topup_amount']),
+      };
+    });
   }
 
   /**

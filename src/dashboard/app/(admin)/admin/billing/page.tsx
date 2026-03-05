@@ -1,4 +1,5 @@
 import { api, type BillingStats } from '@/lib/api-client';
+import BillingCharts from './BillingCharts';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 10;
@@ -7,14 +8,23 @@ export default async function BillingPage() {
   let billingStats: BillingStats | undefined;
   let pricing: Record<string, unknown> | undefined;
   let usage: Record<string, unknown> | undefined;
+  let tierData: Array<{ tier: string; count: number }> = [];
+  let transactions: Array<Record<string, unknown>> = [];
   let error: string | undefined;
 
   try {
-    [billingStats, pricing, usage] = await Promise.all([
+    const [bs, p, u, td, tx] = await Promise.all([
       api.getBillingStats(),
       api.getPricing(),
       api.getUsage().catch(() => undefined),
+      api.getTierDistribution().catch(() => []),
+      api.getAdminTransactions(50).catch(() => null),
     ]);
+    billingStats = bs;
+    pricing = p;
+    usage = u;
+    tierData = td;
+    transactions = tx?.transactions ?? [];
   } catch (e) {
     error = e instanceof Error ? e.message : 'Failed to load billing data';
   }
@@ -195,6 +205,61 @@ export default async function BillingPage() {
               ))}
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Charts section */}
+      <div className="section">
+        <div className="section-title">Visualisations</div>
+        <BillingCharts tierData={tierData} />
+      </div>
+
+      {/* Recent Transactions */}
+      <div className="section">
+        <div className="section-title">Transactions récentes (50 dernières)</div>
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Utilisateur</th>
+                <th>Type</th>
+                <th className="text-right">Montant (μcr)</th>
+                <th className="text-right">Solde après (μcr)</th>
+                <th className="hide-mobile">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.length === 0 ? (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 24 }}>
+                    Aucune transaction
+                  </td>
+                </tr>
+              ) : transactions.map((tx, i) => {
+                const amount = Number(tx['amount'] ?? 0);
+                const isCredit = amount > 0;
+                return (
+                  <tr key={String(tx['id'] ?? i)}>
+                    <td style={{ fontSize: 12, whiteSpace: 'nowrap' }}>
+                      {tx['created_at'] ? new Date(String(tx['created_at'])).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—'}
+                    </td>
+                    <td style={{ fontSize: 12 }}>{String(tx['email'] ?? tx['user_id'] ?? '—')}</td>
+                    <td><span className={`badge ${isCredit ? 'badge-success' : 'badge-danger'}`}>{String(tx['type'] ?? '—')}</span></td>
+                    <td className="text-right font-semibold" style={{ color: isCredit ? 'var(--success)' : 'var(--danger)', fontSize: 12 }}>
+                      {isCredit ? '+' : ''}{amount.toLocaleString()}
+                    </td>
+                    <td className="text-right" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      {Number(tx['balance_after'] ?? 0).toLocaleString()}
+                    </td>
+                    <td className="hide-mobile" style={{ fontSize: 11, color: 'var(--text-muted)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {String(tx['description'] ?? '—')}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
 

@@ -34,7 +34,7 @@ export function createWhatsAppRouter(): Router {
     if (link.verificationCode && whatsAppService.isConfigured()) {
       await whatsAppService.sendTextMessage({
         to: phoneNumber,
-        text: `Votre code de verification SARAH OS : ${link.verificationCode}\n\nCe code expire dans 10 minutes.`,
+        text: `Votre code de verification Freenzy.io : ${link.verificationCode}\n\nCe code expire dans 10 minutes.`,
       });
     }
 
@@ -67,7 +67,7 @@ export function createWhatsAppRouter(): Router {
       if (link && whatsAppService.isConfigured()) {
         await whatsAppService.sendTextMessage({
           to: link.phoneNumber,
-          text: `Bienvenue sur SARAH OS ! 🎉\n\nVotre numero WhatsApp est maintenant lie a votre compte. Vous pouvez commencer a me parler directement ici.\n\nEnvoyez "Bonjour" pour commencer !`,
+          text: `Bienvenue sur Freenzy.io ! 🎉\n\nVotre numero WhatsApp est maintenant lie a votre compte. Vous pouvez commencer a me parler directement ici.\n\nEnvoyez "Bonjour" pour commencer !`,
         });
       }
     }

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { DEFAULT_AGENTS } from '../../../lib/agent-config';
+import { getBond, recordAgentInteraction, recordFeedback, getTopAgents, LEVEL_NAMES, LEVEL_ICONS } from '../../../lib/agent-bonding';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -43,11 +45,15 @@ interface Message {
   billedCredits: number;
   status: string;
   createdAt: string;
+  metadata?: { agent_id?: string };
 }
 
 function getToken(): string {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('sarah_token') || '';
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+      return session.token || '';
+    } catch { return ''; }
   }
   return '';
 }
@@ -65,6 +71,15 @@ async function apiFetch(path: string, options: RequestInit = {}) {
   return res.json();
 }
 
+// WhatsApp commands guide
+const WA_COMMANDS = [
+  { cmd: '@ines', desc: 'Parler à Inès (Assistante)' },
+  { cmd: '@sacha', desc: 'Parler à Sacha (Commercial)' },
+  { cmd: '@jade', desc: 'Parler à Jade (Marketing)' },
+  { cmd: 'détaille', desc: 'Obtenir une réponse longue' },
+  { cmd: 'résume', desc: 'Revenir en mode court' },
+];
+
 export default function WhatsAppPage() {
   const [status, setStatus] = useState<PhoneLinkStatus | null>(null);
   const [phoneInput, setPhoneInput] = useState('');
@@ -73,9 +88,12 @@ export default function WhatsAppPage() {
   const [selectedConv, setSelectedConv] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingTimedOut, setLoadingTimedOut] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [step, setStep] = useState<'status' | 'link' | 'verify'>('status');
+  const [showAgentPicker, setShowAgentPicker] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   const loadStatus = useCallback(async () => {
     try {
@@ -86,13 +104,21 @@ export default function WhatsAppPage() {
         setConversations(convData.conversations || []);
       }
     } catch {
-      setError('Erreur de chargement');
+      setError('Impossible de charger les données. Vérifiez votre connexion.');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => { loadStatus(); }, [loadStatus]);
+
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => {
+      if (loading) setLoadingTimedOut(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   const handleLinkPhone = async () => {
     setError(''); setSuccess('');
@@ -130,9 +156,14 @@ export default function WhatsAppPage() {
 
   const handleUnlink = async () => {
     if (!confirm('Supprimer la liaison WhatsApp ?')) return;
-    await apiFetch('/whatsapp/unlink-phone', { method: 'DELETE' });
-    setStep('status');
-    await loadStatus();
+    setError(''); setSuccess('');
+    try {
+      const data = await apiFetch('/whatsapp/unlink-phone', { method: 'DELETE' });
+      if (data.error) { setError(data.error); return; }
+      setSuccess('Numero dissocie avec succes');
+      setStep('status');
+      await loadStatus();
+    } catch { setError('Erreur lors de la dissociation du numero'); }
   };
 
   const handleSettingsUpdate = async (settings: Record<string, unknown>) => {
@@ -156,10 +187,36 @@ export default function WhatsAppPage() {
     } catch { setError('Erreur chargement messages'); }
   };
 
+  const getAgentForMessage = (msg: Message) => {
+    const agentId = msg.metadata?.agent_id;
+    if (agentId) return DEFAULT_AGENTS.find(a => a.id === agentId);
+    return null;
+  };
+
+  const topAgents = getTopAgents(3);
+
   if (loading) {
     return (
       <div className="p-24 text-center">
-        <div className="text-2xl">Chargement...</div>
+        {loadingTimedOut ? (
+          <>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>&#128268;</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
+              Impossible de charger les données
+            </div>
+            <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 16 }}>
+              Vérifiez votre connexion ou réessayez.
+            </div>
+            <button
+              onClick={() => { setLoadingTimedOut(false); setLoading(true); loadStatus(); }}
+              className="btn btn-primary btn-sm"
+            >
+              Réessayer
+            </button>
+          </>
+        ) : (
+          <div className="animate-pulse text-md text-tertiary">Chargement...</div>
+        )}
       </div>
     );
   }
@@ -170,30 +227,49 @@ export default function WhatsAppPage() {
         <div>
           <h1 className="page-title">WhatsApp</h1>
           <p className="page-subtitle">
-            Liez votre numero WhatsApp pour converser avec votre agent IA directement sur WhatsApp.
+            Conversez avec vos agents IA directement sur WhatsApp. Changez d&apos;agent avec @nom.
           </p>
         </div>
+        <button
+          onClick={() => setShowGuide(!showGuide)}
+          className="btn btn-ghost btn-sm"
+          style={{ fontSize: 13, gap: 6 }}
+        >
+          {showGuide ? 'Fermer' : '📖 Guide'}
+        </button>
       </div>
 
-      {error && (
-        <div className="alert alert-danger mb-16">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="alert alert-success mb-16">
-          {success}
+      {/* Guide WhatsApp */}
+      {showGuide && (
+        <div className="card section" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Commandes WhatsApp</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {WA_COMMANDS.map(c => (
+              <div key={c.cmd} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                <code style={{
+                  fontSize: 13, fontWeight: 600, color: '#25D366',
+                  background: 'rgba(37,211,102,0.08)', padding: '2px 8px', borderRadius: 6,
+                }}>{c.cmd}</code>
+                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{c.desc}</span>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 12 }}>
+            Par défaut, les réponses sont courtes (300 car.). Dites &quot;détaille&quot; pour une réponse complète.
+          </p>
         </div>
       )}
 
-      {/* Not configured warning */}
+      {error && <div className="alert alert-danger mb-16">{error}</div>}
+      {success && <div className="alert alert-success mb-16">{success}</div>}
+
       {status && !status.whatsappConfigured && (
         <div className="alert alert-warning mb-16">
           WhatsApp n&apos;est pas encore configure sur la plateforme. Contactez l&apos;administrateur.
         </div>
       )}
 
-      {/* Step: Link phone */}
+      {/* Link phone */}
       {(!status?.linked || step === 'link') && step !== 'verify' && (
         <div className="card section">
           <h2 className="section-title">Lier votre numero WhatsApp</h2>
@@ -205,10 +281,7 @@ export default function WhatsAppPage() {
               onChange={(e) => setPhoneInput(e.target.value)}
               className="input flex-1 text-lg"
             />
-            <button
-              onClick={handleLinkPhone}
-              className="btn wa-btn font-semibold"
-            >
+            <button onClick={handleLinkPhone} className="btn wa-btn font-semibold">
               Envoyer le code
             </button>
           </div>
@@ -218,7 +291,7 @@ export default function WhatsAppPage() {
         </div>
       )}
 
-      {/* Step: Verify code */}
+      {/* Verify code */}
       {step === 'verify' && (
         <div className="card section wa-bg">
           <h2 className="section-title">Verification</h2>
@@ -232,25 +305,20 @@ export default function WhatsAppPage() {
               onChange={(e) => setCodeInput(e.target.value.replace(/\D/g, ''))}
               className="input wa-verify-input"
             />
-            <button
-              onClick={handleVerify}
-              className="btn wa-btn font-semibold"
-            >
+            <button onClick={handleVerify} className="btn wa-btn font-semibold">
               Verifier
             </button>
           </div>
         </div>
       )}
 
-      {/* Status + Settings (when linked & verified) */}
+      {/* Status + Settings (linked & verified) */}
       {status?.linked && status.isVerified && step === 'status' && (
         <>
           <div className="card info-card info-card-success section">
             <div className="flex-between mb-16">
               <h2 className="section-title mb-0">WhatsApp connecte</h2>
-              <span className="wa-badge-active">
-                Actif
-              </span>
+              <span className="wa-badge-active">Actif</span>
             </div>
 
             <div className="grid-2 mb-16">
@@ -264,24 +332,88 @@ export default function WhatsAppPage() {
               </div>
             </div>
 
-            {/* Preferences */}
-            <div className="separator">
-            </div>
+            {/* Agent Preferences */}
+            <div className="separator"></div>
             <div>
-              <h3 className="text-lg mb-12">Preferences</h3>
-              <div className="flex gap-16 flex-wrap items-center">
-                <label className="flex items-center gap-8">
-                  Agent :
-                  <select
-                    value={status.preferredAgent}
-                    onChange={(e) => handleSettingsUpdate({ preferredAgent: e.target.value })}
-                    className="select"
-                  >
-                    <option value="sarah">Sarah</option>
-                    <option value="emmanuel">Emmanuel</option>
-                  </select>
-                </label>
+              <div className="flex-between items-center mb-12">
+                <h3 className="text-lg">Agent principal</h3>
+                <button
+                  onClick={() => setShowAgentPicker(!showAgentPicker)}
+                  className="btn btn-ghost btn-sm"
+                  style={{ fontSize: 12 }}
+                >
+                  {showAgentPicker ? 'Fermer' : 'Changer'}
+                </button>
+              </div>
 
+              {/* Current agent display */}
+              {(() => {
+                const current = DEFAULT_AGENTS.find(a => a.id === status.preferredAgent || a.name.toLowerCase() === status.preferredAgent);
+                const bond = current ? getBond(current.id) : null;
+                return current ? (
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '10px 14px', borderRadius: 10,
+                    background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+                  }}>
+                    <span style={{ fontSize: 24 }}>{current.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600 }}>{current.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{current.role}</div>
+                    </div>
+                    {bond && bond.relationshipLevel > 1 && (
+                      <div style={{
+                        fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
+                        background: 'rgba(99,102,241,0.1)', color: '#6366f1',
+                      }}>
+                        {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
+                      </div>
+                    )}
+                  </div>
+                ) : null;
+              })()}
+
+              {/* Agent picker grid */}
+              {showAgentPicker && (
+                <div style={{
+                  display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                  gap: 8, marginTop: 12,
+                }}>
+                  {DEFAULT_AGENTS.map(agent => {
+                    const bond = getBond(agent.id);
+                    const isSelected = status.preferredAgent === agent.id || status.preferredAgent === agent.name.toLowerCase();
+                    return (
+                      <button
+                        key={agent.id}
+                        onClick={() => {
+                          handleSettingsUpdate({ preferredAgent: agent.id });
+                          setShowAgentPicker(false);
+                        }}
+                        style={{
+                          display: 'flex', flexDirection: 'column', alignItems: 'center',
+                          gap: 4, padding: '10px 6px', borderRadius: 10, cursor: 'pointer',
+                          border: isSelected ? '2px solid #25D366' : '1px solid var(--border-color)',
+                          background: isSelected ? 'rgba(37,211,102,0.06)' : 'var(--bg-secondary)',
+                          transition: 'all 0.15s',
+                        }}
+                      >
+                        <span style={{ fontSize: 22 }}>{agent.emoji}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center' }}>{agent.name}</span>
+                        <span style={{ fontSize: 10, color: 'var(--text-tertiary)', textAlign: 'center', lineHeight: 1.2 }}>
+                          {agent.role.length > 20 ? agent.role.slice(0, 18) + '...' : agent.role}
+                        </span>
+                        {bond.relationshipLevel > 1 && (
+                          <span style={{ fontSize: 10, color: '#6366f1' }}>
+                            {LEVEL_ICONS[bond.relationshipLevel]} Niv.{bond.relationshipLevel}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="flex gap-16 flex-wrap items-center mt-12">
                 <label className="flex items-center gap-8">
                   <input
                     type="checkbox"
@@ -294,20 +426,51 @@ export default function WhatsAppPage() {
             </div>
 
             <div className="mt-16">
-              <button
-                onClick={handleUnlink}
-                className="btn btn-danger btn-sm"
-              >
+              <button onClick={handleUnlink} className="btn btn-danger btn-sm">
                 Dissocier le numero
               </button>
             </div>
           </div>
 
+          {/* Top Agents — Bonding */}
+          {topAgents.length > 0 && (
+            <div className="card section">
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Mes agents preferes</h3>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                {topAgents.map(bond => {
+                  const agentDef = DEFAULT_AGENTS.find(a => a.id === bond.agentId);
+                  if (!agentDef) return null;
+                  return (
+                    <div key={bond.agentId} style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      padding: '8px 14px', borderRadius: 10,
+                      background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+                      flex: '1 1 140px', minWidth: 140,
+                    }}>
+                      <span style={{ fontSize: 20 }}>{agentDef.emoji}</span>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 600 }}>{agentDef.name}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+                          {bond.totalInteractions} echanges · {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
+                        </div>
+                        {bond.satisfactionScore !== 50 && (
+                          <div style={{ fontSize: 10, color: bond.satisfactionScore >= 60 ? '#22c55e' : '#ef4444' }}>
+                            Satisfaction: {bond.satisfactionScore}%
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Conversations */}
           <div className="section">
             <h2 className="section-title">Conversations</h2>
             {conversations.length === 0 ? (
-              <p className="text-muted">Aucune conversation. Envoyez un message WhatsApp au numero SARAH OS pour commencer !</p>
+              <p className="text-muted">Aucune conversation. Envoyez un message WhatsApp au numero Freenzy.io pour commencer !</p>
             ) : (
               <div className="flex-col gap-8">
                 {conversations.map((conv) => (
@@ -317,7 +480,12 @@ export default function WhatsAppPage() {
                     className={`card-compact rounded-md border pointer ${selectedConv === conv.id ? 'wa-conv-active' : ''}`}
                   >
                     <div className="flex-between">
-                      <span className="font-semibold">{conv.agentName === 'emmanuel' ? 'Emmanuel' : 'Sarah'}</span>
+                      <span className="font-semibold">
+                        {(() => {
+                          const agent = DEFAULT_AGENTS.find(a => a.id === conv.agentName || a.name.toLowerCase() === conv.agentName);
+                          return agent ? `${agent.emoji} ${agent.name}` : conv.agentName;
+                        })()}
+                      </span>
                       <span className="text-muted text-md">{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
                     </div>
                     <div className="text-secondary text-md mt-4">
@@ -334,18 +502,29 @@ export default function WhatsAppPage() {
             <div className="card section">
               <h3 className="text-lg mb-12">Messages</h3>
               <div className="flex-col gap-8 wa-messages-scroll">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`wa-bubble ${msg.direction === 'inbound' ? 'wa-bubble-inbound' : 'wa-bubble-outbound'}`}
-                  >
-                    <div className="text-base">{msg.content || msg.transcription || `[${msg.messageType}]`}</div>
-                    <div className="text-xs text-muted mt-4 text-right">
-                      {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                      {msg.tokensUsed > 0 && ` · ${msg.tokensUsed}t`}
+                {messages.map((msg) => {
+                  const agent = msg.direction === 'outbound' ? getAgentForMessage(msg) : null;
+                  return (
+                    <div key={msg.id}>
+                      {/* Agent indicator for outbound messages */}
+                      {agent && (
+                        <div style={{
+                          fontSize: 11, color: 'var(--text-tertiary)',
+                          marginBottom: 2, textAlign: 'right',
+                        }}>
+                          {agent.emoji} {agent.name}
+                        </div>
+                      )}
+                      <div className={`wa-bubble ${msg.direction === 'inbound' ? 'wa-bubble-inbound' : 'wa-bubble-outbound'}`}>
+                        <div className="text-base">{msg.content || msg.transcription || `[${msg.messageType}]`}</div>
+                        <div className="text-xs text-muted mt-4 text-right">
+                          {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                          {msg.tokensUsed > 0 && ` · ${msg.tokensUsed}t`}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {messages.length === 0 && (
                   <p className="text-muted text-center">Aucun message</p>
                 )}

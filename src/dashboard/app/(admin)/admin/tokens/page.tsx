@@ -248,7 +248,7 @@ export default async function TokensPage() {
         <h2 className="section-title">Pourquoi la consommation baisse avec le temps</h2>
         <div className="card p-24">
           <div className="alert alert-info mb-16">
-            <strong>Bonne nouvelle :</strong> Plus un utilisateur utilise SARAH, moins chaque interaction coûte. Voici pourquoi.
+            <strong>Bonne nouvelle :</strong> Plus un utilisateur utilise Freenzy, moins chaque interaction coûte. Voici pourquoi.
           </div>
 
           {/* Visual consumption curve */}
@@ -282,7 +282,7 @@ export default async function TokensPage() {
                 phase: 'Phase 1 — Découverte (Semaines 1-2)',
                 icon: '🔴',
                 tokens: 'Coûteux',
-                desc: 'L\'agent envoie le profil entreprise complet + le system prompt + le contexte de personnalisation à chaque message. C\'est normal : Sarah apprend à vous connaître.',
+                desc: 'L\'agent envoie le profil entreprise complet + le system prompt + le contexte de personnalisation à chaque message. C\'est normal : Freenzy apprend à vous connaître.',
                 detail: 'Le premier message d\'une conversation est le plus cher car il inclut tout le contexte (~500-700 tokens de system prompt). Les crédits de bienvenue couvrent cette phase d\'apprentissage.',
               },
               {

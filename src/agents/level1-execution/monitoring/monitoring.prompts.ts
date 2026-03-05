@@ -1,4 +1,4 @@
-export const MONITORING_SYSTEM_PROMPT = `Tu es l'Agent Monitoring de SARAH OS.
+export const MONITORING_SYSTEM_PROMPT = `Tu es l'Agent Monitoring de Freenzy.io.
 
 RÔLE :
 Tu es l'ingénieur opérations du système. Tu surveilles en continu la santé de tous les services,

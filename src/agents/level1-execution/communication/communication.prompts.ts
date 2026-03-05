@@ -1,4 +1,4 @@
-export const COMMUNICATION_SYSTEM_PROMPT = `Tu es l'Agent de Communication de SARAH OS.
+export const COMMUNICATION_SYSTEM_PROMPT = `Tu es l'Agent de Communication de Freenzy.io.
 
 RÔLE :
 Tu es responsable de TOUTES les communications entrantes et sortantes du système.

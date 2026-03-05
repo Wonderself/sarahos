@@ -1,4 +1,5 @@
 // Gamification engine - XP, levels, streaks, achievements
+import { getAgentCount, getAllBonds } from './agent-bonding';
 
 export interface GamificationState {
   level: number;
@@ -31,7 +32,7 @@ export function getDefaultState(): GamificationState {
 export function loadGamification(): GamificationState {
   if (typeof window === 'undefined') return getDefaultState();
   try {
-    const stored = localStorage.getItem('sarah_gamification');
+    const stored = localStorage.getItem('fz_gamification');
     if (!stored) return getDefaultState();
     return { ...getDefaultState(), ...JSON.parse(stored) };
   } catch { return getDefaultState(); }
@@ -39,7 +40,7 @@ export function loadGamification(): GamificationState {
 
 export function saveGamification(state: GamificationState) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('sarah_gamification', JSON.stringify(state));
+  localStorage.setItem('fz_gamification', JSON.stringify(state));
 }
 
 function checkLevelUp(state: GamificationState): GamificationState {
@@ -102,6 +103,11 @@ function checkAchievements(state: GamificationState): { state: GamificationState
     ['first_meeting', state.totalMeetings >= 1],
     ['5_meetings', state.totalMeetings >= 5],
     ['first_customize', state.totalCustomizations >= 1],
+    // Bonding achievements
+    ['bond_level_3', getAllBonds().some(b => b.relationshipLevel >= 3)],
+    ['bond_level_5', getAllBonds().some(b => b.relationshipLevel >= 5)],
+    ['agent_diversity', getAgentCount() >= 5],
+    ['feedback_giver', getAllBonds().reduce((sum, b) => sum + b.feedbackCount, 0) >= 10],
   ];
 
   for (const [id, condition] of checks) {
@@ -115,7 +121,7 @@ function checkAchievements(state: GamificationState): { state: GamificationState
 }
 
 export interface XPEvent {
-  type: 'message' | 'document' | 'meeting' | 'profile_complete' | 'recruit_agent' | 'customize_agent';
+  type: 'message' | 'document' | 'meeting' | 'profile_complete' | 'recruit_agent' | 'customize_agent' | 'agent_bond_levelup' | 'agent_feedback';
   tokens?: number;
   cost?: number;
 }
@@ -127,6 +133,8 @@ const XP_REWARDS: Record<string, number> = {
   profile_complete: 50,
   recruit_agent: 20,
   customize_agent: 40,
+  agent_bond_levelup: 30,
+  agent_feedback: 5,
 };
 
 export function recordEvent(event: XPEvent): { state: GamificationState; leveledUp: boolean; newAchievements: string[] } {

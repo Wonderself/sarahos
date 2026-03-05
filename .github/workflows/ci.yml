@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [20, 22]
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: coverage
+          name: coverage-node-${{ matrix.node-version }}
           path: coverage/
 
   dashboard:
@@ -62,3 +62,5 @@ jobs:
 
       - name: Build dashboard
         run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096

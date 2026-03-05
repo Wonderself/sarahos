@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { stateManager } from '../../core/state/state-manager';
 import { agentRegistry } from '../../core/agent-registry/agent-registry';
 import { avatarBridge } from '../../avatar/bridge/avatar-bridge';
@@ -14,6 +16,13 @@ import {
   telephonyService,
 } from '../../avatar/services';
 
+// Read version from package.json at startup
+let APP_VERSION = '0.12.0';
+try {
+  const pkgPath = join(__dirname, '..', '..', '..', 'package.json');
+  APP_VERSION = JSON.parse(readFileSync(pkgPath, 'utf-8')).version;
+} catch { /* fallback to hardcoded version */ }
+
 export function createHealthRouter(): Router {
   const router = Router();
 
@@ -24,7 +33,7 @@ export function createHealthRouter(): Router {
 
     res.json({
       status: 'ok',
-      version: '0.10.0',
+      version: APP_VERSION,
       phase: currentState.current_phase,
       agents: {
         total: agentRegistry.getCount(),

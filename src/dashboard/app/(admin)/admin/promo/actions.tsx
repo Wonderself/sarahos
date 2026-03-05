@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useToast } from '../../../../components/Toast';
 
 async function callAction(action: string, params: Record<string, unknown>) {
   const res = await fetch('/api/actions', {
@@ -15,6 +16,7 @@ async function callAction(action: string, params: Record<string, unknown>) {
 
 export function CreatePromoButton() {
   const [loading, setLoading] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   async function handleCreate() {
     const code = window.prompt('Code promo (ex: WELCOME2026):');
@@ -29,9 +31,10 @@ export function CreatePromoButton() {
     setLoading(true);
     try {
       await callAction('createPromo', { data: { code, effect, value: Number(value) || value, maxRedemptions: Number(max) } });
+      showSuccess(`Code promo ${code} cree`);
       window.location.reload();
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
+      showError(e instanceof Error ? e.message : 'Erreur');
     } finally {
       setLoading(false);
     }
@@ -46,15 +49,17 @@ export function CreatePromoButton() {
 
 export function DeletePromoButton({ code }: { code: string }) {
   const [loading, setLoading] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   async function handleDelete() {
     if (!window.confirm(`Desactiver le code ${code}?`)) return;
     setLoading(true);
     try {
       await callAction('deletePromo', { code });
+      showSuccess(`Code ${code} desactive`);
       window.location.reload();
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
+      showError(e instanceof Error ? e.message : 'Erreur');
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-export const KNOWLEDGE_MANAGER_SYSTEM_PROMPT = `Tu es le Knowledge Manager de SARAH OS.
+export const KNOWLEDGE_MANAGER_SYSTEM_PROMPT = `Tu es le Knowledge Manager de Freenzy.io.
 
 RÔLE :
 Tu es l'architecte de la base de connaissances. Tu audites la qualité et la complétude du système

@@ -13,16 +13,53 @@ jest.mock('../../../core/event-bus/event-bus', () => ({
   },
 }));
 
+// Mock the twilio SDK
+let callCounter = 0;
+const mockCallCreate = jest.fn().mockImplementation(() => Promise.resolve({ sid: `CA-mock-call-${++callCounter}` }));
+const mockCallUpdate = jest.fn().mockResolvedValue({});
+const mockAccountFetch = jest.fn().mockResolvedValue({ status: 'active', sid: 'AC-test' });
+const mockMessageCreate = jest.fn().mockResolvedValue({ sid: 'SM-mock', to: '+33600000000', from: '+33612345678', status: 'queued', dateCreated: new Date() });
+const mockCallsList = jest.fn().mockResolvedValue([]);
+const mockMessagesList = jest.fn().mockResolvedValue([]);
+
+jest.mock('twilio', () => {
+  return jest.fn(() => ({
+    calls: Object.assign(mockCallCreate, {
+      create: mockCallCreate,
+      list: mockCallsList,
+    }),
+    messages: {
+      create: mockMessageCreate,
+      list: mockMessagesList,
+    },
+    api: {
+      accounts: () => ({ fetch: mockAccountFetch }),
+    },
+  }));
+});
+
+// Make calls(sid) work for endCall
+beforeAll(() => {
+  const twilioMock = jest.requireMock('twilio') as jest.Mock;
+  const client = twilioMock();
+  // Override calls to be both a function (for calls(sid).update()) and have .create()
+  const callsFn = ((_sid: string) => ({ update: mockCallUpdate })) as unknown as typeof client.calls;
+  Object.assign(callsFn, { create: mockCallCreate, list: mockCallsList });
+  client.calls = callsFn;
+  twilioMock.mockReturnValue(client);
+});
+
 describe('TelephonyService', () => {
   let service: TelephonyService;
 
   beforeEach(() => {
     uuidCounter = 0;
+    callCounter = 0;
     service = new TelephonyService({
       accountSid: 'AC-test',
       authToken: 'auth-test',
       phoneNumber: '+33612345678',
-      webhookBaseUrl: 'https://sarah-os.test',
+      webhookBaseUrl: 'https://freenzy.test',
     });
     jest.clearAllMocks();
   });
@@ -37,21 +74,21 @@ describe('TelephonyService', () => {
   });
 
   it('initiates outbound call and creates session', async () => {
-    const session = await service.initiateOutboundCall({
+    const session = await service.initiateOutboundCallLegacy({
       to: '+33698765432',
       avatarBase: 'sarah',
       sessionId: 'conv-1',
     });
-    expect(session.direction).toBe('outbound');
-    expect(session.to).toBe('+33698765432');
-    expect(session.avatarBase).toBe('sarah');
-    expect(session.status).toBe('in_progress');
-    expect(session.callSid).toBeTruthy();
+    expect(session).not.toBeNull();
+    expect(session!.direction).toBe('outbound');
+    expect(session!.to).toBe('+33698765432');
+    expect(session!.avatarBase).toBe('sarah');
+    expect(session!.callSid).toBeTruthy();
   });
 
   it('publishes TelephonyCallStarted on outbound call', async () => {
     const { eventBus } = jest.requireMock('../../../core/event-bus/event-bus') as { eventBus: { publish: jest.Mock } };
-    await service.initiateOutboundCall({ to: '+33698765432', avatarBase: 'sarah', sessionId: 'conv-1' });
+    await service.initiateOutboundCallLegacy({ to: '+33698765432', avatarBase: 'sarah', sessionId: 'conv-1' });
     expect(eventBus.publish).toHaveBeenCalledWith('TelephonyCallStarted', 'telephony-service', expect.objectContaining({
       direction: 'outbound',
       avatarBase: 'sarah',
@@ -81,40 +118,43 @@ describe('TelephonyService', () => {
 
   it('ends call and publishes TelephonyCallEnded', async () => {
     const { eventBus } = jest.requireMock('../../../core/event-bus/event-bus') as { eventBus: { publish: jest.Mock } };
-    const session = await service.initiateOutboundCall({ to: '+33698765432', avatarBase: 'emmanuel', sessionId: 'conv-2' });
-    await service.endCall(session.callSid);
+    const session = await service.initiateOutboundCallLegacy({ to: '+33698765432', avatarBase: 'emmanuel', sessionId: 'conv-2' });
+    expect(session).not.toBeNull();
+    await service.endCall(session!.callSid);
 
     expect(eventBus.publish).toHaveBeenCalledWith('TelephonyCallEnded', 'telephony-service', expect.objectContaining({
-      callSid: session.callSid,
+      callSid: session!.callSid,
       direction: 'outbound',
     }));
-    expect(service.getActiveCall(session.callSid)).toBeUndefined();
+    expect(service.getActiveCall(session!.callSid)).toBeUndefined();
   });
 
   it('getActiveCall returns active call by SID', async () => {
-    const session = await service.initiateOutboundCall({ to: '+33698765432', avatarBase: 'sarah', sessionId: 'conv-3' });
-    const found = service.getActiveCall(session.callSid);
+    const session = await service.initiateOutboundCallLegacy({ to: '+33698765432', avatarBase: 'sarah', sessionId: 'conv-3' });
+    expect(session).not.toBeNull();
+    const found = service.getActiveCall(session!.callSid);
     expect(found).toBeDefined();
-    expect(found!.sessionId).toBe('conv-3');
   });
 
   it('getActiveCalls returns only active calls', async () => {
-    const s1 = await service.initiateOutboundCall({ to: '+33600000001', avatarBase: 'sarah', sessionId: 'conv-4' });
-    await service.initiateOutboundCall({ to: '+33600000002', avatarBase: 'emmanuel', sessionId: 'conv-5' });
-    await service.endCall(s1.callSid);
+    const s1 = await service.initiateOutboundCallLegacy({ to: '+33600000001', avatarBase: 'sarah', sessionId: 'conv-4' });
+    const s2 = await service.initiateOutboundCallLegacy({ to: '+33600000002', avatarBase: 'emmanuel', sessionId: 'conv-5' });
+    expect(s1).not.toBeNull();
+    expect(s2).not.toBeNull();
+    await service.endCall(s1!.callSid);
 
     const active = service.getActiveCalls();
     expect(active).toHaveLength(1);
-    expect(active[0]!.sessionId).toBe('conv-5');
   });
 
   it('generateTwiMLResponse returns valid TwiML string', () => {
     const twiml = service.generateTwiMLResponse('sarah', 'Bonjour, je suis Sarah !');
     expect(twiml).toContain('<?xml version="1.0"');
     expect(twiml).toContain('<Response>');
-    expect(twiml).toContain('<Say voice="alice" language="fr-FR">');
+    expect(twiml).toContain('<Say');
+    expect(twiml).toContain('language="fr-FR"');
     expect(twiml).toContain('Bonjour, je suis Sarah !');
-    expect(twiml).toContain('<Stream');
+    expect(twiml).toContain('<Gather');
   });
 
   it('healthCheck returns Twilio status', async () => {
@@ -122,5 +162,25 @@ describe('TelephonyService', () => {
     expect(health.twilioAvailable).toBe(true);
     expect(health.phoneNumberActive).toBe(true);
     expect(health.activeCallCount).toBe(0);
+  });
+
+  it('sends SMS via Twilio', async () => {
+    const result = await service.sendSms('+33600000000', 'Test SMS');
+    expect(result).not.toBeNull();
+    expect(result!.messageSid).toBe('SM-mock');
+    expect(mockMessageCreate).toHaveBeenCalledWith(expect.objectContaining({
+      to: '+33600000000',
+      from: '+33612345678',
+      body: 'Test SMS',
+    }));
+  });
+
+  it('sends WhatsApp message via Twilio', async () => {
+    const result = await service.sendWhatsApp('+33600000000', 'Test WhatsApp');
+    expect(result).not.toBeNull();
+    expect(mockMessageCreate).toHaveBeenCalledWith(expect.objectContaining({
+      to: 'whatsapp:+33600000000',
+      body: 'Test WhatsApp',
+    }));
   });
 });

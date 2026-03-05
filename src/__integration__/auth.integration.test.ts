@@ -79,7 +79,7 @@ describe('Auth Integration', () => {
     const res = await request(app).get('/health');
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('ok');
-    expect(res.body.version).toBe('0.10.0');
+    expect(res.body.version).toBe('0.12.0');
   });
 
   it('GET /auth/me with valid token returns user info', async () => {

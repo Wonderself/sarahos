@@ -1,0 +1,16 @@
+node_modules
+dist
+.git
+.gitignore
+*.log
+*.md
+src/dashboard
+src/dashboard/node_modules
+src/dashboard/.next
+src/__integration__
+**/*.test.ts
+**/*.test.js
+.env
+.env.*
+docker-compose*.yml
+.dockerignore

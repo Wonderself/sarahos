@@ -18,6 +18,7 @@ export interface User {
   activeAgents: string[];
   userNumber: number;
   commissionRate: number;
+  tokenBudgetMultiplier: number;
   referralCode: string | null;
   referredBy: string | null;
   createdAt: Date;
@@ -44,6 +45,7 @@ export interface UpdateUserInput {
   dailyApiLimit?: number;
   demoExpiresAt?: Date | null;
   activeAgents?: string[];
+  tokenBudgetMultiplier?: number;
 }
 
 export interface UserFilters {
@@ -51,6 +53,8 @@ export interface UserFilters {
   tier?: AccountTier;
   isActive?: boolean;
   search?: string; // search email or displayName
+  limit?: number;
+  offset?: number;
 }
 
 export const TIER_HIERARCHY: Record<AccountTier, number> = {
@@ -63,6 +67,6 @@ export const TIER_HIERARCHY: Record<AccountTier, number> = {
 export const DEFAULT_DAILY_LIMITS: Record<AccountTier, number> = {
   guest: 10,
   demo: 100,
-  free: 100,
-  paid: 10000,
+  free: 999_999,  // credits are the sole limit
+  paid: 999_999,  // credits are the sole limit
 };

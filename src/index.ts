@@ -16,6 +16,21 @@ import {
   MonitoringAgent,
 } from './agents/level1-execution';
 import {
+  BudgetAgent,
+  NegociateurAgent,
+  ImpotsAgent,
+  ComptableAgent,
+  ChasseurAgent,
+  PortfolioAgent,
+  CVAgent,
+  CeremonieAgent,
+  ContradicteurAgent,
+  EcrivainAgent,
+  CineasteAgent,
+  CoachAgent,
+  DeconnexionAgent,
+} from './agents/level1-execution/personal';
+import {
   OperationsManager,
   GrowthManager,
   TechnicalManager,
@@ -47,8 +62,9 @@ import { cronService } from './core/cron';
 const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
 
 async function bootstrap(): Promise<void> {
-  logger.info('═══ SARAH OS — Starting ═══');
-  logger.info(`Version: 0.9.0 | Phase: 9 — SaaS Billing & Client Platform`);
+  logger.info('═══ FREENZY.IO — Starting ═══');
+  const pkg = require('../package.json');
+  logger.info(`Version: ${pkg.version} | Phase: 12 — Réveil Intelligent + Multi-Projets`);
 
   // Load state
   const state = await stateManager.load();
@@ -145,6 +161,31 @@ async function bootstrap(): Promise<void> {
     agents: l1Agents.map((a) => a.name),
   });
 
+  // Register Level 1 Personal Agents
+  const l1PersonalAgents = [
+    new BudgetAgent(),
+    new NegociateurAgent(),
+    new ImpotsAgent(),
+    new ComptableAgent(),
+    new ChasseurAgent(),
+    new PortfolioAgent(),
+    new CVAgent(),
+    new CeremonieAgent(),
+    new ContradicteurAgent(),
+    new EcrivainAgent(),
+    new CineasteAgent(),
+    new CoachAgent(),
+    new DeconnexionAgent(),
+  ];
+
+  for (const agent of l1PersonalAgents) {
+    agentRegistry.register(agent);
+  }
+
+  logger.info(`L1 Personal Agents registered: ${l1PersonalAgents.length}`, {
+    agents: l1PersonalAgents.map((a) => a.name),
+  });
+
   // Register Level 2 Management Agents
   const l2Agents = [
     new OperationsManager(),
@@ -179,7 +220,13 @@ async function bootstrap(): Promise<void> {
 
   // Phase 7 — Express API with security
   const app = express();
-  app.use(express.json());
+  app.use(express.json({
+    limit: '1mb',
+    verify: (req, _res, buf) => {
+      // Expose raw body for webhook signature verification (WhatsApp, Twilio, etc.)
+      (req as typeof req & { rawBody?: Buffer }).rawBody = buf;
+    },
+  }));
   applySecurityMiddleware(app);
   registerAllRoutes(app);
 
@@ -190,7 +237,7 @@ async function bootstrap(): Promise<void> {
 
   // Start server
   app.listen(PORT, () => {
-    logger.info(`SARAH OS API listening on port ${PORT}`);
+    logger.info(`FREENZY.IO API listening on port ${PORT}`);
   });
 
   // Initialize orchestrator
@@ -204,7 +251,7 @@ async function bootstrap(): Promise<void> {
   cronService.start();
   logger.info('Cron service started');
 
-  logger.info('═══ SARAH OS — Ready ═══');
+  logger.info('═══ FREENZY.IO — Ready ═══');
   logger.info(`Dashboard: http://localhost:${PORT}/health`);
   logger.info(`Autonomy score: ${autonomyEngine.calculateScore()}/100`);
 
@@ -228,7 +275,7 @@ async function bootstrap(): Promise<void> {
     try { await dbClient.disconnect(); } catch (e) { logger.error('DB disconnect error', { error: String(e) }); }
     try { await redisClient.disconnect(); } catch (e) { logger.error('Redis disconnect error', { error: String(e) }); }
 
-    logger.info('SARAH OS shut down complete');
+    logger.info('FREENZY.IO shut down complete');
     process.exit(0);
   };
 

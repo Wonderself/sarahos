@@ -29,7 +29,7 @@ jest.mock('../persona/persona.service', () => ({
       id: 'persona-sarah',
       voiceProfile: { provider: 'telnyx', voiceId: 'sarah-fr-female-01', language: 'fr-FR', speed: 1.0, pitch: 1.0, style: 'warm-professional' },
     }),
-    buildEnrichedSystemPrompt: jest.fn().mockReturnValue('Tu es Sarah, la DG de SARAH OS.'),
+    buildEnrichedSystemPrompt: jest.fn().mockReturnValue('Tu es Sarah, la DG de Freenzy.io.'),
   },
 }));
 

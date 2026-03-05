@@ -7,13 +7,45 @@ import { walletService } from '../billing/wallet.service';
 import { asrService } from '../avatar/services/asr/asr.service';
 import { ttsService } from '../avatar/services/tts/tts.service';
 import { calculateSTTCost, calculateTTSCost } from '../billing/pricing';
+import { eventBus } from '../core/event-bus/event-bus';
+import { getRepondeurConfig, isScheduleActive } from '../agents/level1-execution/repondeur/repondeur.tools';
 import type { IncomingWhatsAppMessage, WhatsAppConversation } from './whatsapp.types';
 import { normalizePhoneNumber } from './whatsapp.types';
+import {
+  detectRouting,
+  buildWhatsAppPrompt,
+  buildTransitionMessage,
+  computeOnboardingPhase,
+  registerAgents,
+  type AgentDef,
+  type BondContext,
+} from './whatsapp-agent-router';
 
-const PERSONA_PROMPTS: Record<string, string> = {
-  sarah: `Tu es Sarah, Directrice Generale virtuelle de SARAH OS. Tu es charismatique, empathique et professionnelle. Tu reponds en francais de maniere naturelle et bienveillante. Tu es concise dans tes reponses WhatsApp (max 500 caracteres sauf si le sujet necessite plus). Tu utilises parfois des emojis de facon moderee.`,
-  emmanuel: `Tu es Emmanuel, CEO et fondateur de SARAH OS. Tu es pose, visionnaire et inspirant. Tu reponds en francais avec autorite et assurance. Tu es concis dans tes reponses WhatsApp (max 500 caracteres sauf si le sujet necessite plus). Ton de leader tech bienveillant.`,
+// ─── Agent Registry (loaded from config at startup) ───
+
+const AGENT_REGISTRY: Map<string, AgentDef> = new Map();
+
+/** Call once at startup with all agent definitions */
+export function initAgentRegistry(agents: Array<{ id: string; name: string; role: string; emoji: string; systemPrompt: string }>) {
+  for (const a of agents) {
+    AGENT_REGISTRY.set(a.id, a);
+  }
+  registerAgents(agents);
+  logger.info('WhatsApp agent registry initialized', { count: agents.length });
+}
+
+// Fallback prompts for sarah/emmanuel (backward compat)
+const FALLBACK_PROMPTS: Record<string, string> = {
+  sarah: `Tu es Sarah, Directrice Generale virtuelle de Freenzy.io. Tu es charismatique, empathique et professionnelle. Tu reponds en francais de maniere naturelle et bienveillante. Tu es concise dans tes reponses WhatsApp (max 300 caracteres). Tu utilises parfois des emojis de facon moderee.`,
+  emmanuel: `Tu es Emmanuel, CEO et fondateur de Freenzy.io. Tu es pose, visionnaire et inspirant. Tu reponds en francais avec autorite et assurance. Tu es concis dans tes reponses WhatsApp (max 300 caracteres). Ton de leader tech bienveillant.`,
 };
+
+interface AgentContext {
+  currentAgentId: string;
+  responseMode: 'short' | 'detailed';
+  messageCount: number;
+  agentInteractions: Record<string, { count: number; onboardingPhase: string }>;
+}
 
 export class WhatsAppPipelineService {
   /**
@@ -69,7 +101,27 @@ export class WhatsAppPipelineService {
       return;
     }
 
-    // 4. Process based on message type
+    // 4. Check if Repondeur is active for this user
+    const repondeurConfig = await getRepondeurConfig(userId);
+    if (repondeurConfig?.isActive) {
+      const isBoss = repondeurConfig.bossPhoneNumber &&
+        normalizePhoneNumber(message.from) === normalizePhoneNumber(repondeurConfig.bossPhoneNumber);
+      if (!isBoss && isScheduleActive(repondeurConfig.schedule)) {
+        logger.info('Routing to Repondeur Agent', { userId, from: message.from });
+        // Fire event — the repondeur agent handles processing + WhatsApp reply
+        await eventBus.publish('RepondeurMessageReceived', 'whatsapp-pipeline', {
+          senderPhone: message.from,
+          senderName: contactName,
+          messageContent: message.text?.body ?? '[audio]',
+          messageType: message.type === 'audio' ? 'audio' : 'text',
+          waMessageId: message.id,
+          userId,
+        });
+        return;
+      }
+    }
+
+    // 5. Process based on message type (standard pipeline)
     try {
       if (message.type === 'text' && message.text?.body) {
         await this.processTextMessage(userId, message.text.body, message, conversation, phoneLink);
@@ -99,6 +151,26 @@ export class WhatsAppPipelineService {
     await whatsAppRepository.updateLastMessage(userId);
   }
 
+  /** Load agent context from conversation metadata */
+  private getAgentContext(conversation: WhatsAppConversation, preferredAgent: string): AgentContext {
+    const stored = conversation.metadata?.agent_context as AgentContext | undefined;
+    return stored ?? {
+      currentAgentId: preferredAgent || 'fz-assistante',
+      responseMode: 'short',
+      messageCount: 0,
+      agentInteractions: {},
+    };
+  }
+
+  /** Save agent context back into conversation metadata */
+  private async saveAgentContext(conversationId: string, ctx: AgentContext): Promise<void> {
+    try {
+      await whatsAppRepository.updateConversationMetadata(conversationId, { agent_context: ctx });
+    } catch (err) {
+      logger.warn('Failed to save agent context', { conversationId, error: err });
+    }
+  }
+
   private async processTextMessage(
     userId: string,
     text: string,
@@ -117,17 +189,68 @@ export class WhatsAppPipelineService {
       status: 'delivered',
     });
 
+    // ─── Multi-Agent Routing ───
+    const ctx = this.getAgentContext(conversation, phoneLink.preferredAgent);
+    const routing = detectRouting(text, ctx.currentAgentId, ctx.responseMode);
+    const targetAgent = AGENT_REGISTRY.get(routing.targetAgentId);
+
+    // Handle agent switch — send transition message
+    if (routing.isSwitch && targetAgent) {
+      const fromAgent = AGENT_REGISTRY.get(ctx.currentAgentId);
+      const transitionMsg = buildTransitionMessage(fromAgent, targetAgent);
+      await whatsAppService.sendTextMessage({ to: rawMessage.from, text: transitionMsg });
+      ctx.currentAgentId = routing.targetAgentId;
+      logger.info('WhatsApp agent switch', { userId, from: ctx.currentAgentId, to: routing.targetAgentId });
+    }
+
+    // Update context
+    ctx.responseMode = routing.responseMode;
+    ctx.messageCount += 1;
+    const agentKey = ctx.currentAgentId;
+    if (!ctx.agentInteractions[agentKey]) {
+      ctx.agentInteractions[agentKey] = { count: 0, onboardingPhase: 'discovery' };
+    }
+    const agentInt = ctx.agentInteractions[agentKey]!;
+    agentInt.count += 1;
+
+    // Compute onboarding phase
+    const agentIntCount = agentInt.count;
+    const onboardingPhase = computeOnboardingPhase(agentIntCount);
+    agentInt.onboardingPhase = onboardingPhase;
+
+    // Build bond context
+    const bond: BondContext = {
+      totalInteractions: agentIntCount,
+      relationshipLevel: agentIntCount >= 100 ? 5 : agentIntCount >= 50 ? 4 : agentIntCount >= 20 ? 3 : agentIntCount >= 5 ? 2 : 1,
+      satisfactionScore: 50, // Default server-side (client tracks detailed scores)
+    };
+
     // Get conversation history for context
     const history = await whatsAppRepository.getRecentMessagesForContext(userId, 8);
 
-    // Call LLM
-    const llmResult = await this.callLLMWithBilling(userId, text, history, conversation.agentName);
+    // Build dynamic prompt
+    const activeAgent = targetAgent ?? AGENT_REGISTRY.get(ctx.currentAgentId);
+    const systemPrompt = activeAgent
+      ? buildWhatsAppPrompt(activeAgent, ctx.responseMode, bond, onboardingPhase)
+      : FALLBACK_PROMPTS[conversation.agentName] ?? FALLBACK_PROMPTS['sarah'] ?? '';
+
+    // Call LLM with dynamic prompt
+    const maxTokens = ctx.responseMode === 'detailed' ? 2048 : 512;
+    const llmResult = await this.callLLMWithBilling(userId, text, history, systemPrompt, ctx.currentAgentId, maxTokens);
+
+    // Auto-revert to short mode after detailed response
+    if (ctx.responseMode === 'detailed') {
+      ctx.responseMode = 'short';
+    }
+
+    // Save context
+    await this.saveAgentContext(conversation.id, ctx);
 
     if ('error' in llmResult) {
       await whatsAppService.sendTextMessage({
         to: rawMessage.from,
         text: llmResult.error === 'Insufficient balance'
-          ? 'Votre solde est insuffisant. Rechargez votre portefeuille sur le dashboard SARAH OS.'
+          ? 'Votre solde est insuffisant. Rechargez votre portefeuille sur le dashboard Freenzy.io.'
           : 'Desole, je ne peux pas repondre pour le moment. Veuillez reessayer.',
       });
       return;
@@ -138,6 +261,20 @@ export class WhatsAppPipelineService {
       to: rawMessage.from,
       text: llmResult.content,
     });
+
+    // Every 5 messages, send feedback buttons
+    if (ctx.messageCount % 5 === 0) {
+      await whatsAppService.sendInteractiveMessage({
+        to: rawMessage.from,
+        body: 'Cette réponse vous a été utile ?',
+        buttons: [
+          { id: `feedback_yes_${ctx.currentAgentId}`, title: 'Utile 👍' },
+          { id: `feedback_no_${ctx.currentAgentId}`, title: 'À améliorer 👎' },
+          { id: 'cmd_detail', title: 'Plus de détails' },
+        ],
+        footer: `${activeAgent?.emoji ?? '🤖'} ${activeAgent?.name ?? 'Agent'}`,
+      }).catch(() => {}); // non-blocking
+    }
 
     // Save outbound message
     await whatsAppRepository.createMessage({
@@ -150,6 +287,7 @@ export class WhatsAppPipelineService {
       tokensUsed: llmResult.tokens,
       billedCredits: llmResult.billedCredits,
       status: waMessageId ? 'sent' : 'failed',
+      metadata: { agent_id: ctx.currentAgentId },
     });
 
     // Update conversation stats
@@ -243,11 +381,30 @@ export class WhatsAppPipelineService {
       status: 'delivered',
     });
 
-    // Get context and call LLM
+    // Get context and call LLM (voice notes use the current agent context)
     const history = await whatsAppRepository.getRecentMessagesForContext(userId, 8);
-    const llmResult = await this.callLLMWithBilling(userId, transcript, history, conversation.agentName);
+    const voiceCtx = this.getAgentContext(conversation, phoneLink.preferredAgent);
+    const voiceAgent = AGENT_REGISTRY.get(voiceCtx.currentAgentId);
+    const voicePrompt = voiceAgent
+      ? buildWhatsAppPrompt(voiceAgent, 'short', { totalInteractions: 0, relationshipLevel: 1, satisfactionScore: 50 }, 'active')
+      : FALLBACK_PROMPTS[conversation.agentName] ?? FALLBACK_PROMPTS['sarah'] ?? '';
+    const llmResult = await this.callLLMWithBilling(userId, transcript, history, voicePrompt, voiceCtx.currentAgentId);
 
     if ('error' in llmResult) {
+      // Refund STT cost if LLM fails (user shouldn't pay for transcription without a response)
+      const sttRefundCost = calculateSTTCost(sttDurationMs);
+      if (sttRefundCost > 0) {
+        try {
+          await walletService.deposit({
+            userId,
+            amount: sttRefundCost,
+            description: `STT refund: LLM failure after ${sttDurationMs}ms audio`,
+            referenceType: 'stt_refund',
+          });
+        } catch (refundErr) {
+          logger.warn('Failed to refund STT cost after LLM failure', { userId, sttRefundCost, error: refundErr });
+        }
+      }
       await whatsAppService.sendTextMessage({
         to: rawMessage.from,
         text: 'Desole, je ne peux pas repondre pour le moment.',
@@ -330,10 +487,10 @@ export class WhatsAppPipelineService {
     userId: string,
     userMessage: string,
     conversationHistory: Array<{ role: string; content: string }>,
-    agentName: string,
+    systemPrompt: string,
+    agentId: string = 'sarah',
+    maxTokens: number = 1024,
   ): Promise<{ content: string; tokens: number; billedCredits: number } | { error: string }> {
-    const systemPrompt = PERSONA_PROMPTS[agentName] ?? PERSONA_PROMPTS['sarah'] ?? '';
-
     const messages: Array<{ role: string; content: string }> = [
       { role: 'system', content: systemPrompt },
       ...conversationHistory,
@@ -344,8 +501,8 @@ export class WhatsAppPipelineService {
       userId,
       model: 'claude-sonnet-4-20250514',
       messages,
-      maxTokens: 1024,
-      agentName: `whatsapp-${agentName}`,
+      maxTokens,
+      agentName: `whatsapp-${agentId}`,
       endpoint: '/whatsapp/message',
       requestId: uuidv4(),
     });
@@ -366,14 +523,14 @@ export class WhatsAppPipelineService {
 
     await whatsAppService.sendTextMessage({
       to: phoneNumber,
-      text: `Bonjour ! 👋 Pour utiliser SARAH OS sur WhatsApp, inscrivez-vous sur notre plateforme et liez votre numero dans l'espace client.\n\nRendez-vous sur votre dashboard SARAH OS → WhatsApp pour commencer.`,
+      text: `Bonjour ! 👋 Pour utiliser Freenzy.io sur WhatsApp, inscrivez-vous sur notre plateforme et liez votre numero dans l'espace client.\n\nRendez-vous sur votre dashboard Freenzy.io → WhatsApp pour commencer.`,
     });
   }
 
   private async handleInsufficientBalance(phoneNumber: string): Promise<void> {
     await whatsAppService.sendTextMessage({
       to: phoneNumber,
-      text: `Votre solde de credits est insuffisant pour continuer la conversation. Rechargez votre portefeuille depuis votre dashboard SARAH OS → Portefeuille.`,
+      text: `Votre solde de credits est insuffisant pour continuer la conversation. Rechargez votre portefeuille depuis votre dashboard Freenzy.io → Portefeuille.`,
     });
   }
 }

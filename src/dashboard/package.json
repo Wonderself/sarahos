@@ -1,16 +1,18 @@
 {
-  "name": "sarah-os-dashboard",
-  "version": "0.6.0",
+  "name": "flashboard",
+  "version": "0.12.0",
   "private": true,
   "scripts": {
-    "dev": "set NODE_OPTIONS=--max-old-space-size=4096 && next dev -p 3001",
-    "build": "set NODE_OPTIONS=--max-old-space-size=4096 && next build",
+    "dev": "next dev -p 3001",
+    "build": "next build",
     "start": "next start -p 3001"
   },
   "dependencies": {
+    "isomorphic-dompurify": "^3.0.0",
     "next": "^14.2.0",
     "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "react-dom": "^18.3.0",
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

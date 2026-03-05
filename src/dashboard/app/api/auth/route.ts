@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
+function setAuthCookie(response: NextResponse, token: string): void {
+  response.cookies.set('fz-token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60, // 24h
+    path: '/',
+  });
+}
+
+function clearAuthCookie(response: NextResponse): void {
+  response.cookies.delete('fz-token');
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const action = body.action as string;
@@ -24,11 +38,13 @@ export async function POST(req: NextRequest) {
       const data = await res.json();
       if (!res.ok) return NextResponse.json(data, { status: res.status });
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         ...data,
         email: data.email ?? body.email,
         displayName: data.displayName ?? body.displayName,
       });
+      if (data.token) setAuthCookie(response, data.token);
+      return response;
     }
 
     // ── Login ──
@@ -49,13 +65,16 @@ export async function POST(req: NextRequest) {
         });
         const meData = meRes.ok ? await meRes.json() : {};
 
-        return NextResponse.json({
+        const response = NextResponse.json({
           ...data,
+          role: data.role ?? meData.role,
           email: meData.sub ?? '',
           displayName: meData.displayName ?? meData.sub ?? '',
           userId: data.userId ?? meData.userId,
           tier: data.tier ?? meData.tier,
         });
+        if (data.token) setAuthCookie(response, data.token);
+        return response;
       }
 
       // Login by email + password (forwarded to backend)
@@ -68,14 +87,16 @@ export async function POST(req: NextRequest) {
         const data = await res.json();
         if (!res.ok) return NextResponse.json(data, { status: res.status });
 
-        return NextResponse.json({
+        const response = NextResponse.json({
           ...data,
+          role: data.role,
           email: data.email ?? body.email,
           displayName: data.displayName ?? '',
           userId: data.userId,
           tier: data.tier,
-          apiKey: data.apiKey,
         });
+        if (data.token) setAuthCookie(response, data.token);
+        return response;
       }
 
       return NextResponse.json({ error: 'Cle API ou email + mot de passe requis' }, { status: 400 });
@@ -101,6 +122,13 @@ export async function POST(req: NextRequest) {
       });
       const data = await res.json();
       return NextResponse.json(data, { status: res.status });
+    }
+
+    // ── Logout ──
+    if (action === 'logout') {
+      const response = NextResponse.json({ message: 'Logged out' });
+      clearAuthCookie(response);
+      return response;
     }
 
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 });

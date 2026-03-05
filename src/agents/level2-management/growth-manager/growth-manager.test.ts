@@ -89,7 +89,7 @@ describe('GrowthManager', () => {
     const { eventBus } = jest.requireMock('../../../core/event-bus/event-bus') as { eventBus: { publish: jest.Mock } };
     await agent.initialize();
     const result = await agent.execute(makeTask({
-      payload: { taskType: 'campaign', topic: 'SARAH OS launch', platforms: ['linkedin', 'x'], avatar: 'sarah' },
+      payload: { taskType: 'campaign', topic: 'Freenzy.io launch', platforms: ['linkedin', 'x'], avatar: 'sarah' },
     }));
     expect(result.success).toBe(true);
     expect(result.output).toHaveProperty('campaignPlan');

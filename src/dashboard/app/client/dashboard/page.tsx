@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { loadAgentConfigs, DEFAULT_AGENTS, getAgentsForTier, getActiveAgentIds, toggleAgent } from '../../../lib/agent-config';
 import type { AgentTypeId } from '../../../lib/agent-config';
-import SarahWelcome from '../../../components/SarahWelcome';
+import FreenzyWelcome from '../../../components/FreenzyWelcome';
+import { useToast } from '../../../components/Toast';
 
 interface UsageStats {
   totalTokens: number;
@@ -26,6 +28,7 @@ interface WeeklySummary {
 }
 
 export default function ClientDashboard() {
+  const { showError } = useToast();
   const [stats, setStats] = useState<UsageStats>({
     totalTokens: 0, totalCost: 0, totalMessages: 0, totalDocuments: 0,
     totalMeetings: 0, streak: 0, level: 1, xp: 0, xpToNext: 100, achievements: [],
@@ -37,8 +40,12 @@ export default function ClientDashboard() {
   const [hasCustomAgents, setHasCustomAgents] = useState(false);
   const [aiTip, setAiTip] = useState('');
   const [tipLoading, setTipLoading] = useState(false);
+  const [briefing, setBriefing] = useState('');
+  const [briefingLoading, setBriefingLoading] = useState(false);
+  const [briefingLoaded, setBriefingLoaded] = useState(false);
+  const [briefingGeneratedAt, setBriefingGeneratedAt] = useState('');
   const [showWelcome, setShowWelcome] = useState(false);
-  const [activeAgentIds, setActiveAgentIds] = useState<AgentTypeId[]>(['sarah-repondeur']);
+  const [activeAgentIds, setActiveAgentIds] = useState<AgentTypeId[]>(['fz-repondeur']);
 
   useEffect(() => {
     loadStats();
@@ -48,18 +55,19 @@ export default function ClientDashboard() {
     checkCustomAgents();
     checkWelcome();
     setActiveAgentIds(getActiveAgentIds());
-  }, []);
+    loadBriefingWithCache();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function getSession() {
-    try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
+    try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
   }
 
   function checkWelcome() {
     try {
-      const pending = localStorage.getItem('sarah_welcome_pending');
+      const pending = localStorage.getItem('fz_welcome_pending');
       if (pending === 'true') {
         setShowWelcome(true);
-        localStorage.removeItem('sarah_welcome_pending');
+        localStorage.removeItem('fz_welcome_pending');
       }
     } catch { /* */ }
   }
@@ -70,8 +78,8 @@ export default function ClientDashboard() {
 
   function loadStats() {
     try {
-      const gam = JSON.parse(localStorage.getItem('sarah_gamification') ?? '{}');
-      const docs = JSON.parse(localStorage.getItem('sarah_docs') ?? '[]');
+      const gam = JSON.parse(localStorage.getItem('fz_gamification') ?? '{}');
+      const docs = JSON.parse(localStorage.getItem('fz_docs') ?? '[]');
 
       setStats({
         totalTokens: gam.totalTokens ?? 0,
@@ -103,22 +111,26 @@ export default function ClientDashboard() {
     const session = getSession();
     if (!session.token) return;
     try {
-      const res = await fetch(`/api/portal?path=/portal/wallet&token=${session.token}`);
+      const res = await fetch('/api/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: '/portal/wallet', token: session.token, method: 'GET' }),
+      });
       const data = await res.json();
       setWalletBalance(data.balance ?? data.wallet?.balance ?? 0);
-    } catch { /* */ }
+    } catch (e) { showError(e instanceof Error ? e.message : 'Impossible de charger le solde'); }
   }
 
   function loadTeam() {
     try {
-      const team = JSON.parse(localStorage.getItem('sarah_team') ?? '[]');
+      const team = JSON.parse(localStorage.getItem('fz_team') ?? '[]');
       setTeamSize(team.length);
     } catch { /* */ }
   }
 
   function checkProfile() {
     try {
-      const profile = localStorage.getItem('sarah_company_profile');
+      const profile = localStorage.getItem('fz_company_profile');
       setHasProfile(!!profile && profile !== '{}');
     } catch { /* */ }
   }
@@ -141,15 +153,86 @@ export default function ClientDashboard() {
         body: JSON.stringify({
           token: session.token,
           model: 'claude-sonnet-4-20250514',
-          messages: [{ role: 'user', content: `Tu es ${DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.name}, ${DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.role}. Donne UN conseil personnalisé et actionnable pour améliorer la productivité aujourd'hui. Le client a ${stats.totalMessages} messages, ${stats.totalDocuments} documents générés, une équipe de ${teamSize} agents, et un streak de ${stats.streak} jours. Réponse en 2 phrases max, en français.` }],
+          messages: [{ role: 'user', content: `Tu es ${DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name}, ${DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.role}. Donne UN conseil personnalisé et actionnable pour améliorer la productivité aujourd'hui. Le client a ${stats.totalMessages} messages, ${stats.totalDocuments} documents générés, une équipe de ${teamSize} agents, et un streak de ${stats.streak} jours. Réponse en 2 phrases max, en français.` }],
           maxTokens: 256,
-          agentName: 'sarah-assistante',
+          agentName: 'fz-assistante',
         }),
       });
+      if (!res.ok) { setAiTip('Service temporairement indisponible.'); return; }
       const data = await res.json();
       setAiTip(data.content ?? data.text ?? 'Pas de conseil disponible.');
     } catch { setAiTip('Connectez-vous à internet pour recevoir des conseils personnalisés.'); }
     finally { setTipLoading(false); }
+  }
+
+  // ─── Briefing cache helpers ─────────────────────────────────────────────────
+  const BRIEFING_CACHE_KEY = 'fz_briefing_cache';
+
+  function loadBriefingWithCache() {
+    const s = getSession();
+    if (!s.token) return;
+    const todayKey = new Date().toISOString().split('T')[0];
+    try {
+      const cached = JSON.parse(localStorage.getItem(BRIEFING_CACHE_KEY) ?? '{}');
+      if (cached.date === todayKey && cached.content) {
+        setBriefing(cached.content);
+        setBriefingLoaded(true);
+        setBriefingGeneratedAt(cached.generatedAt || '');
+        return; // Utilise le cache
+      }
+    } catch { /* */ }
+    loadBriefing(); // Génère automatiquement si pas de cache valide
+  }
+
+  async function loadBriefing() {
+    const s = getSession();
+    if (!s.token) return;
+    setBriefingLoading(true);
+    try {
+      const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const companyProfile = localStorage.getItem('fz_company_profile') || 'Non renseigné';
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: s.token,
+          model: 'claude-sonnet-4-20250514',
+          messages: [{ role: 'user', content: `Tu es Maëva, directrice générale IA de Freenzy. Nous sommes le ${today}. Génère un briefing du jour concis et actionnable pour le client. Contexte entreprise: ${companyProfile}. Stats: ${stats.totalMessages} messages, ${stats.totalDocuments} documents, streak de ${stats.streak} jours, ${activeAgents.length} agents actifs. Structure ton briefing ainsi:
+1. **Salutation personnalisée** (1 ligne)
+2. **Priorités du jour** (3 actions concrètes à faire aujourd'hui)
+3. **Insight business** (1 observation ou tendance basée sur l'activité)
+4. **Conseil du jour** (1 astuce productivité)
+Sois concise, percutante et bienveillante. Réponds en français.` }],
+          maxTokens: 512,
+          agentName: 'fz-dg',
+        }),
+      });
+      if (!res.ok) { setBriefing('Service temporairement indisponible.'); return; }
+      const data = await res.json();
+      const content = data.content ?? data.text ?? '';
+      setBriefing(content);
+      setBriefingLoaded(true);
+      // Sauvegarder dans le cache
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      setBriefingGeneratedAt(timeStr);
+      try {
+        localStorage.setItem(BRIEFING_CACHE_KEY, JSON.stringify({
+          date: now.toISOString().split('T')[0],
+          content,
+          generatedAt: timeStr,
+        }));
+      } catch { /* */ }
+    } catch { setBriefing('Connectez-vous pour recevoir votre briefing personnalisé.'); }
+    finally { setBriefingLoading(false); }
+  }
+
+  function refreshBriefing() {
+    // Efface le cache et re-génère
+    try { localStorage.removeItem(BRIEFING_CACHE_KEY); } catch { /* */ }
+    setBriefingLoaded(false);
+    setBriefingGeneratedAt('');
+    loadBriefing();
   }
 
   const session = getSession();
@@ -170,7 +253,7 @@ export default function ClientDashboard() {
   // Agent usage from chat history for personalization
   const agentUsage: Record<string, number> = {};
   try {
-    const chatHistory = JSON.parse(localStorage.getItem('sarah_chat_history') ?? '[]');
+    const chatHistory = JSON.parse(localStorage.getItem('fz_chat_history') ?? '[]');
     for (const entry of chatHistory) {
       if (entry.agentId) agentUsage[entry.agentId] = (agentUsage[entry.agentId] ?? 0) + 1;
     }
@@ -182,10 +265,10 @@ export default function ClientDashboard() {
     // Persist to backend
     const s = getSession();
     if (s.token) {
-      fetch('/api/portal?path=/portal/active-agents', {
+      fetch('/api/portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: s.token, agents: updated }),
+        body: JSON.stringify({ path: '/portal/active-agents', token: s.token, method: 'POST', data: { agents: updated } }),
       }).catch(() => {});
     }
   }
@@ -209,9 +292,9 @@ export default function ClientDashboard() {
 
   return (
     <div>
-      {/* Sarah Welcome Modal */}
+      {/* Freenzy Welcome Modal */}
       {showWelcome && (
-        <SarahWelcome userName={userName} tier={tier} onDismiss={dismissWelcome} />
+        <FreenzyWelcome userName={userName} tier={tier} onDismiss={dismissWelcome} />
       )}
 
       {/* Onboarding Priority Banner */}
@@ -237,7 +320,7 @@ export default function ClientDashboard() {
         </div>
       )}
 
-      {/* Sarah Greeting Card */}
+      {/* Greeting Card */}
       <div className="card section flex items-center flex-wrap gap-16" style={{
         background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
         border: '1px solid #6366f122',
@@ -256,10 +339,10 @@ export default function ClientDashboard() {
           </div>
           <div className="text-md text-secondary" style={{ lineHeight: 1.5 }}>
             {stats.totalMessages === 0
-              ? `Bienvenue chez Sarah OS ! Vos ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} actif${activeAgents.length > 1 ? 's' : ''} ${activeAgents.length > 1 ? 'sont prets' : 'est pret'} a travailler.`
+              ? `Bienvenue chez Freenzy.io ! Vos ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} actif${activeAgents.length > 1 ? 's' : ''} ${activeAgents.length > 1 ? 'sont prêts' : 'est prêt'} à travailler.`
               : stats.streak > 7
-                ? `Impressionnant, ${stats.streak} jours consecutifs ! Votre equipe de ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} est en pleine forme.`
-                : `Votre equipe de ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} est prete. ${stats.totalMessages} message${stats.totalMessages > 1 ? 's' : ''} echange${stats.totalMessages > 1 ? 's' : ''} jusqu'ici.`
+                ? `Impressionnant, ${stats.streak} jours consécutifs ! Votre équipe de ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} est en pleine forme.`
+                : `Votre équipe de ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} est prête. ${stats.totalMessages} message${stats.totalMessages > 1 ? 's' : ''} échangé${stats.totalMessages > 1 ? 's' : ''} jusqu'ici.`
             }
           </div>
         </div>
@@ -280,6 +363,71 @@ export default function ClientDashboard() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Modele 100% gratuit — info banner */}
+      <div className="card section flex items-center flex-wrap gap-16" style={{
+        background: 'linear-gradient(135deg, #10b98108, #06b6d408)',
+        border: '1px solid #10b98122',
+        padding: '12px 20px',
+      }}>
+        <span style={{ fontSize: 20 }}>🎁</span>
+        <div className="flex-1" style={{ minWidth: 0 }}>
+          <div className="text-sm font-bold" style={{ color: '#059669', marginBottom: 2 }}>
+            Plateforme 100% gratuite — 0% de commission
+          </div>
+          <div className="text-xs text-muted" style={{ lineHeight: 1.5 }}>
+            Vos agents IA tournent au prix coûtant officiel Anthropic. Aucun markup, aucun abonnement caché.
+            Vous ne payez que les tokens que vous consommez réellement.
+          </div>
+        </div>
+        <div className="flex gap-6" style={{ flexShrink: 0, flexWrap: 'wrap' }}>
+          {['Prix officiel Anthropic', '0% commission', 'Sans abonnement'].map(badge => (
+            <span key={badge} style={{
+              fontSize: 10, fontWeight: 600, color: '#059669',
+              background: '#10b98112', border: '1px solid #10b98130',
+              padding: '3px 10px', borderRadius: 20,
+            }}>
+              {badge}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Briefing du jour — integrated */}
+      <div className="card section" style={{
+        background: 'linear-gradient(135deg, #f59e0b08, #f9731608)',
+        border: '1px solid #f59e0b22',
+      }}>
+        <div className="flex-between items-center mb-12">
+          <div className="flex items-center gap-8">
+            <span style={{ fontSize: 24 }}>☀️</span>
+            <div>
+              <div className="text-base font-bold">Briefing du jour</div>
+              <div className="text-xs text-muted">
+                {briefingGeneratedAt
+                  ? `Généré aujourd'hui à ${briefingGeneratedAt}`
+                  : new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+              </div>
+            </div>
+          </div>
+          <button onClick={refreshBriefing} disabled={briefingLoading} className="btn btn-ghost btn-sm">
+            {briefingLoading ? '⏳ Génération...' : briefingLoaded ? '🔄 Rafraîchir' : '✨ Générer mon briefing'}
+          </button>
+        </div>
+        {briefing ? (
+          <div className="text-sm text-secondary" style={{ lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
+            {briefing}
+          </div>
+        ) : briefingLoading ? (
+          <div className="text-sm text-muted" style={{ fontStyle: 'italic', lineHeight: 1.6 }}>
+            ⏳ Votre briefing est en cours de génération...
+          </div>
+        ) : (
+          <div className="text-sm text-muted" style={{ fontStyle: 'italic', lineHeight: 1.6 }}>
+            Votre briefing personnalisé du jour est en cours de chargement...
+          </div>
+        )}
       </div>
 
       {/* Quick Stats */}
@@ -314,13 +462,13 @@ export default function ClientDashboard() {
       <div className="card section">
         <div className="flex-between items-center mb-16">
           <div className="section-title" style={{ marginBottom: 0 }}>
-            Mon equipe IA
+            Mon équipe IA
             <span className="text-sm text-muted font-normal" style={{ marginLeft: 8 }}>
               {activeAgents.length} actif{activeAgents.length > 1 ? 's' : ''}
             </span>
           </div>
           <Link href="/client/team" className="text-sm font-semibold text-accent" style={{ textDecoration: 'none' }}>
-            Gerer l&apos;equipe &rarr;
+            Gérer l&apos;équipe &rarr;
           </Link>
         </div>
 
@@ -445,35 +593,125 @@ export default function ClientDashboard() {
 
         <div className="card">
           <div className="flex-between items-center mb-12">
-            <div className="text-base font-bold">Conseil de {DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.name}</div>
+            <div className="text-base font-bold">Conseil de {DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name}</div>
             <button onClick={getAiTip} disabled={tipLoading} className="btn btn-ghost btn-sm">
               {tipLoading ? '...' : '✨ Nouveau conseil'}
             </button>
           </div>
           <div className="text-md text-secondary" style={{ lineHeight: 1.6, fontStyle: aiTip ? 'normal' : 'italic' }}>
-            {aiTip || `Cliquez sur "Nouveau conseil" pour recevoir un conseil personnalisé de ${DEFAULT_AGENTS.find(a => a.id === 'sarah-assistante')!.name}.`}
+            {aiTip || `Cliquez sur "Nouveau conseil" pour recevoir un conseil personnalisé de ${DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name}.`}
           </div>
         </div>
       </div>
 
-      {/* Weekly Activity */}
+      {/* Weekly Activity — recharts */}
       <div className="card section">
         <div className="section-title mb-16">Activité de la semaine</div>
-        <div className="flex gap-8" style={{ alignItems: 'flex-end', height: 120 }}>
-          {weeklyData.map((day, i) => (
-            <div key={i} className="flex-1 text-center">
-              <div style={{
-                height: `${Math.max((day.messages / maxWeeklyMessages) * 100, 4)}%`,
-                background: day.messages > 0 ? 'linear-gradient(to top, var(--accent), #a855f7)' : 'var(--bg-tertiary)',
-                borderRadius: '4px 4px 0 0', minHeight: 4,
-                transition: 'height 0.3s ease',
-              }} />
-              <div className="text-xs text-muted" style={{ marginTop: 6 }}>{day.day}</div>
-              <div className="text-xs text-tertiary">{day.messages}msg</div>
-            </div>
-          ))}
+        {weeklyData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart data={weeklyData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
+              <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#86868b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: '#a1a1a6' }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid var(--border-secondary)', background: 'var(--bg-elevated)', color: 'var(--text-primary)' }} />
+              <Bar dataKey="messages" fill="#6366f1" radius={[4, 4, 0, 0]} name="Messages" />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '30px 0' }}>
+            Pas encore de données cette semaine
+          </div>
+        )}
+      </div>
+
+      {/* Credit Gauge + Usage Pie */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+            <div className="text-md font-bold">Solde crédits</div>
+            <Link href="/client/account" className="text-xs text-accent font-semibold" style={{ textDecoration: 'none' }}>
+              Recharger →
+            </Link>
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: -1, marginBottom: 10 }}>
+            {(walletBalance / 1_000_000).toFixed(1)} <span style={{ fontSize: 13, fontWeight: 600, color: '#86868b' }}>crédits</span>
+          </div>
+          {/* Barre de progression */}
+          {(() => {
+            const credits = walletBalance / 1_000_000;
+            const max = Math.max(credits, 50); // scale relative to 50 credits or current balance
+            const pct = Math.min((credits / max) * 100, 100);
+            const barColor = credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444';
+            return (
+              <div>
+                <div style={{
+                  width: '100%', height: 8, background: '#f0f0f3',
+                  borderRadius: 6, overflow: 'hidden', marginBottom: 8,
+                }}>
+                  <div style={{
+                    width: `${pct}%`, height: '100%',
+                    background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)`,
+                    borderRadius: 6, transition: 'width 0.6s ease',
+                  }} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#9ca3af' }}>
+                  <span>≈ {Math.round(credits / 0.69)} chats · {Math.round(credits / 1.1)} emails · {Math.round(credits / 5)} appels</span>
+                  <span style={{ color: barColor, fontWeight: 700 }}>
+                    {credits > 30 ? 'Confortable' : credits > 10 ? 'Modéré' : 'Faible'}
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+        <div className="card" style={{ textAlign: 'center' }}>
+          <div className="text-md font-bold mb-8">Usage par type</div>
+          {stats.totalMessages > 0 || stats.totalDocuments > 0 || stats.totalMeetings > 0 ? (
+            <ResponsiveContainer width="100%" height={130}>
+              <PieChart>
+                <Pie
+                  data={[
+                    { name: 'Messages', value: Math.max(stats.totalMessages, 1), fill: '#6366f1' },
+                    { name: 'Documents', value: Math.max(stats.totalDocuments, 1), fill: '#a855f7' },
+                    { name: 'Réunions', value: Math.max(stats.totalMeetings, 1), fill: '#10b981' },
+                  ]}
+                  cx="50%" cy="50%" innerRadius={30} outerRadius={50}
+                  dataKey="value" paddingAngle={2}
+                >
+                  {[{ fill: '#6366f1' }, { fill: '#a855f7' }, { fill: '#10b981' }].map((entry, i) => (
+                    <Cell key={i} fill={entry.fill} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid var(--border-secondary)', background: 'var(--bg-elevated)', color: 'var(--text-primary)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="text-sm text-muted" style={{ padding: '30px 0' }}>Pas encore de données</div>
+          )}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', fontSize: 10, color: '#86868b' }}>
+            <span><span style={{ color: '#6366f1' }}>&#9632;</span> Chat</span>
+            <span><span style={{ color: '#a855f7' }}>&#9632;</span> Docs</span>
+            <span><span style={{ color: '#10b981' }}>&#9632;</span> Réunions</span>
+          </div>
         </div>
       </div>
+
+      {/* Actions Widget */}
+      <Link href="/client/actions" className="card section flex items-center flex-wrap gap-16" style={{
+        background: 'linear-gradient(135deg, #f59e0b08, #ef444408)',
+        border: '1px solid #f59e0b22', padding: '14px 20px',
+        textDecoration: 'none', color: 'inherit', cursor: 'pointer',
+      }}>
+        <span style={{ fontSize: 32 }}>⚡</span>
+        <div className="flex-1" style={{ minWidth: 200 }}>
+          <div className="text-base font-bold mb-2">Centre d&apos;actions</div>
+          <div className="text-sm text-secondary">
+            Retrouvez toutes les actions proposées par vos agents : tâches, appels, emails, publications...
+          </div>
+        </div>
+        <span className="btn btn-sm" style={{ flexShrink: 0, background: '#F59E0B', color: 'white', borderColor: '#F59E0B' }}>
+          Voir mes actions
+        </span>
+      </Link>
 
       {/* Referral Widget */}
       <div className="card section flex items-center flex-wrap gap-16" style={{
@@ -482,8 +720,8 @@ export default function ClientDashboard() {
       }}>
         <span style={{ fontSize: 32 }}>🎁</span>
         <div className="flex-1" style={{ minWidth: 200 }}>
-          <div className="text-base font-bold mb-2">Invitez vos amis, gagnez 20 EUR de credits</div>
-          <div className="text-sm text-secondary">Partagez votre lien de parrainage et recevez des credits gratuits.</div>
+          <div className="text-base font-bold mb-2">Invitez vos amis, gagnez 20 EUR de crédits</div>
+          <div className="text-sm text-secondary">Partagez votre lien de parrainage et recevez des crédits gratuits.</div>
         </div>
         <Link href="/client/referrals" className="btn btn-primary btn-sm" style={{ flexShrink: 0 }}>
           Mon lien de parrainage
@@ -518,13 +756,13 @@ export default function ClientDashboard() {
               </div>
             </Link>
           )}
-          <Link href="/client/briefing" className="card card-lift flex items-center gap-12 pointer" style={{
+          <Link href="/client/marketplace" className="card card-lift flex items-center gap-12 pointer" style={{
             padding: 14, textDecoration: 'none', color: 'inherit',
           }}>
-            <span style={{ fontSize: 28 }}>☀️</span>
+            <span style={{ fontSize: 28 }}>🛒</span>
             <div>
-              <div className="text-base font-bold">Voir mon briefing du jour</div>
-              <div className="text-sm text-secondary">Tâches, insights, et recommandations personnalisées.</div>
+              <div className="text-base font-bold">Marketplace d&apos;agents</div>
+              <div className="text-sm text-secondary">Découvrez et installez de nouveaux agents spécialisés.</div>
             </div>
           </Link>
           <Link href="/client/meeting" className="card card-lift flex items-center gap-12 pointer" style={{

@@ -1,6 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { SlideOver } from '../../../../components/SlideOver';
+import { useToast } from '../../../../components/Toast';
+
+// ─── Shared action caller ─────────────────────────────────────────────────────
 
 async function callAction(action: string, params: Record<string, unknown>) {
   const res = await fetch('/api/actions', {
@@ -13,136 +18,239 @@ async function callAction(action: string, params: Record<string, unknown>) {
   return data;
 }
 
-export function UserActions({ userId, userName, isActive }: { userId: string; userName: string; isActive: boolean }) {
-  const [loading, setLoading] = useState('');
-
-  async function doAction(action: string, params: Record<string, unknown>, confirm?: string) {
-    if (confirm && !window.confirm(confirm)) return;
-    setLoading(action);
-    try {
-      await callAction(action, params);
-      window.location.reload();
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
-    } finally {
-      setLoading('');
-    }
-  }
-
-  return (
-    <div style={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap' }}>
-      <button
-        onClick={() => {
-          const amount = window.prompt('Crédits à déposer (en micro-credits, ex: 100000000 = 100 cr):');
-          if (!amount) return;
-          doAction('depositCrédits', { userId, amount: Number(amount) });
-        }}
-        className="btn btn-primary btn-xs"
-        disabled={loading === 'depositCrédits'}
-      >
-        {loading === 'depositCrédits' ? '...' : '💰 Crédits'}
-      </button>
-      <button
-        onClick={() => {
-          const role = window.prompt(`Nouveau rôle pour ${userName}? (admin, operator, viewer):`);
-          if (!role) return;
-          doAction('updateUser', { id: userId, data: { role } });
-        }}
-        className="btn btn-secondary btn-xs"
-        disabled={loading === 'updateUser'}
-      >
-        {loading === 'updateUser' ? '...' : 'Role'}
-      </button>
-      <button
-        onClick={() => {
-          const tier = window.prompt(`Nouveau tier pour ${userName} ? (paid, free, demo, guest) :`);
-          if (!tier) return;
-          doAction('updateUser', { id: userId, data: { tier } });
-        }}
-        className="btn btn-secondary btn-xs"
-        disabled={loading === 'updateUser'}
-      >
-        Tier
-      </button>
-      <button
-        onClick={() => doAction('resetUserKey', { id: userId }, `Régénérer la clé API de ${userName}?`)}
-        className="btn btn-secondary btn-xs"
-        disabled={loading === 'resetUserKey'}
-      >
-        {loading === 'resetUserKey' ? '...' : 'Reset Key'}
-      </button>
-      {isActive ? (
-        <button
-          onClick={() => doAction('deleteUser', { id: userId }, `Désactiver ${userName}?`)}
-          className="btn btn-danger btn-xs"
-          disabled={loading === 'deleteUser'}
-        >
-          {loading === 'deleteUser' ? '...' : 'Désactiver'}
-        </button>
-      ) : (
-        <button
-          onClick={() => doAction('updateUser', { id: userId, data: { isActive: true } })}
-          className="btn btn-primary btn-xs"
-          disabled={loading === 'updateUser'}
-        >
-          Réactiver
-        </button>
-      )}
-    </div>
-  );
-}
+// ─── CreateUserButton ─────────────────────────────────────────────────────────
 
 export function CreateUserButton() {
+  const router = useRouter();
+  const toast = useToast();
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [role, setRole] = useState('viewer');
+  const [tier, setTier] = useState('free');
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  async function handleCreate() {
-    const email = window.prompt('Email du nouvel utilisateur:');
-    if (!email) return;
-    const name = window.prompt('Nom complet:');
-    if (!name) return;
-    const role = window.prompt('Role (admin, operator, viewer):', 'viewer');
-    if (!role) return;
-    const tier = window.prompt('Tier (paid, free, demo, guest):', 'free');
-    if (!tier) return;
+  function validate() {
+    const errs: Record<string, string> = {};
+    if (!email.trim()) errs['email'] = 'Email requis';
+    else if (!/\S+@\S+\.\S+/.test(email)) errs['email'] = 'Email invalide';
+    if (!name.trim()) errs['name'] = 'Nom requis';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  }
 
+  function handleClose() {
+    setIsOpen(false);
+    setEmail(''); setName(''); setRole('viewer'); setTier('free'); setErrors({});
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!validate()) return;
     setLoading(true);
     try {
-      await callAction('createUser', { email, displayName: name, role, tier });
-      window.location.reload();
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
+      await callAction('createUser', {
+        email: email.trim(),
+        displayName: name.trim(),
+        role,
+        tier,
+      });
+      toast.showSuccess(`Utilisateur "${name.trim()}" créé avec succès`);
+      handleClose();
+      router.refresh();
+    } catch (err) {
+      toast.showError(err instanceof Error ? err.message : 'Erreur lors de la création');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <button onClick={handleCreate} className="btn btn-primary" disabled={loading}>
-      {loading ? 'Création...' : '+ Nouveau User'}
-    </button>
+    <>
+      <button className="btn btn-primary" onClick={() => setIsOpen(true)}>
+        + Nouveau User
+      </button>
+
+      <SlideOver
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Créer un utilisateur"
+        subtitle="Le mot de passe sera envoyé par email"
+        footer={
+          <>
+            <button className="btn btn-secondary" onClick={handleClose}>
+              Annuler
+            </button>
+            <button
+              className="btn btn-primary"
+              form="create-user-form"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? 'Création…' : '+ Créer'}
+            </button>
+          </>
+        }
+      >
+        <form id="create-user-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Email *</label>
+            <input
+              className={`input${errors['email'] ? ' input-error' : ''}`}
+              type="email"
+              placeholder="user@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              autoFocus
+              required
+            />
+            {errors['email'] && <p className="form-error">{errors['email']}</p>}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Nom complet *</label>
+            <input
+              className={`input${errors['name'] ? ' input-error' : ''}`}
+              type="text"
+              placeholder="Jean Dupont"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+            />
+            {errors['name'] && <p className="form-error">{errors['name']}</p>}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Rôle</label>
+              <select
+                className="select"
+                value={role}
+                onChange={e => setRole(e.target.value)}
+                style={{ width: '100%' }}
+              >
+                <option value="viewer">👤 Viewer</option>
+                <option value="operator">🟡 Operator</option>
+                <option value="admin">🔴 Admin</option>
+              </select>
+            </div>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Tier</label>
+              <select
+                className="select"
+                value={tier}
+                onChange={e => setTier(e.target.value)}
+                style={{ width: '100%' }}
+              >
+                <option value="free">🔵 Free</option>
+                <option value="paid">🟢 Paid</option>
+                <option value="demo">🟡 Demo</option>
+                <option value="guest">⚪ Guest</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="alert alert-info" style={{ marginTop: 16, fontSize: 12 }}>
+            ℹ️ Un email de bienvenue avec les identifiants sera envoyé automatiquement.
+          </div>
+        </form>
+      </SlideOver>
+    </>
   );
 }
 
-export function DepositButton({ userId }: { userId: string }) {
-  const [loading, setLoading] = useState(false);
+// ─── DepositButton (used in user detail page) ─────────────────────────────────
 
-  async function handleDeposit() {
-    const amount = window.prompt('Montant en micro-crédits (100000000 = 100 cr) :');
-    if (!amount) return;
+export function DepositButton({ userId, userName }: { userId: string; userName?: string }) {
+  const router = useRouter();
+  const toast = useToast();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState('');
+  const [desc, setDesc] = useState('');
+
+  function handleClose() {
+    setIsOpen(false);
+    setAmount('');
+    setDesc('');
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const credits = parseFloat(amount);
+    if (!credits || credits <= 0) return;
     setLoading(true);
     try {
-      await callAction('depositCrédits', { userId, amount: Number(amount) });
-      window.location.reload();
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
+      await callAction('depositCredits', {
+        userId,
+        amount: Math.round(credits * 1_000_000),
+        description: desc || 'Dépôt admin',
+      });
+      toast.showSuccess(`${credits} crédits déposés avec succès`);
+      handleClose();
+      router.refresh();
+    } catch (err) {
+      toast.showError(err instanceof Error ? err.message : 'Erreur lors du dépôt');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <button onClick={handleDeposit} className="btn btn-primary btn-xs" disabled={loading}>
-      {loading ? '...' : '💰 Déposer'}
-    </button>
+    <>
+      <button className="btn btn-primary btn-xs" onClick={() => setIsOpen(true)}>
+        💰 Déposer
+      </button>
+
+      <SlideOver
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Déposer des crédits"
+        subtitle={userName ? `Pour ${userName}` : undefined}
+        size="sm"
+        footer={
+          <>
+            <button className="btn btn-secondary" onClick={handleClose}>Annuler</button>
+            <button
+              className="btn btn-primary"
+              form="deposit-btn-form"
+              type="submit"
+              disabled={loading || !amount || parseFloat(amount) <= 0}
+            >
+              {loading ? 'En cours…' : '💰 Déposer'}
+            </button>
+          </>
+        }
+      >
+        <form id="deposit-btn-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Montant (crédits)</label>
+            <input
+              className="input"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="Ex: 100"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+              autoFocus
+              required
+            />
+            <p className="form-hint">1 crédit = 1 000 000 micro-crédits</p>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Motif (optionnel)</label>
+            <input
+              className="input"
+              type="text"
+              placeholder="Dépôt admin, bonus…"
+              value={desc}
+              onChange={e => setDesc(e.target.value)}
+            />
+          </div>
+        </form>
+      </SlideOver>
+    </>
   );
 }

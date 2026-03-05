@@ -19,6 +19,19 @@ export function validateBody(schema: ZodSchema) {
   };
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function validateUuidParam(paramName: string) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const value = req.params[paramName] as string | undefined;
+    if (!value || !UUID_REGEX.test(value)) {
+      res.status(400).json({ error: `Invalid ${paramName}: must be a valid UUID` });
+      return;
+    }
+    next();
+  };
+}
+
 export function validateQuery(schema: ZodSchema) {
   return (req: Request, res: Response, next: NextFunction): void => {
     const result = schema.safeParse(req.query);

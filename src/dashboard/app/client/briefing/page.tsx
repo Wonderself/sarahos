@@ -1,452 +1,270 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { buildSystemPrompt } from '../../../lib/agent-config';
-import VoiceInput from '../../../components/VoiceInput';
+import { useState, useEffect } from 'react';
+import { Skeleton } from '../../../components/Skeleton';
+import { useToast } from '../../../components/Toast';
 
-interface TaskItem {
-  id: string;
-  title: string;
-  priority: 'urgent' | 'high' | 'medium' | 'low';
-  category: string;
-  done: boolean;
-  aiSuggested: boolean;
-}
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-interface InsightCard {
-  icon: string;
-  title: string;
+interface BriefingData {
   content: string;
-  type: 'success' | 'warning' | 'info' | 'danger';
+  generated_at: string;
+  date: string;
 }
 
-const PRIORITY_COLORS = {
-  urgent: '#ef4444',
-  high: '#f59e0b',
-  medium: '#3b82f6',
-  low: '#6b7280',
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
+}
+
+async function portalCall<T>(path: string, method = 'GET', data?: unknown): Promise<T> {
+  const session = getSession();
+  const res = await fetch('/api/portal', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path, token: session.token, method, data }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({})) as { error?: string };
+    throw new Error(err.error ?? `Erreur ${res.status}`);
+  }
+  return res.json();
+}
+
+const TODAY = new Date().toISOString().split('T')[0];
+
+// ─── Section parser ────────────────────────────────────────────────────────────
+// Parses **Title** ... sections from markdown-ish text
+
+function parseSections(text: string): { title: string; body: string }[] {
+  const lines = text.split('\n');
+  const sections: { title: string; body: string }[] = [];
+  let current: { title: string; body: string } | null = null;
+
+  for (const line of lines) {
+    const boldMatch = line.match(/^\*\*(.+?)\*\*/);
+    if (boldMatch) {
+      if (current) sections.push(current);
+      current = { title: boldMatch[1], body: line.replace(/^\*\*(.+?)\*\*/, '').replace(/^[:\s]+/, '') };
+    } else if (current) {
+      current.body += (current.body ? '\n' : '') + line;
+    } else if (line.trim()) {
+      sections.push({ title: '', body: line });
+    }
+  }
+  if (current) sections.push(current);
+  return sections.filter(s => s.title || s.body.trim());
+}
+
+const SECTION_ICONS: Record<string, string> = {
+  'Salutation': '👋',
+  'Priorités du jour': '🎯',
+  'Insight': '💡',
+  'Conseil': '✨',
+  'Tâches': '📋',
+  'Alertes': '⚠️',
+  'Opportunités': '🚀',
 };
 
-const PRIORITY_LABELS = {
-  urgent: 'Urgent',
-  high: 'Important',
-  medium: 'Normal',
-  low: 'Optionnel',
-};
+function sectionIcon(title: string): string {
+  for (const [key, icon] of Object.entries(SECTION_ICONS)) {
+    if (title.toLowerCase().includes(key.toLowerCase())) return icon;
+  }
+  return '📌';
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function BriefingPage() {
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
-  const [insights, setInsights] = useState<InsightCard[]>([]);
-  const [newTask, setNewTask] = useState('');
-  const [newPriority, setNewPriority] = useState<TaskItem['priority']>('medium');
-  const [aiLoading, setAiLoading] = useState(false);
-  const [greeting, setGreeting] = useState('');
-  const [currentDate] = useState(new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-  const [focusTime, setFocusTime] = useState(0);
-  const [focusActive, setFocusActive] = useState(false);
-  const focusRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [showAddTask, setShowAddTask] = useState(false);
+  const { showError, showSuccess } = useToast();
+  const [briefing, setBriefing] = useState<BriefingData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    // Load saved tasks
-    const saved = localStorage.getItem('sarah_tasks');
-    if (saved) try { setTasks(JSON.parse(saved)); } catch { /* */ }
+    loadBriefing();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Set greeting based on time of day
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Bonjour');
-    else if (hour < 18) setGreeting('Bon après-midi');
-    else setGreeting('Bonsoir');
-
-    // Generate default insights
-    generateLocalInsights();
-
-    return () => { if (focusRef.current) clearInterval(focusRef.current); };
-  }, []);
-
-  function saveTasks(t: TaskItem[]) {
-    setTasks(t);
-    localStorage.setItem('sarah_tasks', JSON.stringify(t));
-  }
-
-  function generateLocalInsights() {
-    const now = new Date();
-    const day = now.getDay();
-    const insights: InsightCard[] = [];
-
-    if (day === 1) {
-      insights.push({ icon: '🎯', title: 'Début de semaine', content: 'C\'est lundi! Commencez par définir vos 3 objectifs clés de la semaine. Priorisez les tâches à fort impact.', type: 'info' });
-    } else if (day === 5) {
-      insights.push({ icon: '📊', title: 'Bilan hebdomadaire', content: 'Vendredi! Prenez 15 minutes pour faire le bilan de la semaine. Qu\'avez-vous accompli? Que reporter?', type: 'info' });
-    }
-
-    insights.push(
-      { icon: '💡', title: 'Conseil productivité', content: 'Bloquez 90 minutes sans interruption pour votre tâche la plus importante. Le deep work multiplie votre efficacité par 3.', type: 'success' },
-      { icon: '📈', title: 'Tendance du jour', content: 'Les entreprises qui utilisent l\'IA pour automatiser leurs tâches répétitives gagnent en moyenne 6h par semaine.', type: 'info' },
-    );
-
-    setInsights(insights);
-  }
-
-  async function generateAIBriefing() {
-    const session = getSession();
-    if (!session.token) { window.location.href = '/login'; return; }
-
-    setAiLoading(true);
+  async function loadBriefing() {
+    setLoading(true);
     try {
-      const companyProfile = localStorage.getItem('sarah_company_profile');
-      const tasksSummary = tasks.filter(t => !t.done).map(t => `- [${t.priority}] ${t.title}`).join('\n');
+      const data = await portalCall<{ data?: BriefingData }>('/portal/user-data/briefing');
+      const stored = data?.data as BriefingData | undefined;
+      if (stored?.date === TODAY && stored?.content) {
+        setBriefing(stored);
+      } else {
+        // Auto-generate if no briefing for today
+        await generateBriefing(false);
+      }
+    } catch {
+      // No stored briefing — prompt to generate
+      setBriefing(null);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-      // Use customized prompt if available
-      const customPrompt = buildSystemPrompt('sarah-assistante');
+  async function generateBriefing(showToast = true) {
+    const session = getSession();
+    if (!session.token) { showError('Session expirée'); return; }
+    setGenerating(true);
+    try {
+      const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const companyProfile = localStorage.getItem('fz_company_profile') ?? 'Non renseigné';
+      const gam = JSON.parse(localStorage.getItem('fz_gamification') ?? '{}');
 
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token: session.token,
-          model: 'claude-sonnet-4-20250514',
-          messages: [
-            { role: 'user', content: `${customPrompt}\n\nGénère un briefing quotidien personnalisé.
-
-Contexte entreprise: ${companyProfile ?? 'Non renseigné'}
-Tâches en cours: ${tasksSummary || 'Aucune tâche'}
-Date: ${currentDate}
-Heure: ${new Date().getHours()}h
-
-Réponds en JSON STRICT avec ce format:
-{
-  "greeting": "Message de salutation personnalisé (1 phrase)",
-  "topPriority": "La chose la plus importante à faire aujourd'hui (1 phrase)",
-  "insights": [
-    {"icon": "emoji", "title": "titre court", "content": "conseil/insight (2 phrases max)", "type": "success|warning|info|danger"}
-  ],
-  "suggestedTasks": [
-    {"title": "titre de la tâche", "priority": "urgent|high|medium|low", "category": "catégorie"}
-  ],
-  "motivationalQuote": "Citation motivante en français"
-}` },
-          ],
-          maxTokens: 1024,
-          agentName: 'sarah-assistante',
+          model: 'claude-haiku-4-5-20251001',
+          messages: [{
+            role: 'user',
+            content: `Tu es Maëva, directrice générale IA de Freenzy. Nous sommes le ${today}. Génère un briefing du jour concis et actionnable. Contexte entreprise: ${companyProfile}. Stats: ${gam.totalMessages ?? 0} messages, ${gam.streak ?? 0} jours consécutifs. Structure ainsi:\n**Salutation personnalisée** (1 ligne bienveillante)\n**Priorités du jour** (3 actions concrètes numérotées)\n**Insight business** (1 observation basée sur l'activité)\n**Conseil du jour** (1 astuce productivité)\nSois concise et percutante. En français.`,
+          }],
+          maxTokens: 400,
+          agentName: 'fz-dg',
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Erreur');
+      if (!res.ok) throw new Error('Service temporairement indisponible');
+      const chatData = await res.json();
+      const content = chatData.content ?? chatData.text ?? '';
 
-      const text = data.content ?? data.text ?? '';
-      try {
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          if (parsed.greeting) setGreeting(parsed.greeting);
-          if (parsed.insights) setInsights(parsed.insights);
-          if (parsed.suggestedTasks) {
-            const newTasks: TaskItem[] = parsed.suggestedTasks.map((t: { title: string; priority: string; category: string }, i: number) => ({
-              id: `ai-${Date.now()}-${i}`,
-              title: t.title,
-              priority: (t.priority || 'medium') as TaskItem['priority'],
-              category: t.category || 'IA',
-              done: false,
-              aiSuggested: true,
-            }));
-            saveTasks([...tasks, ...newTasks]);
-          }
-        }
-      } catch { /* parsing failed, keep local insights */ }
+      const newBriefing: BriefingData = {
+        content,
+        generated_at: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        date: TODAY,
+      };
+
+      // Persist to backend
+      await portalCall('/portal/user-data/briefing', 'POST', newBriefing).catch(() => {});
+
+      setBriefing(newBriefing);
+      if (showToast) showSuccess('Briefing généré !');
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur');
+      showError(e instanceof Error ? e.message : 'Erreur de génération');
     } finally {
-      setAiLoading(false);
+      setGenerating(false);
     }
   }
 
-  function getSession() {
-    try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
-  }
+  // ── Render ─────────────────────────────────────────────────────────────────
 
-  function addTask() {
-    if (!newTask.trim()) return;
-    const task: TaskItem = {
-      id: `task-${Date.now()}`,
-      title: newTask.trim(),
-      priority: newPriority,
-      category: 'Manuel',
-      done: false,
-      aiSuggested: false,
-    };
-    saveTasks([...tasks, task]);
-    setNewTask('');
-    setShowAddTask(false);
-  }
-
-  function toggleTask(id: string) {
-    saveTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
-  }
-
-  function deleteTask(id: string) {
-    saveTasks(tasks.filter(t => t.id !== id));
-  }
-
-  function startFocus() {
-    if (focusActive) {
-      // Stop timer
-      if (focusRef.current) clearInterval(focusRef.current);
-      setFocusActive(false);
-      setFocusTime(0);
-      return;
-    }
-    const seconds = 25 * 60; // 25min Pomodoro
-    setFocusTime(seconds);
-    setFocusActive(true);
-    focusRef.current = setInterval(() => {
-      setFocusTime(prev => {
-        if (prev <= 1) {
-          if (focusRef.current) clearInterval(focusRef.current);
-          setFocusActive(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }
-
-  const pendingTasks = tasks.filter(t => !t.done);
-  const doneTasks = tasks.filter(t => t.done);
-  const urgentCount = pendingTasks.filter(t => t.priority === 'urgent' || t.priority === 'high').length;
-  const completionRate = tasks.length > 0 ? Math.round((doneTasks.length / tasks.length) * 100) : 0;
-
-  const session = getSession();
+  const sections = briefing ? parseSections(briefing.content) : [];
 
   return (
-    <div>
+    <div style={{ maxWidth: 760, margin: '0 auto', padding: '24px 0' }}>
+
       {/* Header */}
-      <div className="page-header flex-between flex-wrap gap-12" style={{ alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
-          <h1 className="page-title text-2xl">
-            {greeting}{session.displayName ? `, ${session.displayName}` : ''} !
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>
+            ☀️ Briefing du jour
           </h1>
-          <p className="page-subtitle">{currentDate}</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
+            {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            {briefing?.generated_at ? ` · Généré à ${briefing.generated_at}` : ''}
+          </p>
         </div>
         <button
-          onClick={generateAIBriefing}
-          disabled={aiLoading}
-          className="btn btn-primary flex items-center gap-8"
+          onClick={() => generateBriefing(true)}
+          disabled={generating || loading}
+          className="btn btn-primary btn-sm"
         >
-          {aiLoading ? (
-            <><span className="animate-pulse">Analyse...</span></>
-          ) : (
-            <><span>✨</span> Briefing IA</>
-          )}
+          {generating ? '⏳ Génération...' : briefing ? '🔄 Rafraîchir' : '✨ Générer'}
         </button>
       </div>
 
-      {/* KPI Summary */}
-      <div className="grid-4 section">
-        <div className="stat-card">
-          <div className="stat-label">Tâches aujourd&apos;hui</div>
-          <div className="stat-value">{pendingTasks.length}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Urgentes</div>
-          <div className="stat-value" style={{ color: urgentCount > 0 ? '#ef4444' : 'var(--success)' }}>{urgentCount}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Complétées</div>
-          <div className="stat-value">{doneTasks.length}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Progression</div>
-          <div className="stat-value" style={{ color: completionRate >= 80 ? 'var(--success)' : completionRate >= 50 ? '#f59e0b' : 'var(--text-primary)' }}>
-            {completionRate}%
-          </div>
-          <div className="progress-bar mt-8">
-            <div className="progress-fill" style={{ width: `${completionRate}%`, background: completionRate >= 80 ? 'var(--success)' : completionRate >= 50 ? '#f59e0b' : 'var(--accent)' }} />
-          </div>
-        </div>
-      </div>
-
-      {/* AI Insights */}
-      {insights.length > 0 && (
-        <div className="section">
-          <div className="section-title">Insights du jour</div>
-          <div className="grid-2 gap-12">
-            {insights.map((insight, i) => (
-              <div key={i} className="card" style={{
-                borderLeft: `3px solid ${insight.type === 'success' ? 'var(--success)' : insight.type === 'warning' ? '#f59e0b' : insight.type === 'danger' ? '#ef4444' : 'var(--accent)'}`,
-              }}>
-                <div className="flex gap-8" style={{ alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: 24 }}>{insight.icon}</span>
-                  <div>
-                    <div className="text-base font-bold mb-4">{insight.title}</div>
-                    <div className="text-md text-secondary" style={{ lineHeight: 1.6 }}>{insight.content}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Loading */}
+      {loading && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <Skeleton width="40%" height={20} />
+              <Skeleton width="100%" height={14} />
+              <Skeleton width="85%" height={14} />
+              {i === 2 && <Skeleton width="70%" height={14} />}
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Tasks */}
-      <div className="section">
-        <div className="flex-between items-center mb-16">
-          <div className="section-title" style={{ margin: 0 }}>Mes tâches</div>
-          <div className="flex gap-8">
-            <button onClick={startFocus} className={focusActive ? 'btn btn-danger btn-sm' : 'btn btn-secondary btn-sm'}>
-              {focusActive ? `⏱ ${Math.floor(focusTime / 60)}:${String(focusTime % 60).padStart(2, '0')} — Stop` : '🍅 Focus 25min'}
-            </button>
-            <button onClick={() => setShowAddTask(!showAddTask)} className="btn btn-primary btn-sm">
-              + Ajouter
-            </button>
-          </div>
+      {/* Empty state */}
+      {!loading && !briefing && !generating && (
+        <div style={{
+          textAlign: 'center', padding: '60px 40px',
+          background: 'var(--bg-card)', borderRadius: 20,
+          border: '2px dashed var(--border)',
+        }}>
+          <div style={{ fontSize: 56, marginBottom: 16 }}>☀️</div>
+          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Pas encore de briefing</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+            Générez votre briefing IA quotidien — priorités du jour, insights business et conseils personnalisés.
+          </p>
+          <button
+            onClick={() => generateBriefing(true)}
+            disabled={generating}
+            className="btn btn-primary"
+          >
+            {generating ? '⏳ Génération en cours...' : '✨ Générer mon briefing'}
+          </button>
         </div>
+      )}
 
-        {/* Add task form */}
-        {showAddTask && (
-          <div className="card flex gap-8 mb-16" style={{ alignItems: 'flex-end' }}>
-            <div className="flex-1">
-              <div className="flex gap-6 items-center mb-8">
-                <input
-                  value={newTask}
-                  onChange={e => setNewTask(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && addTask()}
-                  className="input"
-                  placeholder="Titre de la tâche..."
-                  style={{ flex: 1 }}
-                />
-                <VoiceInput
-                  onTranscript={(t) => setNewTask(prev => prev ? prev + ' ' + t : t)}
-                  size="sm"
-                />
-              </div>
-              <div className="flex gap-6">
-                {(['urgent', 'high', 'medium', 'low'] as const).map(p => (
-                  <button
-                    key={p}
-                    onClick={() => setNewPriority(p)}
-                    style={{
-                      padding: '4px 10px', borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                      background: newPriority === p ? PRIORITY_COLORS[p] + '22' : 'transparent',
-                      border: `1px solid ${newPriority === p ? PRIORITY_COLORS[p] : 'var(--border-primary)'}`,
-                      color: newPriority === p ? PRIORITY_COLORS[p] : 'var(--text-muted)',
-                    }}
-                  >
-                    {PRIORITY_LABELS[p]}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <button onClick={addTask} className="btn btn-primary btn-sm">Ajouter</button>
-          </div>
-        )}
+      {/* Generating state */}
+      {generating && !briefing && (
+        <div style={{ textAlign: 'center', padding: '60px 40px' }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">✨</div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
+            Maëva analyse votre contexte et prépare votre briefing...
+          </p>
+        </div>
+      )}
 
-        {/* Task List */}
-        {pendingTasks.length === 0 && doneTasks.length === 0 && (
-          <div className="card text-center text-muted" style={{ padding: 32 }}>
-            <div className="mb-12" style={{ fontSize: 40 }}>📋</div>
-            <div className="font-semibold mb-4" style={{ fontSize: 15 }}>Aucune tâche</div>
-            <div className="text-md">Ajoutez des tâches manuellement ou cliquez sur &quot;Briefing IA&quot; pour des suggestions.</div>
-          </div>
-        )}
-
-        {/* Pending sorted by priority */}
-        {pendingTasks
-          .sort((a, b) => {
-            const order = { urgent: 0, high: 1, medium: 2, low: 3 };
-            return order[a.priority] - order[b.priority];
-          })
-          .map(task => (
-            <div key={task.id} className="flex items-center gap-12 bg-secondary rounded-md" style={{
-              padding: '10px 14px', marginBottom: 4,
-              borderLeft: `3px solid ${PRIORITY_COLORS[task.priority]}`,
-            }}>
-              <button
-                onClick={() => toggleTask(task.id)}
-                className="pointer"
-                style={{
-                  width: 22, height: 22, borderRadius: 6, border: `2px solid ${PRIORITY_COLORS[task.priority]}`,
-                  background: 'transparent', flexShrink: 0,
-                }}
-              />
-              <div className="flex-1">
-                <div className="text-base font-medium">{task.title}</div>
-                <div className="flex gap-6 mt-4">
-                  <span className="text-xs rounded-sm" style={{
-                    padding: '2px 6px',
-                    background: PRIORITY_COLORS[task.priority] + '22', color: PRIORITY_COLORS[task.priority],
-                  }}>
-                    {PRIORITY_LABELS[task.priority]}
-                  </span>
-                  {task.aiSuggested && (
-                    <span className="text-xs rounded-sm" style={{ padding: '2px 6px', background: 'var(--accent-muted)', color: 'var(--accent)' }}>
-                      ✨ Suggestion IA
-                    </span>
-                  )}
-                  {task.category !== 'Manuel' && (
-                    <span className="text-xs rounded-sm" style={{ padding: '2px 6px', background: 'var(--bg-primary)', color: 'var(--text-muted)' }}>
-                      {task.category}
-                    </span>
-                  )}
+      {/* Briefing content */}
+      {!loading && briefing && sections.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {sections.map((section, i) => (
+            <div
+              key={i}
+              className="card"
+              style={{
+                background: i === 0
+                  ? 'linear-gradient(135deg, #6366f108, #a855f705)'
+                  : 'var(--bg-card)',
+                borderColor: i === 0 ? '#6366f122' : 'var(--border)',
+              }}
+            >
+              {section.title && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                  <span style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
+                  <span style={{ fontWeight: 700, fontSize: 15 }}>{section.title}</span>
                 </div>
-              </div>
-              <button onClick={() => deleteTask(task.id)} className="pointer text-muted text-base" style={{ background: 'none', border: 'none' }}>✕</button>
-            </div>
-          ))}
-
-        {/* Done tasks */}
-        {doneTasks.length > 0 && (
-          <div className="mt-16">
-            <div className="text-sm text-muted font-semibold mb-8">Complétées ({doneTasks.length})</div>
-            {doneTasks.map(task => (
-              <div key={task.id} className="flex items-center gap-12 rounded-md" style={{
-                padding: '6px 14px', marginBottom: 2, opacity: 0.5,
+              )}
+              <div style={{
+                fontSize: 14,
+                color: 'var(--text-secondary)',
+                lineHeight: 1.7,
+                whiteSpace: 'pre-wrap',
               }}>
-                <button
-                  onClick={() => toggleTask(task.id)}
-                  className="flex-center pointer"
-                  style={{
-                    width: 22, height: 22, borderRadius: 6, border: '2px solid var(--success)',
-                    background: 'var(--success)', flexShrink: 0,
-                    color: 'white', fontSize: 12,
-                  }}
-                >
-                  ✓
-                </button>
-                <div className="flex-1 text-md text-muted" style={{ textDecoration: 'line-through' }}>
-                  {task.title}
-                </div>
-                <button onClick={() => deleteTask(task.id)} className="pointer text-muted text-base" style={{ background: 'none', border: 'none' }}>✕</button>
+                {section.body.trim()}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="section">
-        <div className="section-title">Actions rapides</div>
-        <div className="grid-3" style={{ gap: 10 }}>
-          {[
-            { icon: '💬', label: 'Demander conseil à Sarah', href: '/client/chat' },
-            { icon: '👥', label: 'Lancer une réunion', href: '/client/meeting' },
-            { icon: '📄', label: 'Générer un document', href: '/client/documents' },
-            { icon: '📊', label: 'Voir mon dashboard', href: '/client/dashboard' },
-            { icon: '🎨', label: 'Personnaliser mes agents', href: '/client/agents/customize' },
-            { icon: '👤', label: 'Modifier mon profil', href: '/client/onboarding' },
-            { icon: '⚡', label: 'Gérer mon équipe', href: '/client/team' },
-          ].map(action => (
-            <Link key={action.label} href={action.href} className="card flex items-center gap-8 pointer p-12" style={{
-              textDecoration: 'none', color: 'inherit',
-            }}>
-              <span style={{ fontSize: 22 }}>{action.icon}</span>
-              <span className="text-md font-medium">{action.label}</span>
-            </Link>
+            </div>
           ))}
         </div>
-      </div>
+      )}
+
+      {/* Raw fallback if no sections parsed */}
+      {!loading && briefing && sections.length === 0 && (
+        <div className="card">
+          <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
+            {briefing.content}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

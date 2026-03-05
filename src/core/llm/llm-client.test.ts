@@ -13,6 +13,12 @@ jest.mock('@anthropic-ai/sdk', () => {
   }));
 });
 
+jest.mock('../guardrails/fallback-manager', () => ({
+  isProviderDown: jest.fn().mockResolvedValue(false),
+  recordProviderFailure: jest.fn().mockResolvedValue(undefined),
+  recordProviderSuccess: jest.fn().mockResolvedValue(undefined),
+}));
+
 // Must import after mocks
 import { callLLM } from './llm-client';
 import { llmCircuitBreaker } from './circuit-breaker';
@@ -56,7 +62,7 @@ describe('callLLM', () => {
       expect.objectContaining({
         model: expect.any(String),
         max_tokens: 4096,
-        system: 'You are a test assistant.',
+        system: [{ type: 'text', text: 'You are a test assistant.', cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: 'Hello' }],
       }),
     );

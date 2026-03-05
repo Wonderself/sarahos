@@ -5,6 +5,8 @@ import { asyncHandler } from '../async-handler';
 import { sendNotificationSchema } from '../validation.schemas';
 import type { AuthenticatedRequest } from '../auth.types';
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export function createNotificationRouter(): Router {
   const router = Router();
 
@@ -15,6 +17,7 @@ export function createNotificationRouter(): Router {
     const authReq = req as AuthenticatedRequest;
     const userId = authReq.user?.userId ?? authReq.user?.sub;
     if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+    if (!UUID_REGEX.test(userId)) { res.json({ notifications: [] }); return; }
 
     const limit = Math.min(Number(req.query['limit'] ?? 50), 200);
     const { notificationService } = await import('../../notifications/notification.service');
@@ -29,6 +32,7 @@ export function createNotificationRouter(): Router {
     const authReq = req as AuthenticatedRequest;
     const userId = authReq.user?.userId ?? authReq.user?.sub;
     if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+    if (!UUID_REGEX.test(userId)) { res.json({ unreadCount: 0 }); return; }
 
     const { notificationService } = await import('../../notifications/notification.service');
     const count = await notificationService.getUnreadCount(userId);
@@ -36,10 +40,26 @@ export function createNotificationRouter(): Router {
   }));
 
   /**
-   * POST /notifications/:id/read — Mark notification as read
+   * POST /notifications/:id/read — Mark notification as read (ownership verified)
    */
   router.post('/notifications/:id/read', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
     const notificationId = req.params['id'] as string;
+
+    // Verify ownership before marking as read (IDOR fix)
+    const { dbClient } = await import('../../infra');
+    const check = await dbClient.query(
+      'SELECT user_id FROM notifications WHERE id = $1',
+      [notificationId],
+    );
+    if (!check.rows[0] || (check.rows[0] as Record<string, unknown>)['user_id'] !== userId) {
+      res.status(404).json({ error: 'Notification not found' });
+      return;
+    }
+
     const { notificationService } = await import('../../notifications/notification.service');
     await notificationService.markAsRead(notificationId);
     res.json({ message: 'Notification marked as read' });

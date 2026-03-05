@@ -37,7 +37,7 @@ export async function postX(
   mediaUrl?: string
 ): Promise<PostResult> {
   logger.info('X post published (stub)', { contentLength: content.length, hasMedia: !!mediaUrl });
-  return { success: true, postId: `x_${Date.now()}`, postUrl: `https://x.com/sarah_os/status/${Date.now()}` };
+  return { success: true, postId: `x_${Date.now()}`, postUrl: `https://x.com/freenzy_io/status/${Date.now()}` };
 }
 
 export async function postInstagram(

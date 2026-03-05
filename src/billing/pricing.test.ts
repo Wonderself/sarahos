@@ -6,7 +6,7 @@ describe('Token Pricing', () => {
     it('should return pricing for Sonnet', () => {
       const pricing = getPricingForModel('claude-sonnet-4-20250514');
       expect(pricing.provider).toBe('anthropic');
-      expect(pricing.marginPercent).toBe(0); // Margin captured at credit pack level
+      expect(pricing.marginPercent).toBe(0); // 0% margin — no markup
     });
 
     it('should return pricing for Opus', () => {
@@ -18,15 +18,15 @@ describe('Token Pricing', () => {
     it('should return default pricing for unknown model', () => {
       const pricing = getPricingForModel('unknown-model');
       expect(pricing.model).toBe('default');
-      expect(pricing.marginPercent).toBe(0); // Margin captured at credit pack level
+      expect(pricing.marginPercent).toBe(0); // 0% margin
     });
   });
 
   describe('calculateTokenCost', () => {
-    it('should calculate cost with 0% margin (margin at pack level)', () => {
+    it('should calculate cost with 0% margin (no markup)', () => {
       const result = calculateTokenCost('claude-sonnet-4-20250514', 1000, 500);
       expect(result.costCredits).toBeGreaterThan(0);
-      // With 0% margin, billed equals cost
+      // With 0% margin, billed === cost
       expect(result.billedCredits).toBe(result.costCredits);
       expect(result.marginCredits).toBe(0);
     });
@@ -44,10 +44,10 @@ describe('Token Pricing', () => {
       expect(result.marginCredits).toBe(0);
     });
 
-    it('margin should be 0% (margin captured at credit pack purchase)', () => {
+    it('billedCredits should equal costCredits with 0% margin', () => {
       const result = calculateTokenCost('claude-sonnet-4-20250514', 1000000, 500000);
-      expect(result.marginCredits).toBe(0);
       expect(result.billedCredits).toBe(result.costCredits);
+      expect(result.marginCredits).toBe(0);
     });
   });
 
@@ -71,7 +71,7 @@ describe('Token Pricing', () => {
       for (const p of TOKEN_PRICING) {
         expect(p.inputCostPerMillion).toBeGreaterThan(0);
         expect(p.outputCostPerMillion).toBeGreaterThan(0);
-        expect(p.marginPercent).toBeGreaterThanOrEqual(0); // 0 is valid (margin at pack level)
+        expect(p.marginPercent).toBeGreaterThanOrEqual(0);
       }
     });
 

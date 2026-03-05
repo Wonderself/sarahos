@@ -126,13 +126,13 @@ export class ContentAgent extends BaseAgent {
       agentName: this.name,
       modelTier: this.modelTier,
       systemPrompt: this.systemPrompt,
-      userMessage: `Génère un prompt de création visuelle optimisé pour ${visualType}. Description : ${description}. Inclus les couleurs de marque SARAH OS (#2563eb, #f59e0b). Retourne SEULEMENT le prompt visuel.`,
+      userMessage: `Génère un prompt de création visuelle optimisé pour ${visualType}. Description : ${description}. Inclus les couleurs de marque Freenzy.io (#2563eb, #f59e0b). Retourne SEULEMENT le prompt visuel.`,
     });
 
     return {
       visualPrompt: response.content,
       visualType,
-      imageUrl: `https://placeholder.sarah-os.com/visual/${Date.now()}`,
+      imageUrl: `https://placeholder.freenzy.io/visual/${Date.now()}`,
       dimensions: '1200x630',
       tokensUsed: response.totalTokens,
     };

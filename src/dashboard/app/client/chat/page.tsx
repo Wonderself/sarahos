@@ -1,9 +1,20 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useUserData } from '../../../lib/use-user-data';
 import Link from 'next/link';
 import { recordEvent } from '../../../lib/gamification';
-import { DEFAULT_AGENTS, loadAgentConfigs, getEffectiveAgent, type ResolvedAgent } from '../../../lib/agent-config';
+import { DEFAULT_AGENTS, ALL_AGENTS, loadAgentConfigs, getEffectiveAgent, type ResolvedAgent } from '../../../lib/agent-config';
+import { recordAgentInteraction, recordFeedback, getBond, LEVEL_NAMES, LEVEL_ICONS } from '../../../lib/agent-bonding';
+import { parseActionProposals, ACTION_TYPE_ICONS, ACTION_TYPE_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDueDate, type ParsedActionProposal } from '../../../lib/action-parser';
+
+type CommMode = 'chat' | 'visio' | 'whatsapp' | 'repondeur';
+const COMM_TABS: { id: CommMode; label: string; icon: string }[] = [
+  { id: 'chat', label: 'Chat texte', icon: '💬' },
+  { id: 'visio', label: 'Appel vocal', icon: '🎙️' },
+  { id: 'whatsapp', label: 'WhatsApp', icon: '📱' },
+  { id: 'repondeur', label: 'Répondeur IA', icon: '📞' },
+];
 import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
 
@@ -38,7 +49,7 @@ interface FaqEntry {
 
 const MAX_HISTORY = 50;
 const MAX_CONTEXT_MESSAGES = 8; // Keep last 8 messages for API calls (saves tokens)
-const FAQ_STORAGE_KEY = 'sarah_faq';
+const FAQ_STORAGE_KEY = 'fz_faq';
 const FAQ_MATCH_THRESHOLD = 0.4; // 40% keyword match = FAQ hit
 
 // Simple keyword-based FAQ matching
@@ -75,7 +86,7 @@ function saveFaq(entries: FaqEntry[]) {
 }
 
 // ─── Question frequency tracker for auto-FAQ suggestions ───
-const FREQ_STORAGE_KEY = 'sarah_question_freq';
+const FREQ_STORAGE_KEY = 'fz_question_freq';
 
 interface QuestionFreqEntry {
   keywords: string[];
@@ -129,20 +140,29 @@ export default function ChatPage() {
   const [totalTokens, setTotalTokens] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
   const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([]);
-  const [history, setHistory] = useState<ConversationEntry[]>([]);
+  const { data: history, setData: setHistory } = useUserData<ConversationEntry[]>('chat_history', [], 'fz_chat_history');
   const [showHistory, setShowHistory] = useState(false);
   const [currentConvoId, setCurrentConvoId] = useState<string | null>(null);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
-  const [faqEntries, setFaqEntries] = useState<FaqEntry[]>([]);
+  const { data: faqEntries, setData: setFaqEntries } = useUserData<FaqEntry[]>('chat_faq', [], 'fz_faq');
   const [faqMatch, setFaqMatch] = useState<FaqEntry | null>(null);
   const [showFaqPanel, setShowFaqPanel] = useState(false);
   const [savedFaqIdx, setSavedFaqIdx] = useState<number | null>(null);
   const [faqSuggestion, setFaqSuggestion] = useState(false);
+  const [commMode, setCommMode] = useState<CommMode>('chat');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const controllerRef = useRef<AbortController | null>(null);
   const sendingRef = useRef(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchActive, setSearchActive] = useState(false);
+  const [historySearchQuery, setHistorySearchQuery] = useState('');
+  const [feedbackGiven, setFeedbackGiven] = useState<Record<number, 'positive' | 'negative'>>({});
+  const [assistantMsgCount, setAssistantMsgCount] = useState(0);
+  const [actionProposals, setActionProposals] = useState<ParsedActionProposal[]>([]);
+  const [acceptedActions, setAcceptedActions] = useState<Set<number>>(new Set());
+  const [actionSaving, setActionSaving] = useState(false);
 
   function parseFollowUps(text: string): { cleanContent: string; questions: string[] } {
     const questions: string[] = [];
@@ -161,13 +181,7 @@ export default function ChatPage() {
     const resolved = DEFAULT_AGENTS.map(a => getEffectiveAgent(a.id, configs));
     setAgents(resolved);
     setSelectedAgent(resolved[0]);
-    // Load chat history
-    try {
-      const stored = localStorage.getItem('sarah_chat_history');
-      if (stored) setHistory(JSON.parse(stored));
-    } catch { /* */ }
-    // Load FAQ entries
-    setFaqEntries(loadFaq());
+    // History + FAQ loaded by useUserData hooks
     return () => { controllerRef.current?.abort(); };
   }, []);
 
@@ -177,7 +191,7 @@ export default function ChatPage() {
 
   function getSession() {
     try {
-      return JSON.parse(localStorage.getItem('sarah_session') ?? '{}');
+      return JSON.parse(localStorage.getItem('fz_session') ?? '{}');
     } catch { return {}; }
   }
 
@@ -204,7 +218,7 @@ export default function ChatPage() {
     // Update usage count
     const updated = faqEntries.map(e => e.id === entry.id ? { ...e, usedCount: e.usedCount + 1 } : e);
     setFaqEntries(updated);
-    saveFaq(updated);
+    // saveFaq removed — useUserData hook handles persistence
   }
 
   // Save a Q&A pair as FAQ
@@ -223,7 +237,7 @@ export default function ChatPage() {
     };
     const updated = [...faqEntries, entry];
     setFaqEntries(updated);
-    saveFaq(updated);
+    // saveFaq removed — useUserData hook handles persistence
     setSavedFaqIdx(answerIdx);
     setTimeout(() => setSavedFaqIdx(null), 2000);
   }
@@ -232,7 +246,7 @@ export default function ChatPage() {
   function deleteFaqEntry(id: string) {
     const updated = faqEntries.filter(e => e.id !== id);
     setFaqEntries(updated);
-    saveFaq(updated);
+    // saveFaq removed — useUserData hook handles persistence
   }
 
   async function sendMessage() {
@@ -287,8 +301,8 @@ export default function ChatPage() {
         const errorMsg = data.error ?? data.message ?? `Erreur ${res.status}`;
         setMessages(prev => [...prev, {
           role: 'system',
-          content: res.status === 402
-            ? `Crédits insuffisants. Rechargez votre compte dans Mon Compte > Wallet.`
+          content: res.status === 402 || data.code === 'INSUFFICIENT_BALANCE'
+            ? `Credits epuises. [Rechargez votre compte](/client/account) pour continuer.`
             : `Erreur: ${errorMsg}`,
           timestamp: new Date().toISOString(),
         }]);
@@ -298,8 +312,11 @@ export default function ChatPage() {
         setTotalTokens(t => t + tokens);
         setTotalCost(c => c + cost);
         const rawContent = data.content ?? data.text ?? 'Pas de réponse';
-        const { cleanContent, questions } = parseFollowUps(rawContent);
+        const { cleanContent: contentNoActions, proposals } = parseActionProposals(rawContent);
+        const { cleanContent, questions } = parseFollowUps(contentNoActions);
         setFollowUpQuestions(questions);
+        setActionProposals(proposals);
+        setAcceptedActions(new Set());
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: cleanContent,
@@ -322,6 +339,19 @@ export default function ChatPage() {
             content: `🏆 Nouveau succès débloqué : ${result.newAchievements.join(', ')}! +50 XP`,
             timestamp: new Date().toISOString(),
           }]);
+        }
+        // Agent bonding
+        if (selectedAgent) {
+          const bondResult = recordAgentInteraction(selectedAgent.id);
+          if (bondResult.leveledUp) {
+            recordEvent({ type: 'agent_bond_levelup' });
+            setMessages(prev => [...prev, {
+              role: 'system',
+              content: `${LEVEL_ICONS[bondResult.bond.relationshipLevel]} Votre relation avec ${selectedAgent.name} a évolué : ${LEVEL_NAMES[bondResult.bond.relationshipLevel]}!`,
+              timestamp: new Date().toISOString(),
+            }]);
+          }
+          setAssistantMsgCount(c => c + 1);
         }
         // Check if question asked 3+ times -> suggest FAQ
         if (selectedAgent && trackQuestion(userMsg.content, faqEntries, selectedAgent.id)) {
@@ -399,7 +429,7 @@ export default function ChatPage() {
         try { const data = await res.json(); errorMsg = data.error ?? data.message ?? errorMsg; } catch { /* */ }
         setMessages(prev => [...prev, {
           role: 'system',
-          content: res.status === 402 ? 'Crédits insuffisants. Rechargez votre compte dans Mon Compte > Wallet.' : `Erreur: ${errorMsg}`,
+          content: res.status === 402 ? 'Credits epuises. [Rechargez votre compte](/client/account) pour continuer.' : `Erreur: ${errorMsg}`,
           timestamp: new Date().toISOString(),
         }]);
         return;
@@ -463,9 +493,12 @@ export default function ChatPage() {
 
       clearTimeout(streamTimeout);
 
-      // Finalize: parse follow-ups, update tokens
-      const { cleanContent, questions } = parseFollowUps(streamedContent);
+      // Finalize: parse actions + follow-ups, update tokens
+      const { cleanContent: contentNoActions, proposals } = parseActionProposals(streamedContent);
+      const { cleanContent, questions } = parseFollowUps(contentNoActions);
       setFollowUpQuestions(questions);
+      setActionProposals(proposals);
+      setAcceptedActions(new Set());
       setMessages(prev => {
         const updated = [...prev];
         const last = updated[updated.length - 1];
@@ -484,6 +517,19 @@ export default function ChatPage() {
       }
       if (result.newAchievements.length > 0) {
         setMessages(prev => [...prev, { role: 'system', content: `🏆 Nouveau succès débloqué : ${result.newAchievements.join(', ')}! +50 XP`, timestamp: new Date().toISOString() }]);
+      }
+      // Agent bonding
+      if (selectedAgent) {
+        const bondResult = recordAgentInteraction(selectedAgent.id);
+        if (bondResult.leveledUp) {
+          recordEvent({ type: 'agent_bond_levelup' });
+          setMessages(prev => [...prev, {
+            role: 'system',
+            content: `${LEVEL_ICONS[bondResult.bond.relationshipLevel]} Votre relation avec ${selectedAgent.name} a évolué : ${LEVEL_NAMES[bondResult.bond.relationshipLevel]}!`,
+            timestamp: new Date().toISOString(),
+          }]);
+        }
+        setAssistantMsgCount(c => c + 1);
       }
       // Check auto-FAQ suggestion
       if (selectedAgent && trackQuestion(userContent, faqEntries, selectedAgent.id)) {
@@ -515,11 +561,7 @@ export default function ChatPage() {
       id, agentId: selectedAgent.id, agentEmoji: selectedAgent.emoji,
       title, messages, date: new Date().toISOString(), totalTokens,
     };
-    setHistory(prev => {
-      const updated = [entry, ...prev.filter(h => h.id !== id)].slice(0, MAX_HISTORY);
-      try { localStorage.setItem('sarah_chat_history', JSON.stringify(updated)); } catch { /* */ }
-      return updated;
-    });
+    setHistory(prev => [entry, ...prev.filter(h => h.id !== id)].slice(0, MAX_HISTORY));
     setCurrentConvoId(id);
   }
 
@@ -549,7 +591,6 @@ export default function ChatPage() {
 
   function clearHistory() {
     setHistory([]);
-    try { localStorage.removeItem('sarah_chat_history'); } catch { /* */ }
   }
 
   function copyMessage(content: string, idx: number) {
@@ -569,48 +610,264 @@ export default function ChatPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
+  function highlightText(text: string, query: string): React.ReactNode {
+    if (!query.trim() || !searchActive) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
+    return parts.map((part, i) =>
+      part.toLowerCase() === query.toLowerCase()
+        ? <mark key={i} style={{ background: '#fef08a', color: '#000', borderRadius: 2 }}>{part}</mark>
+        : part
+    );
+  }
+
+  function exportConversation() {
+    if (!selectedAgent || messages.length === 0) return;
+    const lines: string[] = [
+      `# Conversation avec ${selectedAgent.name} (${selectedAgent.role})`,
+      `Date : ${new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`,
+      '',
+    ];
+    for (const msg of messages) {
+      if (msg.role === 'system') continue;
+      const speaker = msg.role === 'user' ? 'Vous' : selectedAgent.name;
+      lines.push(`**${speaker}** : ${msg.content}`);
+      if (msg.tokens) {
+        lines.push(`*${msg.tokens} tokens — ${((msg.cost ?? 0) / 1_000_000).toFixed(4)} crédits*`);
+      }
+      lines.push('');
+    }
+    lines.push('---');
+    lines.push(`*Total : ${totalTokens.toLocaleString()} tokens — ${(totalCost / 1_000_000).toFixed(4)} crédits*`);
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `conversation-${selectedAgent.id}-${new Date().toISOString().split('T')[0]}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   if (!selectedAgent) return <div className="animate-pulse p-24 text-center text-muted">Chargement...</div>;
 
   return (
     <div className="chat-height flex flex-col">
-      {/* Header */}
-      <div className="flex flex-between items-center flex-wrap gap-8" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)' }}>
-        <div className="flex items-center gap-12" style={{ minWidth: 0 }}>
-          <span style={{ fontSize: 28 }}>{selectedAgent.emoji}</span>
-          <div style={{ minWidth: 0 }}>
-            <div className="flex items-center flex-wrap gap-8">
-              <span className="text-lg font-bold">{selectedAgent.name} — {selectedAgent.role}</span>
-              {selectedAgent.isCustomized && (
-                <span className="badge badge-accent">Personnalisé</span>
-              )}
-            </div>
-            <div className="text-xs text-tertiary">
-              Modèle: {selectedAgent.model} | Tokens: {totalTokens.toLocaleString()} | Coût: {(totalCost / 1_000_000).toFixed(4)} cr
-            </div>
+      {/* ─── PAGE HEADER ─── */}
+      <div style={{ padding: '16px 0 12px', borderBottom: '1px solid var(--border-primary)' }}>
+        {/* Row 1: Title + Actions */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', margin: 0, lineHeight: 1.3 }}>
+              Chat
+            </h1>
+            <p style={{ fontSize: 12, color: 'var(--text-tertiary)', margin: '2px 0 0', lineHeight: 1.4 }}>
+              Communiquez avec vos agents — texte, voix, WhatsApp ou répondeur
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => { setSearchActive(s => !s); setSearchQuery(''); }}
+              className={searchActive ? 'btn btn-primary btn-xs' : 'btn btn-ghost btn-xs'}
+              title="Rechercher dans la conversation"
+            >
+              🔍
+            </button>
+            {messages.length > 0 && (
+              <button onClick={exportConversation} className="btn btn-ghost btn-xs" title="Exporter en Markdown">
+                ↓ Export
+              </button>
+            )}
+            <button onClick={() => setShowHistory(!showHistory)} className="btn btn-ghost btn-xs" title="Historique">
+              📚 {history.length > 0 && <span style={{ fontSize: 10 }}>({history.length})</span>}
+            </button>
+            {faqEntries.length > 0 && (
+              <button onClick={() => setShowFaqPanel(!showFaqPanel)} className="btn btn-ghost btn-xs" title="FAQ">
+                💡 {faqEntries.filter(e => e.agentId === selectedAgent?.id).length}
+              </button>
+            )}
+            <button onClick={startNewChat} className="btn btn-primary btn-sm" style={{ fontSize: 12, padding: '5px 12px' }}>
+              + Nouveau
+            </button>
           </div>
         </div>
-        <div className="flex gap-6">
-          <button onClick={() => setShowHistory(!showHistory)} className="btn btn-ghost btn-sm text-sm">
-            📚 Historique {history.length > 0 && `(${history.length})`}
-          </button>
-          {faqEntries.length > 0 && (
-            <button onClick={() => setShowFaqPanel(!showFaqPanel)} className="btn btn-ghost btn-sm text-sm">
-              💡 FAQ ({faqEntries.filter(e => e.agentId === selectedAgent?.id).length})
+
+        {/* Row 2: Communication Tabs — full width */}
+        <div style={{
+          display: 'flex', width: '100%', background: 'var(--bg-secondary)',
+          borderRadius: 10, padding: 3, gap: 2, marginBottom: 10,
+        }}>
+          {COMM_TABS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setCommMode(tab.id)}
+              style={{
+                flex: 1, textAlign: 'center', padding: '8px 6px', borderRadius: 8,
+                fontSize: 13, fontWeight: commMode === tab.id ? 600 : 400,
+                border: 'none', cursor: 'pointer', transition: 'all 0.15s',
+                background: commMode === tab.id ? 'var(--bg-primary)' : 'transparent',
+                color: commMode === tab.id ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                boxShadow: commMode === tab.id ? 'var(--shadow-sm)' : 'none',
+              }}
+            >
+              {tab.icon} {tab.label}
             </button>
-          )}
-          <Link href="/client/agents/customize" className="btn btn-ghost btn-sm text-sm">
-            🎨 Personnaliser
-          </Link>
-          <button onClick={startNewChat} className="btn btn-ghost btn-sm">
-            + Nouveau chat
-          </button>
+          ))}
         </div>
+
+        {/* Row 3: Agent selector (chat mode only) */}
+        {commMode === 'chat' && (
+          <div className="flex items-center gap-8">
+            <span style={{ fontSize: 20 }}>{selectedAgent.emoji}</span>
+            <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+              {selectedAgent.name}
+            </span>
+            {selectedAgent.isCustomized && <span className="badge badge-accent" style={{ fontSize: 10 }}>Perso</span>}
+            {/* Bonding indicator */}
+            {(() => {
+              const bond = getBond(selectedAgent.id);
+              return bond.relationshipLevel > 1 ? (
+                <span style={{
+                  fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
+                  background: bond.relationshipLevel >= 4 ? 'rgba(99,102,241,0.12)' : 'rgba(99,102,241,0.06)',
+                  color: '#6366f1',
+                }}>
+                  {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
+                  {bond.relationshipLevel >= 3 ? ' · Cet agent vous connait bien' : ''}
+                </span>
+              ) : null;
+            })()}
+            <span className="text-xs text-tertiary" style={{ marginLeft: 'auto' }}>
+              {selectedAgent.role} · {totalTokens.toLocaleString()} tokens
+            </span>
+            <Link href="/client/agents/customize" className="btn btn-ghost btn-xs" title="Personnaliser">
+              🎨
+            </Link>
+          </div>
+        )}
+
+        {/* Search bar */}
+        {searchActive && commMode === 'chat' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 8, border: '1px solid var(--border-primary)' }}>
+            <span style={{ fontSize: 14 }}>🔍</span>
+            <input
+              autoFocus
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Escape' && (setSearchActive(false), setSearchQuery(''))}
+              placeholder="Rechercher dans la conversation..."
+              style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit' }}
+            />
+            {searchQuery && (
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                {messages.filter(m => m.content.toLowerCase().includes(searchQuery.toLowerCase())).length} résultat(s)
+              </span>
+            )}
+            <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 14 }}>✕</button>
+          </div>
+        )}
       </div>
 
+      {/* ═══ VISIO TAB ═══ */}
+      {commMode === 'visio' && (
+        <div className="flex-1" style={{ overflowY: 'auto', padding: '24px 0' }}>
+          <div style={{ marginBottom: 20 }}>
+            <h2 className="text-lg font-bold" style={{ marginBottom: 6 }}>Appel vocal avec vos agents</h2>
+            <p className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
+              Parlez en temps réel avec vos agents IA. Micro + synthèse vocale ElevenLabs.
+            </p>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
+              padding: '5px 10px', borderRadius: 8, background: 'var(--warning-muted)', border: '1px solid var(--warning)',
+              fontSize: 11, color: 'var(--warning)',
+            }}>
+              Consomme ~3x plus de crédits (STT + LLM + TTS)
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+            {ALL_AGENTS.map(agent => (
+              <Link
+                key={agent.id}
+                href={`/client/visio/${agent.id}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <div className="card card-lift" style={{ padding: 16, textAlign: 'center' }}>
+                  <div style={{
+                    width: 52, height: 52, borderRadius: '50%', margin: '0 auto 10px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${agent.color}15`, border: `2px solid ${agent.color}40`, fontSize: 24,
+                  }}>
+                    {agent.emoji}
+                  </div>
+                  <div className="text-sm font-bold">{agent.name}</div>
+                  <div className="text-xs text-muted" style={{ marginTop: 2 }}>{agent.role}</div>
+                  <div className="text-xs font-semibold mt-8" style={{ color: agent.color, padding: '3px 8px', borderRadius: 6, background: `${agent.color}10`, display: 'inline-block' }}>
+                    Appeler
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="card mt-16" style={{ padding: 14 }}>
+            <div className="text-sm font-semibold mb-4">Problèmes audio ?</div>
+            <Link href="/client/visio/diagnostic" className="text-sm text-accent" style={{ textDecoration: 'none' }}>
+              Lancer le diagnostic audio →
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ WHATSAPP TAB ═══ */}
+      {commMode === 'whatsapp' && (
+        <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
+          <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>📱</div>
+            <h2 className="text-xl font-bold mb-8">WhatsApp Business</h2>
+            <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
+              Discutez avec vos agents IA directement depuis WhatsApp. Liez votre numéro, envoyez des messages texte ou vocaux, recevez vos briefings et alertes.
+            </p>
+            <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
+              {['Messages texte et vocaux', 'Briefings quotidiens', 'Alertes en temps réel', 'Support multi-agents', 'Répondeur IA intégré'].map(f => (
+                <div key={f} className="flex items-center gap-8 text-sm">
+                  <span style={{ color: '#22c55e' }}>✓</span> {f}
+                </div>
+              ))}
+            </div>
+            <Link href="/client/whatsapp" className="btn btn-primary">
+              Configurer WhatsApp →
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ REPONDEUR TAB ═══ */}
+      {commMode === 'repondeur' && (
+        <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
+          <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>📞</div>
+            <h2 className="text-xl font-bold mb-8">Répondeur IA</h2>
+            <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
+              Votre standard téléphonique intelligent. Maëva ou Emmanuel répond à vos appels 24/7 avec un répondeur IA personnalisable.
+            </p>
+            <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
+              {['7 modes de fonctionnement', '7 styles de réponse', '10 compétences IA', 'FAQ automatique', 'Détection VIP & anti-spam', 'Résumés horaires/quotidiens', 'Intégration Twilio complète'].map(f => (
+                <div key={f} className="flex items-center gap-8 text-sm">
+                  <span style={{ color: '#22c55e' }}>✓</span> {f}
+                </div>
+              ))}
+            </div>
+            <Link href="/client/repondeur" className="btn btn-primary">
+              Configurer le répondeur →
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ CHAT TAB (existing chat interface) ═══ */}
+      {commMode === 'chat' && <>
       {/* Agent Selector */}
       {/* History Panel */}
       {showHistory && (
-        <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)', maxHeight: 300, overflowY: 'auto' }}>
+        <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)', maxHeight: 320, overflowY: 'auto' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">Conversations récentes</span>
             {history.length > 0 && (
@@ -619,11 +876,30 @@ export default function ChatPage() {
               </button>
             )}
           </div>
+          {/* Global history search */}
+          {history.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--bg-secondary)', borderRadius: 6, border: '1px solid var(--border-primary)' }}>
+              <span style={{ fontSize: 13 }}>🔎</span>
+              <input
+                value={historySearchQuery}
+                onChange={e => setHistorySearchQuery(e.target.value)}
+                placeholder="Rechercher dans l'historique..."
+                style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 12, color: 'var(--text-primary)', fontFamily: 'inherit' }}
+              />
+              {historySearchQuery && <button onClick={() => setHistorySearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}>✕</button>}
+            </div>
+          )}
           {history.length === 0 ? (
             <div className="text-sm text-muted" style={{ padding: '8px 0' }}>Aucune conversation sauvegardée</div>
           ) : (
             <div className="flex flex-col gap-4">
-              {history.map(h => (
+              {history
+                .filter(h => !historySearchQuery.trim() || h.title.toLowerCase().includes(historySearchQuery.toLowerCase()) || h.messages.some(m => m.content.toLowerCase().includes(historySearchQuery.toLowerCase())))
+                .map(h => {
+                const matchMsg = historySearchQuery.trim()
+                  ? h.messages.find(m => m.content.toLowerCase().includes(historySearchQuery.toLowerCase()))
+                  : null;
+                return (
                 <button
                   key={h.id}
                   onClick={() => loadConversation(h)}
@@ -640,9 +916,15 @@ export default function ChatPage() {
                     <div className="text-xs text-muted">
                       {h.messages.length} msg • {new Date(h.date).toLocaleDateString('fr-FR')}
                     </div>
+                    {matchMsg && (
+                      <div className="text-xs" style={{ color: 'var(--accent)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        ...{matchMsg.content.substring(Math.max(0, matchMsg.content.toLowerCase().indexOf(historySearchQuery.toLowerCase()) - 20), Math.min(matchMsg.content.length, matchMsg.content.toLowerCase().indexOf(historySearchQuery.toLowerCase()) + 60))}...
+                      </div>
+                    )}
                   </div>
                 </button>
-              ))}
+              );
+              })}
             </div>
           )}
         </div>
@@ -654,7 +936,7 @@ export default function ChatPage() {
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">💡 Réponses FAQ de {selectedAgent.name}</span>
             <span className="text-xs text-muted">
-              Les FAQ sont gratuites (0 token) et s&apos;ameliorent avec l&apos;usage
+              Les FAQ sont gratuites (0 token) et s&apos;améliorent avec l&apos;usage
             </span>
           </div>
           {faqEntries.filter(e => e.agentId === selectedAgent.id).length === 0 ? (
@@ -740,52 +1022,52 @@ export default function ChatPage() {
             })()}
 
             <div className="flex gap-8 flex-center flex-wrap mt-24">
-              {(selectedAgent.id === 'sarah-repondeur' ? [
+              {(selectedAgent.id === 'fz-repondeur' ? [
                 'Configure mon message d\'accueil',
                 'Comment gerer les appels manques ?',
                 'Cree une FAQ pour mes clients',
                 'Quels horaires d\'ouverture recommandes-tu ?',
-              ] : selectedAgent.id === 'sarah-assistante' ? [
+              ] : selectedAgent.id === 'fz-assistante' ? [
                 'Rédige un email professionnel',
                 'Organise mon planning de la semaine',
                 'Prepare un compte-rendu de reunion',
                 'Conseille-moi sur ma productivite',
-              ] : selectedAgent.id === 'sarah-commercial' ? [
+              ] : selectedAgent.id === 'fz-commercial' ? [
                 'Rédige un email de prospection',
                 'Comment améliorer mon taux de closing ?',
                 'Structure mon pipeline commercial',
                 'Prepare mon pitch de vente',
-              ] : selectedAgent.id === 'sarah-marketing' ? [
+              ] : selectedAgent.id === 'fz-marketing' ? [
                 'Fais-moi un plan marketing',
                 'Cree un post LinkedIn',
                 'Analyse ma strategie SEO',
                 'Comment booster ma visibilite ?',
-              ] : selectedAgent.id === 'sarah-rh' ? [
+              ] : selectedAgent.id === 'fz-rh' ? [
                 'Rédige une fiche de poste',
                 'Prepare mes questions d\'entretien',
                 'Cree un plan de formation',
                 'Comment améliorer ma marque employeur ?',
-              ] : selectedAgent.id === 'sarah-communication' ? [
+              ] : selectedAgent.id === 'fz-communication' ? [
                 'Rédige un communiqué de presse',
                 'Prepare ma communication interne',
                 'Comment gerer une crise mediatique ?',
                 'Cree une newsletter',
-              ] : selectedAgent.id === 'sarah-finance' ? [
+              ] : selectedAgent.id === 'fz-finance' ? [
                 'Analyse mes dépenses du mois',
                 'Prepare un prévisionnel',
                 'Comment optimiser ma trésorerie ?',
                 'Quels KPIs financiers suivre ?',
-              ] : selectedAgent.id === 'sarah-dev' ? [
+              ] : selectedAgent.id === 'fz-dev' ? [
                 'Review mon architecture technique',
                 'Conseille-moi sur le choix de stack',
                 'Comment améliorer mes performances ?',
                 'Planifie ma roadmap technique',
-              ] : selectedAgent.id === 'sarah-juridique' ? [
+              ] : selectedAgent.id === 'fz-juridique' ? [
                 'Revois mon contrat commercial',
                 'Suis-je conforme au RGPD ?',
                 'Rédige mes CGV',
                 'Quels risques juridiques anticiper ?',
-              ] : selectedAgent.id === 'sarah-dg' ? [
+              ] : selectedAgent.id === 'fz-dg' ? [
                 'Quelle strategie pour ce trimestre ?',
                 'Analyse mon positionnement marche',
                 'Comment structurer ma croissance ?',
@@ -800,6 +1082,45 @@ export default function ChatPage() {
                   {q}
                 </button>
               ))}
+            {/* Reunions multi-agents — inside empty state */}
+            <div style={{ marginTop: 32, textAlign: 'left', maxWidth: 600, margin: '32px auto 0' }}>
+              <div className="flex items-center gap-8 mb-8" style={{ justifyContent: 'center' }}>
+                <span style={{ fontSize: 20 }}>🏛️</span>
+                <span className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Reunions multi-agents</span>
+              </div>
+              <div style={{
+                display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 8,
+              }}>
+                {([
+                  { id: 'lancement-projet', emoji: '🚀', title: 'Lancement de projet', desc: 'Scope, roles et timeline' },
+                  { id: 'revue-trimestrielle', emoji: '📊', title: 'Revue trimestrielle', desc: 'Resultats et strategie' },
+                  { id: 'brainstorming-produit', emoji: '💡', title: 'Brainstorming', desc: 'Idees innovantes' },
+                  { id: 'resolution-crise', emoji: '🛡️', title: 'Resolution de crise', desc: 'Situation urgente' },
+                  { id: 'planification-annuelle', emoji: '📅', title: 'Planification', desc: 'Vision et objectifs' },
+                  { id: 'partenariat-strategique', emoji: '🤝', title: 'Partenariat', desc: 'Opportunites' },
+                ] as const).map(tpl => (
+                  <Link key={tpl.id} href={`/client/meeting?template=${tpl.id}`} style={{
+                    display: 'block', padding: '10px 12px', borderRadius: 8,
+                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                    textDecoration: 'none', color: 'inherit', transition: 'border-color 0.15s',
+                  }}>
+                    <div className="text-sm font-semibold">{tpl.emoji} {tpl.title}</div>
+                    <div className="text-xs text-muted">{tpl.desc}</div>
+                  </Link>
+                ))}
+              </div>
+              <div style={{ marginTop: 10, textAlign: 'center' }}>
+                <Link href="/client/meeting" className="btn btn-primary btn-sm" style={{ fontSize: 12 }}>
+                  Lancer une reunion
+                </Link>
+              </div>
+            </div>
+
+            {/* WhatsApp hint */}
+            <div className="flex items-center gap-6 mt-16" style={{ justifyContent: 'center' }}>
+              <span className="text-xs text-muted">📱 Vous pouvez aussi discuter via</span>
+              <Link href="/client/whatsapp" className="text-xs font-semibold" style={{ color: 'var(--accent)', textDecoration: 'none' }}>WhatsApp</Link>
+            </div>
             </div>
           </div>
         )}
@@ -817,7 +1138,9 @@ export default function ChatPage() {
               border: msg.role === 'assistant' ? '1px solid var(--border-primary)' : 'none',
               color: msg.role === 'user' ? 'white' : msg.role === 'system' ? 'var(--danger)' : 'var(--text-primary)',
             }}>
-              <div style={{ fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+              <div style={{ fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                {searchActive && searchQuery ? highlightText(msg.content, searchQuery) : msg.content}
+              </div>
               <div className="flex flex-between items-center mt-4">
                 {msg.tokens ? (
                   <div style={{ fontSize: 10, color: msg.role === 'user' ? 'rgba(255,255,255,0.6)' : 'var(--text-muted)' }}>
@@ -865,6 +1188,58 @@ export default function ChatPage() {
                 )}
               </div>
             </div>
+            {/* Feedback buttons every 5th assistant message */}
+            {msg.role === 'assistant' && (() => {
+              const assistantIdx = messages.slice(0, i + 1).filter(m => m.role === 'assistant').length;
+              return assistantIdx > 0 && assistantIdx % 5 === 0 && !feedbackGiven[i];
+            })() && (
+              <div style={{
+                display: 'flex', gap: 6, marginTop: 6,
+                justifyContent: 'flex-start',
+              }}>
+                <button
+                  onClick={() => {
+                    if (selectedAgent) {
+                      recordFeedback(selectedAgent.id, true);
+                      recordEvent({ type: 'agent_feedback' });
+                    }
+                    setFeedbackGiven(prev => ({ ...prev, [i]: 'positive' }));
+                  }}
+                  style={{
+                    fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer',
+                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
+                  }}
+                >
+                  Utile 👍
+                </button>
+                <button
+                  onClick={() => {
+                    if (selectedAgent) {
+                      recordFeedback(selectedAgent.id, false);
+                      recordEvent({ type: 'agent_feedback' });
+                    }
+                    setFeedbackGiven(prev => ({ ...prev, [i]: 'negative' }));
+                  }}
+                  style={{
+                    fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer',
+                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
+                  }}
+                >
+                  A ameliorer 👎
+                </button>
+              </div>
+            )}
+            {/* Feedback given confirmation */}
+            {feedbackGiven[i] && (
+              <div style={{
+                fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#22c55e' : '#f97316',
+                marginTop: 4, fontWeight: 500,
+              }}>
+                {feedbackGiven[i] === 'positive' ? 'Merci pour votre retour ! 🙏' : 'Noté, on va s\'améliorer !'}
+              </div>
+            )}
           </div>
         ))}
 
@@ -882,7 +1257,7 @@ export default function ChatPage() {
 
       {/* Follow-up Questions */}
       {followUpQuestions.length > 0 && !loading && (
-        <div className="flex gap-6 flex-wrap" style={{ padding: '8px 0', overflowX: 'auto' }}>
+        <div className="flex gap-6 flex-wrap" style={{ padding: '8px 0' }}>
           {followUpQuestions.map((q, i) => (
             <button
               key={i}
@@ -893,6 +1268,135 @@ export default function ChatPage() {
               {q}
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Action Proposals */}
+      {actionProposals.length > 0 && !loading && (
+        <div style={{ padding: '8px 0' }}>
+          <div className="flex flex-between items-center mb-4">
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
+              Actions proposées ({actionProposals.length})
+            </span>
+            {actionProposals.length > 1 && (
+              <button
+                disabled={actionSaving || acceptedActions.size === actionProposals.length}
+                onClick={async () => {
+                  setActionSaving(true);
+                  try {
+                    const token = document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+                    const actions = actionProposals.map(p => ({
+                      type: p.type,
+                      title: p.title,
+                      description: p.description,
+                      priority: p.priority,
+                      dueDate: p.dueDate,
+                      sourceAgent: selectedAgent?.id ?? 'unknown',
+                    }));
+                    const res = await fetch('/api/portal/actions/batch', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+                      body: JSON.stringify({ actions }),
+                    });
+                    if (res.ok) {
+                      setAcceptedActions(new Set(actionProposals.map((_, i) => i)));
+                    }
+                  } catch {}
+                  setActionSaving(false);
+                }}
+                className="btn btn-sm"
+                style={{ fontSize: 11, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}
+              >
+                Tout accepter
+              </button>
+            )}
+          </div>
+          <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
+            {actionProposals.map((p, i) => (
+              <div
+                key={i}
+                className="rounded-sm"
+                style={{
+                  padding: '10px 12px',
+                  border: acceptedActions.has(i)
+                    ? '1px solid var(--success)44'
+                    : '1px solid var(--border)',
+                  background: acceptedActions.has(i)
+                    ? 'var(--success)08'
+                    : 'var(--bg-secondary)',
+                  opacity: acceptedActions.has(i) ? 0.7 : 1,
+                }}
+              >
+                <div className="flex items-center gap-6 mb-4">
+                  <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[p.type] ?? '⚡'}</span>
+                  <span className="text-sm font-semibold" style={{ flex: 1 }}>{p.title}</span>
+                  <span
+                    className="text-xs font-medium"
+                    style={{
+                      padding: '1px 6px',
+                      borderRadius: 4,
+                      background: `${PRIORITY_COLORS[p.priority]}22`,
+                      color: PRIORITY_COLORS[p.priority],
+                    }}
+                  >
+                    {PRIORITY_LABELS[p.priority] ?? p.priority}
+                  </span>
+                </div>
+                {p.description && (
+                  <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                    {p.description}
+                  </p>
+                )}
+                <div className="flex flex-between items-center">
+                  <div className="flex gap-6 items-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                    <span>{ACTION_TYPE_LABELS[p.type] ?? p.type}</span>
+                    {p.dueDate && <span>· {formatDueDate(p.dueDate)}</span>}
+                  </div>
+                  {acceptedActions.has(i) ? (
+                    <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>Acceptée</span>
+                  ) : (
+                    <button
+                      disabled={actionSaving}
+                      onClick={async () => {
+                        setActionSaving(true);
+                        try {
+                          const token = document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+                          const res = await fetch('/api/portal/actions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+                            body: JSON.stringify({
+                              type: p.type,
+                              title: p.title,
+                              description: p.description,
+                              priority: p.priority,
+                              dueDate: p.dueDate,
+                              sourceAgent: selectedAgent?.id ?? 'unknown',
+                            }),
+                          });
+                          if (res.ok) {
+                            setAcceptedActions(prev => new Set([...prev, i]));
+                          }
+                        } catch {}
+                        setActionSaving(false);
+                      }}
+                      className="btn btn-sm"
+                      style={{ fontSize: 11, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', padding: '2px 10px' }}
+                    >
+                      Accepter
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          {acceptedActions.size > 0 && (
+            <div className="text-xs mt-4" style={{ color: 'var(--success)' }}>
+              {acceptedActions.size} action{acceptedActions.size > 1 ? 's' : ''} ajoutée{acceptedActions.size > 1 ? 's' : ''} —{' '}
+              <Link href="/client/actions" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>
+                Voir le centre d&apos;actions
+              </Link>
+            </div>
+          )}
         </div>
       )}
 
@@ -961,7 +1465,7 @@ export default function ChatPage() {
             value={input}
             onChange={e => onInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={`Écrivez à ${selectedAgent?.name ?? 'Sarah'} (${selectedAgent?.role ?? 'Agent'})...`}
+            placeholder={`Écrivez à ${selectedAgent?.name ?? 'votre agent'} (${selectedAgent?.role ?? 'Agent'})...`}
             className="input"
             rows={2}
             style={{ resize: 'none', flex: 1 }}
@@ -985,14 +1489,7 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* WhatsApp info bar */}
-      <div className="flex items-center gap-8 text-xs text-muted" style={{
-        padding: '6px 12px', borderTop: '1px solid var(--border-primary)',
-      }}>
-        <span>📱</span>
-        <span>Vous pouvez aussi parler a {selectedAgent.name} via WhatsApp</span>
-        <a href="/client/account" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>Configurer</a>
-      </div>
+      </>}
     </div>
   );
 }

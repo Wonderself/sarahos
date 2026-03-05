@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════
--- SARAH OS — Migration: Add email/password auth columns
+-- FREENZY.IO — Migration: Add email/password auth columns
 -- Run after init-db.sql
 -- ═══════════════════════════════════════════════════════
 

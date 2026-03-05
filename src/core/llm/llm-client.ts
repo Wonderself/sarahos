@@ -1,8 +1,11 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { createHash } from 'crypto';
 import { logger } from '../../utils/logger';
 import { LLMError, CircuitBreakerOpenError } from '../../utils/errors';
 import { withRetry } from '../../utils/retry';
 import { llmCircuitBreaker } from './circuit-breaker';
+import { isProviderDown, recordProviderFailure, recordProviderSuccess } from '../guardrails/fallback-manager';
+import { redisClient } from '../../infra/redis/redis-client';
 import type { LLMRequest, LLMResponse } from './llm.types';
 
 let client: Anthropic | null = null;
@@ -13,7 +16,11 @@ function getClient(): Anthropic {
     if (!apiKey) {
       throw new LLMError('ANTHROPIC_API_KEY not configured');
     }
-    client = new Anthropic({ apiKey });
+    client = new Anthropic({
+      apiKey,
+      // Enable prompt caching — costs 0.1x on cache reads, saves ~90% on repeated system prompts
+      defaultHeaders: { 'anthropic-beta': 'prompt-caching-2024-07-31' },
+    });
   }
   return client;
 }
@@ -33,13 +40,27 @@ function buildMessages(
   return messages;
 }
 
+/** Build a stable cache key for Redis memoization. */
+function buildMemoKey(request: LLMRequest, model: string): string {
+  const hash = createHash('sha256')
+    .update(model)
+    .update('|')
+    .update(request.systemPrompt)
+    .update('|')
+    .update(request.userMessage)
+    .digest('hex')
+    .slice(0, 32);
+  return `llm:memo:${hash}`;
+}
+
 export async function callLLM(request: LLMRequest): Promise<LLMResponse> {
   const startTime = Date.now();
 
   const modelMap: Record<string, string> = {
-    fast: process.env['CLAUDE_MODEL_FAST'] ?? 'claude-sonnet-4-20250514',
-    standard: process.env['CLAUDE_MODEL_STANDARD'] ?? 'claude-sonnet-4-20250514',
-    advanced: process.env['CLAUDE_MODEL_ADVANCED'] ?? 'claude-opus-4-6',
+    'ultra-fast': process.env['CLAUDE_MODEL_ULTRAFAST'] ?? 'claude-haiku-4-5-20251001',
+    fast:         process.env['CLAUDE_MODEL_FAST']      ?? 'claude-sonnet-4-20250514',
+    standard:     process.env['CLAUDE_MODEL_STANDARD']  ?? 'claude-sonnet-4-20250514',
+    advanced:     process.env['CLAUDE_MODEL_ADVANCED']  ?? 'claude-opus-4-6',
   };
 
   const model = modelMap[request.modelTier] ?? modelMap['standard']!;
@@ -49,7 +70,31 @@ export async function callLLM(request: LLMRequest): Promise<LLMResponse> {
     agent: request.agentName,
     model,
     messageCount: messages.length,
+    memoization: request.enableMemoization ?? false,
   });
+
+  // ── Redis memoization (before circuit breaker — no API call needed) ──
+  if (request.enableMemoization) {
+    const memoKey = buildMemoKey(request, model);
+    try {
+      const cached = await redisClient.get(memoKey);
+      if (cached) {
+        const parsed = JSON.parse(cached) as LLMResponse;
+        logger.debug('LLM response served from Redis cache', {
+          agent: request.agentName,
+          key: memoKey,
+        });
+        return { ...parsed, fromCache: true, latencyMs: Date.now() - startTime };
+      }
+    } catch {
+      // Redis unavailable — proceed without cache
+    }
+  }
+
+  // Guardrails: Check if Anthropic is marked as down
+  if (await isProviderDown('llm')) {
+    throw new Error('Anthropic API temporarily unavailable (circuit breaker open)');
+  }
 
   // Circuit breaker check
   if (!llmCircuitBreaker.canExecute()) {
@@ -66,10 +111,19 @@ export async function callLLM(request: LLMRequest): Promise<LLMResponse> {
 
         let maxTokens = request.maxTokens ?? 4096;
 
+        // System prompt with prompt caching — marked ephemeral, cached for 5 min by Anthropic
+        const systemBlocks: Anthropic.TextBlockParam[] = [
+          {
+            type: 'text',
+            text: request.systemPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ];
+
         const params: Anthropic.MessageCreateParams = {
           model,
           max_tokens: maxTokens,
-          system: request.systemPrompt,
+          system: systemBlocks,
           messages,
         };
 
@@ -122,6 +176,12 @@ export async function callLLM(request: LLMRequest): Promise<LLMResponse> {
     );
     const thinkingContent = thinkingBlocks.map((b) => b.thinking).join('\n');
 
+    // Extract cache token counts from usage (available when prompt caching header is set)
+    const usage = response.usage as Anthropic.Usage & {
+      cache_read_input_tokens?: number;
+      cache_creation_input_tokens?: number;
+    };
+
     const result: LLMResponse = {
       content: textContent,
       model,
@@ -132,22 +192,40 @@ export async function callLLM(request: LLMRequest): Promise<LLMResponse> {
       stopReason: response.stop_reason ?? 'unknown',
       latencyMs: Date.now() - startTime,
       thinking: thinkingContent || undefined,
+      cacheReadTokens: usage.cache_read_input_tokens,
+      cacheCreatedTokens: usage.cache_creation_input_tokens,
     };
 
     logger.debug('LLM response', {
       agent: request.agentName,
       model,
       tokens: result.totalTokens,
+      cacheRead: result.cacheReadTokens ?? 0,
+      cacheCreated: result.cacheCreatedTokens ?? 0,
       latencyMs: result.latencyMs,
     });
 
     llmCircuitBreaker.recordSuccess();
+    await recordProviderSuccess('llm').catch(() => {});
+
+    // ── Store in Redis memoization cache (write-through) ──
+    if (request.enableMemoization) {
+      const memoKey = buildMemoKey(request, model);
+      const ttl = request.memoizationTtlSeconds ?? 300; // 5 min default
+      try {
+        await redisClient.set(memoKey, JSON.stringify(result), ttl);
+      } catch {
+        // Redis unavailable — proceed without caching
+      }
+    }
+
     return result;
   } catch (error) {
     // Don't record circuit breaker failures as additional failures
     if (!(error instanceof CircuitBreakerOpenError)) {
       llmCircuitBreaker.recordFailure();
     }
+    await recordProviderFailure('llm').catch(() => {});
     const message = error instanceof Error ? error.message : String(error);
     throw new LLMError(`LLM call failed for ${request.agentName}: ${message}`, {
       model,

@@ -7,6 +7,15 @@ import type { SSEWriter } from '../core/llm/llm-stream';
 import type { ModelTier, LLMRequest } from '../core/llm/llm.types';
 import type { LlmUsageEntry } from './billing.types';
 import { userRepository } from '../users/user.repository';
+// ── Guardrails Integration ──
+import { beforeClaudeCall, afterClaudeCall } from '../core/guardrails/token-budget-manager';
+import { checkAgentCircuitBreaker, recordAgentTokens, recordGlobalTokens } from '../core/guardrails/circuit-breaker-enhanced';
+import { getUserMode } from '../core/guardrails/user-mode';
+import { selectModel } from '../core/guardrails/model-router';
+import { optimizeConversationContext } from '../core/guardrails/memory-optimizer';
+import { getSecuritySystemPromptSuffix } from '../core/guardrails/security-hardening';
+import { startChain, recordChainTokens, endChain } from '../core/guardrails/loop-detector';
+import type { TokenEvent } from '../core/guardrails/guardrails.types';
 
 export interface LlmProxyRequest {
   userId: string;
@@ -40,57 +49,113 @@ export interface LlmProxyResponse {
 export class LlmProxyService {
   /**
    * Process an LLM request with billing.
-   * Steps: 1) Check budget → 2) Check balance → 3) Call LLM → 4) Deduct credits → 5) Log usage
+   * Uses hold/release pattern: 1) Check budget → 2) Hold estimated cost → 3) Call LLM → 4) Release hold (refund difference) → 5) Log usage
    */
   async processRequest(request: LlmProxyRequest): Promise<LlmProxyResponse | { error: string; code: string }> {
     const startTime = Date.now();
 
-    // 1. Estimate cost for pre-flight check (rough estimate based on input)
+    // ── Guardrails: Pre-flight checks ──
+    const agentMode = await getUserMode(request.userId);
     const estimatedInputTokens = this.estimateInputTokens(request.messages);
-    const maxOutput = request.maxTokens ?? 4096;
-    const estimate = calculateTokenCost(request.model, estimatedInputTokens, maxOutput);
 
-    // 2. Daily budget check
+    // Guardrails: Token budget check (per-minute/hour/day Redis counters)
+    const budgetCheck = await beforeClaudeCall(request.userId, estimatedInputTokens, agentMode);
+    if (!budgetCheck.allowed) {
+      logger.warn('LLM proxy: guardrail token budget blocked', { userId: request.userId, reason: budgetCheck.reason });
+      return { error: budgetCheck.userMessage ?? 'Token budget exceeded', code: 'TOKEN_BUDGET_EXCEEDED' };
+    }
+
+    // Guardrails: Agent circuit breaker check
+    const agentId = request.agentName ?? 'unknown';
+    const agentBreaker = await checkAgentCircuitBreaker(agentId);
+    if (!agentBreaker.allowed) {
+      return { error: agentBreaker.reason ?? 'Agent suspended', code: 'AGENT_SUSPENDED' };
+    }
+
+    // Guardrails: Loop detection for agent chains
+    let chainId: string | undefined;
+    if (agentMode === 'pro') {
+      const chain = startChain(request.userId, agentMode as 'pro' | 'eco');
+      chainId = chain.chainId;
+    }
+
+    // Guardrails: Optimize conversation context (sliding window + summarization)
+    const optimizedResult = await optimizeConversationContext(
+      request.userId, agentId, 'default',
+      request.messages.filter(m => m.role !== 'system') as Array<{ role: 'user' | 'assistant'; content: string }>,
+      agentMode as 'pro' | 'eco',
+    ).catch(() => null);
+    const optimizedMessages = optimizedResult
+      ? optimizedResult.recentMessages.map(m => ({ role: m.role, content: m.content }))
+      : request.messages;
+
+    // Guardrails: Append security suffix to system prompt
+    const securitySuffix = getSecuritySystemPromptSuffix();
+    const securedMessages = [...optimizedMessages];
+    if (securitySuffix && securedMessages.length > 0 && securedMessages[0]?.role === 'system') {
+      securedMessages[0] = { ...securedMessages[0], content: securedMessages[0].content + '\n\n' + securitySuffix };
+    }
+
+    // Guardrails: Model routing (may override requested model)
+    const effectiveModel = await selectModel(request.userId, agentId, 'chat', estimatedInputTokens, agentMode);
+
+    // Cap maxTokens based on guardrails budget check
+    const maxOutput = Math.min(request.maxTokens ?? 4096, budgetCheck.maxTokensAllowed);
+    const estimate = calculateTokenCost(effectiveModel, estimatedInputTokens, maxOutput);
+
+    // 2. Daily budget check (existing — kept as fallback)
     const withinBudget = await this.checkDailyBudget(request.userId, estimate.billedCredits);
     if (!withinBudget) {
       logger.warn('LLM proxy: daily budget exceeded', { userId: request.userId });
       return { error: 'Daily spending limit exceeded', code: 'DAILY_BUDGET_EXCEEDED' };
     }
 
-    // 3. Pre-flight balance check
-    const hasBalance = await walletService.hasBalance(request.userId, estimate.billedCredits);
-    if (!hasBalance) {
-      logger.warn('LLM proxy: insufficient balance', {
+    // 3. Hold estimated cost atomically (prevents race conditions)
+    const holdId = await walletService.hold(
+      request.userId,
+      estimate.billedCredits,
+      `LLM hold: ${request.model} (estimated)`,
+    );
+    if (!holdId) {
+      // Check if auto-topup is enabled and notify
+      let autoTopupRequested = false;
+      try {
+        const settings = await walletService.getAutoTopupSettings(request.userId);
+        if (settings?.autoTopupEnabled) {
+          autoTopupRequested = true;
+          logger.info('LLM proxy: low-balance alert user has insufficient balance', { userId: request.userId });
+        }
+      } catch { /* ignore */ }
+
+      logger.warn('LLM proxy: insufficient balance for hold', {
         userId: request.userId,
         estimatedCost: estimate.billedCredits,
+        autoTopupRequested,
       });
-      return { error: 'Insufficient balance', code: 'INSUFFICIENT_BALANCE' };
+      return { error: `Insufficient balance${autoTopupRequested ? ' (low-balance alert active)' : ''}`, code: 'INSUFFICIENT_BALANCE' };
     }
 
-    // 4. Call LLM via Anthropic SDK
-    const llmResult = await this.callLlm(request);
+    // 4. Call LLM via Anthropic SDK (credits already held)
+    let llmResult: { content: string; inputTokens: number; outputTokens: number; totalTokens: number; cacheReadTokens?: number; cacheCreatedTokens?: number };
+    try {
+      llmResult = await this.callLlm({ ...request, model: effectiveModel, messages: securedMessages });
+    } catch (error) {
+      // LLM call failed — full refund of hold
+      await walletService.releaseHold(request.userId, holdId, estimate.billedCredits, 0);
+      throw error;
+    }
     const durationMs = Date.now() - startTime;
 
-    // 4. Calculate actual cost with user's commission rate
-    const rawCost = calculateTokenCost(request.model, llmResult.inputTokens, llmResult.outputTokens);
-    const actualCost = await this.applyUserCommission(request.userId, rawCost);
-
-    // 5. Deduct from wallet
-    const withdrawal = await walletService.withdraw(
-      request.userId,
-      actualCost.billedCredits,
-      `LLM usage: ${request.model} (${llmResult.totalTokens} tokens)`,
-      'llm_usage',
-      request.requestId,
-    );
-
-    if (!withdrawal) {
-      logger.error('LLM proxy: failed to deduct credits after LLM call', {
-        userId: request.userId,
-        cost: actualCost.billedCredits,
-      });
-      // Still return the result — we'll reconcile billing later
+    // Guardrails: Record chain tokens and end chain
+    if (chainId) {
+      recordChainTokens(chainId, llmResult.totalTokens);
+      endChain(chainId);
     }
+
+    // 5. Calculate actual cost and release hold (refund overestimate)
+    const rawCost = calculateTokenCost(effectiveModel, llmResult.inputTokens, llmResult.outputTokens);
+    const actualCost = await this.applyUserCommission(request.userId, rawCost);
+    await walletService.releaseHold(request.userId, holdId, estimate.billedCredits, actualCost.billedCredits);
 
     // 6. Log usage for analytics
     const wallet = await walletService.getWalletByUserId(request.userId);
@@ -98,7 +163,7 @@ export class LlmProxyService {
       userId: request.userId,
       walletId: wallet?.id ?? null,
       requestId: request.requestId ?? null,
-      model: request.model,
+      model: effectiveModel,
       provider: 'anthropic',
       inputTokens: llmResult.inputTokens,
       outputTokens: llmResult.outputTokens,
@@ -113,9 +178,28 @@ export class LlmProxyService {
     };
     await walletService.recordLlmUsage(usageEntry);
 
+    // ── Guardrails: Post-call recording ──
+    const tokenEvent: TokenEvent = {
+      userId: request.userId,
+      model: effectiveModel,
+      inputTokens: llmResult.inputTokens,
+      outputTokens: llmResult.outputTokens,
+      cacheReadTokens: llmResult.cacheReadTokens ?? 0,
+      cacheCreationTokens: llmResult.cacheCreatedTokens ?? 0,
+      costMicroCredits: actualCost.billedCredits,
+      agentName: agentId,
+      requestType: 'chat',
+      mode: agentMode,
+    };
+    await afterClaudeCall(request.userId, tokenEvent).catch((e) =>
+      logger.warn('Guardrails afterClaudeCall failed', { error: e instanceof Error ? e.message : String(e) }),
+    );
+    await recordAgentTokens(agentId, llmResult.totalTokens).catch(() => { /* best-effort */ });
+    await recordGlobalTokens(llmResult.totalTokens).catch(() => { /* best-effort */ });
+
     logger.info('LLM proxy request completed', {
       userId: request.userId,
-      model: request.model,
+      model: effectiveModel,
       tokens: llmResult.totalTokens,
       billedCredits: actualCost.billedCredits,
       durationMs,
@@ -123,7 +207,7 @@ export class LlmProxyService {
 
     return {
       content: llmResult.content,
-      model: request.model,
+      model: effectiveModel,
       inputTokens: llmResult.inputTokens,
       outputTokens: llmResult.outputTokens,
       totalTokens: llmResult.totalTokens,
@@ -157,36 +241,99 @@ export class LlmProxyService {
 
   /**
    * Process a streaming LLM request with billing.
-   * Pre-flight already checked by caller; this streams and bills after.
+   * Uses hold/release pattern (same as processRequest) to prevent overdraft.
    */
   async processStreamRequest(
     request: LlmProxyRequest,
     sseWriter: SSEWriter,
   ): Promise<void> {
-    // Stream LLM response
     const startTime = Date.now();
-    const llmRequest = this.mapToLLMRequest(request);
-    const response = await streamLLM(llmRequest, sseWriter);
+
+    // ── Guardrails: Pre-flight checks for streaming ──
+    const streamAgentMode = await getUserMode(request.userId);
+    const estimatedInputTokens = this.estimateInputTokens(request.messages);
+
+    const streamBudgetCheck = await beforeClaudeCall(request.userId, estimatedInputTokens, streamAgentMode);
+    if (!streamBudgetCheck.allowed) {
+      throw new Error(streamBudgetCheck.userMessage ?? 'Token budget exceeded');
+    }
+
+    const streamAgentId = request.agentName ?? 'unknown';
+    const streamAgentBreaker = await checkAgentCircuitBreaker(streamAgentId);
+    if (!streamAgentBreaker.allowed) {
+      throw new Error(streamAgentBreaker.reason ?? 'Agent suspended');
+    }
+
+    // Guardrails: Loop detection for agent chains (streaming)
+    let streamChainId: string | undefined;
+    if (streamAgentMode === 'pro') {
+      const chain = startChain(request.userId, streamAgentMode as 'pro' | 'eco');
+      streamChainId = chain.chainId;
+    }
+
+    // Guardrails: Optimize conversation context (sliding window + summarization)
+    const optimizedStreamResult = await optimizeConversationContext(
+      request.userId, streamAgentId, 'default',
+      request.messages.filter(m => m.role !== 'system') as Array<{ role: 'user' | 'assistant'; content: string }>,
+      streamAgentMode as 'pro' | 'eco',
+    ).catch(() => null);
+    const optimizedStreamMessages = optimizedStreamResult
+      ? optimizedStreamResult.recentMessages.map(m => ({ role: m.role, content: m.content }))
+      : request.messages;
+
+    // Guardrails: Append security suffix to system prompt
+    const streamSecuritySuffix = getSecuritySystemPromptSuffix();
+    const securedStreamMessages = [...optimizedStreamMessages];
+    if (streamSecuritySuffix && securedStreamMessages.length > 0 && securedStreamMessages[0]?.role === 'system') {
+      securedStreamMessages[0] = { ...securedStreamMessages[0], content: securedStreamMessages[0].content + '\n\n' + streamSecuritySuffix };
+    }
+
+    // Guardrails: Model routing (may override requested model)
+    const streamEffectiveModel = await selectModel(request.userId, streamAgentId, 'chat', estimatedInputTokens, streamAgentMode);
+
+    // 1. Hold estimated cost atomically before streaming
+    const maxOutput = Math.min(request.maxTokens ?? 4096, streamBudgetCheck.maxTokensAllowed);
+    const estimate = calculateTokenCost(streamEffectiveModel, estimatedInputTokens, maxOutput);
+
+    const holdId = await walletService.hold(
+      request.userId,
+      estimate.billedCredits,
+      `LLM stream hold: ${streamEffectiveModel} (estimated)`,
+    );
+    if (!holdId) {
+      throw new Error('Insufficient balance for streaming request');
+    }
+
+    // 2. Stream LLM response (credits already held)
+    let response: { inputTokens: number; outputTokens: number; totalTokens: number };
+    try {
+      const llmRequest = this.mapToLLMRequest({ ...request, model: streamEffectiveModel, messages: securedStreamMessages });
+      response = await streamLLM(llmRequest, sseWriter);
+    } catch (error) {
+      // Stream failed — full refund of hold
+      await walletService.releaseHold(request.userId, holdId, estimate.billedCredits, 0);
+      throw error;
+    }
     const durationMs = Date.now() - startTime;
 
-    // 3. Post-stream billing with user's commission rate
-    const rawCost = calculateTokenCost(request.model, response.inputTokens, response.outputTokens);
+    // Guardrails: Record chain tokens and end chain (streaming)
+    if (streamChainId) {
+      recordChainTokens(streamChainId, response.totalTokens);
+      endChain(streamChainId);
+    }
+
+    // 3. Calculate actual cost and release hold (refund overestimate)
+    const rawCost = calculateTokenCost(streamEffectiveModel, response.inputTokens, response.outputTokens);
     const actualCost = await this.applyUserCommission(request.userId, rawCost);
+    await walletService.releaseHold(request.userId, holdId, estimate.billedCredits, actualCost.billedCredits);
 
-    await walletService.withdraw(
-      request.userId,
-      actualCost.billedCredits,
-      `LLM stream: ${request.model} (${response.totalTokens} tokens)`,
-      'llm_usage',
-      request.requestId,
-    );
-
+    // 4. Log usage
     const wallet = await walletService.getWalletByUserId(request.userId);
     await walletService.recordLlmUsage({
       userId: request.userId,
       walletId: wallet?.id ?? null,
       requestId: request.requestId ?? null,
-      model: request.model,
+      model: streamEffectiveModel,
       provider: 'anthropic',
       inputTokens: response.inputTokens,
       outputTokens: response.outputTokens,
@@ -200,9 +347,26 @@ export class LlmProxyService {
       metadata: { streaming: true },
     });
 
+    // ── Guardrails: Post-call recording for streaming ──
+    const streamTokenEvent: TokenEvent = {
+      userId: request.userId,
+      model: streamEffectiveModel,
+      inputTokens: response.inputTokens,
+      outputTokens: response.outputTokens,
+      cacheReadTokens: 0, // streaming doesn't return cache details
+      cacheCreationTokens: 0,
+      costMicroCredits: actualCost.billedCredits,
+      agentName: streamAgentId,
+      requestType: 'chat',
+      mode: streamAgentMode,
+    };
+    await afterClaudeCall(request.userId, streamTokenEvent).catch(() => { /* best-effort */ });
+    await recordAgentTokens(streamAgentId, response.totalTokens).catch(() => { /* best-effort */ });
+    await recordGlobalTokens(response.totalTokens).catch(() => { /* best-effort */ });
+
     logger.info('LLM stream request completed', {
       userId: request.userId,
-      model: request.model,
+      model: streamEffectiveModel,
       tokens: response.totalTokens,
       billedCredits: actualCost.billedCredits,
       durationMs,
@@ -220,7 +384,8 @@ export class LlmProxyService {
     try {
       const user = await userRepository.findById(userId);
       if (user && user.commissionRate > 0) {
-        const billedCredits = Math.ceil(cost.costCredits * (1 + user.commissionRate));
+        // Apply commission ON TOP of the already-margined billedCredits (preserves 1% safety margin)
+        const billedCredits = Math.ceil(cost.billedCredits * (1 + user.commissionRate));
         return {
           costCredits: cost.costCredits,
           billedCredits,
@@ -234,11 +399,12 @@ export class LlmProxyService {
   }
 
   /**
-   * Rough token estimation (~4 chars per token).
+   * Conservative token estimation for French/multilingual text.
+   * French averages ~2.5 chars per token due to accents and longer words.
    */
   private estimateInputTokens(messages: Array<{ role: string; content: string }>): number {
     const totalChars = messages.reduce((sum, m) => sum + m.content.length + m.role.length + 4, 0);
-    return Math.ceil(totalChars / 4);
+    return Math.ceil(totalChars / 2.5);
   }
 
   /**
@@ -250,6 +416,8 @@ export class LlmProxyService {
     inputTokens: number;
     outputTokens: number;
     totalTokens: number;
+    cacheReadTokens?: number;
+    cacheCreatedTokens?: number;
   }> {
     const llmRequest = this.mapToLLMRequest(request);
     const response = await callLLM(llmRequest);
@@ -259,6 +427,8 @@ export class LlmProxyService {
       inputTokens: response.inputTokens,
       outputTokens: response.outputTokens,
       totalTokens: response.totalTokens,
+      cacheReadTokens: response.cacheReadTokens,
+      cacheCreatedTokens: response.cacheCreatedTokens,
     };
   }
 
@@ -303,16 +473,18 @@ export class LlmProxyService {
   private async checkDailyBudget(userId: string, estimatedCost: number): Promise<boolean> {
     try {
       const limitCredits = Number(process.env['LLM_DAILY_LIMIT_CREDITS'] ?? 100_000_000); // 100 credits default
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      // Use UTC consistently to avoid timezone-dependent budget windows
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
       const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
 
       const usage = await walletService.getUsageSummary(userId, today, tomorrow);
       return (usage.totalBilledCredits + estimatedCost) <= limitCredits;
-    } catch {
-      // If we can't check, allow the request (fail open)
-      return true;
+    } catch (err) {
+      // Fail-closed: deny request if daily budget check fails (prevents unbounded spending)
+      logger.error('Daily budget check failed, denying request', { userId, err });
+      return false;
     }
   }
 }

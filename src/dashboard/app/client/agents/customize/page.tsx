@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import DocumentUploader from '../../../../components/DocumentUploader';
+import DocumentList from '../../../../components/DocumentList';
 import {
   DEFAULT_AGENTS, EMOJI_OPTIONS, COLOR_PRESETS, PRESET_TEMPLATES,
   LANGUAGE_OPTIONS, FORMAT_OPTIONS,
   loadAgentConfigs, saveAgentConfigs, createDefaultConfig,
-  buildSystemPrompt, exportConfigs, importConfigs,
+  buildSystemPrompt, exportConfigs, importConfigs, syncAgentConfigsWithApi, saveAgentConfigsToApi,
   type AgentTypeId, type AgentCustomConfig, type AgentPersonality, type UserAgentConfigs,
 } from '../../../../lib/agent-config';
 
@@ -28,19 +30,173 @@ const PERSONALITY_SLIDERS: { key: keyof AgentPersonality; label: string; left: s
 ];
 
 function getSession() {
-  try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
+  try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
+}
+
+// ─── Tag Input Helper (outside component to prevent re-mount) ───
+function TagInput({ tags, onChange, placeholder }: { tags: string[]; onChange: (t: string[]) => void; placeholder: string }) {
+  const [input, setInput] = useState('');
+  return (
+    <div>
+      <div className="flex flex-wrap gap-6 mb-8">
+        {tags.map((t, i) => (
+          <span key={i} style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px',
+            borderRadius: 20, background: 'var(--accent-muted)', color: 'var(--accent)', fontSize: 12, fontWeight: 600,
+          }}>
+            {t}
+            <button onClick={() => onChange(tags.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent)', fontSize: 14, padding: 0, marginLeft: 2 }}>×</button>
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-6">
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { onChange([...tags, input.trim()]); setInput(''); e.preventDefault(); } }}
+          className="input input-sm flex-1"
+          placeholder={placeholder}
+        />
+        <button onClick={() => { if (input.trim()) { onChange([...tags, input.trim()]); setInput(''); } }} className="btn btn-ghost btn-sm">+</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Rule List Helper (outside component to prevent re-mount) ───
+function RuleList({ rules, onChange, placeholder }: { rules: string[]; onChange: (r: string[]) => void; placeholder: string }) {
+  return (
+    <div className="flex flex-col gap-6">
+      {rules.map((rule, i) => (
+        <div key={i} className="flex gap-6 items-center">
+          <input
+            value={rule}
+            onChange={e => { const updated = [...rules]; updated[i] = e.target.value; onChange(updated); }}
+            className="input input-sm flex-1"
+          />
+          <button onClick={() => onChange(rules.filter((_, j) => j !== i))} className="btn btn-ghost btn-xs" style={{ color: 'var(--danger)' }}>✕</button>
+        </div>
+      ))}
+      <button
+        onClick={() => onChange([...rules, ''])}
+        className="btn btn-ghost btn-sm"
+        style={{ alignSelf: 'flex-start' }}
+      >
+        + Ajouter une règle
+      </button>
+    </div>
+  );
 }
 
 export default function AgentCustomizePage() {
   const [step, setStep] = useState(0);
-  const [selectedAgentId, setSelectedAgentId] = useState<AgentTypeId>('sarah-assistante');
-  const [config, setConfig] = useState<AgentCustomConfig>(createDefaultConfig('sarah-assistante'));
+  const [selectedAgentId, setSelectedAgentId] = useState<AgentTypeId>('fz-assistante');
+  const [config, setConfig] = useState<AgentCustomConfig>(createDefaultConfig('fz-assistante'));
   const [allConfigs, setAllConfigs] = useState<UserAgentConfigs>({ configs: {}, version: 1 });
   const [testMessage, setTestMessage] = useState('');
   const [testResponse, setTestResponse] = useState('');
   const [testLoading, setTestLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [refreshDocs, setRefreshDocs] = useState(0);
+
+  // ─── Voice & Audio state ───
+  const [voiceAgent, setVoiceAgent] = useState<string>('fz-assistante');
+  const [selectedVoiceId, setSelectedVoiceId] = useState<string>('EXAVITQu4vr4xnSDxMaL');
+  const [voiceStability, setVoiceStability] = useState(0.5);
+  const [voiceSimilarity, setVoiceSimilarity] = useState(0.75);
+  const [voiceStyle, setVoiceStyle] = useState(0.0);
+  const [voiceSpeakerBoost, setVoiceSpeakerBoost] = useState(true);
+  const [voiceModel, setVoiceModel] = useState('eleven_multilingual_v2');
+  const [voicePreviewLoading, setVoicePreviewLoading] = useState<string | null>(null);
+  const [voicePreviewAudio, setVoicePreviewAudio] = useState<HTMLAudioElement | null>(null);
+  const [showVoiceClone, setShowVoiceClone] = useState(false);
+
+  const VOICE_LIST = [
+    { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'Female', lang: 'FR' },
+    { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel', gender: 'Female', lang: 'EN' },
+    { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte', gender: 'Female', lang: 'FR' },
+    { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam', gender: 'Male', lang: 'EN' },
+    { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni', gender: 'Male', lang: 'EN' },
+    { id: 'VR6AewLTigWG4xSOukaG', name: 'Emmanuel', gender: 'Male', lang: 'FR' },
+    { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George', gender: 'Male', lang: 'EN' },
+  ];
+
+  const CAPABILITIES = [
+    { icon: '\uD83C\uDF99\uFE0F', title: 'Text-to-Speech', desc: '7 voix premium, 16 langues', available: true },
+    { icon: '\uD83D\uDDE3\uFE0F', title: 'Voice Cloning', desc: 'Clonez votre propre voix (bient\u00f4t)', available: false },
+    { icon: '\uD83C\uDFB5', title: 'Sound Effects', desc: 'Effets sonores IA (bient\u00f4t)', available: false },
+    { icon: '\uD83C\uDF0D', title: 'Dubbing', desc: 'Doublage vid\u00e9o multi-langue (bient\u00f4t)', available: false },
+    { icon: '\uD83D\uDD07', title: 'Audio Isolation', desc: 'Extraction de voix (bient\u00f4t)', available: false },
+    { icon: '\uD83D\uDCD6', title: 'Projects', desc: 'Contenu long (podcasts, audiobooks) (bient\u00f4t)', available: false },
+  ];
+
+  function loadVoiceSettings() {
+    try {
+      const raw = localStorage.getItem('fz_voice_settings');
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.voiceAgent) setVoiceAgent(s.voiceAgent);
+        if (s.selectedVoiceId) setSelectedVoiceId(s.selectedVoiceId);
+        if (s.stability !== undefined) setVoiceStability(s.stability);
+        if (s.similarity !== undefined) setVoiceSimilarity(s.similarity);
+        if (s.style !== undefined) setVoiceStyle(s.style);
+        if (s.speakerBoost !== undefined) setVoiceSpeakerBoost(s.speakerBoost);
+        if (s.model) setVoiceModel(s.model);
+      }
+    } catch { /* ignore */ }
+  }
+
+  function saveVoiceSettings(overrides?: Record<string, unknown>) {
+    const settings = {
+      voiceAgent,
+      selectedVoiceId,
+      stability: voiceStability,
+      similarity: voiceSimilarity,
+      style: voiceStyle,
+      speakerBoost: voiceSpeakerBoost,
+      model: voiceModel,
+      ...overrides,
+    };
+    localStorage.setItem('fz_voice_settings', JSON.stringify(settings));
+  }
+
+  async function previewVoice(voiceId: string, voiceName: string) {
+    if (voicePreviewAudio) {
+      voicePreviewAudio.pause();
+      setVoicePreviewAudio(null);
+    }
+    setVoicePreviewLoading(voiceId);
+    try {
+      const testText = voiceName === 'Sarah' || voiceName === 'Charlotte' || voiceName === 'Emmanuel'
+        ? `Bonjour, je suis ${voiceName}. Comment puis-je vous aider aujourd'hui ?`
+        : `Hello, I'm ${voiceName}. How can I help you today?`;
+      const res = await fetch('/api/voice/elevenlabs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: testText,
+          voiceId,
+          model_id: voiceModel,
+          stability: voiceStability,
+          similarity_boost: voiceSimilarity,
+          style: voiceStyle,
+          use_speaker_boost: voiceSpeakerBoost,
+        }),
+      });
+      if (!res.ok) throw new Error('Erreur TTS');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.onended = () => { URL.revokeObjectURL(url); setVoicePreviewAudio(null); };
+      setVoicePreviewAudio(audio);
+      audio.play();
+    } catch {
+      /* silently fail */
+    } finally {
+      setVoicePreviewLoading(null);
+    }
+  }
 
   useEffect(() => {
     const loaded = loadAgentConfigs();
@@ -48,6 +204,18 @@ export default function AgentCustomizePage() {
     if (loaded.configs[selectedAgentId]) {
       setConfig(loaded.configs[selectedAgentId]!);
     }
+    loadVoiceSettings();
+    // Background sync with DB
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
+      if (session.token) {
+        syncAgentConfigsWithApi(session.token).then(synced => {
+          setAllConfigs(synced);
+          if (synced.configs[selectedAgentId]) setConfig(synced.configs[selectedAgentId]!);
+        }).catch(() => {});
+      }
+    } catch { /* */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function selectAgent(id: AgentTypeId) {
@@ -83,6 +251,11 @@ export default function AgentCustomizePage() {
     saveAgentConfigs(updated);
     setAllConfigs(updated);
     setSaved(true);
+    // Sync to DB
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
+      if (session.token) void saveAgentConfigsToApi(session.token, updated);
+    } catch { /* */ }
     // Gamification
     try {
       const { recordEvent } = require('../../../../lib/gamification');
@@ -100,6 +273,11 @@ export default function AgentCustomizePage() {
     saveAgentConfigs(updated);
     setAllConfigs(updated);
     setSaved(false);
+    // Sync to DB
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
+      if (session.token) void saveAgentConfigsToApi(session.token, updated);
+    } catch { /* */ }
   }
 
   function applyPreset(presetId: string) {
@@ -121,7 +299,7 @@ export default function AgentCustomizePage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'sarah-agent-configs.json';
+    a.download = 'freenzy-agent-configs.json';
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -160,7 +338,7 @@ export default function AgentCustomizePage() {
           model: 'claude-sonnet-4-20250514',
           messages: [
             { role: 'user', content: prompt },
-            { role: 'assistant', content: `Compris, je suis ${config.customName || 'Sarah'}, ${config.customRole}. Comment puis-je vous aider?` },
+            { role: 'assistant', content: `Compris, je suis ${config.customName || 'votre agent'}, ${config.customRole}. Comment puis-je vous aider?` },
             { role: 'user', content: testMessage },
           ],
           maxTokens: 512,
@@ -179,60 +357,7 @@ export default function AgentCustomizePage() {
   const agentDef = DEFAULT_AGENTS.find(a => a.id === selectedAgentId)!;
   const customizedCount = Object.keys(allConfigs.configs).length;
 
-  // ─── Tag Input Helper ───
-  function TagInput({ tags, onChange, placeholder }: { tags: string[]; onChange: (t: string[]) => void; placeholder: string }) {
-    const [input, setInput] = useState('');
-    return (
-      <div>
-        <div className="flex flex-wrap gap-6 mb-8">
-          {tags.map((t, i) => (
-            <span key={i} style={{
-              display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px',
-              borderRadius: 20, background: 'var(--accent-muted)', color: 'var(--accent)', fontSize: 12, fontWeight: 600,
-            }}>
-              {t}
-              <button onClick={() => onChange(tags.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent)', fontSize: 14, padding: 0, marginLeft: 2 }}>×</button>
-            </span>
-          ))}
-        </div>
-        <div className="flex gap-6">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { onChange([...tags, input.trim()]); setInput(''); e.preventDefault(); } }}
-            className="input input-sm flex-1"
-            placeholder={placeholder}
-          />
-          <button onClick={() => { if (input.trim()) { onChange([...tags, input.trim()]); setInput(''); } }} className="btn btn-ghost btn-sm">+</button>
-        </div>
-      </div>
-    );
-  }
-
-  // ─── Rule List Helper ───
-  function RuleList({ rules, onChange, placeholder }: { rules: string[]; onChange: (r: string[]) => void; placeholder: string }) {
-    return (
-      <div className="flex flex-col gap-6">
-        {rules.map((rule, i) => (
-          <div key={i} className="flex gap-6 items-center">
-            <input
-              value={rule}
-              onChange={e => { const updated = [...rules]; updated[i] = e.target.value; onChange(updated); }}
-              className="input input-sm flex-1"
-            />
-            <button onClick={() => onChange(rules.filter((_, j) => j !== i))} className="btn btn-ghost btn-xs" style={{ color: 'var(--danger)' }}>✕</button>
-          </div>
-        ))}
-        <button
-          onClick={() => onChange([...rules, ''])}
-          className="btn btn-ghost btn-sm"
-          style={{ alignSelf: 'flex-start' }}
-        >
-          + Ajouter une règle
-        </button>
-      </div>
-    );
-  }
+  // TagInput and RuleList moved outside component to avoid re-mount on state change
 
   return (
     <div>
@@ -356,7 +481,7 @@ export default function AgentCustomizePage() {
                   value={config.customName}
                   onChange={e => updateConfig({ customName: e.target.value })}
                   className="input"
-                  placeholder="Sarah"
+                  placeholder="Mon agent"
                   style={{ width: '100%' }}
                 />
               </div>
@@ -431,7 +556,7 @@ export default function AgentCustomizePage() {
                   {config.emoji}
                 </span>
                 <div>
-                  <div className="text-lg font-bold">{config.customName || 'Sarah'}</div>
+                  <div className="text-lg font-bold">{config.customName || 'votre agent'}</div>
                   <div className="text-md" style={{ color: config.accentColor }}>{config.customRole || agentDef.role}</div>
                 </div>
               </div>
@@ -648,7 +773,7 @@ export default function AgentCustomizePage() {
                 value={config.instructions.signatureStyle}
                 onChange={e => updateConfig({ instructions: { ...config.instructions, signatureStyle: e.target.value } })}
                 className="input"
-                placeholder="Ex: — Sarah, votre équipe IA"
+                placeholder="Ex: — Votre équipe IA Freenzy"
                 style={{ width: '100%' }}
               />
             </div>
@@ -728,6 +853,26 @@ export default function AgentCustomizePage() {
                 )}
               </div>
             ))}
+
+            {/* Documents de reference */}
+            <div className="mt-24">
+              <label className="text-sm font-semibold text-secondary" style={{ display: 'block', marginBottom: 6 }}>
+                Documents de reference
+              </label>
+              <p className="text-xs text-muted mb-8">
+                Enrichissez le contexte de vos agents avec des documents. Peut beaucoup aider selon le cas, mais consomme plus de tokens.
+              </p>
+              <DocumentUploader
+                agentContext="agent-customize"
+                token={(() => { try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token ?? ''; } catch { return ''; } })()}
+                onUploadComplete={() => setRefreshDocs(n => n + 1)}
+              />
+              <DocumentList
+                agentContext="agent-customize"
+                token={(() => { try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token ?? ''; } catch { return ''; } })()}
+                refreshKey={refreshDocs}
+              />
+            </div>
           </div>
         )}
 
@@ -773,7 +918,7 @@ export default function AgentCustomizePage() {
                   lineHeight: 1.7,
                 }}>
                   <div className="text-xs font-bold mb-4" style={{ color: config.accentColor }}>
-                    {config.emoji} {config.customName || 'Sarah'} répond :
+                    {config.emoji} {config.customName || 'votre agent'} répond :
                   </div>
                   {testResponse}
                 </div>
@@ -783,7 +928,7 @@ export default function AgentCustomizePage() {
             {/* Actions */}
             <div className="flex gap-12">
               <button onClick={saveConfig} className="btn btn-primary text-lg" style={{ padding: '12px 32px' }}>
-                Sauvegarder {config.customName || 'Sarah'}
+                Sauvegarder {config.customName || 'votre agent'}
               </button>
               <button onClick={resetAgent} className="btn btn-danger btn-sm">
                 Réinitialiser
@@ -791,6 +936,349 @@ export default function AgentCustomizePage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* ─── Voix & Audio — ElevenLabs ─── */}
+      <div style={{ marginTop: 40 }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
+          borderBottom: '2px solid #6366f1', paddingBottom: 12,
+        }}>
+          <span style={{ fontSize: 28 }}>{'\uD83C\uDFA4'}</span>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>
+              Voix &amp; Audio — ElevenLabs
+            </h2>
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>
+              Configurez la voix de vos agents avec ElevenLabs TTS
+            </p>
+          </div>
+        </div>
+
+        {/* 1. Voice Selection per Agent */}
+        <div className="card" style={{ padding: 24, marginBottom: 20 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>
+            {'\uD83C\uDFAF'} S&eacute;lection de voix par agent
+          </h3>
+
+          {/* Agent dropdown */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
+              Agent &agrave; configurer
+            </label>
+            <select
+              value={voiceAgent}
+              onChange={e => { setVoiceAgent(e.target.value); saveVoiceSettings({ voiceAgent: e.target.value }); }}
+              className="input"
+              style={{ width: '100%', maxWidth: 360, padding: '8px 12px', cursor: 'pointer' }}
+            >
+              {DEFAULT_AGENTS.map(a => (
+                <option key={a.id} value={a.id}>{a.emoji} {a.name} — {a.role}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Voice grid */}
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 10 }}>
+            Voix disponibles
+          </label>
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: 12,
+          }}>
+            {VOICE_LIST.map(v => {
+              const isSelected = selectedVoiceId === v.id;
+              const isLoading = voicePreviewLoading === v.id;
+              return (
+                <div
+                  key={v.id}
+                  onClick={() => { setSelectedVoiceId(v.id); saveVoiceSettings({ selectedVoiceId: v.id }); }}
+                  style={{
+                    padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
+                    border: `2px solid ${isSelected ? '#6366f1' : 'var(--border-primary)'}`,
+                    background: isSelected ? '#6366f115' : 'var(--bg-secondary)',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{v.name}</span>
+                    {isSelected && (
+                      <span style={{
+                        width: 20, height: 20, borderRadius: '50%', background: '#6366f1',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 11, color: 'white', fontWeight: 800,
+                      }}>{'\u2713'}</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+                    <span style={{
+                      padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
+                      background: v.gender === 'Female' ? '#ec489920' : '#3b82f620',
+                      color: v.gender === 'Female' ? '#ec4899' : '#3b82f6',
+                    }}>{v.gender}</span>
+                    <span style={{
+                      padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
+                      background: '#6366f120', color: '#6366f1',
+                    }}>{v.lang}</span>
+                  </div>
+                  <button
+                    onClick={e => { e.stopPropagation(); previewVoice(v.id, v.name); }}
+                    disabled={isLoading}
+                    style={{
+                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid #6366f140',
+                      background: isLoading ? '#6366f120' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
+                      fontSize: 12, fontWeight: 600, color: '#6366f1',
+                      fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
+                    }}
+                  >
+                    {isLoading ? '\u23F3 Chargement...' : '\u25B6 \u00C9couter'}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2. Voice Settings */}
+        <div className="card" style={{ padding: 24, marginBottom: 20 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--text-primary)' }}>
+            {'\u2699\uFE0F'} R&eacute;glages vocaux
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+            {/* Left column: sliders */}
+            <div>
+              {/* Stability */}
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Stabilit&eacute;</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366f1' }}>{voiceStability.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min={0} max={1} step={0.01} value={voiceStability}
+                  onChange={e => { const v = Number(e.target.value); setVoiceStability(v); saveVoiceSettings({ stability: v }); }}
+                  style={{
+                    width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
+                    background: `linear-gradient(to right, #6366f1 ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
+                    borderRadius: 3, outline: 'none', cursor: 'pointer',
+                  }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                  <span>Variable</span><span>Stable</span>
+                </div>
+              </div>
+
+              {/* Similarity */}
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Similarit&eacute;</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366f1' }}>{voiceSimilarity.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min={0} max={1} step={0.01} value={voiceSimilarity}
+                  onChange={e => { const v = Number(e.target.value); setVoiceSimilarity(v); saveVoiceSettings({ similarity: v }); }}
+                  style={{
+                    width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
+                    background: `linear-gradient(to right, #6366f1 ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
+                    borderRadius: 3, outline: 'none', cursor: 'pointer',
+                  }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                  <span>Faible</span><span>Forte</span>
+                </div>
+              </div>
+
+              {/* Style */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Style</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366f1' }}>{voiceStyle.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min={0} max={1} step={0.01} value={voiceStyle}
+                  onChange={e => { const v = Number(e.target.value); setVoiceStyle(v); saveVoiceSettings({ style: v }); }}
+                  style={{
+                    width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
+                    background: `linear-gradient(to right, #6366f1 ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
+                    borderRadius: 3, outline: 'none', cursor: 'pointer',
+                  }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                  <span>Neutre</span><span>Expressif</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right column: toggle + model */}
+            <div>
+              {/* Speaker Boost Toggle */}
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                  Speaker Boost
+                </label>
+                <div
+                  onClick={() => { const next = !voiceSpeakerBoost; setVoiceSpeakerBoost(next); saveVoiceSettings({ speakerBoost: next }); }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+                    padding: '8px 16px', borderRadius: 10,
+                    border: `1px solid ${voiceSpeakerBoost ? '#6366f1' : 'var(--border-primary)'}`,
+                    background: voiceSpeakerBoost ? '#6366f115' : 'var(--bg-secondary)',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <div style={{
+                    width: 40, height: 22, borderRadius: 11, position: 'relative',
+                    background: voiceSpeakerBoost ? '#6366f1' : 'var(--bg-tertiary)',
+                    transition: 'background 0.2s',
+                  }}>
+                    <div style={{
+                      width: 18, height: 18, borderRadius: '50%', background: 'white',
+                      position: 'absolute', top: 2,
+                      left: voiceSpeakerBoost ? 20 : 2,
+                      transition: 'left 0.2s',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }} />
+                  </div>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? '#6366f1' : 'var(--text-muted)' }}>
+                    {voiceSpeakerBoost ? 'Activ\u00e9' : 'D\u00e9sactiv\u00e9'}
+                  </span>
+                </div>
+                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6 }}>
+                  Am&eacute;liore la clart&eacute; et la pr&eacute;sence de la voix
+                </p>
+              </div>
+
+              {/* Model Selector */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                  Mod&egrave;le TTS
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {[
+                    { id: 'eleven_multilingual_v2', label: 'Multilingual v2', desc: 'Haute qualit\u00e9, 29 langues' },
+                    { id: 'eleven_flash_v2_5', label: 'Flash v2.5', desc: 'Faible latence, temps r\u00e9el' },
+                  ].map(m => (
+                    <div
+                      key={m.id}
+                      onClick={() => { setVoiceModel(m.id); saveVoiceSettings({ model: m.id }); }}
+                      style={{
+                        padding: '10px 14px', borderRadius: 10, cursor: 'pointer',
+                        border: `2px solid ${voiceModel === m.id ? '#6366f1' : 'var(--border-primary)'}`,
+                        background: voiceModel === m.id ? '#6366f115' : 'var(--bg-secondary)',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{
+                          width: 16, height: 16, borderRadius: '50%',
+                          border: `2px solid ${voiceModel === m.id ? '#6366f1' : 'var(--border-primary)'}`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          {voiceModel === m.id && (
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1' }} />
+                          )}
+                        </div>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{m.label}</span>
+                      </div>
+                      <p style={{ margin: '4px 0 0 24px', fontSize: 11, color: 'var(--text-muted)' }}>{m.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Cloner ma voix */}
+        <div className="card" style={{ padding: 24, marginBottom: 20 }}>
+          <div
+            onClick={() => setShowVoiceClone(!showVoiceClone)}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              cursor: 'pointer',
+            }}
+          >
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+              {'\uD83E\uDDEC'} Cloner ma voix
+            </h3>
+            <span style={{
+              fontSize: 18, color: 'var(--text-muted)', transition: 'transform 0.2s',
+              transform: showVoiceClone ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}>{'\u25BC'}</span>
+          </div>
+
+          {showVoiceClone && (
+            <div style={{ marginTop: 16, opacity: 0.5, pointerEvents: 'none' as const }}>
+              <div style={{
+                padding: 16, borderRadius: 10, border: '1px dashed var(--border-primary)',
+                background: 'var(--bg-secondary)', marginBottom: 16,
+              }}>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 12px 0', lineHeight: 1.6 }}>
+                  Uploadez 1-5 minutes d&apos;audio de votre voix pour cr&eacute;er un clone vocal personnalis&eacute;.
+                  La qualit&eacute; du clone d&eacute;pend de la clart&eacute; de l&apos;enregistrement.
+                </p>
+                <div style={{
+                  padding: 32, borderRadius: 10, border: '2px dashed var(--border-primary)',
+                  background: 'var(--bg-primary)', textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: 36, marginBottom: 8 }}>{'\uD83C\uDF99\uFE0F'}</div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 4px 0' }}>
+                    Glissez un fichier audio ici
+                  </p>
+                  <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>
+                    Formats accept&eacute;s : MP3, WAV, M4A, OGG (max 25 MB)
+                  </p>
+                  <input type="file" accept="audio/*" disabled style={{ display: 'none' }} />
+                </div>
+              </div>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 16px', borderRadius: 10,
+                background: '#f59e0b18', border: '1px solid #f59e0b40',
+              }}>
+                <span style={{ fontSize: 16 }}>{'\u2B50'}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#f59e0b' }}>
+                  Fonctionnalit&eacute; premium — Bient&ocirc;t disponible
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 4. Capabilities ElevenLabs */}
+        <div className="card" style={{ padding: 24 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>
+            {'\uD83D\uDCA1'} Capacit&eacute;s ElevenLabs
+          </h3>
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+            gap: 12,
+          }}>
+            {CAPABILITIES.map(cap => (
+              <div
+                key={cap.title}
+                style={{
+                  padding: '14px 16px', borderRadius: 10,
+                  border: `1px solid ${cap.available ? '#6366f140' : 'var(--border-primary)'}`,
+                  background: cap.available ? '#6366f108' : 'var(--bg-secondary)',
+                  opacity: cap.available ? 1 : 0.6,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                  <span style={{ fontSize: 20 }}>{cap.icon}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{cap.title}</span>
+                  {cap.available && (
+                    <span style={{
+                      marginLeft: 'auto', padding: '2px 8px', borderRadius: 10, fontSize: 9, fontWeight: 700,
+                      background: '#22c55e20', color: '#22c55e',
+                    }}>ACTIF</span>
+                  )}
+                </div>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{cap.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Bottom Navigation */}

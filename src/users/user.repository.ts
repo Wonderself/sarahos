@@ -18,9 +18,10 @@ function rowToUser(row: Record<string, unknown>): User {
     demoExpiresAt: row['demo_expires_at'] ? new Date(row['demo_expires_at'] as string) : null,
     promoCodeUsed: (row['promo_code_used'] as string) ?? null,
     emailConfirmed: (row['email_confirmed'] as boolean) ?? false,
-    activeAgents: (row['active_agents'] as string[]) ?? ['sarah-repondeur'],
+    activeAgents: (row['active_agents'] as string[]) ?? ['fz-repondeur'],
     userNumber: (row['user_number'] as number) ?? 0,
     commissionRate: Number(row['commission_rate'] ?? 0),
+    tokenBudgetMultiplier: Number(row['token_budget_multiplier'] ?? 1.0),
     referralCode: (row['referral_code'] as string) ?? null,
     referredBy: (row['referred_by'] as string) ?? null,
     createdAt: new Date(row['created_at'] as string),
@@ -40,28 +41,28 @@ export class UserRepository {
     const tier = input.tier ?? 'free';
     const role = input.role ?? 'viewer';
     const dailyApiLimit = DEFAULT_DAILY_LIMITS[tier];
-    const activeAgents = input.activeAgents ?? ['sarah-repondeur'];
+    const activeAgents = input.activeAgents ?? ['fz-repondeur'];
     const referredBy = input.referredBy ?? null;
 
-    // Generate referral code (8 chars: SAR-XXXXX)
-    const referralCode = 'SAR-' + uuidv4().replace(/-/g, '').slice(0, 6).toUpperCase();
+    // Generate referral code (8 chars: FZ-XXXXXX)
+    const referralCode = 'FZ-' + uuidv4().replace(/-/g, '').slice(0, 6).toUpperCase();
 
-    // Calculate commission rate based on existing user count
-    const countResult = await dbClient.query("SELECT COUNT(*)::int as cnt FROM users WHERE role != 'system'");
-    const userCount = (countResult.rows[0]?.['cnt'] as number) ?? 0;
-    const userNumber = userCount + 1;
-    let commissionRate = 0.07; // default
-    if (userNumber <= 1000) commissionRate = 0;
-    else if (userNumber <= 100000) commissionRate = 0.05;
+    // Wrap in transaction to prevent race condition on userNumber/commissionRate
+    return dbClient.withTransaction(async (client) => {
+      const countResult = await client.query("SELECT COUNT(*)::int as cnt FROM users WHERE role != 'system'");
+      const userCount = (countResult.rows[0]?.['cnt'] as number) ?? 0;
+      const userNumber = userCount + 1;
+      const commissionRate = 0; // 0% pour tous, à vie
 
-    const result = await dbClient.query(
-      `INSERT INTO users (email, display_name, api_key, role, tier, daily_api_limit, active_agents, user_number, commission_rate, referral_code, referred_by)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-       RETURNING *`,
-      [input.email, input.displayName, apiKey, role, tier, dailyApiLimit, activeAgents, userNumber, commissionRate, referralCode, referredBy],
-    );
+      const result = await client.query(
+        `INSERT INTO users (email, display_name, api_key, role, tier, daily_api_limit, active_agents, user_number, commission_rate, referral_code, referred_by)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING *`,
+        [input.email, input.displayName, apiKey, role, tier, dailyApiLimit, activeAgents, userNumber, commissionRate, referralCode, referredBy],
+      );
 
-    return result.rows[0] ? rowToUser(result.rows[0]) : null;
+      return result.rows[0] ? rowToUser(result.rows[0]) : null;
+    });
   }
 
   async findByApiKey(apiKey: string): Promise<User | null> {
@@ -105,14 +106,49 @@ export class UserRepository {
       params.push(filters.isActive);
     }
     if (filters?.search) {
-      conditions.push(`(email ILIKE $${idx} OR display_name ILIKE $${idx})`);
-      params.push(`%${filters.search}%`);
+      const escaped = filters.search.replace(/[%_\\]/g, '\\$&');
+      conditions.push(`(email ILIKE $${idx} ESCAPE '\\' OR display_name ILIKE $${idx} ESCAPE '\\')`);
+      params.push(`%${escaped}%`);
       idx++;
     }
 
     const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-    const result = await dbClient.query(`SELECT * FROM users ${where} ORDER BY created_at DESC`, params);
+    const limit = filters?.limit ?? 50;
+    const offset = filters?.offset ?? 0;
+    params.push(limit, offset);
+    const result = await dbClient.query(`SELECT * FROM users ${where} ORDER BY created_at DESC LIMIT $${idx++} OFFSET $${idx++}`, params);
     return result.rows.map(rowToUser);
+  }
+
+  async countAll(filters?: UserFilters): Promise<number> {
+    if (!dbClient.isConnected()) return 0;
+
+    const conditions: string[] = [];
+    const params: unknown[] = [];
+    let idx = 1;
+
+    if (filters?.role) {
+      conditions.push(`role = $${idx++}`);
+      params.push(filters.role);
+    }
+    if (filters?.tier) {
+      conditions.push(`tier = $${idx++}`);
+      params.push(filters.tier);
+    }
+    if (filters?.isActive !== undefined) {
+      conditions.push(`is_active = $${idx++}`);
+      params.push(filters.isActive);
+    }
+    if (filters?.search) {
+      const escaped = filters.search.replace(/[%_\\]/g, '\\$&');
+      conditions.push(`(email ILIKE $${idx} ESCAPE '\\' OR display_name ILIKE $${idx} ESCAPE '\\')`);
+      params.push(`%${escaped}%`);
+      idx++;
+    }
+
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const result = await dbClient.query(`SELECT COUNT(*)::int as cnt FROM users ${where}`, params);
+    return (result.rows[0] as Record<string, unknown>)?.['cnt'] as number ?? 0;
   }
 
   async update(id: string, input: UpdateUserInput): Promise<User | null> {
@@ -150,6 +186,10 @@ export class UserRepository {
       sets.push(`active_agents = $${idx++}`);
       params.push(input.activeAgents);
     }
+    if (input.tokenBudgetMultiplier !== undefined) {
+      sets.push(`token_budget_multiplier = $${idx++}`);
+      params.push(input.tokenBudgetMultiplier);
+    }
 
     if (sets.length === 0) return this.findById(id);
 
@@ -171,7 +211,19 @@ export class UserRepository {
       'UPDATE users SET is_active = FALSE, updated_at = NOW() WHERE id = $1',
       [id],
     );
-    return (result.rowCount ?? 0) > 0;
+    const deactivated = (result.rowCount ?? 0) > 0;
+
+    // Invalidate active-status cache so JWT is immediately rejected
+    if (deactivated) {
+      try {
+        const { redisClient } = await import('../infra/redis/redis-client');
+        if (redisClient.isConnected()) {
+          await redisClient.del(`user:active:${id}`);
+        }
+      } catch { /* best effort */ }
+    }
+
+    return deactivated;
   }
 
   async regenerateApiKey(id: string): Promise<string | null> {
@@ -244,6 +296,43 @@ export class UserRepository {
     return { byTier, active, totalDailyCalls };
   }
 
+  /**
+   * GDPR: Permanently delete a user and all associated data.
+   * With ON DELETE CASCADE FKs, deleting from users cascades to:
+   * wallets, wallet_transactions, llm_usage_log, notifications, campaigns,
+   * campaign_posts, referrals, user_sessions, user_preferences, user_documents,
+   * user_alarms, projects, personal_agent_configs, repondeur_configs, etc.
+   */
+  async deleteUser(userId: string): Promise<{ deleted: boolean; tablesAffected: string[] }> {
+    if (!dbClient.isConnected()) return { deleted: false, tablesAffected: [] };
+
+    const tablesAffected: string[] = [];
+
+    return dbClient.withTransaction(async (client) => {
+      // Tables without FK cascade — delete explicitly
+      const manualTables = ['activity_log', 'audit_log'];
+      for (const table of manualTables) {
+        try {
+          const r = await client.query(
+            `DELETE FROM ${table} WHERE actor = $1 OR resource_id = $1`,
+            [userId],
+          );
+          if ((r.rowCount ?? 0) > 0) tablesAffected.push(table);
+        } catch {
+          // Table may not exist — skip
+        }
+      }
+
+      // Delete the user — cascades to all FK-linked tables
+      const result = await client.query('DELETE FROM users WHERE id = $1', [userId]);
+      if ((result.rowCount ?? 0) > 0) {
+        tablesAffected.push('users (+ cascaded data)');
+      }
+
+      return { deleted: (result.rowCount ?? 0) > 0, tablesAffected };
+    });
+  }
+
   // ── Password & Email Auth Methods ──
 
   async getPasswordHash(userId: string): Promise<string | null> {
@@ -299,6 +388,16 @@ export class UserRepository {
       'UPDATE users SET password_hash = $1, password_reset_token = NULL, password_reset_expires = NULL, updated_at = NOW() WHERE id = $2',
       [hash, userId],
     );
+
+    // Invalidate all existing sessions by storing password-change timestamp in Redis
+    try {
+      const { redisClient } = await import('../infra/redis/redis-client');
+      if (redisClient.isConnected()) {
+        // Store timestamp (seconds) — JWTs issued before this are invalid
+        await redisClient.set(`user:pwd_changed:${userId}`, String(Math.floor(Date.now() / 1000)), 86400);
+        await redisClient.del(`user:active:${userId}`);
+      }
+    } catch { /* best effort — JWT will still expire naturally */ }
   }
 
   async upsertByEmail(input: CreateUserInput & { tier: User['tier']; role: User['role'] }): Promise<User | null> {
@@ -307,15 +406,13 @@ export class UserRepository {
     const apiKey = input.apiKey ?? uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '').slice(0, 32);
     const dailyApiLimit = DEFAULT_DAILY_LIMITS[input.tier];
 
+    // On conflict: only update display_name and reactivate.
+    // Deliberately exclude role, tier, api_key, daily_api_limit to prevent role escalation.
     const result = await dbClient.query(
       `INSERT INTO users (email, display_name, api_key, role, tier, daily_api_limit)
        VALUES ($1, $2, $3, $4, $5, $6)
        ON CONFLICT (email) DO UPDATE SET
          display_name = EXCLUDED.display_name,
-         api_key = EXCLUDED.api_key,
-         role = EXCLUDED.role,
-         tier = EXCLUDED.tier,
-         daily_api_limit = EXCLUDED.daily_api_limit,
          is_active = TRUE,
          updated_at = NOW()
        RETURNING *`,

@@ -129,7 +129,7 @@ describe('applySecurityMiddleware', () => {
     const { applySecurityMiddleware } = require('./security.middleware');
     const mockApp = { use: jest.fn() };
     applySecurityMiddleware(mockApp);
-    // requestId + helmet + cors + requestLogger + rateLimiter = 5 calls
-    expect(mockApp.use).toHaveBeenCalledTimes(5);
+    // requestId + helmet + guardrails security headers + cors + requestLogger + 4 auth rate limiters + global rateLimiter = 10 calls
+    expect(mockApp.use).toHaveBeenCalledTimes(10);
   });
 });

@@ -60,6 +60,46 @@ const INTEGRATIONS: Integration[] = [
     category: 'Sécurité',
     icon: '🔐',
   },
+  {
+    name: 'Twilio (SMS + Voice)',
+    description: 'SMS, appels vocaux, répondeur IA, WebRTC. SDK réel intégré avec dégradation gracieuse.',
+    status: 'active',
+    signupUrl: 'https://console.twilio.com',
+    envVars: ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_PHONE_NUMBER'],
+    difficulty: 'Moyen',
+    category: 'Téléphonie',
+    icon: '📱',
+  },
+  {
+    name: 'Twilio WhatsApp',
+    description: 'WhatsApp Business intégré : liaison téléphone, conversations, messages vocaux, répondeur.',
+    status: 'active',
+    signupUrl: 'https://console.twilio.com',
+    envVars: ['TWILIO_WHATSAPP_FROM'],
+    difficulty: 'Moyen',
+    category: 'Messagerie',
+    icon: '💬',
+  },
+  {
+    name: 'ElevenLabs (TTS)',
+    description: 'Synthèse vocale premium (eleven_multilingual_v2). 7 voix françaises, Visio Agents, répondeur vocal.',
+    status: 'active',
+    signupUrl: 'https://elevenlabs.io',
+    envVars: ['ELEVENLABS_API_KEY', 'ELEVENLABS_VOICE_ID'],
+    difficulty: 'Facile',
+    category: 'Voix',
+    icon: '🎙️',
+  },
+  {
+    name: 'fal.ai (Photo & Video IA)',
+    description: 'Génération de photos (Flux/schnell) et vidéos (LTX Video) par IA. Studio créatif intégré.',
+    status: 'active',
+    signupUrl: 'https://fal.ai',
+    envVars: ['FAL_KEY'],
+    difficulty: 'Facile',
+    category: 'Création',
+    icon: '🎨',
+  },
   // Planned (next)
   {
     name: 'Stripe',
@@ -71,37 +111,7 @@ const INTEGRATIONS: Integration[] = [
     category: 'Paiement',
     icon: '💳',
   },
-  {
-    name: 'Twilio (SMS)',
-    description: 'Envoi de SMS pour notifications et alertes clients',
-    status: 'planned',
-    signupUrl: 'https://console.twilio.com',
-    envVars: ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_PHONE_NUMBER'],
-    difficulty: 'Moyen',
-    category: 'Notifications',
-    icon: '📱',
-  },
-  {
-    name: 'Twilio WhatsApp',
-    description: 'Intégration WhatsApp Business pour communication client via l\'agent Répondeur',
-    status: 'planned',
-    signupUrl: 'https://console.twilio.com',
-    envVars: ['TWILIO_WHATSAPP_FROM'],
-    difficulty: 'Moyen',
-    category: 'Notifications',
-    icon: '💬',
-  },
   // Future
-  {
-    name: 'ElevenLabs (TTS)',
-    description: 'Synthèse vocale pour donner une voix à Sarah. Voix naturelle en français.',
-    status: 'future',
-    signupUrl: 'https://elevenlabs.io',
-    envVars: ['ELEVENLABS_API_KEY', 'ELEVENLABS_VOICE_ID'],
-    difficulty: 'Facile',
-    category: 'Avatar',
-    icon: '🎙️',
-  },
   {
     name: 'Deepgram (ASR)',
     description: 'Transcription vocale temps réel. Convertit la voix du client en texte pour le chat.',
@@ -114,7 +124,7 @@ const INTEGRATIONS: Integration[] = [
   },
   {
     name: 'D-ID (Avatar Video)',
-    description: 'Avatar vidéo animé en temps réel. Sarah et Emmanuel en vidéo.',
+    description: 'Avatar vidéo animé en temps réel. Maëva et Emmanuel en vidéo.',
     status: 'future',
     signupUrl: 'https://studio.d-id.com',
     envVars: ['DID_API_KEY'],
@@ -134,7 +144,7 @@ const INTEGRATIONS: Integration[] = [
   },
   {
     name: 'Slack',
-    description: 'Bot Slack pour interagir avec Sarah depuis un workspace Slack.',
+    description: 'Bot Slack pour interagir avec Freenzy depuis un workspace Slack.',
     status: 'future',
     signupUrl: 'https://api.slack.com/apps',
     envVars: ['SLACK_BOT_TOKEN', 'SLACK_SIGNING_SECRET'],
@@ -254,7 +264,7 @@ export default function RoadmapPage() {
       <div className="page-header">
         <h1 className="page-title">Roadmap & Intégrations</h1>
         <p className="page-subtitle">
-          État des intégrations et prochaines étapes du projet SARAH OS
+          État des intégrations et prochaines étapes du projet Freenzy.io
         </p>
       </div>
 
@@ -306,7 +316,7 @@ export default function RoadmapPage() {
       <section className="section">
         <h2 className="section-title" style={{ color: '#6366f1' }}>Prévu (moyen terme)</h2>
         <p className="text-md text-tertiary mb-16">
-          Ces intégrations sont prévues pour enrichir les capacités de Sarah OS.
+          Ces intégrations sont prévues pour enrichir les capacités de Freenzy.io.
           Inscrivez-vous dès maintenant pour obtenir vos clés API.
         </p>
         <div className="grid-3 gap-12">
@@ -320,19 +330,45 @@ export default function RoadmapPage() {
         <div className="card p-24">
           {[
             {
-              phase: 'Phase actuelle',
+              phase: 'Phase actuelle (v0.17.0 — Phase 18)',
               status: 'active' as const,
-              items: ['Dashboard admin + client (34+ pages)', '15 agents IA (Sonnet L1/L2 + Opus L3)', 'Billing micro-crédits + marge 20%', 'Auth JWT + RBAC (4 rôles)', 'Chat, réunions, documents, briefings', 'Codes promo, campagnes, notifications', 'Streaming SSE + Extended Thinking'],
+              items: [
+                'Dashboard admin + client (80+ pages)',
+                '24 agents IA (12+12 L1, 4 L2, 4 L3)',
+                'Deep Discussions (85+ templates, Opus, tags, partage social)',
+                'Studio créatif fal.ai (photo + vidéo IA)',
+                'Admin Dashboard refondu (charts, diagnostics, 2FA, GlobalSearch)',
+                'Billing micro-crédits + marge 20% + auto-recharge',
+                'Auth JWT + RBAC + 2FA TOTP + sessions + reset password',
+                'Twilio SDK intégré (SMS, Voice, WhatsApp, répondeur IA)',
+                'ElevenLabs TTS (7 voix, Visio Agents, répondeur vocal)',
+                'Streaming SSE + Extended Thinking Opus',
+                'Multi-projets avec isolation complète',
+                'Réveil intelligent (appel IA matinal programmable)',
+                'Marketplace agents (48 templates)',
+              ],
             },
             {
-              phase: 'Phase suivante',
+              phase: 'Phase suivante (Phase 19)',
               status: 'planned' as const,
-              items: ['Paiements Stripe (checkout + webhooks)', 'Notifications SMS/WhatsApp (Twilio)', 'Historique et export conversations', 'Améliorations UX et performance'],
+              items: [
+                'Paiements Stripe (checkout + webhooks + abonnements)',
+                'Factures PDF automatiques',
+                'Deepgram ASR (transcription temps réel)',
+                'Améliorations UX et performance',
+              ],
             },
             {
-              phase: 'Phase future',
+              phase: 'Phase future (Phases 20-21+)',
               status: 'future' as const,
-              items: ['Avatar vidéo Sarah/Emmanuel (D-ID)', 'Voix naturelle (ElevenLabs TTS)', 'Transcription vocale (Deepgram ASR)', 'Intégrations sociales (Meta, LinkedIn)', 'Synchronisation calendrier (Google)', 'Bot Slack', 'LLMs open source (Mistral, Llama)'],
+              items: [
+                'Avatar vidéo D-ID Streaming (Sarah/Emmanuel)',
+                'Intégrations sociales (Meta Business, LinkedIn, X)',
+                'Synchronisation calendrier (Google Calendar)',
+                'Bot Slack',
+                'LLMs open source (Mistral, Llama)',
+                'Application mobile',
+              ],
             },
           ].map((p, i) => {
             const cfg = STATUS_CONFIG[p.status];
@@ -369,14 +405,16 @@ export default function RoadmapPage() {
         <div className="card p-20">
           <div className="flex flex-col gap-6">
             {[
-              { name: 'Anthropic API Key', status: 'ok', desc: 'Clé API Claude configurée et fonctionnelle' },
-              { name: 'PostgreSQL', status: 'ok', desc: 'Base de données principale avec pgvector' },
-              { name: 'Redis', status: 'ok', desc: 'Cache et sessions temps réel' },
-              { name: 'JWT Auth', status: 'ok', desc: 'Authentification par token avec 4 rôles' },
+              { name: 'Anthropic API Key', status: 'ok', desc: 'Claude Sonnet (L1/L2) + Opus avec Extended Thinking (L3)' },
+              { name: 'PostgreSQL + pgvector', status: 'ok', desc: '28+ tables, embeddings vectoriels, audit complet' },
+              { name: 'Redis', status: 'ok', desc: 'Cache, sessions temps réel, streaming SSE' },
+              { name: 'JWT Auth + RBAC + 2FA', status: 'ok', desc: '4 rôles, sessions, reset password, TOTP 2FA' },
+              { name: 'Twilio (SMS + Voice + WhatsApp)', status: 'ok', desc: 'SDK réel intégré, répondeur IA, appels entrants/sortants' },
+              { name: 'ElevenLabs TTS', status: 'ok', desc: '7 voix françaises, Visio Agents, eleven_multilingual_v2' },
+              { name: 'fal.ai (Photo & Video)', status: 'ok', desc: 'Studio créatif — Flux/schnell (photo) + LTX Video (vidéo)' },
               { name: 'Email (Resend)', status: 'opt', desc: 'Optionnel — fonctionne en mode log si non configuré' },
               { name: 'Stripe (Paiements)', status: 'next', desc: 'Prochaine intégration — dépôts manuels en attendant' },
-              { name: 'Twilio SMS/WhatsApp', status: 'next', desc: 'Prochaine intégration — notifications log-only en attendant' },
-              { name: 'ElevenLabs / Deepgram / D-ID', status: 'future', desc: 'Pipeline avatar — prévu pour phase future' },
+              { name: 'Deepgram / D-ID', status: 'future', desc: 'ASR temps réel et avatar vidéo — prévu pour phase future' },
             ].map(item => (
               <div key={item.name} className="flex items-center gap-12 bg-secondary rounded-sm border" style={{ padding: '8px 14px' }}>
                 <span style={{

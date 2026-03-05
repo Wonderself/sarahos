@@ -1,5 +1,5 @@
 /**
- * Removes all @sarah-os.test accounts and sample promo codes.
+ * Removes all @freenzy.test accounts and sample promo codes.
  *
  * Usage: npx tsx scripts/remove-test-users.ts
  */
@@ -13,7 +13,7 @@ async function main() {
 
     // Remove promo redemptions from test users first (FK constraint)
     const testUserIds = await dbClient.query(
-      `SELECT id FROM users WHERE email LIKE '%@sarah-os.test'`,
+      `SELECT id FROM users WHERE email LIKE '%@freenzy.test'`,
     );
     const ids = testUserIds.rows.map((r) => (r as Record<string, unknown>)['id'] as string);
 
@@ -26,7 +26,7 @@ async function main() {
 
     // Remove test users
     const userResult = await dbClient.query(
-      `DELETE FROM users WHERE email LIKE '%@sarah-os.test'`,
+      `DELETE FROM users WHERE email LIKE '%@freenzy.test'`,
     );
     const usersRemoved = userResult.rowCount ?? 0;
 

@@ -94,7 +94,7 @@ export class MonitoringAgent extends BaseAgent {
   }
 
   private async handleFullHealthCheck(_task: AgentTask): Promise<Record<string, unknown>> {
-    const services = ['sarah-api', 'llm-router', 'event-bus', 'memory-manager', 'orchestrator'];
+    const services = ['freenzy-api', 'llm-router', 'event-bus', 'memory-manager', 'orchestrator'];
     const latencyResults = await Promise.all(services.map((s) => checkLatency(s)));
     const containers = await checkContainerHealth();
     const avatarCache = await checkAvatarCache();
@@ -176,7 +176,7 @@ export class MonitoringAgent extends BaseAgent {
   }
 
   private async handleLatencyCheck(task: AgentTask): Promise<Record<string, unknown>> {
-    const service = String(task.payload['service'] ?? 'sarah-api');
+    const service = String(task.payload['service'] ?? 'freenzy-api');
     const result = await checkLatency(service);
 
     await eventBus.publish('MetricLogged', this.id, {

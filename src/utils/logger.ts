@@ -22,7 +22,7 @@ const devFormat = winston.format.combine(
 export const logger = winston.createLogger({
   level: LOG_LEVEL,
   format: NODE_ENV === 'production' ? jsonFormat : devFormat,
-  defaultMeta: { service: 'sarah-os' },
+  defaultMeta: { service: 'freenzy' },
   transports: [
     new winston.transports.Console(),
     ...(NODE_ENV === 'production'

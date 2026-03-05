@@ -1,4 +1,4 @@
-export type ModelTier = 'fast' | 'standard' | 'advanced';
+export type ModelTier = 'ultra-fast' | 'fast' | 'standard' | 'advanced';
 
 export interface LLMRequest {
   agentId: string;
@@ -12,6 +12,10 @@ export interface LLMRequest {
   tools?: LLMTool[];
   enableThinking?: boolean;
   thinkingBudgetTokens?: number;
+  /** Cache this response in Redis for repeated identical requests. */
+  enableMemoization?: boolean;
+  /** TTL in seconds for memoized responses. Default: 300 (5 min). */
+  memoizationTtlSeconds?: number;
 }
 
 export interface LLMResponse {
@@ -25,6 +29,12 @@ export interface LLMResponse {
   latencyMs: number;
   thinking?: string;
   thinkingTokens?: number;
+  /** Tokens read from Anthropic prompt cache (cost: 0.1x normal input price). */
+  cacheReadTokens?: number;
+  /** Tokens written into Anthropic prompt cache (cost: 1x normal input price). */
+  cacheCreatedTokens?: number;
+  /** True if response was served from Redis memoization cache (no API call made). */
+  fromCache?: boolean;
 }
 
 export interface ConversationMessage {

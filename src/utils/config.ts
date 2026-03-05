@@ -12,14 +12,15 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url().optional(),
   DB_HOST: z.string().default('localhost'),
   DB_PORT: z.coerce.number().default(5432),
-  DB_NAME: z.string().default('sarah_os'),
-  DB_USER: z.string().default('sarah'),
-  DB_PASSWORD: z.string().default('sarah_secret'),
+  DB_NAME: z.string().default('freenzy'),
+  DB_USER: z.string().default('freenzy'),
+  DB_PASSWORD: z.string().default('freenzy_secret'),
 
   // Redis
   REDIS_URL: z.string().optional(),
   REDIS_HOST: z.string().default('localhost'),
   REDIS_PORT: z.coerce.number().default(6379),
+  REDIS_PASSWORD: z.string().optional(),
 
   // Anthropic
   ANTHROPIC_API_KEY: z.string().min(1, 'ANTHROPIC_API_KEY is required'),
@@ -35,6 +36,8 @@ const envSchema = z.object({
   TWILIO_ACCOUNT_SID: z.string().optional(),
   TWILIO_AUTH_TOKEN: z.string().optional(),
   TWILIO_PHONE_NUMBER: z.string().optional(),
+  TWILIO_WHATSAPP_FROM: z.string().optional().default(''),
+  TWILIO_WEBHOOK_URL: z.string().optional().default(''),
 
   // Embeddings
   OPENAI_API_KEY: z.string().optional(),
@@ -46,10 +49,10 @@ const envSchema = z.object({
   ENCRYPTION_KEY: z.string().min(16).default('change-me-32-byte-key-here!!!!!'),
 
   // API Keys (comma-separated per role)
-  API_KEYS_ADMIN: z.string().default('admin-key-change-me'),
-  API_KEYS_OPERATOR: z.string().default('operator-key-change-me'),
-  API_KEYS_VIEWER: z.string().default('viewer-key-change-me'),
-  API_KEYS_SYSTEM: z.string().default('system-key-change-me'),
+  API_KEYS_ADMIN: z.string().min(8).default('admin-key-change-me'),
+  API_KEYS_OPERATOR: z.string().min(8).default('operator-key-change-me'),
+  API_KEYS_VIEWER: z.string().min(8).default('viewer-key-change-me'),
+  API_KEYS_SYSTEM: z.string().min(8).default('system-key-change-me'),
 
   // Dashboard & Rate Limiting
   DASHBOARD_ORIGIN: z.string().default('http://localhost:3001'),
@@ -64,7 +67,7 @@ const envSchema = z.object({
 
   // Email (Resend)
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().default('SARAH OS <noreply@sarah-os.com>'),
+  EMAIL_FROM: z.string().default('Freenzy.io <noreply@freenzy.io>'),
   APP_URL: z.string().default('http://localhost:3001'),
 
   // Financial
@@ -73,15 +76,56 @@ const envSchema = z.object({
   // WhatsApp Cloud API (Meta)
   WHATSAPP_PHONE_NUMBER_ID: z.string().optional(),
   WHATSAPP_ACCESS_TOKEN: z.string().optional(),
-  WHATSAPP_VERIFY_TOKEN: z.string().default('sarah-os-webhook-verify-2026'),
+  WHATSAPP_VERIFY_TOKEN: z.string().default('freenzy-webhook-verify-2026'),
+  WHATSAPP_APP_SECRET: z.string().optional(),
   WHATSAPP_API_VERSION: z.string().default('v18.0'),
   WEBHOOK_BASE_URL: z.string().default('http://localhost:3010'),
 
   // Deepgram (TTS/STT)
   DEEPGRAM_API_KEY: z.string().optional(),
+
+  // Autopilot — Admin governance via WhatsApp
+  ADMIN_WHATSAPP_PHONE: z.string().optional(),
+  AUTOPILOT_ENABLED: z.string().default('true'),
+  AUTOPILOT_MAX_PROPOSALS_PER_DAY: z.coerce.number().default(20),
+  AUTOPILOT_MAX_URGENT_PER_HOUR: z.coerce.number().default(5),
+  AUTOPILOT_PROPOSAL_EXPIRY_HOURS: z.coerce.number().default(24),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
+
+function validateProductionSecrets(env: EnvConfig): void {
+  if (env.NODE_ENV !== 'production') return;
+
+  const errors: string[] = [];
+
+  if (env.JWT_SECRET.includes('change-me') || env.JWT_SECRET.length < 32) {
+    errors.push('JWT_SECRET must be at least 32 chars and not contain "change-me" in production');
+  }
+  if (env.ENCRYPTION_KEY.includes('change-me') || env.ENCRYPTION_KEY.length < 32) {
+    errors.push('ENCRYPTION_KEY must be at least 32 chars and not contain "change-me" in production');
+  }
+  if (env.DB_PASSWORD.includes('freenzy_secret') || env.DB_PASSWORD.length < 12) {
+    errors.push('DB_PASSWORD must be at least 12 chars and not be the default value in production');
+  }
+
+  const apiKeyFields = ['API_KEYS_ADMIN', 'API_KEYS_OPERATOR', 'API_KEYS_VIEWER', 'API_KEYS_SYSTEM'] as const;
+  for (const field of apiKeyFields) {
+    if (env[field].includes('change-me') || env[field].length < 16) {
+      errors.push(`${field} must be at least 16 chars and not contain "change-me" in production`);
+    }
+  }
+
+  if (env.WHATSAPP_VERIFY_TOKEN === 'freenzy-webhook-verify-2026') {
+    errors.push('WHATSAPP_VERIFY_TOKEN must be changed from default in production');
+  }
+
+  if (errors.length > 0) {
+    console.error('FATAL: Production security validation failed:');
+    errors.forEach(e => console.error(`  - ${e}`));
+    throw new Error('Insecure configuration detected in production. Fix your .env file.');
+  }
+}
 
 function loadConfig(): EnvConfig {
   const result = envSchema.safeParse(process.env);
@@ -91,6 +135,26 @@ function loadConfig(): EnvConfig {
     console.error('Environment validation failed:');
     console.error(JSON.stringify(formatted, null, 2));
     throw new Error('Invalid environment configuration. Check your .env file.');
+  }
+
+  validateProductionSecrets(result.data);
+
+  // Block default secrets in non-development/test environments
+  if (result.data.NODE_ENV !== 'development' && result.data.NODE_ENV !== 'test') {
+    if (result.data.JWT_SECRET.includes('change-me')) {
+      throw new Error('JWT_SECRET must be changed from default in non-development environments');
+    }
+    if (result.data.ENCRYPTION_KEY.includes('change-me')) {
+      throw new Error('ENCRYPTION_KEY must be changed from default in non-development environments');
+    }
+  }
+
+  // Always warn if defaults are used (even in dev)
+  if (result.data.JWT_SECRET.includes('change-me')) {
+    console.warn('WARNING: Using default JWT_SECRET — change before deploying.');
+  }
+  if (result.data.ENCRYPTION_KEY.includes('change-me')) {
+    console.warn('WARNING: Using default ENCRYPTION_KEY — change before deploying.');
   }
 
   return result.data;
@@ -103,5 +167,7 @@ export function getDatabaseUrl(): string {
 }
 
 export function getRedisUrl(): string {
-  return config.REDIS_URL ?? `redis://${config.REDIS_HOST}:${config.REDIS_PORT}`;
+  if (config.REDIS_URL) return config.REDIS_URL;
+  const auth = config.REDIS_PASSWORD ? `:${config.REDIS_PASSWORD}@` : '';
+  return `redis://${auth}${config.REDIS_HOST}:${config.REDIS_PORT}`;
 }

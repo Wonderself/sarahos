@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { getAgentsForTier, DEFAULT_AGENTS, type AgentTypeId } from '../lib/agent-config';
 
-interface SarahWelcomeProps {
+interface FreenzyWelcomeProps {
   userName: string;
   tier: string;
   onDismiss: () => void;
 }
 
 // Free model: same actions for everyone
-const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'sarah-dg')!;
+const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg')!;
 
 const QUICK_ACTIONS: Array<{ icon: string; label: string; desc: string; href: string }> = [
   { icon: '💬', label: `Discuter avec ${dgAgent.name}`, desc: `Votre équipe de ${DEFAULT_AGENTS.length} agents IA est prête`, href: '/client/chat' },
@@ -19,7 +19,7 @@ const QUICK_ACTIONS: Array<{ icon: string; label: string; desc: string; href: st
   { icon: '☀️', label: 'Briefing du jour', desc: 'Tâches et insights', href: '/client/briefing' },
 ];
 
-export default function SarahWelcome({ userName, tier, onDismiss }: SarahWelcomeProps) {
+export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWelcomeProps) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
 
@@ -31,18 +31,18 @@ export default function SarahWelcome({ userName, tier, onDismiss }: SarahWelcome
   // Check if company profile exists
   let hasProfile = false;
   try {
-    const profile = localStorage.getItem('sarah_company_profile');
+    const profile = localStorage.getItem('fz_company_profile');
     hasProfile = !!profile && profile !== '{}';
   } catch { /* */ }
 
   return (
     <div className="welcome-overlay" onClick={onDismiss}>
       <div className="welcome-card" onClick={e => e.stopPropagation()}>
-        {/* Sarah Avatar */}
+        {/* Freenzy Avatar */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <img
             src="/images/logo.jpg"
-            alt="SARAH OS"
+            alt="Freenzy.io"
             style={{ width: 64, height: 64, borderRadius: 20, margin: '0 auto 16px', objectFit: 'cover' }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
           />
@@ -50,7 +50,7 @@ export default function SarahWelcome({ userName, tier, onDismiss }: SarahWelcome
             {greeting}, {userName || 'cher client'} !
           </h2>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 400, margin: '0 auto' }}>
-            Je suis {DEFAULT_AGENTS.find(a => a.id === 'sarah-dg')!.name}, votre {DEFAULT_AGENTS.find(a => a.id === 'sarah-dg')!.role}. Votre équipe de {agentDetails.length} agent{agentDetails.length > 1 ? 's' : ''} IA est prête à travailler.
+            Je suis {DEFAULT_AGENTS.find(a => a.id === 'fz-dg')!.name}, votre {DEFAULT_AGENTS.find(a => a.id === 'fz-dg')!.role}. Votre équipe de {agentDetails.length} agent{agentDetails.length > 1 ? 's' : ''} IA est prête à travailler.
           </p>
         </div>
 

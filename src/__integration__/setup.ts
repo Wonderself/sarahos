@@ -176,6 +176,7 @@ jest.mock('../users/user.service', () => ({
   userService: {
     createUser: jest.fn(),
     listUsers: jest.fn().mockResolvedValue([]),
+    countUsers: jest.fn().mockResolvedValue(0),
     getUser: jest.fn().mockResolvedValue(null),
     updateUser: jest.fn(),
     deactivateUser: jest.fn().mockResolvedValue(false),

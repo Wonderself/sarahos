@@ -22,12 +22,11 @@ export function createStreamRouter(): Router {
     const typesParam = req.query['types'] as string | undefined;
     const types = typesParam ? typesParam.split(',').map((t) => t.trim()) : undefined;
 
-    sseManager.addClient(clientId, res, types);
-
-    // Cleanup on disconnect
-    req.on('close', () => {
-      sseManager.removeClient(clientId);
-    });
+    const added = sseManager.addClient(clientId, res, types);
+    if (!added) {
+      res.status(503).json({ error: 'Too many active streams', code: 'SERVICE_UNAVAILABLE' });
+      return;
+    }
   });
 
   return router;

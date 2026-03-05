@@ -152,14 +152,14 @@ describe('Billing Routes', () => {
   describe('POST /billing/llm', () => {
     it('should proxy LLM request', async () => {
       mockLlmProxyService.processRequest.mockResolvedValue({
-        content: 'Hello!', model: 'test', inputTokens: 10, outputTokens: 5,
+        content: 'Hello!', model: 'claude-sonnet-4-20250514', inputTokens: 10, outputTokens: 5,
         totalTokens: 15, costCredits: 100, billedCredits: 120, durationMs: 50,
       });
 
       const res = await request(app)
         .post('/billing/llm')
         .set('Authorization', `Bearer ${userToken()}`)
-        .send({ model: 'test', messages: [{ role: 'user', content: 'Hi' }] });
+        .send({ model: 'claude-sonnet-4-20250514', messages: [{ role: 'user', content: 'Hi' }] });
 
       expect(res.status).toBe(200);
       expect(res.body.content).toBe('Hello!');
@@ -173,7 +173,7 @@ describe('Billing Routes', () => {
       const res = await request(app)
         .post('/billing/llm')
         .set('Authorization', `Bearer ${userToken()}`)
-        .send({ model: 'test', messages: [{ role: 'user', content: 'Hi' }] });
+        .send({ model: 'claude-sonnet-4-20250514', messages: [{ role: 'user', content: 'Hi' }] });
 
       expect(res.status).toBe(402);
     });

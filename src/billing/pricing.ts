@@ -4,7 +4,9 @@ import { creditsToMicroCredits } from './billing.types';
 /**
  * Token pricing configuration.
  * Prices are in micro-credits per 1M tokens.
- * Based on Anthropic API pricing as of 2026. Margin = 0% (captured at credit pack purchase level).
+ * Based on Anthropic API pricing as of 2026.
+ * marginPercent: 0% — no margin on token pricing (0% commission for first 5000 users).
+ * User commission (0%/5%) is applied separately via user.commissionRate.
  *
  * Actual Anthropic pricing (approx USD):
  * - Sonnet: $3/1M input, $15/1M output
@@ -14,7 +16,15 @@ import { creditsToMicroCredits } from './billing.types';
  * So $3/1M input = 300 credits/1M = 300,000,000 micro-credits/1M
  */
 export const TOKEN_PRICING: TokenPricing[] = [
-  // Claude Sonnet (fast + standard)
+  // Claude Haiku (ultra-fast) — $0.80/1M input, $4.00/1M output (~3.75x cheaper than Sonnet)
+  {
+    model: 'claude-haiku-4-5-20251001',
+    provider: 'anthropic',
+    inputCostPerMillion: creditsToMicroCredits(80),     // 80 credits / 1M input tokens
+    outputCostPerMillion: creditsToMicroCredits(400),   // 400 credits / 1M output tokens
+    marginPercent: 0,
+  },
+  // Claude Sonnet (fast + standard) — $3/1M input, $15/1M output
   {
     model: 'claude-sonnet-4-20250514',
     provider: 'anthropic',
@@ -22,7 +32,7 @@ export const TOKEN_PRICING: TokenPricing[] = [
     outputCostPerMillion: creditsToMicroCredits(1500),  // 1500 credits / 1M output tokens
     marginPercent: 0,
   },
-  // Claude Opus (advanced)
+  // Claude Opus (advanced) — $15/1M input, $75/1M output
   {
     model: 'claude-opus-4-6',
     provider: 'anthropic',
@@ -32,7 +42,7 @@ export const TOKEN_PRICING: TokenPricing[] = [
   },
 ];
 
-// Default fallback pricing — margin captured at credit pack level, not per-token
+// Default fallback pricing — 0% margin
 const DEFAULT_PRICING: TokenPricing = {
   model: 'default',
   provider: 'unknown',

@@ -11,7 +11,7 @@ export class UserService {
       throw new Error('Email already registered');
     }
 
-    const tier = input.tier ?? 'paid';
+    const tier = input.tier ?? 'free';
     const user = await userRepository.create({
       ...input,
       tier,
@@ -65,6 +65,10 @@ export class UserService {
     return userRepository.findAll(filters);
   }
 
+  async countUsers(filters?: UserFilters): Promise<number> {
+    return userRepository.countAll(filters);
+  }
+
   async updateUser(id: string, input: UpdateUserInput): Promise<User> {
     const user = await userRepository.findById(id);
     if (!user) {
@@ -97,6 +101,38 @@ export class UserService {
     if (result) {
       logger.info('User deactivated', { userId: id });
     }
+    return result;
+  }
+
+  /**
+   * GDPR: Permanently delete a user and all associated data.
+   * Prevents deletion of system user.
+   * Self-deletion is allowed via portal (isSelfService=true) but blocked for admins via admin endpoint.
+   */
+  async deleteUserData(userId: string, requestedBy: string, isSelfService = false): Promise<{ deleted: boolean; tablesAffected: string[] }> {
+    // Safety: prevent deleting system user
+    if (userId === '00000000-0000-0000-0000-000000000000') {
+      throw new Error('Cannot delete system user');
+    }
+
+    // Safety: block admin self-deletion via admin endpoint (but allow self-service portal deletion)
+    if (userId === requestedBy && !isSelfService) {
+      const user = await userRepository.findById(requestedBy);
+      if (user?.role === 'admin') {
+        throw new Error('Cannot delete your own admin account via admin endpoint');
+      }
+    }
+
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const result = await userRepository.deleteUser(userId);
+    if (result.deleted) {
+      logger.info('GDPR user data deleted', { userId, email: user.email, requestedBy, tablesAffected: result.tablesAffected });
+    }
+
     return result;
   }
 

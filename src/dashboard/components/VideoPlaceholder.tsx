@@ -12,8 +12,8 @@ interface VideoPlaceholderProps {
 
 export default function VideoPlaceholder({
   id,
-  title = 'Découvrez Sarah en action',
-  subtitle = 'Vidéo à venir',
+  title = 'Decouvrez Freenzy en action',
+  subtitle = 'Video a venir',
   thumbnailSrc,
   videoUrl,
 }: VideoPlaceholderProps) {
@@ -23,7 +23,7 @@ export default function VideoPlaceholder({
     return (
       <div id={id} style={{
         position: 'relative', width: '100%', paddingTop: '56.25%',
-        borderRadius: 'var(--radius-xl, 16px)', overflow: 'hidden',
+        borderRadius: 20, overflow: 'hidden',
         background: '#000',
       }}>
         <iframe
@@ -42,38 +42,38 @@ export default function VideoPlaceholder({
       onClick={() => videoUrl ? setPlaying(true) : undefined}
       style={{
         position: 'relative', width: '100%', paddingTop: '56.25%',
-        borderRadius: 'var(--radius-xl, 16px)', overflow: 'hidden',
+        borderRadius: 20, overflow: 'hidden',
         background: thumbnailSrc
           ? `url(${thumbnailSrc}) center/cover no-repeat`
-          : 'linear-gradient(135deg, #1e1b4b, #312e81)',
+          : 'linear-gradient(135deg, #111827, #1f2937)',
         cursor: videoUrl ? 'pointer' : 'default',
       }}
     >
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center', gap: 12,
-        background: thumbnailSrc ? 'rgba(0,0,0,0.4)' : 'transparent',
+        alignItems: 'center', justifyContent: 'center', gap: 14,
+        background: thumbnailSrc ? 'rgba(0,0,0,0.35)' : 'transparent',
       }}>
         {/* Play button */}
         <div style={{
-          width: 72, height: 72, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.15)',
+          width: 64, height: 64, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.12)',
           backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-          border: '2px solid rgba(255,255,255,0.3)',
+          border: '1.5px solid rgba(255,255,255,0.2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'all 0.2s ease',
         }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
             <polygon points="6,3 20,12 6,21" />
           </svg>
         </div>
 
         <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>
+          <div style={{ color: '#fff', fontSize: 15, fontWeight: 600, letterSpacing: '-0.01em' }}>
             {title}
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 }}>
+          <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, marginTop: 4 }}>
             {subtitle}
           </div>
         </div>

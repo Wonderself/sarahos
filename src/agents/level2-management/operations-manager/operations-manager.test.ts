@@ -99,7 +99,7 @@ describe('OperationsManager', () => {
     const { taskScheduler } = jest.requireMock('../../../core/orchestrator/task-scheduler') as { taskScheduler: { enqueue: jest.Mock } };
     await agent.initialize();
     const result = await agent.execute(makeTask({
-      payload: { taskType: 'decompose', description: 'Launch a marketing campaign for SARAH OS' },
+      payload: { taskType: 'decompose', description: 'Launch a marketing campaign for Freenzy.io' },
     }));
     expect(result.success).toBe(true);
     expect(result.output).toHaveProperty('subtaskCount', 2);

@@ -80,7 +80,7 @@ describe('ContentAgent', () => {
   it('handles brand check tasks', async () => {
     await agent.initialize();
     const result = await agent.execute(makeTask({
-      payload: { taskType: 'brand-check', content: 'Test marketing copy for SARAH OS' },
+      payload: { taskType: 'brand-check', content: 'Test marketing copy for Freenzy.io' },
     }));
     expect(result.success).toBe(true);
     expect(result.output).toHaveProperty('compliant');

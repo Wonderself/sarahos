@@ -1,10 +1,14 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { loadGamification } from '../../lib/gamification';
-import { DEFAULT_AGENTS, getActiveAgentIds } from '../../lib/agent-config';
+import { ALL_AGENTS, getActiveAgentIds } from '../../lib/agent-config';
+import { ToastProvider } from '../../components/Toast';
+import OnboardingTour from '../../components/OnboardingTour';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface UserSession {
   token: string;
@@ -15,40 +19,208 @@ interface UserSession {
   tier: string;
 }
 
-const NAV_SECTIONS = [
+interface NavItemConfig {
+  href: string;
+  icon: string;
+  label: string;
+  visible: boolean;
+  order: number;
+}
+
+interface SectionConfig {
+  id: string;
+  title: string;
+  visible: boolean;
+  order: number;
+  items: NavItemConfig[];
+}
+
+interface MenuConfig {
+  desktop: SectionConfig[];
+  mobile: SectionConfig[];
+}
+
+// ─── Default data ─────────────────────────────────────────────────────────────
+
+const DEFAULT_SECTIONS: SectionConfig[] = [
   {
+    id: 'workspace',
     title: 'Espace de travail',
-    links: [
-      { href: '/client/dashboard', icon: '🏠', label: 'Accueil' },
-      { href: '/client/briefing', icon: '☀️', label: 'Briefing du jour' },
-      { href: '/client/chat', icon: '💬', label: 'Discuter' },
-      { href: '/client/meeting', icon: '🏛️', label: 'Réunion' },
-      { href: '/client/documents', icon: '📄', label: 'Documents' },
-      { href: '/client/strategy', icon: '🎯', label: 'Plan d\'attaque' },
+    visible: true,
+    order: 0,
+    items: [
+      { href: '/client/dashboard', icon: '🏠', label: 'Accueil', visible: true, order: 0 },
+      { href: '/client/reveil', icon: '☕', label: 'Réveil intelligent', visible: true, order: 1 },
+      { href: '/client/journee', icon: '📅', label: 'Ma journée', visible: true, order: 2 },
+      { href: '/client/chat', icon: '💬', label: 'Chat', visible: true, order: 3 },
+      { href: '/client/repondeur', icon: '📞', label: 'Répondeur Intelligent', visible: true, order: 4 },
+      { href: '/client/social', icon: '📱', label: 'Réseaux Sociaux', visible: true, order: 5 },
+      { href: '/client/studio', icon: '🎬', label: 'Studio Créatif', visible: true, order: 6 },
+      { href: '/client/documents', icon: '📄', label: 'Documents', visible: true, order: 7 },
+      { href: '/client/strategy', icon: '🎯', label: "Plan d'attaque", visible: true, order: 8 },
+      { href: '/client/custom-creation', icon: '🧩', label: 'Modules sur mesure', visible: true, order: 9 },
+      { href: '/client/video-pro', icon: '🎥', label: 'Vidéo Pro', visible: true, order: 10 },
+      { href: '/client/formations', icon: '🎓', label: 'Formations', visible: true, order: 11 },
+      { href: '/client/personal', icon: '🧑', label: 'Mes Agents', visible: true, order: 12 },
+      { href: '/client/agents/customize', icon: '🎨', label: 'Personnaliser les Agents', visible: true, order: 13 },
+      { href: '/client/agents', icon: '🤖', label: 'Mes agents IA', visible: true, order: 14 },
+      { href: '/client/modules', icon: '📦', label: 'Mes modules', visible: true, order: 15 },
+      { href: '/client/campaigns', icon: '📣', label: 'Campagnes', visible: true, order: 16 },
+      { href: '/client/telephony', icon: '☎️', label: 'Téléphonie', visible: true, order: 17 },
+      { href: '/client/projects', icon: '📁', label: 'Projets', visible: true, order: 18 },
+      { href: '/client/actions', icon: '⚡', label: "Centre d'actions", visible: true, order: 19 },
     ],
   },
   {
-    title: 'Mon équipe',
-    links: [
-      { href: '/client/team', icon: '👥', label: 'Recruter / Gérer' },
-      { href: '/client/agents/customize', icon: '🎨', label: 'Personnaliser' },
-    ],
-  },
-  {
-    title: 'Configuration',
-    links: [
-      { href: '/client/onboarding', icon: '🏢', label: 'Mon entreprise' },
-      { href: '/client/account', icon: '👤', label: 'Compte & Credits' },
-      { href: '/client/referrals', icon: '🎁', label: 'Parrainer' },
+    id: 'moi',
+    title: 'Moi',
+    visible: true,
+    order: 1,
+    items: [
+      { href: '/client/account', icon: '👤', label: 'Mon Compte', visible: true, order: 0 },
+      { href: '/client/analytics', icon: '📊', label: 'Analytics', visible: true, order: 1 },
+      { href: '/client/finances', icon: '💳', label: 'Finances', visible: true, order: 2 },
+      { href: '/client/referrals', icon: '🎁', label: 'Parrainer', visible: true, order: 3 },
+      { href: '/client/activity', icon: '📋', label: "Journal d'activité", visible: true, order: 4 },
+      { href: '/client/notifications', icon: '🔔', label: 'Notifications', visible: true, order: 5 },
     ],
   },
 ];
+
+const AGENTS_PERSONNELS_SECTION: SectionConfig = {
+  id: 'agents-perso',
+  title: 'Agents Personnels',
+  visible: true,
+  order: 1,
+  items: [
+    { href: '/client/personal/budget', icon: '💰', label: 'Budget', visible: true, order: 0 },
+    { href: '/client/personal/comptable', icon: '🧾', label: 'Comptabilité', visible: true, order: 1 },
+    { href: '/client/personal/chasseur', icon: '🎯', label: 'Chasseur de missions', visible: true, order: 2 },
+    { href: '/client/personal/cv', icon: '📄', label: 'CV 2026', visible: true, order: 3 },
+    { href: '/client/personal/ecrivain', icon: '✍️', label: 'Atelier Écriture', visible: true, order: 4 },
+  ],
+};
+
+const DISCUSSIONS_SECTION: SectionConfig = {
+  id: 'discussions',
+  title: 'Discussions Approfondies',
+  visible: true,
+  order: 2,
+  items: [
+    { href: '/client/discussions', icon: '🧠', label: 'Mes Discussions', visible: true, order: 0 },
+  ],
+};
+
+const MON_ENTREPRISE_SECTION: SectionConfig = {
+  id: 'entreprise',
+  title: 'Mon Entreprise',
+  visible: true,
+  order: 2,
+  items: [
+    { href: '/client/onboarding', icon: '🏢', label: 'Profil entreprise', visible: true, order: 0 },
+    { href: '/client/team', icon: '👥', label: 'Mon équipe', visible: true, order: 1 },
+    { href: '/client/partners', icon: '🤝', label: 'Partenaires', visible: true, order: 2 },
+    { href: '/client/marketplace', icon: '🛒', label: 'Marketplace', visible: true, order: 3 },
+  ],
+};
+
+// ─── Config helpers ───────────────────────────────────────────────────────────
+
+const MENU_CONFIG_KEY = 'fz_menu_config';
+
+function buildDefaultSections(isPro: boolean): SectionConfig[] {
+  const base: SectionConfig[] = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+  const perso: SectionConfig = JSON.parse(JSON.stringify(AGENTS_PERSONNELS_SECTION));
+  perso.order = base.length;
+  base.push(perso);
+  const disc: SectionConfig = JSON.parse(JSON.stringify(DISCUSSIONS_SECTION));
+  disc.order = base.length;
+  base.push(disc);
+  if (isPro) {
+    const ent: SectionConfig = JSON.parse(JSON.stringify(MON_ENTREPRISE_SECTION));
+    ent.order = base.length;
+    base.push(ent);
+  }
+  return base;
+}
+
+function loadMenuSections(desktop: boolean, isPro: boolean): SectionConfig[] {
+  try {
+    const stored = localStorage.getItem(MENU_CONFIG_KEY);
+    if (stored) {
+      const config: MenuConfig = JSON.parse(stored);
+      const sections: SectionConfig[] = JSON.parse(
+        JSON.stringify(desktop ? config.desktop : config.mobile),
+      );
+      if (sections.length > 0) {
+        if (!sections.find(s => s.id === 'agents-perso')) {
+          const perso: SectionConfig = JSON.parse(JSON.stringify(AGENTS_PERSONNELS_SECTION));
+          perso.order = sections.length;
+          sections.push(perso);
+        }
+        if (!sections.find(s => s.id === 'discussions')) {
+          const disc: SectionConfig = JSON.parse(JSON.stringify(DISCUSSIONS_SECTION));
+          disc.order = sections.length;
+          sections.push(disc);
+        }
+        if (isPro && !sections.find(s => s.id === 'entreprise')) {
+          const ent: SectionConfig = JSON.parse(JSON.stringify(MON_ENTREPRISE_SECTION));
+          ent.order = sections.length;
+          sections.push(ent);
+        }
+        if (!isPro) {
+          const idx = sections.findIndex(s => s.id === 'entreprise');
+          if (idx !== -1) sections.splice(idx, 1);
+        }
+        return sections;
+      }
+    }
+  } catch { /* */ }
+  return buildDefaultSections(isPro);
+}
+
+function saveMenuSections(sections: SectionConfig[], desktop: boolean): void {
+  try {
+    const stored = localStorage.getItem(MENU_CONFIG_KEY);
+    const config: MenuConfig = stored
+      ? JSON.parse(stored)
+      : { desktop: buildDefaultSections(false), mobile: buildDefaultSections(false) };
+    if (desktop) config.desktop = sections;
+    else config.mobile = sections;
+    localStorage.setItem(MENU_CONFIG_KEY, JSON.stringify(config));
+  } catch { /* */ }
+}
+
+// ─── Level titles ─────────────────────────────────────────────────────────────
 
 const LEVEL_TITLES: Record<number, string> = {
   1: 'Débutant', 2: 'Apprenti', 3: 'Explorateur', 4: 'Collaborateur',
   5: 'Professionnel', 6: 'Expert', 7: 'Maître', 8: 'Visionnaire',
   9: 'Légende', 10: 'Transcendant',
 };
+
+// ─── Emoji palette for icon picker ────────────────────────────────────────────
+
+const EMOJI_PALETTE = [
+  // Work & folders
+  '🏠', '💼', '📁', '📂', '📋', '📊', '📈', '💰', '💳', '🏢', '🏗️', '🗂️',
+  // Communication
+  '💬', '📞', '📱', '📧', '✉️', '🔔', '📢', '📣', '🗣️', '💭', '📨', '📡',
+  // People
+  '👤', '👥', '🧑', '🤝', '🙋', '👨‍💻', '👩‍💼', '🧑‍🔧', '🧑‍🎨', '🧑‍🏫', '🧑‍⚖️', '🤖',
+  // Tools & tech
+  '⚙️', '🔧', '🔒', '🔑', '🛠️', '⚡', '🔍', '💻', '🧠', '🚀', '🛡️', '🌐',
+  // Content & docs
+  '📄', '📝', '✍️', '📖', '📚', '📎', '🖼️', '🖌️', '🗒️', '📐', '🧾', '📦',
+  // Media
+  '🎬', '🎥', '📸', '🎙️', '🎵', '🎨', '📹', '🖥️', '🎧', '📺', '🎭', '🎮',
+  // Time & nature
+  '📅', '⏰', '☕', '🌅', '🌙', '⭐', '🔥', '☀️', '🌊', '🍀', '🌈', '❄️',
+  // Misc
+  '🎁', '🎓', '🏆', '💎', '🧩', '🛒', '🎉', '✅', '❤️', '⚖️', '🎯', '🪄',
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -63,8 +235,30 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [lowCreditDismissed, setLowCreditDismissed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [theme, setTheme] = useState<'normal' | 'white' | 'dark'>('normal');
   const [activeAgentCount, setActiveAgentCount] = useState(1);
+  const [darkMode, setDarkMode] = useState(false);
+  const [projects, setProjects] = useState<{ id: string; name: string; isDefault: boolean }[]>([]);
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const [showProjectDropdown, setShowProjectDropdown] = useState(false);
+  const [hasOnboarding, setHasOnboarding] = useState(true);
+  const [publishedModules, setPublishedModules] = useState<{ id: string; name: string; slug: string; emoji: string }[]>([]);
+  const [customAgents, setCustomAgents] = useState<{ id: string; name: string; emoji: string }[]>([]);
+
+  // Menu customization
+  const [menuSections, setMenuSections] = useState<SectionConfig[]>([]);
+  const [isDesktop, setIsDesktop] = useState(true);
+  const [isPro, setIsPro] = useState(false);
+  const [notifUnreadCount, setNotifUnreadCount] = useState(0);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
+  const [customizeTab, setCustomizeTab] = useState<'desktop' | 'mobile'>('desktop');
+  const [editSections, setEditSections] = useState<SectionConfig[]>([]);
+  const [editingEmoji, setEditingEmoji] = useState<{ sIdx: number; iIdx: number } | null>(null);
+  const [editingLabel, setEditingLabel] = useState<{ sIdx: number; iIdx: number } | null>(null);
+  const [editingSectionTitle, setEditingSectionTitle] = useState<number | null>(null);
+
+  // Drag-and-drop refs (no re-render needed)
+  const sectionDragIdx = useRef<number | null>(null);
+  const itemDragRef = useRef<{ sectionIdx: number; itemIdx: number } | null>(null);
 
   const refreshGamification = useCallback(() => {
     const gam = loadGamification();
@@ -75,46 +269,125 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem('sarah_session');
+    const desktop = window.innerWidth >= 768;
+    setIsDesktop(desktop);
+    setCustomizeTab(desktop ? 'desktop' : 'mobile');
+
+    const proStored = localStorage.getItem('fz_is_pro') === 'true';
+    setIsPro(proStored);
+
+    // Count unread notifications (3 system + potential alert, minus read ones)
+    try {
+      const readIds: string[] = JSON.parse(localStorage.getItem('fz_notif_read') ?? '[]');
+      const SYSTEM_IDS = ['sys-v014', 'sys-stripe', 'sys-whatsapp'];
+      const unread = SYSTEM_IDS.filter(id => !readIds.includes(id)).length;
+      setNotifUnreadCount(unread);
+    } catch { /* */ }
+
+    setMenuSections(loadMenuSections(desktop, proStored));
+
+    const stored = localStorage.getItem('fz_session');
     if (stored) {
       try {
         const s = JSON.parse(stored);
         setSession(s);
         loadWallet(s.token);
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3010';
+        fetch(`${API_BASE}/portal/projects`, { headers: { Authorization: `Bearer ${s.token}` } })
+          .then(r => { if (r.ok) return r.json(); throw new Error('fail'); })
+          .then(data => {
+            if (data.projects) {
+              setProjects(data.projects);
+              const storedProj = localStorage.getItem('fz_active_project');
+              const defaultProj = data.projects.find((p: { isDefault: boolean }) => p.isDefault);
+              setActiveProjectId(storedProj || defaultProj?.id || data.projects[0]?.id || null);
+            }
+          })
+          .catch(() => {});
+        fetch('/api/company', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: s.token, action: 'check' }),
+        })
+          .then(r => r.ok ? r.json() : null)
+          .then(data => { setHasOnboarding(!!data?.profile?.companyName); })
+          .catch(() => {});
+        // Load published modules for sidebar
+        fetch('/api/portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: '/portal/modules', token: s.token }),
+        })
+          .then(r => r.ok ? r.json() : null)
+          .then(data => {
+            if (data?.modules) {
+              const published = (data.modules as { id: string; name: string; slug: string; emoji: string; is_published: boolean }[])
+                .filter(m => m.is_published)
+                .slice(0, 8); // max 8 in sidebar
+              setPublishedModules(published.map(m => ({ id: m.id, name: m.name, slug: m.slug, emoji: m.emoji })));
+            }
+          })
+          .catch(() => {});
+        // Load custom agents for sidebar
+        fetch('/api/portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: '/portal/agents/custom', token: s.token }),
+        })
+          .then(r => r.ok ? r.json() : null)
+          .then(data => {
+            if (data?.agents) {
+              const visible = (data.agents as { id: string; name: string; emoji: string; visible_in_sidebar: boolean; is_active: boolean }[])
+                .filter(a => a.visible_in_sidebar && a.is_active)
+                .slice(0, 6); // max 6 in sidebar
+              setCustomAgents(visible.map(a => ({ id: a.id, name: a.name, emoji: a.emoji })));
+            }
+          })
+          .catch(() => {});
       } catch { /* corrupted session */ }
     }
     setLoading(false);
     refreshGamification();
     setActiveAgentCount(getActiveAgentIds().length);
 
-    // Load theme
     try {
-      const savedTheme = localStorage.getItem('sarah_theme') as 'normal' | 'white' | 'dark' | null;
-      if (savedTheme) setTheme(savedTheme);
+      if (localStorage.getItem('fz_dark_mode') === 'true') {
+        setDarkMode(true);
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     } catch { /* */ }
 
     const interval = setInterval(refreshGamification, 30000);
     const onStorage = (e: StorageEvent) => {
-      if (e.key === 'sarah_gamification') refreshGamification();
+      if (e.key === 'fz_gamification') refreshGamification();
     };
     window.addEventListener('storage', onStorage);
     return () => { clearInterval(interval); window.removeEventListener('storage', onStorage); };
   }, [refreshGamification]);
 
-  // Close sidebar on navigation
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [pathname]);
+  useEffect(() => { setSidebarOpen(false); }, [pathname]);
 
-  // Check low credit dismiss
+  // SSE — real-time notifications
+  useEffect(() => {
+    if (!session?.token) return;
+    let es: EventSource | null = null;
+    try {
+      es = new EventSource(`/api/portal/sse?token=${encodeURIComponent(session.token)}`);
+      es.addEventListener('notification', () => {
+        setNotifUnreadCount(n => n + 1);
+      });
+      es.onerror = () => { es?.close(); };
+    } catch { /* SSE not supported or blocked */ }
+    return () => { es?.close(); };
+  }, [session?.token]);
+
   useEffect(() => {
     try {
-      const dismissed = localStorage.getItem('sarah_low_credit_dismissed');
+      const dismissed = localStorage.getItem('fz_low_credit_dismissed');
       if (dismissed && Date.now() - Number(dismissed) < 86400000) setLowCreditDismissed(true);
     } catch { /* */ }
   }, []);
 
-  // Ctrl+K handler
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -122,7 +395,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         setSearchOpen(o => !o);
         setSearchQuery('');
       }
-      if (e.key === 'Escape') setSearchOpen(false);
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+        setCustomizeOpen(false);
+      }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -135,10 +411,230 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: '/portal/wallet', token }),
       });
+      if (res.status === 401) {
+        // Token expired — logout cleanly via server (clears httpOnly cookie) then redirect
+        localStorage.removeItem('fz_session');
+        document.cookie = 'fz-token=; path=/; max-age=0';
+        fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) })
+          .catch(() => {})
+          .finally(() => { window.location.href = '/login'; });
+        return;
+      }
+      if (!res.ok) return; // Non-401 errors: stay on page, wallet just won't show
       const data = await res.json();
       setWalletBalance(data.balance ?? data.wallet?.balance ?? 0);
-    } catch { /* */ }
+    } catch { /* network error - stay on page */ }
   }
+
+  function logout() {
+    localStorage.removeItem('fz_session');
+    document.cookie = 'fz-token=; path=/; max-age=0';
+    fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) })
+      .catch(() => {})
+      .finally(() => { window.location.href = '/login'; });
+  }
+
+  function dismissLowCredit() {
+    setLowCreditDismissed(true);
+    try { localStorage.setItem('fz_low_credit_dismissed', String(Date.now())); } catch { /* */ }
+  }
+
+  function toggleDarkMode() {
+    const newValue = !darkMode;
+    setDarkMode(newValue);
+    if (newValue) document.documentElement.setAttribute('data-theme', 'dark');
+    else document.documentElement.removeAttribute('data-theme');
+    try { localStorage.setItem('fz_dark_mode', String(newValue)); } catch { /* */ }
+    if (session?.token) {
+      fetch('/api/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: '/portal/preferences', token: session.token, method: 'PATCH', data: { darkMode: newValue } }),
+      }).catch(() => {});
+    }
+  }
+
+  // ─── Menu customization handlers ──────────────────────────────────────────
+
+  function openCustomize() {
+    const tab = isDesktop ? 'desktop' : 'mobile';
+    setCustomizeTab(tab);
+    setEditSections(JSON.parse(JSON.stringify(loadMenuSections(tab === 'desktop', isPro))));
+    setCustomizeOpen(true);
+  }
+
+  function changeCustomizeTab(tab: 'desktop' | 'mobile') {
+    setCustomizeTab(tab);
+    setEditSections(JSON.parse(JSON.stringify(loadMenuSections(tab === 'desktop', isPro))));
+  }
+
+  function saveCustomize() {
+    saveMenuSections(editSections, customizeTab === 'desktop');
+    if ((customizeTab === 'desktop') === isDesktop) {
+      setMenuSections(JSON.parse(JSON.stringify(editSections)));
+    }
+    setCustomizeOpen(false);
+  }
+
+  function resetCustomize() {
+    setEditSections(JSON.parse(JSON.stringify(buildDefaultSections(isPro))));
+  }
+
+  function updateItemIcon(sIdx: number, iIdx: number, newIcon: string) {
+    setEditSections(prev => prev.map((s, i) => {
+      if (i !== sIdx) return s;
+      return { ...s, items: s.items.map((item, j) => j === iIdx ? { ...item, icon: newIcon } : item) };
+    }));
+    setEditingEmoji(null);
+  }
+
+  function updateItemLabel(sIdx: number, iIdx: number, newLabel: string) {
+    if (!newLabel.trim()) { setEditingLabel(null); return; }
+    setEditSections(prev => prev.map((s, i) => {
+      if (i !== sIdx) return s;
+      return { ...s, items: s.items.map((item, j) => j === iIdx ? { ...item, label: newLabel.trim() } : item) };
+    }));
+    setEditingLabel(null);
+  }
+
+  function updateSectionTitle(sIdx: number, newTitle: string) {
+    if (!newTitle.trim()) { setEditingSectionTitle(null); return; }
+    setEditSections(prev => prev.map((s, i) => i === sIdx ? { ...s, title: newTitle.trim() } : s));
+    setEditingSectionTitle(null);
+  }
+
+  function toggleSectionVisible(sIdx: number) {
+    setEditSections(prev => prev.map((s, i) => i === sIdx ? { ...s, visible: !s.visible } : s));
+  }
+
+  function toggleItemVisible(sIdx: number, iIdx: number) {
+    setEditSections(prev => prev.map((s, i) => {
+      if (i !== sIdx) return s;
+      return { ...s, items: s.items.map((item, j) => j === iIdx ? { ...item, visible: !item.visible } : item) };
+    }));
+  }
+
+  function moveSectionUp(idx: number) {
+    if (idx === 0) return;
+    setEditSections(prev => {
+      const next = [...prev];
+      [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+      next.forEach((s, i) => { s.order = i; });
+      return next;
+    });
+  }
+
+  function moveSectionDown(idx: number) {
+    setEditSections(prev => {
+      if (idx >= prev.length - 1) return prev;
+      const next = [...prev];
+      [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
+      next.forEach((s, i) => { s.order = i; });
+      return next;
+    });
+  }
+
+  function moveItemUp(sIdx: number, iIdx: number) {
+    if (iIdx === 0) return;
+    setEditSections(prev => prev.map((s, i) => {
+      if (i !== sIdx) return s;
+      const items = [...s.items];
+      [items[iIdx - 1], items[iIdx]] = [items[iIdx], items[iIdx - 1]];
+      items.forEach((it, j) => { it.order = j; });
+      return { ...s, items };
+    }));
+  }
+
+  function moveItemDown(sIdx: number, iIdx: number) {
+    setEditSections(prev => prev.map((s, i) => {
+      if (i !== sIdx) return s;
+      if (iIdx >= s.items.length - 1) return s;
+      const items = [...s.items];
+      [items[iIdx], items[iIdx + 1]] = [items[iIdx + 1], items[iIdx]];
+      items.forEach((it, j) => { it.order = j; });
+      return { ...s, items };
+    }));
+  }
+
+  // HTML5 DnD — sections
+  function handleSectionDragStart(e: React.DragEvent, idx: number) {
+    sectionDragIdx.current = idx;
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function handleSectionDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+  function handleSectionDrop(e: React.DragEvent, targetIdx: number) {
+    e.preventDefault();
+    const src = sectionDragIdx.current;
+    if (src === null || src === targetIdx) return;
+    setEditSections(prev => {
+      const next = [...prev];
+      const [removed] = next.splice(src, 1);
+      next.splice(targetIdx, 0, removed);
+      next.forEach((s, i) => { s.order = i; });
+      return next;
+    });
+    sectionDragIdx.current = null;
+  }
+
+  // HTML5 DnD — items
+  function handleItemDragStart(e: React.DragEvent, sIdx: number, iIdx: number) {
+    itemDragRef.current = { sectionIdx: sIdx, itemIdx: iIdx };
+    e.dataTransfer.effectAllowed = 'move';
+    e.stopPropagation();
+  }
+  function handleItemDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  function handleItemDrop(e: React.DragEvent, targetSIdx: number, targetIIdx: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    const src = itemDragRef.current;
+    if (!src || src.sectionIdx !== targetSIdx || src.itemIdx === targetIIdx) return;
+    setEditSections(prev => prev.map((s, i) => {
+      if (i !== targetSIdx) return s;
+      const items = [...s.items];
+      const [removed] = items.splice(src.itemIdx, 1);
+      items.splice(targetIIdx, 0, removed);
+      items.forEach((it, j) => { it.order = j; });
+      return { ...s, items };
+    }));
+    itemDragRef.current = null;
+  }
+
+  // In-sidebar restore buttons
+  function restoreItem(sectionId: string, href: string) {
+    setMenuSections(prev => {
+      const next = prev.map(s => {
+        if (s.id !== sectionId) return s;
+        return { ...s, items: s.items.map(item => item.href === href ? { ...item, visible: true } : item) };
+      });
+      saveMenuSections(next, isDesktop);
+      return next;
+    });
+  }
+
+  function restoreSection(sectionId: string) {
+    setMenuSections(prev => {
+      const next = prev.map(s => s.id === sectionId ? { ...s, visible: true } : s);
+      saveMenuSections(next, isDesktop);
+      return next;
+    });
+  }
+
+  // ─── Derived data ──────────────────────────────────────────────────────────
+
+  const sortedSections = [...menuSections].sort((a, b) => a.order - b.order);
+  const visibleSections = sortedSections.filter(s => s.visible);
+  const hiddenSections = sortedSections.filter(s => !s.visible);
+  const allNavItems = menuSections.flatMap(s => s.items.filter(item => item.href));
+  const filteredLinks = searchQuery
+    ? allNavItems.filter(l => l.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    : allNavItems;
+  const activeProject = projects.find(p => p.id === activeProjectId);
 
   if (loading) {
     return (
@@ -153,57 +649,60 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return null;
   }
 
-  function switchTheme(t: 'normal' | 'white' | 'dark') {
-    setTheme(t);
-    if (t === 'normal') {
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.removeItem('sarah_theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'white');
-      localStorage.setItem('sarah_theme', t === 'dark' ? 'dark' : 'white');
+  // Check if admin is impersonating this session
+  const isImpersonating = typeof window !== 'undefined' &&
+    (() => { try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').impersonating === true; } catch { return false; } })();
+
+  function exitImpersonation() {
+    const backup = localStorage.getItem('fz_admin_session_backup');
+    if (backup) {
+      localStorage.setItem('fz_session', backup);
+      localStorage.removeItem('fz_admin_session_backup');
     }
+    window.location.href = '/admin';
   }
-
-  function dismissLowCredit() {
-    setLowCreditDismissed(true);
-    try { localStorage.setItem('sarah_low_credit_dismissed', String(Date.now())); } catch { /* */ }
-  }
-
-  const allNavLinks = NAV_SECTIONS.flatMap(s => s.links);
-  const filteredLinks = searchQuery
-    ? allNavLinks.filter(l => l.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : allNavLinks;
-
-  const xpPct = gamXPNext > 0 ? Math.min((gamXP / gamXPNext) * 100, 100) : 0;
-  const planBadgeColor = '#6366f1';
 
   return (
-    <div className="flex" style={{ minHeight: '100vh' }}>
+    <ToastProvider>
+    {isImpersonating && (
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+        background: '#ef4444', color: 'white',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,
+        padding: '8px 16px', fontSize: 13, fontWeight: 600,
+      }}>
+        <span>⚠️ MODE ADMIN — vous agissez en tant que {session?.displayName ?? session?.email}</span>
+        <button
+          onClick={exitImpersonation}
+          style={{
+            background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.5)',
+            color: 'white', padding: '3px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 700,
+          }}
+        >
+          Quitter
+        </button>
+      </div>
+    )}
+    <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
       {/* Mobile Top Bar */}
       <div className="mobile-topbar">
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setSidebarOpen(o => !o)}
-          aria-label="Menu"
-        >
-          {sidebarOpen ? '✕' : '☰'}
-        </button>
         <div className="flex items-center gap-8">
           <img
             src="/images/logo.jpg"
-            alt="SARAH OS"
+            alt="Freenzy.io"
             className="rounded-md"
             style={{ height: 28 }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
           />
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Freenzy.io</span>
         </div>
+        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu">
+          {sidebarOpen ? '✕' : '☰'}
+        </button>
       </div>
 
       {/* Sidebar Overlay */}
-      <div
-        className={`sidebar-overlay${sidebarOpen ? ' active' : ''}`}
-        onClick={() => setSidebarOpen(false)}
-      />
+      <div className={`sidebar-overlay${sidebarOpen ? ' active' : ''}`} onClick={() => setSidebarOpen(false)} />
 
       {/* Client Sidebar */}
       <nav className={`client-sidebar${sidebarOpen ? ' sidebar-open' : ''}`}>
@@ -211,119 +710,407 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div className="sidebar-logo">
             <img
               src="/images/logo.jpg"
-              alt="SARAH OS"
+              alt="Freenzy.io"
               className="rounded-md"
               style={{ height: 30 }}
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
             />
             <div>
-              <div className="sidebar-logo-version">Employés IA 24/7</div>
+              <div className="sidebar-logo-text">FREENZY.IO</div>
+              <div className="sidebar-logo-version">Votre equipe IA</div>
             </div>
           </div>
-          {/* Access badge */}
-          <div className="badge badge-success flex items-center gap-4 mt-4" style={{ padding: '3px 8px' }}>
-            <span className="text-xs">✅</span>
-            <span className="text-xs font-bold" style={{ color: '#16a34a' }}>
-              {activeAgentCount} agent{activeAgentCount > 1 ? 's' : ''} actif{activeAgentCount > 1 ? 's' : ''} / {DEFAULT_AGENTS.length}
-            </span>
+          <div className="flex-between items-center mt-4">
+            <div className="badge badge-success flex items-center gap-4" style={{ padding: '3px 8px' }}>
+              <span className="text-xs">✅</span>
+              <span className="text-xs font-bold" style={{ color: '#16a34a' }}>
+                {activeAgentCount} agent{activeAgentCount > 1 ? 's' : ''} actif{activeAgentCount > 1 ? 's' : ''} / {ALL_AGENTS.length}
+              </span>
+            </div>
+            <button
+              onClick={toggleDarkMode}
+              title={darkMode ? 'Mode clair' : 'Mode sombre'}
+              style={{
+                width: 36, height: 36, borderRadius: '50%', border: '1px solid var(--border-secondary)',
+                background: 'var(--bg-elevated)', cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center', fontSize: 16,
+              }}
+            >
+              {darkMode ? '☀️' : '🌙'}
+            </button>
           </div>
         </div>
 
-        <div className="sidebar-nav">
-          {NAV_SECTIONS.map((section, i) => (
-            <div key={i} className="nav-section">
-              <div className="nav-section-title">{section.title}</div>
-              {section.links.map(link => {
-                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+        {/* Project Selector */}
+        {projects.length > 0 && (
+          <div style={{ position: 'relative', margin: '0 16px 12px' }}>
+            <button
+              onClick={() => setShowProjectDropdown(!showProjectDropdown)}
+              className="w-full flex flex-between items-center rounded-sm border"
+              style={{ padding: '8px 12px', background: 'var(--bg-secondary)', fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer' }}
+            >
+              <span className="text-sm font-semibold truncate">
+                📁 {activeProject?.name || 'Projet'}
+              </span>
+              <span style={{ fontSize: 10 }}>{showProjectDropdown ? '▲' : '▼'}</span>
+            </button>
+            {showProjectDropdown && (
+              <div className="rounded-sm border" style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50, background: 'var(--bg-primary)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', marginTop: 4 }}>
+                {projects.map(proj => (
+                  <button
+                    key={proj.id}
+                    onClick={() => { setActiveProjectId(proj.id); localStorage.setItem('fz_active_project', proj.id); setShowProjectDropdown(false); window.location.reload(); }}
+                    className="w-full text-sm"
+                    style={{ display: 'block', padding: '8px 12px', textAlign: 'left', background: proj.id === activeProjectId ? 'var(--accent-muted)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+                  >
+                    {proj.isDefault && '⭐ '}{proj.name}
+                  </button>
+                ))}
+                <div style={{ borderTop: '1px solid var(--border-primary)' }}>
+                  <button
+                    onClick={() => { setShowProjectDropdown(false); window.location.href = '/client/projects'; }}
+                    className="w-full text-sm text-accent"
+                    style={{ display: 'block', padding: '8px 12px', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)', color: 'var(--accent)' }}
+                  >
+                    + Gérer les projets
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Navigation — relative container for customize panel overlay */}
+        <div className="sidebar-nav" style={{ position: 'relative', flex: 1 }}>
+
+          {/* Customize Panel */}
+          {customizeOpen && (
+            <div className="customize-panel">
+              <div className="customize-panel-header">
+                <span style={{ fontWeight: 700, fontSize: 13 }}>Personnaliser le menu</span>
+                <button onClick={() => setCustomizeOpen(false)} className="customize-close-btn">✕</button>
+              </div>
+
+              {/* Device tabs */}
+              <div className="customize-tabs">
+                <button
+                  className={`customize-tab${customizeTab === 'desktop' ? ' active' : ''}`}
+                  onClick={() => changeCustomizeTab('desktop')}
+                >
+                  💻 Ordinateur
+                </button>
+                <button
+                  className={`customize-tab${customizeTab === 'mobile' ? ' active' : ''}`}
+                  onClick={() => changeCustomizeTab('mobile')}
+                >
+                  📱 Mobile
+                </button>
+              </div>
+
+              {/* Sections list */}
+              <div className="customize-scroll">
+                {editSections.map((section, sIdx) => (
+                  <div
+                    key={section.id}
+                    className="customize-section"
+                    draggable={customizeTab === 'desktop'}
+                    onDragStart={customizeTab === 'desktop' ? e => handleSectionDragStart(e, sIdx) : undefined}
+                    onDragOver={customizeTab === 'desktop' ? handleSectionDragOver : undefined}
+                    onDrop={customizeTab === 'desktop' ? e => handleSectionDrop(e, sIdx) : undefined}
+                  >
+                    <div className="customize-section-header">
+                      {customizeTab === 'desktop'
+                        ? <span className="drag-handle" title="Glisser pour réordonner">⠿</span>
+                        : (
+                          <div className="flex items-center gap-2">
+                            <button className="updown-btn" onClick={() => moveSectionUp(sIdx)} disabled={sIdx === 0}>↑</button>
+                            <button className="updown-btn" onClick={() => moveSectionDown(sIdx)} disabled={sIdx >= editSections.length - 1}>↓</button>
+                          </div>
+                        )}
+                      {editingSectionTitle === sIdx ? (
+                        <input
+                          autoFocus
+                          defaultValue={section.title}
+                          onBlur={(e) => updateSectionTitle(sIdx, e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') updateSectionTitle(sIdx, (e.target as HTMLInputElement).value); if (e.key === 'Escape') setEditingSectionTitle(null); }}
+                          style={{ flex: 1, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid var(--accent)', borderRadius: 4, padding: '2px 6px', outline: 'none', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
+                        />
+                      ) : (
+                        <span
+                          onClick={() => setEditingSectionTitle(sIdx)}
+                          style={{ flex: 1, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', cursor: 'text', borderRadius: 3, padding: '1px 4px' }}
+                          title="Cliquer pour renommer"
+                          className="edit-title-trigger"
+                        >
+                          {section.title}
+                        </span>
+                      )}
+                      <button
+                        className="eye-btn"
+                        onClick={() => toggleSectionVisible(sIdx)}
+                        title={section.visible ? 'Masquer la section' : 'Afficher la section'}
+                      >
+                        {section.visible ? '👁' : '🙈'}
+                      </button>
+                    </div>
+
+                    {/* Items */}
+                    {section.items.map((item, iIdx) => (
+                      <div
+                        key={item.href}
+                        className={`customize-item${!item.visible ? ' customize-item-hidden' : ''}`}
+                        draggable={customizeTab === 'desktop'}
+                        onDragStart={customizeTab === 'desktop' ? e => handleItemDragStart(e, sIdx, iIdx) : undefined}
+                        onDragOver={customizeTab === 'desktop' ? handleItemDragOver : undefined}
+                        onDrop={customizeTab === 'desktop' ? e => handleItemDrop(e, sIdx, iIdx) : undefined}
+                      >
+                        {customizeTab === 'desktop'
+                          ? <span className="drag-handle" style={{ fontSize: 10 }} title="Glisser">⠿</span>
+                          : (
+                            <div className="flex items-center gap-1">
+                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemUp(sIdx, iIdx)} disabled={iIdx === 0}>↑</button>
+                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemDown(sIdx, iIdx)} disabled={iIdx >= section.items.length - 1}>↓</button>
+                            </div>
+                          )}
+                        <span
+                          onClick={() => setEditingEmoji(editingEmoji?.sIdx === sIdx && editingEmoji?.iIdx === iIdx ? null : { sIdx, iIdx })}
+                          style={{ fontSize: 14, cursor: 'pointer', borderRadius: 4, padding: '0 2px', lineHeight: 1 }}
+                          className="emoji-edit-trigger"
+                          title="Changer l'icône"
+                        >
+                          {item.icon}
+                        </span>
+                        {editingEmoji?.sIdx === sIdx && editingEmoji?.iIdx === iIdx && (
+                          <>
+                            <div className="emoji-picker-backdrop" onClick={() => setEditingEmoji(null)} />
+                            <div className="emoji-picker-popup">
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 2 }}>
+                                {EMOJI_PALETTE.map(emoji => (
+                                  <button key={emoji} onClick={() => updateItemIcon(sIdx, iIdx, emoji)}
+                                    className="emoji-pick-btn"
+                                  >
+                                    {emoji}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {editingLabel?.sIdx === sIdx && editingLabel?.iIdx === iIdx ? (
+                          <input
+                            autoFocus
+                            defaultValue={item.label}
+                            onBlur={(e) => updateItemLabel(sIdx, iIdx, e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') updateItemLabel(sIdx, iIdx, (e.target as HTMLInputElement).value); if (e.key === 'Escape') setEditingLabel(null); }}
+                            className="label-edit-input"
+                          />
+                        ) : (
+                          <span
+                            onClick={() => setEditingLabel({ sIdx, iIdx })}
+                            style={{ fontSize: 11, flex: 1, cursor: 'text', borderRadius: 3, padding: '1px 4px' }}
+                            title="Cliquer pour renommer"
+                            className="label-edit-trigger"
+                          >
+                            {item.label}
+                          </span>
+                        )}
+                        <button
+                          className="eye-btn"
+                          style={{ fontSize: 12 }}
+                          onClick={() => toggleItemVisible(sIdx, iIdx)}
+                          title={item.visible ? 'Masquer' : 'Afficher'}
+                        >
+                          {item.visible ? '👁' : '🙈'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              {/* Actions */}
+              <div className="customize-footer">
+                <button onClick={resetCustomize} className="btn btn-ghost btn-xs">
+                  Réinitialiser
+                </button>
+                <button onClick={saveCustomize} className="btn btn-xs" style={{ background: 'var(--accent)', color: 'white' }}>
+                  Enregistrer
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Normal nav — visible sections */}
+          {visibleSections.map(section => {
+            const sortedItems = [...section.items].sort((a, b) => a.order - b.order);
+            const visibleItems = sortedItems.filter(item => item.visible);
+            const hiddenItems = sortedItems.filter(item => !item.visible);
+            return (
+              <div key={section.id} className="nav-section">
+                <div className="nav-section-title">{section.title}</div>
+                {visibleItems.map(item => {
+                  const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                  const isNotifications = item.href === '/client/notifications';
+                  return (
+                    <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
+                      onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
+                    >
+                      <span className="nav-icon">{item.icon}</span>
+                      <span style={{ flex: 1 }}>{item.label}</span>
+                      {isNotifications && notifUnreadCount > 0 && (
+                        <span style={{
+                          minWidth: 18, height: 18, borderRadius: 9, padding: '0 5px',
+                          background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 700,
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          {notifUnreadCount}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+                {/* Hidden items — greyed out at bottom of section */}
+                {hiddenItems.map(item => (
+                  <div key={item.href} className="nav-link nav-link-hidden">
+                    <span className="nav-icon" style={{ opacity: 0.4 }}>{item.icon}</span>
+                    <span style={{ flex: 1 }}>{item.label}</span>
+                    <button
+                      onClick={() => restoreItem(section.id, item.href)}
+                      className="nav-restore-btn"
+                      title="Réafficher"
+                    >+</button>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+
+          {/* Dynamic — Mes agents personnalisés */}
+          {customAgents.length > 0 && (
+            <div className="nav-section">
+              <div className="nav-section-title">Mes agents IA</div>
+              {customAgents.map(agent => (
+                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`}>
+                    <span className="nav-icon">{agent.emoji}</span>
+                    <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
+                  </Link>
+              ))}
+              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }}>
+                <span className="nav-icon">➕</span>
+                <span style={{ flex: 1 }}>Créer un agent</span>
+              </Link>
+            </div>
+          )}
+
+          {/* Dynamic — Mes modules publiés */}
+          {publishedModules.length > 0 && (
+            <div className="nav-section">
+              <div className="nav-section-title">Mes modules</div>
+              {publishedModules.map(mod => {
+                const href = `/client/modules/${mod.slug}`;
+                const isActive = pathname === href;
                 return (
-                  <Link key={link.href} href={link.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}>
-                    <span className="nav-icon">{link.icon}</span> {link.label}
+                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}>
+                    <span className="nav-icon">{mod.emoji}</span>
+                    <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.name}</span>
                   </Link>
                 );
               })}
-            </div>
-          ))}
-        </div>
-
-        <div className="sidebar-footer">
-          {/* Credits Mini-Widget */}
-          <div className="bg-secondary border rounded-md p-8 mb-4">
-            <div className="flex-between mb-4">
-              <span className="text-xs font-semibold text-secondary">Crédits</span>
-              <Link href="/client/account" className="text-xs text-accent font-semibold" style={{ textDecoration: 'none' }}>
-                Recharger
+              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }}>
+                <span className="nav-icon">➕</span>
+                <span style={{ flex: 1 }}>Nouveau module</span>
               </Link>
             </div>
-            <div className={walletBalance !== null && walletBalance > 50_000_000 ? 'text-success' : walletBalance !== null && walletBalance > 10_000_000 ? 'text-warning' : 'text-danger'} style={{ fontSize: 16, fontWeight: 800 }}>
-              {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
-              <span className="text-xs font-medium text-muted" style={{ marginLeft: 4 }}>crédits</span>
-            </div>
-          </div>
+          )}
 
-          {/* Gamification Mini-Widget */}
-          <div className="bg-secondary border rounded-md p-8 mb-8">
-            <div className="flex-between mb-4">
-              <div className="flex items-center gap-6">
-                <div className="flex-center rounded-sm font-bold" style={{
-                  width: 20, height: 20, fontSize: 10,
-                  background: 'linear-gradient(135deg, #6366f1, #a855f7)', color: 'white',
-                }}>
-                  {gamLevel}
-                </div>
-                <span className="text-xs font-semibold">{LEVEL_TITLES[gamLevel] ?? 'Maître'}</span>
-              </div>
+          {/* Statut — hardcoded, always visible */}
+          <div className="nav-section">
+            <div className="nav-section-title">Statut</div>
+            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
+              <span className="nav-icon">💳</span>
+              <span style={{ flex: 1 }}>Crédits</span>
+              <span style={{
+                fontSize: 12, fontWeight: 800, marginLeft: 'auto',
+                color: walletBalance !== null && walletBalance > 50_000_000 ? 'var(--success)'
+                  : walletBalance !== null && walletBalance > 10_000_000 ? 'var(--warning)'
+                  : 'var(--danger)',
+              }}>
+                {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
+              </span>
+            </Link>
+            <Link href="/client/account" className="nav-link">
+              <span className="nav-icon">
+                <span style={{
+                  display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
+                  alignItems: 'center', justifyContent: 'center',
+                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                  color: 'white', fontSize: 9, fontWeight: 700,
+                }}>{gamLevel}</span>
+              </span>
+              <span style={{ flex: 1 }}>Niv. {gamLevel} — {LEVEL_TITLES[gamLevel] ?? 'Maître'}</span>
               {gamStreak > 0 && (
-                <span className="text-xs text-warning">🔥{gamStreak}j</span>
+                <span style={{ fontSize: 11, color: 'var(--warning)', marginLeft: 'auto' }}>🔥{gamStreak}j</span>
               )}
-            </div>
-            <div className="progress-bar" style={{ height: 3 }}>
-              <div className="progress-bar-fill" style={{ width: `${xpPct}%`, background: 'linear-gradient(90deg, #6366f1, #a855f7)' }} />
-            </div>
-            <div className="text-muted mt-4" style={{ fontSize: 9, textAlign: 'right' }}>
-              {gamXP}/{gamXPNext} XP
-            </div>
+            </Link>
           </div>
 
-          {/* Theme Toggle */}
-          <div className="flex-between mb-8">
-            <span className="text-xs text-muted">Theme</span>
-            <div className="theme-toggle">
-              <button
-                className={`theme-toggle-btn${theme === 'white' ? ' active' : ''}`}
-                onClick={() => switchTheme('white')}
-                title="Clair & espace"
-              >☀️</button>
-              <button
-                className={`theme-toggle-btn${theme === 'normal' ? ' active' : ''}`}
-                onClick={() => switchTheme('normal')}
-                title="Normal"
-              >🔲</button>
-              <button
-                className={`theme-toggle-btn${theme === 'dark' ? ' active' : ''}`}
-                onClick={() => switchTheme('dark')}
-                title="Sombre & compact"
-              >🌙</button>
+          {/* Hidden sections — at the very bottom, greyed out */}
+          {hiddenSections.length > 0 && (
+            <div className="nav-section">
+              <div className="nav-section-title" style={{ opacity: 0.5 }}>Sections masquées</div>
+              {hiddenSections.map(section => (
+                <div key={section.id} className="nav-link nav-link-hidden">
+                  <span style={{ flex: 1, fontSize: 11 }}>{section.title}</span>
+                  <button
+                    onClick={() => restoreSection(section.id)}
+                    className="nav-restore-btn"
+                    title="Réafficher"
+                  >+</button>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
 
-          {/* User Info */}
-          <div style={{ padding: '4px 0' }}>
-            <div className="text-sm font-semibold truncate">{session.displayName}</div>
-            <div className="text-xs text-tertiary truncate">{session.email}</div>
+          {/* Customize button */}
+          <div style={{ padding: '8px 10px 4px' }}>
+            <button
+              onClick={openCustomize}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: 6, fontSize: 11, color: 'var(--text-muted)',
+                background: 'var(--bg-elevated)', border: '1px dashed var(--border-primary)',
+                borderRadius: 'var(--radius-sm)', padding: '5px 10px', cursor: 'pointer',
+                fontFamily: 'var(--font-sans)',
+              }}
+            >
+              ⚙️ Personnaliser le menu
+            </button>
           </div>
-          <button
-            onClick={() => { localStorage.removeItem('sarah_session'); window.location.href = '/login'; }}
-            className="btn btn-ghost btn-xs w-full mt-4"
-            style={{ justifyContent: 'flex-start' }}
-          >
-            Déconnexion
+        </div>
+
+        {/* Footer compact — 1 ligne : Nom · Dossier */}
+        <div className="sidebar-footer-compact">
+          <span className="sidebar-footer-text">
+            {session.displayName}{activeProject ? ` · ${activeProject.name}` : ''}
+          </span>
+          <button onClick={logout} className="sidebar-footer-logout" title="Déconnexion">
+            ⏻
           </button>
         </div>
       </nav>
 
       {/* Client Content */}
       <div className="client-main-content">
-        {/* Low credit banner */}
+        {!hasOnboarding && pathname !== '/client/onboarding' && (
+          <div className="flex-between p-8" style={{ background: '#6366f110', borderBottom: '1px solid #6366f133' }}>
+            <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>
+              Présentez votre entreprise à vos agents pour des réponses personnalisées
+            </span>
+            <a href="/client/onboarding" className="text-sm font-semibold" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+              Configurer →
+            </a>
+          </div>
+        )}
         {!lowCreditDismissed && walletBalance !== null && walletBalance < 50_000_000 && (
           <div className="flex-between p-8" style={{
             background: walletBalance < 10_000_000 ? '#ef444415' : '#f59e0b15',
@@ -338,30 +1125,42 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <Link href="/client/account" className="text-sm text-accent font-semibold" style={{ textDecoration: 'none' }}>
                 Recharger
               </Link>
-              <button onClick={dismissLowCredit} className="text-muted pointer" style={{
-                fontSize: 16, background: 'none', border: 'none', padding: '0 4px',
-              }}>×</button>
+              <button onClick={dismissLowCredit} style={{ fontSize: 16, background: 'none', border: 'none', padding: '0 4px', cursor: 'pointer' }}>×</button>
             </div>
           </div>
         )}
-
-        <div className="page-container">
-          {children}
-        </div>
+        <div className="page-container">{children}</div>
       </div>
+
+      {/* Floating Chat Button */}
+      {pathname !== '/client/chat' && (
+        <Link
+          href="/client/chat"
+          aria-label="Ouvrir le chat"
+          style={{
+            position: 'fixed', bottom: 24, right: 24, zIndex: 90,
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+            color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 24, boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
+            textDecoration: 'none', transition: 'transform 0.2s, box-shadow 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(99,102,241,0.5)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'; }}
+        >
+          💬
+        </Link>
+      )}
 
       {/* Ctrl+K Search Modal */}
       {searchOpen && (
         <>
-          <div onClick={() => setSearchOpen(false)} style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999,
-          }} />
+          <div onClick={() => setSearchOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999 }} />
           <div style={{
             position: 'fixed', top: '20%', left: '50%', transform: 'translateX(-50%)',
             width: '90%', maxWidth: 480, zIndex: 1000,
             background: 'var(--bg-elevated)', borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-secondary)', boxShadow: 'var(--shadow-lg)',
-            overflow: 'hidden',
+            border: '1px solid var(--border-secondary)', boxShadow: 'var(--shadow-lg)', overflow: 'hidden',
           }}>
             <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)' }}>
               <input
@@ -376,10 +1175,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     setSearchOpen(false);
                   }
                 }}
-                style={{
-                  width: '100%', fontSize: 15, border: 'none', outline: 'none',
-                  background: 'transparent', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)',
-                }}
+                style={{ width: '100%', fontSize: 15, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
               />
             </div>
             <div style={{ maxHeight: 300, overflowY: 'auto' }}>
@@ -389,10 +1185,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   href={link.href}
                   onClick={() => setSearchOpen(false)}
                   className="flex items-center gap-8 text-base"
-                  style={{
-                    padding: '8px 16px', textDecoration: 'none', color: 'var(--text-primary)',
-                    borderBottom: '1px solid var(--border-primary)',
-                  }}
+                  style={{ padding: '8px 16px', textDecoration: 'none', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-primary)' }}
                   onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
@@ -401,9 +1194,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 </Link>
               ))}
               {filteredLinks.length === 0 && (
-                <div className="p-16 text-md text-muted" style={{ textAlign: 'center' }}>
-                  Aucun résultat
-                </div>
+                <div className="p-16 text-md text-muted" style={{ textAlign: 'center' }}>Aucun résultat</div>
               )}
             </div>
             <div className="text-xs text-muted" style={{ padding: '6px 16px', borderTop: '1px solid var(--border-primary)' }}>
@@ -413,5 +1204,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </>
       )}
     </div>
+    <OnboardingTour />
+    </ToastProvider>
   );
 }

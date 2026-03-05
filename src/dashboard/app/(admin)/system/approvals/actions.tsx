@@ -2,6 +2,33 @@
 
 import { useState } from 'react';
 
+export function BatchApproveButton({ pendingIds }: { pendingIds: string[] }) {
+  const [loading, setLoading] = useState(false);
+
+  async function approveAll() {
+    if (!window.confirm(`Approuver les ${pendingIds.length} demande(s) en attente ?`)) return;
+    setLoading(true);
+    try {
+      for (const id of pendingIds) {
+        await fetch('/api/actions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'decideApproval', id, decision: 'APPROVED', reason: '' }),
+        });
+      }
+      window.location.reload();
+    } catch { /* best effort */ }
+    setLoading(false);
+  }
+
+  if (pendingIds.length === 0) return null;
+  return (
+    <button className="btn btn-primary" onClick={approveAll} disabled={loading}>
+      {loading ? '...' : `Approuver tout (${pendingIds.length})`}
+    </button>
+  );
+}
+
 export function ApprovalActions({ approvalId }: { approvalId: string }) {
   const [loading, setLoading] = useState('');
 

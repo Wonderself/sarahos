@@ -60,14 +60,14 @@ function emailTemplate(title: string, body: string): string {
 <body style="margin:0;padding:0;background:#f8f9fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
     <div style="background:linear-gradient(135deg,#6366f1,#a855f7);padding:32px 24px;text-align:center;">
-      <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.2);display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;">S</div>
+      <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.2);display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;">F</div>
       <h1 style="color:white;font-size:22px;margin:12px 0 0;font-weight:700;">${title}</h1>
     </div>
     <div style="padding:32px 24px;">
       ${body}
     </div>
     <div style="padding:16px 24px;background:#f8f9fa;text-align:center;font-size:12px;color:#9ca3af;">
-      <p style="margin:0;">SARAH OS — Vos employes IA 24/7</p>
+      <p style="margin:0;">Freenzy.io — Vos employes IA 24/7</p>
       <p style="margin:4px 0 0;">Cet email a ete envoye automatiquement, ne repondez pas directement.</p>
     </div>
   </div>
@@ -81,7 +81,7 @@ export async function sendConfirmationEmail(email: string, name: string, token: 
   const body = `
     <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${name}</strong>,</p>
     <p style="font-size:15px;color:#4b5563;line-height:1.6;">
-      Merci de vous etre inscrit(e) sur SARAH OS ! Pour confirmer votre adresse email, cliquez sur le bouton ci-dessous :
+      Merci de vous etre inscrit(e) sur Freenzy.io ! Pour confirmer votre adresse email, cliquez sur le bouton ci-dessous :
     </p>
     <div style="text-align:center;margin:28px 0;">
       <a href="${confirmUrl}" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#6366f1,#a855f7);color:white;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
@@ -101,7 +101,7 @@ export async function sendConfirmationEmail(email: string, name: string, token: 
 
   return sendEmail({
     to: email,
-    subject: 'Confirmez votre email — SARAH OS',
+    subject: 'Confirmez votre email — Freenzy.io',
     html: emailTemplate('Confirmez votre email', body),
   });
 }
@@ -131,7 +131,7 @@ export async function sendPasswordResetEmail(email: string, name: string, token:
 
   return sendEmail({
     to: email,
-    subject: 'Reinitialisation de mot de passe — SARAH OS',
+    subject: 'Reinitialisation de mot de passe — Freenzy.io',
     html: emailTemplate('Mot de passe oublie ?', body),
   });
 }

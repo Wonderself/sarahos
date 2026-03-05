@@ -217,6 +217,16 @@ export class WhatsAppRepository {
     );
   }
 
+  async updateConversationMetadata(convId: string, metadata: Record<string, unknown>): Promise<void> {
+    await dbClient.query(
+      `UPDATE whatsapp_conversations
+       SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb,
+           updated_at = NOW()
+       WHERE id = $1`,
+      [convId, JSON.stringify(metadata)],
+    );
+  }
+
   async expireOldConversations(): Promise<number> {
     const result = await dbClient.query(
       `UPDATE whatsapp_conversations

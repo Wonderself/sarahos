@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   // Decode userId from token
   const userId = await getUserId(token);
-  if (!userId) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: 'Session expiree. Veuillez vous reconnecter.', code: 'TOKEN_EXPIRED' }, { status: 401 });
 
   const profile = profiles.get(userId);
   return NextResponse.json({ profile: profile ?? null });
@@ -24,11 +24,17 @@ export async function POST(req: NextRequest) {
   if (!token) return NextResponse.json({ error: 'No token' }, { status: 401 });
 
   const userId = await getUserId(token);
-  if (!userId) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+  if (!userId) return NextResponse.json({ error: 'Session expiree. Veuillez vous reconnecter.', code: 'TOKEN_EXPIRED' }, { status: 401 });
 
   // Quick analysis: fetch website and extract profile via LLM
   if (body.action === 'analyze-url') {
     return analyzeUrl(body.url as string, body.description as string | undefined, token);
+  }
+
+  // Read-only check (used by layout to check onboarding status)
+  if (body.action === 'check') {
+    const profile = profiles.get(userId);
+    return NextResponse.json({ profile: profile ?? null });
   }
 
   const existing = profiles.get(userId) ?? {};
@@ -59,7 +65,7 @@ async function analyzeUrl(url: string, description: string | undefined, token: s
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SarahOS/1.0; +https://sarah-os.com)' },
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Freenzy/1.0; +https://freenzy.io)' },
       signal: controller.signal,
     });
     clearTimeout(timeout);
@@ -119,9 +125,13 @@ Retourne UNIQUEMENT un JSON valide (sans markdown, sans backticks) avec ces cham
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        agentId: 'sarah-assistante',
-        message: prompt,
-        systemPrompt: 'Tu extrais des informations d\'entreprise a partir de sites web. Reponds uniquement en JSON valide.',
+        model: 'claude-sonnet-4-20250514',
+        messages: [
+          { role: 'system', content: 'Tu extrais des informations d\'entreprise a partir de sites web. Reponds uniquement en JSON valide.' },
+          { role: 'user', content: prompt },
+        ],
+        maxTokens: 4096,
+        agentName: 'fz-assistante',
       }),
     });
 

@@ -15,7 +15,10 @@ interface WhatsAppStats {
 
 function getToken(): string {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('sarah_token') || '';
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+      return session.token || '';
+    } catch { return ''; }
   }
   return '';
 }
@@ -117,7 +120,7 @@ export default function AdminWhatsAppPage() {
             <li>Activer l&apos;<strong>API WhatsApp Business</strong> dans les parametres</li>
             <li>Obtenir le <strong>Phone Number ID</strong> et le <strong>Access Token</strong></li>
             <li>Configurer le <strong>Webhook URL</strong> : <code className="text-mono text-sm">{`${API}/webhook/whatsapp`}</code></li>
-            <li>Utiliser le <strong>Verify Token</strong> : <code className="text-mono text-sm">sarah-os-webhook-verify-2026</code></li>
+            <li>Utiliser le <strong>Verify Token</strong> : <code className="text-mono text-sm">freenzy-webhook-verify-2026</code></li>
             <li>Mettre a jour le fichier <code className="text-mono text-sm">.env</code> avec les identifiants</li>
             <li>Redemarrer le serveur</li>
           </ol>

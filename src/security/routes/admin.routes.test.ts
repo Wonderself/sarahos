@@ -17,6 +17,7 @@ jest.mock('../../utils/config', () => ({
 const mockUserService = {
   createUser: jest.fn(),
   listUsers: jest.fn(),
+  countUsers: jest.fn(),
   getUser: jest.fn(),
   updateUser: jest.fn(),
   deactivateUser: jest.fn(),
@@ -51,7 +52,7 @@ function viewerToken(): string {
 }
 
 const sampleUser = {
-  id: 'user-1',
+  id: 'a0000000-0000-4000-8000-000000000001',
   email: 'test@example.com',
   displayName: 'Test User',
   apiKey: 'key-abc-123',
@@ -122,6 +123,7 @@ describe('Admin Routes', () => {
   describe('GET /admin/users', () => {
     it('should list users as admin', async () => {
       mockUserService.listUsers.mockResolvedValue([sampleUser]);
+      mockUserService.countUsers.mockResolvedValue(1);
 
       const res = await request(app)
         .get('/admin/users')
@@ -136,6 +138,7 @@ describe('Admin Routes', () => {
 
     it('should pass filters to service', async () => {
       mockUserService.listUsers.mockResolvedValue([]);
+      mockUserService.countUsers.mockResolvedValue(0);
 
       await request(app)
         .get('/admin/users?role=viewer&tier=free&active=true&search=test')
@@ -146,6 +149,8 @@ describe('Admin Routes', () => {
         tier: 'free',
         isActive: true,
         search: 'test',
+        limit: 50,
+        offset: 0,
       });
     });
   });
@@ -155,18 +160,18 @@ describe('Admin Routes', () => {
       mockUserService.getUser.mockResolvedValue(sampleUser);
 
       const res = await request(app)
-        .get('/admin/users/user-1')
+        .get('/admin/users/a0000000-0000-4000-8000-000000000001')
         .set('Authorization', `Bearer ${adminToken()}`);
 
       expect(res.status).toBe(200);
-      expect(res.body.id).toBe('user-1');
+      expect(res.body.id).toBe('a0000000-0000-4000-8000-000000000001');
     });
 
     it('should return 404 for unknown user', async () => {
       mockUserService.getUser.mockResolvedValue(null);
 
       const res = await request(app)
-        .get('/admin/users/unknown')
+        .get('/admin/users/b0000000-0000-4000-8000-000000000099')
         .set('Authorization', `Bearer ${adminToken()}`);
 
       expect(res.status).toBe(404);
@@ -178,7 +183,7 @@ describe('Admin Routes', () => {
       mockUserService.updateUser.mockResolvedValue({ ...sampleUser, tier: 'paid' });
 
       const res = await request(app)
-        .patch('/admin/users/user-1')
+        .patch('/admin/users/a0000000-0000-4000-8000-000000000001')
         .set('Authorization', `Bearer ${adminToken()}`)
         .send({ tier: 'paid' });
 
@@ -190,7 +195,7 @@ describe('Admin Routes', () => {
       mockUserService.updateUser.mockRejectedValue(new Error('User not found'));
 
       const res = await request(app)
-        .patch('/admin/users/unknown')
+        .patch('/admin/users/b0000000-0000-4000-8000-000000000099')
         .set('Authorization', `Bearer ${adminToken()}`)
         .send({ tier: 'paid' });
 
@@ -203,7 +208,7 @@ describe('Admin Routes', () => {
       mockUserService.deactivateUser.mockResolvedValue(true);
 
       const res = await request(app)
-        .delete('/admin/users/user-1')
+        .delete('/admin/users/a0000000-0000-4000-8000-000000000001')
         .set('Authorization', `Bearer ${adminToken()}`);
 
       expect(res.status).toBe(200);
@@ -214,7 +219,7 @@ describe('Admin Routes', () => {
       mockUserService.deactivateUser.mockResolvedValue(false);
 
       const res = await request(app)
-        .delete('/admin/users/unknown')
+        .delete('/admin/users/b0000000-0000-4000-8000-000000000099')
         .set('Authorization', `Bearer ${adminToken()}`);
 
       expect(res.status).toBe(404);
@@ -226,7 +231,7 @@ describe('Admin Routes', () => {
       mockUserService.regenerateApiKey.mockResolvedValue('new-key-xyz');
 
       const res = await request(app)
-        .post('/admin/users/user-1/reset-key')
+        .post('/admin/users/a0000000-0000-4000-8000-000000000001/reset-key')
         .set('Authorization', `Bearer ${adminToken()}`);
 
       expect(res.status).toBe(200);

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
         messages: body.messages,
         maxTokens: body.maxTokens ?? 4096,
         temperature: body.temperature ?? 0.7,
-        agentName: body.agentName ?? 'sarah-assistant',
+        agentName: body.agentName ?? 'fz-assistante',
       }),
     });
 

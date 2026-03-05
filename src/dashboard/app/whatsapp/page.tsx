@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { DEFAULT_AGENTS, SIGNUP_BONUS_CREDITS } from '../../lib/agent-config';
+import { DEFAULT_AGENTS } from '../../lib/agent-config';
+import PublicNav from '../../components/PublicNav';
+import PublicFooter from '../../components/PublicFooter';
 
 /* ── WhatsApp SVG icon ── */
 function WaIcon({ size = 24, color = '#25D366' }: { size?: number; color?: string }) {
@@ -14,292 +16,342 @@ function WaIcon({ size = 24, color = '#25D366' }: { size?: number; color?: strin
 
 export default function WhatsAppPage() {
   return (
-    <div style={{ background: '#fff', color: 'var(--text-primary)', minHeight: '100vh' }}>
+    <div style={{ background: '#fff', color: '#1d1d1f', minHeight: '100vh' }}>
 
-      {/* ═══ Nav ═══ */}
-      <nav className="landing-nav">
-        <Link href="/" className="flex items-center" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <img src="/images/logo.jpg" alt="SARAH OS" className="rounded-md" style={{ height: 42 }} />
-        </Link>
-        <div className="flex items-center gap-24">
-          <Link href="/" className="text-base text-secondary font-medium" style={{ textDecoration: 'none' }}>Accueil</Link>
-          <Link href="/claude" className="text-base text-secondary font-medium" style={{ textDecoration: 'none' }}>Claude AI</Link>
-          <Link href="/login?mode=register" className="btn btn-primary btn-sm">
+      <PublicNav />
+
+      {/* ── Hero ── */}
+      <section style={{
+        paddingTop: 88, paddingBottom: 40,
+        textAlign: 'center', maxWidth: 700, margin: '0 auto', padding: '88px 24px 40px',
+      }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
+          background: '#f5f5f7', color: '#86868b',
+          marginBottom: 28,
+        }}>
+          <WaIcon size={15} color="#86868b" /> WhatsApp Business
+        </div>
+
+        <h1 style={{
+          fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 700, letterSpacing: '-0.03em',
+          lineHeight: 1.08, marginBottom: 20, color: '#1d1d1f',
+        }}>
+          Vos agents IA, directement
+          <br />
+          sur WhatsApp
+        </h1>
+
+        <p style={{
+          fontSize: 17, lineHeight: 1.6, color: '#86868b',
+          maxWidth: 520, margin: '0 auto 32px',
+        }}>
+          Envoyez un message texte ou une note vocale a n&apos;importe lequel de vos {DEFAULT_AGENTS.length} agents IA.
+          Recevez briefings, alertes et rapports directement dans votre WhatsApp.
+        </p>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginBottom: 36 }}>
+          <Link href="/login?mode=register" style={{
+            padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
+            background: '#1d1d1f', color: '#fff', textDecoration: 'none',
+            display: 'inline-block', transition: 'opacity 0.2s',
+          }}>
             Essayer gratuitement
           </Link>
-        </div>
-      </nav>
-
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
-
-        {/* ═══ Hero ═══ */}
-        <section className="text-center" style={{
-          padding: '80px 0 60px',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)',
-            width: 700, height: 700, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(37,211,102,0.1) 0%, transparent 65%)',
-            pointerEvents: 'none',
-          }} />
-          <div style={{ position: 'relative' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '8px 20px', borderRadius: 24,
-              background: 'rgba(37,211,102,0.1)', border: '1px solid rgba(37,211,102,0.25)',
-              fontSize: 14, fontWeight: 600, color: '#25D366', marginBottom: 28,
-            }}>
-              <WaIcon size={18} /> WhatsApp Business
-            </div>
-            <h1 style={{
-              fontSize: 'clamp(30px, 5vw, 50px)', fontWeight: 800,
-              letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 20,
-            }}>
-              Vos agents IA, directement
-              <br />
-              <span style={{ color: '#25D366' }}>sur WhatsApp</span>
-            </h1>
-            <p style={{
-              fontSize: 'clamp(15px, 2vw, 18px)', color: 'var(--text-secondary)',
-              lineHeight: 1.7, maxWidth: 600, margin: '0 auto 32px',
-            }}>
-              Envoyez un message texte ou une note vocale a n&apos;importe lequel de vos {DEFAULT_AGENTS.length} agents IA.
-              Recevez briefings, alertes et rapports directement dans votre WhatsApp.
-            </p>
-            <div className="flex flex-wrap flex-center gap-12">
-              <Link href="/login?mode=register" className="btn" style={{
-                padding: '14px 32px', fontSize: 16, fontWeight: 700,
-                background: '#25D366', color: '#fff', border: 'none', borderRadius: 12,
-                boxShadow: '0 8px 32px rgba(37,211,102,0.3)',
-              }}>
-                Essayer gratuitement
-              </Link>
-              <Link href="/demo" className="btn btn-secondary" style={{ padding: '14px 28px', fontSize: 16 }}>
-                Voir la demo
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ Image ═══ */}
-        <div className="text-center" style={{ margin: '0 auto 60px', maxWidth: 500 }}>
-          <img
-            src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&q=80"
-            alt="WhatsApp avec SARAH OS"
-            style={{
-              width: '100%', height: 'auto', borderRadius: 20,
-              boxShadow: '0 16px 48px rgba(0,0,0,0.1)',
-            }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-          />
+          <Link href="/demo" style={{
+            padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
+            background: '#f5f5f7', color: '#1d1d1f', textDecoration: 'none',
+            display: 'inline-block', transition: 'opacity 0.2s',
+          }}>
+            Voir la demo
+          </Link>
         </div>
 
-        {/* ═══ Comment ca marche ═══ */}
-        <section className="landing-section">
-          <div className="text-center" style={{ marginBottom: 40 }}>
-            <h2 className="mb-12" style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+          {['WhatsApp inclus', 'Notes vocales', 'Repondeur IA', `${DEFAULT_AGENTS.length} agents`].map(t => (
+            <span key={t} style={{
+              fontSize: 13, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5,
+            }}>
+              <span style={{ color: '#1d1d1f', fontSize: 11 }}>&#10003;</span> {t}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Content wrapper ── */}
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
+
+        {/* ── Comment ca marche ── */}
+        <section style={{ padding: '48px 0' }}>
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnement</div>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
               Comment ca marche
             </h2>
-            <p className="text-lg text-secondary">
-              3 etapes, 2 minutes
-            </p>
+            <p style={{ fontSize: 15, color: '#86868b' }}>3 etapes, 2 minutes</p>
           </div>
-          <div className="landing-steps-grid">
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+          }}>
             {[
-              { step: '01', icon: '📱', title: 'Ajoutez le numero', desc: 'Ajoutez le numero WhatsApp Business de SARAH OS dans vos contacts. Vous le recevez a l\'inscription.' },
-              { step: '02', icon: '💬', title: 'Envoyez un message', desc: 'Ecrivez un texte ou enregistrez une note vocale. Precisez l\'agent que vous voulez contacter (ex: "Thomas, prepare-moi une offre pour...").' },
-              { step: '03', icon: '🤖', title: 'L\'agent repond', desc: 'Votre agent IA analyse votre demande et repond directement dans WhatsApp. Les notes vocales sont transcrites automatiquement par Deepgram.' },
+              { step: '01', title: 'Ajoutez le numero', desc: 'Ajoutez le numero WhatsApp Business de Freenzy.io dans vos contacts. Vous le recevez a l\'inscription.' },
+              { step: '02', title: 'Envoyez un message', desc: 'Ecrivez un texte ou enregistrez une note vocale. Precisez l\'agent que vous voulez contacter.' },
+              { step: '03', title: 'L\'agent repond', desc: 'Votre agent IA analyse votre demande et repond directement dans WhatsApp. Les notes vocales sont transcrites automatiquement.' },
             ].map(s => (
-              <div key={s.step} className="card text-center" style={{ padding: 28, position: 'relative' }}>
-                <div className="font-bold" style={{
-                  position: 'absolute', top: 12, right: 16,
-                  fontSize: 36, color: '#25D366', opacity: 0.15,
-                }}>
-                  {s.step}
-                </div>
-                <div className="mb-16" style={{ fontSize: 40 }}>{s.icon}</div>
-                <div className="text-lg font-bold mb-8">{s.title}</div>
-                <div className="text-md text-secondary leading-relaxed">{s.desc}</div>
+              <div key={s.step} style={{
+                padding: 28, borderRadius: 12,
+                background: '#f5f5f7',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 14 }}>{s.step}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</div>
+                <div style={{ fontSize: 14, color: '#86868b', lineHeight: 1.65 }}>{s.desc}</div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ═══ Fonctionnalites ═══ */}
-        <section className="landing-section">
-          <div className="text-center" style={{ marginBottom: 40 }}>
-            <h2 className="mb-12" style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+        {/* ── Fonctionnalites ── */}
+        <section style={{ padding: '48px 0' }}>
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnalites</div>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
               Tout ce que vous pouvez faire
             </h2>
           </div>
-          <div className="grid-3" style={{ gap: 20, maxWidth: 900, margin: '0 auto' }}>
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+          }}>
             {[
-              { icon: '💬', title: 'Messages texte', desc: 'Ecrivez naturellement a n\'importe quel agent. Il comprend le contexte de votre entreprise.', color: '#25D366' },
-              { icon: '🎤', title: 'Notes vocales', desc: 'Enregistrez une note vocale. Deepgram la transcrit instantanement, l\'agent agit.', color: '#6366f1' },
-              { icon: '☀️', title: 'Briefing quotidien', desc: 'Chaque matin a 8h, recevez un resume de vos taches, alertes et insights dans WhatsApp.', color: '#f59e0b' },
-              { icon: '🔔', title: 'Alertes en temps reel', desc: 'Prospect chaud, facture en retard, deadline proche... vos agents vous alertent proactivement.', color: '#ef4444' },
-              { icon: '👥', title: 'Multi-agents', desc: 'Parlez a Lea pour un email, Thomas pour une offre, Manon pour un post social. Tout dans WhatsApp.', color: '#8b5cf6' },
-              { icon: '🔊', title: 'Reponses vocales', desc: 'Activez les reponses vocales avec ElevenLabs Flash v2.5. Voix ultra-realistes en francais.', color: '#ec4899' },
+              { icon: '💬', title: 'Messages texte', desc: 'Ecrivez naturellement a n\'importe quel agent. Il comprend le contexte de votre entreprise.' },
+              { icon: '🎤', title: 'Notes vocales', desc: 'Enregistrez une note vocale. Deepgram la transcrit instantanement, l\'agent agit.' },
+              { icon: '☀️', title: 'Briefing quotidien', desc: 'Chaque matin a 8h, recevez un resume de vos taches, alertes et insights dans WhatsApp.' },
+              { icon: '🔔', title: 'Alertes en temps reel', desc: 'Prospect chaud, facture en retard, deadline proche... vos agents vous alertent proactivement.' },
+              { icon: '👥', title: 'Multi-agents', desc: 'Parlez a Lea pour un email, Thomas pour une offre, Manon pour un post social. Tout dans WhatsApp.' },
+              { icon: '📞', title: 'Repondeur IA', desc: 'Ne manquez plus un appel. Le repondeur intelligent qualifie et transmet les messages sur WhatsApp.' },
             ].map(f => (
-              <div key={f.title} className="card card-lift text-center p-24" style={{
-                borderTop: `3px solid ${f.color}`,
+              <div key={f.title} style={{
+                padding: 24, borderRadius: 12,
+                border: '1px solid #f5f5f7',
+                textAlign: 'center',
               }}>
-                <div className="mb-12" style={{ fontSize: 36 }}>{f.icon}</div>
-                <div className="font-bold mb-8" style={{ fontSize: 15 }}>{f.title}</div>
-                <div className="text-md text-secondary leading-relaxed">{f.desc}</div>
+                <div style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{f.title}</div>
+                <div style={{ fontSize: 14, color: '#86868b', lineHeight: 1.65 }}>{f.desc}</div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ═══ Agents disponibles ═══ */}
-        <section className="landing-section">
-          <div className="text-center" style={{ marginBottom: 40 }}>
-            <h2 className="mb-12" style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+        {/* ── Agents disponibles ── */}
+        <section style={{ padding: '48px 0' }}>
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Agents</div>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
               {DEFAULT_AGENTS.length} agents disponibles sur WhatsApp
             </h2>
-            <p className="text-lg text-secondary" style={{ maxWidth: 500, margin: '0 auto' }}>
+            <p style={{ fontSize: 15, color: '#86868b' }}>
               Chaque agent est expert dans son domaine et propulse par Claude AI d&apos;Anthropic
             </p>
           </div>
-          <div className="landing-agent-grid">
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12,
+            maxWidth: 700, margin: '0 auto',
+          }}>
             {DEFAULT_AGENTS.map(agent => (
-              <div key={agent.id} className="card card-lift flex items-center p-20" style={{
-                borderLeft: `3px solid #25D366`, gap: 14,
+              <div key={agent.id} style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '14px 16px', borderRadius: 10,
+                border: '1px solid #f5f5f7',
               }}>
                 <div style={{
-                  width: 44, height: 44, borderRadius: 12,
-                  background: 'rgba(37,211,102,0.1)',
+                  width: 40, height: 40, borderRadius: 10,
+                  background: '#f5f5f7',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 22, flexShrink: 0,
+                  fontSize: 20, flexShrink: 0,
                 }}>
                   {agent.emoji}
                 </div>
-                <div>
-                  <div className="text-base font-bold">{agent.name}</div>
-                  <div className="text-sm text-muted">{agent.role}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f' }}>{agent.name}</div>
+                  <div style={{ fontSize: 13, color: '#86868b' }}>{agent.role}</div>
                 </div>
-                <div style={{ marginLeft: 'auto' }}>
-                  <WaIcon size={18} color="rgba(37,211,102,0.5)" />
+                <div style={{ opacity: 0.3, flexShrink: 0 }}>
+                  <WaIcon size={16} color="#86868b" />
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ═══ Notes vocales & Deepgram ═══ */}
-        <section className="landing-section">
-          <div className="landing-whatsapp-section">
+        {/* ── Notes vocales & Pipeline ── */}
+        <section style={{ padding: '48px 0' }}>
+          <div style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start',
+          }}>
             <div>
-              <div className="brand-badge brand-badge-whatsapp" style={{ marginBottom: 20 }}>
-                <WaIcon size={14} /> Notes vocales
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
+                background: '#f5f5f7', color: '#86868b',
+                marginBottom: 18,
+              }}>
+                <WaIcon size={14} color="#86868b" /> Notes vocales
               </div>
-              <h2 className="mb-16" style={{ fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 14 }}>
                 Parlez, vos agents comprennent
               </h2>
-              <p className="text-secondary leading-relaxed" style={{ fontSize: 15, marginBottom: 20 }}>
+              <p style={{ fontSize: 15, color: '#86868b', lineHeight: 1.65, marginBottom: 24 }}>
                 Enregistrez une note vocale WhatsApp comme vous le feriez avec un collegue.
-                Notre pipeline vocal transforme votre voix en action :
+                Notre pipeline vocal transforme votre voix en action.
               </p>
-              <div className="flex-col mb-24" style={{ gap: 14 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {[
-                  { label: 'Transcription instantanee', desc: 'Deepgram Nova-2 transcrit votre voix en texte avec 98% de precision', color: '#6366f1' },
-                  { label: 'Comprehension contextuelle', desc: 'Claude AI comprend votre intention et le contexte de votre entreprise', color: '#D97706' },
-                  { label: 'Action immediate', desc: 'L\'agent execute : email envoye, document cree, analyse lancee', color: '#25D366' },
-                  { label: 'Reponse vocale', desc: 'ElevenLabs Flash v2.5 vous repond avec une voix ultra-realiste (optionnel)', color: '#8B5CF6' },
+                  { label: 'Transcription instantanee', desc: 'Deepgram Nova-2 transcrit votre voix en texte avec 98% de precision' },
+                  { label: 'Comprehension contextuelle', desc: 'Claude AI comprend votre intention et le contexte de votre entreprise' },
+                  { label: 'Action immediate', desc: 'L\'agent execute : email envoye, document cree, analyse lancee' },
+                  { label: 'Reponse vocale', desc: 'ElevenLabs Flash v2.5 vous repond avec une voix ultra-realiste (optionnel)' },
                 ].map(item => (
-                  <div key={item.label} className="flex gap-12" style={{ alignItems: 'flex-start' }}>
+                  <div key={item.label} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <div style={{
-                      width: 8, height: 8, borderRadius: '50%', marginTop: 6, flexShrink: 0,
-                      background: item.color,
+                      width: 6, height: 6, borderRadius: '50%', marginTop: 8, flexShrink: 0,
+                      background: '#1d1d1f',
                     }} />
                     <div>
-                      <div className="text-base font-semibold">{item.label}</div>
-                      <div className="text-md text-muted">{item.desc}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f' }}>{item.label}</div>
+                      <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.5 }}>{item.desc}</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="landing-whatsapp-image">
-              <img
-                src="https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=500&q=80"
-                alt="Communication vocale avec SARAH OS"
-                style={{ width: '100%', borderRadius: 20, boxShadow: '0 16px 48px rgba(0,0,0,0.1)' }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
+            <div style={{
+              background: '#f5f5f7', borderRadius: 12, padding: 32,
+              display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'center', justifyContent: 'center',
+              minHeight: 320,
+            }}>
+              <div style={{ fontSize: 48, lineHeight: 1 }}>🎙️</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', textAlign: 'center' }}>Pipeline vocal</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                {['Voix', 'Deepgram', 'Claude AI', 'Action'].map((step, i) => (
+                  <div key={step} style={{
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '10px 14px', borderRadius: 8, background: '#fff',
+                  }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#86868b', width: 20 }}>{i + 1}</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f' }}>{step}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ═══ Securite ═══ */}
-        <section className="landing-section" style={{ maxWidth: 700, margin: '0 auto' }}>
-          <div className="text-center mb-24">
-            <h2 className="mb-12" style={{ fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+        {/* ── Repondeur IA ── */}
+        <section style={{ padding: '48px 0' }}>
+          <div style={{
+            padding: 40, borderRadius: 12, background: '#f5f5f7',
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+              <div style={{
+                display: 'inline-block', padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
+                background: '#fff', color: '#86868b',
+                marginBottom: 16,
+              }}>
+                Nouveau : Repondeur IA
+              </div>
+              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 10 }}>
+                Ne manquez plus aucun appel
+              </h2>
+              <p style={{ fontSize: 15, color: '#86868b', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
+                Le repondeur intelligent de Freenzy.io repond a vos appels manques, qualifie les prospects
+                et vous transmet un resume structure directement sur WhatsApp.
+              </p>
+            </div>
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+              maxWidth: 640, margin: '0 auto',
+            }}>
+              {[
+                { icon: '📞', title: 'Repond 24/7', desc: 'Jamais d\'appel manque, meme la nuit et le week-end' },
+                { icon: '🎯', title: 'Qualifie', desc: 'Identifie le besoin, le budget et l\'urgence du prospect' },
+                { icon: '📲', title: 'Notifie sur WhatsApp', desc: 'Resume structure envoye instantanement sur votre WhatsApp' },
+              ].map(s => (
+                <div key={s.title} style={{
+                  textAlign: 'center', padding: 20, borderRadius: 10, background: '#fff',
+                }}>
+                  <div style={{ fontSize: 24, marginBottom: 10 }}>{s.icon}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 4 }}>{s.title}</div>
+                  <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.5 }}>{s.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Securite ── */}
+        <section style={{ padding: '48px 0', maxWidth: 700, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Confiance</div>
+            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
               Securite et confidentialite
             </h2>
           </div>
-          <div className="grid-3" style={{ gap: 16 }}>
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+          }}>
             {[
               { icon: '🔒', title: 'Chiffrement', desc: 'WhatsApp chiffre vos messages de bout en bout. Vos donnees sont protegees en transit.' },
               { icon: '🇪🇺', title: 'RGPD', desc: 'Conforme au RGPD. Vos donnees sont hebergees en Europe. Droit a l\'oubli garanti.' },
               { icon: '🎤', title: 'Pas de stockage vocal', desc: 'Vos notes vocales sont transcrites puis supprimees. Aucun enregistrement conserve.' },
             ].map(s => (
-              <div key={s.title} className="card text-center p-20">
-                <div className="mb-8" style={{ fontSize: 28 }}>{s.icon}</div>
-                <div className="text-base font-bold" style={{ marginBottom: 6 }}>{s.title}</div>
-                <div className="text-sm text-secondary leading-relaxed">{s.desc}</div>
+              <div key={s.title} style={{
+                padding: 24, borderRadius: 12,
+                border: '1px solid #f5f5f7',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 24, marginBottom: 10 }}>{s.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{s.title}</div>
+                <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.65 }}>{s.desc}</div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ═══ CTA Final ═══ */}
-        <section className="landing-section text-center rounded-xl" style={{
-          padding: '60px 24px',
-          background: 'linear-gradient(135deg, rgba(37,211,102,0.08), rgba(37,211,102,0.04))',
-          border: '1px solid rgba(37,211,102,0.15)',
-          marginBottom: 40,
+        {/* ── CTA Final ── */}
+        <section style={{
+          padding: '48px 24px', textAlign: 'center',
+          marginBottom: 48,
         }}>
-          <WaIcon size={48} />
-          <h2 className="mb-12 mt-16" style={{ fontSize: 'clamp(24px, 4vw, 34px)', fontWeight: 800, letterSpacing: '-0.03em' }}>
+          <WaIcon size={36} color="#86868b" />
+          <h2 style={{
+            fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, letterSpacing: '-0.03em',
+            color: '#1d1d1f', marginTop: 16, marginBottom: 12,
+          }}>
             Pret a parler a vos agents sur WhatsApp ?
           </h2>
-          <p className="text-lg text-secondary" style={{ maxWidth: 480, margin: '0 auto 28px' }}>
-            Commencez gratuitement avec {SIGNUP_BONUS_CREDITS} credits offerts
+          <p style={{ fontSize: 15, color: '#86868b', maxWidth: 420, margin: '0 auto 24px' }}>
+            Accès gratuit — 0% de commission sur toutes vos actions
           </p>
-          <Link href="/login?mode=register" className="btn rounded-lg font-bold" style={{
-            padding: '16px 40px', fontSize: 17,
-            background: '#25D366', color: '#fff', border: 'none',
-            boxShadow: '0 8px 32px rgba(37,211,102,0.3)',
+          <Link href="/login?mode=register" style={{
+            display: 'inline-block', padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
+            background: '#1d1d1f', color: '#fff', textDecoration: 'none',
+            transition: 'opacity 0.2s',
           }}>
             Essayer gratuitement
           </Link>
-          <div className="flex flex-wrap flex-center gap-24 mt-16">
-            {['WhatsApp inclus', 'Notes vocales', `${DEFAULT_AGENTS.length} agents`].map(t => (
-              <span key={t} className="text-sm text-muted flex items-center gap-4">
-                <span style={{ color: '#25D366' }}>&#10003;</span> {t}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, marginTop: 18 }}>
+            {['WhatsApp inclus', 'Notes vocales', 'Repondeur IA', `${DEFAULT_AGENTS.length} agents`].map(t => (
+              <span key={t} style={{ fontSize: 13, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span style={{ color: '#1d1d1f', fontSize: 11 }}>&#10003;</span> {t}
               </span>
             ))}
           </div>
         </section>
-
-        {/* ═══ Footer ═══ */}
-        <footer className="text-center mt-24" style={{
-          padding: '32px 0', borderTop: '1px solid var(--border-light, #e5e7eb)',
-        }}>
-          <div className="flex flex-wrap flex-center gap-20 mb-16">
-            <Link href="/" className="text-md text-secondary" style={{ textDecoration: 'none' }}>Accueil</Link>
-            <Link href="/claude" className="text-md text-secondary" style={{ textDecoration: 'none' }}>Claude AI</Link>
-            <Link href="/demo" className="text-md text-secondary" style={{ textDecoration: 'none' }}>Demo</Link>
-            <Link href="/plans" className="text-md text-secondary" style={{ textDecoration: 'none' }}>Tarifs</Link>
-          </div>
-          <div className="text-sm text-muted">
-            SARAH OS v0.10.0 — Propulse par Claude AI (Sonnet & Opus) + ElevenLabs + WhatsApp
-          </div>
-        </footer>
       </div>
+
+      <PublicFooter />
     </div>
   );
 }

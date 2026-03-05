@@ -45,6 +45,7 @@ export function createClientPortalRouter(): Router {
         userNumber: user.userNumber,
         commissionRate: user.commissionRate,
         referralCode: user.referralCode,
+        agentMode: (user as any).agentMode ?? (user as any).agent_mode ?? 'pro',
         createdAt: user.createdAt,
         lastLoginAt: user.lastLoginAt,
       },
@@ -175,6 +176,139 @@ export function createClientPortalRouter(): Router {
     const { walletService } = await import('../../billing/wallet.service');
     const summary = await walletService.getUsageSummary(userId);
     res.json({ usage: summary });
+  }));
+
+  // ── User Preferences ──
+
+  router.get('/portal/preferences', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userPreferencesRepository } = await import('../../users/user-preferences.repository');
+    const prefs = await userPreferencesRepository.getByUserId(userId);
+    res.json({ preferences: prefs });
+  }));
+
+  router.patch('/portal/preferences', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userPreferencesRepository } = await import('../../users/user-preferences.repository');
+    const prefs = await userPreferencesRepository.update(userId, req.body);
+    res.json({ preferences: prefs });
+  }));
+
+  router.get('/portal/company-profile', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userPreferencesRepository } = await import('../../users/user-preferences.repository');
+    const profile = await userPreferencesRepository.getCompanyProfile(userId);
+    res.json({ companyProfile: profile });
+  }));
+
+  router.post('/portal/company-profile', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userPreferencesRepository } = await import('../../users/user-preferences.repository');
+    const prefs = await userPreferencesRepository.updateCompanyProfile(userId, req.body);
+    res.json({ companyProfile: prefs?.companyProfile ?? {} });
+  }));
+
+  router.get('/portal/gamification', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userPreferencesRepository } = await import('../../users/user-preferences.repository');
+    const data = await userPreferencesRepository.getGamification(userId);
+    res.json({ gamification: data });
+  }));
+
+  router.post('/portal/gamification', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userPreferencesRepository } = await import('../../users/user-preferences.repository');
+    const prefs = await userPreferencesRepository.updateGamification(userId, req.body);
+    res.json({ gamification: prefs?.gamificationData ?? {} });
+  }));
+
+  // ── Activity Log ──
+
+  router.get('/portal/activity', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const limit = Number(req.query['limit'] ?? 50);
+    const offset = Number(req.query['offset'] ?? 0);
+
+    const { dbClient } = await import('../../infra');
+    if (!dbClient.isConnected()) { res.json({ activities: [] }); return; }
+
+    const result = await dbClient.query(
+      'SELECT * FROM activity_log WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3',
+      [userId, limit, offset],
+    );
+    res.json({ activities: result.rows });
+  }));
+
+  // ── Sessions ──
+
+  router.get('/portal/sessions', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { dbClient } = await import('../../infra');
+    if (!dbClient.isConnected()) { res.json({ sessions: [] }); return; }
+
+    const result = await dbClient.query(
+      'SELECT id, ip_address, user_agent, is_active, created_at, last_active_at, expires_at FROM user_sessions WHERE user_id = $1 AND is_active = TRUE ORDER BY last_active_at DESC',
+      [userId],
+    );
+    res.json({ sessions: result.rows });
+  }));
+
+  router.delete('/portal/sessions/:jti', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { dbClient } = await import('../../infra');
+    if (!dbClient.isConnected()) { res.status(500).json({ error: 'DB not connected' }); return; }
+
+    await dbClient.query(
+      'UPDATE user_sessions SET is_active = FALSE WHERE user_id = $1 AND jti = $2',
+      [userId, req.params['jti']],
+    );
+    res.json({ message: 'Session revoked' });
+  }));
+
+  // DELETE /portal/account — GDPR self-service account deletion
+  router.delete('/portal/account', verifyToken, asyncHandler(async (req, res) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user?.userId ?? authReq.user?.sub;
+    if (!userId) { res.status(401).json({ error: 'User ID required' }); return; }
+
+    const { userService } = await import('../../users/user.service');
+    try {
+      await userService.deleteUserData(String(userId), String(userId), true /* isSelfService */);
+      res.json({ status: 'deleted', message: 'Votre compte et toutes vos donnees ont ete supprimes definitivement.' });
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes('Cannot delete')) {
+        res.status(400).json({ error: error.message });
+        return;
+      }
+      throw error;
+    }
   }));
 
   return router;

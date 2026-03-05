@@ -30,7 +30,7 @@ describe('NotificationService', () => {
 
   const baseNotificationRow = {
     id: 'n1', user_id: 'u1', channel: 'in_app', type: 'welcome',
-    subject: 'Welcome!', body: 'Welcome to Sarah OS',
+    subject: 'Welcome!', body: 'Welcome to Freenzy.io',
     metadata: {}, status: 'pending', external_id: null,
     sent_at: null, delivered_at: null, read_at: null, error_message: null,
     created_at: new Date().toISOString(),
@@ -50,7 +50,7 @@ describe('NotificationService', () => {
 
       const notification = await service.send({
         userId: 'u1', channel: 'in_app', type: 'welcome',
-        subject: 'Welcome!', body: 'Welcome to Sarah OS',
+        subject: 'Welcome!', body: 'Welcome to Freenzy.io',
       });
 
       expect(notification).not.toBeNull();

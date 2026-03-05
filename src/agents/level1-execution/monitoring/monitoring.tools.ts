@@ -85,10 +85,10 @@ export async function checkContainerHealth(): Promise<ContainerHealth[]> {
   // Stub — real implementation queries Docker API
   logger.info('Container health check (stub)');
   return [
-    { name: 'sarah-api', status: 'running', cpuPercent: 12, memoryMb: 256, uptime: '3d 14h', restartCount: 0 },
-    { name: 'sarah-postgres', status: 'running', cpuPercent: 5, memoryMb: 512, uptime: '3d 14h', restartCount: 0 },
-    { name: 'sarah-redis', status: 'running', cpuPercent: 2, memoryMb: 64, uptime: '3d 14h', restartCount: 0 },
-    { name: 'sarah-avatar-pipeline', status: 'running', cpuPercent: 30, memoryMb: 1024, uptime: '3d 14h', restartCount: 0 },
+    { name: 'freenzy-api', status: 'running', cpuPercent: 12, memoryMb: 256, uptime: '3d 14h', restartCount: 0 },
+    { name: 'freenzy-postgres', status: 'running', cpuPercent: 5, memoryMb: 512, uptime: '3d 14h', restartCount: 0 },
+    { name: 'freenzy-redis', status: 'running', cpuPercent: 2, memoryMb: 64, uptime: '3d 14h', restartCount: 0 },
+    { name: 'freenzy-avatar-pipeline', status: 'running', cpuPercent: 30, memoryMb: 1024, uptime: '3d 14h', restartCount: 0 },
   ];
 }
 

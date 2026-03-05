@@ -79,7 +79,7 @@ export function createAvatarRouter(): Router {
   // Telephony endpoints
   router.post('/avatar/telephony/call', requireRole('operator', 'system'), validateBody(telephonyCallSchema), async (req, res) => {
     const { to, avatarBase, sessionId } = req.body as { to: string; avatarBase: 'sarah' | 'emmanuel'; sessionId: string };
-    const call = await telephonyService.initiateOutboundCall({ to, avatarBase, sessionId });
+    const call = await telephonyService.initiateOutboundCallLegacy({ to, avatarBase, sessionId });
     res.json(call);
   });
 
@@ -106,6 +106,45 @@ export function createAvatarRouter(): Router {
   // Pipeline metrics
   router.get('/avatar/pipeline/metrics', requireRole('operator', 'system'), (_req, res) => {
     res.json(conversationManager.getMetrics());
+  });
+
+  // ── Admin test endpoints ──────────────────────────────────────────────────
+
+  // GET /avatar/admin/test/services — config status of each AI provider
+  router.get('/avatar/admin/test/services', requireRole('admin'), (_req, res) => {
+    res.json({
+      elevenlabs: { configured: !!process.env['ELEVENLABS_API_KEY'], provider: 'ElevenLabs' },
+      deepgram:   { configured: !!process.env['DEEPGRAM_API_KEY'], provider: 'Deepgram' },
+      telnyx:     { configured: !!process.env['TELNYX_API_KEY'], provider: 'Telnyx' },
+      twilio:     { configured: telephonyService.isConfigured(), provider: 'Twilio' },
+    });
+  });
+
+  // POST /avatar/admin/test/tts — synthesize test audio, returns base64
+  router.post('/avatar/admin/test/tts', requireRole('admin'), async (req, res) => {
+    const { text = 'Bonjour, je suis votre assistante intelligente.' } = req.body as { text?: string };
+    const start = Date.now();
+    try {
+      const result = await ttsService.synthesize({
+        sessionId: 'admin-test',
+        text: text.slice(0, 200),
+        config: {
+          provider: 'deepgram',
+          voiceId: 'aura-asteria-en',
+          language: 'fr',
+          speed: 1,
+          pitch: 0,
+          style: 'normal',
+          outputFormat: 'mp3',
+          sampleRate: 22050,
+        },
+      });
+      const latency = Date.now() - start;
+      const audioBase64 = result.audioBuffer.toString('base64');
+      res.json({ ok: true, latency, provider: result.provider, audioBase64, durationMs: result.durationMs });
+    } catch (e) {
+      res.status(500).json({ ok: false, error: e instanceof Error ? e.message : 'TTS failed', latency: Date.now() - start });
+    }
   });
 
   // Avatar presets & clients

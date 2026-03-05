@@ -18,10 +18,11 @@ export class RedisClient {
 
     try {
       const url = urlOverride ?? getRedisUrl();
-      this.client = new Redis(url, { maxRetriesPerRequest: 3, lazyConnect: true });
+      const retryStrategy = (times: number) => Math.min(times * 200, 5000);
+      this.client = new Redis(url, { maxRetriesPerRequest: 3, lazyConnect: true, retryStrategy });
       await this.client.connect();
 
-      this.subscriber = new Redis(url, { maxRetriesPerRequest: 3, lazyConnect: true });
+      this.subscriber = new Redis(url, { maxRetriesPerRequest: 3, lazyConnect: true, retryStrategy });
       await this.subscriber.connect();
 
       this.subscriber.on('message', (channel: string, message: string) => {
@@ -101,6 +102,37 @@ export class RedisClient {
       throw new Error('RedisClient not connected.');
     }
     return this.client.del(key);
+  }
+
+  /** Atomic increment by value. Returns new value after increment. */
+  async incrBy(key: string, value: number): Promise<number> {
+    if (!this.client || !this.connected) return 0;
+    return this.client.incrby(key, value);
+  }
+
+  /** Set TTL on an existing key (seconds). */
+  async expire(key: string, ttlSeconds: number): Promise<boolean> {
+    if (!this.client || !this.connected) return false;
+    const result = await this.client.expire(key, ttlSeconds);
+    return result === 1;
+  }
+
+  /** Get multiple keys at once. */
+  async mget(...keys: string[]): Promise<(string | null)[]> {
+    if (!this.client || !this.connected) return keys.map(() => null);
+    return this.client.mget(...keys);
+  }
+
+  /**
+   * Atomic SET if Not eXists with TTL. Used for distributed locking.
+   * Returns true if the key was set (lock acquired), false if it already existed.
+   */
+  async setNx(key: string, value: string, ttlSeconds: number): Promise<boolean> {
+    if (!this.client || !this.connected) {
+      return false; // No Redis = single process, no lock needed
+    }
+    const result = await this.client.set(key, value, 'EX', ttlSeconds, 'NX');
+    return result === 'OK';
   }
 
   isConnected(): boolean {

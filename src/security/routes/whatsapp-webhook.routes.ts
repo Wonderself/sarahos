@@ -1,7 +1,60 @@
 import { Router } from 'express';
+import type { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 import { logger } from '../../utils/logger';
 import { config } from '../../utils/config';
 import type { WhatsAppWebhookPayload } from '../../whatsapp/whatsapp.types';
+
+/**
+ * Verify Meta X-Hub-Signature-256 header using HMAC-SHA256.
+ * Skips verification if WHATSAPP_APP_SECRET is not configured (dev mode).
+ */
+function verifyWebhookSignature(req: Request, res: Response, next: NextFunction): void {
+  const appSecret = config.WHATSAPP_APP_SECRET;
+  if (!appSecret) {
+    if (process.env['NODE_ENV'] === 'production') {
+      logger.error('WhatsApp webhook: WHATSAPP_APP_SECRET not configured in production — rejecting');
+      res.sendStatus(503);
+      return;
+    }
+    logger.warn('WhatsApp webhook: WHATSAPP_APP_SECRET not configured, skipping signature verification (dev mode)');
+    next();
+    return;
+  }
+
+  const signature = req.headers['x-hub-signature-256'] as string | undefined;
+  if (!signature) {
+    logger.warn('WhatsApp webhook: missing X-Hub-Signature-256 header');
+    res.sendStatus(401);
+    return;
+  }
+
+  const rawBody = (req as Request & { rawBody?: Buffer }).rawBody;
+  if (!rawBody) {
+    logger.warn('WhatsApp webhook: rawBody not available for signature verification');
+    res.sendStatus(500);
+    return;
+  }
+
+  const expectedSignature = 'sha256=' + crypto
+    .createHmac('sha256', appSecret)
+    .update(rawBody)
+    .digest('hex');
+
+  try {
+    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+      logger.warn('WhatsApp webhook: invalid signature');
+      res.sendStatus(403);
+      return;
+    }
+  } catch {
+    logger.warn('WhatsApp webhook: signature comparison error');
+    res.sendStatus(403);
+    return;
+  }
+
+  next();
+}
 
 export function createWhatsAppWebhookRouter(): Router {
   const router = Router();
@@ -33,9 +86,9 @@ export function createWhatsAppWebhookRouter(): Router {
    * POST /webhook/whatsapp — Incoming messages from Meta.
    * Must respond 200 within 5 seconds or Meta retries.
    * Processing happens asynchronously.
-   * PUBLIC — no auth required.
+   * PUBLIC — no auth required, but signature-verified.
    */
-  router.post('/webhook/whatsapp', (req, res) => {
+  router.post('/webhook/whatsapp', verifyWebhookSignature, (req, res) => {
     // Immediately respond 200 to Meta
     res.sendStatus(200);
 
@@ -67,6 +120,11 @@ async function processWebhookPayload(payload: WhatsAppWebhookPayload): Promise<v
         for (const message of value.messages) {
           const contactName = value.contacts?.[0]?.profile?.name ?? 'Unknown';
           try {
+            // Autopilot interception: admin WA commands handled before normal pipeline
+            const { tryHandleAutopilotMessage } = await import('../../autopilot/autopilot-wa-handler');
+            const handled = await tryHandleAutopilotMessage(message);
+            if (handled) continue;
+
             await whatsAppPipeline.processIncomingMessage(message, contactName);
           } catch (err) {
             logger.error('WhatsApp message processing error', {

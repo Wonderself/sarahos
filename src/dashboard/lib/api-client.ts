@@ -28,9 +28,21 @@ async function getAuthToken(): Promise<string> {
   return cachedToken;
 }
 
+const FETCH_TIMEOUT_MS = 15_000;
+
+async function fetchWithTimeout(url: string, options?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   const token = await getAuthToken();
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetchWithTimeout(`${API_BASE}${path}`, {
     cache: 'no-store',
     ...options,
     headers: { Authorization: `Bearer ${token}`, ...options?.headers },
@@ -40,10 +52,21 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
     cachedToken = null;
     tokenExpiresAt = 0;
     const newToken = await getAuthToken();
-    const retry = await fetch(`${API_BASE}${path}`, {
+    const retry = await fetchWithTimeout(`${API_BASE}${path}`, {
       cache: 'no-store',
       ...options,
       headers: { Authorization: `Bearer ${newToken}`, ...options?.headers },
+    });
+    if (!retry.ok) throw new Error(`API error: ${retry.status} ${retry.statusText}`);
+    return retry.json() as Promise<T>;
+  }
+
+  // Retry once on 5xx errors
+  if (response.status >= 500) {
+    const retry = await fetchWithTimeout(`${API_BASE}${path}`, {
+      cache: 'no-store',
+      ...options,
+      headers: { Authorization: `Bearer ${token}`, ...options?.headers },
     });
     if (!retry.ok) throw new Error(`API error: ${retry.status} ${retry.statusText}`);
     return retry.json() as Promise<T>;
@@ -305,4 +328,66 @@ export const api = {
   // Scheduler & Improvement
   getSchedulerTasks: () => fetchAPI<Record<string, unknown>[]>('/scheduler/tasks'),
   getImprovementHistory: () => fetchAPI<Record<string, unknown>[]>('/improvement/history'),
+
+  // Enterprise Quotes
+  getEnterpriseQuotes: (status?: string) =>
+    fetchAPI<{ quotes: Record<string, unknown>[]; total: number }>(`/enterprise/quotes${status ? `?status=${status}` : ''}`),
+  updateEnterpriseQuote: (id: string, data: { status?: string; adminNotes?: string }) =>
+    patchAPI<Record<string, unknown>>(`/enterprise/quotes/${id}`, data),
+
+  // Custom Creation Quotes
+  getCustomCreationQuotes: (status?: string) =>
+    fetchAPI<{ quotes: Record<string, unknown>[]; total: number }>(`/custom-creation/quotes${status ? `?status=${status}` : ''}`),
+  updateCustomCreationQuote: (id: string, data: { status?: string; adminNotes?: string; quotedPrice?: number }) =>
+    patchAPI<Record<string, unknown>>(`/custom-creation/quotes/${id}`, data),
+
+  // Analytics — timelines
+  getRevenueTimeline: (period = '30d') =>
+    fetchAPI<Array<{ date: string; revenue: number; cost: number; margin: number }>>(`/analytics/revenue-trend?period=${period}`),
+  getUserGrowth: (period = '30d') =>
+    fetchAPI<Array<{ date: string; newUsers: number }>>(`/analytics/user-growth?period=${period}`),
+  getTopClients: (limit = 10) =>
+    fetchAPI<Array<{ id: string; email: string; displayName: string; tier: string; totalDeposited: number; totalSpent: number; balance: number }>>(`/analytics/top-clients?limit=${limit}`),
+
+  // Referrals
+  getReferrals: () => fetchAPI<{ referrals: Array<Record<string, unknown>>; stats: { total: number; active: number } }>('/admin/referrals?limit=200'),
+  getTierDistribution: () => fetchAPI<Array<{ tier: string; count: number }>>('/admin/stats/tiers'),
+  getAdminTransactions: (limit = 50) => fetchAPI<{ transactions: Array<Record<string, unknown>>; total: number }>(`/admin/transactions?limit=${limit}`),
+
+  // Pilotage — Admin management of client features
+  getAdminProjects: () => fetchAPI<{ projects: Array<Record<string, unknown>>; stats: { total: number; active: number; usersCount: number } }>('/admin/projects'),
+  getAdminModules: () => fetchAPI<{ modules: Array<Record<string, unknown>>; stats: { total: number; published: number; publicCount: number; totalRecords: number }; byType: Array<{ type: string; count: number }> }>('/admin/modules'),
+  getAdminCampaigns: () => fetchAPI<{ campaigns: Array<Record<string, unknown>>; stats: { total: number; drafts: number; pending: number; approved: number; active: number; completed: number } }>('/admin/campaigns'),
+  updateCampaignStatus: (id: string, status: string) => patchAPI<{ success: boolean }>(`/admin/campaigns/${id}/status`, { status }),
+  getAdminAlarms: () => fetchAPI<{ alarms: Array<Record<string, unknown>>; stats: { total: number; active: number; usersCount: number }; byMode: Array<{ mode: string; count: number }>; byDelivery: Array<{ delivery_method: string; count: number }> }>('/admin/alarms'),
+  getAdminCustomAgents: () => fetchAPI<{ agents: Array<Record<string, unknown>>; stats: { total: number; active: number; usersCount: number; avgAutonomy: number } }>('/admin/custom-agents'),
+  toggleCustomAgent: (id: string, isActive: boolean) => patchAPI<{ success: boolean }>(`/admin/custom-agents/${id}`, { isActive }),
+  getAdminPersonalAgentsStats: () => fetchAPI<{ configs: Array<{ agent_id: string; total: number; active: number }>; budget: { transactions: number; users: number; income: number; expenses: number }; comptable: { records: number; users: number }; chasseur: Array<{ status: string; count: number }>; cv: { total: number }; events: { total: number; users: number }; writing: { projects: number; users: number; words: number } }>('/admin/personal-agents/stats'),
+  getAdminDocuments: () => fetchAPI<{ documents: Array<Record<string, unknown>>; stats: { total: number; usersCount: number; totalBytes: number; totalTokens: number }; byType: Array<{ file_type: string; count: number }>; byContext: Array<{ agent_context: string; count: number }> }>('/admin/documents'),
+  deleteAdminDocument: (id: string) => deleteAPI<{ success: boolean }>(`/admin/documents/${id}`),
+
+  // Autopilot — Admin governance
+  getAutopilotProposals: (params?: { status?: string; category?: string; severity?: string; limit?: number; offset?: number }) => {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.set('status', params.status);
+    if (params?.category) qs.set('category', params.category);
+    if (params?.severity) qs.set('severity', params.severity);
+    if (params?.limit) qs.set('limit', String(params.limit));
+    if (params?.offset) qs.set('offset', String(params.offset));
+    const q = qs.toString();
+    return fetchAPI<{ proposals: Array<Record<string, unknown>>; total: number }>(`/autopilot/proposals${q ? `?${q}` : ''}`);
+  },
+  getAutopilotProposal: (id: string) => fetchAPI<Record<string, unknown>>(`/autopilot/proposals/${id}`),
+  decideAutopilotProposal: (id: string, decision: 'approved' | 'denied', notes?: string) =>
+    postAPI<Record<string, unknown>>(`/autopilot/proposals/${id}/decide`, { decision, notes }),
+  rollbackAutopilotProposal: (id: string) =>
+    postAPI<Record<string, unknown>>(`/autopilot/proposals/${id}/rollback`, {}),
+  getAutopilotReports: (limit = 10) =>
+    fetchAPI<{ reports: Array<Record<string, unknown>> }>(`/autopilot/reports?limit=${limit}`),
+  triggerAutopilotAudit: (type: string) =>
+    postAPI<{ reportId: string }>('/autopilot/audit/trigger', { type }),
+  getAutopilotStats: () => fetchAPI<Record<string, unknown>>('/autopilot/stats'),
+
+  // Generic GET helper for server components
+  get: <T>(path: string) => fetchAPI<T>(path),
 };

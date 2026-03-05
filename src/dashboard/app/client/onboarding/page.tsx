@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import VoiceInput from '../../../components/VoiceInput';
+import { useToast } from '../../../components/Toast';
 
 interface CompanyProfile {
   // Step 1 — Identité
@@ -74,8 +75,8 @@ const STEPS = [
   { id: 3, title: 'Situation Actuelle', subtitle: 'Où en êtes-vous ?', icon: '📊' },
   { id: 4, title: 'Objectifs', subtitle: 'Que voulez-vous atteindre ?', icon: '🚀' },
   { id: 5, title: 'Quotidien', subtitle: 'Comment travaillez-vous ?', icon: '⚙️' },
-  { id: 6, title: 'Besoins IA', subtitle: 'Comment Sarah peut aider ?', icon: '🤖' },
-  { id: 7, title: 'Personnalité', subtitle: 'Comment Sarah doit parler ?', icon: '🎨' },
+  { id: 6, title: 'Besoins IA', subtitle: 'Comment Freenzy peut aider ?', icon: '🤖' },
+  { id: 7, title: 'Personnalité', subtitle: 'Comment Freenzy doit communiquer ?', icon: '🎨' },
 ];
 
 const AI_PRIORITIES = [
@@ -88,7 +89,31 @@ const AI_PRIORITIES = [
 const TONES = ['Professionnel', 'Amical', 'Formel', 'Décontracté', 'Expert', 'Pédagogique', 'Inspirant', 'Direct'];
 const LANGUAGES_LIST = ['Français', 'Anglais', 'Espagnol', 'Arabe', 'Hébreu', 'Allemand', 'Italien', 'Portugais'];
 
+function OInput({ value, onChange, placeholder, type = 'text' }: {
+  value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string; type?: string;
+}) {
+  return <input type={type} className="input" placeholder={placeholder} value={value} onChange={onChange} />;
+}
+
+function OTextArea({ value, onChange, onFocus, placeholder, rows = 3 }: {
+  value: string; onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onFocus?: () => void; placeholder: string; rows?: number;
+}) {
+  return <textarea className="input" placeholder={placeholder} rows={rows} value={value} onChange={onChange} onFocus={onFocus} style={{ resize: 'vertical' }} />;
+}
+
+function OLabel({ text, hint, compactMode }: { text: string; hint?: string; compactMode?: boolean }) {
+  return (
+    <label style={{ display: 'block', marginBottom: 6 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{text}</span>
+      {hint && !compactMode && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>{hint}</span>}
+    </label>
+  );
+}
+
 export default function OnboardingPage() {
+  const { showError } = useToast();
   const [step, setStep] = useState(0); // 0 = quick analysis step
   const [profile, setProfile] = useState<CompanyProfile>(defaultProfile);
   const [saving, setSaving] = useState(false);
@@ -100,13 +125,36 @@ export default function OnboardingPage() {
   const [prefilled, setPrefilled] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
   const lastFocusedFieldRef = useRef<keyof CompanyProfile | ''>('');
+  // Account type pre-step — shown only if not yet chosen
+  const [showAccountTypeStep, setShowAccountTypeStep] = useState(false);
 
   useEffect(() => {
     loadProfile();
-    // Load compact mode preference
-    try { setCompactMode(localStorage.getItem('sarah_onboarding_compact') === 'true'); } catch { /* */ }
-    // If profile already exists, skip step 0
+    try { setCompactMode(localStorage.getItem('fz_onboarding_compact') === 'true'); } catch { /* */ }
+    // Show account type step if not yet set
+    try {
+      const alreadySet = localStorage.getItem('fz_is_pro') !== null;
+      if (!alreadySet) setShowAccountTypeStep(true);
+    } catch { /* */ }
   }, []);
+
+  function selectAccountType(isPro: boolean) {
+    try { localStorage.setItem('fz_is_pro', isPro ? 'true' : 'false'); } catch { /* */ }
+    setShowAccountTypeStep(false);
+    // Persist to backend
+    try {
+      const session = getSession();
+      if (session?.token) {
+        fetch('/api/portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: '/portal/preferences', token: session.token, method: 'PATCH', data: { isPro } }),
+        }).catch(() => {});
+      }
+    } catch { /* */ }
+    // If pro, force step 0 (company onboarding); if personal, redirect to dashboard
+    if (!isPro) window.location.href = '/client/dashboard';
+  }
 
   async function loadProfile() {
     const session = getSession();
@@ -124,7 +172,7 @@ export default function OnboardingPage() {
   }
 
   function getSession() {
-    try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
+    try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
   }
 
   function updateField(field: keyof CompanyProfile, value: string | string[]) {
@@ -152,7 +200,7 @@ export default function OnboardingPage() {
       });
       if (complete) window.location.href = '/client/chat';
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Erreur de sauvegarde');
+      showError(e instanceof Error ? e.message : 'Erreur de sauvegarde du profil');
     } finally {
       setSaving(false);
     }
@@ -188,7 +236,15 @@ export default function OnboardingPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) { setAnalyzeError(data.error || 'Erreur lors de l\'analyse'); return; }
+      if (!res.ok) {
+        if (data.code === 'TOKEN_EXPIRED' || (data.error && data.error.includes('expiree'))) {
+          setAnalyzeError('Votre session a expire. Veuillez vous reconnecter.');
+          setTimeout(() => { window.location.href = '/login'; }, 3000);
+        } else {
+          setAnalyzeError(data.error || 'Erreur lors de l\'analyse');
+        }
+        return;
+      }
       if (data.profile) {
         setProfile(p => {
           const updated = { ...p };
@@ -212,45 +268,58 @@ export default function OnboardingPage() {
   function toggleCompactMode() {
     const next = !compactMode;
     setCompactMode(next);
-    try { localStorage.setItem('sarah_onboarding_compact', String(next)); } catch { /* */ }
-  }
-
-  function TextArea({ field, placeholder, rows = 3 }: { field: keyof CompanyProfile; placeholder: string; rows?: number }) {
-    return (
-      <textarea
-        className="input"
-        placeholder={placeholder}
-        rows={rows}
-        value={profile[field] as string}
-        onChange={e => updateField(field, e.target.value)}
-        onFocus={() => { lastFocusedFieldRef.current = field; }}
-        style={{ resize: 'vertical' }}
-      />
-    );
-  }
-
-  function Input({ field, placeholder, type = 'text' }: { field: keyof CompanyProfile; placeholder: string; type?: string }) {
-    return (
-      <input
-        type={type}
-        className="input"
-        placeholder={placeholder}
-        value={profile[field] as string}
-        onChange={e => updateField(field, e.target.value)}
-      />
-    );
-  }
-
-  function Label({ text, hint }: { text: string; hint?: string }) {
-    return (
-      <label style={{ display: 'block', marginBottom: 6 }}>
-        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{text}</span>
-        {hint && !compactMode && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>{hint}</span>}
-      </label>
-    );
+    try { localStorage.setItem('fz_onboarding_compact', String(next)); } catch { /* */ }
   }
 
   if (!loaded) return <div className="animate-pulse p-24 text-center text-muted">Chargement...</div>;
+
+  // Account type pre-step
+  if (showAccountTypeStep) {
+    return (
+      <div style={{ maxWidth: 560, margin: '60px auto', padding: '0 16px' }}>
+        <div className="text-center mb-24">
+          <div style={{ fontSize: 48, marginBottom: 16 }}>👋</div>
+          <h1 className="page-title" style={{ marginBottom: 8 }}>Bienvenue sur Freenzy.io</h1>
+          <p className="page-subtitle text-muted">Vous utilisez Freenzy.io pour :</p>
+        </div>
+        <div className="grid grid-2" style={{ gap: 16, marginBottom: 32 }}>
+          <button
+            onClick={() => selectAccountType(false)}
+            className="card"
+            style={{
+              cursor: 'pointer', textAlign: 'center', padding: '32px 24px',
+              border: '2px solid var(--border-primary)', borderRadius: 'var(--radius-xl)',
+              transition: 'all 0.2s', background: 'var(--bg-secondary)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-muted)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-primary)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
+          >
+            <div style={{ fontSize: 40, marginBottom: 12 }}>👤</div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Usage personnel</div>
+            <div className="text-sm text-muted">Productivité, projets perso, assistants IA</div>
+          </button>
+          <button
+            onClick={() => selectAccountType(true)}
+            className="card"
+            style={{
+              cursor: 'pointer', textAlign: 'center', padding: '32px 24px',
+              border: '2px solid var(--border-primary)', borderRadius: 'var(--radius-xl)',
+              transition: 'all 0.2s', background: 'var(--bg-secondary)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-muted)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-primary)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
+          >
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🏢</div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Mon entreprise</div>
+            <div className="text-sm text-muted">Équipe, clients, automatisation business</div>
+          </button>
+        </div>
+        <p className="text-xs text-muted" style={{ textAlign: 'center' }}>
+          Vous pourrez changer ce choix à tout moment dans Mon Compte
+        </p>
+      </div>
+    );
+  }
 
   // Step 0: Quick analysis screen
   if (step === 0) {
@@ -258,11 +327,14 @@ export default function OnboardingPage() {
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
         <div className="text-center mb-24" style={{ marginBottom: 40 }}>
           <h1 className="text-2xl font-bold" style={{ letterSpacing: '-0.03em' }}>
-            Présentez votre entreprise à Sarah
+            Présentez votre entreprise à Freenzy
           </h1>
           <p className="text-base text-tertiary mt-8" style={{ lineHeight: 1.6 }}>
-            Choisissez la méthode qui vous convient le mieux pour commencer.
+            Choisissez la méthode qui vous convient le mieux pour commencer. Plus vous fournissez de contexte, mieux vos agents pourront vous aider.
           </p>
+          <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: '#f0fdf4', border: '1px solid #bbf7d0', fontSize: 12, color: '#166534', lineHeight: 1.5 }}>
+            🔒 <strong>Confidentialité garantie :</strong> Ces informations sont strictement privées et ne seront jamais partagées avec des tiers. Le Répondeur Intelligent et les agents externes n&apos;ont aucun accès à ces données.
+          </div>
         </div>
 
         {/* Option 1: Quick Analysis */}
@@ -272,7 +344,7 @@ export default function OnboardingPage() {
             <div>
               <div className="text-xl font-bold">Remplissage express</div>
               <div className="text-md text-tertiary">
-                Sarah analyse votre site web et pré-remplit le formulaire (~2-3 crédits)
+                Freenzy analyse votre site web et pré-remplit le formulaire (~2-3 crédits)
               </div>
             </div>
           </div>
@@ -322,13 +394,13 @@ export default function OnboardingPage() {
                   <span className="animate-pulse">Analyse en cours...</span>
                 </span>
               ) : (
-                'Analyser avec Sarah'
+                'Analyser avec Freenzy'
               )}
             </button>
           </div>
 
           <div className="text-xs text-muted mt-12" style={{ lineHeight: 1.5 }}>
-            Sarah va lire votre site, extraire les informations clés et pré-remplir le formulaire.
+            Freenzy va lire votre site, extraire les informations clés et pré-remplir le formulaire.
             Vous pourrez ensuite vérifier et ajuster chaque champ.
           </div>
         </div>
@@ -357,11 +429,11 @@ export default function OnboardingPage() {
       <div className="text-center mb-24">
         <div className="flex flex-center items-center gap-16 mb-12">
           <h1 className="text-2xl font-bold" style={{ letterSpacing: '-0.03em', margin: 0 }}>
-            Présentez votre entreprise à Sarah
+            Présentez votre entreprise à Freenzy
           </h1>
         </div>
         <p className="text-base text-tertiary mt-8" style={{ lineHeight: 1.6 }}>
-          Plus Sarah vous connaît, plus elle sera efficace. Remplissez ce formulaire en détail
+          Plus Freenzy vous connaît, plus vos agents seront efficaces. Remplissez ce formulaire en détail
           pour que votre équipe IA comprenne parfaitement vos besoins.
         </p>
         {/* Compact mode toggle + prefilled badge + voice input */}
@@ -442,57 +514,57 @@ export default function OnboardingPage() {
 
         <div className="flex flex-col gap-20">
           {step === 1 && <>
-            <div><Label text="Nom de l'entreprise" /><Input field="companyName" placeholder="Acme SAS" /></div>
+            <div><OLabel text="Nom de l'entreprise" compactMode={compactMode} /><OInput value={profile.companyName} onChange={e => updateField('companyName', e.target.value)} placeholder="Acme SAS" /></div>
             <div className="grid-2">
-              <div><Label text="Secteur d'activité" /><Input field="industry" placeholder="Tech, Santé, Finance..." /></div>
-              <div><Label text="Nombre d'employés" /><Input field="employeeCount" placeholder="1-10, 11-50, 51-200..." /></div>
+              <div><OLabel text="Secteur d'activité" compactMode={compactMode} /><OInput value={profile.industry} onChange={e => updateField('industry', e.target.value)} placeholder="Tech, Santé, Finance..." /></div>
+              <div><OLabel text="Nombre d'employés" compactMode={compactMode} /><OInput value={profile.employeeCount} onChange={e => updateField('employeeCount', e.target.value)} placeholder="1-10, 11-50, 51-200..." /></div>
             </div>
             <div className="grid-2">
-              <div><Label text="Année de création" /><Input field="foundedYear" placeholder="2020" /></div>
-              <div><Label text="Localisation" /><Input field="location" placeholder="Paris, France" /></div>
+              <div><OLabel text="Année de création" compactMode={compactMode} /><OInput value={profile.foundedYear} onChange={e => updateField('foundedYear', e.target.value)} placeholder="2020" /></div>
+              <div><OLabel text="Localisation" compactMode={compactMode} /><OInput value={profile.location} onChange={e => updateField('location', e.target.value)} placeholder="Paris, France" /></div>
             </div>
-            <div><Label text="Site web" /><Input field="website" placeholder="https://..." /></div>
+            <div><OLabel text="Site web" compactMode={compactMode} /><OInput value={profile.website} onChange={e => updateField('website', e.target.value)} placeholder="https://..." /></div>
           </>}
 
           {step === 2 && <>
-            <div><Label text="Mission" hint="Pourquoi votre entreprise existe-t-elle ?" /><TextArea field="mission" placeholder="Notre mission est de..." /></div>
-            <div><Label text="Vision" hint="À quoi ressemble le succès dans 5 ans ?" /><TextArea field="vision" placeholder="Dans 5 ans, nous serons..." /></div>
-            <div><Label text="Valeurs" hint="Les principes qui guident vos décisions" /><TextArea field="values" placeholder="Innovation, Transparence, Excellence..." /></div>
-            <div><Label text="Proposition de valeur unique" hint="Qu'est-ce qui vous différencie ?" /><TextArea field="uniqueValue" placeholder="Ce qui nous rend unique c'est..." /></div>
-            <div><Label text="Public cible" /><TextArea field="targetAudience" placeholder="PME tech entre 10-100 employés..." /></div>
+            <div><OLabel text="Mission" hint="Pourquoi votre entreprise existe-t-elle ?" compactMode={compactMode} /><OTextArea value={profile.mission} onChange={e => updateField('mission', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'mission'; }} placeholder="Notre mission est de..." /></div>
+            <div><OLabel text="Vision" hint="À quoi ressemble le succès dans 5 ans ?" compactMode={compactMode} /><OTextArea value={profile.vision} onChange={e => updateField('vision', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'vision'; }} placeholder="Dans 5 ans, nous serons..." /></div>
+            <div><OLabel text="Valeurs" hint="Les principes qui guident vos décisions" compactMode={compactMode} /><OTextArea value={profile.values} onChange={e => updateField('values', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'values'; }} placeholder="Innovation, Transparence, Excellence..." /></div>
+            <div><OLabel text="Proposition de valeur unique" hint="Qu'est-ce qui vous différencie ?" compactMode={compactMode} /><OTextArea value={profile.uniqueValue} onChange={e => updateField('uniqueValue', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'uniqueValue'; }} placeholder="Ce qui nous rend unique c'est..." /></div>
+            <div><OLabel text="Public cible" compactMode={compactMode} /><OTextArea value={profile.targetAudience} onChange={e => updateField('targetAudience', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'targetAudience'; }} placeholder="PME tech entre 10-100 employés..." /></div>
           </>}
 
           {step === 3 && <>
-            <div><Label text="Chiffre d'affaires actuel" hint="Approximatif, confidentiel" /><Input field="currentRevenue" placeholder="500K EUR/an, en croissance..." /></div>
-            <div><Label text="Principaux défis" hint="Qu'est-ce qui vous empêche de dormir ?" /><TextArea field="mainChallenges" placeholder="Acquisition client, rétention, scalabilité..." rows={4} /></div>
-            <div><Label text="Concurrents principaux" /><TextArea field="competitors" placeholder="Concurrent A (leader), Concurrent B (niche)..." /></div>
+            <div><OLabel text="Chiffre d'affaires actuel" hint="Approximatif, confidentiel" compactMode={compactMode} /><OInput value={profile.currentRevenue} onChange={e => updateField('currentRevenue', e.target.value)} placeholder="500K EUR/an, en croissance..." /></div>
+            <div><OLabel text="Principaux défis" hint="Qu'est-ce qui vous empêche de dormir ?" compactMode={compactMode} /><OTextArea value={profile.mainChallenges} onChange={e => updateField('mainChallenges', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'mainChallenges'; }} placeholder="Acquisition client, rétention, scalabilité..." rows={4} /></div>
+            <div><OLabel text="Concurrents principaux" compactMode={compactMode} /><OTextArea value={profile.competitors} onChange={e => updateField('competitors', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'competitors'; }} placeholder="Concurrent A (leader), Concurrent B (niche)..." /></div>
             <div className="grid-2">
-              <div><Label text="Forces" /><TextArea field="strengths" placeholder="Équipe technique, produit unique..." /></div>
-              <div><Label text="Faiblesses" /><TextArea field="weaknesses" placeholder="Marketing, manque de process..." /></div>
+              <div><OLabel text="Forces" compactMode={compactMode} /><OTextArea value={profile.strengths} onChange={e => updateField('strengths', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'strengths'; }} placeholder="Équipe technique, produit unique..." /></div>
+              <div><OLabel text="Faiblesses" compactMode={compactMode} /><OTextArea value={profile.weaknesses} onChange={e => updateField('weaknesses', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'weaknesses'; }} placeholder="Marketing, manque de process..." /></div>
             </div>
           </>}
 
           {step === 4 && <>
-            <div><Label text="Objectifs court terme" hint="3-6 mois" /><TextArea field="shortTermGoals" placeholder="Lancer v2 du produit, doubler la base clients..." rows={4} /></div>
-            <div><Label text="Objectifs long terme" hint="1-3 ans" /><TextArea field="longTermGoals" placeholder="Devenir leader du marché, lever des fonds..." rows={4} /></div>
-            <div><Label text="KPIs clés" hint="Comment mesurez-vous le succès ?" /><TextArea field="kpis" placeholder="MRR, churn rate, NPS, conversion..." /></div>
+            <div><OLabel text="Objectifs court terme" hint="3-6 mois" compactMode={compactMode} /><OTextArea value={profile.shortTermGoals} onChange={e => updateField('shortTermGoals', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'shortTermGoals'; }} placeholder="Lancer v2 du produit, doubler la base clients..." rows={4} /></div>
+            <div><OLabel text="Objectifs long terme" hint="1-3 ans" compactMode={compactMode} /><OTextArea value={profile.longTermGoals} onChange={e => updateField('longTermGoals', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'longTermGoals'; }} placeholder="Devenir leader du marché, lever des fonds..." rows={4} /></div>
+            <div><OLabel text="KPIs clés" hint="Comment mesurez-vous le succès ?" compactMode={compactMode} /><OTextArea value={profile.kpis} onChange={e => updateField('kpis', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'kpis'; }} placeholder="MRR, churn rate, NPS, conversion..." /></div>
             <div className="grid-2">
-              <div><Label text="Budget IA mensuel" /><Input field="budget" placeholder="500 EUR/mois" /></div>
-              <div><Label text="Timeline" /><Input field="timeline" placeholder="Résultats attendus en 3 mois" /></div>
+              <div><OLabel text="Budget IA mensuel" compactMode={compactMode} /><OInput value={profile.budget} onChange={e => updateField('budget', e.target.value)} placeholder="500 EUR/mois" /></div>
+              <div><OLabel text="Timeline" compactMode={compactMode} /><OInput value={profile.timeline} onChange={e => updateField('timeline', e.target.value)} placeholder="Résultats attendus en 3 mois" /></div>
             </div>
           </>}
 
           {step === 5 && <>
-            <div><Label text="Tâches quotidiennes" hint="Décrivez une journée type" /><TextArea field="dailyTasks" placeholder="Matin: emails, réunions. Aprèm: dev, suivi clients..." rows={4} /></div>
-            <div><Label text="Points de friction" hint="Qu'est-ce qui vous fait perdre du temps ?" /><TextArea field="painPoints" placeholder="Trop d'emails, reporting manuel, coordination équipe..." rows={4} /></div>
-            <div><Label text="Outils utilisés" /><TextArea field="toolsUsed" placeholder="Slack, Notion, Google Workspace, HubSpot..." /></div>
-            <div><Label text="Structure d'équipe" /><TextArea field="teamStructure" placeholder="3 devs, 1 commercial, 1 marketing, CEO..." /></div>
-            <div><Label text="Canaux de communication" /><TextArea field="communicationChannels" placeholder="Email, WhatsApp, Slack, téléphone..." /></div>
+            <div><OLabel text="Tâches quotidiennes" hint="Décrivez une journée type" compactMode={compactMode} /><OTextArea value={profile.dailyTasks} onChange={e => updateField('dailyTasks', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'dailyTasks'; }} placeholder="Matin: emails, réunions. Aprèm: dev, suivi clients..." rows={4} /></div>
+            <div><OLabel text="Points de friction" hint="Qu'est-ce qui vous fait perdre du temps ?" compactMode={compactMode} /><OTextArea value={profile.painPoints} onChange={e => updateField('painPoints', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'painPoints'; }} placeholder="Trop d'emails, reporting manuel, coordination équipe..." rows={4} /></div>
+            <div><OLabel text="Outils utilisés" compactMode={compactMode} /><OTextArea value={profile.toolsUsed} onChange={e => updateField('toolsUsed', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'toolsUsed'; }} placeholder="Slack, Notion, Google Workspace, HubSpot..." /></div>
+            <div><OLabel text="Structure d'équipe" compactMode={compactMode} /><OTextArea value={profile.teamStructure} onChange={e => updateField('teamStructure', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'teamStructure'; }} placeholder="3 devs, 1 commercial, 1 marketing, CEO..." /></div>
+            <div><OLabel text="Canaux de communication" compactMode={compactMode} /><OTextArea value={profile.communicationChannels} onChange={e => updateField('communicationChannels', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'communicationChannels'; }} placeholder="Email, WhatsApp, Slack, téléphone..." /></div>
           </>}
 
           {step === 6 && <>
             <div>
-              <Label text="Priorités IA" hint="Sélectionnez tout ce qui vous intéresse" />
+              <OLabel text="Priorités IA" hint="Sélectionnez tout ce qui vous intéresse" compactMode={compactMode} />
               <div className="flex flex-wrap gap-6 mt-8">
                 {AI_PRIORITIES.map(p => (
                   <button
@@ -511,15 +583,15 @@ export default function OnboardingPage() {
                 ))}
               </div>
             </div>
-            <div><Label text="Qu'aimeriez-vous automatiser ?" /><TextArea field="automationWishes" placeholder="Réponses emails type, relances clients, reporting hebdo..." rows={4} /></div>
-            <div><Label text="Besoins en contenu" /><TextArea field="contentNeeds" placeholder="Posts LinkedIn, newsletters, articles blog..." /></div>
-            <div><Label text="Service client" /><TextArea field="customerServiceNeeds" placeholder="FAQ automatique, escalation, suivi tickets..." /></div>
-            <div><Label text="Analyse & reporting" /><TextArea field="analyticsNeeds" placeholder="Dashboard ventes, analyse concurrence, veille marché..." /></div>
+            <div><OLabel text="Qu'aimeriez-vous automatiser ?" compactMode={compactMode} /><OTextArea value={profile.automationWishes} onChange={e => updateField('automationWishes', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'automationWishes'; }} placeholder="Réponses emails type, relances clients, reporting hebdo..." rows={4} /></div>
+            <div><OLabel text="Besoins en contenu" compactMode={compactMode} /><OTextArea value={profile.contentNeeds} onChange={e => updateField('contentNeeds', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'contentNeeds'; }} placeholder="Posts LinkedIn, newsletters, articles blog..." /></div>
+            <div><OLabel text="Service client" compactMode={compactMode} /><OTextArea value={profile.customerServiceNeeds} onChange={e => updateField('customerServiceNeeds', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'customerServiceNeeds'; }} placeholder="FAQ automatique, escalation, suivi tickets..." /></div>
+            <div><OLabel text="Analyse & reporting" compactMode={compactMode} /><OTextArea value={profile.analyticsNeeds} onChange={e => updateField('analyticsNeeds', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'analyticsNeeds'; }} placeholder="Dashboard ventes, analyse concurrence, veille marché..." /></div>
           </>}
 
           {step === 7 && <>
             <div>
-              <Label text="Ton de communication" hint="Comment Sarah doit parler en votre nom ?" />
+              <OLabel text="Ton de communication" hint="Comment Freenzy doit communiquer en votre nom ?" compactMode={compactMode} />
               <div className="flex flex-wrap gap-6 mt-8">
                 {TONES.map(t => (
                   <button
@@ -539,7 +611,7 @@ export default function OnboardingPage() {
               </div>
             </div>
             <div>
-              <Label text="Langues" hint="Dans quelles langues Sarah doit communiquer ?" />
+              <OLabel text="Langues" hint="Dans quelles langues Freenzy doit communiquer ?" compactMode={compactMode} />
               <div className="flex flex-wrap gap-6 mt-8">
                 {LANGUAGES_LIST.map(l => (
                   <button
@@ -558,8 +630,8 @@ export default function OnboardingPage() {
                 ))}
               </div>
             </div>
-            <div><Label text="Sujets à éviter" hint="Ce que Sarah ne doit jamais mentionner" /><TextArea field="doNotMention" placeholder="Concurrents spécifiques, anciens litiges..." /></div>
-            <div><Label text="Inspirations" hint="Marques/personnes dont vous aimez le style" /><TextArea field="inspirations" placeholder="Apple pour le design, Patagonia pour les valeurs..." /></div>
+            <div><OLabel text="Sujets à éviter" hint="Ce que Freenzy ne doit jamais mentionner" compactMode={compactMode} /><OTextArea value={profile.doNotMention} onChange={e => updateField('doNotMention', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'doNotMention'; }} placeholder="Concurrents spécifiques, anciens litiges..." /></div>
+            <div><OLabel text="Inspirations" hint="Marques/personnes dont vous aimez le style" compactMode={compactMode} /><OTextArea value={profile.inspirations} onChange={e => updateField('inspirations', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'inspirations'; }} placeholder="Apple pour le design, Patagonia pour les valeurs..." /></div>
           </>}
         </div>
       </div>
@@ -618,9 +690,9 @@ export default function OnboardingPage() {
             className="input"
             placeholder="+33 6 12 34 56 78"
             style={{ flex: 1, minWidth: 200 }}
-            defaultValue={typeof window !== 'undefined' ? localStorage.getItem('sarah_whatsapp_number') ?? '' : ''}
+            defaultValue={typeof window !== 'undefined' ? localStorage.getItem('fz_whatsapp_number') ?? '' : ''}
             onChange={e => {
-              try { localStorage.setItem('sarah_whatsapp_number', e.target.value); } catch { /* */ }
+              try { localStorage.setItem('fz_whatsapp_number', e.target.value); } catch { /* */ }
             }}
           />
           <span className="text-xs text-muted" style={{ fontStyle: 'italic' }}>
@@ -630,7 +702,7 @@ export default function OnboardingPage() {
       </div>
 
       <div className="text-center text-sm text-muted mt-24" style={{ lineHeight: 1.6 }}>
-        Vos données sont privées et sécurisées. Elles servent uniquement à personnaliser Sarah pour votre entreprise.
+        Vos données sont privées et sécurisées. Elles servent uniquement à personnaliser Freenzy pour votre entreprise.
         <br />Vous pouvez modifier ces informations à tout moment.
       </div>
     </div>

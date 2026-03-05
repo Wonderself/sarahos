@@ -16,7 +16,7 @@ function viewerToken(): string {
 const { userService } = require('../users/user.service');
 
 const sampleUser = {
-  id: 'user-abc',
+  id: 'a0000000-0000-4000-8000-000000000001',
   email: 'test@example.com',
   displayName: 'Test User',
   apiKey: 'key-xyz',
@@ -75,7 +75,7 @@ describe('Admin User Management (integration)', () => {
     userService.getUser.mockResolvedValue(null);
 
     const res = await request(app)
-      .get('/admin/users/unknown-id')
+      .get('/admin/users/b0000000-0000-4000-8000-000000000099')
       .set('Authorization', `Bearer ${adminToken()}`);
 
     expect(res.status).toBe(404);
@@ -85,18 +85,18 @@ describe('Admin User Management (integration)', () => {
     userService.getUser.mockResolvedValue(sampleUser);
 
     const res = await request(app)
-      .get('/admin/users/user-abc')
+      .get('/admin/users/a0000000-0000-4000-8000-000000000001')
       .set('Authorization', `Bearer ${adminToken()}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.id).toBe('user-abc');
+    expect(res.body.id).toBe('a0000000-0000-4000-8000-000000000001');
   });
 
   it('PATCH /admin/users/:id — admin can update tier', async () => {
     userService.updateUser.mockResolvedValue({ ...sampleUser, tier: 'paid' });
 
     const res = await request(app)
-      .patch('/admin/users/user-abc')
+      .patch('/admin/users/a0000000-0000-4000-8000-000000000001')
       .set('Authorization', `Bearer ${adminToken()}`)
       .send({ tier: 'paid' });
 
@@ -108,7 +108,7 @@ describe('Admin User Management (integration)', () => {
     userService.deactivateUser.mockResolvedValue(true);
 
     const res = await request(app)
-      .delete('/admin/users/user-abc')
+      .delete('/admin/users/a0000000-0000-4000-8000-000000000001')
       .set('Authorization', `Bearer ${adminToken()}`);
 
     expect(res.status).toBe(200);
@@ -119,7 +119,7 @@ describe('Admin User Management (integration)', () => {
     userService.regenerateApiKey.mockResolvedValue('new-key-123');
 
     const res = await request(app)
-      .post('/admin/users/user-abc/reset-key')
+      .post('/admin/users/a0000000-0000-4000-8000-000000000001/reset-key')
       .set('Authorization', `Bearer ${adminToken()}`);
 
     expect(res.status).toBe(200);

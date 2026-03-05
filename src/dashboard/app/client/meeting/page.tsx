@@ -16,12 +16,12 @@ interface MeetingMessage {
 }
 
 const MEETING_TEMPLATES = [
-  { icon: '🚀', title: 'Lancement de projet', topic: 'Lancer un nouveau projet stratégique', description: 'Définir les objectifs, les rôles et le planning', suggestedAgents: ['sarah-dg', 'sarah-dev', 'sarah-finance'] as AgentTypeId[] },
-  { icon: '📊', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les résultats et ajuster la stratégie', suggestedAgents: ['sarah-dg', 'sarah-finance', 'sarah-commercial'] as AgentTypeId[] },
-  { icon: '💡', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'Générer des idées innovantes en équipe', suggestedAgents: ['sarah-marketing', 'sarah-dev', 'sarah-commercial'] as AgentTypeId[] },
-  { icon: '🛡️', title: 'Résolution de crise', topic: 'Résoudre une situation de crise urgente', description: 'Coordonner la réponse et protéger l\'entreprise', suggestedAgents: ['sarah-dg', 'sarah-communication', 'sarah-juridique'] as AgentTypeId[] },
-  { icon: '📅', title: 'Planification annuelle', topic: 'Planification stratégique pour l\'année', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['sarah-dg', 'sarah-finance', 'sarah-rh'] as AgentTypeId[] },
-  { icon: '🤝', title: 'Partenariat stratégique', topic: 'Évaluer un partenariat ou une acquisition', description: 'Analyser les opportunités et risques', suggestedAgents: ['sarah-dg', 'sarah-commercial', 'sarah-juridique'] as AgentTypeId[] },
+  { icon: '🚀', title: 'Lancement de projet', topic: 'Lancer un nouveau projet stratégique', description: 'Définir les objectifs, les rôles et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
+  { icon: '📊', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les résultats et ajuster la stratégie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
+  { icon: '💡', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'Générer des idées innovantes en équipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
+  { icon: '🛡️', title: 'Résolution de crise', topic: 'Résoudre une situation de crise urgente', description: 'Coordonner la réponse et protéger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
+  { icon: '📅', title: 'Planification annuelle', topic: 'Planification stratégique pour l\'année', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
+  { icon: '🤝', title: 'Partenariat stratégique', topic: 'Évaluer un partenariat ou une acquisition', description: 'Analyser les opportunités et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
 ];
 
 const TOPIC_SUGGESTIONS = [
@@ -40,7 +40,7 @@ const VALIDATION_SUGGESTIONS = [
 
 export default function MeetingPage() {
   const [meetingAgents, setMeetingAgents] = useState<ResolvedAgent[]>([]);
-  const [selectedAgents, setSelectedAgents] = useState<string[]>(['sarah-dg', 'sarah-marketing', 'sarah-finance']);
+  const [selectedAgents, setSelectedAgents] = useState<string[]>(['fz-dg', 'fz-marketing', 'fz-finance']);
   const [topic, setTopic] = useState('');
   const [messages, setMessages] = useState<MeetingMessage[]>([]);
   const [running, setRunning] = useState(false);
@@ -56,7 +56,7 @@ export default function MeetingPage() {
   // Refs to avoid stale closures in runAutoMode
   const messagesRef = useRef<MeetingMessage[]>([]);
   const meetingAgentsRef = useRef<ResolvedAgent[]>([]);
-  const selectedAgentsRef = useRef<string[]>(['sarah-dg', 'sarah-marketing', 'sarah-finance']);
+  const selectedAgentsRef = useRef<string[]>(['fz-dg', 'fz-marketing', 'fz-finance']);
   const topicRef = useRef('');
 
   // Keep refs in sync
@@ -77,12 +77,12 @@ export default function MeetingPage() {
   }, [messages]);
 
   function getSession() {
-    try { return JSON.parse(localStorage.getItem('sarah_session') ?? '{}'); } catch { return {}; }
+    try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
   }
 
   function getCompanyContext(): string {
     try {
-      const profile = localStorage.getItem('sarah_company_profile');
+      const profile = localStorage.getItem('fz_company_profile');
       if (profile) {
         const p = JSON.parse(profile);
         return `Entreprise: ${p.companyName ?? 'N/A'}, Secteur: ${p.industry ?? 'N/A'}, Mission: ${p.mission ?? 'N/A'}, Défis: ${p.challenges ?? 'N/A'}, Objectifs: ${p.shortTermGoals ?? 'N/A'}`;

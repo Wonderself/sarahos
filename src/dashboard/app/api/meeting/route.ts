@@ -5,9 +5,9 @@ const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 // ─── Smart Speaker Rotation ───
 
 function selectNextSpeaker(agents: Array<{id: string; name: string; role: string}>, previousMessages: Array<{speaker: string; content: string}>): typeof agents[number] {
-  // First turn: always DG (sarah-dg) if present
+  // First turn: always DG (fz-dg) if present
   if (previousMessages.length === 0) {
-    const dg = agents.find(a => a.id === 'sarah-dg');
+    const dg = agents.find(a => a.id === 'fz-dg');
     if (dg) return dg;
     return agents[0];
   }
@@ -16,16 +16,16 @@ function selectNextSpeaker(agents: Array<{id: string; name: string; role: string
 
   // Keyword-to-role scoring map
   const roleKeywords: Record<string, string[]> = {
-    'sarah-finance': ['budget', 'coût', 'cout', 'marge', 'trésorerie', 'rentabilité', 'chiffre', 'financ', 'prix', 'investiss', 'dépense'],
-    'sarah-dev': ['tech', 'api', 'code', 'développ', 'infra', 'serveur', 'bug', 'architecture', 'logiciel', 'sécurité'],
-    'sarah-commercial': ['vente', 'client', 'prospect', 'pipeline', 'deal', 'contrat commercial', 'négoci', 'marché'],
-    'sarah-marketing': ['marque', 'campagne', 'seo', 'visibilité', 'audience', 'contenu', 'réseaux sociaux', 'communication digitale'],
-    'sarah-rh': ['recrutement', 'talent', 'formation', 'équipe', 'salaire', 'embauche', 'collaborat', 'ressources humaines'],
-    'sarah-juridique': ['contrat', 'rgpd', 'juridique', 'légal', 'conformité', 'droit', 'propriété intellectuelle', 'litige'],
-    'sarah-communication': ['presse', 'image', 'réputation', 'média', 'communiqué', 'événement', 'crise', 'relation publique'],
-    'sarah-assistante': ['planning', 'agenda', 'organisation', 'tâche', 'email', 'suivi', 'rapport', 'logistique'],
-    'sarah-repondeur': ['appel', 'message', 'faq', 'support', 'ticket', 'réclamation', 'réponse', 'accueil'],
-    'sarah-dg': ['stratégie', 'vision', 'croissance', 'décision', 'leadership', 'expansion', 'levée de fonds', 'direction'],
+    'fz-finance': ['budget', 'coût', 'cout', 'marge', 'trésorerie', 'rentabilité', 'chiffre', 'financ', 'prix', 'investiss', 'dépense'],
+    'fz-dev': ['tech', 'api', 'code', 'développ', 'infra', 'serveur', 'bug', 'architecture', 'logiciel', 'sécurité'],
+    'fz-commercial': ['vente', 'client', 'prospect', 'pipeline', 'deal', 'contrat commercial', 'négoci', 'marché'],
+    'fz-marketing': ['marque', 'campagne', 'seo', 'visibilité', 'audience', 'contenu', 'réseaux sociaux', 'communication digitale'],
+    'fz-rh': ['recrutement', 'talent', 'formation', 'équipe', 'salaire', 'embauche', 'collaborat', 'ressources humaines'],
+    'fz-juridique': ['contrat', 'rgpd', 'juridique', 'légal', 'conformité', 'droit', 'propriété intellectuelle', 'litige'],
+    'fz-communication': ['presse', 'image', 'réputation', 'média', 'communiqué', 'événement', 'crise', 'relation publique'],
+    'fz-assistante': ['planning', 'agenda', 'organisation', 'tâche', 'email', 'suivi', 'rapport', 'logistique'],
+    'fz-repondeur': ['appel', 'message', 'faq', 'support', 'ticket', 'réclamation', 'réponse', 'accueil'],
+    'fz-dg': ['stratégie', 'vision', 'croissance', 'décision', 'leadership', 'expansion', 'levée de fonds', 'direction'],
   };
 
   const lastContent = (previousMessages[previousMessages.length - 1]?.content || '').toLowerCase();

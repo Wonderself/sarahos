@@ -1,0 +1,39 @@
+import { PRIVACY_SECTIONS, LEGAL_LAST_UPDATED } from '../../../lib/legal-content';
+
+export const metadata = {
+  title: 'Politique de Confidentialité | Freenzy.io',
+  description: 'Politique de confidentialité et protection des données RGPD — Freenzy.io.',
+};
+
+export default function ConfidentialitePage() {
+  return (
+    <article>
+      <div style={{ marginBottom: 36, paddingBottom: 24, borderBottom: '1px solid #f0f0f0' }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: '#1d1d1f', marginBottom: 8, letterSpacing: -0.5 }}>
+          Politique de Confidentialité
+        </h1>
+        <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>
+          Dernière mise à jour : {LEGAL_LAST_UPDATED}
+        </p>
+      </div>
+
+      {PRIVACY_SECTIONS.map((section, i) => (
+        <section key={section.id} id={section.id} style={{ marginBottom: 36 }}>
+          <h2 style={{
+            fontSize: 15, fontWeight: 700, color: '#1d1d1f', marginBottom: 12,
+            paddingLeft: 12, borderLeft: '3px solid #6366f1',
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, minWidth: 24 }}>
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            {section.title}
+          </h2>
+          <div style={{ fontSize: 14, lineHeight: 1.8, color: '#4b5563', whiteSpace: 'pre-line', paddingLeft: 12 }}>
+            {section.content}
+          </div>
+        </section>
+      ))}
+    </article>
+  );
+}

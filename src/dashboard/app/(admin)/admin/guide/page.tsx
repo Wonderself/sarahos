@@ -60,7 +60,7 @@ export default function GuidePage() {
       <div className="page-header">
         <h1 className="page-title">Guide de Gestion</h1>
         <p className="page-subtitle">
-          Tout ce qu&apos;il faut savoir pour gérer, évoluer et déployer SARAH OS.
+          Tout ce qu&apos;il faut savoir pour gérer, évoluer et déployer Freenzy.io.
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export default function GuidePage() {
       <section id="architecture" className="section">
         <h2 className="section-title">🏗️ Architecture du projet</h2>
         <div className="card p-20">
-          <div style={CODE_BLOCK_STYLE}>{`SARAH OS Dashboard
+          <div style={CODE_BLOCK_STYLE}>{`Freenzy.io Dashboard
 ├── src/dashboard/
 │   ├── app/
 │   │   ├── layout.tsx          → Sidebar admin (AdminShell)
@@ -102,14 +102,16 @@ export default function GuidePage() {
 │   │   ├── AdminShell.tsx      → Shell admin avec sidebar + health check
 │   │   └── NavLink.tsx         → Composant lien actif sidebar
 │   └── lib/
-│       ├── agent-config.ts     → 6 agents IA client, configs, system prompts
+│       ├── agent-config.ts     → 24 agents IA, configs, system prompts (~1800 lignes)
 │       ├── api-client.ts       → Client API serveur (backend)
+│       ├── deep-discussion.*   → Deep Discussions (85+ templates, utils)
 │       └── gamification.ts     → Moteur XP / niveaux / achievements
-└── Backend Express (port 3010)
-    ├── 15 agents IA (L1/L2/L3)
+└── Backend Express 5 (port 3010)
+    ├── 24 agents IA (12+12 L1 + 4 L2 + 4 L3)
     ├── PostgreSQL 16 + pgvector
     ├── Redis 7
-    └── 79 endpoints API`}</div>
+    ├── fal.ai (photo + video)
+    └── 80+ endpoints API`}</div>
 
           <div className="mt-16">
             <h3 className="text-base font-bold mb-8">Concepts clés</h3>
@@ -118,8 +120,8 @@ export default function GuidePage() {
                 { label: 'Pages admin', desc: 'Composants serveur (server components). Pas de useState, pas de localStorage. Données chargées côté serveur via api-client.ts.' },
                 { label: 'Pages client', desc: 'Composants client (\'use client\'). Utilisent useState, useEffect, localStorage. Authentification par token JWT stocké dans localStorage.' },
                 { label: 'API routes', desc: 'Fichiers route.ts dans app/api/. Servent de proxy vers le backend Express (port 3010). Évitent les problèmes CORS.' },
-                { label: 'Agent config', desc: 'Tout est dans lib/agent-config.ts : les agents client, leurs prompts, personnalités, expertises. Le backend gère 15 agents (L1/L2/L3). Les pages importent DEFAULT_AGENTS pour afficher les agents.' },
-                { label: 'Stockage client', desc: 'localStorage avec préfixe sarah_ : sarah_session, sarah_company_profile, sarah_agent_configs, sarah_chat_history, sarah_gamification, etc.' },
+                { label: 'Agent config', desc: 'Tout est dans lib/agent-config.ts (~1800 lignes) : 24 agents client, leurs prompts, personnalités, expertises. Le backend gère 24 agents (12+12 L1 + 4 L2 + 4 L3). Les pages importent DEFAULT_AGENTS pour afficher les agents.' },
+                { label: 'Stockage client', desc: 'localStorage avec préfixe fz_ : fz_session, fz_company_profile, fz_agent_configs, fz_chat_history, fz_gamification, etc.' },
                 { label: 'Styles CSS', desc: 'Un seul fichier globals.css avec ~1000 classes réutilisables (.card, .btn, .grid-2, .badge, .section, etc.). Pas de Tailwind.' },
               ].map(c => (
                 <div key={c.label} className="flex gap-8" style={{ alignItems: 'flex-start' }}>
@@ -245,7 +247,7 @@ export default function GuidePage() {
               title: 'Vérifier le build',
               content: (
                 <span>
-                  Lancer le build du dashboard pour vérifier qu&apos;il n&apos;y a aucune erreur. Résultat attendu : toutes les ~40 routes compilées sans erreur.
+                  Lancer le build du dashboard pour vérifier qu&apos;il n&apos;y a aucune erreur. Résultat attendu : toutes les ~80 routes compilées sans erreur.
                 </span>
               ),
             },
@@ -275,7 +277,7 @@ export default function GuidePage() {
               title: 'Définir l\'identifiant',
               content: (
                 <span>
-                  Ajouter un nouvel identifiant unique dans la liste des types d&apos;agents (ex : <strong>sarah-juridique</strong>, <strong>sarah-finance</strong>).
+                  Ajouter un nouvel identifiant unique dans la liste des types d&apos;agents (ex : <strong>fz-juridique</strong>, <strong>fz-finance</strong>).
                 </span>
               ),
             },
@@ -289,7 +291,7 @@ export default function GuidePage() {
                     <table className="data-table text-sm">
                       <tbody>
                         {[
-                          ['Nom & Rôle', 'Ex : Sarah — Directrice Juridique'],
+                          ['Nom & Rôle', 'Ex : Maëva — Directrice Juridique'],
                           ['Tagline', 'Description courte affichée sur la carte (1 ligne)'],
                           ['Emoji & Couleur', 'Identité visuelle de l\'agent (emoji + couleur hex)'],
                           ['Modèle IA', 'Sonnet (rapide, économique) ou Opus (avancé, raisonnement)'],
@@ -485,6 +487,17 @@ export default function GuidePage() {
                 'Le service d\'email est déjà codé dans le backend — activer l\'envoi réel en décommentant le code dans notification-service.ts',
               ],
             },
+            {
+              name: 'fal.ai (Photo & Video IA)',
+              icon: '🎨',
+              difficulty: 'Facile',
+              steps: [
+                'Déjà intégré — fal.ai Flux/schnell pour les photos (synchrone)',
+                'fal.ai LTX Video pour les vidéos (async queue)',
+                'Routes : /api/photo et /api/video dans le dashboard',
+                'Coûts : 8 crédits (image), 12 crédits (HD), 20 crédits (vidéo)',
+              ],
+            },
           ].map(integ => (
             <div key={integ.name} className="card p-16">
               <div className="flex items-center gap-8 mb-8">
@@ -527,15 +540,15 @@ export default function GuidePage() {
               <div className="text-md font-bold mb-8">Backend</div>
               <div className="text-sm text-secondary" style={{ lineHeight: 1.8 }}>
                 Compilation TypeScript + Exécution des tests<br />
-                <strong>64 suites, 683 tests</strong> — tous passent<br />
+                <strong>88+ suites, 700+ tests</strong> — tous passent<br />
                 0 erreur TypeScript, 0 erreur lint
               </div>
             </div>
             <div className="flex-1 bg-secondary rounded-sm border" style={{ padding: 14 }}>
               <div className="text-md font-bold mb-8">Dashboard</div>
               <div className="text-sm text-secondary" style={{ lineHeight: 1.8 }}>
-                Compilation Next.js (~40 routes)<br />
-                <strong>34+ pages</strong> admin + client<br />
+                Compilation Next.js (~80 routes)<br />
+                <strong>80+ pages</strong> admin + client<br />
                 Build optimisé pour la production
               </div>
             </div>
@@ -762,7 +775,7 @@ export default function GuidePage() {
       <div className="text-sm text-muted text-center mt-24" style={{
         padding: 16, borderTop: '1px solid var(--border-primary)',
       }}>
-        SARAH OS v0.10.0 — Phase 10 — Mars 2026
+        Freenzy.io v0.17.0 — Phase 18 — Mars 2026
       </div>
     </div>
   );

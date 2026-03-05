@@ -44,6 +44,19 @@ export class NotificationService {
     const notification = result.rows[0] ? rowToNotification(result.rows[0] as Record<string, unknown>) : null;
 
     if (notification) {
+      // Push to SSE stream (best-effort, non-blocking)
+      try {
+        const { addNotificationToStream } = await import('../security/routes/notification-stream.routes');
+        addNotificationToStream(notification.userId, {
+          id: notification.id,
+          type: notification.type,
+          subject: notification.subject,
+          body: notification.body,
+          channel: notification.channel,
+          createdAt: new Date().toISOString(),
+        });
+      } catch { /* SSE push is best-effort */ }
+
       // Dispatch to channel handler
       await this.dispatch(notification);
     }
@@ -98,23 +111,62 @@ export class NotificationService {
       }
 
       case 'email':
-        // TODO: SendGrid/SES integration
-        logger.info('Email notification queued (not connected)', {
+        // No email provider connected yet — mark as failed with clear reason
+        logger.warn('Email notification failed: no email provider configured (SendGrid/SES)', {
           notificationId: notification.id,
           type: notification.type,
           userId: notification.userId,
         });
-        await this.markAsSent(notification.id, `email-pending-${notification.id}`);
+        await this.markAsFailed(notification.id, 'Email delivery not configured — no provider (SendGrid/SES) connected');
         break;
 
-      case 'sms':
-        // TODO: Twilio SMS integration
-        logger.info('SMS notification queued (not connected)', {
-          notificationId: notification.id,
-          type: notification.type,
-        });
-        await this.markAsSent(notification.id, `sms-pending-${notification.id}`);
+      case 'sms': {
+        const { telephonyService } = await import('../avatar/services/telephony/telephony.service');
+
+        if (!telephonyService.isConfigured()) {
+          logger.warn('SMS notification: Twilio not configured', { notificationId: notification.id });
+          await this.markAsFailed(notification.id, 'Twilio SMS not configured');
+          break;
+        }
+
+        // Look up user phone from metadata, then fallback to WhatsApp-linked phone
+        let smsPhone = notification.metadata?.['phone'] as string | undefined;
+        if (!smsPhone) {
+          try {
+            const { whatsAppRepository } = await import('../whatsapp/whatsapp.repository');
+            const phoneLink = await whatsAppRepository.getPhoneLink(notification.userId);
+            if (phoneLink?.isVerified) smsPhone = phoneLink.phoneNumber;
+          } catch { /* best effort */ }
+        }
+        if (!smsPhone) {
+          logger.warn('SMS notification: no phone number in metadata or WhatsApp link', {
+            notificationId: notification.id,
+            userId: notification.userId,
+          });
+          await this.markAsFailed(notification.id, 'No phone number available for SMS');
+          break;
+        }
+
+        try {
+          const smsBody = `${notification.subject}\n\n${notification.body}`;
+          const result = await telephonyService.sendSms(smsPhone, smsBody);
+
+          if (result) {
+            await this.markAsSent(notification.id, result.messageSid);
+            logger.info('SMS notification sent via Twilio', {
+              notificationId: notification.id,
+              messageSid: result.messageSid,
+            });
+          } else {
+            await this.markAsFailed(notification.id, 'Twilio SMS send returned null');
+          }
+        } catch (error) {
+          const smsErrorMsg = error instanceof Error ? error.message : 'Unknown error';
+          logger.error('SMS notification error', { notificationId: notification.id, error: smsErrorMsg });
+          await this.markAsFailed(notification.id, smsErrorMsg);
+        }
         break;
+      }
 
       case 'in_app':
         // In-app notifications are stored in DB, client polls or uses SSE
@@ -122,9 +174,9 @@ export class NotificationService {
         break;
 
       case 'webhook':
-        // TODO: Custom webhook delivery
-        logger.info('Webhook notification queued', { notificationId: notification.id });
-        await this.markAsSent(notification.id, `webhook-pending-${notification.id}`);
+        // Webhook delivery not implemented — mark as failed
+        logger.warn('Webhook notification failed: delivery not implemented', { notificationId: notification.id });
+        await this.markAsFailed(notification.id, 'Webhook delivery not implemented');
         break;
     }
   }

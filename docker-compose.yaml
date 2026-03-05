@@ -1,0 +1,175 @@
+# ═══════════════════════════════════════════════════════
+# Freenzy.io — Production Docker Compose (Coolify)
+# ═══════════════════════════════════════════════════════
+# Deploy via Coolify → Docker Compose → paste this file
+# Set environment variables in Coolify's UI
+# ═══════════════════════════════════════════════════════
+
+version: '3.9'
+
+services:
+  # ── PostgreSQL + pgvector ──
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: freenzy-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-freenzy}
+      POSTGRES_USER: ${DB_USER:-freenzy}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    networks:
+      - internal
+
+  # ── Redis ──
+  redis:
+    image: redis:7-alpine
+    container_name: freenzy-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru --requirepass ${REDIS_PASSWORD}
+    healthcheck:
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD}', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+    networks:
+      - internal
+
+  # ── Backend (Node.js / Express) ──
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freenzy-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${DB_USER:-freenzy}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-freenzy}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-freenzy}
+      DB_USER: ${DB_USER:-freenzy}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      DASHBOARD_ORIGIN: ${DASHBOARD_ORIGIN:-https://app.freenzy.io}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      CLAUDE_MODEL_FAST: ${CLAUDE_MODEL_FAST:-claude-sonnet-4-20250514}
+      CLAUDE_MODEL_STANDARD: ${CLAUDE_MODEL_STANDARD:-claude-sonnet-4-20250514}
+      CLAUDE_MODEL_ADVANCED: ${CLAUDE_MODEL_ADVANCED:-claude-opus-4-6}
+      CLAUDE_MODEL_ULTRAFAST: ${CLAUDE_MODEL_ULTRAFAST:-claude-haiku-4-5-20251001}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:-}
+      ELEVENLABS_VOICE_ID: ${ELEVENLABS_VOICE_ID:-EXAVITQu4vr4xnSDxMaL}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER:-}
+      TWILIO_WHATSAPP_FROM: ${TWILIO_WHATSAPP_FROM:-}
+      WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
+      WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN:-}
+      WHATSAPP_VERIFY_TOKEN: ${WHATSAPP_VERIFY_TOKEN:-}
+      WEBHOOK_BASE_URL: ${WEBHOOK_BASE_URL:-https://api.freenzy.io}
+      GOOGLE_CALENDAR_API_KEY: ${GOOGLE_CALENDAR_API_KEY:-}
+      API_KEYS_ADMIN: ${API_KEYS_ADMIN}
+      API_KEYS_OPERATOR: ${API_KEYS_OPERATOR:-operator-default-key}
+      API_KEYS_VIEWER: ${API_KEYS_VIEWER:-viewer-default-key-0}
+      API_KEYS_SYSTEM: ${API_KEYS_SYSTEM:-system-default-key-0}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-1000}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-noreply@freenzy.io}
+      APP_URL: ${APP_URL:-https://app.freenzy.io}
+      AUTOPILOT_ENABLED: ${AUTOPILOT_ENABLED:-false}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-smadja99@gmail.com}
+      GLOBAL_HOURLY_BUDGET: ${GLOBAL_HOURLY_BUDGET:-5000000}
+    volumes:
+      - backend_state:/app/state
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/health || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+    labels:
+      - "coolify.managed=true"
+    networks:
+      - internal
+      - proxy
+
+  # ── Dashboard (Next.js) ──
+  dashboard:
+    build:
+      context: ./src/dashboard
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.freenzy.io}
+    container_name: freenzy-dashboard
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.freenzy.io}
+      NODE_ENV: production
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/ || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    labels:
+      - "coolify.managed=true"
+    networks:
+      - internal
+      - proxy
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_state:
+
+networks:
+  internal:
+    driver: bridge
+  proxy:
+    external: true
+    name: coolify

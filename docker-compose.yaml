@@ -9,7 +9,7 @@ version: '3.9'
 
 services:
   # ── PostgreSQL + pgvector ──
-  postgres:
+  freenzy-postgres:
     image: pgvector/pgvector:pg16
     container_name: freenzy-postgres
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
       - internal
 
   # ── Redis ──
-  redis:
+  freenzy-redis:
     image: redis:7-alpine
     container_name: freenzy-redis
     restart: unless-stopped
@@ -61,21 +61,21 @@ services:
     container_name: freenzy-backend
     restart: unless-stopped
     depends_on:
-      postgres:
+      freenzy-postgres:
         condition: service_healthy
-      redis:
+      freenzy-redis:
         condition: service_healthy
     environment:
       NODE_ENV: production
       PORT: 3000
-      DATABASE_URL: postgresql://${DB_USER:-freenzy}:${DB_PASSWORD}@postgres:5432/${DB_NAME:-freenzy}
-      DB_HOST: postgres
+      DATABASE_URL: postgresql://${DB_USER:-freenzy}:${DB_PASSWORD}@freenzy-postgres:5432/${DB_NAME:-freenzy}
+      DB_HOST: freenzy-postgres
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-freenzy}
       DB_USER: ${DB_USER:-freenzy}
       DB_PASSWORD: ${DB_PASSWORD}
-      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
-      REDIS_HOST: redis
+      REDIS_URL: redis://:${REDIS_PASSWORD}@freenzy-redis:6379
+      REDIS_HOST: freenzy-redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       DASHBOARD_ORIGIN: ${DASHBOARD_ORIGIN:-https://app.freenzy.io}

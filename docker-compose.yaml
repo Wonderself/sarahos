@@ -19,7 +19,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
       interval: 10s
@@ -111,8 +110,6 @@ services:
       AUTOPILOT_ENABLED: ${AUTOPILOT_ENABLED:-false}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-smadja99@gmail.com}
       GLOBAL_HOURLY_BUDGET: ${GLOBAL_HOURLY_BUDGET:-5000000}
-    volumes:
-      - backend_state:/app/state
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:3000/health || exit 1']
       interval: 15s
@@ -165,7 +162,6 @@ services:
 volumes:
   postgres_data:
   redis_data:
-  backend_state:
 
 networks:
   internal:

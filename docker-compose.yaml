@@ -123,6 +123,7 @@ services:
           cpus: '1.0'
     labels:
       - "coolify.managed=true"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
     networks:
       - internal
       - proxy
@@ -155,6 +156,7 @@ services:
           cpus: '0.5'
     labels:
       - "coolify.managed=true"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=3000"
     networks:
       - internal
       - proxy

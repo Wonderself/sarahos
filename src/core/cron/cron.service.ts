@@ -247,9 +247,9 @@ export class CronService {
     if (dbClient.isConnected()) {
       try {
         await dbClient.query(
-          `INSERT INTO cron_history (id, job_name, status, records_affected, duration_ms, error_message)
+          `INSERT INTO cron_history (id, job_name, status, duration_ms, result, error_message)
            VALUES ($1, $2, $3, $4, $5, $6)`,
-          [uuidv4(), job.name, status, recordsAffected, durationMs, errorMessage],
+          [uuidv4(), job.name, status, durationMs, JSON.stringify({ records_affected: recordsAffected }), errorMessage],
         );
       } catch {
         // Don't fail the job if logging fails

@@ -17,26 +17,13 @@ const LEGAL_LINKS = [
 
 export default function PublicFooter() {
   return (
-    <footer style={{ background: '#0a0a0f', color: 'rgba(255,255,255,0.5)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+    <footer style={{ background: '#0a0a0f', color: 'rgba(255,255,255,0.5)', borderTop: 'none' }}>
       {/* Band 1: Logo + product links */}
       <div className="lp-footer-band1">
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <div style={{
-            width: 30, height: 30, borderRadius: 8,
-            background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <span style={{ color: '#fff', fontSize: 14, fontWeight: 900, lineHeight: 1 }}>F</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: 18, fontWeight: 900, letterSpacing: -0.5, color: '#fff', lineHeight: 1 }}>
-              FREENZY<span style={{ color: '#6366f1' }}>.IO</span>
-            </span>
-            <span style={{ fontSize: 8, fontWeight: 600, letterSpacing: 1.5, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', lineHeight: 1, marginTop: 2 }}>
-              Free &amp; Easy
-            </span>
-          </div>
+          <span className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 18 }}>
+            FREENZY.IO
+          </span>
         </Link>
         <nav className="lp-footer-band1-links">
           {PRODUCT_LINKS.map(l => (
@@ -53,7 +40,7 @@ export default function PublicFooter() {
           ))}
         </nav>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>
-          &copy; {new Date().getFullYear()} Freenzy.io &middot; <span style={{ color: '#6366f1', fontWeight: 600 }}>Claude AI</span>
+          &copy; {new Date().getFullYear()} Freenzy.io &middot; <span style={{ color: '#5b6cf7', fontWeight: 600 }}>Claude AI</span>
         </span>
       </div>
     </footer>

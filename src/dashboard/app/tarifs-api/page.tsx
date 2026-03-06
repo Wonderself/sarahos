@@ -31,9 +31,9 @@ export const metadata: Metadata = {
 
 const ACTION_COSTS = [
   { icon: '💬', action: 'Chat avec agent IA', model: 'Claude Haiku', credits: 0.5, per50: '100 chats', color: '#22c55e' },
-  { icon: '✉️', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#6366f1' },
+  { icon: '✉️', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#5b6cf7' },
   { icon: '📱', action: 'Post réseaux sociaux', model: 'Claude Haiku', credits: 0.8, per50: '62 posts', color: '#3b82f6' },
-  { icon: '📄', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#6366f1' },
+  { icon: '📄', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#5b6cf7' },
   { icon: '📞', action: 'Appel répondeur IA', model: 'Twilio + Haiku', credits: 5, per50: '10 appels', color: '#f97316' },
   { icon: '📤', action: 'Appel sortant IA', model: 'Twilio + Sonnet', credits: 16, per50: '3 appels', color: '#f97316' },
   { icon: '💬', action: 'WhatsApp Business IA', model: 'Claude Haiku', credits: 0.4, per50: '125 msgs', color: '#22c55e' },
@@ -52,7 +52,7 @@ const DEPOSIT_OPTIONS = [
 
 const MODEL_PRICES = [
   { model: 'Claude Haiku', input: '$0.80', output: '$4.00', usage: 'FAQ, chat, posts réseaux, WhatsApp', color: '#22c55e' },
-  { model: 'Claude Sonnet', input: '$3.00', output: '$15.00', usage: 'Emails, documents, analyses', color: '#6366f1' },
+  { model: 'Claude Sonnet', input: '$3.00', output: '$15.00', usage: 'Emails, documents, analyses', color: '#5b6cf7' },
   { model: 'Claude Opus', input: '$15.00', output: '$75.00', usage: 'Stratégie, DG, décisions critiques', color: '#9333ea' },
   { model: 'ElevenLabs TTS', input: '€0.18', output: '/ 1 000 chars', usage: 'Voix naturelle, messages vocaux', color: '#f59e0b' },
   { model: 'Twilio Voice', input: '$0.014', output: '/ min', usage: 'Appels entrants & sortants', color: '#f97316' },
@@ -76,7 +76,7 @@ export default function TarifsAPIPage() {
 
         {/* Header */}
         <div>
-          <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 8 }}>Freenzy.io</p>
+          <p style={{ fontSize: 11, fontWeight: 800, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 8 }}>Freenzy.io</p>
           <h1 style={{ fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 10 }}>
             Tarifs API
           </h1>
@@ -190,20 +190,20 @@ export default function TarifsAPIPage() {
             {DEPOSIT_OPTIONS.map((opt, i) => (
               <div key={i} style={{
                 flex: '1 0 100px',
-                background: opt.label ? 'rgba(99,102,241,0.05)' : '#fafafa',
-                border: opt.label ? '2px solid rgba(99,102,241,0.25)' : '1px solid #e5e5e7',
+                background: opt.label ? 'rgba(91,108,247,0.05)' : '#fafafa',
+                border: opt.label ? '2px solid rgba(91,108,247,0.25)' : '1px solid #e5e5e7',
                 borderRadius: 12, padding: '16px 20px', textAlign: 'center', position: 'relative',
               }}>
                 {opt.label && (
                   <div style={{
                     position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
-                    background: '#6366f1', color: '#fff',
+                    background: '#5b6cf7', color: '#fff',
                     fontSize: 10, fontWeight: 800, padding: '2px 9px', borderRadius: 40, whiteSpace: 'nowrap',
                   }}>
                     {opt.label}
                   </div>
                 )}
-                <div style={{ fontSize: 22, fontWeight: 900, color: opt.label ? '#6366f1' : '#1d1d1f' }}>{opt.eur}€</div>
+                <div style={{ fontSize: 22, fontWeight: 900, color: opt.label ? '#5b6cf7' : '#1d1d1f' }}>{opt.eur}€</div>
                 <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{opt.credits.toLocaleString()} crédits</div>
                 <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>≈ 1 cr / {(opt.eur / opt.credits * 100).toFixed(1)}€</div>
               </div>
@@ -231,7 +231,7 @@ export default function TarifsAPIPage() {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 3 }}>Format de votre code</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#6366f1', fontFamily: 'monospace', letterSpacing: 2 }}>FZ-XXXXXX</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#5b6cf7', fontFamily: 'monospace', letterSpacing: 2 }}>FZ-XXXXXX</div>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default function TarifsAPIPage() {
         <div style={{ textAlign: 'center', paddingTop: 8 }}>
           <Link href="/login?mode=register" style={{
             display: 'inline-block', padding: '14px 36px',
-            background: '#6366f1', color: '#fff',
+            background: '#5b6cf7', color: '#fff',
             borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: 'none',
           }}>
             Commencer gratuitement

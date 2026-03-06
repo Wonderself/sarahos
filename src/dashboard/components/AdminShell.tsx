@@ -180,14 +180,8 @@ export default function AdminShell({
         {/* Header */}
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <img
-              src="/images/logo.jpg"
-              alt="Freenzy.io"
-              style={{ height: 32, borderRadius: 8 }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
             <div>
-              <div className="sidebar-logo-text">FREENZY.IO</div>
+              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>FREENZY.IO</div>
               <div className="sidebar-logo-version">Console Admin</div>
             </div>
           </div>

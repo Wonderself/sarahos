@@ -150,7 +150,7 @@ export default async function QuotesPage() {
                   <div style={{
                     marginTop: 10, padding: '8px 12px', borderRadius: 8,
                     background: 'var(--bg-secondary, #f9fafb)', fontSize: 13,
-                    borderLeft: '3px solid #6366f1',
+                    borderLeft: '3px solid #5b6cf7',
                   }}>
                     <strong>Notes admin :</strong> {String(q['admin_notes'])}
                   </div>

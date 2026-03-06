@@ -74,7 +74,7 @@ export default function VisioControls({
         onClick={onToggleMode}
         style={{
           width: 44, height: 44, borderRadius: '50%', border: 'none',
-          background: isTextMode ? '#6366f1' : '#334155', color: 'white',
+          background: isTextMode ? '#5b6cf7' : '#334155', color: 'white',
           cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.2s',
         }}

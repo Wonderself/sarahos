@@ -115,7 +115,7 @@ const SCENARIO_TEMPLATES = [
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 const CLASSIF_COLORS: Record<string, string> = {
-  urgent: '#ef4444', vip: '#f59e0b', order: '#6366f1', complaint: '#f97316',
+  urgent: '#ef4444', vip: '#f59e0b', order: '#5b6cf7', complaint: '#f97316',
   appointment: '#0ea5e9', faq: '#10b981', family: '#ec4899', spam: '#94a3b8',
   general: '#64748b', blocked: '#dc2626',
 };
@@ -148,7 +148,7 @@ function timeAgo(iso: string): string {
 }
 
 // ── Shared sub-components ─────────────────────────────────────────────────────
-function StatCard({ icon, value, label, color = '#6366f1' }: { icon: string; value: number | string; label: string; color?: string }) {
+function StatCard({ icon, value, label, color = '#5b6cf7' }: { icon: string; value: number | string; label: string; color?: string }) {
   return (
     <div style={{
       background: 'white', borderRadius: 12, padding: '16px 20px',
@@ -173,7 +173,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
         disabled={saving}
         style={{
           padding: '8px 20px', borderRadius: 8, border: 'none',
-          background: saving ? '#c7d2fe' : '#6366f1', color: 'white',
+          background: saving ? '#c7d2fe' : '#5b6cf7', color: 'white',
           fontSize: 13, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
         }}
       >
@@ -261,7 +261,7 @@ export default function RepondeurPage() {
   if (loading) {
     return (
       <div style={{ padding: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #6366f1', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #5b6cf7', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
         <span style={{ fontSize: 14, color: '#6b7280' }}>Chargement du répondeur...</span>
       </div>
     );
@@ -300,10 +300,10 @@ export default function RepondeurPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 700,
-                  background: wizardStep >= s ? '#6366f1' : '#f3f4f6',
+                  background: wizardStep >= s ? '#5b6cf7' : '#f3f4f6',
                   color: wizardStep >= s ? 'white' : '#9ca3af',
                 }}>{s}</div>
-                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#6366f1' : '#e5e7eb' }} />}
+                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#5b6cf7' : '#e5e7eb' }} />}
               </div>
             ))}
           </div>
@@ -322,7 +322,7 @@ export default function RepondeurPage() {
                   onClick={() => setWizardScenario(s.id)}
                   style={{
                     padding: 16, borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    border: `2px solid ${wizardScenario === s.id ? '#6366f1' : '#e5e7eb'}`,
+                    border: `2px solid ${wizardScenario === s.id ? '#5b6cf7' : '#e5e7eb'}`,
                     background: wizardScenario === s.id ? '#eef2ff' : 'white',
                     transition: 'all 0.15s',
                   }}
@@ -339,7 +339,7 @@ export default function RepondeurPage() {
                 disabled={!wizardScenario}
                 style={{
                   padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: wizardScenario ? '#6366f1' : '#e5e7eb',
+                  background: wizardScenario ? '#5b6cf7' : '#e5e7eb',
                   color: wizardScenario ? 'white' : '#9ca3af',
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
                 }}
@@ -381,7 +381,7 @@ export default function RepondeurPage() {
               <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
-              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: '#6366f1', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: '#5b6cf7', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                 Continuer →
               </button>
             </div>
@@ -489,9 +489,9 @@ export default function RepondeurPage() {
               style={{
                 padding: '8px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
                 background: tab === t.id ? 'white' : 'transparent',
-                color: tab === t.id ? '#6366f1' : '#6b7280',
+                color: tab === t.id ? '#5b6cf7' : '#6b7280',
                 borderRadius: '8px 8px 0 0',
-                borderBottom: tab === t.id ? '2px solid #6366f1' : '2px solid transparent',
+                borderBottom: tab === t.id ? '2px solid #5b6cf7' : '2px solid transparent',
               }}
             >
               {t.icon} {t.label}
@@ -564,7 +564,7 @@ function OverviewTab({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 800 }}>
       {/* Stat cards */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <StatCard icon="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#6366f1" />
+        <StatCard icon="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#5b6cf7" />
         <StatCard icon="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#f59e0b" />
         <StatCard icon="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#ef4444" />
         <StatCard icon="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#10b981" />
@@ -589,7 +589,7 @@ function OverviewTab({
           </div>
         </div>
         {config.greetingMessage && (
-          <div style={{ marginTop: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 8, fontSize: 12, color: '#374151', borderLeft: '3px solid #6366f1' }}>
+          <div style={{ marginTop: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 8, fontSize: 12, color: '#374151', borderLeft: '3px solid #5b6cf7' }}>
             "{config.greetingMessage}"
           </div>
         )}
@@ -617,7 +617,7 @@ function OverviewTab({
               disabled={!testMessage.trim()}
               style={{
                 padding: '8px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600,
-                background: testMessage.trim() ? '#6366f1' : '#e5e7eb',
+                background: testMessage.trim() ? '#5b6cf7' : '#e5e7eb',
                 color: testMessage.trim() ? 'white' : '#9ca3af',
                 cursor: testMessage.trim() ? 'pointer' : 'not-allowed',
               }}
@@ -708,7 +708,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               style={{
                 padding: '6px 14px', borderRadius: 20, border: '1px solid #e5e7eb',
                 background: mode === p.mode ? '#eef2ff' : 'white',
-                color: mode === p.mode ? '#6366f1' : '#374151',
+                color: mode === p.mode ? '#5b6cf7' : '#374151',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}
             >
@@ -728,7 +728,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onClick={() => { setMode(m.value); markChanged(); }}
               style={{
                 padding: '12px 10px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
-                border: `2px solid ${mode === m.value ? '#6366f1' : '#e5e7eb'}`,
+                border: `2px solid ${mode === m.value ? '#5b6cf7' : '#e5e7eb'}`,
                 background: mode === m.value ? '#eef2ff' : '#fafafa',
               }}
             >
@@ -748,7 +748,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {STYLES.map(s => (
               <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? '#eef2ff' : 'transparent' }}>
-                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#6366f1' }} />
+                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#5b6cf7' }} />
                 <span style={{ fontSize: 12, fontWeight: style === s.value ? 600 : 400 }}>{s.label}</span>
               </label>
             ))}
@@ -916,7 +916,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
             style={{
               padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
               background: subTab === id ? 'white' : 'transparent',
-              color: subTab === id ? '#6366f1' : '#6b7280',
+              color: subTab === id ? '#5b6cf7' : '#6b7280',
               boxShadow: subTab === id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
@@ -937,7 +937,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
               <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none' }} />
               <div style={{ display: 'flex', gap: 8 }}>
                 <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
-                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#6366f1' : '#e5e7eb', color: newQ && newA ? 'white' : '#9ca3af', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
+                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#5b6cf7' : '#e5e7eb', color: newQ && newA ? 'white' : '#9ca3af', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
               </div>
             </div>
           </div>
@@ -1075,7 +1075,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
         {([['messages', '💬 Messages', messages.length], ['orders', '🛒 Commandes', orders.length], ['summaries', '📋 Résumés', summaries.length]] as const).map(([id, label, count]) => (
-          <button key={id} onClick={() => setInboxTab(id)} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#6366f1' : '#e5e7eb'}`, background: inboxTab === id ? '#eef2ff' : 'white', color: inboxTab === id ? '#6366f1' : '#6b7280', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
+          <button key={id} onClick={() => setInboxTab(id)} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#5b6cf7' : '#e5e7eb'}`, background: inboxTab === id ? '#eef2ff' : 'white', color: inboxTab === id ? '#5b6cf7' : '#6b7280', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
             {label} <span style={{ background: '#e5e7eb', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
@@ -1086,11 +1086,11 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Filter chips */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#6366f1' : '#e5e7eb'}`, background: msgFilter === 'all' ? '#eef2ff' : 'white', color: msgFilter === 'all' ? '#6366f1' : '#6b7280', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#5b6cf7' : '#e5e7eb'}`, background: msgFilter === 'all' ? '#eef2ff' : 'white', color: msgFilter === 'all' ? '#5b6cf7' : '#6b7280', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
               Tous ({messages.length})
             </button>
             {Object.entries(classifCounts).map(([c, n]) => (
-              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#6366f1' : '#e5e7eb'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#6366f1'}12` : 'white', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#6366f1') : '#6b7280', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#5b6cf7' : '#e5e7eb'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#5b6cf7'}12` : 'white', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#5b6cf7') : '#6b7280', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                 {c} ({n})
               </button>
             ))}
@@ -1144,7 +1144,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'summaries' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#6366f1', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#5b6cf7', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
               {generatingSummary ? '⏳ Génération...' : '📋 Générer un résumé maintenant'}
             </button>
           </div>
@@ -1154,7 +1154,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
             summaries.map(s => (
               <div key={s.id} style={{ background: 'white', borderRadius: 10, padding: '12px 14px', border: '1px solid #e5e7eb' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#6366f1', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#5b6cf7', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
                   <span style={{ fontSize: 10, color: '#9ca3af' }}>{timeAgo(s.createdAt)}</span>
                 </div>
                 <pre style={{ fontSize: 11, color: '#374151', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
@@ -1225,7 +1225,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               onClick={() => { setAlwaysOn(!alwaysOn); mark(); }}
               style={{
                 width: 36, height: 20, borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s',
-                background: alwaysOn ? '#6366f1' : '#e5e7eb', position: 'relative',
+                background: alwaysOn ? '#5b6cf7' : '#e5e7eb', position: 'relative',
               }}
             >
               <div style={{
@@ -1244,8 +1244,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
                 const active = rule?.isActive ?? false;
                 return (
                   <button key={i} onClick={() => toggleDay(i + 1)} style={{
-                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#6366f1' : '#e5e7eb'}`,
-                    background: active ? '#eef2ff' : 'white', color: active ? '#6366f1' : '#9ca3af',
+                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#5b6cf7' : '#e5e7eb'}`,
+                    background: active ? '#eef2ff' : 'white', color: active ? '#5b6cf7' : '#9ca3af',
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                   }}>{day}</button>
                 );
@@ -1302,8 +1302,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             <div>
               <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#6366f1' }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: '#6366f1', minWidth: 50 }}>{maxLen} car.</span>
+                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#5b6cf7' }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: '#5b6cf7', minWidth: 50 }}>{maxLen} car.</span>
               </div>
             </div>
           </div>
@@ -1322,16 +1322,16 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             <div key={opt.id} style={{ padding: 14, borderRadius: 10, border: '1px solid #e5e7eb', background: '#f9fafb' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 700 }}>Option {opt.id}</span>
-                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#eef2ff', color: '#6366f1', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
+                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#eef2ff', color: '#5b6cf7', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
               </div>
               <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{opt.label}</div>
-              <div style={{ fontSize: 11, color: '#6366f1', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
+              <div style={{ fontSize: 11, color: '#5b6cf7', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
               <div style={{ fontSize: 10, color: '#9ca3af' }}>{opt.desc}</div>
             </div>
           ))}
         </div>
         <div style={{ marginTop: 10, fontSize: 11, color: '#6b7280' }}>
-          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#6366f1' }}>support@freenzy.io</a>
+          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#5b6cf7' }}>support@freenzy.io</a>
         </div>
       </div>
 
@@ -1342,8 +1342,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Rétention des données</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#6366f1' }} />
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#6366f1', minWidth: 55 }}>{retention} jours</span>
+              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#5b6cf7' }} />
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#5b6cf7', minWidth: 55 }}>{retention} jours</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>

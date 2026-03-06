@@ -66,7 +66,7 @@ export default function VoiceAnalyticsPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-[#6366f1]">{data.visioSessions}</div>
+          <div className="text-2xl font-bold text-[#5b6cf7]">{data.visioSessions}</div>
           <div className="text-xs text-[var(--muted)]">Sessions visio</div>
         </div>
         <div className="card p-4 text-center">
@@ -90,15 +90,15 @@ export default function VoiceAnalyticsPage() {
           <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
             <div style={{
               width: 80, height: 80, borderRadius: '50%',
-              background: `conic-gradient(#6366f1 ${data.deepgramUsage / Math.max(data.deepgramUsage + data.elevenLabsUsage, 1) * 360}deg, #a855f7 0deg)`,
+              background: `conic-gradient(#5b6cf7 ${data.deepgramUsage / Math.max(data.deepgramUsage + data.elevenLabsUsage, 1) * 360}deg, #8b7cf8 0deg)`,
             }} />
             <div>
               <div className="flex items-center gap-2 text-sm mb-1">
-                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#6366f1' }} />
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#5b6cf7' }} />
                 Deepgram: {data.deepgramUsage} appels
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#a855f7' }} />
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#8b7cf8' }} />
                 ElevenLabs: {data.elevenLabsUsage} appels
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function VoiceAnalyticsPage() {
             </div>
             <div className="flex items-center justify-between py-2">
               <span className="text-sm font-semibold">Credits total voix</span>
-              <span className="text-sm font-bold text-[#6366f1]">{data.totalVoiceCredits.toFixed(1)}</span>
+              <span className="text-sm font-bold text-[#5b6cf7]">{data.totalVoiceCredits.toFixed(1)}</span>
             </div>
           </div>
         </div>

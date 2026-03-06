@@ -157,8 +157,8 @@ export default function AgentRequestQueue({
                       )}
                       {isActive && (
                         <span style={{
-                          fontSize: 9, fontWeight: 700, color: '#6366f1',
-                          background: '#6366f115', padding: '1px 6px', borderRadius: 6,
+                          fontSize: 9, fontWeight: 700, color: '#5b6cf7',
+                          background: '#5b6cf715', padding: '1px 6px', borderRadius: 6,
                         }}>
                           En cours
                         </span>
@@ -225,7 +225,7 @@ export default function AgentRequestQueue({
                         style={{
                           padding: '6px 14px', borderRadius: 7, border: 'none', fontSize: 11,
                           fontWeight: 700, cursor: 'pointer',
-                          background: req.agentColor || '#6366f1', color: 'white',
+                          background: req.agentColor || '#5b6cf7', color: 'white',
                         }}
                       >
                         Prendre en charge
@@ -243,7 +243,7 @@ export default function AgentRequestQueue({
                         {isFulfilling ? '⏳ Envoi...' : `✅ Valider & envoyer à ${req.agentName.replace('Agent ', '')}`}
                       </button>
                     ) : (
-                      <span style={{ fontSize: 11, color: '#6366f1', fontStyle: 'italic', padding: '6px 0' }}>
+                      <span style={{ fontSize: 11, color: '#5b6cf7', fontStyle: 'italic', padding: '6px 0' }}>
                         Générez un média pour valider cette demande
                       </span>
                     )}

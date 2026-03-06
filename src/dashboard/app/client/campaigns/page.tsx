@@ -40,7 +40,7 @@ const STATUS_LABELS: Record<CampaignStatus, string> = {
 };
 const STATUS_COLORS: Record<CampaignStatus, string> = {
   draft: '#6b7280', submitted: '#f59e0b', approved: '#22c55e',
-  rejected: '#ef4444', active: '#3b82f6', completed: '#a855f7',
+  rejected: '#ef4444', active: '#3b82f6', completed: '#8b7cf8',
 };
 const PLATFORM_LABELS: Record<Platform, string> = {
   linkedin: 'LinkedIn', instagram: 'Instagram', facebook: 'Facebook', twitter: 'X / Twitter',

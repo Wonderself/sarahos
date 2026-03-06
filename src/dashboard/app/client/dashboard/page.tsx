@@ -1,111 +1,89 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { loadAgentConfigs, DEFAULT_AGENTS, getAgentsForTier, getActiveAgentIds, toggleAgent } from '../../../lib/agent-config';
+import { getActiveAgentIds, DEFAULT_AGENTS } from '../../../lib/agent-config';
 import type { AgentTypeId } from '../../../lib/agent-config';
 import FreenzyWelcome from '../../../components/FreenzyWelcome';
 import { useToast } from '../../../components/Toast';
 
+// ─── Types ───
+
+interface TodoItem { id: string; text: string; done: boolean; }
+
 interface UsageStats {
-  totalTokens: number;
-  totalCost: number;
   totalMessages: number;
   totalDocuments: number;
-  totalMeetings: number;
   streak: number;
-  level: number;
-  xp: number;
-  xpToNext: number;
-  achievements: string[];
 }
 
-interface WeeklySummary {
-  day: string;
-  messages: number;
-  tokens: number;
+// ─── Helpers ───
+
+function uid(): string { return Math.random().toString(36).slice(2, 9); }
+
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
 }
+
+// ─── Component ───
 
 export default function ClientDashboard() {
   const { showError } = useToast();
-  const [stats, setStats] = useState<UsageStats>({
-    totalTokens: 0, totalCost: 0, totalMessages: 0, totalDocuments: 0,
-    totalMeetings: 0, streak: 0, level: 1, xp: 0, xpToNext: 100, achievements: [],
-  });
-  const [weeklyData, setWeeklyData] = useState<WeeklySummary[]>([]);
+  const [stats, setStats] = useState<UsageStats>({ totalMessages: 0, totalDocuments: 0, streak: 0 });
   const [walletBalance, setWalletBalance] = useState<number>(0);
-  const [teamSize, setTeamSize] = useState(0);
+  const [activeAgentIds, setActiveAgentIds] = useState<AgentTypeId[]>(['fz-repondeur']);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
-  const [hasCustomAgents, setHasCustomAgents] = useState(false);
-  const [aiTip, setAiTip] = useState('');
-  const [tipLoading, setTipLoading] = useState(false);
+
+  // ─── Todos from journee ───
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [newTodo, setNewTodo] = useState('');
+  const [priorities, setPriorities] = useState<string[]>(['', '', '']);
+
+  // ─── Briefing ───
   const [briefing, setBriefing] = useState('');
   const [briefingLoading, setBriefingLoading] = useState(false);
   const [briefingLoaded, setBriefingLoaded] = useState(false);
-  const [briefingGeneratedAt, setBriefingGeneratedAt] = useState('');
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [activeAgentIds, setActiveAgentIds] = useState<AgentTypeId[]>(['fz-repondeur']);
-  const [showAchievements, setShowAchievements] = useState(false);
+  const [briefingTime, setBriefingTime] = useState('');
+  const [showBriefing, setShowBriefing] = useState(true);
 
   useEffect(() => {
     loadStats();
     loadWallet();
-    loadTeam();
-    checkProfile();
-    checkCustomAgents();
-    checkWelcome();
     setActiveAgentIds(getActiveAgentIds());
+    checkProfile();
+    checkWelcome();
+    loadTodos();
+    loadPriorities();
     loadBriefingWithCache();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function getSession() {
-    try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
-  }
-
   function checkWelcome() {
     try {
-      const pending = localStorage.getItem('fz_welcome_pending');
-      if (pending === 'true') {
+      if (localStorage.getItem('fz_welcome_pending') === 'true') {
         setShowWelcome(true);
         localStorage.removeItem('fz_welcome_pending');
       }
-    } catch { /* */ }
+    } catch {}
   }
 
-  function dismissWelcome() {
-    setShowWelcome(false);
+  function checkProfile() {
+    try {
+      const p = localStorage.getItem('fz_company_profile');
+      setHasProfile(!!p && p !== '{}');
+    } catch {}
   }
 
   function loadStats() {
     try {
       const gam = JSON.parse(localStorage.getItem('fz_gamification') ?? '{}');
       const docs = JSON.parse(localStorage.getItem('fz_docs') ?? '[]');
-
       setStats({
-        totalTokens: gam.totalTokens ?? 0,
-        totalCost: gam.totalCost ?? 0,
         totalMessages: gam.totalMessages ?? 0,
         totalDocuments: docs.length ?? 0,
-        totalMeetings: gam.totalMeetings ?? 0,
         streak: gam.streak ?? 0,
-        level: gam.level ?? 1,
-        xp: gam.xp ?? 0,
-        xpToNext: gam.xpToNext ?? 100,
-        achievements: gam.achievements ?? [],
       });
-
-      const weekly: WeeklySummary[] = [];
-      const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const key = date.toISOString().split('T')[0];
-        const dayData = gam.dailyStats?.[key] ?? { messages: 0, tokens: 0 };
-        weekly.push({ day: days[date.getDay() === 0 ? 6 : date.getDay() - 1], messages: dayData.messages, tokens: dayData.tokens });
-      }
-      setWeeklyData(weekly);
-    } catch { /* */ }
+    } catch {}
   }
 
   async function loadWallet() {
@@ -119,54 +97,73 @@ export default function ClientDashboard() {
       });
       const data = await res.json();
       setWalletBalance(data.balance ?? data.wallet?.balance ?? 0);
-    } catch (e) { showError(e instanceof Error ? e.message : 'Impossible de charger le solde'); }
+    } catch (e) { showError(e instanceof Error ? e.message : 'Erreur chargement solde'); }
   }
 
-  function loadTeam() {
+  // ─── Todos persistence ───
+
+  function loadTodos() {
     try {
-      const team = JSON.parse(localStorage.getItem('fz_team') ?? '[]');
-      setTeamSize(team.length);
-    } catch { /* */ }
+      const saved = JSON.parse(localStorage.getItem('fz_journee_data') ?? '{}');
+      if (Array.isArray(saved.todos)) setTodos(saved.todos);
+    } catch {}
   }
 
-  function checkProfile() {
+  const saveTodos = useCallback((items: TodoItem[]) => {
+    setTodos(items);
     try {
-      const profile = localStorage.getItem('fz_company_profile');
-      setHasProfile(!!profile && profile !== '{}');
-    } catch { /* */ }
+      const saved = JSON.parse(localStorage.getItem('fz_journee_data') ?? '{}');
+      saved.todos = items;
+      localStorage.setItem('fz_journee_data', JSON.stringify(saved));
+    } catch {}
+  }, []);
+
+  function addTodo() {
+    if (!newTodo.trim()) return;
+    const updated = [...todos, { id: uid(), text: newTodo.trim(), done: false }];
+    saveTodos(updated);
+    setNewTodo('');
   }
 
-  function checkCustomAgents() {
+  function toggleTodo(id: string) {
+    saveTodos(todos.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  }
+
+  function removeTodo(id: string) {
+    saveTodos(todos.filter(t => t.id !== id));
+  }
+
+  // ─── Priorities persistence ───
+
+  function loadPriorities() {
     try {
-      const configs = loadAgentConfigs();
-      setHasCustomAgents(Object.keys(configs.configs).length > 0);
-    } catch { /* */ }
+      const saved = JSON.parse(localStorage.getItem('fz_journee_data') ?? '{}');
+      if (Array.isArray(saved.priorites)) {
+        setPriorities(saved.priorites.map((p: { text?: string }) => p.text || ''));
+      }
+    } catch {}
   }
 
-  async function getAiTip() {
-    const session = getSession();
-    if (!session.token) return;
-    setTipLoading(true);
+  function updatePriority(idx: number, text: string) {
+    const updated = [...priorities];
+    updated[idx] = text;
+    setPriorities(updated);
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: session.token,
-          model: 'claude-sonnet-4-20250514',
-          messages: [{ role: 'user', content: `Tu es ${DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name}, ${DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.role}. Donne UN conseil personnalisé et actionnable pour améliorer la productivité aujourd'hui. Le client a ${stats.totalMessages} messages, ${stats.totalDocuments} documents générés, une équipe de ${teamSize} agents, et un streak de ${stats.streak} jours. Réponse en 2 phrases max, en français.` }],
-          maxTokens: 256,
-          agentName: 'fz-assistante',
-        }),
-      });
-      if (!res.ok) { setAiTip('Service temporairement indisponible.'); return; }
-      const data = await res.json();
-      setAiTip(data.content ?? data.text ?? 'Pas de conseil disponible.');
-    } catch { setAiTip('Connectez-vous à internet pour recevoir des conseils personnalisés.'); }
-    finally { setTipLoading(false); }
+      const saved = JSON.parse(localStorage.getItem('fz_journee_data') ?? '{}');
+      if (!Array.isArray(saved.priorites)) {
+        saved.priorites = [
+          { id: uid(), text: '', rank: 1 },
+          { id: uid(), text: '', rank: 2 },
+          { id: uid(), text: '', rank: 3 },
+        ];
+      }
+      saved.priorites[idx] = { ...saved.priorites[idx], text };
+      localStorage.setItem('fz_journee_data', JSON.stringify(saved));
+    } catch {}
   }
 
-  // ─── Briefing cache helpers ─────────────────────────────────────────────────
+  // ─── Briefing ───
+
   const BRIEFING_CACHE_KEY = 'fz_briefing_cache';
 
   function loadBriefingWithCache() {
@@ -178,11 +175,11 @@ export default function ClientDashboard() {
       if (cached.date === todayKey && cached.content) {
         setBriefing(cached.content);
         setBriefingLoaded(true);
-        setBriefingGeneratedAt(cached.generatedAt || '');
-        return; // Utilise le cache
+        setBriefingTime(cached.generatedAt || '');
+        return;
       }
-    } catch { /* */ }
-    loadBriefing(); // Génère automatiquement si pas de cache valide
+    } catch {}
+    loadBriefing();
   }
 
   async function loadBriefing() {
@@ -191,20 +188,15 @@ export default function ClientDashboard() {
     setBriefingLoading(true);
     try {
       const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      const companyProfile = localStorage.getItem('fz_company_profile') || 'Non renseigné';
+      const companyProfile = localStorage.getItem('fz_company_profile') || 'Non renseigne';
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token: s.token,
           model: 'claude-sonnet-4-20250514',
-          messages: [{ role: 'user', content: `Tu es Maëva, directrice générale IA de Freenzy. Nous sommes le ${today}. Génère un briefing du jour concis et actionnable pour le client. Contexte entreprise: ${companyProfile}. Stats: ${stats.totalMessages} messages, ${stats.totalDocuments} documents, streak de ${stats.streak} jours, ${activeAgents.length} agents actifs. Structure ton briefing ainsi:
-1. **Salutation personnalisée** (1 ligne)
-2. **Priorités du jour** (3 actions concrètes à faire aujourd'hui)
-3. **Insight business** (1 observation ou tendance basée sur l'activité)
-4. **Conseil du jour** (1 astuce productivité)
-Sois concise, percutante et bienveillante. Réponds en français.` }],
-          maxTokens: 512,
+          messages: [{ role: 'user', content: `Tu es l'assistante IA de Freenzy. Nous sommes le ${today}. Genere un briefing du jour concis (max 4 lignes). Contexte: ${companyProfile}. Stats: ${stats.totalMessages} messages, ${stats.totalDocuments} docs, streak ${stats.streak}j, ${activeAgentIds.length} agents. Structure: 1 salutation + 2-3 priorites concretes. Sois directe et actionnable. Francais.` }],
+          maxTokens: 300,
           agentName: 'fz-dg',
         }),
       });
@@ -213,625 +205,338 @@ Sois concise, percutante et bienveillante. Réponds en français.` }],
       const content = data.content ?? data.text ?? '';
       setBriefing(content);
       setBriefingLoaded(true);
-      // Sauvegarder dans le cache
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      setBriefingGeneratedAt(timeStr);
+      const timeStr = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      setBriefingTime(timeStr);
       try {
         localStorage.setItem(BRIEFING_CACHE_KEY, JSON.stringify({
-          date: now.toISOString().split('T')[0],
-          content,
-          generatedAt: timeStr,
+          date: new Date().toISOString().split('T')[0], content, generatedAt: timeStr,
         }));
-      } catch { /* */ }
-    } catch { setBriefing('Connectez-vous pour recevoir votre briefing personnalisé.'); }
+      } catch {}
+    } catch { setBriefing('Connectez-vous pour votre briefing.'); }
     finally { setBriefingLoading(false); }
   }
 
   function refreshBriefing() {
-    // Efface le cache et re-génère
-    try { localStorage.removeItem(BRIEFING_CACHE_KEY); } catch { /* */ }
+    try { localStorage.removeItem(BRIEFING_CACHE_KEY); } catch {}
     setBriefingLoaded(false);
-    setBriefingGeneratedAt('');
+    setBriefingTime('');
     loadBriefing();
   }
 
+  // ─── Derived ───
+
   const session = getSession();
   const userName = session.name || session.email?.split('@')[0] || '';
-  const tier = session.tier || 'guest';
-  const maxWeeklyMessages = Math.max(...weeklyData.map(d => d.messages), 1);
-
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
-
-  const availableAgents = getAgentsForTier(tier);
-  const agentDetails = availableAgents.map(id => DEFAULT_AGENTS.find(a => a.id === id)!).filter(Boolean);
-
-  // Split agents into active (user-selected) and inactive
-  const activeAgents = agentDetails.filter(a => activeAgentIds.includes(a.id));
-  const inactiveAgents = agentDetails.filter(a => !activeAgentIds.includes(a.id));
-
-  // Agent usage from chat history for personalization
-  const agentUsage: Record<string, number> = {};
-  try {
-    const chatHistory = JSON.parse(localStorage.getItem('fz_chat_history') ?? '[]');
-    for (const entry of chatHistory) {
-      if (entry.agentId) agentUsage[entry.agentId] = (agentUsage[entry.agentId] ?? 0) + 1;
-    }
-  } catch { /* */ }
-
-  function handleActivateAgent(agentId: AgentTypeId) {
-    const updated = toggleAgent(agentId);
-    setActiveAgentIds([...updated]);
-    // Persist to backend
-    const s = getSession();
-    if (s.token) {
-      fetch('/api/portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: '/portal/active-agents', token: s.token, method: 'POST', data: { agents: updated } }),
-      }).catch(() => {});
-    }
-  }
-
-  // Checklist items
-  const checklistItems = [
-    { id: 'account', label: 'Créer votre compte', done: !!session.token, href: '/login', icon: '✅' },
-    { id: 'profile', label: 'Compléter le profil entreprise', done: hasProfile, href: '/client/onboarding', icon: '🏢' },
-    { id: 'agent', label: 'Recruter votre premier agent', done: teamSize > 0, href: '/client/team', icon: '👥' },
-    { id: 'customize', label: 'Personnaliser un agent', done: hasCustomAgents, href: '/client/agents/customize', icon: '🎨' },
-    { id: 'message', label: 'Envoyer votre premier message', done: stats.totalMessages > 0, href: '/client/chat', icon: '💬' },
-  ];
-  const checklistDone = checklistItems.filter(c => c.done).length;
-  const isNewUser = checklistDone < 5;
-
-  const LEVEL_TITLES: Record<number, string> = {
-    1: 'Débutant', 2: 'Apprenti', 3: 'Explorateur', 4: 'Collaborateur',
-    5: 'Professionnel', 6: 'Expert', 7: 'Maître', 8: 'Visionnaire',
-    9: 'Légende', 10: 'Transcendant',
-  };
+  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon apres-midi' : 'Bonsoir';
+  const todayStr = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const credits = walletBalance / 1_000_000;
+  const activeAgents = activeAgentIds.map(id => DEFAULT_AGENTS.find(a => a.id === id)).filter(Boolean);
+  const todosDone = todos.filter(t => t.done).length;
+  const todosTotal = todos.length;
 
   return (
     <div className="client-page-scrollable">
-      {/* Freenzy Welcome Modal */}
       {showWelcome && (
-        <FreenzyWelcome userName={userName} tier={tier} onDismiss={dismissWelcome} />
+        <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
       )}
 
-      {/* Onboarding Priority Banner */}
-      {!hasProfile && (
-        <div className="card section flex items-center flex-wrap gap-16" style={{
-          background: 'linear-gradient(135deg, #6366f10d, #a855f708)',
-          border: '2px solid #6366f130',
-          padding: '16px 20px',
-        }}>
-          <span style={{ fontSize: 36 }}>🏢</span>
-          <div className="flex-1" style={{ minWidth: 200 }}>
-            <div className="text-lg font-bold mb-4">
-              Présentez votre entreprise à vos agents
-            </div>
-            <div className="text-md text-secondary" style={{ lineHeight: 1.5 }}>
-              Complétez votre profil pour que vos agents IA comprennent parfaitement vos besoins.
-              Plus de contexte = des réponses bien meilleures.
-            </div>
+      {/* ── Header compact ── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div>
+          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
+            {greeting}, <span style={{ color: 'var(--accent)' }}>{userName || 'cher client'}</span>
           </div>
-          <Link href="/client/onboarding" className="btn btn-primary" style={{ flexShrink: 0 }}>
-            Configurer maintenant
-          </Link>
-        </div>
-      )}
-
-      {/* Greeting Card */}
-      <div className="card section flex items-center flex-wrap gap-16" style={{
-        background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
-        border: '1px solid #6366f122',
-        padding: '16px 20px',
-      }}>
-        <div className="flex-center" style={{
-          width: 52, height: 52, borderRadius: 16,
-          background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-          color: 'white', fontSize: 24, fontWeight: 800, flexShrink: 0,
-        }}>
-          S
-        </div>
-        <div className="flex-1">
-          <div className="text-lg font-bold mb-4">
-            {greeting}, {userName || 'cher client'} !
-          </div>
-          <div className="text-md text-secondary" style={{ lineHeight: 1.5 }}>
-            {stats.totalMessages === 0
-              ? `Bienvenue chez Freenzy.io ! Vos ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} actif${activeAgents.length > 1 ? 's' : ''} ${activeAgents.length > 1 ? 'sont prêts' : 'est prêt'} à travailler.`
-              : stats.streak > 7
-                ? `Impressionnant, ${stats.streak} jours consécutifs ! Votre équipe de ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} est en pleine forme.`
-                : `Votre équipe de ${activeAgents.length} agent${activeAgents.length > 1 ? 's' : ''} est prête. ${stats.totalMessages} message${stats.totalMessages > 1 ? 's' : ''} échangé${stats.totalMessages > 1 ? 's' : ''} jusqu'ici.`
-            }
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
+            {todayStr}
           </div>
         </div>
-        <div className="flex gap-6" style={{ flexShrink: 0 }}>
-          {activeAgents.slice(0, 4).map(a => (
-            <div key={a.id} title={a.role} className="flex-center" style={{
-              width: 32, height: 32, borderRadius: 10,
-              background: a.color + '22', border: `1px solid ${a.color}44`, fontSize: 16,
-            }}>
-              {a.emoji}
-            </div>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          {activeAgents.slice(0, 3).map(a => a && (
+            <div key={a.id} title={a.name} style={{
+              width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: a.color + '22', border: `1px solid ${a.color}44`, fontSize: 14,
+            }}>{a.emoji}</div>
           ))}
-          {activeAgents.length > 4 && (
-            <div className="flex-center text-xs font-bold text-muted" style={{
-              width: 32, height: 32, borderRadius: 10, background: 'var(--bg-tertiary)',
-            }}>
-              +{activeAgents.length - 4}
-            </div>
+          {activeAgents.length > 3 && (
+            <div style={{
+              width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'var(--bg-tertiary)', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)',
+            }}>+{activeAgents.length - 3}</div>
           )}
         </div>
       </div>
 
-      {/* Modele 100% gratuit — info banner */}
-      <div className="card section flex items-center flex-wrap gap-16" style={{
-        background: 'linear-gradient(135deg, #10b98108, #06b6d408)',
-        border: '1px solid #10b98122',
-        padding: '12px 20px',
-      }}>
-        <span style={{ fontSize: 20 }}>🎁</span>
-        <div className="flex-1" style={{ minWidth: 0 }}>
-          <div className="text-sm font-bold" style={{ color: '#059669', marginBottom: 2 }}>
-            Plateforme 100% gratuite — 0% de commission
+      {/* ── Onboarding banner (new user only) ── */}
+      {!hasProfile && (
+        <Link href="/client/onboarding" style={{
+          display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', marginBottom: 12,
+          background: 'linear-gradient(135deg, #6366f10d, #a855f708)',
+          border: '2px solid #6366f130', borderRadius: 12, textDecoration: 'none', color: 'inherit',
+        }}>
+          <span style={{ fontSize: 24 }}>🏢</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 700 }}>Configurez votre profil entreprise</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Vos agents seront plus pertinents avec du contexte</div>
           </div>
-          <div className="text-xs text-muted" style={{ lineHeight: 1.5 }}>
-            Vos agents IA tournent au prix coûtant officiel Anthropic. Aucun markup, aucun abonnement caché.
-            Vous ne payez que les tokens que vous consommez réellement.
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>Configurer &rarr;</span>
+        </Link>
+      )}
+
+      {/* ── 4 KPIs ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
+        {[
+          { label: 'Credits', value: credits.toFixed(1), color: credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444', sub: 'disponibles' },
+          { label: 'Messages', value: String(stats.totalMessages), color: '#6366f1', sub: 'echanges' },
+          { label: 'Agents', value: String(activeAgents.length), color: '#a855f7', sub: 'actifs' },
+          { label: 'Streak', value: `${stats.streak}j`, color: stats.streak > 0 ? '#f59e0b' : '#86868b', sub: stats.streak > 7 ? 'en feu !' : 'consecutifs' },
+        ].map(kpi => (
+          <div key={kpi.label} style={{
+            background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+            borderRadius: 12, padding: '12px 10px', textAlign: 'center',
+          }}>
+            <div style={{ fontSize: 22, fontWeight: 800, color: kpi.color, letterSpacing: -0.5 }}>{kpi.value}</div>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: 0.5 }}>{kpi.sub}</div>
           </div>
-        </div>
-        <div className="flex gap-6" style={{ flexShrink: 0, flexWrap: 'wrap' }}>
-          {['Prix officiel Anthropic', '0% commission', 'Sans abonnement'].map(badge => (
-            <span key={badge} style={{
-              fontSize: 10, fontWeight: 600, color: '#059669',
-              background: '#10b98112', border: '1px solid #10b98130',
-              padding: '3px 10px', borderRadius: 20,
-            }}>
-              {badge}
-            </span>
-          ))}
-        </div>
+        ))}
       </div>
 
-      {/* Briefing du jour — integrated */}
-      <div className="card section" style={{
-        background: 'linear-gradient(135deg, #f59e0b08, #f9731608)',
-        border: '1px solid #f59e0b22',
+      {/* ── Briefing du jour (collapsible) ── */}
+      <div style={{
+        background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+        borderRadius: 12, marginBottom: 12, overflow: 'hidden',
       }}>
-        <div className="flex-between items-center mb-12">
-          <div className="flex items-center gap-8">
-            <span style={{ fontSize: 24 }}>☀️</span>
-            <div>
-              <div className="text-base font-bold">Briefing du jour</div>
-              <div className="text-xs text-muted">
-                {briefingGeneratedAt
-                  ? `Généré aujourd'hui à ${briefingGeneratedAt}`
-                  : new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-              </div>
+        <button onClick={() => setShowBriefing(v => !v)} style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
+          padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 16 }}>☀️</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Briefing du jour</span>
+            {briefingTime && <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{briefingTime}</span>}
+          </div>
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', transform: showBriefing ? 'rotate(0)' : 'rotate(-90deg)', transition: 'transform 0.2s', display: 'inline-block' }}>&#9660;</span>
+        </button>
+        {showBriefing && (
+          <div style={{ padding: '0 16px 14px', borderTop: '1px solid var(--border-primary)' }}>
+            {briefing ? (
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7, whiteSpace: 'pre-wrap', marginTop: 10 }}>{briefing}</div>
+            ) : briefingLoading ? (
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', fontStyle: 'italic', marginTop: 10 }}>Briefing en cours de generation...</div>
+            ) : (
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', fontStyle: 'italic', marginTop: 10 }}>Chargement...</div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
+              <button onClick={refreshBriefing} disabled={briefingLoading} className="btn btn-ghost btn-sm" style={{ fontSize: 11 }}>
+                {briefingLoading ? '...' : briefingLoaded ? '🔄 Rafraichir' : '✨ Generer'}
+              </button>
             </div>
-          </div>
-          <button onClick={refreshBriefing} disabled={briefingLoading} className="btn btn-ghost btn-sm">
-            {briefingLoading ? '⏳ Génération...' : briefingLoaded ? '🔄 Rafraîchir' : '✨ Générer mon briefing'}
-          </button>
-        </div>
-        {briefing ? (
-          <div className="text-sm text-secondary" style={{ lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-            {briefing}
-          </div>
-        ) : briefingLoading ? (
-          <div className="text-sm text-muted" style={{ fontStyle: 'italic', lineHeight: 1.6 }}>
-            ⏳ Votre briefing est en cours de génération...
-          </div>
-        ) : (
-          <div className="text-sm text-muted" style={{ fontStyle: 'italic', lineHeight: 1.6 }}>
-            Votre briefing personnalisé du jour est en cours de chargement...
           </div>
         )}
       </div>
 
-      {/* Quick Stats — stays 2x2 on mobile */}
-      <div className="section" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
-        <div className="stat-card">
-          <div className="stat-label">Messages échangés</div>
-          <div className="stat-value">{stats.totalMessages}</div>
-          <div className="text-xs text-muted mt-4">+10 XP par message</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Documents générés</div>
-          <div className="stat-value">{stats.totalDocuments}</div>
-          <div className="text-xs text-muted mt-4">+25 XP par document</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Agents actifs</div>
-          <div className="stat-value">{activeAgents.length}</div>
-          <div className="text-xs text-muted mt-4">
-            sur {DEFAULT_AGENTS.length} disponibles
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Crédits restants</div>
-          <div className="stat-value" style={{ color: walletBalance > 50_000_000 ? 'var(--success)' : walletBalance > 10_000_000 ? '#f59e0b' : '#ef4444' }}>
-            {(walletBalance / 1_000_000).toFixed(1)}
-          </div>
-          <div className="text-xs text-muted mt-4">crédits disponibles</div>
-        </div>
-      </div>
+      {/* ── Taches + Priorites ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
 
-      {/* Agent Activity Summary — Active vs Inactive */}
-      <div className="card section">
-        <div className="flex-between items-center mb-16">
-          <div className="section-title" style={{ marginBottom: 0 }}>
-            Mon équipe IA
-            <span className="text-sm text-muted font-normal" style={{ marginLeft: 8 }}>
-              {activeAgents.length} actif{activeAgents.length > 1 ? 's' : ''}
-            </span>
-          </div>
-          <Link href="/client/team" className="text-sm font-semibold text-accent" style={{ textDecoration: 'none' }}>
-            Gérer l&apos;équipe &rarr;
-          </Link>
-        </div>
-
-        {/* Active agents — horizontal scroll on mobile */}
-        <div style={{ display: 'flex', gap: 10, overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', paddingBottom: 4 }}>
-          {activeAgents.map(agent => (
-            <Link key={agent.id} href="/client/chat" className="flex items-center gap-8 bg-secondary rounded-md" style={{
-              padding: '8px 10px', minWidth: 200, flexShrink: 0, scrollSnapAlign: 'start',
-              border: `1px solid ${agent.color}33`, textDecoration: 'none', color: 'inherit',
-              transition: 'border-color 0.15s ease',
-            }}>
-              <div className="flex-center" style={{
-                width: 36, height: 36, borderRadius: 10,
-                background: agent.color + '22', border: `1px solid ${agent.color}44`, fontSize: 18,
-              }}>
-                {agent.emoji}
-              </div>
-              <div className="flex-1" style={{ minWidth: 0 }}>
-                <div className="text-sm font-bold truncate">{agent.name}</div>
-                <div className="text-xs text-muted">{agent.role}</div>
-              </div>
-              {agentUsage[agent.id] && (
-                <div className="text-xs text-muted">{agentUsage[agent.id]}x</div>
-              )}
-              <div className="dot dot-success" title="En ligne 24/7" />
-            </Link>
-          ))}
-        </div>
-
-        {/* Inactive agents — compact, grayed out */}
-        {inactiveAgents.length > 0 && (
-          <div style={{ marginTop: 16 }}>
-            <div className="text-sm font-semibold text-muted mb-8">
-              Agents disponibles
+        {/* Taches du jour */}
+        <div style={{
+          background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+          borderRadius: 12, padding: '14px 16px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 14 }}>✅</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Taches du jour</span>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {inactiveAgents.map(agent => (
+            {todosTotal > 0 && (
+              <span style={{ fontSize: 11, color: todosDone === todosTotal && todosTotal > 0 ? '#22c55e' : 'var(--text-muted)', fontWeight: 600 }}>
+                {todosDone}/{todosTotal}
+              </span>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
+            {todos.map(t => (
+              <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <button
-                  key={agent.id}
-                  onClick={() => handleActivateAgent(agent.id)}
-                  className="flex items-center gap-6 rounded-md"
+                  onClick={() => toggleTodo(t.id)}
                   style={{
-                    padding: '5px 10px', border: '1px dashed var(--border-secondary)',
-                    background: 'transparent', cursor: 'pointer',
-                    opacity: 0.5, transition: 'opacity 0.15s',
-                    fontFamily: 'var(--font-sans)',
+                    width: 18, height: 18, borderRadius: 4, border: `2px solid ${t.done ? '#22c55e' : 'var(--border-secondary)'}`,
+                    background: t.done ? '#22c55e' : 'transparent', cursor: 'pointer', flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#fff',
                   }}
-                  title={`Activer ${agent.name}`}
-                >
-                  <span style={{ fontSize: 14 }}>{agent.emoji}</span>
-                  <span className="text-xs text-secondary">{agent.name}</span>
-                  <span className="text-xs text-accent font-semibold">+</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* New User Checklist */}
-      {isNewUser && (
-        <div className="card section" style={{ borderColor: '#6366f133' }}>
-          <div className="flex-between items-center mb-16">
-            <div>
-              <div className="section-title" style={{ marginBottom: 4 }}>Démarrage rapide</div>
-              <div className="text-sm text-muted">
-                {checklistDone}/5 étapes complétées
+                >{t.done ? '✓' : ''}</button>
+                <span style={{
+                  fontSize: 13, color: t.done ? 'var(--text-muted)' : 'var(--text-primary)',
+                  textDecoration: t.done ? 'line-through' : 'none', flex: 1,
+                }}>{t.text}</span>
+                <button onClick={() => removeTodo(t.id)} style={{
+                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--text-muted)',
+                  opacity: 0.5, padding: 2,
+                }}>✕</button>
               </div>
-            </div>
-            <div className="progress-bar" style={{ width: 100 }}>
-              <div className="progress-fill" style={{ width: `${(checklistDone / 5) * 100}%` }} />
-            </div>
+            ))}
           </div>
-          <div className="flex flex-col gap-6">
-            {checklistItems.map(item => (
-              <Link
-                key={item.id}
-                href={item.done ? '#' : item.href}
-                className={`checklist-item${item.done ? ' checklist-item-done' : ''}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                onClick={item.done ? (e) => e.preventDefault() : undefined}
-              >
-                <span className="text-center" style={{ fontSize: 18, width: 28 }}>
-                  {item.done ? '✅' : item.icon}
-                </span>
-                <span className="text-md" style={{
-                  fontWeight: item.done ? 400 : 600,
-                  textDecoration: item.done ? 'line-through' : 'none',
-                  color: item.done ? 'var(--text-muted)' : 'var(--text-primary)',
-                }}>
-                  {item.label}
-                </span>
-                {!item.done && (
-                  <span className="text-xs text-accent font-semibold" style={{ marginLeft: 'auto' }}>
-                    Commencer &rarr;
-                  </span>
-                )}
-              </Link>
+
+          <form onSubmit={e => { e.preventDefault(); addTodo(); }} style={{ display: 'flex', gap: 6 }}>
+            <input
+              type="text"
+              value={newTodo}
+              onChange={e => setNewTodo(e.target.value)}
+              placeholder="Ajouter une tache..."
+              style={{
+                flex: 1, padding: '6px 10px', borderRadius: 8, fontSize: 12,
+                border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none',
+              }}
+            />
+            <button type="submit" style={{
+              padding: '6px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+              border: 'none', cursor: 'pointer', background: 'var(--accent)', color: '#fff',
+              fontFamily: 'inherit', opacity: newTodo.trim() ? 1 : 0.5,
+            }}>+</button>
+          </form>
+        </div>
+
+        {/* Priorites Top 3 */}
+        <div style={{
+          background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+          borderRadius: 12, padding: '14px 16px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+            <span style={{ fontSize: 14 }}>🎯</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Priorites du jour</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {priorities.map((p, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{
+                  width: 20, height: 20, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 11, fontWeight: 800, flexShrink: 0,
+                  background: i === 0 ? '#f59e0b22' : i === 1 ? '#6366f122' : '#10b98122',
+                  color: i === 0 ? '#f59e0b' : i === 1 ? '#6366f1' : '#10b981',
+                }}>{i + 1}</span>
+                <input
+                  type="text"
+                  value={p}
+                  onChange={e => updatePriority(i, e.target.value)}
+                  placeholder={`Priorite ${i + 1}...`}
+                  style={{
+                    flex: 1, padding: '5px 8px', borderRadius: 6, fontSize: 12,
+                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none',
+                  }}
+                />
+              </div>
             ))}
           </div>
         </div>
-      )}
-
-      {/* Streak + AI Tip */}
-      <div className="grid-2 section gap-12">
-        <div className="card" style={{ borderColor: stats.streak > 0 ? '#f59e0b' : 'var(--border-primary)' }}>
-          <div className="flex items-center gap-16">
-            <div style={{ fontSize: 48 }}>{stats.streak > 0 ? '🔥' : '❄️'}</div>
-            <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: stats.streak > 0 ? '#f59e0b' : 'var(--text-muted)' }}>
-                {stats.streak}
-              </div>
-              <div className="text-md text-secondary">jours consécutifs</div>
-              <div className="text-xs text-muted mt-4">
-                {stats.streak === 0 ? 'Envoyez un message pour commencer votre streak!' :
-                  stats.streak >= 30 ? 'Impressionnant! Vous êtes un utilisateur fidèle.' :
-                    stats.streak >= 7 ? 'Belle semaine! Continuez!' : 'Bon début, gardez le rythme!'}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex-between items-center mb-12">
-            <div className="text-base font-bold">Conseil de {DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name}</div>
-            <button onClick={getAiTip} disabled={tipLoading} className="btn btn-ghost btn-sm">
-              {tipLoading ? '...' : '✨ Nouveau conseil'}
-            </button>
-          </div>
-          <div className="text-md text-secondary" style={{ lineHeight: 1.6, fontStyle: aiTip ? 'normal' : 'italic' }}>
-            {aiTip || `Cliquez sur "Nouveau conseil" pour recevoir un conseil personnalisé de ${DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name}.`}
-          </div>
-        </div>
       </div>
 
-      {/* Weekly Activity — recharts */}
-      <div className="card section">
-        <div className="section-title mb-16">Activité de la semaine</div>
-        {weeklyData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={160}>
-            <BarChart data={weeklyData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-              <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#86868b' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: '#a1a1a6' }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid var(--border-secondary)', background: 'var(--bg-elevated)', color: 'var(--text-primary)' }} />
-              <Bar dataKey="messages" fill="#6366f1" radius={[4, 4, 0, 0]} name="Messages" />
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="text-sm text-muted" style={{ textAlign: 'center', padding: '30px 0' }}>
-            Pas encore de données cette semaine
-          </div>
-        )}
-      </div>
-
-      {/* Credit Gauge + Usage Pie */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <div className="text-md font-bold">Solde crédits</div>
-            <Link href="/client/account" className="text-xs text-accent font-semibold" style={{ textDecoration: 'none' }}>
-              Recharger →
-            </Link>
-          </div>
-          <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: -1, marginBottom: 10 }}>
-            {(walletBalance / 1_000_000).toFixed(1)} <span style={{ fontSize: 13, fontWeight: 600, color: '#86868b' }}>crédits</span>
-          </div>
-          {/* Barre de progression */}
-          {(() => {
-            const credits = walletBalance / 1_000_000;
-            const max = Math.max(credits, 50); // scale relative to 50 credits or current balance
-            const pct = Math.min((credits / max) * 100, 100);
-            const barColor = credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444';
-            return (
-              <div>
-                <div style={{
-                  width: '100%', height: 8, background: '#f0f0f3',
-                  borderRadius: 6, overflow: 'hidden', marginBottom: 8,
-                }}>
-                  <div style={{
-                    width: `${pct}%`, height: '100%',
-                    background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)`,
-                    borderRadius: 6, transition: 'width 0.6s ease',
-                  }} />
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#9ca3af' }}>
-                  <span>≈ {Math.round(credits / 0.69)} chats · {Math.round(credits / 1.1)} emails · {Math.round(credits / 5)} appels</span>
-                  <span style={{ color: barColor, fontWeight: 700 }}>
-                    {credits > 30 ? 'Confortable' : credits > 10 ? 'Modéré' : 'Faible'}
-                  </span>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-        <div className="card" style={{ textAlign: 'center' }}>
-          <div className="text-md font-bold mb-8">Usage par type</div>
-          {stats.totalMessages > 0 || stats.totalDocuments > 0 || stats.totalMeetings > 0 ? (
-            <ResponsiveContainer width="100%" height={130}>
-              <PieChart>
-                <Pie
-                  data={[
-                    { name: 'Messages', value: Math.max(stats.totalMessages, 1), fill: '#6366f1' },
-                    { name: 'Documents', value: Math.max(stats.totalDocuments, 1), fill: '#a855f7' },
-                    { name: 'Réunions', value: Math.max(stats.totalMeetings, 1), fill: '#10b981' },
-                  ]}
-                  cx="50%" cy="50%" innerRadius={30} outerRadius={50}
-                  dataKey="value" paddingAngle={2}
-                >
-                  {[{ fill: '#6366f1' }, { fill: '#a855f7' }, { fill: '#10b981' }].map((entry, i) => (
-                    <Cell key={i} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid var(--border-secondary)', background: 'var(--bg-elevated)', color: 'var(--text-primary)' }} />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="text-sm text-muted" style={{ padding: '30px 0' }}>Pas encore de données</div>
-          )}
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', fontSize: 10, color: '#86868b' }}>
-            <span><span style={{ color: '#6366f1' }}>&#9632;</span> Chat</span>
-            <span><span style={{ color: '#a855f7' }}>&#9632;</span> Docs</span>
-            <span><span style={{ color: '#10b981' }}>&#9632;</span> Réunions</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Actions Widget */}
-      <Link href="/client/actions" className="card section flex items-center flex-wrap gap-16" style={{
-        background: 'linear-gradient(135deg, #f59e0b08, #ef444408)',
-        border: '1px solid #f59e0b22', padding: '14px 20px',
-        textDecoration: 'none', color: 'inherit', cursor: 'pointer',
+      {/* ── Acces rapides ── */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 12,
       }}>
-        <span style={{ fontSize: 32 }}>⚡</span>
-        <div className="flex-1" style={{ minWidth: 200 }}>
-          <div className="text-base font-bold mb-2">Centre d&apos;actions</div>
-          <div className="text-sm text-secondary">
-            Retrouvez toutes les actions proposées par vos agents : tâches, appels, emails, publications...
-          </div>
-        </div>
-        <span className="btn btn-sm" style={{ flexShrink: 0, background: '#F59E0B', color: 'white', borderColor: '#F59E0B' }}>
-          Voir mes actions
-        </span>
-      </Link>
-
-      {/* Referral Widget */}
-      <div className="card section flex items-center flex-wrap gap-16" style={{
-        background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
-        border: '1px solid #6366f122', padding: '14px 20px',
-      }}>
-        <span style={{ fontSize: 32 }}>🎁</span>
-        <div className="flex-1" style={{ minWidth: 200 }}>
-          <div className="text-base font-bold mb-2">Invitez vos amis, gagnez 20 EUR de crédits</div>
-          <div className="text-sm text-secondary">Partagez votre lien de parrainage et recevez des crédits gratuits.</div>
-        </div>
-        <Link href="/client/referrals" className="btn btn-primary btn-sm" style={{ flexShrink: 0 }}>
-          Mon lien de parrainage
-        </Link>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="section">
-        <div className="section-title">Actions recommandées</div>
-        <div className="grid-2" style={{ gap: 10 }}>
-          {!hasProfile && (
-            <Link href="/client/onboarding" className="card card-lift flex items-center gap-12 pointer" style={{
-              padding: 14, textDecoration: 'none', color: 'inherit',
-              borderColor: 'var(--accent)', background: 'var(--accent-muted)',
-            }}>
-              <span style={{ fontSize: 28 }}>📋</span>
-              <div>
-                <div className="text-base font-bold">Complétez votre profil entreprise</div>
-                <div className="text-sm text-secondary">Vos agents vous donneront de meilleurs conseils avec plus de contexte.</div>
-              </div>
-            </Link>
-          )}
-          {!hasCustomAgents && (
-            <Link href="/client/agents/customize" className="card card-lift flex items-center gap-12 pointer" style={{
-              padding: 14, textDecoration: 'none', color: 'inherit',
-              borderColor: '#a855f7', background: '#a855f715',
-            }}>
-              <span style={{ fontSize: 28 }}>🎨</span>
-              <div>
-                <div className="text-base font-bold">Personnalisez vos agents</div>
-                <div className="text-sm text-secondary">Configurez la personnalité, l&apos;expertise et les instructions de chaque agent.</div>
-              </div>
-            </Link>
-          )}
-          <Link href="/client/marketplace" className="card card-lift flex items-center gap-12 pointer" style={{
-            padding: 14, textDecoration: 'none', color: 'inherit',
+        {[
+          { href: '/client/chat', icon: '💬', label: 'Chat' },
+          { href: '/client/actions', icon: '⚡', label: 'Actions' },
+          { href: '/client/documents', icon: '📄', label: 'Documents' },
+          { href: '/client/team', icon: '👥', label: 'Equipe' },
+          { href: '/client/studio', icon: '🎬', label: 'Studio' },
+          { href: '/client/strategy', icon: '🎯', label: 'Strategie' },
+        ].map(item => (
+          <Link key={item.href} href={item.href} style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '10px 12px', borderRadius: 10, textDecoration: 'none', color: 'inherit',
+            background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+            transition: 'border-color 0.15s',
           }}>
-            <span style={{ fontSize: 28 }}>🛒</span>
-            <div>
-              <div className="text-base font-bold">Marketplace d&apos;agents</div>
-              <div className="text-sm text-secondary">Découvrez et installez de nouveaux agents spécialisés.</div>
-            </div>
+            <span style={{ fontSize: 18 }}>{item.icon}</span>
+            <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
           </Link>
-          <Link href="/client/meeting" className="card card-lift flex items-center gap-12 pointer" style={{
-            padding: 14, textDecoration: 'none', color: 'inherit',
-          }}>
-            <span style={{ fontSize: 28 }}>🏛️</span>
-            <div>
-              <div className="text-base font-bold">Lancer une réunion stratégique</div>
-              <div className="text-sm text-secondary">Réunissez vos agents pour brainstormer ensemble.</div>
-            </div>
+        ))}
+      </div>
+
+      {/* ── Mon equipe IA (compact) ── */}
+      <div style={{
+        background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+        borderRadius: 12, padding: '14px 16px', marginBottom: 12,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Mon equipe IA</span>
+          <Link href="/client/team" style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
+            Gerer &rarr;
           </Link>
         </div>
-      </div>
-
-      {/* Achievements — collapsible */}
-      <div className="section">
-        <button
-          onClick={() => setShowAchievements(v => !v)}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
-        >
-          <span className="section-title" style={{ marginBottom: 0 }}>Succès & Récompenses</span>
-          <span style={{ fontSize: 14, color: 'var(--text-muted)', transition: 'transform 0.2s', transform: showAchievements ? 'rotate(180deg)' : 'rotate(0)' }}>▼</span>
-        </button>
-        {showAchievements && <div className="grid-3 mt-12" style={{ gap: 10 }}>
-          {[
-            { icon: '🎯', title: 'Premier Pas', desc: 'Envoyez votre premier message', unlocked: stats.totalMessages >= 1 },
-            { icon: '💬', title: 'Bavard', desc: '10 messages envoyés', unlocked: stats.totalMessages >= 10 },
-            { icon: '🗣️', title: 'Grand Orateur', desc: '50 messages envoyés', unlocked: stats.totalMessages >= 50 },
-            { icon: '📄', title: 'Rédacteur', desc: 'Générez votre premier document', unlocked: stats.totalDocuments >= 1 },
-            { icon: '📚', title: 'Auteur', desc: '5 documents générés', unlocked: stats.totalDocuments >= 5 },
-            { icon: '👥', title: 'Recruteur', desc: 'Recrutez votre premier agent', unlocked: teamSize >= 1 },
-            { icon: '🏢', title: 'Manager', desc: 'Équipe de 3+ agents', unlocked: teamSize >= 3 },
-            { icon: '🔥', title: 'Assidu', desc: 'Streak de 7 jours', unlocked: stats.streak >= 7 },
-            { icon: '💎', title: 'Expert', desc: 'Atteignez le niveau 5', unlocked: stats.level >= 5 },
-            { icon: '📋', title: 'Organisé', desc: 'Complétez votre profil entreprise', unlocked: hasProfile },
-            { icon: '🤝', title: 'Collaborateur', desc: 'Lancez une réunion multi-agents', unlocked: stats.totalMeetings >= 1 },
-            { icon: '🎨', title: 'Personnalisateur', desc: 'Personnalisez votre premier agent', unlocked: hasCustomAgents },
-            { icon: '⭐', title: 'Légende', desc: 'Atteignez le niveau 10', unlocked: stats.level >= 10 },
-          ].map(a => (
-            <div key={a.title} className="card text-center p-12" style={{
-              opacity: a.unlocked ? 1 : 0.4,
-              borderColor: a.unlocked ? 'var(--accent)' : 'var(--border-primary)',
-              background: a.unlocked ? 'var(--accent-muted)' : 'var(--bg-secondary)',
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+          {activeAgents.map(a => a && (
+            <Link key={a.id} href="/client/chat" style={{
+              display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px',
+              borderRadius: 8, background: a.color + '0d', border: `1px solid ${a.color}30`,
+              textDecoration: 'none', color: 'inherit', flexShrink: 0, minWidth: 130,
             }}>
-              <div style={{ fontSize: 32 }} className="mb-4">{a.icon}</div>
-              <div className="text-md font-bold" style={{ marginBottom: 2 }}>{a.title}</div>
-              <div className="text-xs text-muted">{a.desc}</div>
-              {a.unlocked && <div className="text-xs text-accent font-semibold" style={{ marginTop: 6 }}>DÉBLOQUÉ</div>}
-            </div>
+              <span style={{ fontSize: 16 }}>{a.emoji}</span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{a.role}</div>
+              </div>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', flexShrink: 0, marginLeft: 'auto' }} />
+            </Link>
           ))}
-        </div>}
+        </div>
       </div>
 
-      {/* Level badge bottom-right */}
-      <div className="level-badge-fixed flex items-center gap-8 text-sm font-bold" style={{
-        position: 'fixed', bottom: 20, right: 20,
-        background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-        borderRadius: 16, padding: '6px 12px',
-        color: 'white',
-        boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
-        zIndex: 50,
+      {/* ── Credit detail (compact) ── */}
+      <div style={{
+        background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+        borderRadius: 12, padding: '12px 16px', marginBottom: 12,
       }}>
-        <span>Nv.{stats.level}</span>
-        <span style={{ opacity: 0.7 }}>|</span>
-        <span>{LEVEL_TITLES[stats.level] ?? 'Maître'}</span>
-        <span style={{ opacity: 0.7 }}>|</span>
-        <span>{stats.xp}/{stats.xpToNext} XP</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Solde credits</span>
+          <Link href="/client/account" style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
+            Recharger &rarr;
+          </Link>
+        </div>
+        {(() => {
+          const max = Math.max(credits, 50);
+          const pct = Math.min((credits / max) * 100, 100);
+          const barColor = credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444';
+          return (
+            <>
+              <div style={{
+                width: '100%', height: 6, background: 'var(--bg-tertiary)',
+                borderRadius: 4, overflow: 'hidden', marginBottom: 6,
+              }}>
+                <div style={{
+                  width: `${pct}%`, height: '100%',
+                  background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)`,
+                  borderRadius: 4, transition: 'width 0.6s ease',
+                }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#9ca3af' }}>
+                <span>{credits.toFixed(1)} credits &middot; ~{Math.round(credits / 0.69)} chats</span>
+                <span style={{ color: barColor, fontWeight: 700 }}>
+                  {credits > 30 ? 'Confortable' : credits > 10 ? 'Modere' : 'Faible'}
+                </span>
+              </div>
+            </>
+          );
+        })()}
       </div>
+
+      {/* ── Parrainage (compact) ── */}
+      <Link href="/client/referrals" style={{
+        display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', marginBottom: 12,
+        background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
+        border: '1px solid #6366f122', borderRadius: 12, textDecoration: 'none', color: 'inherit',
+      }}>
+        <span style={{ fontSize: 20 }}>🎁</span>
+        <div style={{ flex: 1 }}>
+          <span style={{ fontSize: 13, fontWeight: 700 }}>Invitez un ami</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)', marginLeft: 8 }}>+20 EUR de credits</span>
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>&rarr;</span>
+      </Link>
     </div>
   );
 }

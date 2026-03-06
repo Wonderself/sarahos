@@ -140,7 +140,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-assistante',
     icon: '📋',
-    color: '#6366f1',
+    color: '#5b6cf7',
     shortLabel: 'Organisation',
     title: 'Stratégie Organisation',
     subtitle: 'Optimisez votre quotidien et gagnez du temps',
@@ -157,7 +157,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-dg',
     icon: '👩‍💼',
-    color: '#a855f7',
+    color: '#8b7cf8',
     shortLabel: 'Strategie',
     title: 'Strategie d\'Entreprise',
     subtitle: 'Définissez votre cap et accélérez votre croissance',
@@ -293,7 +293,7 @@ const DEFAULT_FOLDERS: ActionFolder[] = [
   { id: 'f-rh', name: 'RH & Recrutement', icon: '👥', color: '#14b8a6', items: [] },
   { id: 'f-juridique', name: 'Juridique & Admin', icon: '⚖️', color: '#64748b', items: [] },
   { id: 'f-operations', name: 'Opérations', icon: '⚙️', color: '#8b5cf6', items: [] },
-  { id: 'f-other', name: 'Divers', icon: '📁', color: '#6366f1', items: [] },
+  { id: 'f-other', name: 'Divers', icon: '📁', color: '#5b6cf7', items: [] },
 ];
 
 /* ═══════════════════════════════════════════
@@ -693,7 +693,7 @@ export default function StrategyPage() {
       {/* ─── Objective Banner ─── */}
       <div className="card mb-20" style={{
         padding: 20,
-        background: objective.title ? 'linear-gradient(135deg, #6366f108, #a855f708)' : 'var(--bg-secondary)',
+        background: objective.title ? 'linear-gradient(135deg, #5b6cf708, #8b7cf808)' : 'var(--bg-secondary)',
         border: objective.title ? '1px solid var(--accent)' : '1px dashed var(--border-secondary)',
       }}>
         {!objective.title && !editingObjective ? (
@@ -847,7 +847,7 @@ export default function StrategyPage() {
               <div className="text-xs text-muted">À faire</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#a855f7' }}>{plansGenerated}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#8b7cf8' }}>{plansGenerated}</div>
               <div className="text-xs text-muted">Plans générés</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>

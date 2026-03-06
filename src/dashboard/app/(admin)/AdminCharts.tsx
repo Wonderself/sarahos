@@ -10,7 +10,7 @@ import {
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 
-const PIE_COLORS = ['#6366f1', '#a855f7', '#10b981', '#f59e0b', '#dc2626'];
+const PIE_COLORS = ['#5b6cf7', '#8b7cf8', '#10b981', '#f59e0b', '#dc2626'];
 const CHART_STYLE = { fontSize: 11, borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)' };
 
 // ─── Date range selector ───────────────────────────────────────────────────────
@@ -81,8 +81,8 @@ export function RevenueAreaChart({
       <AreaChart data={formatted} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
-            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+            <stop offset="5%" stopColor="#5b6cf7" stopOpacity={0.25} />
+            <stop offset="95%" stopColor="#5b6cf7" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gradMargin" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#10b981" stopOpacity={0.25} />
@@ -94,7 +94,7 @@ export function RevenueAreaChart({
         <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <Tooltip contentStyle={CHART_STYLE} formatter={(v) => [`${Number(v).toFixed(2)} cr`, '']} />
         <Legend iconSize={8} wrapperStyle={{ fontSize: 10, paddingTop: 4 }} />
-        <Area type="monotone" dataKey="revenueK" stroke="#6366f1" strokeWidth={2} fill="url(#gradRevenue)" name="Revenus (cr)" />
+        <Area type="monotone" dataKey="revenueK" stroke="#5b6cf7" strokeWidth={2} fill="url(#gradRevenue)" name="Revenus (cr)" />
         <Area type="monotone" dataKey="marginK" stroke="#10b981" strokeWidth={2} fill="url(#gradMargin)" name="Marge (cr)" />
       </AreaChart>
     </ResponsiveContainer>
@@ -128,7 +128,7 @@ export function UserGrowthBarChart({
         <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <Tooltip contentStyle={CHART_STYLE} />
-        <Bar dataKey="newUsers" fill="#6366f1" radius={[4, 4, 0, 0]} name="Nouveaux users" />
+        <Bar dataKey="newUsers" fill="#5b6cf7" radius={[4, 4, 0, 0]} name="Nouveaux users" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -230,7 +230,7 @@ interface TopClientEntry {
 
 const TIER_BADGE: Record<string, string> = {
   paid: '#10b981',
-  free: '#6366f1',
+  free: '#5b6cf7',
   demo: '#f59e0b',
   guest: '#9ca3af',
 };
@@ -329,7 +329,7 @@ export default function AdminCharts({ billingStats, tokenUsage, agentCounts }: A
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={CHART_STYLE} />
-            <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} name="Agents" />
+            <Bar dataKey="count" fill="#5b6cf7" radius={[4, 4, 0, 0]} name="Agents" />
           </BarChart>
         </ResponsiveContainer>
       </div>

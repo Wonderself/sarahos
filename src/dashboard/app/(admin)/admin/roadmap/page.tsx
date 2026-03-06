@@ -187,7 +187,7 @@ const INTEGRATIONS: Integration[] = [
 const STATUS_CONFIG = {
   active: { label: 'Actif', color: '#22c55e', bg: '#22c55e15' },
   planned: { label: 'Prochainement', color: '#f59e0b', bg: '#f59e0b15' },
-  future: { label: 'Prévu', color: '#6366f1', bg: '#6366f115' },
+  future: { label: 'Prévu', color: '#5b6cf7', bg: '#5b6cf715' },
 };
 
 const DIFFICULTY_CONFIG = {
@@ -314,7 +314,7 @@ export default function RoadmapPage() {
 
       {/* ═══ Future ═══ */}
       <section className="section">
-        <h2 className="section-title" style={{ color: '#6366f1' }}>Prévu (moyen terme)</h2>
+        <h2 className="section-title" style={{ color: '#5b6cf7' }}>Prévu (moyen terme)</h2>
         <p className="text-md text-tertiary mb-16">
           Ces intégrations sont prévues pour enrichir les capacités de Freenzy.io.
           Inscrivez-vous dès maintenant pour obtenir vos clés API.
@@ -419,14 +419,14 @@ export default function RoadmapPage() {
               <div key={item.name} className="flex items-center gap-12 bg-secondary rounded-sm border" style={{ padding: '8px 14px' }}>
                 <span style={{
                   width: 10, height: 10, borderRadius: 5, flexShrink: 0,
-                  background: item.status === 'ok' ? '#22c55e' : item.status === 'opt' ? '#f59e0b' : item.status === 'next' ? '#f59e0b' : '#6366f1',
+                  background: item.status === 'ok' ? '#22c55e' : item.status === 'opt' ? '#f59e0b' : item.status === 'next' ? '#f59e0b' : '#5b6cf7',
                 }} />
                 <span className="text-md font-semibold" style={{ minWidth: 200 }}>{item.name}</span>
                 <span className="text-sm text-secondary">{item.desc}</span>
                 <span style={{
                   marginLeft: 'auto', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, flexShrink: 0,
-                  background: item.status === 'ok' ? '#22c55e15' : item.status === 'opt' ? '#f59e0b15' : item.status === 'next' ? '#f59e0b15' : '#6366f115',
-                  color: item.status === 'ok' ? '#22c55e' : item.status === 'opt' ? '#f59e0b' : item.status === 'next' ? '#f59e0b' : '#6366f1',
+                  background: item.status === 'ok' ? '#22c55e15' : item.status === 'opt' ? '#f59e0b15' : item.status === 'next' ? '#f59e0b15' : '#5b6cf715',
+                  color: item.status === 'ok' ? '#22c55e' : item.status === 'opt' ? '#f59e0b' : item.status === 'next' ? '#f59e0b' : '#5b6cf7',
                 }}>
                   {item.status === 'ok' ? 'Actif' : item.status === 'opt' ? 'Optionnel' : item.status === 'next' ? 'Prochainement' : 'Prévu'}
                 </span>

@@ -64,7 +64,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
   if (status === 'processing') {
     return (
       <div style={{
-        padding: 40, textAlign: 'center', border: '2px dashed #6366f1',
+        padding: 40, textAlign: 'center', border: '2px dashed #5b6cf7',
         borderRadius: 12, background: '#fafafe',
       }}>
         <div style={{ fontSize: 28, marginBottom: 12 }}>🎬</div>
@@ -76,7 +76,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
           margin: '0 auto', overflow: 'hidden',
         }}>
           <div style={{
-            height: '100%', borderRadius: 3, background: '#6366f1',
+            height: '100%', borderRadius: 3, background: '#5b6cf7',
             width: `${progress}%`, transition: 'width 0.5s',
           }} />
         </div>
@@ -113,7 +113,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              padding: '8px 20px', borderRadius: 8, background: '#6366f1',
+              padding: '8px 20px', borderRadius: 8, background: '#5b6cf7',
               color: 'white', fontSize: 12, fontWeight: 600, textDecoration: 'none',
             }}
           >

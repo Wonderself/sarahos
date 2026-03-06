@@ -21,7 +21,7 @@ export default function MentionsPage() {
         <section key={section.id} id={section.id} style={{ marginBottom: 36 }}>
           <h2 style={{
             fontSize: 15, fontWeight: 700, color: '#1d1d1f', marginBottom: 12,
-            paddingLeft: 12, borderLeft: '3px solid #6366f1',
+            paddingLeft: 12, borderLeft: '3px solid #5b6cf7',
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
             <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, minWidth: 24 }}>

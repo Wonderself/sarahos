@@ -188,7 +188,7 @@ export default function AudioDiagnostic() {
         disabled={running}
         style={{
           padding: '10px 24px', borderRadius: 10, border: 'none',
-          background: running ? '#94a3b8' : '#6366f1', color: 'white',
+          background: running ? '#94a3b8' : '#5b6cf7', color: 'white',
           fontSize: 14, fontWeight: 700, cursor: running ? 'wait' : 'pointer',
           marginBottom: 20,
         }}

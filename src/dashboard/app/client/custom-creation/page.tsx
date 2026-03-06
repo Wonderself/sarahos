@@ -261,7 +261,7 @@ export default function ModulesSurMesurePage() {
           {/* Become a creator CTA */}
           <div className="card mt-24" style={{
             padding: 24, textAlign: 'center',
-            background: 'linear-gradient(135deg, var(--accent-muted), #a855f715)',
+            background: 'linear-gradient(135deg, var(--accent-muted), #8b7cf815)',
             border: '1px solid var(--accent)',
           }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>💡</div>
@@ -286,7 +286,7 @@ export default function ModulesSurMesurePage() {
           {/* AI advantage banner */}
           <div className="card mb-20" style={{
             padding: 20,
-            background: 'linear-gradient(135deg, #6366f108, #a855f708)',
+            background: 'linear-gradient(135deg, #5b6cf708, #8b7cf808)',
             border: '1px solid var(--accent)',
           }}>
             <div className="flex items-center gap-8 mb-8">

@@ -942,7 +942,7 @@ export default function AgentCustomizePage() {
       <div style={{ marginTop: 40 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
-          borderBottom: '2px solid #6366f1', paddingBottom: 12,
+          borderBottom: '2px solid #5b6cf7', paddingBottom: 12,
         }}>
           <span style={{ fontSize: 28 }}>{'\uD83C\uDFA4'}</span>
           <div>
@@ -995,8 +995,8 @@ export default function AgentCustomizePage() {
                   onClick={() => { setSelectedVoiceId(v.id); saveVoiceSettings({ selectedVoiceId: v.id }); }}
                   style={{
                     padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
-                    border: `2px solid ${isSelected ? '#6366f1' : 'var(--border-primary)'}`,
-                    background: isSelected ? '#6366f115' : 'var(--bg-secondary)',
+                    border: `2px solid ${isSelected ? '#5b6cf7' : 'var(--border-primary)'}`,
+                    background: isSelected ? '#5b6cf715' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
@@ -1004,7 +1004,7 @@ export default function AgentCustomizePage() {
                     <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{v.name}</span>
                     {isSelected && (
                       <span style={{
-                        width: 20, height: 20, borderRadius: '50%', background: '#6366f1',
+                        width: 20, height: 20, borderRadius: '50%', background: '#5b6cf7',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 11, color: 'white', fontWeight: 800,
                       }}>{'\u2713'}</span>
@@ -1018,16 +1018,16 @@ export default function AgentCustomizePage() {
                     }}>{v.gender}</span>
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: '#6366f120', color: '#6366f1',
+                      background: '#5b6cf720', color: '#5b6cf7',
                     }}>{v.lang}</span>
                   </div>
                   <button
                     onClick={e => { e.stopPropagation(); previewVoice(v.id, v.name); }}
                     disabled={isLoading}
                     style={{
-                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid #6366f140',
-                      background: isLoading ? '#6366f120' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
-                      fontSize: 12, fontWeight: 600, color: '#6366f1',
+                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid #5b6cf740',
+                      background: isLoading ? '#5b6cf720' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
+                      fontSize: 12, fontWeight: 600, color: '#5b6cf7',
                       fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                     }}
                   >
@@ -1052,14 +1052,14 @@ export default function AgentCustomizePage() {
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Stabilit&eacute;</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366f1' }}>{voiceStability.toFixed(2)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#5b6cf7' }}>{voiceStability.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceStability}
                   onChange={e => { const v = Number(e.target.value); setVoiceStability(v); saveVoiceSettings({ stability: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #6366f1 ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
+                    background: `linear-gradient(to right, #5b6cf7 ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
@@ -1072,14 +1072,14 @@ export default function AgentCustomizePage() {
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Similarit&eacute;</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366f1' }}>{voiceSimilarity.toFixed(2)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#5b6cf7' }}>{voiceSimilarity.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceSimilarity}
                   onChange={e => { const v = Number(e.target.value); setVoiceSimilarity(v); saveVoiceSettings({ similarity: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #6366f1 ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
+                    background: `linear-gradient(to right, #5b6cf7 ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
@@ -1092,14 +1092,14 @@ export default function AgentCustomizePage() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Style</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#6366f1' }}>{voiceStyle.toFixed(2)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#5b6cf7' }}>{voiceStyle.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceStyle}
                   onChange={e => { const v = Number(e.target.value); setVoiceStyle(v); saveVoiceSettings({ style: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #6366f1 ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
+                    background: `linear-gradient(to right, #5b6cf7 ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
@@ -1121,14 +1121,14 @@ export default function AgentCustomizePage() {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                     padding: '8px 16px', borderRadius: 10,
-                    border: `1px solid ${voiceSpeakerBoost ? '#6366f1' : 'var(--border-primary)'}`,
-                    background: voiceSpeakerBoost ? '#6366f115' : 'var(--bg-secondary)',
+                    border: `1px solid ${voiceSpeakerBoost ? '#5b6cf7' : 'var(--border-primary)'}`,
+                    background: voiceSpeakerBoost ? '#5b6cf715' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{
                     width: 40, height: 22, borderRadius: 11, position: 'relative',
-                    background: voiceSpeakerBoost ? '#6366f1' : 'var(--bg-tertiary)',
+                    background: voiceSpeakerBoost ? '#5b6cf7' : 'var(--bg-tertiary)',
                     transition: 'background 0.2s',
                   }}>
                     <div style={{
@@ -1139,7 +1139,7 @@ export default function AgentCustomizePage() {
                       boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }} />
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? '#6366f1' : 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? '#5b6cf7' : 'var(--text-muted)' }}>
                     {voiceSpeakerBoost ? 'Activ\u00e9' : 'D\u00e9sactiv\u00e9'}
                   </span>
                 </div>
@@ -1163,19 +1163,19 @@ export default function AgentCustomizePage() {
                       onClick={() => { setVoiceModel(m.id); saveVoiceSettings({ model: m.id }); }}
                       style={{
                         padding: '10px 14px', borderRadius: 10, cursor: 'pointer',
-                        border: `2px solid ${voiceModel === m.id ? '#6366f1' : 'var(--border-primary)'}`,
-                        background: voiceModel === m.id ? '#6366f115' : 'var(--bg-secondary)',
+                        border: `2px solid ${voiceModel === m.id ? '#5b6cf7' : 'var(--border-primary)'}`,
+                        background: voiceModel === m.id ? '#5b6cf715' : 'var(--bg-secondary)',
                         transition: 'all 0.15s',
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{
                           width: 16, height: 16, borderRadius: '50%',
-                          border: `2px solid ${voiceModel === m.id ? '#6366f1' : 'var(--border-primary)'}`,
+                          border: `2px solid ${voiceModel === m.id ? '#5b6cf7' : 'var(--border-primary)'}`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                           {voiceModel === m.id && (
-                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1' }} />
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#5b6cf7' }} />
                           )}
                         </div>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{m.label}</span>
@@ -1259,8 +1259,8 @@ export default function AgentCustomizePage() {
                 key={cap.title}
                 style={{
                   padding: '14px 16px', borderRadius: 10,
-                  border: `1px solid ${cap.available ? '#6366f140' : 'var(--border-primary)'}`,
-                  background: cap.available ? '#6366f108' : 'var(--bg-secondary)',
+                  border: `1px solid ${cap.available ? '#5b6cf740' : 'var(--border-primary)'}`,
+                  background: cap.available ? '#5b6cf708' : 'var(--bg-secondary)',
                   opacity: cap.available ? 1 : 0.6,
                 }}
               >

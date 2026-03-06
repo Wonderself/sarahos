@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 
 const EMOJIS = ['🤖','🧠','💡','⚡','🎯','🚀','💼','📊','🛠️','🎨','💬','📝','🔍','🏆','💎','🌟','⭐','🔥','🎭','🤝','📱','💻','🌐','📈','🎪','🏅','🎓','🔮','🧩','🎲'];
 
-const COLORS = ['#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#0ea5e9','#3b82f6','#6b7280','#1d1d1f'];
+const COLORS = ['#5b6cf7','#8b5cf6','#ec4899','#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#0ea5e9','#3b82f6','#6b7280','#1d1d1f'];
 
 const DOMAINS = [
   { value: 'commercial', label: 'Commercial', icon: '💼' },
@@ -71,7 +71,7 @@ function CreateAgentContent() {
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [emoji, setEmoji] = useState('🤖');
-  const [color, setColor] = useState('#6366f1');
+  const [color, setColor] = useState('#5b6cf7');
 
   // Step 2 — Domain & capabilities
   const [domain, setDomain] = useState('');
@@ -197,13 +197,13 @@ function CreateAgentContent() {
               style={{
                 display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 20,
                 border: 'none', cursor: i + 1 < step ? 'pointer' : 'default',
-                background: step === i + 1 ? '#6366f1' : i + 1 < step ? '#eef2ff' : '#f3f4f6',
-                color: step === i + 1 ? 'white' : i + 1 < step ? '#6366f1' : '#9ca3af',
+                background: step === i + 1 ? '#5b6cf7' : i + 1 < step ? '#eef2ff' : '#f3f4f6',
+                color: step === i + 1 ? 'white' : i + 1 < step ? '#5b6cf7' : '#9ca3af',
                 fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap',
               }}
             >
               <span style={{
-                width: 18, height: 18, borderRadius: '50%', background: step === i + 1 ? 'rgba(255,255,255,0.3)' : i + 1 < step ? '#6366f1' : '#e5e7eb',
+                width: 18, height: 18, borderRadius: '50%', background: step === i + 1 ? 'rgba(255,255,255,0.3)' : i + 1 < step ? '#5b6cf7' : '#e5e7eb',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700,
                 color: step === i + 1 ? 'white' : i + 1 < step ? 'white' : '#9ca3af', flexShrink: 0,
               }}>
@@ -211,7 +211,7 @@ function CreateAgentContent() {
               </span>
               {s}
             </button>
-            {i < STEPS.length - 1 && <div style={{ width: 20, height: 2, background: i + 1 < step ? '#6366f1' : '#e5e7eb', flexShrink: 0 }} />}
+            {i < STEPS.length - 1 && <div style={{ width: 20, height: 2, background: i + 1 < step ? '#5b6cf7' : '#e5e7eb', flexShrink: 0 }} />}
           </div>
         ))}
       </div>

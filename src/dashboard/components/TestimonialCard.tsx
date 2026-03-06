@@ -8,7 +8,7 @@ interface TestimonialCardProps {
 }
 
 export default function TestimonialCard({
-  name, company, role, quote, rating, avatarColor = '#6366f1',
+  name, company, role, quote, rating, avatarColor = '#5b6cf7',
 }: TestimonialCardProps) {
   const initials = name.split(' ').map(n => n[0]).join('');
 

@@ -53,7 +53,7 @@ export default function CostEstimator({ costSteps, onConfirm, confirmed }: CostE
           onClick={onConfirm}
           style={{
             width: '100%', padding: '10px 0', borderRadius: 8, border: 'none',
-            background: '#6366f1', color: 'white', fontSize: 13, fontWeight: 600,
+            background: '#5b6cf7', color: 'white', fontSize: 13, fontWeight: 600,
             cursor: 'pointer',
           }}
         >

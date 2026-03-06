@@ -98,8 +98,8 @@ export default function ReferralsPage() {
 
       {/* Hero */}
       <div className="card section" style={{
-        background: 'linear-gradient(135deg, #6366f10d, #a855f708)',
-        border: '2px solid #6366f130', padding: '24px 20px',
+        background: 'linear-gradient(135deg, #5b6cf70d, #8b7cf808)',
+        border: '2px solid #5b6cf730', padding: '24px 20px',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
           <span style={{ fontSize: 48 }}>🎁</span>

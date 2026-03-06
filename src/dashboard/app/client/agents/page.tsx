@@ -77,7 +77,7 @@ export default function AgentsPage() {
           </p>
         </div>
         <Link href="/client/agents/create" style={{
-          padding: '10px 20px', borderRadius: 10, background: '#6366f1', color: 'white',
+          padding: '10px 20px', borderRadius: 10, background: '#5b6cf7', color: 'white',
           fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
         }}>
           + Créer un agent
@@ -94,7 +94,7 @@ export default function AgentsPage() {
       <section style={{ marginBottom: 32 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>✨ Mes agents personnalisés</h2>
-          <span style={{ fontSize: 11, fontWeight: 600, background: '#eef2ff', color: '#6366f1', padding: '2px 8px', borderRadius: 10 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, background: '#eef2ff', color: '#5b6cf7', padding: '2px 8px', borderRadius: 10 }}>
             {customAgents.length}
           </span>
         </div>
@@ -112,7 +112,7 @@ export default function AgentsPage() {
               Créez votre premier agent IA sur mesure en quelques minutes
             </div>
             <Link href="/client/agents/create" style={{
-              padding: '10px 24px', borderRadius: 10, background: '#6366f1', color: 'white',
+              padding: '10px 24px', borderRadius: 10, background: '#5b6cf7', color: 'white',
               fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6,
             }}>
               ✨ Créer mon premier agent
@@ -124,11 +124,11 @@ export default function AgentsPage() {
               <div key={agent.id} style={{
                 background: 'white', borderRadius: 14, border: '1px solid #e5e7eb',
                 padding: 16, display: 'flex', flexDirection: 'column', gap: 10,
-                borderTop: `3px solid ${agent.color ?? '#6366f1'}`,
+                borderTop: `3px solid ${agent.color ?? '#5b6cf7'}`,
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{
-                    width: 40, height: 40, borderRadius: 10, background: `${agent.color ?? '#6366f1'}18`,
+                    width: 40, height: 40, borderRadius: 10, background: `${agent.color ?? '#5b6cf7'}18`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0,
                   }}>
                     {agent.emoji ?? '🤖'}

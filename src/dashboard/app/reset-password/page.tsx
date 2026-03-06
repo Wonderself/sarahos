@@ -78,13 +78,11 @@ export default function ResetPasswordPage() {
         <div style={{ maxWidth: 400, width: '100%' }}>
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <img
-              src="/images/logo.jpg" alt="Freenzy.io"
-              style={{ height: 44, borderRadius: 12, margin: '0 auto 14px', display: 'block' }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
+            <div className="fz-logo-text fz-logo-text-light" style={{ fontSize: 22, margin: '0 auto 14px' }}>
+              FREENZY.IO
+            </div>
             <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4 }}>
-              Votre equipe IA disponible 24/7
+              Votre équipe IA disponible 24/7
             </p>
           </div>
 
@@ -195,7 +193,7 @@ export default function ResetPasswordPage() {
             <a
               href="/login"
               style={{
-                fontSize: 13, color: '#6366f1', textDecoration: 'none',
+                fontSize: 13, color: '#5b6cf7', textDecoration: 'none',
                 fontWeight: 500,
               }}
             >

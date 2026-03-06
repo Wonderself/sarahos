@@ -233,9 +233,9 @@ export default function BriefingPage() {
               className="card"
               style={{
                 background: i === 0
-                  ? 'linear-gradient(135deg, #6366f108, #a855f705)'
+                  ? 'linear-gradient(135deg, #5b6cf708, #8b7cf805)'
                   : 'var(--bg-card)',
-                borderColor: i === 0 ? '#6366f122' : 'var(--border)',
+                borderColor: i === 0 ? '#5b6cf722' : 'var(--border)',
               }}
             >
               {section.title && (

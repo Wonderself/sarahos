@@ -51,8 +51,7 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
     items: [
       { href: '/client/dashboard', icon: '🏠', label: 'Accueil', visible: true, order: 0 },
       { href: '/client/reveil', icon: '☕', label: 'Réveil intelligent', visible: true, order: 1 },
-      { href: '/client/journee', icon: '📅', label: 'Ma journée', visible: true, order: 2 },
-      { href: '/client/chat', icon: '💬', label: 'Chat', visible: true, order: 3 },
+      { href: '/client/chat', icon: '💬', label: 'Chat', visible: true, order: 2 },
       { href: '/client/repondeur', icon: '📞', label: 'Répondeur Intelligent', visible: true, order: 4 },
       { href: '/client/social', icon: '📱', label: 'Réseaux Sociaux', visible: true, order: 5 },
       { href: '/client/studio', icon: '🎬', label: 'Studio Créatif', visible: true, order: 6 },
@@ -687,14 +686,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* Mobile Top Bar */}
       <div className="mobile-topbar">
         <div className="flex items-center gap-8">
-          <img
-            src="/images/logo.jpg"
-            alt="Freenzy.io"
-            className="rounded-md"
-            style={{ height: 28 }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-          />
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Freenzy.io</span>
+          <span className="fz-logo-text" style={{ fontSize: 16, color: 'var(--text-primary)' }}>FREENZY.IO</span>
         </div>
         <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu">
           {sidebarOpen ? '✕' : '☰'}
@@ -708,16 +700,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <nav className={`client-sidebar${sidebarOpen ? ' sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <img
-              src="/images/logo.jpg"
-              alt="Freenzy.io"
-              className="rounded-md"
-              style={{ height: 30 }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
             <div>
-              <div className="sidebar-logo-text">FREENZY.IO</div>
-              <div className="sidebar-logo-version">Votre equipe IA</div>
+              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>FREENZY.IO</div>
+              <div className="sidebar-logo-version">Votre équipe IA</div>
             </div>
           </div>
           <div className="flex-between items-center mt-4">
@@ -1043,7 +1028,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
                   alignItems: 'center', justifyContent: 'center',
-                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                  background: 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
                   color: 'white', fontSize: 9, fontWeight: 700,
                 }}>{gamLevel}</span>
               </span>
@@ -1102,7 +1087,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* Client Content */}
       <div className="client-main-content">
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div className="flex-between p-8" style={{ background: '#6366f110', borderBottom: '1px solid #6366f133' }}>
+          <div className="flex-between p-8" style={{ background: '#5b6cf710', borderBottom: '1px solid #5b6cf733' }}>
             <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>
               Présentez votre entreprise à vos agents pour des réponses personnalisées
             </span>
@@ -1140,13 +1125,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           style={{
             position: 'fixed', bottom: 24, right: 24, zIndex: 90,
             width: 56, height: 56, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+            background: 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
             color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 24, boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
+            fontSize: 24, boxShadow: '0 4px 20px rgba(91,108,247,0.4)',
             textDecoration: 'none', transition: 'transform 0.2s, box-shadow 0.2s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(99,102,241,0.5)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'; }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(91,108,247,0.5)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(91,108,247,0.4)'; }}
         >
           💬
         </Link>

@@ -165,7 +165,7 @@ export default function FormationsPage() {
   };
 
   /* ─── Styles ─── */
-  const accent = '#6366f1';
+  const accent = '#5b6cf7';
 
   const sectionStyle: React.CSSProperties = {
     maxWidth: 1100,
@@ -211,7 +211,7 @@ export default function FormationsPage() {
 
       {/* ── Hero Section ── */}
       <section style={{
-        background: `linear-gradient(135deg, ${accent}, #a855f7)`,
+        background: `linear-gradient(135deg, ${accent}, #8b7cf8)`,
         padding: '56px 24px 48px',
         textAlign: 'center',
         borderRadius: '0 0 32px 32px',
@@ -341,7 +341,7 @@ export default function FormationsPage() {
                 opacity: f.available ? 1 : 0.85,
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(99,102,241,0.12)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(91,108,247,0.12)';
                 (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={e => {
@@ -689,7 +689,7 @@ export default function FormationsPage() {
                   fontSize: 15,
                   fontWeight: 700,
                   border: 'none',
-                  background: `linear-gradient(135deg, ${accent}, #a855f7)`,
+                  background: `linear-gradient(135deg, ${accent}, #8b7cf8)`,
                   color: '#fff',
                   cursor: 'pointer',
                   transition: 'opacity 0.2s, transform 0.15s',

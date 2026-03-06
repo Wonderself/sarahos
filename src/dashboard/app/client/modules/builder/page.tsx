@@ -49,7 +49,7 @@ const FIELD_TYPES: { type: FieldType; label: string }[] = [
 ];
 
 const EMOJIS = ['📋', '📊', '🤖', '📈', '🎯', '💼', '🏆', '⚡', '🌟', '🔥', '💡', '🛒', '📞', '✉️', '📝', '🎨', '🏠', '👥', '🔧', '📦', '🌍', '💰', '📅', '🔔'];
-const COLORS = ['#6366f1', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#14b8a6', '#a855f7'];
+const COLORS = ['#5b6cf7', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#14b8a6', '#8b7cf8'];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -156,7 +156,7 @@ function BuilderContent() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [emoji, setEmoji] = useState('📋');
-  const [color, setColor] = useState('#6366f1');
+  const [color, setColor] = useState('#5b6cf7');
   const [slug, setSlug] = useState('');
   const [slugEdited, setSlugEdited] = useState(false);
 
@@ -199,7 +199,7 @@ function BuilderContent() {
         setName(m.name ?? '');
         setDescription(m.description ?? '');
         setEmoji(m.emoji ?? '📋');
-        setColor(m.color ?? '#6366f1');
+        setColor(m.color ?? '#5b6cf7');
         setSlug(m.slug ?? '');
         setSlugEdited(true);
         setIsPublished(m.is_published ?? true);

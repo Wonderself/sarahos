@@ -53,7 +53,7 @@ const ALARM_MODES = [
   { id: 'dur',        emoji: '\u{1F525}', label: 'Dur',        color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
   { id: 'sympa',      emoji: '\u{1F60A}', label: 'Sympa',      color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
   { id: 'drole',      emoji: '\u{1F602}', label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
-  { id: 'fou',        emoji: '\u{1F92A}', label: 'Fou',        color: '#a855f7', desc: 'Un reveil completement delirant et imprevisible' },
+  { id: 'fou',        emoji: '\u{1F92A}', label: 'Fou',        color: '#8b7cf8', desc: 'Un reveil completement delirant et imprevisible' },
   { id: 'motivant',   emoji: '\u{1F4AA}', label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
   { id: 'zen',        emoji: '\u{1F9D8}', label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
   { id: 'energique',  emoji: '\u26A1',    label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },

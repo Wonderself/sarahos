@@ -145,7 +145,7 @@ function dateToKey(d: Date): string {
 }
 
 function platformColor(platformId: string): string {
-  return PLATFORMS.find(p => p.id === platformId)?.color ?? '#6366f1';
+  return PLATFORMS.find(p => p.id === platformId)?.color ?? '#5b6cf7';
 }
 
 function platformEmoji(platformId: string): string {
@@ -528,8 +528,8 @@ export default function SocialMediaPage() {
               gap: 6,
               padding: '8px 16px',
               borderRadius: 20,
-              border: activeTab === tab.id ? '1px solid #6366f1' : '1px solid var(--border-secondary)',
-              background: activeTab === tab.id ? '#6366f1' : 'var(--bg-elevated)',
+              border: activeTab === tab.id ? '1px solid #5b6cf7' : '1px solid var(--border-secondary)',
+              background: activeTab === tab.id ? '#5b6cf7' : 'var(--bg-elevated)',
               color: activeTab === tab.id ? '#ffffff' : 'var(--text-secondary)',
               fontSize: 13,
               fontWeight: 600,
@@ -594,9 +594,9 @@ export default function SocialMediaPage() {
                   style={{
                     padding: '8px 16px',
                     borderRadius: 10,
-                    border: postType === t.id ? '2px solid #6366f1' : '1px solid var(--border-secondary)',
+                    border: postType === t.id ? '2px solid #5b6cf7' : '1px solid var(--border-secondary)',
                     background: postType === t.id ? 'var(--accent-muted)' : 'var(--bg-secondary)',
-                    color: postType === t.id ? '#6366f1' : 'var(--text-secondary)',
+                    color: postType === t.id ? '#5b6cf7' : 'var(--text-secondary)',
                     fontSize: 13,
                     fontWeight: postType === t.id ? 700 : 500,
                     cursor: 'pointer',
@@ -631,7 +631,7 @@ export default function SocialMediaPage() {
                 resize: 'vertical',
                 outline: 'none',
               }}
-              onFocus={e => { e.target.style.borderColor = '#6366f1'; }}
+              onFocus={e => { e.target.style.borderColor = '#5b6cf7'; }}
               onBlur={e => { e.target.style.borderColor = 'var(--border-secondary)'; }}
             />
 
@@ -646,7 +646,7 @@ export default function SocialMediaPage() {
                 padding: '6px 0',
                 background: 'none',
                 border: 'none',
-                color: '#6366f1',
+                color: '#5b6cf7',
                 fontSize: 13,
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -750,9 +750,9 @@ export default function SocialMediaPage() {
                       onClick={() => setHashtagMode('auto')}
                       style={{
                         padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                        border: hashtagMode === 'auto' ? '1px solid #6366f1' : '1px solid var(--border-secondary)',
+                        border: hashtagMode === 'auto' ? '1px solid #5b6cf7' : '1px solid var(--border-secondary)',
                         background: hashtagMode === 'auto' ? 'var(--accent-muted)' : 'transparent',
-                        color: hashtagMode === 'auto' ? '#6366f1' : 'var(--text-secondary)',
+                        color: hashtagMode === 'auto' ? '#5b6cf7' : 'var(--text-secondary)',
                         cursor: 'pointer', fontFamily: 'var(--font-sans)',
                       }}
                     >
@@ -762,9 +762,9 @@ export default function SocialMediaPage() {
                       onClick={() => setHashtagMode('manual')}
                       style={{
                         padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                        border: hashtagMode === 'manual' ? '1px solid #6366f1' : '1px solid var(--border-secondary)',
+                        border: hashtagMode === 'manual' ? '1px solid #5b6cf7' : '1px solid var(--border-secondary)',
                         background: hashtagMode === 'manual' ? 'var(--accent-muted)' : 'transparent',
-                        color: hashtagMode === 'manual' ? '#6366f1' : 'var(--text-secondary)',
+                        color: hashtagMode === 'manual' ? '#5b6cf7' : 'var(--text-secondary)',
                         cursor: 'pointer', fontFamily: 'var(--font-sans)',
                       }}
                     >
@@ -801,7 +801,7 @@ export default function SocialMediaPage() {
                 border: 'none',
                 background: isGenerating
                   ? 'var(--bg-tertiary)'
-                  : 'linear-gradient(135deg, #6366f1, #a855f7)',
+                  : 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
                 color: isGenerating ? 'var(--text-muted)' : '#ffffff',
                 fontSize: 15,
                 fontWeight: 700,
@@ -874,9 +874,9 @@ export default function SocialMediaPage() {
                   onClick={handleSavePost}
                   style={{
                     padding: '8px 18px', borderRadius: 10,
-                    border: '1px solid #6366f1',
+                    border: '1px solid #5b6cf7',
                     background: 'var(--accent-muted)',
-                    color: '#6366f1',
+                    color: '#5b6cf7',
                     fontSize: 13, fontWeight: 600, cursor: 'pointer',
                     fontFamily: 'var(--font-sans)', transition: 'all 0.15s ease',
                   }}
@@ -956,7 +956,7 @@ export default function SocialMediaPage() {
                       style={{
                         marginTop: 8,
                         background: 'none', border: 'none', cursor: 'pointer',
-                        color: '#6366f1', fontSize: 12, fontWeight: 600,
+                        color: '#5b6cf7', fontSize: 12, fontWeight: 600,
                         padding: 0, fontFamily: 'var(--font-sans)',
                       }}
                     >
@@ -983,9 +983,9 @@ export default function SocialMediaPage() {
                   onClick={() => setCalendarView('week')}
                   style={{
                     padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-                    border: calendarView === 'week' ? '1px solid #6366f1' : '1px solid var(--border-secondary)',
+                    border: calendarView === 'week' ? '1px solid #5b6cf7' : '1px solid var(--border-secondary)',
                     background: calendarView === 'week' ? 'var(--accent-muted)' : 'transparent',
-                    color: calendarView === 'week' ? '#6366f1' : 'var(--text-secondary)',
+                    color: calendarView === 'week' ? '#5b6cf7' : 'var(--text-secondary)',
                     cursor: 'pointer', fontFamily: 'var(--font-sans)',
                   }}
                 >
@@ -995,9 +995,9 @@ export default function SocialMediaPage() {
                   onClick={() => setCalendarView('month')}
                   style={{
                     padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-                    border: calendarView === 'month' ? '1px solid #6366f1' : '1px solid var(--border-secondary)',
+                    border: calendarView === 'month' ? '1px solid #5b6cf7' : '1px solid var(--border-secondary)',
                     background: calendarView === 'month' ? 'var(--accent-muted)' : 'transparent',
-                    color: calendarView === 'month' ? '#6366f1' : 'var(--text-secondary)',
+                    color: calendarView === 'month' ? '#5b6cf7' : 'var(--text-secondary)',
                     cursor: 'pointer', fontFamily: 'var(--font-sans)',
                   }}
                 >
@@ -1049,7 +1049,7 @@ export default function SocialMediaPage() {
                     style={{
                       padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
                       border: '1px solid var(--border-secondary)', background: 'transparent',
-                      color: '#6366f1', cursor: 'pointer', fontFamily: 'var(--font-sans)',
+                      color: '#5b6cf7', cursor: 'pointer', fontFamily: 'var(--font-sans)',
                     }}
                   >
                     Aujourd&apos;hui
@@ -1069,7 +1069,7 @@ export default function SocialMediaPage() {
                 return (
                   <div key={key} style={{
                     borderRadius: 12,
-                    border: isToday ? '2px solid #6366f1' : '1px solid var(--border-primary)',
+                    border: isToday ? '2px solid #5b6cf7' : '1px solid var(--border-primary)',
                     background: 'var(--bg-elevated)',
                     minHeight: 160,
                     display: 'flex',
@@ -1080,7 +1080,7 @@ export default function SocialMediaPage() {
                     <div style={{
                       padding: '8px 10px',
                       borderBottom: '1px solid var(--border-primary)',
-                      background: isToday ? '#6366f108' : 'var(--bg-secondary)',
+                      background: isToday ? '#5b6cf708' : 'var(--bg-secondary)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
@@ -1088,14 +1088,14 @@ export default function SocialMediaPage() {
                       <div>
                         <span style={{
                           fontSize: 11, fontWeight: 700,
-                          color: isToday ? '#6366f1' : 'var(--text-muted)',
+                          color: isToday ? '#5b6cf7' : 'var(--text-muted)',
                           textTransform: 'uppercase',
                         }}>
                           {DAYS_FR[i]}
                         </span>
                         <span style={{
                           marginLeft: 6, fontSize: 14, fontWeight: 700,
-                          color: isToday ? '#6366f1' : 'var(--text-primary)',
+                          color: isToday ? '#5b6cf7' : 'var(--text-primary)',
                         }}>
                           {date.getDate()}
                         </span>
@@ -1180,7 +1180,7 @@ export default function SocialMediaPage() {
                       <div key={di} style={{
                         minHeight: 60,
                         borderRadius: 8,
-                        border: isToday ? '1px solid #6366f1' : '1px solid var(--border-primary)',
+                        border: isToday ? '1px solid #5b6cf7' : '1px solid var(--border-primary)',
                         background: 'var(--bg-elevated)',
                         padding: 4,
                         cursor: 'pointer',
@@ -1190,7 +1190,7 @@ export default function SocialMediaPage() {
                       >
                         <div style={{
                           fontSize: 12, fontWeight: 600,
-                          color: isToday ? '#6366f1' : 'var(--text-primary)',
+                          color: isToday ? '#5b6cf7' : 'var(--text-primary)',
                           marginBottom: 4,
                         }}>
                           {date.getDate()}
@@ -1335,7 +1335,7 @@ export default function SocialMediaPage() {
                     style={{
                       padding: '8px 18px', borderRadius: 10,
                       border: 'none',
-                      background: newCalPost.title.trim() ? '#6366f1' : 'var(--bg-tertiary)',
+                      background: newCalPost.title.trim() ? '#5b6cf7' : 'var(--bg-tertiary)',
                       color: newCalPost.title.trim() ? '#fff' : 'var(--text-muted)',
                       fontSize: 13, fontWeight: 600,
                       cursor: newCalPost.title.trim() ? 'pointer' : 'default',
@@ -1438,7 +1438,7 @@ export default function SocialMediaPage() {
           ═══════════════════════════════════════════════════ */}
       {activeTab === 'connect' && (
         <div>
-          <div className="card" style={{ padding: 20, marginBottom: 16, background: 'linear-gradient(135deg, #6366f108, #a855f706)' }}>
+          <div className="card" style={{ padding: 20, marginBottom: 16, background: 'linear-gradient(135deg, #5b6cf708, #8b7cf806)' }}>
             <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: 'var(--text-primary)' }}>
               Connectez vos comptes pour publier directement depuis Freenzy.io
             </div>
@@ -1779,7 +1779,7 @@ export default function SocialMediaPage() {
               <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 }}>
                 Posts generes ce mois
               </div>
-              <div style={{ fontSize: 36, fontWeight: 800, color: '#6366f1' }}>
+              <div style={{ fontSize: 36, fontWeight: 800, color: '#5b6cf7' }}>
                 {analytics.monthPosts}
               </div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
@@ -1791,7 +1791,7 @@ export default function SocialMediaPage() {
               <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 }}>
                 Caracteres generes
               </div>
-              <div style={{ fontSize: 36, fontWeight: 800, color: '#a855f7' }}>
+              <div style={{ fontSize: 36, fontWeight: 800, color: '#8b7cf8' }}>
                 {analytics.totalChars > 1000 ? `${(analytics.totalChars / 1000).toFixed(1)}k` : analytics.totalChars}
               </div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>

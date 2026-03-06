@@ -84,7 +84,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
           </span>
           {items.length > 0 && (
             <span style={{
-              fontSize: 10, fontWeight: 600, color: '#6366f1',
+              fontSize: 10, fontWeight: 600, color: '#5b6cf7',
               background: '#eef2ff', padding: '1px 8px', borderRadius: 10,
             }}>
               {items.length} vidéo{items.length > 1 ? 's' : ''}
@@ -222,7 +222,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                       onClick={() => handleSetProject(expandedItem.id)}
                       style={{
                         padding: '6px 12px', borderRadius: 7, border: 'none',
-                        background: '#6366f1', color: 'white', fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                        background: '#5b6cf7', color: 'white', fontSize: 11, fontWeight: 600, cursor: 'pointer',
                       }}
                     >OK</button>
                     <button
@@ -259,7 +259,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                     onClick={() => { onReuseScript(expandedItem.script); setExpandedId(null); }}
                     style={{
                       fontSize: 10, padding: '5px 10px', borderRadius: 6,
-                      border: '1px solid #6366f1', color: '#6366f1', background: 'white',
+                      border: '1px solid #5b6cf7', color: '#5b6cf7', background: 'white',
                       cursor: 'pointer', fontWeight: 600,
                     }}
                   >
@@ -323,7 +323,7 @@ function VideoGrid({
             style={{
               borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
               border: `2px solid ${expandedId === v.id
-                ? '#6366f1'
+                ? '#5b6cf7'
                 : v.id === highlightedId
                   ? '#10b981'
                   : '#e5e7eb'}`,

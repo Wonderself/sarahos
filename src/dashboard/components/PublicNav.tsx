@@ -40,13 +40,11 @@ export default function PublicNav() {
       }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <span style={{
-            fontSize: 22, fontWeight: 900, letterSpacing: -0.8,
-            lineHeight: 1,
-            color: isDark ? '#fff' : '#1d1d1f',
-            transition: 'color 0.3s ease',
-          }}>
-            FREENZY<span style={{ color: '#6366f1' }}>.IO</span>
+          <span
+            className={`fz-logo-text ${isDark ? 'fz-logo-text-dark' : 'fz-logo-text-light'}`}
+            style={{ fontSize: 22, transition: 'all 0.3s ease' }}
+          >
+            FREENZY.IO
           </span>
         </Link>
 
@@ -116,8 +114,8 @@ export default function PublicNav() {
               style={{
                 fontSize: 15, fontWeight: 500, textDecoration: 'none',
                 padding: '14px 16px', borderRadius: 8,
-                color: pathname === link.href ? '#6366f1' : '#4b5563',
-                background: pathname === link.href ? 'rgba(99,102,241,0.06)' : 'transparent',
+                color: pathname === link.href ? '#5b6cf7' : '#4b5563',
+                background: pathname === link.href ? 'rgba(91,108,247,0.06)' : 'transparent',
               }}
             >
               {link.label}
@@ -139,7 +137,7 @@ export default function PublicNav() {
             style={{
               fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
               padding: '12px 20px', borderRadius: 10,
-              background: '#6366f1', color: '#fff',
+              background: '#5b6cf7', color: '#fff',
             }}
           >
             Créer un compte gratuit

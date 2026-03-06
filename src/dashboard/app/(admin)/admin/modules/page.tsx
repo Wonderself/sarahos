@@ -24,7 +24,7 @@ interface ModulesData {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  form: '#6366f1',
+  form: '#5b6cf7',
   crm: '#06b6d4',
   agent: '#8b5cf6',
   dashboard: '#f59e0b',

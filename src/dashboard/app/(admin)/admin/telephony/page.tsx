@@ -224,9 +224,9 @@ export default function TelephonyPage() {
             borderRadius: 12,
             fontSize: 11,
             fontWeight: 600,
-            background: 'rgba(99,102,241,0.1)',
+            background: 'rgba(91,108,247,0.1)',
             color: 'var(--accent)',
-            border: '1px solid rgba(99,102,241,0.2)',
+            border: '1px solid rgba(91,108,247,0.2)',
           }}>
             Bientot
           </span>

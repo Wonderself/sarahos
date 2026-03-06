@@ -50,7 +50,7 @@ export default function PlansPage() {
         <div style={{
           position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)',
           width: 560, height: 320,
-          background: 'radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(91,108,247,0.1) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -72,9 +72,9 @@ export default function PlansPage() {
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/login?mode=register" style={{
-              padding: '14px 32px', background: '#6366f1', color: '#fff',
+              padding: '14px 32px', background: '#5b6cf7', color: '#fff',
               borderRadius: 12, fontWeight: 700, fontSize: 15, textDecoration: 'none',
-              boxShadow: '0 0 28px rgba(99,102,241,0.35)',
+              boxShadow: '0 0 28px rgba(91,108,247,0.35)',
             }}>
               S&apos;inscrire gratuitement
             </Link>
@@ -106,7 +106,7 @@ export default function PlansPage() {
                 padding: '28px 24px', textAlign: 'center',
                 borderRight: i < 3 ? '1px solid #f2f2f2' : 'none',
               }}>
-                <div style={{ width: 6, height: 6, background: '#6366f1', borderRadius: '50%', margin: '0 auto 14px' }} />
+                <div style={{ width: 6, height: 6, background: '#5b6cf7', borderRadius: '50%', margin: '0 auto 14px' }} />
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f', marginBottom: 5 }}>{p.label}</div>
                 <div style={{ fontSize: 11, color: '#86868b', lineHeight: 1.5 }}>{p.desc}</div>
               </div>
@@ -191,7 +191,7 @@ export default function PlansPage() {
                 {opt.label && (
                   <div style={{
                     position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
-                    background: opt.label === 'Populaire' ? '#6366f1' : '#1d1d1f',
+                    background: opt.label === 'Populaire' ? '#5b6cf7' : '#1d1d1f',
                     color: '#fff', fontSize: 10, fontWeight: 700,
                     padding: '3px 12px', borderRadius: 40, whiteSpace: 'nowrap', letterSpacing: 0.5,
                   }}>
@@ -382,7 +382,7 @@ export default function PlansPage() {
                     <th key={h} style={{
                       padding: '14px 20px', textAlign: i === 0 ? 'left' : 'center',
                       fontSize: 12, fontWeight: 700,
-                      color: i === 1 ? '#6366f1' : '#86868b',
+                      color: i === 1 ? '#5b6cf7' : '#86868b',
                       borderBottom: '1px solid #e5e7eb',
                     }}>{h}</th>
                   ))}
@@ -523,7 +523,7 @@ export default function PlansPage() {
         <div style={{
           position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)',
           width: 560, height: 280,
-          background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(91,108,247,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -540,10 +540,10 @@ export default function PlansPage() {
           <Link href="/login?mode=register" style={{
             display: 'inline-block',
             padding: '15px 40px',
-            background: '#6366f1', color: '#fff',
+            background: '#5b6cf7', color: '#fff',
             borderRadius: 12, fontWeight: 700, fontSize: 16,
             textDecoration: 'none',
-            boxShadow: '0 0 36px rgba(99,102,241,0.3)',
+            boxShadow: '0 0 36px rgba(91,108,247,0.3)',
           }}>
             Commencer gratuitement
           </Link>

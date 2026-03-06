@@ -292,7 +292,7 @@ export default function ActivityPage() {
                   position: 'absolute', left: -16, top: 14,
                   width: 10, height: 10, borderRadius: '50%',
                   background: 'var(--bg-elevated)',
-                  border: '2px solid var(--accent, #6366f1)',
+                  border: '2px solid var(--accent, #5b6cf7)',
                   zIndex: 1,
                 }} />
 

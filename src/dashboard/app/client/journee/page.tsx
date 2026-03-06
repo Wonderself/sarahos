@@ -298,7 +298,7 @@ const MOOD_OPTIONS = [
   { emoji: '\u{1F641}', label: 'Pas top', color: '#f97316' },
   { emoji: '\u{1F610}', label: 'Neutre', color: '#eab308' },
   { emoji: '\u{1F642}', label: 'Bien', color: '#22c55e' },
-  { emoji: '\u{1F929}', label: 'Super !', color: '#6366f1' },
+  { emoji: '\u{1F929}', label: 'Super !', color: '#5b6cf7' },
 ];
 
 const NEWS_TABS = [
@@ -995,7 +995,7 @@ export default function JourneePage() {
     const text = data.affirmation || AFFIRMATIONS[idx];
     return (
       <W id="affirmation">
-        <div style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.08))', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+        <div style={{ background: 'linear-gradient(135deg, rgba(91,108,247,0.08), rgba(168,85,247,0.08))', borderRadius: 8, padding: 16, textAlign: 'center' }}>
           <div style={{ fontSize: 24, marginBottom: 8 }}>{'\u2728'}</div>
           <div style={{ fontSize: 15, fontStyle: 'italic', color: 'var(--text-primary)', lineHeight: 1.5 }}>{text}</div>
         </div>
@@ -1051,7 +1051,7 @@ export default function JourneePage() {
           {ZODIAC_SIGNS.map(z => (
             <button key={z.id} onClick={() => updateData({ horoscopeSign: z.id })} style={{
               padding: '4px 8px', borderRadius: 8, fontSize: 12, border: data.horoscopeSign === z.id ? '2px solid var(--accent)' : '1px solid var(--border-primary)',
-              background: data.horoscopeSign === z.id ? 'rgba(99,102,241,0.1)' : 'var(--bg-tertiary)', cursor: 'pointer', color: 'var(--text-primary)',
+              background: data.horoscopeSign === z.id ? 'rgba(91,108,247,0.1)' : 'var(--bg-tertiary)', cursor: 'pointer', color: 'var(--text-primary)',
             }}>{z.emoji} {z.label}</button>
           ))}
         </div>
@@ -1379,7 +1379,7 @@ export default function JourneePage() {
             <button key={w.id} onClick={() => toggleVisibility(w.id)} style={{
               display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 8,
               border: isVisible(w.id) ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
-              background: isVisible(w.id) ? 'rgba(99,102,241,0.08)' : 'var(--bg-secondary)',
+              background: isVisible(w.id) ? 'rgba(91,108,247,0.08)' : 'var(--bg-secondary)',
               cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
             }}>
               <span style={{ fontSize: 16 }}>{w.emoji}</span>

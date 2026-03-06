@@ -29,14 +29,14 @@ export default function CookieConsent() {
     }}>
       <span>
         Ce site utilise uniquement des cookies necessaires au fonctionnement du service.{' '}
-        <Link href="/legal/cookies" style={{ color: '#6366f1', textDecoration: 'underline' }}>
+        <Link href="/legal/cookies" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
           En savoir plus
         </Link>
       </span>
       <button
         onClick={accept}
         style={{
-          background: '#6366f1', color: 'white', border: 'none', padding: '7px 20px',
+          background: '#5b6cf7', color: 'white', border: 'none', padding: '7px 20px',
           borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer',
         }}
       >

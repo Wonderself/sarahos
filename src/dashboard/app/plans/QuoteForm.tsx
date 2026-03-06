@@ -137,7 +137,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
             <div>
               <label style={labelStyle}>Societe *</label>
               <input style={inputStyle} required minLength={2} maxLength={200}
-                onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
                 onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
                 value={form.companyName} onChange={e => setForm(f => ({ ...f, companyName: e.target.value }))}
                 placeholder="Nom de votre entreprise" />
@@ -145,7 +145,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
             <div>
               <label style={labelStyle}>Nom du contact *</label>
               <input style={inputStyle} required minLength={2} maxLength={200}
-                onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
                 onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
                 value={form.contactName} onChange={e => setForm(f => ({ ...f, contactName: e.target.value }))}
                 placeholder="Prenom Nom" />
@@ -156,7 +156,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
             <div>
               <label style={labelStyle}>Email *</label>
               <input type="email" style={inputStyle} required
-                onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
                 onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
                 value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                 placeholder="contact@entreprise.com" />
@@ -164,7 +164,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
             <div>
               <label style={labelStyle}>Telephone</label>
               <input style={inputStyle}
-                onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
                 onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
                 value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                 placeholder="+33 6 12 34 56 78" />
@@ -175,7 +175,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
             <div>
               <label style={labelStyle}>Secteur d&apos;activite</label>
               <select style={inputStyle}
-                onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
                 onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
                 value={form.industry} onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}>
                 <option value="">Selectionnez...</option>
@@ -187,7 +187,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
             <div>
               <label style={labelStyle}>Nombre d&apos;utilisateurs</label>
               <input type="number" style={inputStyle} min={1}
-                onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
                 onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
                 value={form.estimatedUsers} onChange={e => setForm(f => ({ ...f, estimatedUsers: e.target.value }))}
                 placeholder="Ex: 50" />
@@ -217,7 +217,7 @@ export default function QuoteForm({ onClose }: { onClose: () => void }) {
           <div style={{ marginBottom: 28 }}>
             <label style={labelStyle}>Besoins specifiques</label>
             <textarea style={{ ...inputStyle, minHeight: 90, resize: 'vertical' }} maxLength={2000}
-              onFocus={e => { e.target.style.borderColor = '#6366f1'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onFocus={e => { e.target.style.borderColor = '#5b6cf7'; e.target.style.boxShadow = '0 0 0 3px rgba(91,108,247,0.1)'; }}
               onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.12)'; e.target.style.boxShadow = 'none'; }}
               value={form.needs} onChange={e => setForm(f => ({ ...f, needs: e.target.value }))}
               placeholder="Decrivez vos besoins : nombre d'agents, integrations souhaitees, contraintes de securite..." />

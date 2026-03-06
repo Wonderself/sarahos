@@ -62,7 +62,7 @@ export default function AudioPreview({ text, token, onSelect, defaultGender }: A
           disabled={loading || !text.trim()}
           style={{
             flex: 1, padding: '10px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-            border: `2px solid ${selectedProvider === 'deepgram' ? '#6366f1' : '#e5e7eb'}`,
+            border: `2px solid ${selectedProvider === 'deepgram' ? '#5b6cf7' : '#e5e7eb'}`,
             background: selectedProvider === 'deepgram' ? '#eef2ff' : 'white',
             cursor: loading ? 'wait' : 'pointer', color: '#1d1d1f',
           }}
@@ -97,7 +97,7 @@ export default function AudioPreview({ text, token, onSelect, defaultGender }: A
         </button>
       </div>
 
-      {loading && <div style={{ fontSize: 12, color: '#6366f1', textAlign: 'center' }}>Generation audio...</div>}
+      {loading && <div style={{ fontSize: 12, color: '#5b6cf7', textAlign: 'center' }}>Generation audio...</div>}
 
       {audioUrl && (
         <audio controls src={audioUrl} style={{ width: '100%', height: 36 }} />

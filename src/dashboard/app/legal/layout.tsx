@@ -32,7 +32,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         <div style={{
           position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
           width: 500, height: 200,
-          background: 'radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 68%)',
+          background: 'radial-gradient(ellipse, rgba(91,108,247,0.1) 0%, transparent 68%)',
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -83,16 +83,16 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
                   fontSize: 13, textDecoration: 'none',
                   padding: '9px 12px',
                   borderRadius: 8,
-                  background: isActive ? 'rgba(99,102,241,0.08)' : 'transparent',
-                  borderLeft: isActive ? '3px solid #6366f1' : '3px solid transparent',
-                  color: isActive ? '#6366f1' : '#4b5563',
+                  background: isActive ? 'rgba(91,108,247,0.08)' : 'transparent',
+                  borderLeft: isActive ? '3px solid #5b6cf7' : '3px solid transparent',
+                  color: isActive ? '#5b6cf7' : '#4b5563',
                   fontWeight: isActive ? 700 : 400,
                   transition: 'all 0.15s ease',
                   display: 'block',
                 }}
               >
                 <div style={{ fontWeight: isActive ? 700 : 500 }}>{p.label}</div>
-                <div style={{ fontSize: 11, color: isActive ? 'rgba(99,102,241,0.7)' : '#9ca3af', marginTop: 1 }}>{p.sub}</div>
+                <div style={{ fontSize: 11, color: isActive ? 'rgba(91,108,247,0.7)' : '#9ca3af', marginTop: 1 }}>{p.sub}</div>
               </Link>
             );
           })}

@@ -188,7 +188,7 @@ export default function LoginPage() {
               <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
                 Selectionnez les agents dont vous avez besoin. Vous pourrez en activer d&apos;autres plus tard.
                 <br />
-                <span style={{ color: '#6366f1', fontWeight: 600 }}>Camille (Répondeur Intelligent)</span> est pre-selectionnee par defaut.
+                <span style={{ color: '#5b6cf7', fontWeight: 600 }}>Camille (Répondeur Intelligent)</span> est pre-selectionnee par defaut.
               </div>
             </div>
 
@@ -276,7 +276,7 @@ export default function LoginPage() {
         <div style={{
           position: 'absolute', top: '15%', left: '30%', transform: 'translateX(-50%)',
           width: 400, height: 400,
-          background: 'radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 68%)',
+          background: 'radial-gradient(ellipse, rgba(91,108,247,0.12) 0%, transparent 68%)',
           pointerEvents: 'none',
         }} />
         <div style={{
@@ -284,16 +284,16 @@ export default function LoginPage() {
           height: '100%', padding: '60px 52px', position: 'relative', zIndex: 1,
         }}>
           {/* Logo */}
-          <div style={{ fontSize: 18, fontWeight: 900, color: '#fff', letterSpacing: -0.5, marginBottom: 48 }}>
+          <div className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 20, marginBottom: 48 }}>
             FREENZY.IO
           </div>
 
           {/* Main headline */}
-          <div style={{
+          <div className="lp-gradient-h1" style={{
             fontSize: 'clamp(28px, 3.5vw, 40px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: -1.5,
-            color: '#ffffff', marginBottom: 14,
+            marginBottom: 14,
           }}>
-            L'app qui<br />remplace tout.
+            L&apos;app qui<br />remplace tout.
           </div>
           <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', lineHeight: 1.7, maxWidth: 300, marginBottom: 40 }}>
             {DEFAULT_AGENTS.length} agents spécialisés. Coûts IA optimisés automatiquement.
@@ -341,12 +341,12 @@ export default function LoginPage() {
           {/* Early adopter badge */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 7,
-            background: 'rgba(99,102,241,0.12)',
-            border: '1px solid rgba(99,102,241,0.25)',
+            background: 'rgba(91,108,247,0.12)',
+            border: '1px solid rgba(91,108,247,0.25)',
             color: '#a5b4fc', padding: '7px 14px', borderRadius: 40,
             fontSize: 12, fontWeight: 700,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6366f1', display: 'inline-block' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5b6cf7', display: 'inline-block' }} />
             0% pour tous · à vie
           </div>
         </div>
@@ -357,13 +357,11 @@ export default function LoginPage() {
       <div style={{ maxWidth: 400, width: '100%' }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <img
-            src="/images/logo.jpg" alt="Freenzy.io"
-            style={{ height: 44, borderRadius: 12, margin: '0 auto 14px', display: 'block' }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-          />
+          <div className="fz-logo-text fz-logo-text-light" style={{ fontSize: 22, margin: '0 auto 14px' }}>
+            FREENZY.IO
+          </div>
           <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4 }}>
-            Votre equipe IA disponible 24/7
+            Votre équipe IA disponible 24/7
           </p>
         </div>
 
@@ -491,7 +489,7 @@ export default function LoginPage() {
                   <div style={{ textAlign: 'right', marginBottom: 16 }}>
                     <button type="button"
                       onClick={() => { setMode('forgot'); setError(''); setSuccess(''); }}
-                      style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: 13, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+                      style={{ background: 'none', border: 'none', color: '#5b6cf7', fontSize: 13, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
                     >
                       Mot de passe oublie ?
                     </button>
@@ -528,13 +526,13 @@ export default function LoginPage() {
               {mode === 'register' && (
                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: '#6b7280', cursor: 'pointer', marginBottom: 4 }}>
                   <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
-                    style={{ marginTop: 2, accentColor: '#6366f1' }} />
+                    style={{ marginTop: 2, accentColor: '#5b6cf7' }} />
                   <span>
                     J&apos;accepte les{' '}
-                    <a href="/legal/cgu" target="_blank" style={{ color: '#6366f1', textDecoration: 'underline' }}>
+                    <a href="/legal/cgu" target="_blank" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
                       Conditions Generales d&apos;Utilisation
                     </a>{' '}et la{' '}
-                    <a href="/legal/confidentialite" target="_blank" style={{ color: '#6366f1', textDecoration: 'underline' }}>
+                    <a href="/legal/confidentialite" target="_blank" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
                       Politique de Confidentialite
                     </a>.
                   </span>
@@ -572,7 +570,7 @@ export default function LoginPage() {
           </form>
 
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <a href="/plans" style={{ fontSize: 13, color: '#6366f1', textDecoration: 'none' }}>
+            <a href="/plans" style={{ fontSize: 13, color: '#5b6cf7', textDecoration: 'none' }}>
               Voir les tarifs — Tout est gratuit
             </a>
           </div>

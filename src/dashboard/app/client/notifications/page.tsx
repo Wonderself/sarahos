@@ -215,7 +215,7 @@ export default function NotificationsPage() {
 
   const typeColor: Record<NotifType, string> = {
     alert: '#ef4444',
-    session: '#6366f1',
+    session: '#5b6cf7',
     update: '#22c55e',
     info: '#3b82f6',
   };

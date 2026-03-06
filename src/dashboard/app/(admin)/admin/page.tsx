@@ -59,7 +59,7 @@ export default async function OverviewPage() {
     agents: health.agents.entries.filter(a => a.level === l),
   }));
 
-  const levelColors: Record<number, string> = { 1: 'var(--accent)', 2: '#a855f7', 3: '#f59e0b' };
+  const levelColors: Record<number, string> = { 1: 'var(--accent)', 2: '#8b7cf8', 3: '#f59e0b' };
 
   const statusCounts = (['IDLE', 'BUSY', 'ERROR', 'PAUSED'] as const)
     .map(s => ({ status: s, count: health.agents.entries.filter(a => a.status === s).length }))

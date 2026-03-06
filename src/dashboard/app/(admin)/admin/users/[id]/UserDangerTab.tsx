@@ -50,7 +50,7 @@ export default function UserDangerTab({ user, showToast }: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div style={{ ...styles.card, border: '1px solid #6366f144' }}>
+      <div style={{ ...styles.card, border: '1px solid #5b6cf744' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>🎭 Impersonation</div>
@@ -65,7 +65,7 @@ export default function UserDangerTab({ user, showToast }: {
             style={{
               padding: '8px 16px', borderRadius: 6, border: 'none',
               cursor: user.role === 'admin' ? 'not-allowed' : 'pointer',
-              background: user.role === 'admin' ? '#9ca3af' : '#6366f1', color: 'white',
+              background: user.role === 'admin' ? '#9ca3af' : '#5b6cf7', color: 'white',
               fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 16,
               opacity: impersonating ? 0.7 : 1,
             }}

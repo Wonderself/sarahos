@@ -21,7 +21,7 @@ function StatusBadge({ status }: { status: ServiceStatus['status'] }) {
     ok:       { color: '#16a34a', bg: '#16a34a18', border: '#16a34a44', label: '✅ Opérationnel' },
     error:    { color: '#ef4444', bg: '#ef444418', border: '#ef444444', label: '❌ Erreur' },
     warning:  { color: '#f59e0b', bg: '#f59e0b18', border: '#f59e0b44', label: '⚠️ Non configuré' },
-    checking: { color: '#6366f1', bg: '#6366f118', border: '#6366f144', label: '⏳ Vérification…' },
+    checking: { color: '#5b6cf7', bg: '#5b6cf718', border: '#5b6cf744', label: '⏳ Vérification…' },
   };
   const c = cfg[status];
   return (
@@ -89,7 +89,7 @@ function AudioTest() {
         </div>
       )}
       {step === 'transcribing' && (
-        <span style={{ color: '#6366f1', fontWeight: 600, fontSize: 13 }}>⏳ Transcription en cours…</span>
+        <span style={{ color: '#5b6cf7', fontWeight: 600, fontSize: 13 }}>⏳ Transcription en cours…</span>
       )}
       {step === 'done' && (
         <div>

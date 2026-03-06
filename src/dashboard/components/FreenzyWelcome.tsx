@@ -40,13 +40,10 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
       <div className="welcome-card" onClick={e => e.stopPropagation()}>
         {/* Freenzy Avatar */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <img
-            src="/images/logo.jpg"
-            alt="Freenzy.io"
-            style={{ width: 64, height: 64, borderRadius: 20, margin: '0 auto 16px', objectFit: 'cover' }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-          />
-          <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>
+          <div className="fz-logo-text" style={{ fontSize: 24, margin: '0 auto 16px', color: 'var(--accent)' }}>
+            FREENZY.IO
+          </div>
+          <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.04em', marginBottom: 6 }}>
             {greeting}, {userName || 'cher client'} !
           </h2>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 400, margin: '0 auto' }}>
@@ -71,8 +68,8 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
         {!hasProfile && (
           <div style={{
             padding: '16px 20px', marginBottom: 20, borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
-            border: '1px solid #6366f125',
+            background: 'linear-gradient(135deg, #5b6cf70a, #8b7cf808)',
+            border: '1px solid #5b6cf725',
           }}>
             <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>
               Configurons votre profil !

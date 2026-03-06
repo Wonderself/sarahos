@@ -63,9 +63,9 @@ const ALL_AGENTS = [
 // ─── Actions avec crédits
 const ACTION_COSTS = [
   { icon: '💬', action: 'Chat avec agent IA', model: 'Haiku', count: '100 chats', color: '#22c55e' },
-  { icon: '✉️', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#6366f1' },
+  { icon: '✉️', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#5b6cf7' },
   { icon: '📱', action: 'Post réseaux sociaux', model: 'Haiku', count: '62 posts', color: '#3b82f6' },
-  { icon: '📄', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#6366f1' },
+  { icon: '📄', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#5b6cf7' },
   { icon: '📞', action: 'Appel répondeur IA', model: 'Twilio + Haiku', count: '10 appels', color: '#f97316' },
   { icon: '📤', action: 'Appel sortant IA', model: 'Twilio + Sonnet', count: '3 appels', color: '#f97316' },
   { icon: '💬', action: 'WhatsApp Business IA', model: 'Haiku', count: '125 msgs', color: '#22c55e' },
@@ -96,12 +96,12 @@ const STATS_BADGES = [
 // ─── Live activity feed
 const ACTIVITY = [
   { icon: '📞', text: 'Appel traité · lead qualifié', agent: 'Répondeur', color: '#22c55e', ago: '2 min' },
-  { icon: '✉️', text: 'Proposition commerciale envoyée', agent: 'Commercial', color: '#6366f1', ago: '4 min' },
+  { icon: '✉️', text: 'Proposition commerciale envoyée', agent: 'Commercial', color: '#5b6cf7', ago: '4 min' },
   { icon: '📱', text: '3 posts LinkedIn programmés', agent: 'Marketing', color: '#3b82f6', ago: '8 min' },
   { icon: '📊', text: 'Rapport mensuel généré', agent: 'Finance', color: '#f59e0b', ago: '13 min' },
   { icon: '⏰', text: 'Briefing matinal envoyé', agent: 'Réveil IA', color: '#f97316', ago: '19 min' },
   { icon: '🖼️', text: 'Visuel créé · campagne Été 2026', agent: 'Photo/Visuel', color: '#9333ea', ago: '24 min' },
-  { icon: '📄', text: 'NDA bilingue généré', agent: 'Juridique', color: '#6366f1', ago: '31 min' },
+  { icon: '📄', text: 'NDA bilingue généré', agent: 'Juridique', color: '#5b6cf7', ago: '31 min' },
   { icon: '💬', text: '12 messages WhatsApp traités', agent: 'Assistante', color: '#22c55e', ago: '39 min' },
   { icon: '🎬', text: 'Clip vidéo 30s créé', agent: 'Vidéo', color: '#ec4899', ago: '47 min' },
   { icon: '🤝', text: 'Stratégie Q2 synthétisée', agent: 'DG', color: '#9333ea', ago: '1h' },
@@ -123,7 +123,7 @@ const DEMO_SCENARIOS = [
   },
   {
     tab: '✉️ Email',
-    color: '#6366f1',
+    color: '#5b6cf7',
     prompt: 'Rédige une proposition pour Acme Corp — intégration SaaS, budget 12 000€.',
     lines: [
       { label: 'Objet', text: 'Proposition · Intégration SaaS · Acme Corp' },
@@ -180,7 +180,7 @@ const SCENARIOS = [
     desc: 'Générez contrats, devis, NDA, CGV en langage naturel. Export PDF signable, archivage auto.',
     steps: ['Prompt en langage naturel', 'Génération structurée IA', 'Export PDF + archivage'],
     tech: 'Claude Sonnet · 3.5 crédits/doc',
-    color: '#6366f1',
+    color: '#5b6cf7',
   },
   {
     title: 'Social Media Autopilot',
@@ -284,20 +284,20 @@ export default function LandingPage() {
           <div className="lp-hero-glow-anim" style={{
             position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
             width: '100%', maxWidth: 600, height: 350,
-            background: 'radial-gradient(ellipse, rgba(99,102,241,0.14) 0%, transparent 68%)',
+            background: 'radial-gradient(ellipse, rgba(91,108,247,0.14) 0%, transparent 68%)',
             pointerEvents: 'none',
           }} />
 
           <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <div style={{ marginBottom: 16 }}>
+            <div style={{ marginBottom: 10, marginTop: -8 }}>
               <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 7,
+                display: 'inline-flex', alignItems: 'center', gap: 7, flexWrap: 'wrap', justifyContent: 'center',
                 background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.22)',
                 color: '#86efac', padding: '5px 16px', borderRadius: 40,
                 fontSize: 11, fontWeight: 700,
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-                Pro &amp; Particuliers · 0% de commission
+                Pro &amp; Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet
               </span>
             </div>
 
@@ -311,7 +311,7 @@ export default function LandingPage() {
 
             <p style={{
               fontSize: 'clamp(13px, 1.6vw, 15px)',
-              color: '#6366f1', fontWeight: 700,
+              color: '#5b6cf7', fontWeight: 700,
               letterSpacing: 2, textTransform: 'uppercase',
               marginBottom: 8,
             }}>
@@ -323,13 +323,13 @@ export default function LandingPage() {
               color: 'rgba(255,255,255,0.44)',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
             }}>
-              {totalAgents} agents IA spécialisés. Toutes les IA du marché. Prix officiel, 0% de commission.
+              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>72 agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.62)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span>
             </p>
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
               <Link href="/login?mode=register" className="lp-cta-primary" style={{
-                padding: '12px 20px', background: '#6366f1', color: '#fff',
+                padding: '12px 20px', background: '#5b6cf7', color: '#fff',
                 borderRadius: 10, fontWeight: 800, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
               }}>
@@ -384,7 +384,7 @@ export default function LandingPage() {
         <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
               <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
                 Vos outils, prets a l&apos;emploi.
               </h2>
@@ -399,9 +399,9 @@ export default function LandingPage() {
                   style={{
                     padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
                     border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
-                    background: toolTab === i ? '#6366f1' : '#f0f0f0',
+                    background: toolTab === i ? '#5b6cf7' : '#f0f0f0',
                     color: toolTab === i ? '#fff' : '#6b7280',
-                    boxShadow: toolTab === i ? '0 2px 12px rgba(99,102,241,0.25)' : 'none',
+                    boxShadow: toolTab === i ? '0 2px 12px rgba(91,108,247,0.25)' : 'none',
                     transition: 'all 0.2s',
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}
@@ -454,7 +454,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En action</p>
               <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#fff', letterSpacing: -1.5 }}>
-                Vos agents au travail.
+                Vos <span style={{ color: '#a5b4fc' }}>agents</span> au travail.
               </h2>
             </div>
 
@@ -554,7 +554,7 @@ export default function LandingPage() {
         <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ca marche</p>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ca marche</p>
               <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
                 Concret. Automatise. Instantane.
               </h2>
@@ -762,7 +762,7 @@ export default function LandingPage() {
                 Free &amp; Easy
               </p>
               <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#fff', letterSpacing: -1.5 }}>
-                L&apos;IA accessible à tous.
+                L&apos;IA <span style={{ color: '#a5b4fc' }}>accessible</span> à tous.
               </h2>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
                 Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA complète, gratuite, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous, telle qu&apos;elle devrait être.
@@ -772,7 +772,7 @@ export default function LandingPage() {
               {[
                 { icon: '💎', title: '0% de commission', desc: 'Vous payez le prix officiel des fournisseurs IA. Pas de markup, pas de marge cachée. Ce que ça coûte réellement, c\'est ce que vous payez.', color: '#22c55e' },
                 { icon: '🔓', title: 'Aucun abonnement', desc: 'Pas de forfait mensuel, pas d\'engagement. Vous rechargez des crédits quand vous en avez besoin. Vos crédits n\'expirent jamais.', color: '#f59e0b' },
-                { icon: '🌐', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#6366f1' },
+                { icon: '🌐', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#5b6cf7' },
                 { icon: '🇫🇷', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
                 { icon: '⚡', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
                 { icon: '🤖', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
@@ -921,18 +921,18 @@ export default function LandingPage() {
 
         {/* ══ CTA FINAL ════════════════════════════════════════ */}
         <section style={{
-          background: 'linear-gradient(165deg, #0a0a0f 0%, #1a1a2e 100%)',
+          background: 'linear-gradient(165deg, #0a0a0f 0%, #0f0f1a 50%, #0a0a0f 100%)',
           padding: 'clamp(56px, 8vw, 96px) 24px',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
         }}>
           <div style={{
-            position: 'absolute', bottom: '-10%', left: '50%', transform: 'translateX(-50%)',
+            position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
             width: '100%', maxWidth: 500, height: 300,
-            background: 'radial-gradient(ellipse, rgba(99,102,241,0.11) 0%, transparent 68%)',
+            background: 'radial-gradient(ellipse, rgba(91,108,247,0.08) 0%, transparent 68%)',
             pointerEvents: 'none',
           }} />
           <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <p style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.18)', letterSpacing: 6, textTransform: 'uppercase', marginBottom: 16 }}>
+            <p className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 12, letterSpacing: 4, textTransform: 'uppercase', marginBottom: 16, opacity: 0.4 }}>
               FREENZY.IO
             </p>
             <h2 style={{
@@ -944,11 +944,11 @@ export default function LandingPage() {
               <span style={{ color: '#a5b4fc' }}>vous attend.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 32 }}>
-              {totalAgents} agents IA. Toutes les IA du marché. 0% de commission. Sans carte bancaire.
+              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents} agents IA</span>. Toutes les IA du marché. <span style={{ color: '#a5b4fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
             </p>
             <Link href="/login?mode=register" className="lp-cta-primary" style={{
               display: 'inline-block', padding: '15px 40px',
-              background: '#6366f1', color: '#fff',
+              background: '#5b6cf7', color: '#fff',
               borderRadius: 12, fontWeight: 800, fontSize: 16,
               textDecoration: 'none',
             }}>

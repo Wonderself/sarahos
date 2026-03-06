@@ -186,7 +186,7 @@ export default function VisioPage() {
                   <div style={{
                     width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: (agent?.color ?? '#6366f1') + '15', fontSize: 18,
+                    background: (agent?.color ?? '#5b6cf7') + '15', fontSize: 18,
                   }}>
                     {agent?.emoji ?? '🤖'}
                   </div>

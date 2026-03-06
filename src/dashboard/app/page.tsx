@@ -226,6 +226,40 @@ const WA_MESSAGES = [
   { from: 'agent', text: '✅ Devis envoyé à contact@acme.fr · suivi planifié J+3', time: '18:33' },
 ];
 
+// ─── Outils utilisateurs (par catégorie)
+const TOOL_CATEGORIES = [
+  { id: 'comm', label: 'Communication', icon: '\u{1F4DE}', tools: [
+    { icon: '\u{1F4DE}', name: 'Repondeur intelligent 24/7', desc: 'Repond a vos appels, qualifie les leads, prend les RDV automatiquement.' },
+    { icon: '\u{1F4AC}', name: 'WhatsApp Business IA', desc: 'Messages entrants et sortants, notifications, pilotage par WhatsApp.' },
+    { icon: '\u{1F4F2}', name: 'Appels sortants IA', desc: 'Prospection, relances et confirmations par telephone avec voix naturelle.' },
+    { icon: '\u{2709}\u{FE0F}', name: 'Email IA professionnel', desc: 'Redaction, envoi et suivi automatique de vos emails business.' },
+  ]},
+  { id: 'prod', label: 'Productivite', icon: '\u26A1', tools: [
+    { icon: '\u23F0', name: 'Reveil intelligent & Brief', desc: 'Briefing personnalise chaque matin : agenda, priorites, meteo, actus.' },
+    { icon: '\u{1F3AF}', name: 'Plan d\'action quotidien', desc: 'Objectifs structures, taches priorisees, suivi de progression en temps reel.' },
+    { icon: '\u{1F4C4}', name: 'Documents & contrats IA', desc: 'Generation de devis, contrats, NDA, rapports en quelques secondes.' },
+    { icon: '\u{1F91D}', name: 'Reunions structurees IA', desc: 'Ordre du jour, compte-rendu, decisions et actions — tout automatise.' },
+  ]},
+  { id: 'create', label: 'Creation', icon: '\u{1F3A8}', tools: [
+    { icon: '\u{1F4F8}', name: 'Studio Photo IA', desc: 'Creez des visuels pro, logos, bannières avec DALL-E et Flux.' },
+    { icon: '\u{1F3AC}', name: 'Studio Video IA', desc: 'Clips video 30s, talking heads, animations pour vos reseaux.' },
+    { icon: '\u{1F4F1}', name: 'Reseaux sociaux IA', desc: 'Posts LinkedIn, Twitter, Instagram generes et planifies automatiquement.' },
+    { icon: '\u{1F4E3}', name: 'Campagnes marketing IA', desc: 'Strategies, contenus et calendrier editorial generes par IA.' },
+  ]},
+  { id: 'gestion', label: 'Gestion', icon: '\u{1F4CA}', tools: [
+    { icon: '\u{1F4B0}', name: 'Comptabilite & finances', desc: 'Suivi tresorerie, factures, depenses et rapports financiers IA.' },
+    { icon: '\u{1F465}', name: 'Suivi clients & CRM', desc: 'Pipeline commercial, relances automatiques, historique client complet.' },
+    { icon: '\u2696\u{FE0F}', name: 'Veille juridique IA', desc: 'Alertes reglementaires, analyse de contrats, conformite automatisee.' },
+    { icon: '\u{1F464}', name: 'RH & recrutement IA', desc: 'Tri de CV, entretiens structures, onboarding automatise.' },
+  ]},
+  { id: 'perso', label: 'Personnel', icon: '\u{1F9D8}', tools: [
+    { icon: '\u{1F4B3}', name: 'Budget & depenses perso', desc: 'Suivi de vos finances personnelles, alertes et conseils d\'economie.' },
+    { icon: '\u{1F3E0}', name: 'Chasseur immobilier IA', desc: 'Veille immobiliere, alertes, analyse de marche et negociation.' },
+    { icon: '\u{1F4DD}', name: 'CV & carriere IA', desc: 'CV optimise, lettres de motivation, preparation d\'entretiens.' },
+    { icon: '\u{1F9D8}', name: 'Coach bien-etre IA', desc: 'Conseils sante, meditation, deconnexion et equilibre vie pro/perso.' },
+  ]},
+];
+
 // ─── Expand config
 const AGENTS_PREVIEW = 6;
 const MODELS_PREVIEW = 3;
@@ -249,6 +283,7 @@ export default function LandingPage() {
   const [faqCat, setFaqCat]                 = useState(0);
   const [demoTab, setDemoTab]               = useState(0);
   const [scenTechView, setScenTechView]     = useState<'scenarios' | 'tech'>('scenarios');
+  const [toolTab, setToolTab]               = useState(0);
 
   const visibleAgents  = showAllAgents  ? ALL_AGENTS   : ALL_AGENTS.slice(0, AGENTS_PREVIEW);
   const visibleModels  = showAllModels  ? AI_MODELS    : AI_MODELS.slice(0, MODELS_PREVIEW);
@@ -372,135 +407,6 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ══ TOUT EST INCLUS ═══════════════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
-          <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Tout est inclus</p>
-              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
-                Aucun extra. Aucun add-on.
-              </h2>
-              <p style={{ color: '#86868b', fontSize: 14 }}>Une plateforme. Tout dedans. Cliquez pour explorer.</p>
-            </div>
-
-            <div className="lp-inclus-grid">
-
-              {/* ── AGENTS ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les agents IA</span>
-                  <span style={{ fontSize: 11, background: '#6366f110', color: '#6366f1', border: '1px solid #6366f122', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
-                    {ALL_AGENTS.length} agents
-                  </span>
-                </div>
-                <div className="lp-agents-inner">
-                  {visibleAgents.map((a, i) => (
-                    <div key={i} className="lp-agent-chip" style={{
-                      background: '#fafafa', borderRadius: 8, padding: '8px 10px',
-                      border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: 6,
-                    }}>
-                      <span style={{ fontSize: 15 }}>{a.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: '#1d1d1f', lineHeight: 1.2 }}>{a.name}</div>
-                        <div style={{ fontSize: 9, color: '#9ca3af' }}>{a.cat}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllAgents(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllAgents ? '▲ Réduire' : `▼ Voir les ${ALL_AGENTS.length - AGENTS_PREVIEW} autres agents`}
-                </button>
-              </div>
-
-              {/* ── MODELES IA ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les modèles IA</span>
-                  <span style={{ fontSize: 11, background: '#22c55e10', color: '#22c55e', border: '1px solid #22c55e22', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
-                    {AI_MODELS.length} modèles
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                  {visibleModels.map((m, i) => (
-                    <div key={i} style={{
-                      display: 'flex', alignItems: 'center', gap: 10,
-                      background: '#fafafa', borderRadius: 9, padding: '10px 12px',
-                      border: '1px solid #f0f0f0',
-                    }}>
-                      <span style={{ fontSize: 18 }}>{m.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{m.name}</div>
-                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{m.sub}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllModels(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllModels ? '▲ Réduire' : `▼ Voir ${AI_MODELS.length - MODELS_PREVIEW} autres modèles`}
-                </button>
-              </div>
-
-              {/* ── ECOSYSTEME ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>L&apos;écosystème</span>
-                  <span style={{ fontSize: 11, background: '#f9731610', color: '#f97316', border: '1px solid #f9731622', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
-                    {ECOSYSTEM.length} intégrations
-                  </span>
-                </div>
-                <div className="lp-eco-inner">
-                  {visibleEco.map((e, i) => (
-                    <div key={i} style={{
-                      background: '#fafafa', borderRadius: 9, padding: '10px 12px',
-                      border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: 8,
-                    }}>
-                      <span style={{ fontSize: 18 }}>{e.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{e.name}</div>
-                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{e.sub}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllEco(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllEco ? '▲ Réduire' : `▼ Voir ${ECOSYSTEM.length - ECO_PREVIEW} autres intégrations`}
-                </button>
-              </div>
-
-              {/* ── ACTIONS ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les types d&apos;actions</span>
-                  <Link href="/tarifs-api" style={{ fontSize: 11, color: '#6366f1', textDecoration: 'none', fontWeight: 700 }}>
-                    Tarifs API →
-                  </Link>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {visibleActions.map((a, i) => (
-                    <div key={i} style={{
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      background: '#fafafa', borderRadius: 8, padding: '9px 12px',
-                      border: '1px solid #f0f0f0',
-                    }}>
-                      <span style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 7, color: '#1d1d1f' }}>
-                        <span>{a.icon}</span>{a.action}
-                      </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 10, color: '#9ca3af' }}>{a.model}</span>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: a.color }}>{a.count}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllActions(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllActions ? '▲ Réduire' : `▼ Voir ${ACTION_COSTS.length - ACTIONS_PREVIEW} autres actions`}
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
         {/* ══ DEMO INTERACTIVE ══════════════════════════════════ */}
         <section style={{ background: '#1d1d1f', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 860, margin: '0 auto' }}>
@@ -599,6 +505,74 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
+        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
+              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
+                Vos outils, prets a l&apos;emploi.
+              </h2>
+              <p style={{ color: '#86868b', fontSize: 14 }}>Tout ce dont vous avez besoin, active en un clic.</p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              {TOOL_CATEGORIES.map((cat, i) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setToolTab(i)}
+                  style={{
+                    padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
+                    border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
+                    background: toolTab === i ? '#6366f1' : '#f0f0f0',
+                    color: toolTab === i ? '#fff' : '#6b7280',
+                    boxShadow: toolTab === i ? '0 2px 12px rgba(99,102,241,0.25)' : 'none',
+                    transition: 'all 0.2s',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                  }}
+                >
+                  <span style={{ fontSize: 15 }}>{cat.icon}</span>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14,
+            }} className="lp-tools-grid">
+              {TOOL_CATEGORIES[toolTab].tools.map((tool, i) => (
+                <div key={i} className="lp-app-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 18px' }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                    background: '#f0f0ff', border: '1px solid #e0e0ff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 22,
+                  }}>
+                    {tool.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>{tool.name}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: '#22c55e',
+                        background: '#22c55e10', border: '1px solid #22c55e22',
+                        padding: '2px 8px', borderRadius: 20,
+                      }}>Inclus</span>
+                    </div>
+                    <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{tool.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: 24 }}>
+              <span style={{ fontSize: 12, color: '#9ca3af' }}>
+                {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils inclus dans tous les plans
+              </span>
             </div>
           </div>
         </section>
@@ -864,6 +838,135 @@ export default function LandingPage() {
                   {badge.text}
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ TOUT EST INCLUS (technique) ═════════════════════════ */}
+        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Sous le capot</p>
+              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
+                Aucun extra. Aucun add-on.
+              </h2>
+              <p style={{ color: '#86868b', fontSize: 14 }}>Une plateforme. Tout dedans. Cliquez pour explorer.</p>
+            </div>
+
+            <div className="lp-inclus-grid">
+
+              {/* ── AGENTS ── */}
+              <div className="lp-app-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les agents IA</span>
+                  <span style={{ fontSize: 11, background: '#6366f110', color: '#6366f1', border: '1px solid #6366f122', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
+                    {ALL_AGENTS.length} agents
+                  </span>
+                </div>
+                <div className="lp-agents-inner">
+                  {visibleAgents.map((a, i) => (
+                    <div key={i} className="lp-agent-chip" style={{
+                      background: '#fafafa', borderRadius: 8, padding: '8px 10px',
+                      border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: 6,
+                    }}>
+                      <span style={{ fontSize: 15 }}>{a.icon}</span>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: '#1d1d1f', lineHeight: 1.2 }}>{a.name}</div>
+                        <div style={{ fontSize: 9, color: '#9ca3af' }}>{a.cat}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setShowAllAgents(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
+                  {showAllAgents ? '\u25B2 Reduire' : `\u25BC Voir les ${ALL_AGENTS.length - AGENTS_PREVIEW} autres agents`}
+                </button>
+              </div>
+
+              {/* ── MODELES IA ── */}
+              <div className="lp-app-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les modeles IA</span>
+                  <span style={{ fontSize: 11, background: '#22c55e10', color: '#22c55e', border: '1px solid #22c55e22', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
+                    {AI_MODELS.length} modeles
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  {visibleModels.map((m, i) => (
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      background: '#fafafa', borderRadius: 9, padding: '10px 12px',
+                      border: '1px solid #f0f0f0',
+                    }}>
+                      <span style={{ fontSize: 18 }}>{m.icon}</span>
+                      <div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{m.name}</div>
+                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{m.sub}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setShowAllModels(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
+                  {showAllModels ? '\u25B2 Reduire' : `\u25BC Voir ${AI_MODELS.length - MODELS_PREVIEW} autres modeles`}
+                </button>
+              </div>
+
+              {/* ── ECOSYSTEME ── */}
+              <div className="lp-app-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>L&apos;ecosysteme</span>
+                  <span style={{ fontSize: 11, background: '#f9731610', color: '#f97316', border: '1px solid #f9731622', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
+                    {ECOSYSTEM.length} integrations
+                  </span>
+                </div>
+                <div className="lp-eco-inner">
+                  {visibleEco.map((e, i) => (
+                    <div key={i} style={{
+                      background: '#fafafa', borderRadius: 9, padding: '10px 12px',
+                      border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: 8,
+                    }}>
+                      <span style={{ fontSize: 18 }}>{e.icon}</span>
+                      <div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{e.name}</div>
+                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{e.sub}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setShowAllEco(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
+                  {showAllEco ? '\u25B2 Reduire' : `\u25BC Voir ${ECOSYSTEM.length - ECO_PREVIEW} autres integrations`}
+                </button>
+              </div>
+
+              {/* ── ACTIONS ── */}
+              <div className="lp-app-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les types d&apos;actions</span>
+                  <Link href="/tarifs-api" style={{ fontSize: 11, color: '#6366f1', textDecoration: 'none', fontWeight: 700 }}>
+                    Tarifs API &rarr;
+                  </Link>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {visibleActions.map((a, i) => (
+                    <div key={i} style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      background: '#fafafa', borderRadius: 8, padding: '9px 12px',
+                      border: '1px solid #f0f0f0',
+                    }}>
+                      <span style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 7, color: '#1d1d1f' }}>
+                        <span>{a.icon}</span>{a.action}
+                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 10, color: '#9ca3af' }}>{a.model}</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: a.color }}>{a.count}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setShowAllActions(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
+                  {showAllActions ? '\u25B2 Reduire' : `\u25BC Voir ${ACTION_COSTS.length - ACTIONS_PREVIEW} autres actions`}
+                </button>
+              </div>
+
             </div>
           </div>
         </section>

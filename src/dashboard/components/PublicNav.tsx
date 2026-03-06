@@ -40,35 +40,22 @@ export default function PublicNav() {
       }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: 9,
+          <span className="lp-gradient-h1" style={{
+            fontSize: 26, fontWeight: 900, letterSpacing: -1.2,
+            lineHeight: 1,
             background: isDark
-              ? 'linear-gradient(135deg, #6366f1, #a855f7)'
-              : 'linear-gradient(135deg, #6366f1, #a855f7)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-            boxShadow: isDark ? '0 0 16px rgba(99,102,241,0.3)' : '0 1px 4px rgba(99,102,241,0.18)',
-            transition: 'box-shadow 0.3s ease',
+              ? 'linear-gradient(120deg, #ffffff 0%, #e0e7ff 22%, #c7d2fe 45%, #a5b4fc 60%, #e0e7ff 80%, #ffffff 100%)'
+              : 'linear-gradient(120deg, #1d1d1f 0%, #6366f1 50%, #1d1d1f 100%)',
+            backgroundSize: '300% auto',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            transition: 'all 0.3s ease',
           }}>
-            <span style={{ color: '#fff', fontSize: 15, fontWeight: 900, lineHeight: 1 }}>F</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{
-              fontSize: 22, fontWeight: 900, letterSpacing: -0.8,
-              color: isDark ? '#ffffff' : '#1d1d1f',
-              transition: 'color 0.3s ease', lineHeight: 1,
-            }}>
-              FREENZY<span style={{ color: '#6366f1', fontWeight: 900 }}>.IO</span>
-            </span>
-            <span style={{
-              fontSize: 9, fontWeight: 600, letterSpacing: 1.5,
-              color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.32)',
-              textTransform: 'uppercase', lineHeight: 1, marginTop: 3,
-              transition: 'color 0.3s ease',
-            }}>
-              Free &amp; Easy
-            </span>
-          </div>
+            FREENZY<span style={{
+              WebkitTextFillColor: '#6366f1',
+            }}>.IO</span>
+          </span>
         </Link>
 
         {/* Desktop links */}

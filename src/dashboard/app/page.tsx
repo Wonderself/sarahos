@@ -260,35 +260,13 @@ const TOOL_CATEGORIES = [
   ]},
 ];
 
-// ─── Expand config
-const AGENTS_PREVIEW = 6;
-const MODELS_PREVIEW = 3;
-const ECO_PREVIEW = 4;
-const ACTIONS_PREVIEW = 4;
-
-const expandBtnStyle = {
-  marginTop: 10, width: '100%', padding: '8px',
-  background: 'transparent', border: '1px dashed #d1d5db',
-  borderRadius: 8, fontSize: 12, color: '#6b7280', cursor: 'pointer', fontWeight: 600,
-  minHeight: 44,
-} as const;
 
 // ═══════════════════════════════════════════════════════════
 export default function LandingPage() {
-  const [showAllAgents, setShowAllAgents]   = useState(false);
-  const [showAllModels, setShowAllModels]   = useState(false);
-  const [showAllEco, setShowAllEco]         = useState(false);
-  const [showAllActions, setShowAllActions] = useState(false);
   const [openFaq, setOpenFaq]               = useState<number | null>(null);
   const [faqCat, setFaqCat]                 = useState(0);
   const [demoTab, setDemoTab]               = useState(0);
-  const [scenTechView, setScenTechView]     = useState<'scenarios' | 'tech'>('scenarios');
   const [toolTab, setToolTab]               = useState(0);
-
-  const visibleAgents  = showAllAgents  ? ALL_AGENTS   : ALL_AGENTS.slice(0, AGENTS_PREVIEW);
-  const visibleModels  = showAllModels  ? AI_MODELS    : AI_MODELS.slice(0, MODELS_PREVIEW);
-  const visibleEco     = showAllEco     ? ECOSYSTEM    : ECOSYSTEM.slice(0, ECO_PREVIEW);
-  const visibleActions = showAllActions ? ACTION_COSTS : ACTION_COSTS.slice(0, ACTIONS_PREVIEW);
 
   const demo = DEMO_SCENARIOS[demoTab];
 
@@ -349,30 +327,25 @@ export default function LandingPage() {
             </p>
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
               <Link href="/login?mode=register" className="lp-cta-primary" style={{
-                padding: '14px 30px', background: '#6366f1', color: '#fff',
-                borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: 'none',
-                minHeight: 48,
+                padding: '12px 20px', background: '#6366f1', color: '#fff',
+                borderRadius: 10, fontWeight: 800, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
+                minHeight: 44, whiteSpace: 'nowrap',
               }}>
                 Commencer gratuitement
               </Link>
               <Link href="/plans" style={{
-                padding: '14px 22px', minHeight: 48,
+                padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
                 background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.11)',
                 color: 'rgba(255,255,255,0.68)', borderRadius: 10, fontWeight: 600,
-                fontSize: 14, textDecoration: 'none',
+                fontSize: 'clamp(11px, 3vw, 14px)', textDecoration: 'none',
               }}>
                 Voir les tarifs
               </Link>
               </div>
             </div>
 
-            <div className="lp-hero-steps">
-              <div className="lp-hero-step"><span className="lp-hero-step-num">01</span> Profil · 5 min</div>
-              <div className="lp-hero-step"><span className="lp-hero-step-num">02</span> Activation</div>
-              <div className="lp-hero-step"><span className="lp-hero-step-num">03</span> Operationnel</div>
-            </div>
           </div>
         </section>
 
@@ -406,6 +379,74 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+
+        {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
+        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
+              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
+                Vos outils, prets a l&apos;emploi.
+              </h2>
+              <p style={{ color: '#86868b', fontSize: 14 }}>Tout ce dont vous avez besoin, active en un clic.</p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              {TOOL_CATEGORIES.map((cat, i) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setToolTab(i)}
+                  style={{
+                    padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
+                    border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
+                    background: toolTab === i ? '#6366f1' : '#f0f0f0',
+                    color: toolTab === i ? '#fff' : '#6b7280',
+                    boxShadow: toolTab === i ? '0 2px 12px rgba(99,102,241,0.25)' : 'none',
+                    transition: 'all 0.2s',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                  }}
+                >
+                  <span style={{ fontSize: 15 }}>{cat.icon}</span>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14,
+            }} className="lp-tools-grid">
+              {TOOL_CATEGORIES[toolTab].tools.map((tool, i) => (
+                <div key={i} className="lp-app-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 18px' }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                    background: '#f0f0ff', border: '1px solid #e0e0ff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 22,
+                  }}>
+                    {tool.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>{tool.name}</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: '#22c55e',
+                        background: '#22c55e10', border: '1px solid #22c55e22',
+                        padding: '2px 8px', borderRadius: 20,
+                      }}>Inclus</span>
+                    </div>
+                    <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{tool.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: 24 }}>
+              <span style={{ fontSize: 12, color: '#9ca3af' }}>
+                {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils inclus dans tous les plans
+              </span>
+            </div>
+          </div>
+        </section>
 
         {/* ══ DEMO INTERACTIVE ══════════════════════════════════ */}
         <section style={{ background: '#1d1d1f', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
@@ -509,139 +550,66 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
-          <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
-              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
-                Vos outils, prets a l&apos;emploi.
-              </h2>
-              <p style={{ color: '#86868b', fontSize: 14 }}>Tout ce dont vous avez besoin, active en un clic.</p>
-            </div>
-
-            <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-              {TOOL_CATEGORIES.map((cat, i) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setToolTab(i)}
-                  style={{
-                    padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
-                    border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
-                    background: toolTab === i ? '#6366f1' : '#f0f0f0',
-                    color: toolTab === i ? '#fff' : '#6b7280',
-                    boxShadow: toolTab === i ? '0 2px 12px rgba(99,102,241,0.25)' : 'none',
-                    transition: 'all 0.2s',
-                    display: 'flex', alignItems: 'center', gap: 6,
-                  }}
-                >
-                  <span style={{ fontSize: 15 }}>{cat.icon}</span>
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14,
-            }} className="lp-tools-grid">
-              {TOOL_CATEGORIES[toolTab].tools.map((tool, i) => (
-                <div key={i} className="lp-app-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 18px' }}>
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                    background: '#f0f0ff', border: '1px solid #e0e0ff',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 22,
-                  }}>
-                    {tool.icon}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>{tool.name}</span>
-                      <span style={{
-                        fontSize: 10, fontWeight: 700, color: '#22c55e',
-                        background: '#22c55e10', border: '1px solid #22c55e22',
-                        padding: '2px 8px', borderRadius: 20,
-                      }}>Inclus</span>
-                    </div>
-                    <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{tool.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ textAlign: 'center', marginTop: 24 }}>
-              <span style={{ fontSize: 12, color: '#9ca3af' }}>
-                {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils inclus dans tous les plans
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ SCÉNARIOS & TECHNOLOGIES (fusionné) ════════════════ */}
+        {/* ══ COMMENT ÇA MARCHE — scenarios + technologies ═════════ */}
         <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En detail</p>
-              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 18 }}>
-                {scenTechView === 'scenarios' ? 'Scenarios concrets.' : 'Les meilleurs outils du marche.'}
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ca marche</p>
+              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
+                Concret. Automatise. Instantane.
               </h2>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div className="lp-view-toggle">
-                  <button
-                    className={`lp-view-toggle-btn ${scenTechView === 'scenarios' ? 'active' : ''}`}
-                    onClick={() => setScenTechView('scenarios')}
-                  >
-                    Cas d&apos;usage
-                  </button>
-                  <button
-                    className={`lp-view-toggle-btn ${scenTechView === 'tech' ? 'active' : ''}`}
-                    onClick={() => setScenTechView('tech')}
-                  >
-                    Technologies
-                  </button>
-                </div>
-              </div>
+              <p style={{ color: '#86868b', fontSize: 14 }}>Vos agents traitent tout, 24h/24. Voici ce que ca donne.</p>
             </div>
 
-            <div className="lp-scenario-steps" style={{ gap: 16 }}>
-              {scenTechView === 'scenarios' ? (
-                SCENARIOS.map((s, i) => (
-                  <div key={i} className="lp-app-card">
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, marginBottom: 14 }} />
-                    <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</h3>
-                    <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                      {s.steps.map((step, j) => (
-                        <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#4b5563' }}>
-                          <span style={{
-                            width: 20, height: 20, borderRadius: '50%',
-                            background: `${s.color}14`, color: s.color,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: 10, fontWeight: 800, flexShrink: 0,
-                          }}>{j + 1}</span>
-                          {step}
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{ marginTop: 14, fontSize: 11, color: '#9ca3af' }}>{s.tech}</div>
+            {/* Scenarios concrets */}
+            <div className="lp-scenario-steps" style={{ gap: 16, marginBottom: 40 }}>
+              {SCENARIOS.map((s, i) => (
+                <div key={i} className="lp-app-card">
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, marginBottom: 14 }} />
+                  <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</h3>
+                  <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {s.steps.map((step, j) => (
+                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#4b5563' }}>
+                        <span style={{
+                          width: 20, height: 20, borderRadius: '50%',
+                          background: `${s.color}14`, color: s.color,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 10, fontWeight: 800, flexShrink: 0,
+                        }}>{j + 1}</span>
+                        {step}
+                      </div>
+                    ))}
                   </div>
-                ))
-              ) : (
-                TECH_FEATURES.map((t, i) => (
-                  <div key={i} className="lp-app-card">
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, marginBottom: 14 }} />
-                    <h3 style={{ fontSize: 15, fontWeight: 800, color: '#1d1d1f', marginBottom: 8 }}>{t.title}</h3>
-                    <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>{t.desc}</p>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                      {t.points.map((p, j) => (
-                        <div key={j} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <span style={{ color: '#22c55e', fontWeight: 800, fontSize: 11 }}>&#10003;</span> {p}
-                        </div>
-                      ))}
-                    </div>
+                  <div style={{ marginTop: 14, fontSize: 11, color: '#9ca3af' }}>{s.tech}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Technologies intégrées */}
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, color: '#9ca3af', letterSpacing: 3, textTransform: 'uppercase' }}>Propulse par</p>
+            </div>
+            <div className="lp-scenario-steps" style={{ gap: 14 }}>
+              {TECH_FEATURES.map((t, i) => (
+                <div key={i} className="lp-app-card" style={{ padding: '20px 22px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
+                    <h3 style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>{t.title}</h3>
                   </div>
-                ))
-              )}
+                  <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {t.points.map((p, j) => (
+                      <span key={j} style={{
+                        fontSize: 11, color: '#4b5563', background: '#f0f0f0',
+                        padding: '3px 10px', borderRadius: 20,
+                      }}>
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -838,135 +806,6 @@ export default function LandingPage() {
                   {badge.text}
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ TOUT EST INCLUS (technique) ═════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
-          <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: '#6366f1', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Sous le capot</p>
-              <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
-                Aucun extra. Aucun add-on.
-              </h2>
-              <p style={{ color: '#86868b', fontSize: 14 }}>Une plateforme. Tout dedans. Cliquez pour explorer.</p>
-            </div>
-
-            <div className="lp-inclus-grid">
-
-              {/* ── AGENTS ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les agents IA</span>
-                  <span style={{ fontSize: 11, background: '#6366f110', color: '#6366f1', border: '1px solid #6366f122', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
-                    {ALL_AGENTS.length} agents
-                  </span>
-                </div>
-                <div className="lp-agents-inner">
-                  {visibleAgents.map((a, i) => (
-                    <div key={i} className="lp-agent-chip" style={{
-                      background: '#fafafa', borderRadius: 8, padding: '8px 10px',
-                      border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: 6,
-                    }}>
-                      <span style={{ fontSize: 15 }}>{a.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: '#1d1d1f', lineHeight: 1.2 }}>{a.name}</div>
-                        <div style={{ fontSize: 9, color: '#9ca3af' }}>{a.cat}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllAgents(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllAgents ? '\u25B2 Reduire' : `\u25BC Voir les ${ALL_AGENTS.length - AGENTS_PREVIEW} autres agents`}
-                </button>
-              </div>
-
-              {/* ── MODELES IA ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les modeles IA</span>
-                  <span style={{ fontSize: 11, background: '#22c55e10', color: '#22c55e', border: '1px solid #22c55e22', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
-                    {AI_MODELS.length} modeles
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                  {visibleModels.map((m, i) => (
-                    <div key={i} style={{
-                      display: 'flex', alignItems: 'center', gap: 10,
-                      background: '#fafafa', borderRadius: 9, padding: '10px 12px',
-                      border: '1px solid #f0f0f0',
-                    }}>
-                      <span style={{ fontSize: 18 }}>{m.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{m.name}</div>
-                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{m.sub}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllModels(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllModels ? '\u25B2 Reduire' : `\u25BC Voir ${AI_MODELS.length - MODELS_PREVIEW} autres modeles`}
-                </button>
-              </div>
-
-              {/* ── ECOSYSTEME ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>L&apos;ecosysteme</span>
-                  <span style={{ fontSize: 11, background: '#f9731610', color: '#f97316', border: '1px solid #f9731622', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>
-                    {ECOSYSTEM.length} integrations
-                  </span>
-                </div>
-                <div className="lp-eco-inner">
-                  {visibleEco.map((e, i) => (
-                    <div key={i} style={{
-                      background: '#fafafa', borderRadius: 9, padding: '10px 12px',
-                      border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: 8,
-                    }}>
-                      <span style={{ fontSize: 18 }}>{e.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{e.name}</div>
-                        <div style={{ fontSize: 10, color: '#9ca3af' }}>{e.sub}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllEco(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllEco ? '\u25B2 Reduire' : `\u25BC Voir ${ECOSYSTEM.length - ECO_PREVIEW} autres integrations`}
-                </button>
-              </div>
-
-              {/* ── ACTIONS ── */}
-              <div className="lp-app-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f' }}>Les types d&apos;actions</span>
-                  <Link href="/tarifs-api" style={{ fontSize: 11, color: '#6366f1', textDecoration: 'none', fontWeight: 700 }}>
-                    Tarifs API &rarr;
-                  </Link>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {visibleActions.map((a, i) => (
-                    <div key={i} style={{
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      background: '#fafafa', borderRadius: 8, padding: '9px 12px',
-                      border: '1px solid #f0f0f0',
-                    }}>
-                      <span style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 7, color: '#1d1d1f' }}>
-                        <span>{a.icon}</span>{a.action}
-                      </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 10, color: '#9ca3af' }}>{a.model}</span>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: a.color }}>{a.count}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={() => setShowAllActions(v => !v)} className="lp-expand-btn" style={expandBtnStyle}>
-                  {showAllActions ? '\u25B2 Reduire' : `\u25BC Voir ${ACTION_COSTS.length - ACTIONS_PREVIEW} autres actions`}
-                </button>
-              </div>
-
             </div>
           </div>
         </section>

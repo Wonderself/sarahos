@@ -20,7 +20,7 @@ export default function EnterpriseSection() {
   return (
     <>
       <div className="landing-enterprise-section" style={{
-        maxWidth: 860, margin: '0 auto 20px', padding: '48px 40px',
+        maxWidth: 860, margin: '0 auto 20px', padding: 'clamp(24px, 4vw, 48px) clamp(16px, 3vw, 40px)',
         borderRadius: 24,
         border: '1px solid rgba(0,0,0,0.06)',
         background: '#fafafa',
@@ -47,9 +47,9 @@ export default function EnterpriseSection() {
           </p>
         </div>
 
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 12, marginBottom: 36,
+        <div className="lp-enterprise-grid" style={{
+          display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 10, marginBottom: 36,
         }}>
           {FEATURES.map(f => (
             <div key={f.text} style={{

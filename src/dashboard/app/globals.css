@@ -1628,6 +1628,7 @@ a { color: inherit; text-decoration: none; }
   .lp-whatsapp-grid  { grid-template-columns: 1fr; gap: 32px; }
   .lp-custom-grid    { grid-template-columns: 1fr !important; }
   .lp-tools-grid     { grid-template-columns: 1fr !important; }
+  .lp-enterprise-grid { grid-template-columns: 1fr !important; }
   .lp-custom-examples { grid-template-columns: repeat(2, 1fr) !important; }
 
   /* Steps: remove side borders on mobile stack */

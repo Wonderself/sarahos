@@ -40,21 +40,13 @@ export default function PublicNav() {
       }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <span className="lp-gradient-h1" style={{
-            fontSize: 26, fontWeight: 900, letterSpacing: -1.2,
+          <span style={{
+            fontSize: 22, fontWeight: 900, letterSpacing: -0.8,
             lineHeight: 1,
-            background: isDark
-              ? 'linear-gradient(120deg, #ffffff 0%, #e0e7ff 22%, #c7d2fe 45%, #a5b4fc 60%, #e0e7ff 80%, #ffffff 100%)'
-              : 'linear-gradient(120deg, #1d1d1f 0%, #6366f1 50%, #1d1d1f 100%)',
-            backgroundSize: '300% auto',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            transition: 'all 0.3s ease',
+            color: isDark ? '#fff' : '#1d1d1f',
+            transition: 'color 0.3s ease',
           }}>
-            FREENZY<span style={{
-              WebkitTextFillColor: '#6366f1',
-            }}>.IO</span>
+            FREENZY<span style={{ color: '#6366f1' }}>.IO</span>
           </span>
         </Link>
 

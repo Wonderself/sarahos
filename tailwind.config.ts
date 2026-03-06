@@ -8,25 +8,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#FAFAF8',
-        foreground: '#1A1A1A',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
         muted: {
-          DEFAULT: '#666666',
-          foreground: '#999999',
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
         },
         accent: {
-          DEFAULT: '#C4A77D',
-          foreground: '#FFFFFF',
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
         },
         card: {
-          DEFAULT: '#FFFFFF',
-          foreground: '#1A1A1A',
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
         },
-        border: 'rgba(0,0,0,0.06)',
+        border: 'var(--border)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Playfair Display', 'Georgia', 'serif'],
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
     },
   },

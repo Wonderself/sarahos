@@ -3,362 +3,370 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-// Minimal agent list for the landing
-const FEATURED_AGENTS = [
-  { icon: 'call', name: 'Repondeur 24/7', desc: 'Ne manquez plus aucun appel' },
-  { icon: 'alarm', name: 'Reveil Intelligent', desc: 'Briefing personnalise chaque matin' },
-  { icon: 'description', name: 'Documents', desc: 'Contrats et devis en quelques secondes' },
-  { icon: 'phone_iphone', name: 'Reseaux Sociaux', desc: 'Posts generes et planifies' },
-  { icon: 'chat', name: 'WhatsApp Business', desc: 'Messages automatiques intelligents' },
-  { icon: 'self_improvement', name: 'Coach Personnel', desc: 'Conseils et accompagnement' },
+const FEATURES = [
+  {
+    icon: 'call',
+    title: 'Repondeur IA 24/7',
+    description: 'Ne manquez plus aucun appel. Sarah repond, qualifie et transfere intelligemment.',
+    stat: '98%',
+    statLabel: 'appels traites',
+  },
+  {
+    icon: 'edit_document',
+    title: 'Documents automatises',
+    description: 'Contrats, devis, factures generes en quelques secondes avec vos donnees.',
+    stat: '10x',
+    statLabel: 'plus rapide',
+  },
+  {
+    icon: 'schedule',
+    title: 'Agenda intelligent',
+    description: 'Planification automatique, rappels, et synchronisation multi-calendriers.',
+    stat: '5h',
+    statLabel: 'gagnees/semaine',
+  },
+  {
+    icon: 'share',
+    title: 'Reseaux sociaux',
+    description: 'Contenu genere, planifie et publie sur toutes vos plateformes.',
+    stat: '300%',
+    statLabel: 'engagement',
+  },
+];
+
+const AGENTS = [
+  { name: 'Communication', count: 12, color: '#3B82F6' },
+  { name: 'Documents', count: 8, color: '#10B981' },
+  { name: 'Scheduling', count: 6, color: '#F59E0B' },
+  { name: 'Analytics', count: 10, color: '#8B5CF6' },
+  { name: 'Social Media', count: 15, color: '#EC4899' },
+  { name: 'Finance', count: 9, color: '#06B6D4' },
 ];
 
 const TESTIMONIALS = [
-  { name: 'Marie L.', role: 'Fondatrice, Startup', quote: 'Enfin une IA qui simplifie vraiment mon quotidien.' },
-  { name: 'Thomas B.', role: 'Consultant independant', quote: 'Le repondeur a change ma facon de gerer mes appels.' },
-  { name: 'Sophie M.', role: 'Directrice Marketing', quote: 'Simple, elegant, efficace. Exactement ce qu\'il me fallait.' },
+  {
+    quote: "J'ai gagne 15 heures par semaine depuis que j'utilise SarahOS. Mon repondeur IA gere 90% de mes appels.",
+    author: 'Marie Dubois',
+    role: 'CEO, TechStart',
+    avatar: 'M',
+  },
+  {
+    quote: "Le dashboard est incroyablement intuitif. Meme mon equipe non-technique l'a adopte en quelques minutes.",
+    author: 'Thomas Martin',
+    role: 'Directeur Operations',
+    avatar: 'T',
+  },
+  {
+    quote: "Gratuit pour commencer, et la valeur est immediate. C'est rare de trouver un outil aussi complet sans engagement.",
+    author: 'Sophie Laurent',
+    role: 'Freelance Designer',
+    avatar: 'S',
+  },
 ];
 
-export default function MinimalLanding() {
+export default function SaaSLanding() {
   const [email, setEmail] = useState('');
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#FAFAF8',
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-    }}>
-      {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        background: 'rgba(250,250,248,0.85)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(0,0,0,0.04)',
-      }}>
-        <div style={{
-          maxWidth: 1000,
-          margin: '0 auto',
-          padding: '0 24px',
-          height: 64,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-          <Link href="/" style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 22,
-            fontWeight: 500,
-            color: '#1A1A1A',
-            textDecoration: 'none',
-            letterSpacing: '-0.02em',
-          }}>
-            SarahOS
+    <div className="min-h-screen bg-background text-foreground font-sans">
+      {/* Announcement Banner */}
+      <div className="bg-accent/10 border-b border-accent/20">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-center gap-2 text-sm">
+          <span className="inline-flex items-center gap-1.5 text-accent font-medium">
+            <span className="material-symbols-rounded text-base">auto_awesome</span>
+            Nouveau: 72 agents IA disponibles
+          </span>
+          <Link href="#features" className="text-foreground/60 hover:text-foreground transition-colors">
+            En savoir plus →
           </Link>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <Link href="#features" style={{
-              fontSize: 14,
-              color: '#666',
-              textDecoration: 'none',
-              transition: 'color 0.2s',
-            }}>
-              Fonctionnalites
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="text-xl font-semibold tracking-tight">
+              SarahOS
             </Link>
-            <Link href="#pricing" style={{
-              fontSize: 14,
-              color: '#666',
-              textDecoration: 'none',
-            }}>
-              Tarifs
+            <div className="hidden md:flex items-center gap-6">
+              <Link href="#features" className="text-sm text-muted hover:text-foreground transition-colors">
+                Fonctionnalites
+              </Link>
+              <Link href="#agents" className="text-sm text-muted hover:text-foreground transition-colors">
+                Agents
+              </Link>
+              <Link href="#pricing" className="text-sm text-muted hover:text-foreground transition-colors">
+                Tarifs
+              </Link>
+              <Link href="/docs" className="text-sm text-muted hover:text-foreground transition-colors">
+                Documentation
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="hidden sm:block text-sm text-muted hover:text-foreground transition-colors px-3 py-2">
+              Connexion
             </Link>
-            <Link href="/login" style={{
-              fontSize: 14,
-              fontWeight: 500,
-              color: '#1A1A1A',
-              textDecoration: 'none',
-              padding: '10px 20px',
-              background: '#1A1A1A',
-              color: '#fff',
-              borderRadius: 8,
-            }}>
-              Commencer
+            <Link href="/login?mode=register" className="text-sm font-medium bg-foreground text-background px-4 py-2 rounded-lg hover:bg-foreground/90 transition-colors">
+              Commencer gratuitement
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '120px 24px 80px',
-        textAlign: 'center',
-      }}>
-        <div style={{ maxWidth: 680 }}>
-          {/* Subtle badge */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '8px 16px',
-            background: 'rgba(0,0,0,0.03)',
-            borderRadius: 40,
-            marginBottom: 32,
-          }}>
-            <span style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: '#C4A77D',
-            }} />
-            <span style={{ fontSize: 12, color: '#666', fontWeight: 500 }}>
-              Gratuit pour commencer
-            </span>
-          </div>
-
-          {/* Main headline */}
-          <h1 style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 'clamp(42px, 8vw, 72px)',
-            fontWeight: 400,
-            lineHeight: 1.1,
-            color: '#1A1A1A',
-            marginBottom: 24,
-            letterSpacing: '-0.03em',
-          }}>
-            Votre assistant
-            <br />
-            <span style={{ fontStyle: 'italic' }}>personnel</span>
-          </h1>
-
-          {/* Subtitle */}
-          <p style={{
-            fontSize: 18,
-            lineHeight: 1.7,
-            color: '#666',
-            marginBottom: 48,
-            maxWidth: 480,
-            margin: '0 auto 48px',
-          }}>
-            72 agents IA qui travaillent pour vous. 
-            Telephonie, documents, reseaux sociaux — 
-            tout est simplifie.
-          </p>
-
-          {/* CTA */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 16,
-          }}>
-            <div style={{
-              display: 'flex',
-              gap: 8,
-              maxWidth: 400,
-              width: '100%',
-            }}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre@email.com"
-                style={{
-                  flex: 1,
-                  padding: '14px 20px',
-                  fontSize: 15,
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  borderRadius: 8,
-                  background: '#fff',
-                  outline: 'none',
-                }}
-              />
-              <button style={{
-                padding: '14px 28px',
-                fontSize: 15,
-                fontWeight: 500,
-                background: '#1A1A1A',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 8,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}>
-                Essayer
-              </button>
+      <section className="relative overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 pt-20 pb-32">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-6">
+              La plateforme complete pour{' '}
+              <span className="text-accent">automatiser</span> votre business
+            </h1>
+            <p className="text-lg text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
+              72 agents IA qui travaillent ensemble pour gerer vos appels, documents, 
+              reseaux sociaux et plus encore. Gratuit pour commencer.
+            </p>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+              <Link 
+                href="/login?mode=register" 
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-foreground text-background px-6 py-3 rounded-lg font-medium hover:bg-foreground/90 transition-colors"
+              >
+                Commencer gratuitement
+                <span className="material-symbols-rounded text-lg">arrow_forward</span>
+              </Link>
+              <Link 
+                href="#demo" 
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-border px-6 py-3 rounded-lg font-medium hover:bg-muted/10 transition-colors"
+              >
+                Voir la demo
+              </Link>
             </div>
-            <span style={{ fontSize: 12, color: '#999' }}>
-              Sans carte bancaire. Annulez quand vous voulez.
-            </span>
+            <p className="text-sm text-muted-foreground">
+              Sans carte bancaire. 50 credits offerts.
+            </p>
           </div>
         </div>
-      </section>
 
-      {/* Trusted by section - minimal */}
-      <section style={{
-        padding: '40px 24px',
-        borderTop: '1px solid rgba(0,0,0,0.04)',
-        borderBottom: '1px solid rgba(0,0,0,0.04)',
-      }}>
-        <div style={{
-          maxWidth: 800,
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 48,
-          flexWrap: 'wrap',
-        }}>
-          <span style={{ fontSize: 12, color: '#999', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Propulse par
-          </span>
-          {['Claude AI', 'OpenAI', 'Twilio', 'ElevenLabs'].map((brand) => (
-            <span key={brand} style={{
-              fontSize: 14,
-              fontWeight: 500,
-              color: '#999',
-            }}>
-              {brand}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section id="features" style={{
-        padding: '120px 24px',
-        maxWidth: 1000,
-        margin: '0 auto',
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <h2 style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 'clamp(32px, 5vw, 48px)',
-            fontWeight: 400,
-            color: '#1A1A1A',
-            marginBottom: 16,
-            letterSpacing: '-0.02em',
-          }}>
-            Tout ce dont vous avez besoin
-          </h2>
-          <p style={{ fontSize: 16, color: '#666', maxWidth: 400, margin: '0 auto' }}>
-            Des outils puissants, une interface simple.
-          </p>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 24,
-        }}>
-          {FEATURED_AGENTS.map((agent, i) => (
-            <div key={i} style={{
-              padding: 32,
-              background: '#fff',
-              borderRadius: 16,
-              border: '1px solid rgba(0,0,0,0.06)',
-              transition: 'all 0.3s ease',
-            }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: 12,
-                background: 'rgba(196,167,125,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: 20,
-              }}>
-                <span className="material-symbols-rounded" style={{
-                  fontSize: 24,
-                  color: '#C4A77D',
-                }}>
-                  {agent.icon}
-                </span>
+        {/* Dashboard Preview */}
+        <div className="max-w-5xl mx-auto px-4 -mt-8">
+          <div className="relative rounded-xl border border-border bg-card overflow-hidden shadow-2xl shadow-foreground/5">
+            {/* Browser Chrome */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/5">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                <div className="w-3 h-3 rounded-full bg-green-400/80" />
               </div>
-              <h3 style={{
-                fontSize: 18,
-                fontWeight: 500,
-                color: '#1A1A1A',
-                marginBottom: 8,
-              }}>
-                {agent.name}
-              </h3>
-              <p style={{
-                fontSize: 14,
-                color: '#666',
-                lineHeight: 1.6,
-              }}>
-                {agent.desc}
-              </p>
+              <div className="flex-1 flex justify-center">
+                <div className="px-4 py-1 rounded-md bg-muted/10 text-xs text-muted">
+                  app.sarahos.com/dashboard
+                </div>
+              </div>
             </div>
-          ))}
+            
+            {/* Dashboard Content */}
+            <div className="p-6 bg-gradient-to-b from-card to-muted/5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {[
+                  { label: 'Appels traites', value: '1,247', change: '+12%' },
+                  { label: 'Documents generes', value: '89', change: '+8%' },
+                  { label: 'Temps economise', value: '48h', change: '+15%' },
+                  { label: 'Agents actifs', value: '24/72', change: '' },
+                ].map((stat, i) => (
+                  <div key={i} className="p-4 rounded-lg bg-background border border-border">
+                    <div className="text-xs text-muted mb-1">{stat.label}</div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-semibold">{stat.value}</span>
+                      {stat.change && (
+                        <span className="text-xs text-green-500 font-medium">{stat.change}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Agent Activity */}
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="md:col-span-2 p-4 rounded-lg bg-background border border-border">
+                  <div className="text-sm font-medium mb-4">Activite des agents</div>
+                  <div className="space-y-3">
+                    {[
+                      { agent: 'Repondeur', action: 'Appel qualifie de +33 6 12 34 56 78', time: 'il y a 2 min' },
+                      { agent: 'Documents', action: 'Devis genere pour Client ABC', time: 'il y a 5 min' },
+                      { agent: 'Social', action: 'Post LinkedIn publie', time: 'il y a 12 min' },
+                    ].map((activity, i) => (
+                      <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                            <span className="text-xs font-medium text-accent">{activity.agent[0]}</span>
+                          </div>
+                          <div>
+                            <div className="text-sm">{activity.action}</div>
+                            <div className="text-xs text-muted">{activity.agent}</div>
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted">{activity.time}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 rounded-lg bg-background border border-border">
+                  <div className="text-sm font-medium mb-4">Repartition agents</div>
+                  <div className="space-y-2">
+                    {AGENTS.slice(0, 4).map((agent, i) => (
+                      <div key={i} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: agent.color }} />
+                          <span className="text-sm">{agent.name}</span>
+                        </div>
+                        <span className="text-xs text-muted">{agent.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section style={{
-        padding: '80px 24px 120px',
-        background: '#fff',
-      }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 64 }}>
-            <h2 style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 'clamp(32px, 5vw, 48px)',
-              fontWeight: 400,
-              color: '#1A1A1A',
-              letterSpacing: '-0.02em',
-            }}>
-              Comment ca marche
+      {/* Trusted By */}
+      <section className="py-16 border-b border-border">
+        <div className="max-w-6xl mx-auto px-4">
+          <p className="text-center text-sm text-muted mb-8">
+            Propulse par les meilleures technologies
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+            {['Claude AI', 'OpenAI', 'Twilio', 'ElevenLabs', 'Vercel'].map((brand) => (
+              <span key={brand} className="text-muted/60 font-medium">
+                {brand}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-24">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+              Tout ce dont vous avez besoin
             </h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Des outils puissants et accessibles pour automatiser chaque aspect de votre activite.
+            </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
-            {[
-              { num: '01', title: 'Inscrivez-vous', desc: 'Creez votre compte en 30 secondes. Aucune carte requise.' },
-              { num: '02', title: 'Configurez vos agents', desc: 'Choisissez les agents qui correspondent a vos besoins.' },
-              { num: '03', title: 'Laissez-les travailler', desc: 'Vos agents s\'occupent du reste. Vous gardez le controle.' },
-            ].map((step, i) => (
-              <div key={i} style={{
-                display: 'flex',
-                gap: 32,
-                alignItems: 'flex-start',
-              }}>
-                <span style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 48,
-                  fontWeight: 400,
-                  color: 'rgba(0,0,0,0.08)',
-                  lineHeight: 1,
-                  minWidth: 80,
-                }}>
-                  {step.num}
-                </span>
-                <div>
-                  <h3 style={{
-                    fontSize: 20,
-                    fontWeight: 500,
-                    color: '#1A1A1A',
-                    marginBottom: 8,
-                  }}>
-                    {step.title}
-                  </h3>
-                  <p style={{
-                    fontSize: 15,
-                    color: '#666',
-                    lineHeight: 1.6,
-                  }}>
-                    {step.desc}
-                  </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            {FEATURES.map((feature, i) => (
+              <div 
+                key={i} 
+                className="group p-6 rounded-xl border border-border bg-card hover:border-accent/30 transition-all duration-300"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <span className="material-symbols-rounded text-2xl text-accent">
+                      {feature.icon}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-semibold">{feature.stat}</div>
+                    <div className="text-xs text-muted">{feature.statLabel}</div>
+                  </div>
                 </div>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Agents Grid */}
+      <section id="agents" className="py-24 bg-muted/5 border-y border-border">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+              <span className="material-symbols-rounded text-base">deployed_code</span>
+              72 agents disponibles
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+              Une armee d&apos;agents a votre service
+            </h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Chaque agent est specialise dans un domaine. Ils collaborent automatiquement pour accomplir vos taches.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {AGENTS.map((agent, i) => (
+              <div 
+                key={i}
+                className="p-4 rounded-xl border border-border bg-card text-center hover:border-accent/30 transition-colors"
+              >
+                <div 
+                  className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center"
+                  style={{ backgroundColor: `${agent.color}20` }}
+                >
+                  <div 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: agent.color }}
+                  />
+                </div>
+                <div className="font-medium text-sm mb-1">{agent.name}</div>
+                <div className="text-xs text-muted">{agent.count} agents</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works */}
+      <section className="py-24">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+              Pret en 3 etapes
+            </h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Commencez a automatiser votre business en quelques minutes.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: '01',
+                title: 'Creez votre compte',
+                description: 'Inscription gratuite en 30 secondes. Aucune carte bancaire requise.',
+                icon: 'person_add',
+              },
+              {
+                step: '02',
+                title: 'Configurez vos agents',
+                description: 'Selectionnez et personnalisez les agents selon vos besoins.',
+                icon: 'settings',
+              },
+              {
+                step: '03',
+                title: 'Laissez-les travailler',
+                description: 'Vos agents prennent le relais. Suivez tout depuis le dashboard.',
+                icon: 'trending_up',
+              },
+            ].map((item, i) => (
+              <div key={i} className="relative">
+                <div className="text-6xl font-bold text-muted/10 mb-4">{item.step}</div>
+                <div className="w-12 h-12 rounded-lg bg-foreground flex items-center justify-center mb-4">
+                  <span className="material-symbols-rounded text-2xl text-background">
+                    {item.icon}
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
@@ -366,51 +374,33 @@ export default function MinimalLanding() {
       </section>
 
       {/* Testimonials */}
-      <section style={{
-        padding: '120px 24px',
-        background: '#FAFAF8',
-      }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 64 }}>
-            <h2 style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 'clamp(32px, 5vw, 48px)',
-              fontWeight: 400,
-              color: '#1A1A1A',
-              letterSpacing: '-0.02em',
-            }}>
-              Ce qu&apos;ils en disent
+      <section className="py-24 bg-muted/5 border-y border-border">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+              Ils nous font confiance
             </h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Decouvrez ce que nos utilisateurs disent de SarahOS.
+            </p>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 24,
-          }}>
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} style={{
-                padding: 32,
-                background: '#fff',
-                borderRadius: 16,
-                border: '1px solid rgba(0,0,0,0.06)',
-              }}>
-                <p style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 18,
-                  fontStyle: 'italic',
-                  color: '#1A1A1A',
-                  lineHeight: 1.6,
-                  marginBottom: 24,
-                }}>
-                  &ldquo;{t.quote}&rdquo;
+          <div className="grid md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((testimonial, i) => (
+              <div 
+                key={i}
+                className="p-6 rounded-xl border border-border bg-card"
+              >
+                <p className="text-sm leading-relaxed mb-6">
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: '#1A1A1A' }}>
-                    {t.name}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                    <span className="font-medium text-accent">{testimonial.avatar}</span>
                   </div>
-                  <div style={{ fontSize: 13, color: '#999' }}>
-                    {t.role}
+                  <div>
+                    <div className="font-medium text-sm">{testimonial.author}</div>
+                    <div className="text-xs text-muted">{testimonial.role}</div>
                   </div>
                 </div>
               </div>
@@ -419,198 +409,142 @@ export default function MinimalLanding() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" style={{
-        padding: '120px 24px',
-        background: '#fff',
-      }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 'clamp(32px, 5vw, 48px)',
-            fontWeight: 400,
-            color: '#1A1A1A',
-            marginBottom: 16,
-            letterSpacing: '-0.02em',
-          }}>
-            Prix transparent
-          </h2>
-          <p style={{
-            fontSize: 16,
-            color: '#666',
-            marginBottom: 48,
-          }}>
-            Payez uniquement ce que vous utilisez. 0% de commission.
-          </p>
+      {/* Pricing */}
+      <section id="pricing" className="py-24">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-sm font-medium mb-4">
+              <span className="material-symbols-rounded text-base">verified</span>
+              Gratuit pour commencer
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+              Prix simple et transparent
+            </h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Pas d&apos;abonnement. Payez uniquement ce que vous utilisez.
+            </p>
+          </div>
 
-          <div style={{
-            display: 'inline-block',
-            padding: 48,
-            background: '#FAFAF8',
-            borderRadius: 24,
-            border: '1px solid rgba(0,0,0,0.06)',
-            maxWidth: 400,
-            width: '100%',
-          }}>
-            <div style={{
-              fontSize: 12,
-              color: '#C4A77D',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              marginBottom: 16,
-            }}>
-              Pour commencer
-            </div>
-            <div style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 64,
-              fontWeight: 400,
-              color: '#1A1A1A',
-              lineHeight: 1,
-              marginBottom: 8,
-            }}>
-              0€
-            </div>
-            <div style={{ fontSize: 14, color: '#666', marginBottom: 32 }}>
-              50 credits offerts a l&apos;inscription
-            </div>
-            
-            <div style={{
-              textAlign: 'left',
-              marginBottom: 32,
-            }}>
-              {[
-                'Acces a tous les agents',
-                'Toutes les fonctionnalites',
-                'Support par email',
-                'Sans engagement',
-              ].map((feature, i) => (
-                <div key={i} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  padding: '12px 0',
-                  borderBottom: i < 3 ? '1px solid rgba(0,0,0,0.04)' : 'none',
-                }}>
-                  <span className="material-symbols-rounded" style={{
-                    fontSize: 18,
-                    color: '#C4A77D',
-                  }}>
-                    check
-                  </span>
-                  <span style={{ fontSize: 14, color: '#1A1A1A' }}>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Free Tier */}
+            <div className="p-8 rounded-xl border border-border bg-card">
+              <div className="text-sm font-medium text-muted mb-2">Pour commencer</div>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-4xl font-semibold">0</span>
+                <span className="text-muted">EUR</span>
+              </div>
+              <p className="text-sm text-muted mb-6">
+                50 credits offerts a l&apos;inscription. Parfait pour tester.
+              </p>
+              <Link 
+                href="/login?mode=register"
+                className="block w-full text-center py-3 rounded-lg border border-border font-medium hover:bg-muted/10 transition-colors"
+              >
+                Commencer gratuitement
+              </Link>
+              <ul className="mt-6 space-y-3">
+                {[
+                  'Acces a tous les 72 agents',
+                  'Dashboard complet',
+                  'Support par email',
+                  '50 credits offerts',
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm">
+                    <span className="material-symbols-rounded text-lg text-green-500">check</span>
                     {feature}
-                  </span>
-                </div>
-              ))}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <Link href="/login?mode=register" style={{
-              display: 'block',
-              padding: '16px 32px',
-              background: '#1A1A1A',
-              color: '#fff',
-              fontSize: 15,
-              fontWeight: 500,
-              borderRadius: 10,
-              textDecoration: 'none',
-              textAlign: 'center',
-            }}>
-              Creer mon compte gratuit
-            </Link>
+            {/* Pay as you go */}
+            <div className="p-8 rounded-xl border-2 border-accent bg-card relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-accent text-background text-xs font-medium px-3 py-1 rounded-bl-lg">
+                Populaire
+              </div>
+              <div className="text-sm font-medium text-accent mb-2">A la consommation</div>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-4xl font-semibold">0.10</span>
+                <span className="text-muted">EUR / credit</span>
+              </div>
+              <p className="text-sm text-muted mb-6">
+                Rechargez quand vous voulez. Pas d&apos;engagement.
+              </p>
+              <Link 
+                href="/login?mode=register"
+                className="block w-full text-center py-3 rounded-lg bg-accent text-white font-medium hover:bg-accent/90 transition-colors"
+              >
+                Commencer maintenant
+              </Link>
+              <ul className="mt-6 space-y-3">
+                {[
+                  'Tout du plan gratuit',
+                  'Credits illimites',
+                  'API access',
+                  'Support prioritaire',
+                  'Integrations avancees',
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm">
+                    <span className="material-symbols-rounded text-lg text-accent">check</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section style={{
-        padding: '120px 24px',
-        background: '#1A1A1A',
-        textAlign: 'center',
-      }}>
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
-          <h2 style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 'clamp(32px, 6vw, 56px)',
-            fontWeight: 400,
-            color: '#fff',
-            marginBottom: 24,
-            letterSpacing: '-0.02em',
-          }}>
-            Pret a simplifier votre quotidien ?
+      <section className="py-24 bg-foreground text-background">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+            Pret a automatiser votre business ?
           </h2>
-          <p style={{
-            fontSize: 16,
-            color: 'rgba(255,255,255,0.6)',
-            marginBottom: 40,
-          }}>
-            Rejoignez les entrepreneurs qui ont choisi de deleguer a l&apos;IA.
+          <p className="text-background/60 max-w-xl mx-auto mb-8">
+            Rejoignez des milliers d&apos;entrepreneurs qui utilisent SarahOS pour gagner du temps chaque jour.
           </p>
-          <Link href="/login?mode=register" style={{
-            display: 'inline-block',
-            padding: '16px 40px',
-            background: '#fff',
-            color: '#1A1A1A',
-            fontSize: 15,
-            fontWeight: 500,
-            borderRadius: 10,
-            textDecoration: 'none',
-          }}>
-            Commencer gratuitement
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre@email.com"
+              className="w-full sm:w-80 px-4 py-3 rounded-lg bg-background/10 border border-background/20 text-background placeholder:text-background/40 focus:outline-none focus:border-background/40"
+            />
+            <button className="w-full sm:w-auto px-6 py-3 rounded-lg bg-background text-foreground font-medium hover:bg-background/90 transition-colors">
+              Commencer gratuitement
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{
-        padding: '48px 24px',
-        background: '#1A1A1A',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        <div style={{
-          maxWidth: 1000,
-          margin: '0 auto',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 24,
-        }}>
-          <span style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: 18,
-            color: '#fff',
-          }}>
-            SarahOS
-          </span>
-          <div style={{ display: 'flex', gap: 32 }}>
-            {['CGU', 'Confidentialite', 'Contact'].map((link) => (
-              <Link key={link} href="#" style={{
-                fontSize: 13,
-                color: 'rgba(255,255,255,0.5)',
-                textDecoration: 'none',
-              }}>
-                {link}
-              </Link>
-            ))}
+      <footer className="py-12 border-t border-border">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">SarahOS</span>
+              <span className="text-sm text-muted">— Votre assistant IA</span>
+            </div>
+            <div className="flex items-center gap-6">
+              {[
+                { label: 'Documentation', href: '/docs' },
+                { label: 'Tarifs', href: '#pricing' },
+                { label: 'CGU', href: '/terms' },
+                { label: 'Confidentialite', href: '/privacy' },
+              ].map((link) => (
+                <Link key={link.label} href={link.href} className="text-sm text-muted hover:text-foreground transition-colors">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className="text-sm text-muted">
+              2026 SarahOS
+            </div>
           </div>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
-            2026 SarahOS
-          </span>
         </div>
       </footer>
-
-      {/* Google Fonts for Playfair Display */}
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap');
-        
-        @media (max-width: 768px) {
-          nav > div > div:nth-child(2) {
-            display: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

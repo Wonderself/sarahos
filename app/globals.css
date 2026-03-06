@@ -2,32 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* SarahOS — Minimalist Design System */
+/* SarahOS — SaaS Dashboard Design System */
 
 :root {
-  /* Core palette — Warm & minimal */
-  --bg-primary: #FAFAF8;
-  --bg-secondary: #FFFFFF;
-  --bg-dark: #1A1A1A;
+  /* Core palette — Clean & Professional */
+  --background: #FFFFFF;
+  --foreground: #0A0A0A;
   
-  /* Text */
-  --text-primary: #1A1A1A;
-  --text-secondary: #666666;
-  --text-muted: #999999;
+  /* Muted tones */
+  --muted: #71717A;
+  --muted-foreground: #A1A1AA;
   
-  /* Accent — warm coral/gold */
-  --accent: #C4A77D;
-  --accent-light: rgba(196, 167, 125, 0.1);
+  /* Accent — Soft blue-violet */
+  --accent: #6366F1;
+  --accent-foreground: #FFFFFF;
+  
+  /* Card */
+  --card: #FFFFFF;
+  --card-foreground: #0A0A0A;
   
   /* Borders */
-  --border-light: rgba(0, 0, 0, 0.06);
-  --border-dark: rgba(255, 255, 255, 0.06);
+  --border: #E4E4E7;
   
   /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius: 0.5rem;
 }
 
 * {

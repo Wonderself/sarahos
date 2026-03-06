@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import PublicNav from '../../components/PublicNav';
-import PublicFooter from '../../components/PublicFooter';
-import EnterpriseSection from '../plans/EnterpriseSection';
-import { TOTAL_AGENTS_DISPLAY } from '../../lib/agent-config';
-import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../lib/faq-data';
+import PublicNav from '../../../components/PublicNav';
+import PublicFooter from '../../../components/PublicFooter';
+import EnterpriseSection from '../../plans/EnterpriseSection';
+import { TOTAL_AGENTS_DISPLAY } from '../../../lib/agent-config';
+import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 

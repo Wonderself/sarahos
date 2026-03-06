@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'SarahOS - Votre Assistant Personnel IA',
-  description: '72 agents IA qui travaillent pour vous. Telephonie, documents, reseaux sociaux - tout est simplifie.',
+  title: 'SarahOS - Assistant IA Gratuit pour Entrepreneurs',
+  description: '72 agents IA specialises qui automatisent vos taches quotidiennes. Commencez gratuitement - telephonie, documents, reseaux sociaux.',
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#FAFAF8',
+  themeColor: '#FFFFFF',
 };
 
 export default function RootLayout({

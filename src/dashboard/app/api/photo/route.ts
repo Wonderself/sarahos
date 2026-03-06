@@ -82,6 +82,8 @@ export async function POST(req: NextRequest) {
     // Schnell = fast (4 steps), Dev = HD quality (28 steps)
     const model = hd ? 'fal-ai/flux/dev' : 'fal-ai/flux/schnell';
 
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 60_000);
     const res = await fetch(`https://fal.run/${model}`, {
       method: 'POST',
       headers: {
@@ -95,7 +97,9 @@ export async function POST(req: NextRequest) {
         num_images: 1,
         enable_safety_checker: false,
       }),
+      signal: ctrl.signal,
     });
+    clearTimeout(timer);
 
     if (!res.ok) {
       const errText = await res.text();

@@ -49,25 +49,25 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
     visible: true,
     order: 0,
     items: [
-      { href: '/client/dashboard', icon: '🏠', label: 'Accueil', visible: true, order: 0 },
-      { href: '/client/reveil', icon: '☕', label: 'Réveil intelligent', visible: true, order: 1 },
-      { href: '/client/chat', icon: '💬', label: 'Chat', visible: true, order: 2 },
-      { href: '/client/repondeur', icon: '📞', label: 'Répondeur Intelligent', visible: true, order: 4 },
-      { href: '/client/social', icon: '📱', label: 'Réseaux Sociaux', visible: true, order: 5 },
-      { href: '/client/studio', icon: '🎬', label: 'Studio Créatif', visible: true, order: 6 },
-      { href: '/client/documents', icon: '📄', label: 'Documents', visible: true, order: 7 },
-      { href: '/client/strategy', icon: '🎯', label: "Plan d'attaque", visible: true, order: 8 },
-      { href: '/client/custom-creation', icon: '🧩', label: 'Modules sur mesure', visible: true, order: 9 },
-      { href: '/client/video-pro', icon: '🎥', label: 'Vidéo Pro', visible: true, order: 10 },
-      { href: '/client/formations', icon: '🎓', label: 'Formations', visible: true, order: 11 },
-      { href: '/client/personal', icon: '🧑', label: 'Mes Agents', visible: true, order: 12 },
-      { href: '/client/agents/customize', icon: '🎨', label: 'Personnaliser les Agents', visible: true, order: 13 },
-      { href: '/client/agents', icon: '🤖', label: 'Mes agents IA', visible: true, order: 14 },
-      { href: '/client/modules', icon: '📦', label: 'Mes modules', visible: true, order: 15 },
-      { href: '/client/campaigns', icon: '📣', label: 'Campagnes', visible: true, order: 16 },
-      { href: '/client/telephony', icon: '☎️', label: 'Téléphonie', visible: true, order: 17 },
-      { href: '/client/projects', icon: '📁', label: 'Projets', visible: true, order: 18 },
-      { href: '/client/actions', icon: '⚡', label: "Centre d'actions", visible: true, order: 19 },
+      { href: '/client/dashboard', icon: 'home', label: 'Accueil', visible: true, order: 0 },
+      { href: '/client/reveil', icon: 'coffee', label: 'Réveil intelligent', visible: true, order: 1 },
+      { href: '/client/chat', icon: 'chat', label: 'Chat', visible: true, order: 2 },
+      { href: '/client/repondeur', icon: 'call', label: 'Répondeur Intelligent', visible: true, order: 4 },
+      { href: '/client/social', icon: 'share', label: 'Réseaux Sociaux', visible: true, order: 5 },
+      { href: '/client/studio', icon: 'movie', label: 'Studio Créatif', visible: true, order: 6 },
+      { href: '/client/documents', icon: 'description', label: 'Documents', visible: true, order: 7 },
+      { href: '/client/strategy', icon: 'target', label: "Plan d'attaque", visible: true, order: 8 },
+      { href: '/client/custom-creation', icon: 'extension', label: 'Modules sur mesure', visible: true, order: 9 },
+      { href: '/client/video-pro', icon: 'videocam', label: 'Vidéo Pro', visible: true, order: 10 },
+      { href: '/client/formations', icon: 'school', label: 'Formations', visible: true, order: 11 },
+      { href: '/client/personal', icon: 'person', label: 'Mes Agents', visible: true, order: 12 },
+      { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser les Agents', visible: true, order: 13 },
+      { href: '/client/agents', icon: 'smart_toy', label: 'Mes agents IA', visible: true, order: 14 },
+      { href: '/client/modules', icon: 'inventory_2', label: 'Mes modules', visible: true, order: 15 },
+      { href: '/client/campaigns', icon: 'campaign', label: 'Campagnes', visible: true, order: 16 },
+      { href: '/client/telephony', icon: 'phone', label: 'Téléphonie', visible: true, order: 17 },
+      { href: '/client/projects', icon: 'folder', label: 'Projets', visible: true, order: 18 },
+      { href: '/client/actions', icon: 'bolt', label: "Centre d'actions", visible: true, order: 19 },
     ],
   },
   {
@@ -76,12 +76,12 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
     visible: true,
     order: 1,
     items: [
-      { href: '/client/account', icon: '👤', label: 'Mon Compte', visible: true, order: 0 },
-      { href: '/client/analytics', icon: '📊', label: 'Analytics', visible: true, order: 1 },
-      { href: '/client/finances', icon: '💳', label: 'Finances', visible: true, order: 2 },
-      { href: '/client/referrals', icon: '🎁', label: 'Parrainer', visible: true, order: 3 },
-      { href: '/client/activity', icon: '📋', label: "Journal d'activité", visible: true, order: 4 },
-      { href: '/client/notifications', icon: '🔔', label: 'Notifications', visible: true, order: 5 },
+      { href: '/client/account', icon: 'account_circle', label: 'Mon Compte', visible: true, order: 0 },
+      { href: '/client/analytics', icon: 'analytics', label: 'Analytics', visible: true, order: 1 },
+      { href: '/client/finances', icon: 'credit_card', label: 'Finances', visible: true, order: 2 },
+      { href: '/client/referrals', icon: 'redeem', label: 'Parrainer', visible: true, order: 3 },
+      { href: '/client/activity', icon: 'history', label: "Journal d'activité", visible: true, order: 4 },
+      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 5 },
     ],
   },
 ];
@@ -92,11 +92,11 @@ const AGENTS_PERSONNELS_SECTION: SectionConfig = {
   visible: true,
   order: 1,
   items: [
-    { href: '/client/personal/budget', icon: '💰', label: 'Budget', visible: true, order: 0 },
-    { href: '/client/personal/comptable', icon: '🧾', label: 'Comptabilité', visible: true, order: 1 },
-    { href: '/client/personal/chasseur', icon: '🎯', label: 'Chasseur de missions', visible: true, order: 2 },
-    { href: '/client/personal/cv', icon: '📄', label: 'CV 2026', visible: true, order: 3 },
-    { href: '/client/personal/ecrivain', icon: '✍️', label: 'Atelier Écriture', visible: true, order: 4 },
+    { href: '/client/personal/budget', icon: 'savings', label: 'Budget', visible: true, order: 0 },
+    { href: '/client/personal/comptable', icon: 'receipt', label: 'Comptabilité', visible: true, order: 1 },
+    { href: '/client/personal/chasseur', icon: 'target', label: 'Chasseur de missions', visible: true, order: 2 },
+    { href: '/client/personal/cv', icon: 'description', label: 'CV 2026', visible: true, order: 3 },
+    { href: '/client/personal/ecrivain', icon: 'draw', label: 'Atelier Écriture', visible: true, order: 4 },
   ],
 };
 
@@ -106,7 +106,7 @@ const DISCUSSIONS_SECTION: SectionConfig = {
   visible: true,
   order: 2,
   items: [
-    { href: '/client/discussions', icon: '🧠', label: 'Mes Discussions', visible: true, order: 0 },
+    { href: '/client/discussions', icon: 'psychology', label: 'Mes Discussions', visible: true, order: 0 },
   ],
 };
 
@@ -116,10 +116,10 @@ const MON_ENTREPRISE_SECTION: SectionConfig = {
   visible: true,
   order: 2,
   items: [
-    { href: '/client/onboarding', icon: '🏢', label: 'Profil entreprise', visible: true, order: 0 },
-    { href: '/client/team', icon: '👥', label: 'Mon équipe', visible: true, order: 1 },
-    { href: '/client/partners', icon: '🤝', label: 'Partenaires', visible: true, order: 2 },
-    { href: '/client/marketplace', icon: '🛒', label: 'Marketplace', visible: true, order: 3 },
+    { href: '/client/onboarding', icon: 'business', label: 'Profil entreprise', visible: true, order: 0 },
+    { href: '/client/team', icon: 'group', label: 'Mon équipe', visible: true, order: 1 },
+    { href: '/client/partners', icon: 'handshake', label: 'Partenaires', visible: true, order: 2 },
+    { href: '/client/marketplace', icon: 'storefront', label: 'Marketplace', visible: true, order: 3 },
   ],
 };
 
@@ -198,25 +198,25 @@ const LEVEL_TITLES: Record<number, string> = {
   9: 'Légende', 10: 'Transcendant',
 };
 
-// ─── Emoji palette for icon picker ────────────────────────────────────────────
+// ─── Material icon palette for icon picker ───────────────────────────────────
 
-const EMOJI_PALETTE = [
+const MATERIAL_ICON_PALETTE = [
   // Work & folders
-  '🏠', '💼', '📁', '📂', '📋', '📊', '📈', '💰', '💳', '🏢', '🏗️', '🗂️',
+  'home', 'work', 'folder', 'folder_open', 'assignment', 'bar_chart', 'trending_up', 'savings', 'credit_card', 'business', 'architecture', 'inventory_2',
   // Communication
-  '💬', '📞', '📱', '📧', '✉️', '🔔', '📢', '📣', '🗣️', '💭', '📨', '📡',
+  'chat', 'call', 'share', 'mail', 'email', 'notifications', 'campaign', 'record_voice_over', 'forum', 'chat_bubble', 'send', 'cell_tower',
   // People
-  '👤', '👥', '🧑', '🤝', '🙋', '👨‍💻', '👩‍💼', '🧑‍🔧', '🧑‍🎨', '🧑‍🏫', '🧑‍⚖️', '🤖',
+  'account_circle', 'group', 'person', 'handshake', 'waving_hand', 'terminal', 'verified', 'engineering', 'palette', 'school', 'balance', 'smart_toy',
   // Tools & tech
-  '⚙️', '🔧', '🔒', '🔑', '🛠️', '⚡', '🔍', '💻', '🧠', '🚀', '🛡️', '🌐',
+  'settings', 'build', 'lock', 'key', 'handyman', 'bolt', 'search', 'computer', 'psychology', 'rocket_launch', 'shield', 'language',
   // Content & docs
-  '📄', '📝', '✍️', '📖', '📚', '📎', '🖼️', '🖌️', '🗒️', '📐', '🧾', '📦',
+  'description', 'edit_note', 'draw', 'menu_book', 'library_books', 'attach_file', 'image', 'brush', 'sticky_note_2', 'square_foot', 'receipt', 'package_2',
   // Media
-  '🎬', '🎥', '📸', '🎙️', '🎵', '🎨', '📹', '🖥️', '🎧', '📺', '🎭', '🎮',
+  'movie', 'videocam', 'photo_camera', 'mic', 'music_note', 'palette', 'video_camera_back', 'desktop_windows', 'headphones', 'tv', 'theater_comedy', 'sports_esports',
   // Time & nature
-  '📅', '⏰', '☕', '🌅', '🌙', '⭐', '🔥', '☀️', '🌊', '🍀', '🌈', '❄️',
+  'calendar_month', 'schedule', 'coffee', 'wb_twilight', 'dark_mode', 'star', 'local_fire_department', 'light_mode', 'water', 'eco', 'looks', 'ac_unit',
   // Misc
-  '🎁', '🎓', '🏆', '💎', '🧩', '🛒', '🎉', '✅', '❤️', '⚖️', '🎯', '🪄',
+  'redeem', 'school', 'trophy', 'diamond', 'extension', 'storefront', 'celebration', 'check_circle', 'favorite', 'balance', 'target', 'auto_fix_high',
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -358,6 +358,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     const interval = setInterval(refreshGamification, 30000);
     const onStorage = (e: StorageEvent) => {
+      if (e.key === 'fz_session' && !e.newValue) {
+        window.location.href = '/login';
+        return;
+      }
       if (e.key === 'fz_gamification') refreshGamification();
     };
     window.addEventListener('storage', onStorage);
@@ -670,7 +674,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,
         padding: '8px 16px', fontSize: 13, fontWeight: 600,
       }}>
-        <span>⚠️ MODE ADMIN — vous agissez en tant que {session?.displayName ?? session?.email}</span>
+        <span><span className="material-symbols-rounded mi-white" style={{ fontSize: 16 }}>warning</span> MODE ADMIN — vous agissez en tant que {session?.displayName ?? session?.email}</span>
         <button
           onClick={exitImpersonation}
           style={{
@@ -686,10 +690,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* Mobile Top Bar */}
       <div className="mobile-topbar">
         <div className="flex items-center gap-8">
-          <span className="fz-logo-text" style={{ fontSize: 16, color: 'var(--text-primary)' }}>FREENZY.IO</span>
+          <span className="fz-logo-text" style={{ fontSize: 16, color: 'var(--text-primary)' }}>freenzy.io</span>
         </div>
         <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu">
-          {sidebarOpen ? '✕' : '☰'}
+          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{sidebarOpen ? 'close' : 'menu'}</span>
         </button>
       </div>
 
@@ -701,13 +705,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div className="sidebar-header">
           <div className="sidebar-logo">
             <div>
-              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>FREENZY.IO</div>
+              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>freenzy.io</div>
               <div className="sidebar-logo-version">Votre équipe IA</div>
             </div>
           </div>
           <div className="flex-between items-center mt-4">
             <div className="badge badge-success flex items-center gap-4" style={{ padding: '3px 8px' }}>
-              <span className="text-xs">✅</span>
+              <span className="material-symbols-rounded mi-success" style={{ fontSize: 14 }}>check_circle</span>
               <span className="text-xs font-bold" style={{ color: '#16a34a' }}>
                 {activeAgentCount} agent{activeAgentCount > 1 ? 's' : ''} actif{activeAgentCount > 1 ? 's' : ''} / {ALL_AGENTS.length}
               </span>
@@ -721,7 +725,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 alignItems: 'center', justifyContent: 'center', fontSize: 16,
               }}
             >
-              {darkMode ? '☀️' : '🌙'}
+              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{darkMode ? 'light_mode' : 'dark_mode'}</span>
             </button>
           </div>
         </div>
@@ -735,7 +739,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               style={{ padding: '8px 12px', background: 'var(--bg-secondary)', fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer' }}
             >
               <span className="text-sm font-semibold truncate">
-                📁 {activeProject?.name || 'Projet'}
+                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>folder</span> {activeProject?.name || 'Projet'}
               </span>
               <span style={{ fontSize: 10 }}>{showProjectDropdown ? '▲' : '▼'}</span>
             </button>
@@ -748,7 +752,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     className="w-full text-sm"
                     style={{ display: 'block', padding: '8px 12px', textAlign: 'left', background: proj.id === activeProjectId ? 'var(--accent-muted)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
                   >
-                    {proj.isDefault && '⭐ '}{proj.name}
+                    {proj.isDefault && <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>star</span>{' '}</>}{proj.name}
                   </button>
                 ))}
                 <div style={{ borderTop: '1px solid var(--border-primary)' }}>
@@ -773,7 +777,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="customize-panel">
               <div className="customize-panel-header">
                 <span style={{ fontWeight: 700, fontSize: 13 }}>Personnaliser le menu</span>
-                <button onClick={() => setCustomizeOpen(false)} className="customize-close-btn">✕</button>
+                <button onClick={() => setCustomizeOpen(false)} className="customize-close-btn"><span className="material-symbols-rounded" style={{ fontSize: 16 }}>close</span></button>
               </div>
 
               {/* Device tabs */}
@@ -782,13 +786,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   className={`customize-tab${customizeTab === 'desktop' ? ' active' : ''}`}
                   onClick={() => changeCustomizeTab('desktop')}
                 >
-                  💻 Ordinateur
+                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>computer</span> Ordinateur
                 </button>
                 <button
                   className={`customize-tab${customizeTab === 'mobile' ? ' active' : ''}`}
                   onClick={() => changeCustomizeTab('mobile')}
                 >
-                  📱 Mobile
+                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>phone_iphone</span> Mobile
                 </button>
               </div>
 
@@ -808,8 +812,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                         ? <span className="drag-handle" title="Glisser pour réordonner">⠿</span>
                         : (
                           <div className="flex items-center gap-2">
-                            <button className="updown-btn" onClick={() => moveSectionUp(sIdx)} disabled={sIdx === 0}>↑</button>
-                            <button className="updown-btn" onClick={() => moveSectionDown(sIdx)} disabled={sIdx >= editSections.length - 1}>↓</button>
+                            <button className="updown-btn" onClick={() => moveSectionUp(sIdx)} disabled={sIdx === 0}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>arrow_upward</span></button>
+                            <button className="updown-btn" onClick={() => moveSectionDown(sIdx)} disabled={sIdx >= editSections.length - 1}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>arrow_downward</span></button>
                           </div>
                         )}
                       {editingSectionTitle === sIdx ? (
@@ -835,7 +839,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                         onClick={() => toggleSectionVisible(sIdx)}
                         title={section.visible ? 'Masquer la section' : 'Afficher la section'}
                       >
-                        {section.visible ? '👁' : '🙈'}
+                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{section.visible ? 'visibility' : 'visibility_off'}</span>
                       </button>
                     </div>
 
@@ -853,8 +857,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           ? <span className="drag-handle" style={{ fontSize: 10 }} title="Glisser">⠿</span>
                           : (
                             <div className="flex items-center gap-1">
-                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemUp(sIdx, iIdx)} disabled={iIdx === 0}>↑</button>
-                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemDown(sIdx, iIdx)} disabled={iIdx >= section.items.length - 1}>↓</button>
+                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemUp(sIdx, iIdx)} disabled={iIdx === 0}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>arrow_upward</span></button>
+                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemDown(sIdx, iIdx)} disabled={iIdx >= section.items.length - 1}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>arrow_downward</span></button>
                             </div>
                           )}
                         <span
@@ -863,18 +867,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           className="emoji-edit-trigger"
                           title="Changer l'icône"
                         >
-                          {item.icon}
+                          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{item.icon}</span>
                         </span>
                         {editingEmoji?.sIdx === sIdx && editingEmoji?.iIdx === iIdx && (
                           <>
                             <div className="emoji-picker-backdrop" onClick={() => setEditingEmoji(null)} />
                             <div className="emoji-picker-popup">
                               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 2 }}>
-                                {EMOJI_PALETTE.map(emoji => (
+                                {MATERIAL_ICON_PALETTE.map(emoji => (
                                   <button key={emoji} onClick={() => updateItemIcon(sIdx, iIdx, emoji)}
                                     className="emoji-pick-btn"
                                   >
-                                    {emoji}
+                                    <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{emoji}</span>
                                   </button>
                                 ))}
                               </div>
@@ -905,7 +909,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           onClick={() => toggleItemVisible(sIdx, iIdx)}
                           title={item.visible ? 'Masquer' : 'Afficher'}
                         >
-                          {item.visible ? '👁' : '🙈'}
+                          <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{item.visible ? 'visibility' : 'visibility_off'}</span>
                         </button>
                       </div>
                     ))}
@@ -940,7 +944,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
                       onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
                     >
-                      <span className="nav-icon">{item.icon}</span>
+                      <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span></span>
                       <span style={{ flex: 1 }}>{item.label}</span>
                       {isNotifications && notifUnreadCount > 0 && (
                         <span style={{
@@ -957,7 +961,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 {/* Hidden items — greyed out at bottom of section */}
                 {hiddenItems.map(item => (
                   <div key={item.href} className="nav-link nav-link-hidden">
-                    <span className="nav-icon" style={{ opacity: 0.4 }}>{item.icon}</span>
+                    <span className="nav-icon" style={{ opacity: 0.4 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span></span>
                     <span style={{ flex: 1 }}>{item.label}</span>
                     <button
                       onClick={() => restoreItem(section.id, item.href)}
@@ -976,12 +980,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <div className="nav-section-title">Mes agents IA</div>
               {customAgents.map(agent => (
                   <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`}>
-                    <span className="nav-icon">{agent.emoji}</span>
+                    <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>smart_toy</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
                   </Link>
               ))}
               <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }}>
-                <span className="nav-icon">➕</span>
+                <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>add_circle</span></span>
                 <span style={{ flex: 1 }}>Créer un agent</span>
               </Link>
             </div>
@@ -996,13 +1000,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 const isActive = pathname === href;
                 return (
                   <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}>
-                    <span className="nav-icon">{mod.emoji}</span>
+                    <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>extension</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.name}</span>
                   </Link>
                 );
               })}
               <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }}>
-                <span className="nav-icon">➕</span>
+                <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>add_circle</span></span>
                 <span style={{ flex: 1 }}>Nouveau module</span>
               </Link>
             </div>
@@ -1012,7 +1016,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div className="nav-section">
             <div className="nav-section-title">Statut</div>
             <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
-              <span className="nav-icon">💳</span>
+              <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>credit_card</span></span>
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
                 fontSize: 12, fontWeight: 800, marginLeft: 'auto',
@@ -1034,7 +1038,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               </span>
               <span style={{ flex: 1 }}>Niv. {gamLevel} — {LEVEL_TITLES[gamLevel] ?? 'Maître'}</span>
               {gamStreak > 0 && (
-                <span style={{ fontSize: 11, color: 'var(--warning)', marginLeft: 'auto' }}>🔥{gamStreak}j</span>
+                <span style={{ fontSize: 11, color: 'var(--warning)', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}><span className="material-symbols-rounded" style={{ fontSize: 13, color: 'var(--warning)' }}>local_fire_department</span>{gamStreak}j</span>
               )}
             </Link>
           </div>
@@ -1068,7 +1072,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              ⚙️ Personnaliser le menu
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>settings</span> Personnaliser le menu
             </button>
           </div>
         </div>
@@ -1103,8 +1107,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }}>
             <span className={`text-sm font-semibold ${walletBalance < 10_000_000 ? 'text-danger' : 'text-warning'}`}>
               {walletBalance < 10_000_000
-                ? '⚠️ Crédits presque épuisés — Rechargez pour continuer à utiliser vos agents'
-                : '💡 Solde de crédits bas — Pensez à recharger'}
+                ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> Crédits presque épuisés — Rechargez pour continuer à utiliser vos agents</>
+                : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Solde de crédits bas — Pensez à recharger</>}
             </span>
             <div className="flex items-center gap-8">
               <Link href="/client/account" className="text-sm text-accent font-semibold" style={{ textDecoration: 'none' }}>
@@ -1117,25 +1121,24 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div className="page-container">{children}</div>
       </div>
 
-      {/* Floating Chat Button */}
-      {pathname !== '/client/chat' && (
-        <Link
-          href="/client/chat"
-          aria-label="Ouvrir le chat"
-          style={{
-            position: 'fixed', bottom: 24, right: 24, zIndex: 90,
-            width: 56, height: 56, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
-            color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 24, boxShadow: '0 4px 20px rgba(91,108,247,0.4)',
-            textDecoration: 'none', transition: 'transform 0.2s, box-shadow 0.2s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(91,108,247,0.5)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(91,108,247,0.4)'; }}
-        >
-          💬
-        </Link>
-      )}
+      {/* Floating Menu Button (mobile) */}
+      <button
+        className="mobile-fab-menu"
+        onClick={() => setSidebarOpen(o => !o)}
+        aria-label="Menu"
+        style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 90,
+          width: 56, height: 56, borderRadius: '50%',
+          background: 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
+          color: '#fff', display: 'none', alignItems: 'center', justifyContent: 'center',
+          fontSize: 22, boxShadow: '0 4px 20px rgba(91,108,247,0.4)',
+          border: 'none', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(91,108,247,0.5)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(91,108,247,0.4)'; }}
+      >
+        <span className="material-symbols-rounded mi-white" style={{ fontSize: 22 }}>menu</span>
+      </button>
 
       {/* Ctrl+K Search Modal */}
       {searchOpen && (
@@ -1174,7 +1177,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span className="text-lg">{link.icon}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{link.icon}</span>
                   <span>{link.label}</span>
                 </Link>
               ))}
@@ -1190,29 +1193,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
     </div>
 
-    {/* ═══ MOBILE BOTTOM TAB BAR ═══ */}
-    <nav className="mobile-tab-bar">
-      <Link href="/client/dashboard" className={`tab-bar-item${pathname === '/client/dashboard' ? ' active' : ''}`}>
-        <span className="tab-bar-icon">🏠</span>
-        <span>Accueil</span>
-      </Link>
-      <Link href="/client/chat" className={`tab-bar-item${pathname?.startsWith('/client/chat') ? ' active' : ''}`}>
-        <span className="tab-bar-icon">💬</span>
-        <span>Chat</span>
-      </Link>
-      <Link href="/client/studio" className={`tab-bar-item${pathname?.startsWith('/client/studio') ? ' active' : ''}`}>
-        <span className="tab-bar-icon">🎬</span>
-        <span>Studio</span>
-      </Link>
-      <Link href="/client/personal" className={`tab-bar-item${pathname?.startsWith('/client/personal') || pathname?.startsWith('/client/agents') ? ' active' : ''}`}>
-        <span className="tab-bar-icon">🤖</span>
-        <span>Agents</span>
-      </Link>
-      <button className="tab-bar-item" onClick={() => setSidebarOpen(o => !o)}>
-        <span className="tab-bar-icon">☰</span>
-        <span>Plus</span>
-      </button>
-    </nav>
 
     <OnboardingTour />
     </ToastProvider>

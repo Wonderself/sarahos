@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ALL_AGENTS } from '../../../../lib/agent-config';
+import { useUserData } from '../../../../lib/use-user-data';
 
 function getToken(): string {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token ?? ''; }
@@ -19,7 +20,7 @@ interface Discussion {
   title: string;
   agentId: string;
   agentName: string;
-  agentEmoji: string;
+  agentMaterialIcon: string;
   messages: DiscussionMessage[];
   keyPoints: string[];
   status: 'active' | 'archived';
@@ -39,15 +40,13 @@ const DISCUSSION_TEMPLATES = [
 ];
 
 export default function MyDiscussionsPage() {
-  const [discussions, setDiscussions] = useState<Discussion[]>(() => {
-    try { return JSON.parse(localStorage.getItem('fz_admin_discussions') ?? '[]'); }
-    catch { return []; }
-  });
+  const { data: discussions, setData: setDiscussions } = useUserData<Discussion[]>('admin_discussions', [], 'fz_admin_discussions');
   const [activeId, setActiveId] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const active = discussions.find(d => d.id === activeId);
 
@@ -55,9 +54,12 @@ export default function MyDiscussionsPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [active?.messages.length, streaming]);
 
+  useEffect(() => {
+    return () => { abortRef.current?.abort(); };
+  }, []);
+
   const save = (updated: Discussion[]) => {
     setDiscussions(updated);
-    localStorage.setItem('fz_admin_discussions', JSON.stringify(updated));
   };
 
   const startDiscussion = (template: typeof DISCUSSION_TEMPLATES[0]) => {
@@ -67,7 +69,7 @@ export default function MyDiscussionsPage() {
       title: template.title,
       agentId: agent.id,
       agentName: agent.name,
-      agentEmoji: agent.emoji,
+      agentMaterialIcon: agent.materialIcon,
       messages: [],
       keyPoints: [],
       status: 'active',
@@ -100,6 +102,10 @@ export default function MyDiscussionsPage() {
       const contextMsgs = d.messages.slice(-20).map(m => ({ role: m.role, content: m.content }));
       contextMsgs.push({ role: 'user', content: text });
 
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       const res = await fetch('/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -110,6 +116,7 @@ export default function MyDiscussionsPage() {
           maxTokens: 4096,
           agentName: agent.id,
         }),
+        signal: controller.signal,
       });
 
       if (!res.body) throw new Error('No stream');
@@ -168,7 +175,7 @@ export default function MyDiscussionsPage() {
   };
 
   const exportMarkdown = (d: Discussion) => {
-    const md = `# ${d.title}\nAgent: ${d.agentEmoji} ${d.agentName}\nDate: ${new Date(d.createdAt).toLocaleDateString('fr-FR')}\n\n` +
+    const md = `# ${d.title}\nAgent: ${d.agentName}\nDate: ${new Date(d.createdAt).toLocaleDateString('fr-FR')}\n\n` +
       d.messages.map(m => `**${m.role === 'user' ? 'Vous' : d.agentName}** (${new Date(m.timestamp).toLocaleTimeString('fr-FR')}):\n${m.content}\n`).join('\n---\n\n');
     navigator.clipboard.writeText(md);
   };
@@ -189,7 +196,7 @@ export default function MyDiscussionsPage() {
                 const agent = ALL_AGENTS.find(a => a.id === t.agentId);
                 return (
                   <button key={t.title} onClick={() => startDiscussion(t)} className="w-full text-left p-2 rounded-lg hover:bg-gray-700 text-sm">
-                    <span>{agent?.emoji} {t.title}</span>
+                    <span><span className="material-symbols-rounded" style={{ fontSize: 14, color: agent?.color || 'var(--accent)' }}>{agent?.materialIcon}</span> {t.title}</span>
                   </button>
                 );
               })}
@@ -202,7 +209,7 @@ export default function MyDiscussionsPage() {
               className={`p-3 border-b border-gray-700/50 cursor-pointer hover:bg-gray-700/50 ${activeId === d.id ? 'bg-gray-700/50' : ''}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-white text-sm font-medium truncate">{d.agentEmoji} {d.title}</span>
+                <span className="text-white text-sm font-medium truncate"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{d.agentMaterialIcon}</span> {d.title}</span>
                 <button onClick={(e) => { e.stopPropagation(); deleteDiscussion(d.id); }} className="text-red-500 text-xs hover:text-red-400">×</button>
               </div>
               <p className="text-gray-500 text-xs mt-1">{d.messages.length} messages • {new Date(d.lastActivityAt).toLocaleDateString('fr-FR')}</p>
@@ -217,7 +224,7 @@ export default function MyDiscussionsPage() {
           <>
             <div className="p-4 border-b border-gray-700 flex items-center justify-between">
               <div>
-                <h2 className="text-white font-medium">{active.agentEmoji} {active.title}</h2>
+                <h2 className="text-white font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{active.agentMaterialIcon}</span> {active.title}</h2>
                 <p className="text-gray-500 text-xs">{active.agentName} • {active.messages.length} messages</p>
               </div>
               <button onClick={() => exportMarkdown(active)} className="px-3 py-1 bg-gray-700 text-gray-300 rounded text-xs hover:bg-gray-600">
@@ -256,7 +263,7 @@ export default function MyDiscussionsPage() {
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
             <div className="text-center">
-              <p className="text-4xl mb-3">🧠</p>
+              <p className="mb-3"><span className="material-symbols-rounded" style={{ fontSize: 40 }}>psychology</span></p>
               <p className="text-lg font-medium text-gray-400">Discussions approfondies</p>
               <p className="text-sm mt-2">Explorez des sujets en profondeur avec les agents IA</p>
               <button onClick={() => setShowTemplates(true)} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">

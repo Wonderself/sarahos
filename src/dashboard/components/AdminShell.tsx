@@ -43,10 +43,14 @@ export default function AdminShell({
     }
   }, [pathname, navSections]);
 
-  // Load admin session info
+  // Load admin session info + role check
   useEffect(() => {
     try {
       const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+      if (!session.token || session.role !== 'admin') {
+        window.location.href = '/login';
+        return;
+      }
       if (session.displayName) setAdminName(session.displayName);
       const savedDark = localStorage.getItem('fz_dark_mode');
       if (savedDark === 'true') {
@@ -75,11 +79,20 @@ export default function AdminShell({
   useEffect(() => {
     async function fetchApprovals() {
       try {
-        const res = await fetch('/api/health', { cache: 'no-store' });
+        const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+        if (!session.token) return;
+        const res = await fetch('/api/portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: '/portal/actions', token: session.token, method: 'GET' }),
+          cache: 'no-store',
+        });
         if (res.ok) {
-          setPendingApprovals(0);
+          const data = await res.json();
+          const pending = Array.isArray(data) ? data.filter((a: { status?: string }) => a.status === 'pending').length : 0;
+          setPendingApprovals(pending);
         }
-      } catch { /* */ }
+      } catch { /* network error */ }
     }
     fetchApprovals();
     const interval = setInterval(fetchApprovals, 120_000);
@@ -165,7 +178,7 @@ export default function AdminShell({
           onClick={() => document.dispatchEvent(new CustomEvent('fz:open-search'))}
           aria-label="Recherche"
         >
-          🔍
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>search</span>
         </button>
       </div>
 
@@ -181,7 +194,7 @@ export default function AdminShell({
         <div className="sidebar-header">
           <div className="sidebar-logo">
             <div>
-              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>FREENZY.IO</div>
+              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>freenzy.io</div>
               <div className="sidebar-logo-version">Console Admin</div>
             </div>
           </div>
@@ -195,7 +208,7 @@ export default function AdminShell({
               onClick={toggleDarkMode}
               title={darkMode ? 'Mode clair' : 'Mode sombre'}
             >
-              {darkMode ? '\u2600\uFE0F' : '\uD83C\uDF19'}
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{darkMode ? 'light_mode' : 'dark_mode'}</span>
             </button>
           </div>
         </div>
@@ -217,7 +230,7 @@ export default function AdminShell({
                 <div className="nav-section-links">
                   {section.links.map((link) => (
                     <NavLink key={link.href} href={link.href}>
-                      <span className="nav-icon">{link.icon}</span>
+                      <span className="material-symbols-rounded nav-icon" style={{ fontSize: 18 }}>{link.icon}</span>
                       {link.label}
                       {link.href === '/system/approvals' && pendingApprovals > 0 && (
                         <span className="approval-badge">
@@ -242,7 +255,7 @@ export default function AdminShell({
           </div>
 
           <NavLink href="/client/dashboard">
-            <span className="nav-icon">🔗</span>
+            <span className="material-symbols-rounded nav-icon" style={{ fontSize: 18 }}>link</span>
             Espace Client
           </NavLink>
           <div className="sidebar-user-row">
@@ -275,23 +288,23 @@ export default function AdminShell({
       {/* Bottom Tab Bar — mobile only */}
       <nav className="admin-bottom-tab-bar">
         <Link href="/admin" className={`admin-tab-item${pathname === '/admin' ? ' active' : ''}`}>
-          <span className="admin-tab-icon">📊</span>
+          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bar_chart</span></span>
           <span>Accueil</span>
         </Link>
         <Link href="/admin/users" className={`admin-tab-item${pathname.startsWith('/admin/users') ? ' active' : ''}`}>
-          <span className="admin-tab-icon">👥</span>
+          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>group</span></span>
           <span>Users</span>
         </Link>
         <Link href="/infra/health" className={`admin-tab-item${pathname.startsWith('/infra') ? ' active' : ''}`}>
-          <span className="admin-tab-icon">❤️</span>
+          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>favorite</span></span>
           <span>Sante</span>
         </Link>
         <Link href="/admin/billing" className={`admin-tab-item${pathname.startsWith('/admin/billing') ? ' active' : ''}`}>
-          <span className="admin-tab-icon">💳</span>
+          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>credit_card</span></span>
           <span>Billing</span>
         </Link>
         <button className="admin-tab-item" onClick={() => setSidebarOpen(o => !o)}>
-          <span className="admin-tab-icon">☰</span>
+          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>menu</span></span>
           <span>Menu</span>
         </button>
       </nav>

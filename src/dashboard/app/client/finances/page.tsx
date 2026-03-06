@@ -44,8 +44,12 @@ interface ModelPrice {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const FEATURE_LABELS: Record<string, string> = {
-  chat: '💬 Chat', repondeur: '📞 Répondeur', visio: '🎙️ Visio',
-  studio: '🎨 Studio', briefing: '📋 Briefing', meeting: '🤝 Réunion', other: '⚙️ Autre',
+  chat: 'Chat', repondeur: 'Répondeur', visio: 'Visio',
+  studio: 'Studio', briefing: 'Briefing', meeting: 'Réunion', other: 'Autre',
+};
+const FEATURE_ICONS: Record<string, string> = {
+  chat: 'chat', repondeur: 'call', visio: 'mic',
+  studio: 'palette', briefing: 'assignment', meeting: 'handshake', other: 'settings',
 };
 const PIE_COLORS = ['#5b6cf7', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#8b7cf8', '#14b8a6'];
 const MODEL_PRICES: ModelPrice[] = [
@@ -194,7 +198,7 @@ export default function FinancesPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>💳</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>credit_card</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement des finances...</div>
       </div>
     );
@@ -206,21 +210,21 @@ export default function FinancesPage() {
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div>
-          <h1 className="page-title">💳 Finances</h1>
-          <p className="page-subtitle">Suivi des dépenses, auto-recharge et tarification des modèles IA.</p>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>credit_card</span> Finances</h1>
+          <p className="page-subtitle">Suivi des dépenses, auto-recharge et tarification des modèles <span className="fz-logo-word">IA</span>.</p>
         </div>
       </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Solde actuel', value: `${currentBalance} cr`, icon: '💰', color: 'var(--accent)' },
-          { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: '📉', color: '#ef4444' },
-          { label: 'Coût moyen/session', value: monthlyCosts.length > 0 ? `${(monthlyCosts.slice(-1)[0]?.cost / 30).toFixed(2)} cr/j` : '—', icon: '📊', color: '#f59e0b' },
-          { label: 'Auto-recharge', value: autoTopup.autoTopupEnabled ? 'Activée' : 'Désactivée', icon: '🔄', color: autoTopup.autoTopupEnabled ? '#22c55e' : '#6b7280' },
+          { label: 'Solde actuel', value: `${currentBalance} cr`, icon: 'savings', color: 'var(--accent)' },
+          { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: 'trending_down', color: '#ef4444' },
+          { label: 'Coût moyen/session', value: monthlyCosts.length > 0 ? `${((monthlyCosts.slice(-1)[0]?.cost ?? 0) / 30).toFixed(2)} cr/j` : '—', icon: 'bar_chart', color: '#f59e0b' },
+          { label: 'Auto-recharge', value: autoTopup.autoTopupEnabled ? 'Activée' : 'Désactivée', icon: 'refresh', color: autoTopup.autoTopupEnabled ? '#22c55e' : '#6b7280' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-            <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
+            <div style={{ fontSize: 20, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
             <div style={{ fontSize: 16, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
             <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
           </div>
@@ -244,7 +248,7 @@ export default function FinancesPage() {
         <div>
           {monthlyCosts.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📊</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>bar_chart</span></div>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucune donnée disponible</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Utilisez vos agents pour voir apparaître les données ici.</div>
             </div>
@@ -270,7 +274,7 @@ export default function FinancesPage() {
         <div>
           {featureCosts.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📈</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>trending_up</span></div>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucune donnée de répartition disponible</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Les données s&apos;afficheront après utilisation.</div>
             </div>
@@ -298,14 +302,14 @@ export default function FinancesPage() {
                     <div key={f.feature} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <div style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, background: PIE_COLORS[i % PIE_COLORS.length] }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600 }}>{FEATURE_LABELS[f.feature] ?? f.feature}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>{FEATURE_ICONS[f.feature] && <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{FEATURE_ICONS[f.feature]}</span>}{FEATURE_LABELS[f.feature] ?? f.feature}</div>
                         <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 1 }}>
                           {f.requests} req · {(f.tokens / 1000).toFixed(0)}k tokens
                         </div>
                       </div>
                       <div style={{ flexShrink: 0, textAlign: 'right' }}>
                         <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)' }}>{(f.cost / 1_000_000).toFixed(3)} cr</div>
-                        <div style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>{f.pct?.toFixed(1)}%</div>
+                        <div style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>{(f.pct ?? 0).toFixed(1)}%</div>
                       </div>
                     </div>
                   ))}
@@ -324,7 +328,7 @@ export default function FinancesPage() {
       {tab === 'Auto-topup' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="card" style={{ padding: 24 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Recharge automatique</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Recharge <span className="fz-logo-word">automatique</span></h3>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: 'var(--bg-secondary)', marginBottom: 20 }}>
               <div>
@@ -343,7 +347,7 @@ export default function FinancesPage() {
               >
                 <span style={{
                   position: 'absolute', top: 2, left: autoTopup.autoTopupEnabled ? 22 : 2,
-                  width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                  width: 20, height: 20, borderRadius: '50%', background: 'var(--bg-elevated)',
                   transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
                 }} />
               </button>
@@ -386,7 +390,7 @@ export default function FinancesPage() {
               className="btn btn-primary"
               style={{ fontSize: 13 }}
             >
-              {topupSaving ? 'Sauvegarde...' : topupSaved ? '✅ Sauvegardé' : 'Sauvegarder les paramètres'}
+              {topupSaving ? 'Sauvegarde...' : topupSaved ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Sauvegardé</> : 'Sauvegarder les paramètres'}
             </button>
           </div>
 
@@ -403,7 +407,7 @@ export default function FinancesPage() {
                         {new Date(h.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: '#22c55e' }}>🔄 Auto</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#22c55e' }}><span className="material-symbols-rounded" style={{ fontSize: 11 }}>refresh</span> Auto</span>
                   </div>
                 ))}
               </div>
@@ -444,7 +448,7 @@ export default function FinancesPage() {
               </table>
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 12 }}>
-              * Tarifs Anthropic + 25% de marge Freenzy. 1 crédit = 1M micro-crédits (unité interne).
+              * Tarifs <span className="fz-logo-word">Anthropic</span> + 25% de marge Freenzy. 1 crédit = 1M micro-crédits (unité interne).
             </div>
           </div>
 

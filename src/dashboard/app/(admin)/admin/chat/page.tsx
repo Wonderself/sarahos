@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react';
 import { ALL_AGENTS } from '../../../../lib/agent-config';
 import type { DefaultAgentDef } from '../../../../lib/agent-config';
+import { useUserData } from '../../../../lib/use-user-data';
 
 // ─── Types ───
 
@@ -17,7 +18,7 @@ interface Message {
 interface ConversationEntry {
   id: string;
   agentId: string;
-  agentEmoji: string;
+  agentMaterialIcon: string;
   agentName: string;
   title: string;
   messages: Message[];
@@ -40,15 +41,7 @@ function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-function loadHistory(): ConversationEntry[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]');
-  } catch { return []; }
-}
-
-function saveHistory(h: ConversationEntry[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
-}
+// loadHistory/saveHistory removed — useUserData handles persistence + backend sync
 
 function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n) + '...' : s;
@@ -58,7 +51,7 @@ function truncate(s: string, n: number) {
 
 export default function AdminChatPage() {
   const [selectedAgent, setSelectedAgent] = useState<DefaultAgentDef>(ALL_AGENTS[0]);
-  const [conversations, setConversations] = useState<ConversationEntry[]>([]);
+  const { data: conversations, setData: setConversations } = useUserData<ConversationEntry[]>('admin_chat_history', [], STORAGE_KEY);
   const [activeConvId, setActiveConvId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -70,9 +63,11 @@ export default function AdminChatPage() {
   const abortRef = useRef<AbortController | null>(null);
   const streamBufferRef = useRef('');
 
-  // Load history on mount
+  // History loaded by useUserData hook
+
+  // Cleanup on unmount
   useEffect(() => {
-    setConversations(loadHistory());
+    return () => { abortRef.current?.abort(); };
   }, []);
 
   // Auto-scroll
@@ -102,7 +97,7 @@ export default function AdminChatPage() {
       const entry: ConversationEntry = {
         id: activeConvId ?? uid(),
         agentId: selectedAgent.id,
-        agentEmoji: selectedAgent.emoji,
+        agentMaterialIcon: selectedAgent.materialIcon,
         agentName: selectedAgent.name,
         title,
         messages: msgs,
@@ -118,7 +113,6 @@ export default function AdminChatPage() {
         setActiveConvId(entry.id);
       }
 
-      saveHistory(updated);
       return updated;
     });
   }, [activeConvId, selectedAgent]);
@@ -132,11 +126,7 @@ export default function AdminChatPage() {
   }, [streaming]);
 
   const deleteConversation = useCallback((id: string) => {
-    setConversations(prev => {
-      const updated = prev.filter(c => c.id !== id);
-      saveHistory(updated);
-      return updated;
-    });
+    setConversations(prev => prev.filter(c => c.id !== id));
     if (activeConvId === id) {
       setActiveConvId(null);
       setMessages([]);
@@ -367,7 +357,7 @@ export default function AdminChatPage() {
                   }`}
                   title={agent.description}
                 >
-                  <span className="text-base flex-shrink-0">{agent.emoji}</span>
+                  <span className="material-symbols-rounded text-base flex-shrink-0" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
                   <span className="truncate text-xs">{agent.name}</span>
                 </button>
               ))}
@@ -392,7 +382,7 @@ export default function AdminChatPage() {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-300 truncate flex-1">
-                    {conv.agentEmoji} {conv.title}
+                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{conv.agentMaterialIcon}</span> {conv.title}
                   </span>
                   <button
                     onClick={e => { e.stopPropagation(); deleteConversation(conv.id); }}
@@ -419,7 +409,7 @@ export default function AdminChatPage() {
         {/* Top Bar */}
         <div className="flex items-center justify-between px-4 py-2.5 bg-gray-950/80 border-b border-gray-800">
           <div className="flex items-center gap-3">
-            <span className="text-lg">{selectedAgent.emoji}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 20, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span>
             <div>
               <h2 className="text-sm font-semibold text-white">{selectedAgent.name}</h2>
               <p className="text-[10px] text-gray-500">{selectedAgent.role} &middot; {selectedAgent.model}</p>
@@ -445,7 +435,7 @@ export default function AdminChatPage() {
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center">
-              <span className="text-5xl mb-4">{selectedAgent.emoji}</span>
+              <span className="material-symbols-rounded mb-4" style={{ fontSize: 48, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span>
               <h3 className="text-lg font-semibold text-gray-300 mb-1">
                 Chat avec {selectedAgent.name}
               </h3>
@@ -472,7 +462,7 @@ export default function AdminChatPage() {
               >
                 {msg.role === 'assistant' && (
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-xs">{selectedAgent.emoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 14, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span>
                     <span className="text-[10px] font-medium text-gray-400">{selectedAgent.name}</span>
                   </div>
                 )}
@@ -514,7 +504,7 @@ export default function AdminChatPage() {
           {streaming && (
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-blue-400 animate-pulse">
-                {selectedAgent.emoji} {selectedAgent.name} est en train de repondre...
+                <span className="material-symbols-rounded" style={{ fontSize: 14, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span> {selectedAgent.name} est en train de repondre...
               </span>
               <button
                 onClick={stopStreaming}
@@ -546,7 +536,7 @@ export default function AdminChatPage() {
 
           <div className="flex items-center justify-between mt-2">
             <span className="text-[10px] text-gray-600">
-              {selectedAgent.emoji} {selectedAgent.name} &middot; {selectedAgent.model}
+              <span className="material-symbols-rounded" style={{ fontSize: 12, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span> {selectedAgent.name} &middot; {selectedAgent.model}
             </span>
             <span className="text-[10px] text-gray-600">
               {messages.filter(m => m.role === 'user').length} messages envoyes

@@ -16,9 +16,11 @@ export const metadata: Metadata = {
 const eyebrow: React.CSSProperties = {
   fontSize: 11, fontWeight: 700, letterSpacing: 4,
   textTransform: 'uppercase', color: '#86868b', marginBottom: 12,
+  fontFamily: 'var(--font-display)',
 };
 const sectionTitle: React.CSSProperties = {
-  fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 900,
+  fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 700,
+  fontFamily: 'var(--font-display)',
   letterSpacing: -1.2, color: '#1d1d1f', lineHeight: 1.1, margin: 0,
 };
 const sectionSubtitle: React.CSSProperties = {
@@ -55,10 +57,11 @@ export default function PlansPage() {
         }} />
         <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <h1 style={{
-            fontSize: 'clamp(34px, 6vw, 64px)', fontWeight: 900,
+            fontSize: 'clamp(34px, 6vw, 64px)', fontWeight: 700,
+            fontFamily: 'var(--font-display)',
             color: '#fff', letterSpacing: -2.5, lineHeight: 1.02, marginBottom: 18,
           }}>
-            Gratuit.
+            <span className="fz-logo-word">Gratuit</span>.
             <br />
             <span style={{ color: 'rgba(255,255,255,0.38)' }}>
               Payez ce que vous utilisez.
@@ -73,7 +76,7 @@ export default function PlansPage() {
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/login?mode=register" style={{
               padding: '14px 32px', background: '#5b6cf7', color: '#fff',
-              borderRadius: 12, fontWeight: 700, fontSize: 15, textDecoration: 'none',
+              borderRadius: 12, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 15, textDecoration: 'none',
               boxShadow: '0 0 28px rgba(91,108,247,0.35)',
             }}>
               S&apos;inscrire gratuitement
@@ -107,7 +110,7 @@ export default function PlansPage() {
                 borderRight: i < 3 ? '1px solid #f2f2f2' : 'none',
               }}>
                 <div style={{ width: 6, height: 6, background: '#5b6cf7', borderRadius: '50%', margin: '0 auto 14px' }} />
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f', marginBottom: 5 }}>{p.label}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f', marginBottom: 5 }}>{p.label}</div>
                 <div style={{ fontSize: 11, color: '#86868b', lineHeight: 1.5 }}>{p.desc}</div>
               </div>
             ))}
@@ -126,7 +129,7 @@ export default function PlansPage() {
               <Link href="/login?mode=register" style={{
                 display: 'inline-block', marginTop: 28,
                 padding: '13px 28px', background: '#1d1d1f', color: '#fff',
-                borderRadius: 10, fontWeight: 700, fontSize: 14, textDecoration: 'none',
+                borderRadius: 10, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, textDecoration: 'none',
               }}>
                 Commencer gratuitement
               </Link>
@@ -140,7 +143,7 @@ export default function PlansPage() {
               }}>
                 Pour tous · à vie
               </div>
-              <div style={{ fontSize: 64, fontWeight: 900, color: '#1d1d1f', letterSpacing: -4, lineHeight: 1, marginBottom: 6 }}>
+              <div style={{ fontSize: 64, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#1d1d1f', letterSpacing: -4, lineHeight: 1, marginBottom: 6 }}>
                 0%
               </div>
               <div style={{ fontSize: 14, color: '#86868b', marginBottom: 28, lineHeight: 1.5 }}>
@@ -154,7 +157,7 @@ export default function PlansPage() {
                   'Payez uniquement ce que vous consommez',
                 ].map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: '#4b5563', alignItems: 'flex-start' }}>
-                    <span style={{ color: '#22c55e', fontWeight: 800, flexShrink: 0, marginTop: 1 }}>✓</span>
+                    <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 14, flexShrink: 0, marginTop: 1 }}>check</span>
                     {item}
                   </div>
                 ))}
@@ -199,7 +202,7 @@ export default function PlansPage() {
                   </div>
                 )}
                 <div style={{
-                  fontSize: 32, fontWeight: 900, letterSpacing: -1.5,
+                  fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-display)', letterSpacing: -1.5,
                   color: opt.label === 'Populaire' ? '#fff' : '#1d1d1f',
                   lineHeight: 1, marginBottom: 6,
                 }}>
@@ -255,7 +258,7 @@ export default function PlansPage() {
               { count: '~19', label: 'Analyses' },
             ].map(ex => (
               <div key={ex.label} style={{ padding: '24px 16px', textAlign: 'center', ...card }}>
-                <div style={{ fontSize: 28, fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, lineHeight: 1 }}>
+                <div style={{ fontSize: 28, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#1d1d1f', letterSpacing: -1.5, lineHeight: 1 }}>
                   {ex.count}
                 </div>
                 <div style={{ fontSize: 12, color: '#86868b', marginTop: 6, fontWeight: 600 }}>{ex.label}</div>
@@ -268,7 +271,7 @@ export default function PlansPage() {
         <section style={{ ...sectionPad, paddingTop: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={eyebrow}>Votre équipe</p>
-            <h2 style={sectionTitle}>{DEFAULT_AGENTS.length} agents business. Tous inclus.</h2>
+            <h2 style={sectionTitle}>{DEFAULT_AGENTS.length} <span className="fz-logo-word">agents</span> business. Tous inclus.</h2>
             <p style={sectionSubtitle}>Activez ceux dont vous avez besoin. En un clic.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 8 }}>
@@ -278,7 +281,7 @@ export default function PlansPage() {
                 padding: '14px 16px',
                 display: 'flex', alignItems: 'center', gap: 12,
               }}>
-                <span style={{ fontSize: 20, flexShrink: 0 }}>{agent.emoji}</span>
+                <span style={{ fontSize: 20, flexShrink: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></span>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f' }}>{agent.role}</div>
                   <div style={{ fontSize: 11, color: '#9ca3af' }}>{agent.priceCredits} cr/action</div>
@@ -392,12 +395,12 @@ export default function PlansPage() {
                 {[
                   ['Prix mensuel', 'Gratuit + 0%', '20€/mois', '500–2 000€/mois'],
                   ['Agents IA', `${DEFAULT_AGENTS.length} spécialisés`, '1 généraliste', '1 personne'],
-                  ['Téléphonie', '✓ Incluse', '✗', '✓'],
+                  ['Téléphonie', <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check</span> Incluse</>, <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>, <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span>],
                   ['Disponibilité', '24h/7j/365j', '24h/7j', 'Horaires bureau'],
                   ['Personnalisation', 'Totale', 'Limitée', 'Totale'],
                   ['Engagement', 'Aucun', 'Mensuel', 'Contrat'],
                 ].map(([label, freenzy, chatgpt, classic], i, arr) => (
-                  <tr key={label}>
+                  <tr key={String(label)}>
                     <td style={{ padding: '13px 20px', fontWeight: 600, color: '#1d1d1f', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{label}</td>
                     <td style={{ padding: '13px 20px', textAlign: 'center', fontWeight: 700, color: '#22c55e', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{freenzy}</td>
                     <td style={{ padding: '13px 20px', textAlign: 'center', color: '#9ca3af', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{chatgpt}</td>
@@ -435,7 +438,7 @@ export default function PlansPage() {
                 opacity: item.available ? 1 : 0.55,
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 5 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f' }}>{item.title}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f' }}>{item.title}</div>
                   <span style={{
                     fontSize: 9, fontWeight: 700,
                     padding: '2px 7px', borderRadius: 20,
@@ -489,7 +492,7 @@ export default function PlansPage() {
               <details key={i} style={{ borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
                 <summary style={{
                   padding: '16px 20px',
-                  fontSize: 14, fontWeight: 600, color: '#1d1d1f',
+                  fontSize: 14, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f',
                   cursor: 'pointer', listStyle: 'none',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   background: '#fff', userSelect: 'none',
@@ -529,19 +532,19 @@ export default function PlansPage() {
         <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <h2 style={{
             fontSize: 'clamp(28px, 5vw, 52px)',
-            fontWeight: 900, color: '#fff',
+            fontWeight: 700, fontFamily: 'var(--font-display)', color: '#fff',
             letterSpacing: -2, lineHeight: 1.08, marginBottom: 14,
           }}>
             Prêt à commencer ?
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, marginBottom: 38 }}>
-            {totalAgents}+ agents IA. Toutes les IA du marché. 0% de commission.
+            {totalAgents}+ agents <span className="fz-logo-word">IA</span>. Toutes les IA du marché. 0% de commission.
           </p>
           <Link href="/login?mode=register" style={{
             display: 'inline-block',
             padding: '15px 40px',
             background: '#5b6cf7', color: '#fff',
-            borderRadius: 12, fontWeight: 700, fontSize: 16,
+            borderRadius: 12, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 16,
             textDecoration: 'none',
             boxShadow: '0 0 36px rgba(91,108,247,0.3)',
           }}>

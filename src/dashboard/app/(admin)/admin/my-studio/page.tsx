@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useUserData } from '../../../../lib/use-user-data';
 
 // ── Auth helper ──────────────────────────────────────────────────────────────
 function getToken(): string {
@@ -44,15 +45,7 @@ const DURATIONS: { value: VideoDuration; label: string }[] = [
 
 const GALLERY_KEY = 'fz_admin_studio_gallery';
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function loadGallery(): GalleryItem[] {
-  try { return JSON.parse(localStorage.getItem(GALLERY_KEY) ?? '[]') as GalleryItem[]; }
-  catch { return []; }
-}
-
-function saveGallery(items: GalleryItem[]) {
-  localStorage.setItem(GALLERY_KEY, JSON.stringify(items));
-}
+// loadGallery/saveGallery removed — useUserData handles persistence + backend sync
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function AdminMyStudioPage() {
@@ -76,10 +69,8 @@ export default function AdminMyStudioPage() {
   const [videoResult, setVideoResult] = useState<string | null>(null);
   const [videoError, setVideoError] = useState('');
 
-  // Gallery
-  const [gallery, setGallery] = useState<GalleryItem[]>([]);
-
-  useEffect(() => { setGallery(loadGallery()); }, []);
+  // Gallery (synced to backend via useUserData)
+  const { data: gallery, setData: setGallery } = useUserData<GalleryItem[]>('admin_studio_gallery', [], GALLERY_KEY);
 
   const addToGallery = useCallback((item: Omit<GalleryItem, 'id' | 'createdAt'>) => {
     const entry: GalleryItem = {
@@ -87,12 +78,8 @@ export default function AdminMyStudioPage() {
       id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       createdAt: new Date().toISOString(),
     };
-    setGallery(prev => {
-      const next = [entry, ...prev];
-      saveGallery(next);
-      return next;
-    });
-  }, []);
+    setGallery(prev => [entry, ...prev]);
+  }, [setGallery]);
 
   // ── Photo generation ─────────────────────────────────────────────────────
   const generatePhoto = async () => {
@@ -146,28 +133,35 @@ export default function AdminMyStudioPage() {
 
   // ── Video polling ────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!videoId || videoStatus === 'done' || videoStatus === 'error') return;
+    if (!videoId) return;
+    let stopped = false;
     const interval = setInterval(async () => {
+      if (stopped) return;
       try {
         const res = await fetch(`/api/video?id=${videoId}`);
+        if (!res.ok) return; // retry on next tick
         const data = await res.json();
+        if (stopped) return;
         setVideoStatus(data.status);
         if (data.status === 'done' && data.resultUrl) {
+          stopped = true;
           setVideoResult(data.resultUrl);
           addToGallery({ type: 'video', prompt: videoPrompt, url: data.resultUrl });
           clearInterval(interval);
         } else if (data.status === 'error') {
+          stopped = true;
           setVideoError('La generation video a echoue.');
           clearInterval(interval);
         }
       } catch { /* retry on next tick */ }
     }, 4000);
-    return () => clearInterval(interval);
-  }, [videoId, videoStatus, videoPrompt, addToGallery]);
+    return () => { stopped = true; clearInterval(interval); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoId]);
 
   const clearGallery = () => {
+    if (!confirm('Vider toute la galerie ? Cette action est irréversible.')) return;
     setGallery([]);
-    localStorage.removeItem(GALLERY_KEY);
   };
 
   // ── Render ───────────────────────────────────────────────────────────────

@@ -7,7 +7,9 @@ const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('fz-token');
+  try {
+    return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token ?? null;
+  } catch { return null; }
 }
 
 async function apiFetch(path: string, options?: RequestInit) {
@@ -27,13 +29,20 @@ export function ApproveButton({ proposalId }: { proposalId: string }) {
     <button
       disabled={loading}
       onClick={async () => {
+        const notes = window.prompt('Notes (optionnel):');
+        if (notes === null) return; // user cancelled
         setLoading(true);
-        const notes = window.prompt('Notes (optionnel):') ?? '';
-        await apiFetch(`/autopilot/proposals/${proposalId}/decide`, {
-          method: 'POST',
-          body: JSON.stringify({ decision: 'approved', notes }),
-        });
-        router.refresh();
+        try {
+          await apiFetch(`/autopilot/proposals/${proposalId}/decide`, {
+            method: 'POST',
+            body: JSON.stringify({ decision: 'approved', notes }),
+          });
+          router.refresh();
+        } catch {
+          alert('Erreur lors de l\'approbation');
+        } finally {
+          setLoading(false);
+        }
       }}
       className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50"
     >
@@ -50,14 +59,20 @@ export function DenyButton({ proposalId }: { proposalId: string }) {
     <button
       disabled={loading}
       onClick={async () => {
-        setLoading(true);
         const notes = window.prompt('Raison du refus:');
-        if (!notes) { setLoading(false); return; }
-        await apiFetch(`/autopilot/proposals/${proposalId}/decide`, {
-          method: 'POST',
-          body: JSON.stringify({ decision: 'denied', notes }),
-        });
-        router.refresh();
+        if (!notes) return;
+        setLoading(true);
+        try {
+          await apiFetch(`/autopilot/proposals/${proposalId}/decide`, {
+            method: 'POST',
+            body: JSON.stringify({ decision: 'denied', notes }),
+          });
+          router.refresh();
+        } catch {
+          alert('Erreur lors du refus');
+        } finally {
+          setLoading(false);
+        }
       }}
       className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 disabled:opacity-50"
     >
@@ -76,11 +91,17 @@ export function RollbackButton({ proposalId }: { proposalId: string }) {
       onClick={async () => {
         if (!confirm('Rollback cette action ? L\'état précédent sera restauré.')) return;
         setLoading(true);
-        await apiFetch(`/autopilot/proposals/${proposalId}/rollback`, {
-          method: 'POST',
-          body: '{}',
-        });
-        router.refresh();
+        try {
+          await apiFetch(`/autopilot/proposals/${proposalId}/rollback`, {
+            method: 'POST',
+            body: '{}',
+          });
+          router.refresh();
+        } catch {
+          alert('Erreur lors du rollback');
+        } finally {
+          setLoading(false);
+        }
       }}
       className="px-3 py-1.5 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700 disabled:opacity-50"
     >
@@ -110,12 +131,17 @@ export function TriggerAuditButton() {
         disabled={loading}
         onClick={async () => {
           setLoading(true);
-          await apiFetch('/autopilot/audit/trigger', {
-            method: 'POST',
-            body: JSON.stringify({ type }),
-          });
-          setLoading(false);
-          router.refresh();
+          try {
+            await apiFetch('/autopilot/audit/trigger', {
+              method: 'POST',
+              body: JSON.stringify({ type }),
+            });
+            router.refresh();
+          } catch {
+            alert('Erreur lors du déclenchement de l\'audit');
+          } finally {
+            setLoading(false);
+          }
         }}
         className="px-4 py-1.5 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 disabled:opacity-50"
       >

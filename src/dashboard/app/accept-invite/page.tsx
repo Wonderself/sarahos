@@ -22,10 +22,11 @@ function AcceptInviteContent() {
 
   async function acceptInvitation(inviteToken: string) {
     try {
-      const authToken = document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+      let authToken: string | undefined;
+      try { authToken = JSON.parse(localStorage.getItem('fz_session') ?? '{}').token; } catch { /* */ }
       if (!authToken) {
         // Not logged in — redirect to login with return URL
-        router.push(`/login?redirect=/accept-invite?token=${inviteToken}`);
+        router.push(`/login?redirect=${encodeURIComponent(`/accept-invite?token=${inviteToken}`)}`);
         return;
       }
 
@@ -61,7 +62,7 @@ function AcceptInviteContent() {
       <div className="card" style={{ maxWidth: 420, width: '100%', padding: '40px 32px', textAlign: 'center' }}>
         {status === 'loading' && (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>⏳</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>hourglass_empty</span></div>
             <h2 className="text-lg font-bold mb-4">Acceptation en cours...</h2>
             <p className="text-sm text-secondary">Veuillez patienter.</p>
           </>
@@ -69,7 +70,7 @@ function AcceptInviteContent() {
 
         {status === 'success' && (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>celebration</span></div>
             <h2 className="text-lg font-bold mb-4">Invitation acceptée !</h2>
             <p className="text-sm text-secondary mb-16">
               Vous avez rejoint l&apos;espace de travail avec succès.
@@ -82,7 +83,7 @@ function AcceptInviteContent() {
 
         {status === 'error' && (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>❌</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>error</span></div>
             <h2 className="text-lg font-bold mb-4">Erreur</h2>
             <p className="text-sm text-secondary mb-16">{error}</p>
             <Link href="/client/team" className="btn btn-secondary">
@@ -93,7 +94,7 @@ function AcceptInviteContent() {
 
         {status === 'no-token' && (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🔗</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>link</span></div>
             <h2 className="text-lg font-bold mb-4">Lien invalide</h2>
             <p className="text-sm text-secondary mb-16">
               Ce lien d&apos;invitation est invalide ou a expiré.

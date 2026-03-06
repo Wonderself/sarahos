@@ -160,7 +160,10 @@ export default function LoginPage() {
       if (data.activeAgents) setActiveAgentIds(data.activeAgents);
       localStorage.setItem('fz_welcome_pending', 'true');
       console.log('[FREENZY] Login response — role:', data.role, 'email:', data.email);
-      if (data.role === 'admin') {
+      const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+      if (redirectParam && redirectParam.startsWith('/')) {
+        window.location.href = redirectParam;
+      } else if (data.role === 'admin') {
         window.location.href = '/admin';
       } else if (data.onboardingCompleted === false) {
         window.location.href = '/client/onboarding';
@@ -181,9 +184,9 @@ export default function LoginPage() {
         <div className="flex-center" style={{ flex: 1, padding: 24, minHeight: '100vh' }}>
           <div style={{ maxWidth: 640, width: '100%' }}>
             <div className="text-center" style={{ marginBottom: 32 }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>&#127881;</div>
-              <div style={{ fontSize: 24, fontWeight: 700, color: '#111827', marginBottom: 8, letterSpacing: '-0.02em' }}>
-                Bienvenue ! Choisissez vos agents
+              <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>celebration</span></div>
+              <div style={{ fontSize: 24, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#111827', marginBottom: 8, letterSpacing: '-0.02em' }}>
+                Bienvenue ! Choisissez vos <span className="fz-logo-word">agents</span>
               </div>
               <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
                 Selectionnez les agents dont vous avez besoin. Vous pourrez en activer d&apos;autres plus tard.
@@ -227,9 +230,9 @@ export default function LoginPage() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       color: 'white', fontSize: 11, fontWeight: 700,
                     }}>
-                      {selected && '\u2713'}
+                      {selected && <span className="material-symbols-rounded" style={{ fontSize: 11 }}>check</span>}
                     </div>
-                    <div style={{ fontSize: 28, marginBottom: 10 }}>{agent.emoji}</div>
+                    <div style={{ fontSize: 28, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 2 }}>
                       {agent.name}
                     </div>
@@ -285,15 +288,15 @@ export default function LoginPage() {
         }}>
           {/* Logo */}
           <div className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 20, marginBottom: 48 }}>
-            FREENZY.IO
+            freenzy.io
           </div>
 
           {/* Main headline */}
           <div className="lp-gradient-h1" style={{
-            fontSize: 'clamp(28px, 3.5vw, 40px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: -1.5,
+            fontSize: 'clamp(28px, 3.5vw, 40px)', fontWeight: 700, fontFamily: 'var(--font-display)', lineHeight: 1.1, letterSpacing: -1.5,
             marginBottom: 14,
           }}>
-            L&apos;app qui<br />remplace tout.
+            Utilisez<br />vraiment l&apos;<span className="fz-logo-word">IA</span>.
           </div>
           <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', lineHeight: 1.7, maxWidth: 300, marginBottom: 40 }}>
             {DEFAULT_AGENTS.length} agents spécialisés. Coûts IA optimisés automatiquement.
@@ -307,8 +310,8 @@ export default function LoginPage() {
               { val: '0%', label: 'Commission', color: '#fbbf24' },
             ].map(s => (
               <div key={s.label}>
-                <div style={{ fontSize: 26, fontWeight: 900, color: s.color, letterSpacing: -1 }}>{s.val}</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
+                <div style={{ fontSize: 26, fontWeight: 700, fontFamily: 'var(--font-display)', color: s.color, letterSpacing: -1 }}>{s.val}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 3, fontWeight: 600, fontFamily: 'var(--font-display)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -319,18 +322,18 @@ export default function LoginPage() {
             border: '1px solid rgba(255,255,255,0.07)',
             borderRadius: 16, padding: '18px 20px', marginBottom: 24,
           }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 14 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 14 }}>
               Activité en cours
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                { icon: '📞', text: 'Répondeur — 3 appels traités cette nuit', color: '#22c55e' },
-                { icon: '⏰', text: 'Réveil — 1 247 briefs envoyés ce matin', color: '#f59e0b' },
-                { icon: '📱', text: 'Social — 8 posts publiés automatiquement', color: '#3b82f6' },
-                { icon: '📄', text: 'Documents — 23 rapports générés aujourd\'hui', color: '#9333ea' },
+                { icon: 'call', text: 'Répondeur — 3 appels traités cette nuit', color: '#22c55e' },
+                { icon: 'alarm', text: 'Réveil — 1 247 briefs envoyés ce matin', color: '#f59e0b' },
+                { icon: 'phone_iphone', text: 'Social — 8 posts publiés automatiquement', color: '#3b82f6' },
+                { icon: 'description', text: 'Documents — 23 rapports générés aujourd\'hui', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                  <span style={{ fontSize: 16 }}>{item.icon}</span>
+                  <span style={{ fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{item.icon}</span></span>
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>{item.text}</span>
                   <div style={{ marginLeft: 'auto', width: 7, height: 7, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
                 </div>
@@ -347,7 +350,7 @@ export default function LoginPage() {
             fontSize: 12, fontWeight: 700,
           }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5b6cf7', display: 'inline-block' }} />
-            0% pour tous · à vie
+            0% pour tous · à vie — <span className="fz-logo-word">gratuit</span>
           </div>
         </div>
       </div>
@@ -358,10 +361,10 @@ export default function LoginPage() {
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div className="fz-logo-text fz-logo-text-light" style={{ fontSize: 22, margin: '0 auto 14px' }}>
-            FREENZY.IO
+            freenzy.io
           </div>
-          <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4 }}>
-            Votre équipe IA disponible 24/7
+          <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4, fontFamily: 'var(--font-display)' }}>
+            Votre équipe <span className="fz-logo-word">IA</span> disponible 24/7
           </p>
         </div>
 
@@ -462,8 +465,8 @@ export default function LoginPage() {
                     background: '#f0fdf4', borderRadius: 12, padding: '12px 16px', marginBottom: 16,
                     border: '1px solid rgba(22,163,74,0.12)',
                   }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#16a34a' }}>
-                      Accès gratuit · 0% de commission
+                    <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#16a34a' }}>
+                      Accès <span className="fz-logo-word">gratuit</span> · 0% de commission
                     </div>
                     <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
                       Payez uniquement les tokens consommés, au prix officiel.
@@ -583,7 +586,7 @@ export default function LoginPage() {
               display: 'flex', alignItems: 'center', gap: 8,
               padding: '8px 12px', borderRadius: 12, background: '#fafafa',
             }}>
-              <span style={{ fontSize: 18 }}>{agent.emoji}</span>
+              <span style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></span>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#374151' }}>{agent.role}</div>
                 <div style={{ fontSize: 10, color: '#9ca3af' }}>{agent.tagline}</div>

@@ -334,7 +334,7 @@ export default function VisioCallPage() {
   if (!agent) {
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
-        <div style={{ fontSize: 15, color: '#6b7280' }}>Agent non trouve</div>
+        <div style={{ fontSize: 15, color: 'var(--text-secondary)' }}>Agent non trouve</div>
         <a href="/client/visio" style={{ fontSize: 13, color: '#5b6cf7', marginTop: 12, display: 'inline-block' }}>Retour a la liste</a>
       </div>
     );
@@ -352,7 +352,7 @@ export default function VisioCallPage() {
         borderBottom: '1px solid #1e293b', flexShrink: 0,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 16 }}>{agent.emoji}</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
           <span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>{agent.name}</span>
           <span className="hide-mobile" style={{ fontSize: 11, color: '#94a3b8' }}>— {agent.role}</span>
         </div>
@@ -374,9 +374,9 @@ export default function VisioCallPage() {
           padding: '10px 16px', background: '#fef2f2', borderBottom: '1px solid #fecaca',
           display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', flexShrink: 0,
         }}>
-          <span style={{ fontSize: 16 }}>🎙️</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>mic</span>
           <span style={{ flex: 1, fontSize: 13, color: '#991b1b', lineHeight: 1.5 }}>{micError}</span>
-          <button onClick={retryMic} style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #dc2626', background: 'white', color: '#dc2626', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={retryMic} style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #dc2626', background: 'var(--bg-elevated)', color: '#dc2626', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
             Reessayer
           </button>
         </div>
@@ -409,7 +409,7 @@ export default function VisioCallPage() {
           {/* Drag handle for mobile */}
           <button className="visio-transcript-handle" onClick={() => setShowTranscript(v => !v)}>
             <div style={{ width: 36, height: 4, background: '#d1d5db', borderRadius: 2, margin: '0 auto' }} />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', marginTop: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', marginTop: 6 }}>
               Transcription {messages.length > 0 ? `(${messages.length})` : ''}
             </span>
           </button>
@@ -422,7 +422,7 @@ export default function VisioCallPage() {
           />
 
           {/* Text input */}
-          <div style={{ padding: '8px 12px', borderTop: '1px solid #e5e7eb', display: 'flex', gap: 8, flexShrink: 0 }}>
+          <div style={{ padding: '8px 12px', borderTop: '1px solid var(--border-primary)', display: 'flex', gap: 8, flexShrink: 0 }}>
             <input
               type="text"
               value={textInput}
@@ -430,7 +430,7 @@ export default function VisioCallPage() {
               onKeyDown={e => { if (e.key === 'Enter') sendTextMessage(); }}
               placeholder={isTextMode ? 'Tapez votre message...' : 'Ou tapez ici...'}
               disabled={processing}
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14, outline: 'none' }}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 14, outline: 'none' }}
             />
             <button
               onClick={sendTextMessage}

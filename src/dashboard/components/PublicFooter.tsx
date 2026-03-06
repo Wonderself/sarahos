@@ -22,7 +22,7 @@ export default function PublicFooter() {
       <div className="lp-footer-band1">
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <span className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 18 }}>
-            FREENZY.IO
+            freenzy.io
           </span>
         </Link>
         <nav className="lp-footer-band1-links">

@@ -56,7 +56,7 @@ export default async function AdminCustomCreationPage() {
       </p>
 
       {/* Stats overview */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 32 }}>
+      <div className="fz-grid-4" style={{ display: 'grid', gap: 12, marginBottom: 32 }}>
         {[
           { label: 'Total demandes', value: String(quotes.length), color: '#1d1d1f' },
           { label: 'Nouvelles', value: String(quotes.filter(q => q.status === 'new').length), color: '#d97706' },

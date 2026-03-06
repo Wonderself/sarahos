@@ -39,7 +39,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
           {/* Breadcrumb */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
             <Link href="/" style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', textDecoration: 'none', fontWeight: 600 }}>
-              FREENZY.IO
+              freenzy.io
             </Link>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>/</span>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
@@ -55,7 +55,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
             )}
           </div>
           <h1 style={{
-            fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 900,
+            fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700,
             color: '#fff', letterSpacing: -1, margin: 0,
           }}>
             {currentPage?.sub ?? 'Documents légaux'}

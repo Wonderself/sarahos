@@ -79,7 +79,7 @@ export default function ResetPasswordPage() {
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div className="fz-logo-text fz-logo-text-light" style={{ fontSize: 22, margin: '0 auto 14px' }}>
-              FREENZY.IO
+              freenzy.io
             </div>
             <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4 }}>
               Votre équipe IA disponible 24/7

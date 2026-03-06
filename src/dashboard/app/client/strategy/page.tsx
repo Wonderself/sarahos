@@ -103,7 +103,7 @@ interface ProjectData {
 const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-marketing',
-    icon: '📊',
+    icon: 'bar_chart',
     color: '#ec4899',
     shortLabel: 'Marketing',
     title: 'Stratégie Marketing',
@@ -121,7 +121,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-finance',
-    icon: '💰',
+    icon: 'savings',
     color: '#f59e0b',
     shortLabel: 'Finance',
     title: 'Stratégie Financière',
@@ -139,7 +139,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-assistante',
-    icon: '📋',
+    icon: 'assignment',
     color: '#5b6cf7',
     shortLabel: 'Organisation',
     title: 'Stratégie Organisation',
@@ -156,7 +156,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-dg',
-    icon: '👩‍💼',
+    icon: 'verified',
     color: '#8b7cf8',
     shortLabel: 'Strategie',
     title: 'Strategie d\'Entreprise',
@@ -174,7 +174,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-dev',
-    icon: '💻',
+    icon: 'terminal',
     color: '#3b82f6',
     shortLabel: 'Tech',
     title: 'Stratégie Technique',
@@ -192,7 +192,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-repondeur',
-    icon: '📞',
+    icon: 'call',
     color: '#22c55e',
     shortLabel: 'Service Client',
     title: 'Stratégie Service Client',
@@ -210,7 +210,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-commercial',
-    icon: '🤝',
+    icon: 'handshake',
     color: '#f97316',
     shortLabel: 'Commercial',
     title: 'Stratégie Commerciale',
@@ -228,7 +228,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-rh',
-    icon: '👥',
+    icon: 'group',
     color: '#14b8a6',
     shortLabel: 'RH',
     title: 'Stratégie RH',
@@ -246,7 +246,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-communication',
-    icon: '📣',
+    icon: 'campaign',
     color: '#8b5cf6',
     shortLabel: 'Communication',
     title: 'Stratégie Communication',
@@ -264,7 +264,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   },
   {
     agentId: 'fz-juridique',
-    icon: '⚖️',
+    icon: 'balance',
     color: '#64748b',
     shortLabel: 'Juridique',
     title: 'Stratégie Juridique',
@@ -286,14 +286,14 @@ const STRATEGY_STORAGE_KEY = 'fz_agent_strategies';
 const PROJECT_STORAGE_KEY = 'fz_plan_attaque';
 
 const DEFAULT_FOLDERS: ActionFolder[] = [
-  { id: 'f-marketing', name: 'Marketing & Comm', icon: '📊', color: '#ec4899', items: [] },
-  { id: 'f-finance', name: 'Finance & Budget', icon: '💰', color: '#f59e0b', items: [] },
-  { id: 'f-tech', name: 'Tech & Produit', icon: '💻', color: '#3b82f6', items: [] },
-  { id: 'f-commercial', name: 'Commercial & Ventes', icon: '🤝', color: '#f97316', items: [] },
-  { id: 'f-rh', name: 'RH & Recrutement', icon: '👥', color: '#14b8a6', items: [] },
-  { id: 'f-juridique', name: 'Juridique & Admin', icon: '⚖️', color: '#64748b', items: [] },
-  { id: 'f-operations', name: 'Opérations', icon: '⚙️', color: '#8b5cf6', items: [] },
-  { id: 'f-other', name: 'Divers', icon: '📁', color: '#5b6cf7', items: [] },
+  { id: 'f-marketing', name: 'Marketing & Comm', icon: 'bar_chart', color: '#ec4899', items: [] },
+  { id: 'f-finance', name: 'Finance & Budget', icon: 'savings', color: '#f59e0b', items: [] },
+  { id: 'f-tech', name: 'Tech & Produit', icon: 'terminal', color: '#3b82f6', items: [] },
+  { id: 'f-commercial', name: 'Commercial & Ventes', icon: 'handshake', color: '#f97316', items: [] },
+  { id: 'f-rh', name: 'RH & Recrutement', icon: 'group', color: '#14b8a6', items: [] },
+  { id: 'f-juridique', name: 'Juridique & Admin', icon: 'balance', color: '#64748b', items: [] },
+  { id: 'f-operations', name: 'Opérations', icon: 'settings', color: '#8b5cf6', items: [] },
+  { id: 'f-other', name: 'Divers', icon: 'folder', color: '#5b6cf7', items: [] },
 ];
 
 /* ═══════════════════════════════════════════
@@ -673,11 +673,11 @@ export default function StrategyPage() {
   const progressPct = totalActions > 0 ? Math.round((doneActions / totalActions) * 100) : 0;
 
   const TABS = [
-    { id: 'dashboard' as const, label: 'Tableau de bord', icon: '📊' },
-    { id: 'strategies' as const, label: 'Stratégies', icon: '🎯' },
-    { id: 'folders' as const, label: 'Dossiers', icon: '📂' },
-    { id: 'documents' as const, label: 'Documents', icon: '📄' },
-    { id: 'history' as const, label: 'Historique IA', icon: '💬' },
+    { id: 'dashboard' as const, label: 'Tableau de bord', icon: 'bar_chart' },
+    { id: 'strategies' as const, label: 'Stratégies', icon: 'target' },
+    { id: 'folders' as const, label: 'Dossiers', icon: 'folder' },
+    { id: 'documents' as const, label: 'Documents', icon: 'description' },
+    { id: 'history' as const, label: 'Historique IA', icon: 'chat' },
   ];
 
   return (
@@ -686,7 +686,7 @@ export default function StrategyPage() {
       <div className="page-header">
         <h1 className="page-title">Plan d&apos;Attaque</h1>
         <p className="page-subtitle">
-          Votre centre de commandement. Définissez votre objectif, pilotez vos stratégies, organisez vos actions.
+          Votre centre de commandement. Définissez votre objectif, pilotez vos <span className="fz-logo-word">stratégies</span>, organisez vos actions.
         </p>
       </div>
 
@@ -772,7 +772,7 @@ export default function StrategyPage() {
         ) : (
           <div>
             <div className="flex items-center gap-8 mb-4">
-              <span style={{ fontSize: 20 }}>🎯</span>
+              <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>target</span></span>
               <div className="text-lg font-bold" style={{ flex: 1 }}>{objective.title}</div>
               <button
                 onClick={() => setEditingObjective(true)}
@@ -786,7 +786,7 @@ export default function StrategyPage() {
             <div className="flex gap-8 flex-wrap text-xs">
               {objective.deadline && (
                 <span className="badge" style={{ background: 'var(--bg-primary)' }}>
-                  📅 {new Date(objective.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>calendar_month</span> {new Date(objective.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </span>
               )}
               <span className="badge" style={{
@@ -815,7 +815,7 @@ export default function StrategyPage() {
               marginBottom: -2, fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
             }}
           >
-            {tab.icon} {tab.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{tab.icon}</span> {tab.label}
           </button>
         ))}
       </div>
@@ -870,7 +870,7 @@ export default function StrategyPage() {
                   const pct = Math.round((done / folder.items.length) * 100);
                   return (
                     <div key={folder.id} className="flex items-center gap-8">
-                      <span style={{ fontSize: 16, width: 24 }}>{folder.icon}</span>
+                      <span style={{ fontSize: 16, width: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{folder.icon}</span></span>
                       <span className="text-sm font-semibold" style={{ width: 140, flexShrink: 0 }}>{folder.name}</span>
                       <div style={{ flex: 1, height: 6, background: 'var(--bg-secondary)', borderRadius: 3 }}>
                         <div style={{ height: '100%', width: `${pct}%`, background: folder.color, borderRadius: 3, transition: 'width 0.3s' }} />
@@ -886,13 +886,13 @@ export default function StrategyPage() {
           {/* Synthesis section */}
           <div className="card" style={{ padding: 20 }}>
             <div className="flex items-center gap-8 mb-12">
-              <div className="text-md font-bold" style={{ flex: 1 }}>Synthèse IA du projet</div>
+              <div className="text-md font-bold" style={{ flex: 1 }}>Synthèse <span className="fz-logo-word">IA</span> du projet</div>
               <button
                 className="btn btn-primary btn-sm"
                 onClick={generateSynthesis}
                 disabled={synthesizing}
               >
-                {synthesizing ? 'Analyse en cours...' : '🧠 Générer la synthèse'}
+                {synthesizing ? 'Analyse en cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>psychology</span> Générer la synthèse</>}
               </button>
             </div>
             {synthesis ? (
@@ -943,7 +943,7 @@ export default function StrategyPage() {
                     fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                   }}
                 >
-                  <span>{strat.icon}</span>
+                  <span><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{strat.icon}</span></span>
                   {strat.shortLabel}
                   {hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--success)', display: 'inline-block' }} />}
                   {hasSaved && !hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--warning)', display: 'inline-block' }} />}
@@ -954,7 +954,7 @@ export default function StrategyPage() {
 
           {/* Reassurance */}
           <div className="alert alert-info mb-16">
-            <span className="text-base">💡</span>{' '}
+            <span className="text-base"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>lightbulb</span></span>{' '}
             <span className="text-md">{activeStrategy?.reassurance}</span>
           </div>
 
@@ -964,7 +964,7 @@ export default function StrategyPage() {
           {strategyViewMode === 'form' && activeStrategy && (
             <div className="card p-20">
               <div className="flex items-center gap-8 mb-16">
-                <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
+                <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span></span>
                 <div>
                   <div className="text-lg font-bold">{activeStrategy.title}</div>
                   <div className="text-sm text-muted">{activeStrategy.subtitle}</div>
@@ -1016,7 +1016,7 @@ export default function StrategyPage() {
                   {generating ? (
                     <span className="animate-pulse">{agent(activeStrategy.agentId).name} analyse et crée votre plan...</span>
                   ) : (
-                    <>🎯 Générer mon plan d&apos;action</>
+                    <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>target</span> Générer mon plan d&apos;action</>
                   )}
                 </button>
                 {currentPlan && (
@@ -1035,18 +1035,18 @@ export default function StrategyPage() {
               <div className="flex gap-8 flex-wrap mb-16">
                 <button className="btn btn-ghost btn-sm" onClick={() => setStrategyViewMode('form')}>← Modifier mes réponses</button>
                 <div style={{ flex: 1 }} />
-                <button className="btn btn-ghost btn-sm" onClick={copyPlan}>{copied ? '✓ Copié !' : '📋 Copier'}</button>
+                <button className="btn btn-ghost btn-sm" onClick={copyPlan}>{copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Copié !</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Copier</>}</button>
                 <button
                   className="btn btn-sm"
                   onClick={() => { setStrategyViewMode('form'); setTimeout(() => generatePlan(), 100); }}
                   style={{ background: activeStrategy.color, color: 'white', borderColor: activeStrategy.color }}
                 >
-                  🔄 Régénérer
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>refresh</span> Régénérer
                 </button>
               </div>
               <div className="card p-20">
                 <div className="flex items-center gap-8 mb-16" style={{ paddingBottom: 16, borderBottom: '1px solid var(--border-primary)' }}>
-                  <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
+                  <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span></span>
                   <div>
                     <div className="text-lg font-bold">{activeStrategy.title}</div>
                     <div className="text-xs text-muted">
@@ -1087,7 +1087,7 @@ export default function StrategyPage() {
                       borderBottom: isExpanded ? `1px solid ${folder.color}22` : 'none',
                     }}
                   >
-                    <span style={{ fontSize: 20 }}>{folder.icon}</span>
+                    <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{folder.icon}</span></span>
                     <div style={{ flex: 1, textAlign: 'left' }}>
                       <div className="text-md font-bold">{folder.name}</div>
                       <div className="text-xs text-muted">{total} action{total > 1 ? 's' : ''} • {done} terminée{done > 1 ? 's' : ''}</div>
@@ -1120,7 +1120,7 @@ export default function StrategyPage() {
                               fontSize: 11, cursor: 'pointer', flexShrink: 0,
                             }}
                           >
-                            {item.status === 'done' ? '✓' : item.status === 'doing' ? '⏳' : ''}
+                            {item.status === 'done' ? <span className="material-symbols-rounded" style={{ fontSize: 11 }}>check</span> : item.status === 'doing' ? <span className="material-symbols-rounded" style={{ fontSize: 11 }}>hourglass_empty</span> : ''}
                           </button>
                           <span className="text-sm" style={{
                             flex: 1,
@@ -1219,7 +1219,7 @@ export default function StrategyPage() {
           {/* Document list */}
           {documents.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📄</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>description</span></div>
               <div className="text-md font-semibold mb-4">Aucun document</div>
               <p className="text-sm text-muted">Ajoutez des documents pour les analyser avec l&apos;IA et enrichir votre plan d&apos;attaque.</p>
             </div>
@@ -1228,7 +1228,7 @@ export default function StrategyPage() {
               {documents.map(doc => (
                 <div key={doc.id} className="card" style={{ padding: 16 }}>
                   <div className="flex items-center gap-8 mb-8">
-                    <span style={{ fontSize: 20 }}>📄</span>
+                    <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>description</span></span>
                     <div style={{ flex: 1 }}>
                       <div className="text-md font-bold">{doc.name}</div>
                       <div className="text-xs text-muted">
@@ -1241,7 +1241,7 @@ export default function StrategyPage() {
                       onClick={() => analyzeDocument(doc)}
                       disabled={analyzing}
                     >
-                      {analyzing ? '...' : '🧠 Analyser'}
+                      {analyzing ? '...' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>psychology</span> Analyser</>}
                     </button>
                     <button
                       onClick={() => deleteDocument(doc.id)}
@@ -1271,12 +1271,12 @@ export default function StrategyPage() {
             <div className="text-md font-bold mb-12">Modèles à télécharger</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
               {[
-                { icon: '📋', name: 'Brief projet', desc: 'Template de brief structuré' },
-                { icon: '📊', name: 'Business plan', desc: 'Structure de business plan' },
-                { icon: '📅', name: 'Planning projet', desc: 'Modèle de planning Gantt' },
-                { icon: '💰', name: 'Budget prévisionnel', desc: 'Tableau de budget type' },
-                { icon: '🎯', name: 'OKR / Objectifs', desc: 'Matrice objectifs & résultats' },
-                { icon: '📝', name: 'Compte-rendu', desc: 'Template réunion / CR' },
+                { icon: 'assignment', name: 'Brief projet', desc: 'Template de brief structuré' },
+                { icon: 'bar_chart', name: 'Business plan', desc: 'Structure de business plan' },
+                { icon: 'calendar_month', name: 'Planning projet', desc: 'Modèle de planning Gantt' },
+                { icon: 'savings', name: 'Budget prévisionnel', desc: 'Tableau de budget type' },
+                { icon: 'target', name: 'OKR / Objectifs', desc: 'Matrice objectifs & résultats' },
+                { icon: 'edit_note', name: 'Compte-rendu', desc: 'Template réunion / CR' },
               ].map(tpl => (
                 <button
                   key={tpl.name}
@@ -1288,7 +1288,7 @@ export default function StrategyPage() {
                   className="card"
                   style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: '1px solid var(--border-secondary)', background: 'var(--bg-secondary)', fontFamily: 'var(--font-sans)' }}
                 >
-                  <span style={{ fontSize: 20 }}>{tpl.icon}</span>
+                  <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{tpl.icon}</span></span>
                   <div className="text-sm font-bold mt-4">{tpl.name}</div>
                   <div className="text-xs text-muted">{tpl.desc}</div>
                 </button>
@@ -1309,7 +1309,7 @@ export default function StrategyPage() {
 
           {conversations.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>chat</span></div>
               <div className="text-md font-semibold mb-4">Aucun historique</div>
               <p className="text-sm text-muted">
                 Les plans générés dans l&apos;onglet Stratégies apparaîtront ici automatiquement.
@@ -1320,7 +1320,7 @@ export default function StrategyPage() {
               {conversations.map((conv, i) => (
                 <div key={i} className="card" style={{ padding: 16 }}>
                   <div className="flex items-center gap-8 mb-6">
-                    <span style={{ fontSize: 16 }}>🤖</span>
+                    <span style={{ fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>smart_toy</span></span>
                     <div className="text-sm font-bold" style={{ flex: 1 }}>{conv.summary}</div>
                     <span className="text-xs text-muted">
                       {new Date(conv.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}

@@ -30,17 +30,17 @@ export const metadata: Metadata = {
 };
 
 const ACTION_COSTS = [
-  { icon: '💬', action: 'Chat avec agent IA', model: 'Claude Haiku', credits: 0.5, per50: '100 chats', color: '#22c55e' },
-  { icon: '✉️', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#5b6cf7' },
-  { icon: '📱', action: 'Post réseaux sociaux', model: 'Claude Haiku', credits: 0.8, per50: '62 posts', color: '#3b82f6' },
-  { icon: '📄', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#5b6cf7' },
-  { icon: '📞', action: 'Appel répondeur IA', model: 'Twilio + Haiku', credits: 5, per50: '10 appels', color: '#f97316' },
-  { icon: '📤', action: 'Appel sortant IA', model: 'Twilio + Sonnet', credits: 16, per50: '3 appels', color: '#f97316' },
-  { icon: '💬', action: 'WhatsApp Business IA', model: 'Claude Haiku', credits: 0.4, per50: '125 msgs', color: '#22c55e' },
-  { icon: '🗣️', action: 'Message vocal TTS', model: 'ElevenLabs', credits: 4.5, per50: '11 msgs', color: '#f59e0b' },
-  { icon: '🖼️', action: 'Image IA créée', model: 'DALL-E · Flux', credits: 7, per50: '7 images', color: '#9333ea' },
-  { icon: '🎬', action: 'Clip vidéo 30s', model: 'Runway ML', credits: 40, per50: '1 clip', color: '#ec4899' },
-  { icon: '🤝', action: 'Réunion IA structurée', model: 'Claude Opus', credits: 8, per50: '6 réunions', color: '#9333ea' },
+  { icon: 'chat', action: 'Chat avec agent IA', model: 'Claude Haiku', credits: 0.5, per50: '100 chats', color: '#22c55e' },
+  { icon: 'mail', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#5b6cf7' },
+  { icon: 'phone_iphone', action: 'Post reseaux sociaux', model: 'Claude Haiku', credits: 0.8, per50: '62 posts', color: '#3b82f6' },
+  { icon: 'description', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#5b6cf7' },
+  { icon: 'call', action: 'Appel repondeur IA', model: 'Twilio + Haiku', credits: 5, per50: '10 appels', color: '#f97316' },
+  { icon: 'outbox', action: 'Appel sortant IA', model: 'Twilio + Sonnet', credits: 16, per50: '3 appels', color: '#f97316' },
+  { icon: 'chat', action: 'WhatsApp Business IA', model: 'Claude Haiku', credits: 0.4, per50: '125 msgs', color: '#22c55e' },
+  { icon: 'record_voice_over', action: 'Message vocal TTS', model: 'ElevenLabs', credits: 4.5, per50: '11 msgs', color: '#f59e0b' },
+  { icon: 'image', action: 'Image IA creee', model: 'DALL-E / Flux', credits: 7, per50: '7 images', color: '#9333ea' },
+  { icon: 'movie', action: 'Clip video 30s', model: 'Runway ML', credits: 40, per50: '1 clip', color: '#ec4899' },
+  { icon: 'handshake', action: 'Reunion IA structuree', model: 'Claude Opus', credits: 8, per50: '6 reunions', color: '#9333ea' },
 ];
 
 const DEPOSIT_OPTIONS = [
@@ -76,8 +76,8 @@ export default function TarifsAPIPage() {
 
         {/* Header */}
         <div>
-          <p style={{ fontSize: 11, fontWeight: 800, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 8 }}>Freenzy.io</p>
-          <h1 style={{ fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 900, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 10 }}>
+          <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 8 }}>Freenzy.io</p>
+          <h1 style={{ fontSize: 'clamp(28px, 5vw, 42px)', fontFamily: 'var(--font-display)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 10 }}>
             Tarifs API
           </h1>
           <p style={{ fontSize: 15, color: '#6b7280', maxWidth: 560, lineHeight: 1.6 }}>
@@ -95,7 +95,7 @@ export default function TarifsAPIPage() {
               { n: '0%', sub: 'commission', desc: 'Prix officiel fournisseur' },
             ].map((item, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#a5b4fc', letterSpacing: -1 }}>{item.n}</div>
+                <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', fontWeight: 700, color: '#a5b4fc', letterSpacing: -1 }}>{item.n}</div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{item.sub}</div>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 4 }}>{item.desc}</div>
               </div>
@@ -128,7 +128,7 @@ export default function TarifsAPIPage() {
                   <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
                     <td style={{ ...cell }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span>{item.icon}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span>
                         <span style={{ color: '#1d1d1f' }}>{item.action}</span>
                       </span>
                     </td>
@@ -203,26 +203,26 @@ export default function TarifsAPIPage() {
                     {opt.label}
                   </div>
                 )}
-                <div style={{ fontSize: 22, fontWeight: 900, color: opt.label ? '#5b6cf7' : '#1d1d1f' }}>{opt.eur}€</div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: opt.label ? '#5b6cf7' : '#1d1d1f' }}>{opt.eur}€</div>
                 <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{opt.credits.toLocaleString()} crédits</div>
                 <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>≈ 1 cr / {(opt.eur / opt.credits * 100).toFixed(1)}€</div>
               </div>
             ))}
           </div>
           <div style={{ marginTop: 14, padding: '14px 16px', background: '#f7f7f7', borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 20 }}>📞</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>call</span>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f' }}>Ligne téléphonique IA (optionnel)</div>
               <div style={{ fontSize: 12, color: '#6b7280' }}>Numéro dédié via Twilio · activable depuis le dashboard · +1€/mois</div>
             </div>
-            <div style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 900, color: '#22c55e', whiteSpace: 'nowrap' }}>+1€/mois</div>
+            <div style={{ marginLeft: 'auto', fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#22c55e', whiteSpace: 'nowrap' }}>+1€/mois</div>
           </div>
         </div>
 
         {/* Parrainage */}
         <div style={{ background: '#fff', borderRadius: 14, padding: '24px', border: '1px solid #e5e5e7' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 28 }}>🎁</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 28 }}>redeem</span>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 14, fontWeight: 800, color: '#1d1d1f', marginBottom: 4 }}>Programme de parrainage</div>
               <div style={{ fontSize: 13, color: '#6b7280' }}>

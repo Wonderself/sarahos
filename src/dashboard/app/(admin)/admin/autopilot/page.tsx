@@ -1,8 +1,8 @@
 import { api } from '../../../../lib/api-client';
 import { ApproveButton, DenyButton, RollbackButton, TriggerAuditButton } from './AutopilotActions';
 
-const SEVERITY_EMOJI: Record<string, string> = {
-  urgent: '🔴', critical: '🟠', warning: '🟡', info: '🔵',
+const SEVERITY_ICON: Record<string, string> = {
+  urgent: 'error', critical: 'warning', warning: 'info', info: 'help',
 };
 const STATUS_LABEL: Record<string, string> = {
   draft: 'Brouillon', pending_review: 'En attente', approved: 'Approuvé', denied: 'Refusé',
@@ -94,7 +94,7 @@ export default async function AutopilotPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span>{SEVERITY_EMOJI[String(p.severity)] ?? '⚪'}</span>
+                      <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{SEVERITY_ICON[String(p.severity)] ?? 'circle'}</span>
                       <span className="text-xs text-gray-500 uppercase font-medium">{String(p.category)}</span>
                       <span className="text-xs text-gray-600">•</span>
                       <span className="text-xs text-gray-500">{String(p.agentName)}</span>
@@ -142,7 +142,7 @@ export default async function AutopilotPage() {
               <tbody>
                 {recentProposals.slice(0, 20).map((p) => (
                   <tr key={String(p.id)} className="border-b border-gray-800 hover:bg-gray-800/50">
-                    <td className="py-3 px-4">{SEVERITY_EMOJI[String(p.severity)] ?? '⚪'}</td>
+                    <td className="py-3 px-4"><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{SEVERITY_ICON[String(p.severity)] ?? 'circle'}</span></td>
                     <td className="py-3 px-4 text-white max-w-xs truncate">{String(p.title)}</td>
                     <td className="py-3 px-4 text-gray-400 text-xs">{String(p.agentName)}</td>
                     <td className="py-3 px-4">
@@ -194,7 +194,7 @@ export default async function AutopilotPage() {
                   <div className="px-4 pb-4 space-y-2">
                     {findings.map((f, i) => (
                       <div key={i} className="flex items-start gap-2 text-sm">
-                        <span>{SEVERITY_EMOJI[String(f.severity)] ?? '⚪'}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{SEVERITY_ICON[String(f.severity)] ?? 'circle'}</span>
                         <div>
                           <span className="text-white">{String(f.title)}</span>
                           <p className="text-gray-500 text-xs">{String(f.description)}</p>

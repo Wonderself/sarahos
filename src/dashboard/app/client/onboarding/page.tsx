@@ -70,13 +70,13 @@ const defaultProfile: CompanyProfile = {
 };
 
 const STEPS = [
-  { id: 1, title: 'Votre Entreprise', subtitle: 'Qui êtes-vous ?', icon: '🏢' },
-  { id: 2, title: 'Mission & Vision', subtitle: 'Où allez-vous ?', icon: '🎯' },
-  { id: 3, title: 'Situation Actuelle', subtitle: 'Où en êtes-vous ?', icon: '📊' },
-  { id: 4, title: 'Objectifs', subtitle: 'Que voulez-vous atteindre ?', icon: '🚀' },
-  { id: 5, title: 'Quotidien', subtitle: 'Comment travaillez-vous ?', icon: '⚙️' },
-  { id: 6, title: 'Besoins IA', subtitle: 'Comment Freenzy peut aider ?', icon: '🤖' },
-  { id: 7, title: 'Personnalité', subtitle: 'Comment Freenzy doit communiquer ?', icon: '🎨' },
+  { id: 1, title: 'Votre Entreprise', subtitle: 'Qui êtes-vous ?', icon: 'business' },
+  { id: 2, title: 'Mission & Vision', subtitle: 'Où allez-vous ?', icon: 'target' },
+  { id: 3, title: 'Situation Actuelle', subtitle: 'Où en êtes-vous ?', icon: 'bar_chart' },
+  { id: 4, title: 'Objectifs', subtitle: 'Que voulez-vous atteindre ?', icon: 'rocket_launch' },
+  { id: 5, title: 'Quotidien', subtitle: 'Comment travaillez-vous ?', icon: 'settings' },
+  { id: 6, title: 'Besoins IA', subtitle: 'Comment Freenzy peut vous aider ?', icon: 'smart_toy' },
+  { id: 7, title: 'Personnalité', subtitle: 'Comment Freenzy doit communiquer ?', icon: 'palette' },
 ];
 
 const AI_PRIORITIES = [
@@ -163,9 +163,14 @@ export default function OnboardingPage() {
       const res = await fetch(`/api/company?token=${encodeURIComponent(session.token)}`);
       if (res.ok) {
         const data = await res.json();
-        if (data.profile) setProfile(p => ({ ...p, ...data.profile }));
+        if (data.profile) {
+          setProfile(p => ({ ...p, ...data.profile }));
+          try { localStorage.setItem('fz_company_profile', JSON.stringify(data.profile)); } catch { /* */ }
+        }
       }
-    } catch { /* */ }
+    } catch {
+      setAnalyzeError('Impossible de charger votre profil. Vérifiez votre connexion.');
+    }
     setLoaded(true);
     // If profile already has data, go to step 1
     if (profile.companyName) setStep(1);
@@ -198,6 +203,8 @@ export default function OnboardingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: session.token, profile: toSave }),
       });
+      // Persist company profile locally for briefing/dashboard/documents
+      try { localStorage.setItem('fz_company_profile', JSON.stringify(toSave)); } catch { /* */ }
       if (complete) window.location.href = '/client/chat';
     } catch (e) {
       showError(e instanceof Error ? e.message : 'Erreur de sauvegarde du profil');
@@ -278,9 +285,9 @@ export default function OnboardingPage() {
     return (
       <div style={{ maxWidth: 560, margin: '60px auto', padding: '0 16px' }}>
         <div className="text-center mb-24">
-          <div style={{ fontSize: 48, marginBottom: 16 }}>👋</div>
-          <h1 className="page-title" style={{ marginBottom: 8 }}>Bienvenue sur Freenzy.io</h1>
-          <p className="page-subtitle text-muted">Vous utilisez Freenzy.io pour :</p>
+          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>waving_hand</span></div>
+          <h1 className="page-title" style={{ marginBottom: 8 }}>Bienvenue sur <span className="fz-logo-word">Freenzy.io</span></h1>
+          <p className="page-subtitle text-muted">Vous utilisez <span className="fz-logo-word">Freenzy.io</span> pour :</p>
         </div>
         <div className="grid grid-2" style={{ gap: 16, marginBottom: 32 }}>
           <button
@@ -294,7 +301,7 @@ export default function OnboardingPage() {
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-muted)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-primary)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
           >
-            <div style={{ fontSize: 40, marginBottom: 12 }}>👤</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>person</span></div>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Usage personnel</div>
             <div className="text-sm text-muted">Productivité, projets perso, assistants IA</div>
           </button>
@@ -309,7 +316,7 @@ export default function OnboardingPage() {
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-muted)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-primary)'; e.currentTarget.style.background = 'var(--bg-secondary)'; }}
           >
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🏢</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>business</span></div>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Mon entreprise</div>
             <div className="text-sm text-muted">Équipe, clients, automatisation business</div>
           </button>
@@ -333,18 +340,18 @@ export default function OnboardingPage() {
             Choisissez la méthode qui vous convient le mieux pour commencer. Plus vous fournissez de contexte, mieux vos agents pourront vous aider.
           </p>
           <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: '#f0fdf4', border: '1px solid #bbf7d0', fontSize: 12, color: '#166534', lineHeight: 1.5 }}>
-            🔒 <strong>Confidentialité garantie :</strong> Ces informations sont strictement privées et ne seront jamais partagées avec des tiers. Le Répondeur Intelligent et les agents externes n&apos;ont aucun accès à ces données.
+            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>lock</span> <strong>Confidentialité garantie :</strong> Ces informations sont strictement privées et ne seront jamais partagées avec des tiers. Le Répondeur Intelligent et les agents externes n&apos;ont aucun accès à ces données.
           </div>
         </div>
 
         {/* Option 1: Quick Analysis */}
         <div className="card p-24 mb-16" style={{ borderLeft: '4px solid var(--accent)' }}>
           <div className="flex items-center gap-12 mb-16">
-            <span style={{ fontSize: 28 }}>⚡</span>
+            <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>bolt</span></span>
             <div>
               <div className="text-xl font-bold">Remplissage express</div>
               <div className="text-md text-tertiary">
-                Freenzy analyse votre site web et pré-remplit le formulaire (~2-3 crédits)
+                <span className="fz-logo-word">Freenzy</span> analyse votre site web et pré-remplit le formulaire (~2-3 crédits)
               </div>
             </div>
           </div>
@@ -409,7 +416,7 @@ export default function OnboardingPage() {
         <div className="card card-lift text-center pointer p-24"
           onClick={() => setStep(1)}>
           <div className="flex items-center flex-center gap-12">
-            <span style={{ fontSize: 24 }}>📝</span>
+            <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>edit_note</span></span>
             <div style={{ textAlign: 'left' }}>
               <div className="text-lg font-bold">Remplir manuellement</div>
               <div className="text-md text-tertiary">
@@ -465,7 +472,7 @@ export default function OnboardingPage() {
               fontFamily: 'var(--font-sans)',
             }}
           >
-            {compactMode ? '📋 Vue détaillée' : '⚡ Vue rapide'}
+            {compactMode ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>assignment</span> Vue détaillée</> : <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>bolt</span> Vue rapide</>}
           </button>
         </div>
       </div>
@@ -496,7 +503,7 @@ export default function OnboardingPage() {
               display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
             }}
           >
-            <span>{s.icon}</span> {s.title}
+            <span><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{s.icon}</span></span> {s.title}
           </button>
         ))}
       </div>
@@ -504,7 +511,7 @@ export default function OnboardingPage() {
       {/* Form Content */}
       <div className="card p-24">
         <div className="text-xl font-bold mb-4">
-          {STEPS[step - 1].icon} {STEPS[step - 1].title}
+          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{STEPS[step - 1].icon}</span> {STEPS[step - 1].title}
         </div>
         {!compactMode && (
           <div className="text-md text-tertiary mb-24">
@@ -676,7 +683,7 @@ export default function OnboardingPage() {
         border: '1px solid #25d36622',
       }}>
         <div className="flex items-center gap-8 mb-12">
-          <span style={{ fontSize: 24 }}>📱</span>
+          <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>phone_iphone</span></span>
           <div>
             <div className="text-lg font-bold">Connectez WhatsApp <span className="text-sm font-medium text-muted">(optionnel)</span></div>
             <div className="text-sm text-tertiary" style={{ lineHeight: 1.5 }}>

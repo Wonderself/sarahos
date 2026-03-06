@@ -64,7 +64,7 @@ export default async function MemoryPage() {
       ) : (
         <div className="card">
           <div className="empty-state">
-            <div className="empty-state-icon">🧠</div>
+            <div className="empty-state-icon"><span className="material-symbols-rounded" style={{ fontSize: 32 }}>psychology</span></div>
             <div className="empty-state-text">Aucun souvenir enregistre</div>
             <div className="empty-state-sub">Les agents stockent automatiquement leurs apprentissages via POST /memory/store</div>
           </div>

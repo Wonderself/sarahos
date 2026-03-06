@@ -49,35 +49,35 @@ interface TestResult {
 // ─── Constants ───
 
 const ALARM_MODES = [
-  { id: 'doux',       emoji: '\u{1F338}', label: 'Doux',       color: '#93c5fd', desc: 'Un reveil tout en douceur pour commencer la journee sereinement' },
-  { id: 'dur',        emoji: '\u{1F525}', label: 'Dur',        color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
-  { id: 'sympa',      emoji: '\u{1F60A}', label: 'Sympa',      color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
-  { id: 'drole',      emoji: '\u{1F602}', label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
-  { id: 'fou',        emoji: '\u{1F92A}', label: 'Fou',        color: '#8b7cf8', desc: 'Un reveil completement delirant et imprevisible' },
-  { id: 'motivant',   emoji: '\u{1F4AA}', label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
-  { id: 'zen',        emoji: '\u{1F9D8}', label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
-  { id: 'energique',  emoji: '\u26A1',    label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },
+  { id: 'doux',       icon: 'spa',              label: 'Doux',       color: '#93c5fd', desc: 'Un reveil tout en douceur pour commencer la journee sereinement' },
+  { id: 'dur',        icon: 'local_fire_department', label: 'Dur',   color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
+  { id: 'sympa',      icon: 'sentiment_satisfied', label: 'Sympa',   color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
+  { id: 'drole',      icon: 'mood',              label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
+  { id: 'fou',        icon: 'psychology_alt',    label: 'Fou',        color: '#8b7cf8', desc: 'Un reveil completement delirant et imprevisible' },
+  { id: 'motivant',   icon: 'fitness_center',    label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
+  { id: 'zen',        icon: 'self_improvement',  label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
+  { id: 'energique',  icon: 'bolt',              label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },
 ];
 
 const RUBRICS = [
-  { id: 'bonne_humeur',       emoji: '\u{1F308}', label: 'Bonne humeur' },
-  { id: 'meteo',              emoji: '\u2600\uFE0F', label: 'Meteo' },
-  { id: 'astrologie',         emoji: '\u2648',    label: 'Astrologie' },
-  { id: 'annonce_perso',      emoji: '\u{1F4E2}', label: 'Annonce personnalisee' },
-  { id: 'energies_jour',      emoji: '\u2728',    label: 'Energies du jour' },
-  { id: 'news',               emoji: '\u{1F4F0}', label: 'Actualites' },
-  { id: 'citation',           emoji: '\u{1F48E}', label: 'Citation' },
-  { id: 'conseil_bien_etre',  emoji: '\u{1F9E0}', label: 'Conseil bien-etre' },
-  { id: 'resume_agenda',      emoji: '\u{1F4C5}', label: 'Resume de l\'agenda' },
-  { id: 'rappel_objectifs',   emoji: '\u{1F3AF}', label: 'Rappel objectifs' },
-  { id: 'blague',             emoji: '\u{1F0CF}', label: 'Blague du jour' },
-  { id: 'horoscope_chinois',  emoji: '\u{1F409}', label: 'Horoscope chinois' },
-  { id: 'gratitude',          emoji: '\u{1F64F}', label: 'Gratitude' },
-  { id: 'fun_fact',           emoji: '\u{1F9EA}', label: 'Fun fact' },
-  { id: 'musique_suggeree',   emoji: '\u{1F3B5}', label: 'Musique suggeree' },
-  { id: 'defi_jour',          emoji: '\u{1F3C6}', label: 'Defi du jour' },
-  { id: 'anecdote_histoire',  emoji: '\u{1F4DC}', label: 'Anecdote historique' },
-  { id: 'conseil_productivite', emoji: '\u23F1\uFE0F', label: 'Conseil productivite' },
+  { id: 'bonne_humeur',       icon: 'mood',              label: 'Bonne humeur' },
+  { id: 'meteo',              icon: 'partly_cloudy_day',  label: 'Meteo' },
+  { id: 'astrologie',         icon: 'stars',             label: 'Astrologie' },
+  { id: 'annonce_perso',      icon: 'campaign',          label: 'Annonce personnalisee' },
+  { id: 'energies_jour',      icon: 'auto_awesome',      label: 'Energies du jour' },
+  { id: 'news',               icon: 'newspaper',         label: 'Actualites' },
+  { id: 'citation',           icon: 'format_quote',      label: 'Citation' },
+  { id: 'conseil_bien_etre',  icon: 'psychology',        label: 'Conseil bien-etre' },
+  { id: 'resume_agenda',      icon: 'calendar_month',    label: 'Resume de l\'agenda' },
+  { id: 'rappel_objectifs',   icon: 'target',            label: 'Rappel objectifs' },
+  { id: 'blague',             icon: 'sentiment_very_satisfied', label: 'Blague du jour' },
+  { id: 'horoscope_chinois',  icon: 'pets',              label: 'Horoscope chinois' },
+  { id: 'gratitude',          icon: 'volunteer_activism', label: 'Gratitude' },
+  { id: 'fun_fact',           icon: 'science',           label: 'Fun fact' },
+  { id: 'musique_suggeree',   icon: 'music_note',        label: 'Musique suggeree' },
+  { id: 'defi_jour',          icon: 'emoji_events',      label: 'Defi du jour' },
+  { id: 'anecdote_histoire',  icon: 'history_edu',       label: 'Anecdote historique' },
+  { id: 'conseil_productivite', icon: 'timer',           label: 'Conseil productivite' },
 ];
 
 const DAY_LABELS = [
@@ -99,54 +99,54 @@ const ROUTINE_ITEMS = [
 ];
 
 const QUICK_ACTIONS = [
-  { icon: '\u2600\uFE0F', label: 'Briefing', href: '/client/briefing' },
-  { icon: '\u{1F4DE}', label: 'Repondeur', href: '/client/repondeur' },
-  { icon: '\u{1F4AC}', label: 'Discutez', href: '/client/chat' },
-  { icon: '\u{1F4CA}', label: 'Dashboard', href: '/client/dashboard' },
+  { icon: 'wb_sunny', label: 'Briefing', href: '/client/briefing' },
+  { icon: 'call', label: 'Repondeur', href: '/client/repondeur' },
+  { icon: 'chat', label: 'Discutez', href: '/client/chat' },
+  { icon: 'bar_chart', label: 'Dashboard', href: '/client/dashboard' },
 ];
 
 // ─── Content Modules ───
 
 const CONTENT_MODULES = [
-  { id: 'meteo' as const, emoji: '🌤️', label: 'Meteo', desc: 'Previsions, temperature, suggestion vestimentaire', seconds: 30 },
-  { id: 'astrologie' as const, emoji: '♈', label: 'Astrologie', desc: 'Horoscope, numerologie, energies du jour', seconds: 45 },
-  { id: 'briefing' as const, emoji: '📰', label: 'Briefing du matin', desc: 'Actualites par categorie personnalisee', seconds: 60 },
-  { id: 'agenda' as const, emoji: '📅', label: 'Agenda', desc: 'Evenements du jour, deadlines a venir', seconds: 30 },
-  { id: 'bienEtre' as const, emoji: '🧘', label: 'Bien-etre', desc: 'Meditation, exercice, suivi sommeil', seconds: 40 },
-  { id: 'motivation' as const, emoji: '💪', label: 'Motivation', desc: 'Citation, objectifs, gratitude, defi', seconds: 35 },
-  { id: 'finance' as const, emoji: '📈', label: 'Finance', desc: 'Marches, crypto, alertes portfolio', seconds: 25 },
-  { id: 'social' as const, emoji: '👥', label: 'Social', desc: 'Anniversaires, messages, reseaux', seconds: 20 },
+  { id: 'meteo' as const, icon: 'partly_cloudy_day', label: 'Meteo', desc: 'Previsions, temperature, suggestion vestimentaire', seconds: 30 },
+  { id: 'astrologie' as const, icon: 'stars', label: 'Astrologie', desc: 'Horoscope, numerologie, energies du jour', seconds: 45 },
+  { id: 'briefing' as const, icon: 'newspaper', label: 'Briefing du matin', desc: 'Actualites par categorie personnalisee', seconds: 60 },
+  { id: 'agenda' as const, icon: 'calendar_month', label: 'Agenda', desc: 'Evenements du jour, deadlines a venir', seconds: 30 },
+  { id: 'bienEtre' as const, icon: 'self_improvement', label: 'Bien-etre', desc: 'Meditation, exercice, suivi sommeil', seconds: 40 },
+  { id: 'motivation' as const, icon: 'fitness_center', label: 'Motivation', desc: 'Citation, objectifs, gratitude, defi', seconds: 35 },
+  { id: 'finance' as const, icon: 'trending_up', label: 'Finance', desc: 'Marches, crypto, alertes portfolio', seconds: 25 },
+  { id: 'social' as const, icon: 'group', label: 'Social', desc: 'Anniversaires, messages, reseaux', seconds: 20 },
 ];
 
 const PRESETS = [
-  { id: 'express' as const, label: 'Express', emoji: '⚡', duration: '~2 min', desc: 'Meteo + Citation + Agenda', moduleIds: ['meteo', 'motivation', 'agenda'] },
-  { id: 'standard' as const, label: 'Standard', emoji: '☀️', duration: '~5 min', desc: 'Meteo + Briefing + Agenda + Motivation', moduleIds: ['meteo', 'briefing', 'agenda', 'motivation'] },
-  { id: 'complet' as const, label: 'Complet', emoji: '🌟', duration: '~10 min', desc: 'Tous les modules actives', moduleIds: ['meteo', 'astrologie', 'briefing', 'agenda', 'bienEtre', 'motivation', 'finance', 'social'] },
-  { id: 'custom' as const, label: 'Personnalise', emoji: '🎛️', duration: 'Variable', desc: 'Choisissez vos modules', moduleIds: [] },
+  { id: 'express' as const, label: 'Express', icon: 'bolt', duration: '~2 min', desc: 'Meteo + Citation + Agenda', moduleIds: ['meteo', 'motivation', 'agenda'] },
+  { id: 'standard' as const, label: 'Standard', icon: 'wb_sunny', duration: '~5 min', desc: 'Meteo + Briefing + Agenda + Motivation', moduleIds: ['meteo', 'briefing', 'agenda', 'motivation'] },
+  { id: 'complet' as const, label: 'Complet', icon: 'auto_awesome', duration: '~10 min', desc: 'Tous les modules actives', moduleIds: ['meteo', 'astrologie', 'briefing', 'agenda', 'bienEtre', 'motivation', 'finance', 'social'] },
+  { id: 'custom' as const, label: 'Personnalise', icon: 'tune', duration: 'Variable', desc: 'Choisissez vos modules', moduleIds: [] },
 ];
 
 const BRIEFING_CATEGORIES = [
-  { id: 'tech', label: 'Tech', emoji: '💻' },
-  { id: 'business', label: 'Business', emoji: '💼' },
-  { id: 'politique', label: 'Politique', emoji: '🏛️' },
-  { id: 'sport', label: 'Sport', emoji: '⚽' },
-  { id: 'culture', label: 'Culture', emoji: '🎭' },
-  { id: 'local', label: 'Local', emoji: '📍' },
+  { id: 'tech', label: 'Tech', icon: 'computer' },
+  { id: 'business', label: 'Business', icon: 'work' },
+  { id: 'politique', label: 'Politique', icon: 'account_balance' },
+  { id: 'sport', label: 'Sport', icon: 'sports_soccer' },
+  { id: 'culture', label: 'Culture', icon: 'theater_comedy' },
+  { id: 'local', label: 'Local', icon: 'location_on' },
 ];
 
 const ZODIAC_SIGNS = [
-  { id: 'belier', label: 'Belier', emoji: '♈', dates: '21 mars - 19 avril' },
-  { id: 'taureau', label: 'Taureau', emoji: '♉', dates: '20 avril - 20 mai' },
-  { id: 'gemeaux', label: 'Gemeaux', emoji: '♊', dates: '21 mai - 20 juin' },
-  { id: 'cancer', label: 'Cancer', emoji: '♋', dates: '21 juin - 22 juillet' },
-  { id: 'lion', label: 'Lion', emoji: '♌', dates: '23 juillet - 22 aout' },
-  { id: 'vierge', label: 'Vierge', emoji: '♍', dates: '23 aout - 22 sept.' },
-  { id: 'balance', label: 'Balance', emoji: '♎', dates: '23 sept. - 22 oct.' },
-  { id: 'scorpion', label: 'Scorpion', emoji: '♏', dates: '23 oct. - 21 nov.' },
-  { id: 'sagittaire', label: 'Sagittaire', emoji: '♐', dates: '22 nov. - 21 dec.' },
-  { id: 'capricorne', label: 'Capricorne', emoji: '♑', dates: '22 dec. - 19 jan.' },
-  { id: 'verseau', label: 'Verseau', emoji: '♒', dates: '20 jan. - 18 fev.' },
-  { id: 'poissons', label: 'Poissons', emoji: '♓', dates: '19 fev. - 20 mars' },
+  { id: 'belier', label: 'Belier', icon: 'star', dates: '21 mars - 19 avril' },
+  { id: 'taureau', label: 'Taureau', icon: 'star', dates: '20 avril - 20 mai' },
+  { id: 'gemeaux', label: 'Gemeaux', icon: 'star', dates: '21 mai - 20 juin' },
+  { id: 'cancer', label: 'Cancer', icon: 'star', dates: '21 juin - 22 juillet' },
+  { id: 'lion', label: 'Lion', icon: 'star', dates: '23 juillet - 22 aout' },
+  { id: 'vierge', label: 'Vierge', icon: 'star', dates: '23 aout - 22 sept.' },
+  { id: 'balance', label: 'Balance', icon: 'star', dates: '23 sept. - 22 oct.' },
+  { id: 'scorpion', label: 'Scorpion', icon: 'star', dates: '23 oct. - 21 nov.' },
+  { id: 'sagittaire', label: 'Sagittaire', icon: 'star', dates: '22 nov. - 21 dec.' },
+  { id: 'capricorne', label: 'Capricorne', icon: 'star', dates: '22 dec. - 19 jan.' },
+  { id: 'verseau', label: 'Verseau', icon: 'star', dates: '20 jan. - 18 fev.' },
+  { id: 'poissons', label: 'Poissons', icon: 'star', dates: '19 fev. - 20 mars' },
 ];
 
 function getDefaultContentModules(): ContentModules {
@@ -291,15 +291,15 @@ export default function ReveilPage() {
           const a = alarms[0];
           setAlarm({
             id: a.id,
-            enabled: a.enabled ?? false,
-            time: a.time ?? '07:00',
-            days: a.days ?? [1, 2, 3, 4, 5],
+            enabled: a.isActive ?? a.enabled ?? false,
+            time: a.alarmTime ?? a.time ?? '07:00',
+            days: a.daysOfWeek ?? a.days ?? [1, 2, 3, 4, 5],
             timezone: a.timezone ?? 'Europe/Paris',
             mode: a.mode ?? 'doux',
             rubrics: a.rubrics ?? ['bonne_humeur', 'meteo', 'citation'],
-            voice: a.voice ?? 'sarah',
-            delivery: a.delivery ?? 'call',
-            phone: a.phone ?? '',
+            voice: a.voiceId ?? a.voice ?? 'sarah',
+            delivery: a.deliveryMethod === 'phone_call' ? 'call' : a.deliveryMethod ?? a.delivery ?? 'call',
+            phone: a.phoneNumber ?? a.phone ?? '',
             birthDate: a.birthDate ?? a.birth_date ?? '',
             customAnnouncement: a.customAnnouncement ?? a.custom_announcement ?? '',
             contentModules: a.contentModules ?? a.content_modules ?? getDefaultContentModules(),
@@ -359,20 +359,20 @@ export default function ReveilPage() {
     setSaving(true);
     setError('');
     try {
+      const [h, m] = (config.time || '07:00').split(':').map(Number);
       const body = JSON.stringify({
-        enabled: config.enabled,
-        time: config.time,
+        isActive: config.enabled,
+        hour: h,
+        minute: m,
         days: config.days,
-        timezone: config.timezone,
         mode: config.mode,
         rubrics: config.rubrics,
-        voice: config.voice,
-        delivery: config.delivery,
-        phone: config.phone,
+        voiceId: config.voice,
+        deliveryMethod: config.delivery === 'call' ? 'phone_call' : config.delivery === 'whatsapp' ? 'whatsapp' : config.delivery,
+        phoneNumber: config.phone,
         birthDate: config.birthDate,
         customAnnouncement: config.customAnnouncement,
         contentModules: config.contentModules,
-        preset: config.preset,
       });
 
       let res: Response;
@@ -472,12 +472,12 @@ export default function ReveilPage() {
         <div style={{ position: 'sticky', top: 0, zIndex: 30, padding: '0 0 8px' }}>
           {error && (
             <div className="alert alert-danger" style={{ marginBottom: 4 }}>
-              <span style={{ fontSize: 14 }}>{'\u26A0\uFE0F'}</span> {error}
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> {error}
             </div>
           )}
           {success && (
             <div className="alert alert-success" style={{ marginBottom: 4 }}>
-              <span style={{ fontSize: 14 }}>{'\u2705'}</span> {success}
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> {success}
             </div>
           )}
           {saving && !error && !success && (
@@ -492,7 +492,7 @@ export default function ReveilPage() {
       {/*  1. HEADER                                     */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="page-header" style={{ textAlign: 'center', flexDirection: 'column', paddingBottom: 8 }}>
-        <div style={{ fontSize: 48, marginBottom: 8 }}>{'\u2615'}</div>
+        <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 8, display: 'block' }}>coffee</span>
         <div style={{
           fontSize: 42, fontWeight: 200, color: 'var(--text-muted)',
           letterSpacing: '-0.03em', fontFamily: 'var(--font-sans)',
@@ -508,6 +508,7 @@ export default function ReveilPage() {
         <p className="text-sm" style={{ color: 'var(--accent)', fontWeight: 500 }}>
           {getNextAlarmLabel(alarm)}
         </p>
+        <p className="text-xs" style={{ color: 'var(--text-muted)', marginTop: 4 }}>Votre assistant <span className="fz-logo-word">IA</span> personnalise votre matin</p>
       </div>
 
       {/* ═══════════════════════════════════════════════ */}
@@ -525,11 +526,11 @@ export default function ReveilPage() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 24, transition: 'background 0.3s',
             }}>
-              {alarm?.enabled ? '\u{1F514}' : '\u{1F515}'}
+              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{alarm?.enabled ? 'notifications_active' : 'notifications_off'}</span>
             </div>
             <div>
               <div className="text-lg font-bold">
-                Reveil Intelligent
+                <span className="fz-logo-word">Reveil Intelligent</span>
               </div>
               <div className="text-sm text-muted">
                 {alarm?.enabled ? 'Actif — votre IA vous reveille chaque matin' : 'Inactif — activez votre reveil IA'}
@@ -660,10 +661,10 @@ export default function ReveilPage() {
                     alignItems: 'center', justifyContent: 'center',
                     color: 'white', fontSize: 10, fontWeight: 700,
                   }}>
-                    {'\u2713'}
+                    <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span>
                   </div>
                 )}
-                <div style={{ fontSize: 28, marginBottom: 6 }}>{mode.emoji}</div>
+                <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 6, display: 'block', color: mode.color }}>{mode.icon}</span>
                 <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>
                   {mode.label}
                 </div>
@@ -716,7 +717,7 @@ export default function ReveilPage() {
                   width: '100%',
                 }}
               >
-                <span style={{ fontSize: 20, flexShrink: 0 }}>{rubric.emoji}</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 20, flexShrink: 0 }}>{rubric.icon}</span>
                 <span style={{
                   flex: 1, fontSize: 13, fontWeight: 500,
                   color: isActive ? 'var(--accent-hover)' : 'var(--text-secondary)',
@@ -749,7 +750,7 @@ export default function ReveilPage() {
             {(hasAstro || hasHoroscope) && (
               <div className="card" style={{ padding: '14px 18px' }}>
                 <div className="flex items-center gap-8 mb-8">
-                  <span style={{ fontSize: 18 }}>{hasAstro ? '\u2648' : '\u{1F409}'}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{hasAstro ? 'stars' : 'pets'}</span>
                   <span className="text-md font-semibold">
                     {hasAstro && hasHoroscope
                       ? 'Date de naissance (Astrologie & Horoscope chinois)'
@@ -771,7 +772,7 @@ export default function ReveilPage() {
             {hasAnnonce && (
               <div className="card" style={{ padding: '14px 18px' }}>
                 <div className="flex items-center gap-8 mb-8">
-                  <span style={{ fontSize: 18 }}>{'\u{1F4E2}'}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>campaign</span>
                   <span className="text-md font-semibold">Annonce personnalisee</span>
                 </div>
                 <textarea
@@ -822,7 +823,7 @@ export default function ReveilPage() {
                   fontFamily: 'var(--font-sans)',
                 }}
               >
-                <div style={{ fontSize: 28, marginBottom: 6 }}>{p.emoji}</div>
+                <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 6, display: 'block' }}>{p.icon}</span>
                 <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>{p.label}</div>
                 <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>{p.duration}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>{p.desc}</div>
@@ -870,7 +871,7 @@ export default function ReveilPage() {
                     background: 'transparent', fontFamily: 'var(--font-sans)', textAlign: 'left',
                   }}
                 >
-                  <span style={{ fontSize: 24, flexShrink: 0 }}>{mod.emoji}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 24, flexShrink: 0 }}>{mod.icon}</span>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{mod.label}</div>
                     <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{mod.desc}</div>
@@ -947,7 +948,7 @@ export default function ReveilPage() {
                                   transition: 'all 0.15s',
                                 }}
                               >
-                                {z.emoji}
+                                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{z.icon}</span>
                               </button>
                             ))}
                           </div>
@@ -1001,7 +1002,7 @@ export default function ReveilPage() {
                                     color: isActive ? '#fff' : 'var(--text-secondary)',
                                   }}
                                 >
-                                  {cat.emoji} {cat.label}
+                                  <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>{cat.icon}</span> {cat.label}
                                 </button>
                               );
                             })}
@@ -1136,13 +1137,13 @@ export default function ReveilPage() {
             }}>
               <div className="text-sm text-secondary" style={{ lineHeight: 1.8 }}>
                 <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                  {mode.emoji} {greeting}{session.displayName ? ` ${session.displayName}` : ''} !
+                  <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', color: mode.color }}>{mode.icon}</span> {greeting}{session.displayName ? ` ${session.displayName}` : ''} !
                 </span>
                 <span style={{ color: 'var(--text-muted)' }}> — Mode {mode.label}</span>
                 <br />
                 {enabledModules.map(m => (
                   <span key={m.id}>
-                    {m.emoji}{' '}
+                    <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>{m.icon}</span>{' '}
                     {m.id === 'meteo' && <><strong>Meteo</strong> : Il fait 18°C a {modules.meteo.city || 'Paris'}{modules.meteo.clothingSuggestion ? ', veste legere conseillee' : ''}.</>}
                     {m.id === 'astrologie' && <><strong>Horoscope</strong> : {modules.astrologie.zodiacSign ? ZODIAC_SIGNS.find(z => z.id === modules.astrologie.zodiacSign)?.label ?? 'votre signe' : 'votre signe'} — journee propice aux nouvelles initiatives.</>}
                     {m.id === 'briefing' && <><strong>Briefing</strong> : {modules.briefing.itemCount} actualites {modules.briefing.categories.length > 0 ? `(${modules.briefing.categories.join(', ')})` : ''}</>}
@@ -1173,8 +1174,8 @@ export default function ReveilPage() {
           <label className="text-sm text-muted mb-8" style={{ display: 'block' }}>Voix de l&apos;agent</label>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             {[
-              { id: 'sarah' as const, label: 'Maëva', emoji: '\u{1F469}', desc: 'Voix feminine chaleureuse' },
-              { id: 'emmanuel' as const, label: 'Emmanuel', emoji: '\u{1F468}', desc: 'Voix masculine posee' },
+              { id: 'sarah' as const, label: 'Maëva', icon: 'person', desc: 'Voix feminine chaleureuse' },
+              { id: 'emmanuel' as const, label: 'Emmanuel', icon: 'person', desc: 'Voix masculine posee' },
             ].map(v => {
               const isSelected = (alarm?.voice ?? 'sarah') === v.id;
               return (
@@ -1191,7 +1192,7 @@ export default function ReveilPage() {
                   }}
                 >
                   <div className="flex items-center gap-10">
-                    <span style={{ fontSize: 28 }}>{v.emoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 28 }}>{v.icon}</span>
                     <div>
                       <div style={{
                         fontSize: 14, fontWeight: 600,
@@ -1211,8 +1212,8 @@ export default function ReveilPage() {
           <label className="text-sm text-muted mb-8" style={{ display: 'block' }}>Mode de livraison</label>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             {[
-              { id: 'call' as const, label: 'Appel telephonique', emoji: '\u{1F4DE}', desc: 'L\'IA vous appelle' },
-              { id: 'whatsapp' as const, label: 'Message WhatsApp', emoji: '\u{1F4AC}', desc: 'Message vocal WhatsApp' },
+              { id: 'call' as const, label: 'Appel telephonique', icon: 'call', desc: 'L\'IA vous appelle' },
+              { id: 'whatsapp' as const, label: 'Message WhatsApp', icon: 'chat', desc: 'Message vocal WhatsApp' },
             ].map(d => {
               const isSelected = (alarm?.delivery ?? 'call') === d.id;
               return (
@@ -1229,7 +1230,7 @@ export default function ReveilPage() {
                   }}
                 >
                   <div className="flex items-center gap-10">
-                    <span style={{ fontSize: 24 }}>{d.emoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{d.icon}</span>
                     <div>
                       <div style={{
                         fontSize: 14, fontWeight: 600,
@@ -1262,6 +1263,187 @@ export default function ReveilPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════ */}
+      {/*  6b. SONNERIE PERSONNALISEE                    */}
+      {/* ═══════════════════════════════════════════════ */}
+      <div className="section">
+        <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>music_note</span> Sonnerie de l&apos;appel</div>
+        <div className="card" style={{ padding: '20px 24px' }}>
+          <div style={{ marginBottom: 16 }}>
+            <div className="text-base font-bold" style={{ marginBottom: 6 }}>Personnalisez la sonnerie du reveil</div>
+            <div className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
+              Quand le reveil vous appelle, vous entendez d&apos;abord une sonnerie avant que l&apos;IA prenne la parole.
+              Vous pouvez la personnaliser de plusieurs facons :
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div className="fz-feature-card">
+              <div className="fz-feature-icon" style={{ background: 'rgba(34,197,94,0.1)', borderColor: 'rgba(34,197,94,0.15)' }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>phone_iphone</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="fz-feature-title">Sonnerie de votre telephone</div>
+                <div className="fz-feature-desc">
+                  Par defaut, c&apos;est la sonnerie d&apos;appel standard de votre telephone qui retentit.
+                  Pour la changer : <strong>Reglages &gt; Sons &gt; Sonnerie</strong> sur iPhone,
+                  ou <strong>Parametres &gt; Son &gt; Sonnerie du telephone</strong> sur Android.
+                </div>
+              </div>
+            </div>
+
+            <div className="fz-feature-card">
+              <div className="fz-feature-icon" style={{ background: 'rgba(139,124,248,0.1)', borderColor: 'rgba(139,124,248,0.15)' }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>queue_music</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="fz-feature-title">Sonnerie personnalisee par contact</div>
+                <div className="fz-feature-desc">
+                  Attribuez une sonnerie unique au numero Freenzy ! Enregistrez notre numero dans vos contacts,
+                  puis : <strong>Contact &gt; Modifier &gt; Sonnerie</strong>.
+                  Ainsi, vous saurez immediatement que c&apos;est votre reveil IA qui vous appelle.
+                </div>
+              </div>
+            </div>
+
+            <div className="fz-feature-card">
+              <div className="fz-feature-icon" style={{ background: 'rgba(249,115,22,0.1)', borderColor: 'rgba(249,115,22,0.15)' }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>mic</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="fz-feature-title">Intro vocale IA</div>
+                <div className="fz-feature-desc">
+                  L&apos;IA commence directement par un message vocal personnalise des que vous decrochez.
+                  Le ton depend du mode choisi (Doux, Dur, Drole, etc.).
+                  Pour un reveil encore plus immersif, activez le decrochage automatique dans vos reglages telephoniques.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════ */}
+      {/*  6c. NUMERO IA — TWILIO                        */}
+      {/* ═══════════════════════════════════════════════ */}
+      <div className="section">
+        <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>call</span> Votre numero IA dedie</div>
+        <div style={{
+          background: 'linear-gradient(135deg, #0a0a14, #13132a)',
+          borderRadius: 16, padding: 'clamp(20px, 4vw, 32px)',
+          border: '1px solid rgba(91,108,247,0.2)',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', top: -50, right: -50, width: 200, height: 200,
+            background: 'radial-gradient(circle, rgba(91,108,247,0.12) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }} />
+
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)',
+                color: '#86efac', padding: '4px 14px', borderRadius: 20,
+                fontSize: 11, fontWeight: 700,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+                Nouveau
+              </span>
+            </div>
+
+            <h3 style={{
+              fontSize: 'clamp(18px, 4vw, 24px)', fontWeight: 900, color: '#fff',
+              letterSpacing: '-0.03em', marginBottom: 10, lineHeight: 1.2,
+            }}>
+              Un numero de telephone IA{'\u00A0'}rien{'\u00A0'}que{'\u00A0'}pour{'\u00A0'}vous
+            </h3>
+
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, marginBottom: 24, maxWidth: 600 }}>
+              Commandez un <strong style={{ color: 'rgba(255,255,255,0.8)' }}>numero supplementaire via Twilio</strong> et debloquez
+              un assistant telephonique IA complet, disponible 24h/24 et 7j/7.
+            </p>
+
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))',
+              gap: 12, marginBottom: 24,
+            }}>
+              {[
+                { icon: 'notifications', title: 'Reveil intelligent', desc: 'Votre IA vous appelle chaque matin avec un briefing personnalise depuis votre propre numero.' },
+                { icon: 'call', title: 'Repondeur IA 24/7', desc: 'Quand vous ne repondez pas, l\'IA prend l\'appel, qualifie le lead et vous envoie un resume WhatsApp.' },
+                { icon: 'outgoing_mail', title: 'Appels sortants', desc: 'Programmez des appels IA : prospection, confirmations de RDV, relances clients, sondages.' },
+                { icon: 'chat', title: 'SMS & WhatsApp', desc: 'Envoyez et recevez des messages automatises : notifications, rappels, confirmations.' },
+                { icon: 'record_voice_over', title: 'Voix naturelle', desc: 'Powered by ElevenLabs : voix francaise naturelle (Maeva ou Emmanuel) pour toutes les interactions.' },
+                { icon: 'bar_chart', title: 'Analytics appels', desc: 'Statistiques completes : duree, qualification, conversion, enregistrements, transcriptions.' },
+                { icon: 'public', title: 'Numero local', desc: 'Choisissez un numero francais (+33), ou un numero dans 100+ pays pour vos clients internationaux.' },
+                { icon: 'lock', title: 'Securise', desc: 'Appels chiffres, conformite RGPD, enregistrements optionnels, suppression sur demande.' },
+              ].map((feature, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 12,
+                  padding: '14px 16px', borderRadius: 12,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 22, flexShrink: 0, color: '#e4e6eb' }}>{feature.icon}</span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#e4e6eb', marginBottom: 3 }}>{feature.title}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{feature.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '14px 20px', borderRadius: 12,
+              background: 'rgba(91,108,247,0.12)', border: '1px solid rgba(91,108,247,0.2)',
+              marginBottom: 20,
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 22 }}>savings</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#a5b4fc' }}>Tarif Twilio transparent</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                  Numero francais : ~1€/mois · Appels sortants : ~0.01€/min · SMS : ~0.04€/msg
+                  <br />
+                  <span style={{ color: 'rgba(255,255,255,0.3)' }}>Facturation directe Twilio, aucune commission Freenzy.</span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <Link
+                href="/client/telephony"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '12px 24px', borderRadius: 12,
+                  background: '#5b6cf7', color: '#fff',
+                  fontWeight: 700, fontSize: 14,
+                  textDecoration: 'none', transition: 'opacity 0.2s',
+                  minHeight: 44,
+                }}
+              >
+                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>call</span> Commander mon numero IA
+              </Link>
+              <Link
+                href="/client/repondeur"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '12px 24px', borderRadius: 12,
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+                  color: 'rgba(255,255,255,0.7)',
+                  fontWeight: 600, fontSize: 14,
+                  textDecoration: 'none', transition: 'opacity 0.2s',
+                  minHeight: 44,
+                }}
+              >
+                Voir le repondeur IA
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════════ */}
       {/*  7. TEST BUTTON                                */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
@@ -1280,7 +1462,7 @@ export default function ReveilPage() {
             {testing ? (
               <span className="animate-pulse">Test en cours...</span>
             ) : (
-              <>{'\u{1F514}'} Tester mon reveil maintenant</>
+              <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>notifications_active</span> Tester mon reveil maintenant</>
             )}
           </button>
           <div className="text-xs text-muted mt-8">
@@ -1296,7 +1478,7 @@ export default function ReveilPage() {
             padding: '16px 20px',
           }}>
             <div className="flex items-center gap-8 mb-8">
-              <span style={{ fontSize: 20 }}>{'\u{1F916}'}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>smart_toy</span>
               <span className="text-md font-bold">Apercu du reveil</span>
               {testResult.delivered && (
                 <span className="badge badge-success" style={{ marginLeft: 'auto' }}>
@@ -1348,7 +1530,7 @@ export default function ReveilPage() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'white', fontSize: 12,
               }}>
-                {r.done && '\u2713'}
+                {r.done && <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span>}
               </div>
               <span className="text-base" style={{
                 textDecoration: r.done ? 'line-through' : 'none',
@@ -1381,7 +1563,7 @@ export default function ReveilPage() {
                 transition: 'border-color 0.2s, box-shadow 0.2s',
               }}
             >
-              <span style={{ fontSize: 24 }}>{action.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{action.icon}</span>
               <span className="text-md font-medium">{action.label}</span>
             </Link>
           ))}

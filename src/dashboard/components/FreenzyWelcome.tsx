@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { getAgentsForTier, DEFAULT_AGENTS, type AgentTypeId } from '../lib/agent-config';
+import { getAgentsForTier, DEFAULT_AGENTS } from '../lib/agent-config';
 
 interface FreenzyWelcomeProps {
   userName: string;
@@ -9,26 +9,22 @@ interface FreenzyWelcomeProps {
   onDismiss: () => void;
 }
 
-// Free model: same actions for everyone
-const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg')!;
+const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg') ?? { name: 'Sarah', materialIcon: 'verified' };
 
 const QUICK_ACTIONS: Array<{ icon: string; label: string; desc: string; href: string }> = [
-  { icon: '💬', label: `Discuter avec ${dgAgent.name}`, desc: `Votre équipe de ${DEFAULT_AGENTS.length} agents IA est prête`, href: '/client/chat' },
-  { icon: '🏛️', label: 'Réunion stratégique', desc: 'Réunissez vos agents', href: '/client/meeting' },
-  { icon: '🎨', label: 'Agent Studio', desc: 'Personnalisez vos agents', href: '/client/agents/customize' },
-  { icon: '☀️', label: 'Briefing du jour', desc: 'Tâches et insights', href: '/client/briefing' },
+  { icon: 'chat', label: `Discuter avec ${dgAgent.name}`, desc: `${DEFAULT_AGENTS.length} agents prets`, href: '/client/chat' },
+  { icon: 'groups', label: 'Reunion strategique', desc: 'Reunissez vos agents', href: '/client/meeting' },
+  { icon: 'tune', label: 'Agent Studio', desc: 'Personnalisez vos agents', href: '/client/agents/customize' },
+  { icon: 'wb_sunny', label: 'Briefing du jour', desc: 'Taches et insights', href: '/client/briefing' },
 ];
 
 export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWelcomeProps) {
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon apres-midi' : 'Bonsoir';
 
   const availableAgents = getAgentsForTier(tier);
-  const agentDetails = availableAgents.map(id => DEFAULT_AGENTS.find(a => a.id === id)!).filter(Boolean);
+  const agentDetails = availableAgents.map(id => DEFAULT_AGENTS.find(a => a.id === id)).filter((a): a is NonNullable<typeof a> => !!a);
 
-  const actions = QUICK_ACTIONS;
-
-  // Check if company profile exists
   let hasProfile = false;
   try {
     const profile = localStorage.getItem('fz_company_profile');
@@ -38,89 +34,83 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
   return (
     <div className="welcome-overlay" onClick={onDismiss}>
       <div className="welcome-card" onClick={e => e.stopPropagation()}>
-        {/* Freenzy Avatar */}
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div className="fz-logo-text" style={{ fontSize: 24, margin: '0 auto 16px', color: 'var(--accent)' }}>
-            FREENZY.IO
+        {/* Logo + Greeting — compact */}
+        <div style={{ textAlign: 'center', marginBottom: 16 }}>
+          <div className="fz-logo-text" style={{ fontSize: 20, margin: '0 auto 10px', color: 'var(--accent)' }}>
+            freenzy.io
           </div>
-          <h2 style={{ fontSize: 22, fontWeight: 900, letterSpacing: '-0.04em', marginBottom: 6 }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 4 }}>
             {greeting}, {userName || 'cher client'} !
           </h2>
-          <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 400, margin: '0 auto' }}>
-            Je suis {DEFAULT_AGENTS.find(a => a.id === 'fz-dg')!.name}, votre {DEFAULT_AGENTS.find(a => a.id === 'fz-dg')!.role}. Votre équipe de {agentDetails.length} agent{agentDetails.length > 1 ? 's' : ''} IA est prête à travailler.
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: 380, margin: '0 auto' }}>
+            Votre equipe de <span className="fz-logo-word">{agentDetails.length} agents IA</span> est prete.
           </p>
         </div>
 
-        {/* Available agents preview */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
-          {agentDetails.map(a => (
+        {/* Agents preview — scrollable row */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
+          {agentDetails.slice(0, 12).map(a => (
             <div key={a.id} title={a.role} style={{
-              width: 36, height: 36, borderRadius: 10,
+              width: 30, height: 30, borderRadius: 8,
               background: a.color + '22', border: `1px solid ${a.color}44`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              {a.emoji}
+              <span className="material-symbols-rounded" style={{ fontSize: 15, color: a.color }}>{a.materialIcon}</span>
             </div>
           ))}
+          {agentDetails.length > 12 && (
+            <div style={{
+              width: 30, height: 30, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'var(--bg-tertiary)', fontSize: 10, fontWeight: 700, color: 'var(--text-muted)',
+            }}>+{agentDetails.length - 12}</div>
+          )}
         </div>
 
-        {/* Onboarding CTA — shown prominently if no profile */}
+        {/* Onboarding CTA */}
         {!hasProfile && (
           <div style={{
-            padding: '16px 20px', marginBottom: 20, borderRadius: 'var(--radius-md)',
+            padding: '12px 14px', marginBottom: 14, borderRadius: 10,
             background: 'linear-gradient(135deg, #5b6cf70a, #8b7cf808)',
             border: '1px solid #5b6cf725',
           }}>
-            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, marginBottom: 4 }}>
               Configurons votre profil !
             </div>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 12 }}>
-              Plus vos agents connaissent votre entreprise, plus leurs conseils seront pertinents et personnalisés.
-              Prenez 5 minutes pour remplir votre profil — cela changera tout.
+            <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 10 }}>
+              C&apos;est la que <span className="fz-logo-word">l&apos;IA</span> montre sa vraie puissance. Plus vos agents connaissent votre entreprise, plus leurs reponses sont precises et personnalisees. 5 minutes qui changent tout.
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <Link
-                href="/client/onboarding"
-                onClick={onDismiss}
-                className="btn btn-primary"
-                style={{ fontSize: 14, padding: '10px 24px' }}
-              >
-                Configurer mon profil
+              <Link href="/client/onboarding" onClick={onDismiss} className="btn btn-primary" style={{ fontSize: 13, padding: '8px 18px' }}>
+                Configurer
               </Link>
-              <button
-                onClick={onDismiss}
-                className="btn btn-ghost"
-                style={{ fontSize: 13, color: 'var(--text-muted)' }}
-              >
+              <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                 Plus tard
               </button>
             </div>
           </div>
         )}
 
-        {/* Quick actions */}
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+        {/* Quick actions — 2x2 grid */}
+        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
           Que souhaitez-vous faire ?
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 8, marginBottom: 24 }}>
-          {actions.map(action => (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 14 }}>
+          {QUICK_ACTIONS.map(action => (
             <Link
               key={action.label}
               href={action.href}
               onClick={onDismiss}
               style={{
-                display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
-                borderRadius: 'var(--radius-md)', background: 'var(--bg-primary)',
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px',
+                borderRadius: 10, background: 'var(--bg-primary)',
                 border: '1px solid var(--border-primary)', textDecoration: 'none', color: 'inherit',
-                transition: 'all 0.15s ease',
+                transition: 'border-color 0.15s',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-active)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-primary)'; }}
             >
-              <span style={{ fontSize: 22, flexShrink: 0 }}>{action.icon}</span>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>{action.label}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{action.desc}</div>
+              <span className="material-symbols-rounded" style={{ fontSize: 20, color: 'var(--accent)', flexShrink: 0 }}>{action.icon}</span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{action.label}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{action.desc}</div>
               </div>
             </Link>
           ))}
@@ -128,7 +118,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
 
         {/* Dismiss */}
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+          <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             Passer et aller au dashboard
           </button>
         </div>

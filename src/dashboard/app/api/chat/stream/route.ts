@@ -3,7 +3,8 @@ import { NextRequest } from 'next/server';
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  let body: Record<string, unknown>;
+  try { body = await req.json(); } catch { return new Response('{"error":"Invalid JSON"}', { status: 400, headers: { 'Content-Type': 'application/json' } }); }
   const token = body.token as string;
 
   if (!token) {

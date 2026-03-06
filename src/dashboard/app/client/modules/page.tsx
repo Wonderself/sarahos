@@ -22,10 +22,10 @@ interface UserModule {
 }
 
 const TYPE_LABELS: Record<string, { label: string; icon: string; color: string }> = {
-  form: { label: 'Formulaire', icon: '📋', color: '#10b981' },
-  crm: { label: 'Base CRM', icon: '📊', color: '#3b82f6' },
-  agent: { label: 'Agent IA', icon: '🤖', color: '#8b5cf6' },
-  dashboard: { label: 'Dashboard', icon: '📈', color: '#f59e0b' },
+  form: { label: 'Formulaire', icon: 'assignment', color: '#10b981' },
+  crm: { label: 'Base CRM', icon: 'bar_chart', color: '#3b82f6' },
+  agent: { label: 'Agent IA', icon: 'smart_toy', color: '#8b5cf6' },
+  dashboard: { label: 'Dashboard', icon: 'trending_up', color: '#f59e0b' },
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -113,9 +113,9 @@ export default function ModulesPage() {
       {/* ── Header ── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>📦 Mes modules</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>inventory_2</span> Mes <span className="fz-logo-word">modules</span></h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-            Créez des mini-applications intégrées à votre dashboard — formulaires, bases de données, agents IA, tableaux de bord.
+            Créez des mini-applications intégrées à votre dashboard — formulaires, bases de données, <span className="fz-logo-word">agents IA</span>, tableaux de bord.
           </p>
         </div>
         <Link href="/client/modules/builder" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -126,7 +126,7 @@ export default function ModulesPage() {
       {/* ── Empty state ── */}
       {modules.length === 0 && (
         <div style={{ textAlign: 'center', padding: '60px 40px', background: 'var(--bg-card)', borderRadius: 20, border: '2px dashed var(--border)' }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}>📦</div>
+          <div style={{ fontSize: 56, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 56 }}>inventory_2</span></div>
           <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Aucun module créé</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
             Créez votre premier module : un formulaire de collecte, une base CRM, un agent IA dédié ou un tableau de bord personnalisé.
@@ -141,7 +141,7 @@ export default function ModulesPage() {
       {modules.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {modules.map(mod => {
-            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, icon: '📦', color: '#5b6cf7' };
+            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, icon: 'inventory_2', color: '#5b6cf7' };
             return (
               <div key={mod.id} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 20, border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
 
@@ -168,10 +168,10 @@ export default function ModulesPage() {
                 {/* Badges */}
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
                   <span style={{ background: `${typeInfo.color}20`, color: typeInfo.color, borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>
-                    {typeInfo.icon} {typeInfo.label}
+                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{typeInfo.icon}</span> {typeInfo.label}
                   </span>
                   {mod.is_published ? (
-                    <span style={{ background: '#10b98120', color: '#10b981', borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>✅ Publié</span>
+                    <span style={{ background: '#10b98120', color: '#10b981', borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Publié</span>
                   ) : (
                     <span style={{ background: '#6b728020', color: '#6b7280', borderRadius: 20, padding: '2px 10px', fontSize: 12 }}>Brouillon</span>
                   )}
@@ -202,7 +202,7 @@ export default function ModulesPage() {
                         style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: 'var(--text-secondary)' }}
                         title="Copier l'URL publique"
                       >
-                        {copyDone === mod.id ? '✅' : '🔗'}
+                        {copyDone === mod.id ? <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> : <span className="material-symbols-rounded" style={{ fontSize: 12 }}>link</span>}
                       </button>
                     )}
                     {/* Edit */}
@@ -211,7 +211,7 @@ export default function ModulesPage() {
                       style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', textDecoration: 'none', fontSize: 12, color: 'var(--text-secondary)' }}
                       title="Modifier"
                     >
-                      ✏️
+                      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>edit</span>
                     </Link>
                     {/* Delete */}
                     <button
@@ -220,7 +220,7 @@ export default function ModulesPage() {
                       style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
                       title="Supprimer"
                     >
-                      🗑️
+                      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>delete</span>
                     </button>
                   </div>
                 </div>

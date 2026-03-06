@@ -27,11 +27,11 @@ interface Mission {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<MissionStatus, { label: string; color: string; icon: string }> = {
-  draft: { label: 'À candidater', color: '#6b7280', icon: '📝' },
-  applied: { label: 'Candidaté', color: '#3b82f6', icon: '📤' },
-  interview: { label: 'Entretien', color: '#f59e0b', icon: '🎯' },
-  offered: { label: 'Offre reçue', color: '#22c55e', icon: '🎉' },
-  rejected: { label: 'Refusé', color: '#ef4444', icon: '❌' },
+  draft: { label: 'À candidater', color: '#6b7280', icon: 'edit_note' },
+  applied: { label: 'Candidaté', color: '#3b82f6', icon: 'outbox' },
+  interview: { label: 'Entretien', color: '#f59e0b', icon: 'target' },
+  offered: { label: 'Offre reçue', color: '#22c55e', icon: 'celebration' },
+  rejected: { label: 'Refusé', color: '#ef4444', icon: 'cancel' },
 };
 
 const TYPE_LABELS: Record<MissionType, string> = {
@@ -140,7 +140,7 @@ export default function ChasseurPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>🎯</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>target</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement du pipeline...</div>
       </div>
     );
@@ -152,7 +152,7 @@ export default function ChasseurPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
         <div>
           <div style={{ fontWeight: 700, fontSize: 16 }}>{m.title}</div>
-          <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginTop: 2 }}>🏢 {m.company}</div>
+          <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginTop: 2 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>business</span> {m.company}</div>
         </div>
         <button onClick={() => setSelectedMission(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-tertiary)' }}>×</button>
       </div>
@@ -181,7 +181,7 @@ export default function ChasseurPage() {
         {m.location && (
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
             <span style={{ color: 'var(--text-tertiary)' }}>Localisation</span>
-            <span style={{ fontWeight: 600 }}>📍 {m.location}</span>
+            <span style={{ fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 13 }}>location_on</span> {m.location}</span>
           </div>
         )}
       </div>
@@ -192,7 +192,7 @@ export default function ChasseurPage() {
           <div style={{ fontSize: 13 }}>{m.next_action}</div>
           {m.next_action_date && (
             <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>
-              📅 {new Date(m.next_action_date).toLocaleDateString('fr-FR')}
+              <span className="material-symbols-rounded" style={{ fontSize: 11 }}>calendar_month</span> {new Date(m.next_action_date).toLocaleDateString('fr-FR')}
             </div>
           )}
         </div>
@@ -214,9 +214,9 @@ export default function ChasseurPage() {
           </button>
         )}
         <Link href={`/client/chat?agent=fz-chasseur&context=${encodeURIComponent(`Mission: ${m.title} chez ${m.company} (${TYPE_LABELS[m.type]})`)}`} className="btn btn-ghost btn-sm" style={{ fontSize: 11, textDecoration: 'none' }}>
-          💬 Conseil
+          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>chat</span> Conseil
         </Link>
-        <button onClick={() => handleDelete(m.id)} className="btn btn-ghost btn-sm" style={{ fontSize: 11, color: '#ef4444' }}>🗑</button>
+        <button onClick={() => handleDelete(m.id)} className="btn btn-ghost btn-sm" style={{ fontSize: 11, color: '#ef4444' }}><span className="material-symbols-rounded" style={{ fontSize: 11 }}>delete</span></button>
       </div>
     </div>
   );
@@ -229,12 +229,12 @@ export default function ChasseurPage() {
           <div style={{ marginBottom: 4 }}>
             <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--text-tertiary)', textDecoration: 'none' }}>← Agents personnels</Link>
           </div>
-          <h1 className="page-title">🎯 Chasseur de missions</h1>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>target</span> Chasseur de missions</h1>
           <p className="page-subtitle">Pipeline de candidatures et suivi des opportunités</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => setView(view === 'kanban' ? 'list' : 'kanban')} className="btn btn-ghost btn-sm">
-            {view === 'kanban' ? '📋 Liste' : '📊 Kanban'}
+            {view === 'kanban' ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Liste</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bar_chart</span> Kanban</>}
           </button>
           <button onClick={() => setShowModal(true)} className="btn btn-primary btn-sm">+ Ajouter</button>
         </div>
@@ -245,14 +245,14 @@ export default function ChasseurPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Missions', value: missions.length, icon: '📋', color: 'var(--accent)' },
-          { label: 'Candidatures', value: applied, icon: '📤', color: '#3b82f6' },
-          { label: 'Entretiens', value: interviews, icon: '🎯', color: '#f59e0b' },
-          { label: 'Taux de réponse', value: `${responseRate}%`, icon: '📈', color: responseRate >= 30 ? '#22c55e' : '#f59e0b' },
-          { label: 'Offres', value: offers, icon: '🎉', color: '#22c55e' },
+          { label: 'Missions', value: missions.length, icon: 'assignment', color: 'var(--accent)' },
+          { label: 'Candidatures', value: applied, icon: 'outbox', color: '#3b82f6' },
+          { label: 'Entretiens', value: interviews, icon: 'target', color: '#f59e0b' },
+          { label: 'Taux de réponse', value: `${responseRate}%`, icon: 'trending_up', color: responseRate >= 30 ? '#22c55e' : '#f59e0b' },
+          { label: 'Offres', value: offers, icon: 'celebration', color: '#22c55e' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-            <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
+            <div style={{ fontSize: 20, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
             <div style={{ fontSize: 20, fontWeight: 700, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
           </div>
@@ -264,7 +264,7 @@ export default function ChasseurPage() {
         <div>
           {missions.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '80px 40px' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🎯</div>
+              <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>target</span></div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucune mission en cours</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 20 }}>
                 Ajoutez vos opportunités et suivez chaque étape jusqu&apos;à l&apos;offre
@@ -279,7 +279,7 @@ export default function ChasseurPage() {
                 return (
                   <div key={status}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-                      <span style={{ fontSize: 14 }}>{cfg.icon}</span>
+                      <span style={{ fontSize: 14 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{cfg.icon}</span></span>
                       <span style={{ fontWeight: 700, fontSize: 13, color: cfg.color }}>{cfg.label}</span>
                       <span style={{
                         fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 8,
@@ -299,11 +299,11 @@ export default function ChasseurPage() {
                           }}
                         >
                           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4, lineHeight: 1.3 }}>{m.title}</div>
-                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>🏢 {m.company}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}><span className="material-symbols-rounded" style={{ fontSize: 11 }}>business</span> {m.company}</div>
                           {m.tjm && <div style={{ fontSize: 11, color: 'var(--accent)', marginTop: 3 }}>{m.tjm}€/j</div>}
                           {m.next_action_date && (
                             <div style={{ fontSize: 10, color: 'var(--text-tertiary)', marginTop: 4 }}>
-                              📅 {new Date(m.next_action_date).toLocaleDateString('fr-FR')}
+                              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>calendar_month</span> {new Date(m.next_action_date).toLocaleDateString('fr-FR')}
                             </div>
                           )}
                         </div>
@@ -326,11 +326,11 @@ export default function ChasseurPage() {
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, fontSize: 14 }}>{m.title}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>🏢 {m.company} · {TYPE_LABELS[m.type]}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>business</span> {m.company} · {TYPE_LABELS[m.type]}</div>
                     </div>
                     {m.tjm && <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', flexShrink: 0 }}>{m.tjm}€/j</div>}
                     <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: cfg.color + '20', color: cfg.color, flexShrink: 0 }}>
-                      {cfg.icon} {cfg.label}
+                      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{cfg.icon}</span> {cfg.label}
                     </span>
                     <div style={{ display: 'flex', gap: 4 }}>
                       {STATUSES.indexOf(m.status) > 0 && (
@@ -354,7 +354,7 @@ export default function ChasseurPage() {
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 480, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>🎯 Nouvelle mission</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>target</span> Nouvelle mission</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>

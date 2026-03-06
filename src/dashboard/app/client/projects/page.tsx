@@ -154,8 +154,8 @@ export default function ProjectsPage() {
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 className="page-title">📁 Projets</h1>
-            <p className="page-subtitle">Organisez votre travail par projet pour isoler les agents, données et dépenses.</p>
+            <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>folder</span> <span className="fz-logo-word">Projets</span></h1>
+            <p className="page-subtitle">Organisez votre travail par projet pour isoler les <span className="fz-logo-word">agents</span>, données et dépenses.</p>
           </div>
           <button
             onClick={() => { setForm({ name: '', description: '' }); setShowModal(true); }}
@@ -170,12 +170,12 @@ export default function ProjectsPage() {
       {projects.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
-            { label: 'Total projets', value: String(projects.length), icon: '📁', color: 'var(--accent)' },
-            { label: 'Projet actif', value: activeProject?.name ?? '—', icon: '✅', color: '#22c55e' },
-            { label: 'Crédits cumulés', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', icon: '💳', color: '#f59e0b' },
+            { label: 'Total projets', value: String(projects.length), icon: 'folder', color: 'var(--accent)' },
+            { label: 'Projet actif', value: activeProject?.name ?? '—', icon: 'check_circle', color: '#22c55e' },
+            { label: 'Crédits cumulés', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', icon: 'credit_card', color: '#f59e0b' },
           ].map(s => (
             <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-              <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
+              <div style={{ fontSize: 20, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
               <div style={{ fontSize: 14, fontWeight: 700, color: s.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.value}</div>
               <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
             </div>
@@ -188,9 +188,9 @@ export default function ProjectsPage() {
         <div className="text-tertiary animate-pulse" style={{ textAlign: 'center', padding: '60px 0' }}>Chargement...</div>
       ) : projects.length === 0 ? (
         <EmptyState
-          icon="📁"
+          icon="folder"
           title="Aucun projet pour l'instant"
-          description="Créez un projet pour organiser votre travail entre clients, produits ou services. Chaque projet dispose de ses propres agents et données."
+          description="Créez un projet pour organiser votre travail entre clients, produits ou services. Chaque projet dispose de ses propres agents IA et données."
           actionLabel="+ Créer mon premier projet"
           onAction={() => setShowModal(true)}
         />
@@ -212,7 +212,7 @@ export default function ProjectsPage() {
                 )}
                 {project.isDefault && !isActive && (
                   <div style={{ position: 'absolute', top: 12, right: 12, background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', borderRadius: 99, fontSize: 10, fontWeight: 600, padding: '2px 8px' }}>
-                    ⭐ défaut
+                    <span className="material-symbols-rounded" style={{ fontSize: 10 }}>star</span> défaut
                   </div>
                 )}
 
@@ -236,7 +236,7 @@ export default function ProjectsPage() {
                       className="btn btn-primary btn-sm"
                       style={{ fontSize: 12 }}
                     >
-                      {activating === project.id ? 'Activation...' : '✓ Activer'}
+                      {activating === project.id ? 'Activation...' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Activer</>}
                     </button>
                   )}
                   <button
@@ -244,7 +244,7 @@ export default function ProjectsPage() {
                     className="btn btn-ghost btn-sm"
                     style={{ fontSize: 12 }}
                   >
-                    ✏️ Renommer
+                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>edit</span> Renommer
                   </button>
                   {!project.isDefault && (
                     <button
@@ -252,7 +252,7 @@ export default function ProjectsPage() {
                       className="btn btn-ghost btn-sm"
                       style={{ fontSize: 12, color: '#ef4444' }}
                     >
-                      🗑️ Supprimer
+                      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>delete</span> Supprimer
                     </button>
                   )}
                 </div>
@@ -269,7 +269,7 @@ export default function ProjectsPage() {
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
           <div className="card" style={{ width: '100%', maxWidth: 440, padding: 28 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}>📁 Nouveau projet</h3>
+            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>folder</span> Nouveau projet</h3>
 
             <div style={{ marginBottom: 14 }}>
               <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Nom du projet *</label>
@@ -315,7 +315,7 @@ export default function ProjectsPage() {
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
           <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}>✏️ Renommer le projet</h3>
+            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>edit</span> Renommer le projet</h3>
             <input
               className="input"
               style={{ width: '100%', marginBottom: 20 }}
@@ -345,7 +345,7 @@ export default function ProjectsPage() {
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
           <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}>🗑️ Supprimer le projet</h3>
+            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>delete</span> Supprimer le projet</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20 }}>
               Êtes-vous sûr de vouloir supprimer <strong>"{deleteProject.name}"</strong> ? Cette action est irréversible.
             </p>

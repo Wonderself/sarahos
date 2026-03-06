@@ -33,14 +33,20 @@ const PERIOD_OPTIONS = [
 const PIE_COLORS = ['#5b6cf7', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#8b7cf8', '#ec4899', '#14b8a6'];
 
 // Agent names mapping (models → agent names)
-const MODEL_LABELS: Record<string, string> = {
-  'claude-sonnet-4-6': '🤖 Claude Sonnet (agents L1/L2)',
-  'claude-opus-4-6': '🧠 Claude Opus (DG / L3)',
-  'claude-haiku-4-5-20251001': '⚡ Claude Haiku (tâches rapides)',
+const MODEL_LABELS: Record<string, { icon: string; label: string }> = {
+  'claude-sonnet-4-6': { icon: 'smart_toy', label: 'Claude Sonnet (agents L1/L2)' },
+  'claude-opus-4-6': { icon: 'psychology', label: 'Claude Opus (DG / L3)' },
+  'claude-haiku-4-5-20251001': { icon: 'bolt', label: 'Claude Haiku (tâches rapides)' },
 };
 
 function getModelLabel(model: string) {
-  return MODEL_LABELS[model] ?? model;
+  const entry = MODEL_LABELS[model];
+  return entry ? entry.label : model;
+}
+
+function getModelIcon(model: string) {
+  const entry = MODEL_LABELS[model];
+  return entry ? entry.icon : 'smart_toy';
 }
 
 // ─── API helper ───────────────────────────────────────────────────────────────
@@ -109,14 +115,14 @@ export default function AnalyticsPage() {
 
   // Pie data
   const pieData = usageByModel.map(m => ({
-    name: getModelLabel(m.model).replace(/^[^\s]+ /, ''),
+    name: getModelLabel(m.model),
     value: Math.round(m.totalCost / 1000),
   })).filter(d => d.value > 0);
 
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>📊</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>bar_chart</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement des analytics...</div>
       </div>
     );
@@ -127,8 +133,8 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">📊 Analytics</h1>
-          <p className="page-subtitle">Utilisation de vos agents — tokens, requêtes et coûts</p>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bar_chart</span> Analytics</h1>
+          <p className="page-subtitle">Utilisation de vos <span className="fz-logo-word">agents IA</span> — tokens, requêtes et coûts</p>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           {PERIOD_OPTIONS.map(p => (
@@ -153,13 +159,13 @@ export default function AnalyticsPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤', color: 'var(--accent)' },
-          { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: '📨', color: '#3b82f6' },
-          { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: '💰', color: '#f59e0b' },
-          { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: '🤖', color: '#22c55e' },
+          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: 'text_fields', color: 'var(--accent)' },
+          { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: 'forward_to_inbox', color: '#3b82f6' },
+          { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: 'savings', color: '#f59e0b' },
+          { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: 'smart_toy', color: '#22c55e' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
+            <div style={{ fontSize: 22, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{s.icon}</span></div>
             <div style={{ fontSize: 18, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
             <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{s.label}</div>
           </div>
@@ -168,10 +174,10 @@ export default function AnalyticsPage() {
 
       {totalRequests === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bar_chart</span></div>
           <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucune donnée sur cette période</div>
           <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
-            Utilisez vos agents pour voir apparaître les analytics ici
+            Utilisez vos agents pour voir apparaître les <span className="fz-logo-word">analytics</span> ici
           </div>
         </div>
       ) : (
@@ -223,8 +229,8 @@ export default function AnalyticsPage() {
                       background: PIE_COLORS[i % PIE_COLORS.length],
                     }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {getModelLabel(m.model)}
+                      <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{getModelIcon(m.model)}</span> {getModelLabel(m.model)}
                       </div>
                       <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 1 }}>
                         {m.totalRequests} req · {(m.totalTokens / 1000).toFixed(0)}k tokens

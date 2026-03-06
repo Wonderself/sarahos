@@ -58,7 +58,7 @@ export default function OgImage() {
             }}
           />
           <span style={{ fontSize: '18px', color: '#a5b4fc', fontWeight: 600, letterSpacing: '1px' }}>
-            FREENZY.IO — FLASHBOARD
+            freenzy.io — flashboard
           </span>
         </div>
 

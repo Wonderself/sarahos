@@ -62,7 +62,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     return () => { timers.forEach(t => clearTimeout(t)); };
   }, []);
 
-  const ICONS: Record<ToastType, string> = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+  const ICONS: Record<ToastType, string> = { success: 'check_circle', error: 'close', info: 'info', warning: 'warning' };
   const COLORS: Record<ToastType, { bg: string; border: string; text: string }> = {
     success: { bg: '#f0fdf4', border: '#86efac', text: '#15803d' },
     error:   { bg: '#fef2f2', border: '#fca5a5', text: '#dc2626' },
@@ -101,7 +101,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 animation: 'toastIn 0.2s ease',
               }}
             >
-              <span style={{ fontSize: 16, flexShrink: 0, lineHeight: 1.4 }}>{ICONS[toast.type]}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 16, flexShrink: 0, lineHeight: 1.4 }}>{ICONS[toast.type]}</span>
               <span style={{ flex: 1, fontSize: 13, color: c.text, lineHeight: 1.5 }}>{toast.message}</span>
               <button
                 onClick={() => removeToast(toast.id)}
@@ -113,7 +113,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                ✕
+                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
               </button>
             </div>
           );
@@ -143,9 +143,9 @@ interface ErrorBannerProps {
 
 export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerProps) {
   const COLORS = {
-    error:   { bg: '#fef2f2', border: '#fca5a5', text: '#dc2626', icon: '❌' },
-    warning: { bg: '#fffbeb', border: '#fcd34d', text: '#d97706', icon: '⚠️' },
-    info:    { bg: '#eff6ff', border: '#93c5fd', text: '#1d4ed8', icon: 'ℹ️' },
+    error:   { bg: '#fef2f2', border: '#fca5a5', text: '#dc2626', icon: 'close' },
+    warning: { bg: '#fffbeb', border: '#fcd34d', text: '#d97706', icon: 'warning' },
+    info:    { bg: '#eff6ff', border: '#93c5fd', text: '#1d4ed8', icon: 'info' },
   };
   const c = COLORS[type];
   return (
@@ -157,7 +157,7 @@ export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerP
         display: 'flex', alignItems: 'center', gap: 10,
       }}
     >
-      <span style={{ fontSize: 15 }}>{c.icon}</span>
+      <span className="material-symbols-rounded" style={{ fontSize: 15 }}>{c.icon}</span>
       <span style={{ flex: 1, fontSize: 13, color: c.text, lineHeight: 1.5 }}>{message}</span>
       {onDismiss && (
         <button
@@ -169,7 +169,7 @@ export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerP
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          ✕
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
         </button>
       )}
     </div>

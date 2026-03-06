@@ -18,70 +18,70 @@ interface TwilioCapability {
 
 const CAPABILITIES: TwilioCapability[] = [
   {
-    icon: '📱',
+    icon: 'phone_iphone',
     title: 'SMS',
     description: 'Envoi et reception de SMS. Notifications automatiques, codes de verification, campagnes marketing.',
     status: 'configure',
     features: ['Envoi en masse', 'Codes OTP', 'Notifications', 'Reponse automatique'],
   },
   {
-    icon: '📞',
+    icon: 'call',
     title: 'Appels Vocaux',
     description: 'Appels sortants programmatiques, IVR (repondeur intelligent), enregistrement et transcription.',
     status: 'configure',
     features: ['Appels sortants', 'IVR / SVI', 'Enregistrement', 'Transcription'],
   },
   {
-    icon: '💬',
+    icon: 'chat',
     title: 'WhatsApp Business',
     description: 'Messages WhatsApp via l\'API Twilio. Templates pre-approuves, envoi de medias, conversations.',
     status: 'configure',
     features: ['Templates', 'Medias', 'Conversations', 'Notifications'],
   },
   {
-    icon: '🎥',
+    icon: 'videocam',
     title: 'Twilio Video',
     description: 'Visioconference integree. Rooms multi-participants, enregistrement video, partage d\'ecran.',
     status: 'bientot',
     features: ['Rooms', 'Enregistrement', 'Partage ecran', 'Multi-participants'],
   },
   {
-    icon: '🔐',
+    icon: 'lock',
     title: 'Twilio Verify',
     description: 'Verification d\'identite multi-canal. 2FA par SMS, email, push ou TOTP.',
     status: 'configure',
     features: ['SMS OTP', 'Email OTP', 'Push', 'TOTP'],
   },
   {
-    icon: '💬',
+    icon: 'forum',
     title: 'Twilio Conversations',
     description: 'Messagerie omnicanale unifiee. Combinez SMS, WhatsApp et chat web dans une seule interface.',
     status: 'bientot',
     features: ['SMS + WhatsApp', 'Chat web', 'Historique unifie', 'Webhooks'],
   },
   {
-    icon: '📧',
+    icon: 'mail',
     title: 'SendGrid (Email)',
     description: 'Emails transactionnels et marketing via SendGrid (filiale Twilio). Templates, analytics, deliverability.',
     status: 'bientot',
     features: ['Transactionnel', 'Marketing', 'Templates', 'Analytics'],
   },
   {
-    icon: '📊',
+    icon: 'bar_chart',
     title: 'Twilio Segment',
     description: 'Customer Data Platform. Analytics client, tracking d\'evenements, unification de donnees.',
     status: 'bientot',
     features: ['CDP', 'Tracking', 'Audiences', 'Integrations'],
   },
   {
-    icon: '🤖',
+    icon: 'smart_toy',
     title: 'Twilio Flex',
     description: 'Centre de contact cloud personnalisable. Agent desktop, routage intelligent, reporting.',
     status: 'bientot',
     features: ['Agent desktop', 'Routage', 'Reporting', 'Plugins'],
   },
   {
-    icon: '📍',
+    icon: 'location_on',
     title: 'Twilio Lookup',
     description: 'Verification et enrichissement de numeros de telephone. Detection de fraude, info operateur.',
     status: 'configure',
@@ -253,7 +253,7 @@ export default function TelephonyPage() {
       {/* ─── Header ─── */}
       <div>
         <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-          📞 Telephonie & Communications (Twilio)
+          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>call</span> Telephonie & Communications (Twilio)
         </h1>
         <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 6 }}>
           Gerez les communications vocales, SMS, WhatsApp et plus via Twilio
@@ -396,7 +396,7 @@ export default function TelephonyPage() {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 24 }}>{cap.icon}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{cap.icon}</span>
                   <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{cap.title}</span>
                 </div>
                 {getStatusBadge(cap.status)}
@@ -493,7 +493,7 @@ export default function TelephonyPage() {
                     background: s.done ? 'var(--success)' : 'var(--bg-tertiary)',
                     color: s.done ? '#fff' : 'var(--text-tertiary)',
                   }}>
-                    {s.done ? '✓' : s.step}
+                    {s.done ? <span className="material-symbols-rounded" style={{ fontSize: 14, color: '#fff' }}>check</span> : s.step}
                   </span>
                   <div>
                     <div style={{
@@ -545,10 +545,10 @@ export default function TelephonyPage() {
                     {v.configured ? (
                       <>
                         <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{v.masked}</span>
-                        ✅ Configure
+                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Configure
                       </>
                     ) : (
-                      '❌ Non configure'
+                      <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>cancel</span> Non configure</>
                     )}
                   </span>
                 </div>
@@ -581,7 +581,7 @@ export default function TelephonyPage() {
               fontWeight: 500,
               marginBottom: 16,
             }}>
-              ⚠️ Configurez un numero Twilio pour activer les tests
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> Configurez un numero Twilio pour activer les tests
             </div>
           )}
 
@@ -621,7 +621,7 @@ export default function TelephonyPage() {
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              📱 Envoyer SMS Test
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>phone_iphone</span> Envoyer SMS Test
             </button>
             <button
               disabled={!hasPhoneNumber}
@@ -638,7 +638,7 @@ export default function TelephonyPage() {
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              📞 Appel Test
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>call</span> Appel Test
             </button>
           </div>
         </div>
@@ -710,7 +710,7 @@ export default function TelephonyPage() {
           color: 'var(--info)',
           lineHeight: 1.5,
         }}>
-          💡 Les couts Twilio sont factures separement de vos credits Freenzy.io. Twilio facture directement sur votre compte Twilio.
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Les couts Twilio sont factures separement de vos credits Freenzy.io. Twilio facture directement sur votre compte Twilio.
           Les tarifs ci-dessus sont indicatifs et peuvent varier selon le volume et la region.
         </div>
       </div>

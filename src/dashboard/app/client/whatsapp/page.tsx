@@ -200,7 +200,7 @@ export default function WhatsAppPage() {
       <div className="p-24 text-center">
         {loadingTimedOut ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>&#128268;</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>power</span></div>
             <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
               Impossible de charger les données
             </div>
@@ -227,7 +227,7 @@ export default function WhatsAppPage() {
         <div>
           <h1 className="page-title">WhatsApp</h1>
           <p className="page-subtitle">
-            Conversez avec vos agents IA directement sur WhatsApp. Changez d&apos;agent avec @nom.
+            Conversez avec vos <span className="fz-logo-word">agents IA</span> directement sur WhatsApp. Changez d&apos;agent avec @nom.
           </p>
         </div>
         <button
@@ -235,14 +235,14 @@ export default function WhatsAppPage() {
           className="btn btn-ghost btn-sm"
           style={{ fontSize: 13, gap: 6 }}
         >
-          {showGuide ? 'Fermer' : '📖 Guide'}
+          {showGuide ? 'Fermer' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>menu_book</span> Guide</>}
         </button>
       </div>
 
       {/* Guide WhatsApp */}
       {showGuide && (
         <div className="card section" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Commandes WhatsApp</h3>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Commandes <span className="fz-logo-word">WhatsApp</span></h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {WA_COMMANDS.map(c => (
               <div key={c.cmd} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -356,7 +356,7 @@ export default function WhatsAppPage() {
                     padding: '10px 14px', borderRadius: 10,
                     background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
                   }}>
-                    <span style={{ fontSize: 24 }}>{current.emoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 24, color: (current as any).color ?? 'var(--accent)' }}>{(current as any).materialIcon ?? 'smart_toy'}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: 600 }}>{current.name}</div>
                       <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{current.role}</div>
@@ -397,7 +397,7 @@ export default function WhatsAppPage() {
                           transition: 'all 0.15s',
                         }}
                       >
-                        <span style={{ fontSize: 22 }}>{agent.emoji}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: 22, color: (agent as any).color ?? 'var(--accent)' }}>{(agent as any).materialIcon ?? 'smart_toy'}</span>
                         <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center' }}>{agent.name}</span>
                         <span style={{ fontSize: 10, color: 'var(--text-tertiary)', textAlign: 'center', lineHeight: 1.2 }}>
                           {agent.role.length > 20 ? agent.role.slice(0, 18) + '...' : agent.role}
@@ -447,7 +447,7 @@ export default function WhatsAppPage() {
                       background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
                       flex: '1 1 140px', minWidth: 140,
                     }}>
-                      <span style={{ fontSize: 20 }}>{agentDef.emoji}</span>
+                      <span className="material-symbols-rounded" style={{ fontSize: 20, color: (agentDef as any).color ?? 'var(--accent)' }}>{(agentDef as any).materialIcon ?? 'smart_toy'}</span>
                       <div>
                         <div style={{ fontSize: 13, fontWeight: 600 }}>{agentDef.name}</div>
                         <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
@@ -483,7 +483,7 @@ export default function WhatsAppPage() {
                       <span className="font-semibold">
                         {(() => {
                           const agent = DEFAULT_AGENTS.find(a => a.id === conv.agentName || a.name.toLowerCase() === conv.agentName);
-                          return agent ? `${agent.emoji} ${agent.name}` : conv.agentName;
+                          return agent ? agent.name : conv.agentName;
                         })()}
                       </span>
                       <span className="text-muted text-md">{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
@@ -512,7 +512,7 @@ export default function WhatsAppPage() {
                           fontSize: 11, color: 'var(--text-tertiary)',
                           marginBottom: 2, textAlign: 'right',
                         }}>
-                          {agent.emoji} {agent.name}
+                          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>{(agent as any).materialIcon ?? 'smart_toy'}</span> {agent.name}
                         </div>
                       )}
                       <div className={`wa-bubble ${msg.direction === 'inbound' ? 'wa-bubble-inbound' : 'wa-bubble-outbound'}`}>

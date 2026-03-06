@@ -55,10 +55,10 @@ interface ChatMessage {
 }
 
 const TYPE_LABELS: Record<ModuleType, string> = {
-  form: '📋 Formulaire',
-  crm: '📊 Base CRM',
-  agent: '🤖 Agent IA',
-  dashboard: '📈 Dashboard',
+  form: 'Formulaire',
+  crm: 'Base CRM',
+  agent: 'Agent IA',
+  dashboard: 'Dashboard',
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -118,7 +118,7 @@ function FormRenderer({ mod, onSubmit }: { mod: UserModule; onSubmit: () => void
   if (submitted) {
     return (
       <div style={{ textAlign: 'center', padding: '48px 32px' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
         <h2 style={{ fontWeight: 700, fontSize: 20, marginBottom: 8 }}>{schema.confirmation_message ?? 'Merci !'}</h2>
         <button onClick={() => { setSubmitted(false); setValues({}); }} style={{ marginTop: 16, padding: '8px 20px', borderRadius: 10, background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer' }}>
           Nouveau formulaire
@@ -331,7 +331,7 @@ function CRMRenderer({ mod }: { mod: UserModule }) {
                       disabled={deleting === rec.id}
                       style={{ padding: '3px 8px', borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
                     >
-                      {deleting === rec.id ? '...' : '🗑️'}
+                      {deleting === rec.id ? '...' : <span className="material-symbols-rounded" style={{ fontSize: 12 }}>delete</span>}
                     </button>
                   </td>
                 </tr>
@@ -467,14 +467,14 @@ function DashboardRenderer({ mod }: { mod: UserModule }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 16 }}>
         {[
-          { label: 'Total', value: stats.total, icon: '📊' },
-          { label: "Aujourd'hui", value: stats.today, icon: '📅' },
-          { label: 'Cette semaine', value: stats.thisWeek, icon: '📈' },
+          { label: 'Total', value: stats.total, icon: 'bar_chart' },
+          { label: "Aujourd'hui", value: stats.today, icon: 'calendar_month' },
+          { label: 'Cette semaine', value: stats.thisWeek, icon: 'trending_up' },
         ].map(s => (
           <div key={s.label} style={{ background: 'var(--bg-secondary)', borderRadius: 16, padding: '20px 16px', textAlign: 'center' }}>
-            <div style={{ fontSize: 28, marginBottom: 6 }}>{s.icon}</div>
+            <div style={{ fontSize: 28, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{s.icon}</span></div>
             <div style={{ fontSize: 28, fontWeight: 800, color: mod.color }}>{s.value}</div>
             <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>{s.label}</div>
           </div>
@@ -482,7 +482,7 @@ function DashboardRenderer({ mod }: { mod: UserModule }) {
       </div>
       <div style={{ background: 'var(--bg-secondary)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-          📈 Les graphiques détaillés et l&apos;analyse des tendances seront disponibles dans une prochaine mise à jour.
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>trending_up</span> Les graphiques détaillés et l&apos;analyse des tendances seront disponibles dans une prochaine mise à jour.
         </p>
       </div>
     </div>
@@ -530,7 +530,7 @@ export default function ModuleRuntimePage() {
 
   if (!mod) return (
     <div style={{ padding: 32, textAlign: 'center' }}>
-      <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+      <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>search</span></div>
       <h2 style={{ fontWeight: 700 }}>Module introuvable</h2>
       <p style={{ color: 'var(--text-secondary)', marginBottom: 20 }}>Ce module n&apos;existe pas ou vous n&apos;y avez pas accès.</p>
       <Link href="/client/modules" className="btn btn-primary" style={{ textDecoration: 'none' }}>← Retour aux modules</Link>
@@ -538,11 +538,11 @@ export default function ModuleRuntimePage() {
   );
 
   const typeInfo = {
-    form: { icon: '📋', label: 'Formulaire' },
-    crm: { icon: '📊', label: 'Base CRM' },
-    agent: { icon: '🤖', label: 'Agent IA' },
-    dashboard: { icon: '📈', label: 'Dashboard' },
-  }[mod.type] ?? { icon: '📦', label: mod.type };
+    form: { icon: 'assignment', label: 'Formulaire' },
+    crm: { icon: 'bar_chart', label: 'Base CRM' },
+    agent: { icon: 'smart_toy', label: 'Agent IA' },
+    dashboard: { icon: 'trending_up', label: 'Dashboard' },
+  }[mod.type] ?? { icon: 'inventory_2', label: mod.type };
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -557,7 +557,7 @@ export default function ModuleRuntimePage() {
             <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{mod.name}</h1>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <span style={{ background: `${mod.color}20`, color: mod.color, borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>
-                {typeInfo.icon} {typeInfo.label}
+                <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{typeInfo.icon}</span> {typeInfo.label}
               </span>
               {mod.type !== 'agent' && (
                 <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
@@ -578,7 +578,7 @@ export default function ModuleRuntimePage() {
             ← Retour
           </Link>
           <Link href={`/client/modules/builder?edit=${mod.id}`} style={{ padding: '7px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'transparent', textDecoration: 'none', fontSize: 13, color: 'var(--text-secondary)' }}>
-            ✏️ Modifier
+            <span className="material-symbols-rounded" style={{ fontSize: 13 }}>edit</span> Modifier
           </Link>
         </div>
       </div>
@@ -602,7 +602,7 @@ export default function ModuleRuntimePage() {
       {/* ── Public URL info ── */}
       {mod.public_access && (
         <div style={{ marginTop: 16, padding: '12px 16px', background: 'var(--bg-secondary)', borderRadius: 12, fontSize: 13, color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>🔗 Ce module a une URL publique : <code>/m/{mod.slug}</code></span>
+          <span><span className="material-symbols-rounded" style={{ fontSize: 13 }}>link</span> Ce module a une URL publique : <code>/m/{mod.slug}</code></span>
           <button
             onClick={() => navigator.clipboard.writeText(`${window.location.origin}/m/${mod.slug}`)}
             style={{ padding: '4px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12 }}

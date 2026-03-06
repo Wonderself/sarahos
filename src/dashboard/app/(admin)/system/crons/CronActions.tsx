@@ -19,12 +19,12 @@ export default function CronActions({ jobName }: { jobName: string }) {
       });
       const data = await res.json() as { ok: boolean; message?: string; error?: string };
       if (res.ok && data.ok) {
-        showSuccess(`✅ ${jobName} exécuté avec succès`);
+        showSuccess(`${jobName} execute avec succes`);
       } else {
-        showError(`❌ ${data.error ?? data.message ?? 'Erreur inconnue'}`);
+        showError(`${data.error ?? data.message ?? 'Erreur inconnue'}`);
       }
     } catch {
-      showError(`❌ Erreur réseau`);
+      showError(`Erreur reseau`);
     } finally {
       setLoading(false);
     }

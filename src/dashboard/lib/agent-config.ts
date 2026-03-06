@@ -81,6 +81,7 @@ export interface DefaultAgentDef {
   gender: AgentGender;
   role: string;
   emoji: string;
+  materialIcon: string;
   color: string;
   model: string;
   systemPrompt: string;
@@ -101,6 +102,7 @@ export interface ResolvedAgent {
   gender: AgentGender;
   role: string;
   emoji: string;
+  materialIcon: string;
   color: string;
   model: string;
   systemPrompt: string;
@@ -128,6 +130,7 @@ export const DEFAULT_AGENTS: DefaultAgentDef[] = [
     gender: 'F',
     role: 'Répondeur Intelligent',
     emoji: '📞',
+    materialIcon: 'call',
     color: '#22c55e',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Camille, Répondeur Intelligent. Tu es chaleureuse, réactive et ultra-professionnelle — la première voix que les clients entendent, et tu sais que cette première impression est décisive. Tu gères chaque interaction avec le soin d'une hôtesse d'accueil 5 étoiles.
@@ -171,9 +174,9 @@ REGLES D'OR :
     priceCredits: 5,
     domainOptions: ['Service client', 'FAQ automatisées', 'Gestion des plaintes', 'Prise de messages', 'Qualification leads', 'Support technique N1', 'Gestion des urgences', 'Multilingue', 'Script d\'appel', 'Satisfaction client', 'Gestion des retours', 'Live chat', 'Chatbot', 'Ticketing', 'Escalation', 'Feedback collection', 'NPS / CSAT', 'Self-service', 'Knowledge base', 'Tone management'],
     modes: [
-      { id: 'auto-response', name: 'Réponse automatique', description: 'Répondre aux messages clients 24/7', icon: '🤖' },
-      { id: 'faq', name: 'Gestion FAQ', description: 'Créer et maintenir une base de réponses', icon: '❓' },
-      { id: 'escalation', name: 'Escalation', description: 'Détecter les urgences et les rediriger', icon: '🚨' },
+      { id: 'auto-response', name: 'Réponse automatique', description: 'Répondre aux messages clients 24/7', icon: 'smart_toy' },
+      { id: 'faq', name: 'Gestion FAQ', description: 'Créer et maintenir une base de réponses', icon: 'help' },
+      { id: 'escalation', name: 'Escalation', description: 'Détecter les urgences et les rediriger', icon: 'emergency' },
     ],
   },
   {
@@ -182,6 +185,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Assistante Exécutive',
     emoji: '📋',
+    materialIcon: 'assignment',
     color: '#6366f1',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Inès, Assistante Exécutive. Tu es l'assistante que tout dirigeant rêve d'avoir : ultra-organisée, proactive, discrète et dotée d'une mémoire d'éléphant. Tu anticipes les besoins avant même qu'on te les exprime. Tu es le filet de sécurité qui fait que rien ne tombe entre les mailles.
@@ -226,9 +230,9 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Gestion d\'agenda', 'Rédaction emails', 'Gestion de tâches', 'Prise de notes', 'Suivi de projets', 'Organisation d\'événements', 'Gestion documentaire', 'Rappels & deadlines', 'Filtrage information', 'Communication interne', 'Logistique', 'Travel management', 'Reporting', 'CRM admin', 'Templates & procédures', 'Onboarding', 'Coordination équipes', 'Gestion fournisseurs', 'Archivage', 'Process improvement'],
     modes: [
-      { id: 'email', name: 'Rédaction email', description: 'Rédiger des emails professionnels adaptés', icon: '📧' },
-      { id: 'planning', name: 'Organisation', description: 'Gérer votre agenda, tâches et deadlines', icon: '📅' },
-      { id: 'notes', name: 'Prise de notes', description: 'Structurer des notes de réunion en plan d\'action', icon: '📝' },
+      { id: 'email', name: 'Rédaction email', description: 'Rédiger des emails professionnels adaptés', icon: 'mail' },
+      { id: 'planning', name: 'Organisation', description: 'Gérer votre agenda, tâches et deadlines', icon: 'calendar_month' },
+      { id: 'notes', name: 'Prise de notes', description: 'Structurer des notes de réunion en plan d\'action', icon: 'edit_note' },
     ],
   },
   {
@@ -237,6 +241,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Directeur Commercial',
     emoji: '🤝',
+    materialIcon: 'handshake',
     color: '#f97316',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Sacha, Directeur Commercial. Tu as 15 ans d'expérience en vente B2B et B2C, et tu adores transformer des opportunités en succès. Tu es direct, énergique et stratégique — le genre de commercial qui prépare chaque rendez-vous comme un match important.
@@ -281,9 +286,9 @@ REGLES D'OR :
     priceCredits: 20,
     domainOptions: ['Prospection B2B', 'Prospection B2C', 'Gestion de pipeline', 'Qualification de leads', 'Négociation', 'Closing', 'CRM / Suivi clients', 'Offres commerciales', 'Pricing', 'Upselling / Cross-selling', 'Account management', 'Partenariats', 'Sales enablement', 'Forecast ventes', 'Cold emailing', 'Social selling', 'Démo produit', 'Objections handling', 'Fidélisation', 'KPIs commerciaux'],
     modes: [
-      { id: 'prospect', name: 'Prospection', description: 'Identifier et qualifier des prospects ciblés', icon: '🎯' },
-      { id: 'deal', name: 'Closing', description: 'Préparer une négociation et conclure une vente', icon: '🤝' },
-      { id: 'pipeline', name: 'Pipeline', description: 'Organiser et suivre votre pipeline commercial', icon: '📈' },
+      { id: 'prospect', name: 'Prospection', description: 'Identifier et qualifier des prospects ciblés', icon: 'target' },
+      { id: 'deal', name: 'Closing', description: 'Préparer une négociation et conclure une vente', icon: 'handshake' },
+      { id: 'pipeline', name: 'Pipeline', description: 'Organiser et suivre votre pipeline commercial', icon: 'trending_up' },
     ],
   },
   {
@@ -292,6 +297,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Directrice Marketing',
     emoji: '📊',
+    materialIcon: 'campaign',
     color: '#ec4899',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Jade, Directrice Marketing. Tu combines créativité et data avec passion — pour toi, le marketing c'est de la science au service de l'émotion. Tu as piloté des campagnes de 0 à des millions de vues et tu sais que chaque euro investi doit être traçable.
@@ -336,9 +342,9 @@ REGLES D'OR :
     priceCredits: 25,
     domainOptions: ['SEO / SEM', 'Content marketing', 'Social media', 'Email marketing', 'Growth hacking', 'Branding', 'Analytics', 'Paid ads', 'Influence marketing', 'Community management', 'Marketing automation', 'CRM', 'UX/UI', 'Copywriting', 'Video marketing', 'Podcasting', 'PR / Relations presse', 'Event marketing', 'ABM', 'Product marketing'],
     modes: [
-      { id: 'campaign', name: 'Campagne marketing', description: 'Créer et planifier une campagne multi-canal', icon: '📢' },
-      { id: 'auto-post', name: 'Auto-posting', description: 'Générer et programmer des posts réseaux sociaux', icon: '📱' },
-      { id: 'seo', name: 'Audit SEO', description: 'Analyser et optimiser votre référencement', icon: '🔍' },
+      { id: 'campaign', name: 'Campagne marketing', description: 'Créer et planifier une campagne multi-canal', icon: 'campaign' },
+      { id: 'auto-post', name: 'Auto-posting', description: 'Générer et programmer des posts réseaux sociaux', icon: 'phone_iphone' },
+      { id: 'seo', name: 'Audit SEO', description: 'Analyser et optimiser votre référencement', icon: 'search' },
     ],
   },
   {
@@ -347,6 +353,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Directeur des Ressources Humaines',
     emoji: '👥',
+    materialIcon: 'group',
     color: '#14b8a6',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Noah, Directeur des Ressources Humaines. Tu es à la fois stratège et humain — tu sais que derrière chaque recrutement, chaque formation et chaque conflit, il y a des personnes. Tu combines rigueur juridique et intelligence émotionnelle pour accompagner la croissance humaine de l'entreprise.
@@ -390,9 +397,9 @@ REGLES D'OR :
     priceCredits: 20,
     domainOptions: ['Recrutement', 'Fiche de poste', 'Entretien d\'embauche', 'Onboarding', 'Formation / L&D', 'Gestion des compétences', 'Évaluation performance', 'Droit du travail', 'Paie / Rémunération', 'Avantages sociaux', 'Climat social', 'Marque employeur', 'Mobilité interne', 'Plan de carrière', 'GPEC', 'QVT / Bien-être', 'CSE / IRP', 'Offboarding', 'Diversité & inclusion', 'People analytics'],
     modes: [
-      { id: 'recruit', name: 'Recrutement', description: 'Rédiger une offre et structurer un process de recrutement', icon: '📝' },
-      { id: 'training', name: 'Formation', description: 'Concevoir un plan de formation sur mesure', icon: '🎓' },
-      { id: 'talent', name: 'Gestion des talents', description: 'Évaluer, développer et fidéliser les collaborateurs', icon: '⭐' },
+      { id: 'recruit', name: 'Recrutement', description: 'Rédiger une offre et structurer un process de recrutement', icon: 'edit_note' },
+      { id: 'training', name: 'Formation', description: 'Concevoir un plan de formation sur mesure', icon: 'school' },
+      { id: 'talent', name: 'Gestion des talents', description: 'Évaluer, développer et fidéliser les collaborateurs', icon: 'star' },
     ],
   },
   {
@@ -401,6 +408,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Directrice de la Communication',
     emoji: '📣',
+    materialIcon: 'record_voice_over',
     color: '#8b5cf6',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Lina, Directrice de la Communication. Tu es la gardienne de l'image de marque — chaque mot, chaque visuel, chaque prise de parole passe par ton filtre stratégique. Tu combines sens politique, plume affûtée et sang-froid en situation de crise. Tu sais que la communication, c'est 50% de stratégie et 50% d'exécution impeccable.
@@ -444,9 +452,9 @@ REGLES D'OR :
     priceCredits: 20,
     domainOptions: ['Relations presse', 'Communiqués de presse', 'Communication interne', 'Communication externe', 'Événementiel', 'Relations publiques', 'Media training', 'Gestion de crise', 'E-réputation', 'Storytelling', 'Communication institutionnelle', 'Rapport annuel', 'Newsletter interne', 'Communication RSE', 'Communication financière', 'Communication de changement', 'Parrainage / Mécénat', 'Communication de recrutement', 'Lobbying', 'Affaires publiques'],
     modes: [
-      { id: 'press', name: 'Relations presse', description: 'Rédiger un communiqué ou préparer une interview', icon: '📰' },
-      { id: 'internal', name: 'Com interne', description: 'Créer des supports de communication interne', icon: '🏢' },
-      { id: 'crisis', name: 'Gestion de crise', description: 'Gérer une communication de crise', icon: '🛡️' },
+      { id: 'press', name: 'Relations presse', description: 'Rédiger un communiqué ou préparer une interview', icon: 'newspaper' },
+      { id: 'internal', name: 'Com interne', description: 'Créer des supports de communication interne', icon: 'business' },
+      { id: 'crisis', name: 'Gestion de crise', description: 'Gérer une communication de crise', icon: 'shield' },
     ],
   },
   {
@@ -455,6 +463,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Directeur Financier',
     emoji: '💰',
+    materialIcon: 'account_balance',
     color: '#f59e0b',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Eliott, Directeur Financier (CFO). Tu es rigoureux, méthodique et tu parles le langage des chiffres couramment — mais tu sais aussi les rendre accessibles à ceux qui ne sont pas financiers. Tu crois qu'une bonne décision business est toujours éclairée par les données financières.
@@ -499,9 +508,9 @@ REGLES D'OR :
     priceCredits: 35,
     domainOptions: ['Comptabilité', 'Trésorerie', 'Budget prévisionnel', 'Reporting financier', 'Fiscalité', 'Audit', 'Contrôle de gestion', 'Business plan financier', 'Valorisation', 'Fundraising', 'Cash flow', 'KPIs financiers', 'Facturation', 'Recouvrement', 'Assurances', 'Compliance', 'Gestion des risques', 'Investissements', 'Subventions / Aides', 'Optimisation des coûts'],
     modes: [
-      { id: 'analysis', name: 'Analyse financière', description: 'Analyser chiffres, marges et ratios', icon: '📊' },
-      { id: 'budget', name: 'Budget prévisionnel', description: 'Créer et suivre un budget prévisionnel', icon: '💶' },
-      { id: 'fiscal', name: 'Optimisation fiscale', description: 'Conseils pour optimiser votre fiscalité', icon: '🏛️' },
+      { id: 'analysis', name: 'Analyse financière', description: 'Analyser chiffres, marges et ratios', icon: 'bar_chart' },
+      { id: 'budget', name: 'Budget prévisionnel', description: 'Créer et suivre un budget prévisionnel', icon: 'euro' },
+      { id: 'fiscal', name: 'Optimisation fiscale', description: 'Conseils pour optimiser votre fiscalité', icon: 'account_balance' },
     ],
   },
   {
@@ -510,6 +519,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Directeur Technique',
     emoji: '💻',
+    materialIcon: 'terminal',
     color: '#3b82f6',
     model: 'claude-opus-4-6',
     systemPrompt: `Tu es Rayan, Directeur Technique (CTO). Tu es le geek passionné qui sait aussi parler business — tu traduis les besoins métier en architecture technique solide. Tu es pragmatique : la meilleure solution est celle qui marche, qui scale et qui est maintenable, pas la plus élégante sur le papier.
@@ -554,9 +564,9 @@ REGLES D'OR :
     priceCredits: 40,
     domainOptions: ['Architecture logicielle', 'Cloud (AWS/GCP/Azure)', 'DevOps / CI-CD', 'Sécurité informatique', 'Base de données', 'API design', 'Microservices', 'Frontend (React/Vue)', 'Backend (Node/Python)', 'Mobile (iOS/Android)', 'Machine Learning', 'Infrastructure', 'Performance', 'Testing / QA', 'Blockchain', 'IoT', 'Data engineering', 'Low-code / No-code', 'Open source', 'Tech debt'],
     modes: [
-      { id: 'review', name: 'Code review', description: 'Analyser du code et suggérer des améliorations', icon: '🔍' },
-      { id: 'architecture', name: 'Architecture', description: 'Concevoir l\'architecture technique d\'un projet', icon: '🏗️' },
-      { id: 'debug', name: 'Debugging', description: 'Diagnostiquer et résoudre des bugs', icon: '🐛' },
+      { id: 'review', name: 'Code review', description: 'Analyser du code et suggérer des améliorations', icon: 'search' },
+      { id: 'architecture', name: 'Architecture', description: 'Concevoir l\'architecture technique d\'un projet', icon: 'architecture' },
+      { id: 'debug', name: 'Debugging', description: 'Diagnostiquer et résoudre des bugs', icon: 'bug_report' },
     ],
   },
   {
@@ -565,6 +575,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Directrice Juridique',
     emoji: '⚖️',
+    materialIcon: 'balance',
     color: '#64748b',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Agathe, Directrice Juridique. Tu es précise, méthodique et pédagogue — tu sais que le droit fait peur à la plupart des dirigeants, alors tu le rends accessible sans le simplifier. Tu es le bouclier juridique de l'entreprise, mais aussi sa boussole pour saisir les opportunités en toute sécurité.
@@ -608,9 +619,9 @@ REGLES D'OR :
     priceCredits: 30,
     domainOptions: ['Droit des contrats', 'RGPD / Protection des données', 'Propriété intellectuelle', 'Droit des sociétés', 'Droit du travail', 'CGV / CGU', 'Mentions légales', 'Droit commercial', 'Conformité / Compliance', 'Contentieux', 'Droit numérique', 'Franchise / Licence', 'Marques & Brevets', 'Due diligence juridique', 'Assurances', 'Droit fiscal', 'Médiation', 'Droit international', 'Réglementation sectorielle', 'Gouvernance'],
     modes: [
-      { id: 'contract', name: 'Contrats', description: 'Rédiger ou analyser un contrat commercial', icon: '📄' },
-      { id: 'rgpd', name: 'RGPD', description: 'Mise en conformité et audit RGPD', icon: '🔒' },
-      { id: 'compliance', name: 'Conformité', description: 'Vérifier la conformité légale et réglementaire', icon: '✅' },
+      { id: 'contract', name: 'Contrats', description: 'Rédiger ou analyser un contrat commercial', icon: 'article' },
+      { id: 'rgpd', name: 'RGPD', description: 'Mise en conformité et audit RGPD', icon: 'lock' },
+      { id: 'compliance', name: 'Conformité', description: 'Vérifier la conformité légale et réglementaire', icon: 'check_circle' },
     ],
   },
   {
@@ -619,6 +630,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Directrice Générale',
     emoji: '👩‍💼',
+    materialIcon: 'verified',
     color: '#a855f7',
     model: 'claude-opus-4-6',
     systemPrompt: `Tu es Maëva, Directrice Générale. Tu es visionnaire, pragmatique et inspirante — tu vois loin mais tu gardes les pieds sur terre. Tu as l'expérience d'une CEO qui a piloté des croissances de 0 à 50M€ et tu sais que chaque grande décision est un mélange de data, d'intuition et de courage. Tu es le sparring partner ultime du dirigeant.
@@ -663,9 +675,9 @@ REGLES D'OR :
     priceCredits: 50,
     domainOptions: ['Stratégie entreprise', 'Gouvernance', 'Leadership', 'Levée de fonds', 'M&A', 'Business development', 'Gestion de crise', 'Relations investisseurs', 'Expansion internationale', 'Innovation', 'Transformation digitale', 'Culture d\'entreprise', 'ESG / RSE', 'Partenariats stratégiques', 'Vision produit', 'Pricing strategy', 'Board management', 'Due diligence', 'Restructuration', 'Scale-up'],
     modes: [
-      { id: 'strategy', name: 'Conseil stratégique', description: 'Analyse et recommandations sur la direction de l\'entreprise', icon: '🎯' },
-      { id: 'decision', name: 'Aide à la décision', description: 'Structurer un choix complexe avec pros/cons et risques', icon: '⚖️' },
-      { id: 'pitch', name: 'Préparation pitch', description: 'Préparer un pitch investisseurs ou partenaires', icon: '🎤' },
+      { id: 'strategy', name: 'Conseil stratégique', description: 'Analyse et recommandations sur la direction de l\'entreprise', icon: 'target' },
+      { id: 'decision', name: 'Aide à la décision', description: 'Structurer un choix complexe avec pros/cons et risques', icon: 'balance' },
+      { id: 'pitch', name: 'Préparation pitch', description: 'Préparer un pitch investisseurs ou partenaires', icon: 'mic' },
     ],
   },
   {
@@ -674,6 +686,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Directeur Vidéo',
     emoji: '🎬',
+    materialIcon: 'videocam',
     color: '#dc2626',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Milo, Directeur Vidéo. Tu es passionné par la puissance de la vidéo et les possibilités folles de l'IA générative. Tu guides les créateurs de la page blanche au rendu final avec enthousiasme et méthode. Tu connais chaque outil, chaque format, chaque plateforme — et tu sais les combiner pour un résultat pro.
@@ -717,9 +730,9 @@ REGLES D'OR :
     priceCredits: 30,
     domainOptions: ['HeyGen', 'D-ID', 'Runway ML', 'Sora', 'Pika Labs', 'Kling AI', 'Script vidéo', 'Storyboard', 'Montage', 'Sound design', 'Motion design', 'Brand content', 'Publicité vidéo', 'Court-métrage', 'Tutoriel vidéo', 'Interview IA', 'Teaser', 'Vidéo corporate', 'UGC IA', 'Sous-titrage'],
     modes: [
-      { id: 'create', name: 'Créer', description: 'Créer une vidéo de A à Z avec les outils IA', icon: '🎥' },
-      { id: 'avatar', name: 'Avatar', description: 'Générer une vidéo avec avatar IA (HeyGen/D-ID)', icon: '🧑' },
-      { id: 'edit', name: 'Montage', description: 'Guide de montage et post-production IA', icon: '✂️' },
+      { id: 'create', name: 'Créer', description: 'Créer une vidéo de A à Z avec les outils IA', icon: 'videocam' },
+      { id: 'avatar', name: 'Avatar', description: 'Générer une vidéo avec avatar IA (HeyGen/D-ID)', icon: 'face' },
+      { id: 'edit', name: 'Montage', description: 'Guide de montage et post-production IA', icon: 'content_cut' },
     ],
   },
   {
@@ -728,6 +741,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Directrice Photo & Design',
     emoji: '📸',
+    materialIcon: 'photo_camera',
     color: '#0ea5e9',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Léna, Directrice Photo & Design. Tu as l'œil d'une directrice artistique senior et la maîtrise technique des meilleurs outils IA de génération d'images. Tu crois que chaque marque mérite des visuels exceptionnels, et tu sais les créer en guidant le client pas à pas avec passion et précision.
@@ -771,9 +785,9 @@ REGLES D'OR :
     priceCredits: 25,
     domainOptions: ['Nano Banana', 'Midjourney', 'DALL-E', 'Stable Diffusion', 'Packshot produit', 'Portrait corporate', 'Photo événementiel', 'Retouche IA', 'Direction artistique', 'Identité visuelle', 'Mood board', 'Photo immobilier', 'E-commerce visuel', 'Social media visuel', 'Logo IA', 'Illustration', 'Infographie', 'Template design', 'Banner web', 'Print design'],
     modes: [
-      { id: 'generate', name: 'Générer', description: 'Générer des images avec les outils IA', icon: '🖼️' },
-      { id: 'packshot', name: 'Packshot', description: 'Créer des photos produit professionnelles', icon: '📦' },
-      { id: 'brand', name: 'Branding', description: 'Direction artistique et identité visuelle', icon: '🎨' },
+      { id: 'generate', name: 'Générer', description: 'Générer des images avec les outils IA', icon: 'image' },
+      { id: 'packshot', name: 'Packshot', description: 'Créer des photos produit professionnelles', icon: 'inventory_2' },
+      { id: 'brand', name: 'Branding', description: 'Direction artistique et identité visuelle', icon: 'palette' },
     ],
   },
 ];
@@ -787,6 +801,7 @@ export const PERSONAL_AGENTS: DefaultAgentDef[] = [
     gender: 'F',
     role: 'Mon Budget',
     emoji: '💰',
+    materialIcon: 'savings',
     color: '#10b981',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Yasmine, coach en gestion budgétaire personnelle. Tu es pédagogue, rassurante et zéro jugement — parler d'argent peut être stressant, et ton rôle est de rendre ça simple et concret. Tu as l'expertise d'une conseillère financière senior mais tu expliques les choses comme une amie qui s'y connaît bien.
@@ -831,9 +846,9 @@ REGLES D'OR :
     priceCredits: 10,
     domainOptions: ['Suivi dépenses', 'Budget mensuel', 'Objectifs épargne', 'Catégorisation auto', 'Dépenses récurrentes', 'Projection fin de mois', 'Comparaison mois/mois', 'Alertes dépassement', 'Export rapport', 'Analyse habitudes'],
     modes: [
-      { id: 'categorize', name: 'Catégoriser', description: 'Catégoriser et enregistrer une dépense', icon: '🏷️' },
-      { id: 'project', name: 'Projection', description: 'Projeter votre budget mensuel', icon: '📈' },
-      { id: 'goals', name: 'Objectifs', description: 'Gérer vos objectifs d\'épargne', icon: '🎯' },
+      { id: 'categorize', name: 'Catégoriser', description: 'Catégoriser et enregistrer une dépense', icon: 'label' },
+      { id: 'project', name: 'Projection', description: 'Projeter votre budget mensuel', icon: 'trending_up' },
+      { id: 'goals', name: 'Objectifs', description: 'Gérer vos objectifs d\'épargne', icon: 'target' },
     ],
   },
   {
@@ -842,6 +857,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Mon Négociateur',
     emoji: '🤝',
+    materialIcon: 'gavel',
     color: '#ef4444',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Raphaël, coach en négociation. Tu es stratège, empathique et direct — tu sais que la négociation est un art qui s'apprend et que la préparation fait 80% du résultat. Tu transformes des gens stressés en négociateurs confiants grâce à des scripts concrets et des simulations réalistes.
@@ -886,9 +902,9 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Négociation salariale', 'Négociation loyer', 'Négociation contrat', 'Négociation achat', 'Préparation arguments', 'Simulation dialogue', 'Analyse rapport de force', 'Techniques de persuasion', 'BATNA / plan B', 'Suivi résultats'],
     modes: [
-      { id: 'salary', name: 'Salaire', description: 'Préparer une négociation salariale', icon: '💼' },
-      { id: 'rent', name: 'Loyer', description: 'Négocier votre loyer ou bail', icon: '🏠' },
-      { id: 'roleplay', name: 'Simulation', description: 'Simuler un dialogue de négociation', icon: '🎭' },
+      { id: 'salary', name: 'Salaire', description: 'Préparer une négociation salariale', icon: 'work' },
+      { id: 'rent', name: 'Loyer', description: 'Négocier votre loyer ou bail', icon: 'home' },
+      { id: 'roleplay', name: 'Simulation', description: 'Simuler un dialogue de négociation', icon: 'theater_comedy' },
     ],
   },
   {
@@ -897,6 +913,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Impôts Facile',
     emoji: '🏛️',
+    materialIcon: 'account_balance',
     color: '#6b7280',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Ambre, guide fiscal français. Tu es patiente, didactique et tu sais que la fiscalité fait peur à tout le monde — alors tu la rends accessible sans la simplifier. Tu accompagnes chaque contribuable pas à pas, comme une amie qui travaille aux impôts et qui prend le temps d'expliquer.
@@ -941,9 +958,9 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Déclaration revenus', 'Déductions fiscales', 'Frais réels', 'Dates limites', 'Prélèvement source', 'Revenus fonciers', 'Plus-values', 'Dons et réductions', 'Crédit d\'impôt', 'Simulation impôts'],
     modes: [
-      { id: 'guide', name: 'Guide', description: 'Guide pas à pas pour déclarer', icon: '📋' },
-      { id: 'deductions', name: 'Déductions', description: 'Rechercher les déductions applicables', icon: '🔍' },
-      { id: 'simulate', name: 'Estimation', description: 'Estimer vos impôts', icon: '🧮' },
+      { id: 'guide', name: 'Guide', description: 'Guide pas à pas pour déclarer', icon: 'assignment' },
+      { id: 'deductions', name: 'Déductions', description: 'Rechercher les déductions applicables', icon: 'search' },
+      { id: 'simulate', name: 'Estimation', description: 'Estimer vos impôts', icon: 'calculate' },
     ],
   },
   {
@@ -952,6 +969,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Mon Comptable',
     emoji: '📊',
+    materialIcon: 'calculate',
     color: '#f59e0b',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Bastien, expert-comptable virtuel pour freelances et auto-entrepreneurs. Tu es rigoureux, patient et tu sais que la compta freelance est un cauchemar pour beaucoup — alors tu la rends simple, structurée et sans stress. Tu es le comptable que chaque indépendant rêve d'avoir : disponible, clair et toujours à jour.
@@ -996,9 +1014,9 @@ REGLES D'OR :
     priceCredits: 20,
     domainOptions: ['Facturation', 'Suivi revenus', 'Suivi dépenses', 'Déclaration URSSAF', 'Calcul TVA', 'Charges sociales', 'Bilan trimestriel', 'CA mensuel', 'Catégories dépenses pro', 'Rappels échéances'],
     modes: [
-      { id: 'invoice', name: 'Facturer', description: 'Générer une facture formatée', icon: '🧾' },
-      { id: 'quarterly', name: 'Bilan', description: 'Bilan trimestriel revenus/charges', icon: '📊' },
-      { id: 'urssaf', name: 'URSSAF', description: 'Rappels et calculs URSSAF/TVA', icon: '🏛️' },
+      { id: 'invoice', name: 'Facturer', description: 'Générer une facture formatée', icon: 'receipt' },
+      { id: 'quarterly', name: 'Bilan', description: 'Bilan trimestriel revenus/charges', icon: 'bar_chart' },
+      { id: 'urssaf', name: 'URSSAF', description: 'Rappels et calculs URSSAF/TVA', icon: 'account_balance' },
     ],
   },
   {
@@ -1007,6 +1025,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Chasseur de Missions',
     emoji: '🎯',
+    materialIcon: 'target',
     color: '#3b82f6',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Axel, expert en recherche de missions freelance. Tu es motivant, stratégique et tu connais le marché freelance français sur le bout des doigts. Tu sais que trouver des missions, c'est un métier en soi — et tu transformes les freelances en chasseurs efficaces qui ne manquent jamais d'opportunités.
@@ -1050,9 +1069,9 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Recherche missions', 'Propositions commerciales', 'Pipeline clients', 'Profil freelance', 'TJM / Pricing', 'Relances clients', 'Plateformes freelance', 'Prospection directe', 'Taux de conversion', 'Networking'],
     modes: [
-      { id: 'search', name: 'Chercher', description: 'Trouver des missions adaptées', icon: '🔎' },
-      { id: 'proposal', name: 'Proposer', description: 'Rédiger une proposition percutante', icon: '✍️' },
-      { id: 'pipeline', name: 'Pipeline', description: 'Suivre vos missions en cours', icon: '📋' },
+      { id: 'search', name: 'Chercher', description: 'Trouver des missions adaptées', icon: 'search' },
+      { id: 'proposal', name: 'Proposer', description: 'Rédiger une proposition percutante', icon: 'draw' },
+      { id: 'pipeline', name: 'Pipeline', description: 'Suivre vos missions en cours', icon: 'assignment' },
     ],
   },
   {
@@ -1061,6 +1080,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Mon Portfolio',
     emoji: '✨',
+    materialIcon: 'auto_awesome',
     color: '#ec4899',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Zoé, experte en personal branding et marketing personnel. Tu es enthousiaste, créative et stratégique — tu sais qu'une marque personnelle forte se construit avec régularité, authenticité et une vraie stratégie de contenu. Tu transformes des profils invisibles en voix qui comptent dans leur secteur.
@@ -1105,9 +1125,9 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Profil LinkedIn', 'Posts LinkedIn', 'Calendrier éditorial', 'Personal branding', 'Bio professionnelle', 'Portfolio en ligne', 'Témoignages clients', 'Contenu thought leadership', 'Stratégie de contenu', 'Réseau professionnel'],
     modes: [
-      { id: 'linkedin', name: 'LinkedIn', description: 'Optimiser votre profil LinkedIn', icon: '💼' },
-      { id: 'content', name: 'Contenu', description: 'Générer un post ou article', icon: '✍️' },
-      { id: 'calendar', name: 'Calendrier', description: 'Planifier votre calendrier éditorial', icon: '📅' },
+      { id: 'linkedin', name: 'LinkedIn', description: 'Optimiser votre profil LinkedIn', icon: 'work' },
+      { id: 'content', name: 'Contenu', description: 'Générer un post ou article', icon: 'draw' },
+      { id: 'calendar', name: 'Calendrier', description: 'Planifier votre calendrier éditorial', icon: 'calendar_month' },
     ],
   },
   {
@@ -1116,6 +1136,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'CV 2026',
     emoji: '📝',
+    materialIcon: 'description',
     color: '#8b5cf6',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Enzo, gestionnaire de carrière et expert CV. Tu ne génères pas de CV à l'aveugle — tu mènes un vrai entretien approfondi pour comprendre le parcours, les réussites, les compétences et les ambitions. Tu es comme un chasseur de têtes bienveillant qui veut voir le meilleur de chaque candidat ressortir sur papier.
@@ -1160,10 +1181,10 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Rédaction CV', 'Lettre motivation', 'Adaptation par offre', 'Évolution carrière', 'Prépa entretien', 'Bilan compétences', 'Suivi candidatures', 'Analyse offres', 'Reconversion', 'Personal pitch'],
     modes: [
-      { id: 'interview', name: 'Échange', description: 'Session approfondie pour comprendre votre parcours', icon: '🎙️' },
-      { id: 'generate', name: 'Générer', description: 'Générer ou mettre à jour votre CV', icon: '📄' },
-      { id: 'tailor', name: 'Adapter', description: 'Adapter le CV à une offre spécifique', icon: '🎯' },
-      { id: 'evolve', name: 'Évoluer', description: 'Proposer des évolutions de carrière', icon: '🚀' },
+      { id: 'interview', name: 'Échange', description: 'Session approfondie pour comprendre votre parcours', icon: 'mic' },
+      { id: 'generate', name: 'Générer', description: 'Générer ou mettre à jour votre CV', icon: 'article' },
+      { id: 'tailor', name: 'Adapter', description: 'Adapter le CV à une offre spécifique', icon: 'target' },
+      { id: 'evolve', name: 'Évoluer', description: 'Proposer des évolutions de carrière', icon: 'rocket_launch' },
     ],
   },
   {
@@ -1172,6 +1193,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Le Contradicteur',
     emoji: '⚖️',
+    materialIcon: 'psychology',
     color: '#64748b',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Naël, le Contradicteur. Tu es l'avocat du diable bienveillant — ton rôle n'est pas de critiquer, mais d'aider à prendre de meilleures décisions en challengeant chaque option avec rigueur et méthode. Tu es neutre, structuré et tu crois qu'une bonne décision naît d'un débat honnête avec soi-même.
@@ -1216,9 +1238,9 @@ REGLES D'OR :
     priceCredits: 20,
     domainOptions: ['Analyse décision', 'Arguments pour/contre', 'Matrice pondérée', 'Biais cognitifs', 'Arbres de décision', 'Analyse de risques', 'Scénarios what-if', 'Revue post-décision', 'Cadre éthique', 'Second avis'],
     modes: [
-      { id: 'debate', name: 'Débattre', description: 'Arguments pour et contre une décision', icon: '🗣️' },
-      { id: 'matrix', name: 'Matrice', description: 'Matrice de décision pondérée', icon: '📊' },
-      { id: 'bias', name: 'Biais', description: 'Détecter les biais cognitifs', icon: '🧠' },
+      { id: 'debate', name: 'Débattre', description: 'Arguments pour et contre une décision', icon: 'forum' },
+      { id: 'matrix', name: 'Matrice', description: 'Matrice de décision pondérée', icon: 'bar_chart' },
+      { id: 'bias', name: 'Biais', description: 'Détecter les biais cognitifs', icon: 'psychology' },
     ],
   },
   {
@@ -1227,6 +1249,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Mon Écrivain',
     emoji: '📖',
+    materialIcon: 'edit_note',
     color: '#a855f7',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Louane, coach d'écriture et éditrice littéraire. Tu as une passion profonde pour les histoires bien racontées et tu crois que chaque personne a un livre en elle. Tu es exigeante sur la qualité mais toujours bienveillante — comme une éditrice qui veut voir le manuscrit briller. Tu parles d'écriture avec enthousiasme et précision.
@@ -1271,10 +1294,10 @@ REGLES D'OR :
     priceCredits: 20,
     domainOptions: ['Roman', 'Scénario film', 'Nouvelle', 'Essai', 'Poésie', 'Structure 3 actes', 'Arc personnage', 'Worldbuilding', 'Dialogue', 'Style littéraire'],
     modes: [
-      { id: 'structure', name: 'Structure', description: 'Créer la structure du livre/film', icon: '🏗️' },
-      { id: 'chapter', name: 'Chapitre', description: 'Travailler un chapitre spécifique', icon: '📝' },
-      { id: 'character', name: 'Personnage', description: 'Développer un personnage', icon: '🎭' },
-      { id: 'feedback', name: 'Feedback', description: 'Feedback détaillé sur un texte', icon: '🔍' },
+      { id: 'structure', name: 'Structure', description: 'Créer la structure du livre/film', icon: 'architecture' },
+      { id: 'chapter', name: 'Chapitre', description: 'Travailler un chapitre spécifique', icon: 'edit_note' },
+      { id: 'character', name: 'Personnage', description: 'Développer un personnage', icon: 'theater_comedy' },
+      { id: 'feedback', name: 'Feedback', description: 'Feedback détaillé sur un texte', icon: 'search' },
     ],
   },
   {
@@ -1283,6 +1306,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Cinéaste IA',
     emoji: '🎬',
+    materialIcon: 'movie',
     color: '#dc2626',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Ilyès, guide expert en réalisation de films avec l'IA. Tu es passionné, méthodique et tu démocratises le cinéma — tu crois que n'importe qui peut réaliser un film grâce aux outils IA, à condition d'avoir la bonne méthode. Tu guides de la page blanche au rendu final avec des instructions précises et concrètes.
@@ -1327,9 +1351,9 @@ REGLES D'OR :
     priceCredits: 15,
     domainOptions: ['Écriture script', 'Storyboard IA', 'Runway ML', 'Sora / Pika', 'Montage vidéo', 'Sound design', 'Musique IA', 'Doublage IA', 'VFX IA', 'Distribution'],
     modes: [
-      { id: 'script', name: 'Script', description: 'Écrire un script/scénario', icon: '📝' },
-      { id: 'production', name: 'Production', description: 'Guide outils vidéo IA étape par étape', icon: '🎥' },
-      { id: 'post', name: 'Post-prod', description: 'Montage, son, musique et distribution', icon: '🎞️' },
+      { id: 'script', name: 'Script', description: 'Écrire un script/scénario', icon: 'edit_note' },
+      { id: 'production', name: 'Production', description: 'Guide outils vidéo IA étape par étape', icon: 'videocam' },
+      { id: 'post', name: 'Post-prod', description: 'Montage, son, musique et distribution', icon: 'movie' },
     ],
   },
   {
@@ -1338,6 +1362,7 @@ REGLES D'OR :
     gender: 'F',
     role: 'Coach Motivation',
     emoji: '🔥',
+    materialIcon: 'local_fire_department',
     color: '#f97316',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Capucine, coach motivation et partenaire de responsabilité. Tu es énergique, positive et bienveillante — mais pas naïve. Tu sais que la motivation vient et part, alors tu construis des systèmes (habitudes, streaks, micro-actions) qui tiennent même quand la motivation est en berne. Tu célèbres chaque victoire, même petite.
@@ -1382,9 +1407,9 @@ REGLES D'OR :
     priceCredits: 10,
     domainOptions: ['Définir objectifs', 'Check-in quotidien', 'Système de streaks', 'Revue hebdomadaire', 'Célébration victoires', 'Gestion procrastination', 'Habitudes', 'Motivation', 'Accountability', 'Bilan mensuel'],
     modes: [
-      { id: 'goals', name: 'Objectifs', description: 'Définir ou revoir vos objectifs', icon: '🎯' },
-      { id: 'checkin', name: 'Check-in', description: 'Check-in quotidien rapide', icon: '✅' },
-      { id: 'review', name: 'Revue', description: 'Revue hebdomadaire de progression', icon: '📊' },
+      { id: 'goals', name: 'Objectifs', description: 'Définir ou revoir vos objectifs', icon: 'target' },
+      { id: 'checkin', name: 'Check-in', description: 'Check-in quotidien rapide', icon: 'check_circle' },
+      { id: 'review', name: 'Revue', description: 'Revue hebdomadaire de progression', icon: 'bar_chart' },
     ],
   },
   {
@@ -1393,6 +1418,7 @@ REGLES D'OR :
     gender: 'M',
     role: 'Défi Déconnexion',
     emoji: '🌿',
+    materialIcon: 'spa',
     color: '#22c55e',
     model: 'claude-sonnet-4-20250514',
     systemPrompt: `Tu es Timéo, coach de digital detox et bien-être numérique. Tu es calme, encourageant et réaliste — tu ne diabolises pas les écrans, mais tu aides à reprendre le contrôle. Tu sais que la déconnexion n'est pas une punition mais une libération, et tu guides chaque personne à son rythme vers un équilibre sain.
@@ -1437,9 +1463,9 @@ REGLES D'OR :
     priceCredits: 10,
     domainOptions: ['Défi déconnexion', 'Activités offline', 'Suivi humeur', 'Temps d\'écran', 'Habitudes numériques', 'Méditation', 'Nature', 'Sport', 'Lecture', 'Créativité offline'],
     modes: [
-      { id: 'challenge', name: 'Défi', description: 'Proposer un défi de déconnexion', icon: '🏆' },
-      { id: 'activities', name: 'Activités', description: 'Suggestions d\'activités offline', icon: '🌳' },
-      { id: 'mood', name: 'Humeur', description: 'Logger et suivre votre humeur', icon: '😊' },
+      { id: 'challenge', name: 'Défi', description: 'Proposer un défi de déconnexion', icon: 'trophy' },
+      { id: 'activities', name: 'Activités', description: 'Suggestions d\'activités offline', icon: 'park' },
+      { id: 'mood', name: 'Humeur', description: 'Logger et suivre votre humeur', icon: 'mood' },
     ],
   },
 ];
@@ -1448,17 +1474,12 @@ export const ALL_AGENTS: DefaultAgentDef[] = [...DEFAULT_AGENTS, ...PERSONAL_AGE
 
 // ─── Options ───
 
-export const EMOJI_OPTIONS = [
-  // People & roles
-  '👩‍💼', '👨‍💼', '🧑‍💼', '👩‍💻', '👨‍💻', '🧑‍💻',
-  // Objects
-  '📊', '📋', '📞', '💻', '💰', '🎯',
-  '📈', '📉', '📌', '📝', '📧', '📱',
-  // Animals/mascots
-  '🦊', '🦁', '🐺', '🦅', '🐙', '🐉',
-  // Abstract/symbols
-  '⚡', '🔥', '💎', '🌟', '🚀', '🎨',
-  '🧠', '💡', '🔮', '🎪', '🏆', '🛡️',
+export const MATERIAL_ICON_OPTIONS = [
+  'person', 'group', 'call', 'assignment', 'handshake', 'campaign',
+  'bar_chart', 'terminal', 'balance', 'verified', 'videocam', 'photo_camera',
+  'savings', 'gavel', 'account_balance', 'calculate', 'target', 'auto_awesome',
+  'description', 'psychology', 'edit_note', 'movie', 'local_fire_department', 'spa',
+  'rocket_launch', 'diamond', 'star', 'shield', 'trophy', 'palette',
 ];
 
 export const COLOR_PRESETS = [
@@ -1477,7 +1498,7 @@ export const PRESET_TEMPLATES: AgentPresetTemplate[] = [
     id: 'startup',
     name: 'Mode Startup',
     description: 'Créatif, rapide, informel. Idéal pour les startups et projets innovants.',
-    icon: '🚀',
+    icon: 'rocket_launch',
     color: '#6366f1',
     personality: { formality: 75, responseLength: 30, creativity: 85, proactivity: 90, expertiseLevel: 60, humor: 65 },
     instructions: { alwaysDo: ['Proposer des growth hacks', 'Penser MVP', 'Suggérer des métriques'], neverDo: ['Overengineerer', 'Être trop formel', 'Ignorer le budget'], responseFormat: 'bullets' },
@@ -1486,7 +1507,7 @@ export const PRESET_TEMPLATES: AgentPresetTemplate[] = [
     id: 'corporate',
     name: 'Mode Corporate',
     description: 'Formel, structuré, basé sur les données. Pour les grandes entreprises.',
-    icon: '🏢',
+    icon: 'business',
     color: '#3b82f6',
     personality: { formality: 15, responseLength: 70, creativity: 35, proactivity: 50, expertiseLevel: 90, humor: 10 },
     instructions: { alwaysDo: ['Citer les sources', 'Fournir des rapports structurés', 'Respecter les processus'], neverDo: ['Utiliser du jargon informel', 'Spéculer sans données', 'Ignorer la hiérarchie'], responseFormat: 'structured' },
@@ -1495,7 +1516,7 @@ export const PRESET_TEMPLATES: AgentPresetTemplate[] = [
     id: 'agency',
     name: 'Mode Agence',
     description: 'Créatif, orienté client, délivrables clairs. Pour les agences et freelances.',
-    icon: '🎨',
+    icon: 'palette',
     color: '#ec4899',
     personality: { formality: 50, responseLength: 50, creativity: 90, proactivity: 80, expertiseLevel: 70, humor: 50 },
     instructions: { alwaysDo: ['Proposer des concepts créatifs', 'Penser délivrables', 'Challenger le brief'], neverDo: ['Être générique', 'Oublier les deadlines', 'Ignorer le branding'], responseFormat: 'mixed' },
@@ -1607,7 +1628,7 @@ export function getEffectiveAgent(agentId: AgentTypeId, configs?: UserAgentConfi
   if (!custom) {
     return {
       id: def.id, name: baseName, gender: def.gender, role: baseRole,
-      emoji: def.emoji, color: def.color, model: def.model,
+      emoji: def.emoji, materialIcon: def.materialIcon, color: def.color, model: def.model,
       systemPrompt: def.systemPrompt, meetingPrompt: def.meetingPrompt,
       isCustomized: !!adminOverride,
     };
@@ -1619,6 +1640,7 @@ export function getEffectiveAgent(agentId: AgentTypeId, configs?: UserAgentConfi
     gender: def.gender,
     role: custom.customRole || baseRole,
     emoji: custom.emoji || def.emoji,
+    materialIcon: def.materialIcon,
     color: custom.accentColor || def.color,
     model: def.model,
     systemPrompt: buildSystemPrompt(agentId, userConfigs),
@@ -1747,10 +1769,10 @@ export interface DepositOption {
 }
 
 export const DEPOSIT_OPTIONS: DepositOption[] = [
-  { id: 'dep_5', amount: 5, label: '5 EUR', icon: '🌱' },
-  { id: 'dep_20', amount: 20, label: '20 EUR', icon: '🚀', popular: true },
-  { id: 'dep_50', amount: 50, label: '50 EUR', icon: '💎' },
-  { id: 'dep_100', amount: 100, label: '100 EUR', icon: '👑' },
+  { id: 'dep_5', amount: 5, label: '5 EUR', icon: 'eco' },
+  { id: 'dep_20', amount: 20, label: '20 EUR', icon: 'rocket_launch', popular: true },
+  { id: 'dep_50', amount: 50, label: '50 EUR', icon: 'diamond' },
+  { id: 'dep_100', amount: 100, label: '100 EUR', icon: 'workspace_premium' },
 ];
 
 export const COMMISSION_TIERS = [

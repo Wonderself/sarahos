@@ -74,13 +74,38 @@ export default function ClientDashboard() {
     } catch {}
   }
 
+  // ─── Remind me later system ───
+  const [dismissals, setDismissals] = useState<Record<string, string>>({});
+  const [showRemindMenu, setShowRemindMenu] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('fz_dismissals') ?? '{}');
+      setDismissals(saved);
+    } catch {}
+  }, []);
+
+  function isDismissed(key: string): boolean {
+    const until = dismissals[key];
+    if (!until) return false;
+    return new Date(until).getTime() > Date.now();
+  }
+
+  function dismissFor(key: string, days: number) {
+    const until = new Date(Date.now() + days * 86400000).toISOString();
+    const updated = { ...dismissals, [key]: until };
+    setDismissals(updated);
+    localStorage.setItem('fz_dismissals', JSON.stringify(updated));
+    setShowRemindMenu(null);
+  }
+
   function loadStats() {
     try {
       const gam = JSON.parse(localStorage.getItem('fz_gamification') ?? '{}');
       const docs = JSON.parse(localStorage.getItem('fz_docs') ?? '[]');
       setStats({
         totalMessages: gam.totalMessages ?? 0,
-        totalDocuments: docs.length ?? 0,
+        totalDocuments: Array.isArray(docs) ? docs.length : 0,
         streak: gam.streak ?? 0,
       });
     } catch {}
@@ -244,7 +269,7 @@ export default function ClientDashboard() {
       {/* ── Header compact ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
-          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
             {greeting}, <span style={{ color: 'var(--accent)' }}>{userName || 'cher client'}</span>
           </div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
@@ -256,7 +281,7 @@ export default function ClientDashboard() {
             <div key={a.id} title={a.name} style={{
               width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: a.color + '22', border: `1px solid ${a.color}44`, fontSize: 14,
-            }}>{a.emoji}</div>
+            }}><span className="material-symbols-rounded" style={{ fontSize: 15, color: a.color }}>{a.materialIcon}</span></div>
           ))}
           {activeAgents.length > 3 && (
             <div style={{
@@ -268,34 +293,69 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Onboarding banner (new user only) ── */}
-      {!hasProfile && (
-        <Link href="/client/onboarding" style={{
-          display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', marginBottom: 12,
+      {!hasProfile && !isDismissed('onboarding') && (
+        <div style={{
+          padding: '14px 16px', marginBottom: 12,
           background: 'linear-gradient(135deg, #6366f10d, #a855f708)',
-          border: '2px solid #6366f130', borderRadius: 12, textDecoration: 'none', color: 'inherit',
+          border: '2px solid #6366f130', borderRadius: 12, position: 'relative',
         }}>
-          <span style={{ fontSize: 24 }}>🏢</span>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 14, fontWeight: 700 }}>Configurez votre profil entreprise</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Vos agents seront plus pertinents avec du contexte</div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <span className="material-symbols-rounded mi-lg" style={{ marginTop: 2 }}>domain</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Configurez votre profil entreprise</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 10 }}>
+                C&apos;est la que <span className="fz-logo-word">l&apos;IA montre sa vraie puissance</span>. Plus vos agents connaissent votre entreprise (secteur, equipe, objectifs), plus chaque reponse est precise, personnalisee et actionnable. <strong>5 minutes qui changent toute l&apos;experience.</strong>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                <Link href="/client/onboarding" className="btn btn-primary btn-sm" style={{ fontSize: 12, padding: '6px 14px' }}>
+                  <span className="material-symbols-rounded mi-sm mi-white">rocket_launch</span>
+                  Configurer maintenant
+                </Link>
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => setShowRemindMenu(showRemindMenu === 'onboarding' ? null : 'onboarding')}
+                    className="btn btn-ghost btn-sm"
+                    style={{ fontSize: 11, color: 'var(--text-muted)', padding: '6px 10px' }}
+                  >
+                    Me le rappeler plus tard
+                  </button>
+                  {showRemindMenu === 'onboarding' && (
+                    <div style={{
+                      position: 'absolute', top: '100%', left: 0, marginTop: 4, zIndex: 50,
+                      background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+                      borderRadius: 10, padding: 6, boxShadow: 'var(--shadow-lg)', minWidth: 160,
+                    }}>
+                      {[{ label: 'Dans 1 jour', days: 1 }, { label: 'Dans 3 jours', days: 3 }, { label: 'Dans 1 semaine', days: 7 }].map(opt => (
+                        <button key={opt.days} onClick={() => dismissFor('onboarding', opt.days)} style={{
+                          display: 'block', width: '100%', textAlign: 'left', padding: '8px 12px',
+                          background: 'none', border: 'none', borderRadius: 6, cursor: 'pointer',
+                          fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', fontFamily: 'var(--font-display)',
+                        }}>
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>Configurer &rarr;</span>
-        </Link>
+        </div>
       )}
 
       {/* ── 4 KPIs ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
+      <div className="dash-kpis" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
         {[
           { label: 'Credits', value: credits.toFixed(1), color: credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444', sub: 'disponibles' },
           { label: 'Messages', value: String(stats.totalMessages), color: '#6366f1', sub: 'echanges' },
-          { label: 'Agents', value: String(activeAgents.length), color: '#a855f7', sub: 'actifs' },
+          { label: 'Agents IA', value: String(activeAgents.length), color: '#a855f7', sub: 'actifs' },
           { label: 'Streak', value: `${stats.streak}j`, color: stats.streak > 0 ? '#f59e0b' : '#86868b', sub: stats.streak > 7 ? 'en feu !' : 'consecutifs' },
         ].map(kpi => (
           <div key={kpi.label} style={{
             background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
             borderRadius: 12, padding: '12px 10px', textAlign: 'center',
           }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: kpi.color, letterSpacing: -0.5 }}>{kpi.value}</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: kpi.color, letterSpacing: -0.5 }}>{kpi.value}</div>
             <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: 0.5 }}>{kpi.sub}</div>
           </div>
         ))}
@@ -311,8 +371,8 @@ export default function ClientDashboard() {
           padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 16 }}>☀️</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Briefing du jour</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>wb_sunny</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}><span className="fz-logo-word">Briefing</span> du jour</span>
             {briefingTime && <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{briefingTime}</span>}
           </div>
           <span style={{ fontSize: 11, color: 'var(--text-muted)', transform: showBriefing ? 'rotate(0)' : 'rotate(-90deg)', transition: 'transform 0.2s', display: 'inline-block' }}>&#9660;</span>
@@ -328,7 +388,7 @@ export default function ClientDashboard() {
             )}
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
               <button onClick={refreshBriefing} disabled={briefingLoading} className="btn btn-ghost btn-sm" style={{ fontSize: 11 }}>
-                {briefingLoading ? '...' : briefingLoaded ? '🔄 Rafraichir' : '✨ Generer'}
+                {briefingLoading ? '...' : briefingLoaded ? (<><span className="material-symbols-rounded mi-sm">refresh</span> Rafraichir</>) : (<><span className="material-symbols-rounded mi-sm">auto_awesome</span> Generer</>)}
               </button>
             </div>
           </div>
@@ -336,7 +396,7 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Taches + Priorites ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+      <div className="dash-tasks-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
 
         {/* Taches du jour */}
         <div style={{
@@ -345,7 +405,7 @@ export default function ClientDashboard() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 14 }}>✅</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>check_circle</span>
               <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Taches du jour</span>
             </div>
             {todosTotal > 0 && (
@@ -365,7 +425,7 @@ export default function ClientDashboard() {
                     background: t.done ? '#22c55e' : 'transparent', cursor: 'pointer', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#fff',
                   }}
-                >{t.done ? '✓' : ''}</button>
+                >{t.done ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> : ''}</button>
                 <span style={{
                   fontSize: 13, color: t.done ? 'var(--text-muted)' : 'var(--text-primary)',
                   textDecoration: t.done ? 'line-through' : 'none', flex: 1,
@@ -373,7 +433,7 @@ export default function ClientDashboard() {
                 <button onClick={() => removeTodo(t.id)} style={{
                   background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--text-muted)',
                   opacity: 0.5, padding: 2,
-                }}>✕</button>
+                }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span></button>
               </div>
             ))}
           </div>
@@ -404,7 +464,7 @@ export default function ClientDashboard() {
           borderRadius: 12, padding: '14px 16px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-            <span style={{ fontSize: 14 }}>🎯</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>target</span>
             <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Priorites du jour</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -434,16 +494,16 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Acces rapides ── */}
-      <div style={{
+      <div className="dash-quick-actions" style={{
         display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 12,
       }}>
         {[
-          { href: '/client/chat', icon: '💬', label: 'Chat' },
-          { href: '/client/actions', icon: '⚡', label: 'Actions' },
-          { href: '/client/documents', icon: '📄', label: 'Documents' },
-          { href: '/client/team', icon: '👥', label: 'Equipe' },
-          { href: '/client/studio', icon: '🎬', label: 'Studio' },
-          { href: '/client/strategy', icon: '🎯', label: 'Strategie' },
+          { href: '/client/chat', icon: 'chat', label: 'Chat' },
+          { href: '/client/actions', icon: 'bolt', label: 'Actions' },
+          { href: '/client/documents', icon: 'description', label: 'Documents' },
+          { href: '/client/team', icon: 'group', label: 'Equipe' },
+          { href: '/client/studio', icon: 'movie', label: 'Studio' },
+          { href: '/client/strategy', icon: 'target', label: 'Strategie' },
         ].map(item => (
           <Link key={item.href} href={item.href} style={{
             display: 'flex', alignItems: 'center', gap: 8,
@@ -451,7 +511,7 @@ export default function ClientDashboard() {
             background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
             transition: 'border-color 0.15s',
           }}>
-            <span style={{ fontSize: 18 }}>{item.icon}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{item.icon}</span>
             <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
           </Link>
         ))}
@@ -468,14 +528,14 @@ export default function ClientDashboard() {
             Gerer &rarr;
           </Link>
         </div>
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+        <div className="dash-team-scroll" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
           {activeAgents.map(a => a && (
             <Link key={a.id} href="/client/chat" style={{
               display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px',
               borderRadius: 8, background: a.color + '0d', border: `1px solid ${a.color}30`,
               textDecoration: 'none', color: 'inherit', flexShrink: 0, minWidth: 130,
             }}>
-              <span style={{ fontSize: 16 }}>{a.emoji}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 16, color: a.color }}>{a.materialIcon}</span>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div>
                 <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{a.role}</div>
@@ -492,7 +552,10 @@ export default function ClientDashboard() {
         borderRadius: 12, padding: '12px 16px', marginBottom: 12,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Solde credits</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span className="material-symbols-rounded mi-sm">account_balance_wallet</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Solde credits</span>
+          </div>
           <Link href="/client/account" style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
             Recharger &rarr;
           </Link>
@@ -522,21 +585,53 @@ export default function ClientDashboard() {
             </>
           );
         })()}
+        {/* Low credit reminder with dismiss */}
+        {credits <= 10 && !isDismissed('low_credits') && (
+          <div style={{
+            marginTop: 8, padding: '8px 10px', borderRadius: 8,
+            background: credits <= 5 ? '#ef444410' : '#f59e0b10',
+            border: `1px solid ${credits <= 5 ? '#ef444425' : '#f59e0b25'}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1 }}>
+              <span className="material-symbols-rounded mi-sm" style={{ color: credits <= 5 ? '#ef4444' : '#f59e0b' }}>warning</span>
+              <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+                {credits <= 5 ? 'Credits presque epuises !' : 'Pensez a recharger bientot'}
+              </span>
+            </div>
+            <button
+              onClick={() => dismissFor('low_credits', 1)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}
+            >
+              <span className="material-symbols-rounded mi-sm mi-muted">close</span>
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* ── Parrainage (compact) ── */}
-      <Link href="/client/referrals" style={{
-        display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', marginBottom: 12,
-        background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
-        border: '1px solid #6366f122', borderRadius: 12, textDecoration: 'none', color: 'inherit',
-      }}>
-        <span style={{ fontSize: 20 }}>🎁</span>
-        <div style={{ flex: 1 }}>
-          <span style={{ fontSize: 13, fontWeight: 700 }}>Invitez un ami</span>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)', marginLeft: 8 }}>+20 EUR de credits</span>
+      {/* ── Parrainage (compact, dismissable) ── */}
+      {!isDismissed('referral') && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', marginBottom: 12,
+          background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
+          border: '1px solid #6366f122', borderRadius: 12,
+        }}>
+          <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, textDecoration: 'none', color: 'inherit' }}>
+            <span className="material-symbols-rounded">redeem</span>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontSize: 13, fontWeight: 700 }}>Invitez un ami</span>
+              <span style={{ fontSize: 12, color: 'var(--text-muted)', marginLeft: 8 }}>+20 EUR de credits</span>
+            </div>
+            <span className="material-symbols-rounded mi-sm">arrow_forward</span>
+          </Link>
+          <button
+            onClick={() => dismissFor('referral', 7)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, flexShrink: 0 }}
+          >
+            <span className="material-symbols-rounded mi-sm mi-muted">close</span>
+          </button>
         </div>
-        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>&rarr;</span>
-      </Link>
+      )}
     </div>
   );
 }

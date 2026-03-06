@@ -166,10 +166,10 @@ export default function CVPage() {
     const lines = [
       `# ${profile.first_name ?? ''} ${profile.last_name ?? ''}`,
       profile.title ? `**${profile.title}**` : '',
-      profile.email ? `📧 ${profile.email}` : '',
-      profile.phone ? `📱 ${profile.phone}` : '',
-      profile.linkedin ? `🔗 ${profile.linkedin}` : '',
-      profile.location ? `📍 ${profile.location}` : '',
+      profile.email ? `<span className="material-symbols-rounded" style={{ fontSize: 18 }}>mail</span> ${profile.email}` : '',
+      profile.phone ? `<span className="material-symbols-rounded" style={{ fontSize: 18 }}>phone_iphone</span> ${profile.phone}` : '',
+      profile.linkedin ? `<span className="material-symbols-rounded" style={{ fontSize: 18 }}>link</span> ${profile.linkedin}` : '',
+      profile.location ? `[location] ${profile.location}` : '',
       '',
       profile.summary ? `## Résumé\n${profile.summary}` : '',
       '',
@@ -191,7 +191,7 @@ export default function CVPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>📄</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>description</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement de votre CV...</div>
       </div>
     );
@@ -226,14 +226,14 @@ export default function CVPage() {
           <div style={{ marginBottom: 4 }}>
             <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--text-tertiary)', textDecoration: 'none' }}>← Agents personnels</Link>
           </div>
-          <h1 className="page-title">📄 CV 2026</h1>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>description</span> CV 2026</h1>
           <p className="page-subtitle">Construisez un CV moderne et laissez fz-cv vous aider</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {saved && <span style={{ fontSize: 12, color: '#22c55e' }}>✅ Sauvegardé</span>}
-          {saving && <span style={{ fontSize: 12, color: '#f59e0b' }}>⏳ Sauvegarde...</span>}
-          <button onClick={copyMarkdown} className="btn btn-ghost btn-sm">{copied ? '✅ Copié !' : '📋 Copier Markdown'}</button>
-          <Link href="/client/chat?agent=fz-cv" className="btn btn-primary btn-sm">🤖 fz-cv</Link>
+          {saved && <span style={{ fontSize: 12, color: '#22c55e' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Sauvegardé</span>}
+          {saving && <span style={{ fontSize: 12, color: '#f59e0b' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>hourglass_empty</span> Sauvegarde...</span>}
+          <button onClick={copyMarkdown} className="btn btn-ghost btn-sm">{copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Copié !</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Copier Markdown</>}</button>
+          <Link href="/client/chat?agent=fz-cv" className="btn btn-primary btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>smart_toy</span> fz-cv</Link>
         </div>
       </div>
 
@@ -260,14 +260,14 @@ export default function CVPage() {
               background: item.done ? '#22c55e20' : 'var(--bg-tertiary)',
               color: item.done ? '#22c55e' : 'var(--text-tertiary)',
             }}>
-              {item.done ? '✅' : '○'} {item.label}
+              {item.done ? 'check_circle' : '○'} {item.label}
             </span>
           ))}
         </div>
       </div>
 
       {/* Sections */}
-      <AccordionSection id="info" title="Informations personnelles" icon="👤">
+      <AccordionSection id="info" title="Informations personnelles" icon="person">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           {[
             { key: 'first_name', label: 'Prénom', placeholder: 'Jean' },
@@ -302,7 +302,7 @@ export default function CVPage() {
         </div>
       </AccordionSection>
 
-      <AccordionSection id="skills" title={`Compétences (${profile.skills?.length ?? 0})`} icon="💡">
+      <AccordionSection id="skills" title={`Compétences (${profile.skills?.length ?? 0})`} icon="lightbulb">
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
           {(profile.skills ?? []).map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, background: 'var(--bg-tertiary)', border: '1px solid var(--border-primary)' }}>
@@ -321,7 +321,7 @@ export default function CVPage() {
         <button onClick={addSkill} className="btn btn-ghost btn-sm">+ Ajouter une compétence</button>
       </AccordionSection>
 
-      <AccordionSection id="experiences" title={`Expériences (${profile.experiences?.length ?? 0})`} icon="💼">
+      <AccordionSection id="experiences" title={`Expériences (${profile.experiences?.length ?? 0})`} icon="work">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {(profile.experiences ?? []).map((e, i) => (
             <div key={i} style={{ padding: '12px 14px', background: 'var(--bg-tertiary)', borderRadius: 8, position: 'relative' }}>
@@ -360,7 +360,7 @@ export default function CVPage() {
         <button onClick={addExperience} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une expérience</button>
       </AccordionSection>
 
-      <AccordionSection id="education" title={`Formation (${profile.education?.length ?? 0})`} icon="🎓">
+      <AccordionSection id="education" title={`Formation (${profile.education?.length ?? 0})`} icon="school">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {(profile.education ?? []).map((e, i) => (
             <div key={i} style={{ padding: '12px 14px', background: 'var(--bg-tertiary)', borderRadius: 8, position: 'relative' }}>
@@ -389,7 +389,7 @@ export default function CVPage() {
         <button onClick={addEducation} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une formation</button>
       </AccordionSection>
 
-      <AccordionSection id="languages" title={`Langues (${profile.languages?.length ?? 0})`} icon="🌍">
+      <AccordionSection id="languages" title={`Langues (${profile.languages?.length ?? 0})`} icon="language">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(profile.languages ?? []).map((l, i) => (
             <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -416,7 +416,7 @@ export default function CVPage() {
         <button onClick={addLanguage} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une langue</button>
       </AccordionSection>
 
-      <AccordionSection id="goals" title="Objectifs de carrière" icon="🎯">
+      <AccordionSection id="goals" title="Objectifs de carrière" icon="target">
         <textarea
           className="input"
           rows={4}

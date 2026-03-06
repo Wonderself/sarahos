@@ -18,9 +18,9 @@ const typeColors: Record<string, string> = {
 };
 
 const typeIcons: Record<string, string> = {
-  TaskCreated: '📝', TaskCompleted: '✅', AgentStarted: '🤖', AgentStopped: '⏹️',
-  Error: '❌', ApprovalRequested: '⏳', ApprovalDecided: '✔️', SystemBoot: '🚀',
-  LLMCall: '🧠', CronRun: '⏰', NotificationSent: '📤',
+  TaskCreated: 'edit_note', TaskCompleted: 'check_circle', AgentStarted: 'smart_toy', AgentStopped: 'stop_circle',
+  Error: 'error', ApprovalRequested: 'hourglass_empty', ApprovalDecided: 'verified', SystemBoot: 'rocket_launch',
+  LLMCall: 'psychology', CronRun: 'alarm', NotificationSent: 'outbox',
 };
 
 export default async function EventsPage() {
@@ -106,7 +106,7 @@ export default async function EventsPage() {
             alignItems: 'flex-start', marginBottom: 2,
             background: event.type === 'Error' ? 'rgba(239,68,68,0.05)' : 'transparent',
           }}>
-            <span style={{ fontSize: 16, marginTop: 2 }}>{typeIcons[event.type] ?? '◉'}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 16, marginTop: 2 }}>{typeIcons[event.type] ?? 'radio_button_checked'}</span>
             <div className="flex-1" style={{ minWidth: 0 }}>
               <div className="flex items-center gap-8" style={{ marginBottom: 3 }}>
                 <span className={`badge ${typeColors[event.type] ?? 'badge-neutral'}`}>{event.type}</span>
@@ -149,7 +149,7 @@ export default async function EventsPage() {
                 const pct = events.length > 0 ? (count / events.length) * 100 : 0;
                 return (
                   <div key={type} className="flex items-center gap-8">
-                    <span className="text-base">{typeIcons[type] ?? '◉'}</span>
+                    <span className="material-symbols-rounded text-base">{typeIcons[type] ?? 'radio_button_checked'}</span>
                     <span className="text-md font-medium" style={{ minWidth: 140 }}>{type}</span>
                     <div className="progress-bar" style={{ flex: 1 }}>
                       <div className="progress-bar-fill" style={{ width: `${pct}%` }} />

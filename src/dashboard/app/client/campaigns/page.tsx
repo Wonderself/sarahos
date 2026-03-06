@@ -46,7 +46,7 @@ const PLATFORM_LABELS: Record<Platform, string> = {
   linkedin: 'LinkedIn', instagram: 'Instagram', facebook: 'Facebook', twitter: 'X / Twitter',
 };
 const PLATFORM_EMOJIS: Record<Platform, string> = {
-  linkedin: '💼', instagram: '📸', facebook: '👥', twitter: '🐦',
+  linkedin: 'work', instagram: 'photo_camera', facebook: 'group', twitter: 'flutter_dash',
 };
 const OBJECTIVE_LABELS: Record<CampaignObjective, string> = {
   awareness: 'Notoriété', engagement: 'Engagement', conversion: 'Conversion', retention: 'Rétention',
@@ -129,7 +129,7 @@ export default function CampaignsPage() {
         ...(form.description && { description: form.description }),
         platforms: form.platforms,
         objective: form.objective,
-        ...(form.budget && { budget: parseFloat(form.budget) }),
+        ...(form.budget && !isNaN(parseFloat(form.budget)) && { budget: parseFloat(form.budget) }),
         ...(form.start_date && { start_date: form.start_date }),
         ...(form.end_date && { end_date: form.end_date }),
       });
@@ -193,7 +193,7 @@ export default function CampaignsPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>📣</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>campaign</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement des campagnes...</div>
       </div>
     );
@@ -205,8 +205,8 @@ export default function CampaignsPage() {
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div>
-          <h1 className="page-title">📣 Campagnes Marketing</h1>
-          <p className="page-subtitle">Créez, planifiez et suivez vos campagnes multi-plateformes.</p>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>campaign</span> Campagnes <span className="fz-logo-word">Marketing</span></h1>
+          <p className="page-subtitle">Créez, planifiez et suivez vos campagnes <span className="fz-logo-word">multi-plateformes</span>.</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
@@ -221,13 +221,13 @@ export default function CampaignsPage() {
       {total > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
-            { label: 'Campagnes', value: String(total), icon: '📣', color: 'var(--accent)' },
-            { label: 'Actives', value: String(active), icon: '🟢', color: '#22c55e' },
-            { label: 'En attente', value: String(pending), icon: '⏳', color: '#f59e0b' },
-            { label: 'Posts planifiés', value: String(totalPosts), icon: '📅', color: '#3b82f6' },
+            { label: 'Campagnes', value: String(total), icon: 'campaign', color: 'var(--accent)' },
+            { label: 'Actives', value: String(active), icon: 'circle', color: '#22c55e' },
+            { label: 'En attente', value: String(pending), icon: 'hourglass_empty', color: '#f59e0b' },
+            { label: 'Posts planifiés', value: String(totalPosts), icon: 'calendar_month', color: '#3b82f6' },
           ].map(s => (
             <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-              <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
+              <div style={{ fontSize: 20, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
               <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
               <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
             </div>
@@ -261,7 +261,7 @@ export default function CampaignsPage() {
         <div>
           {campaigns.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>📣</div>
+              <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>campaign</span></div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucune campagne</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 20 }}>
                 Créez votre première campagne marketing pour commencer à planifier vos publications.
@@ -294,8 +294,8 @@ export default function CampaignsPage() {
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                         {c.platforms.map(p => (
-                          <span key={p} style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
-                            {PLATFORM_EMOJIS[p]} {PLATFORM_LABELS[p]}
+                          <span key={p} style={{ fontSize: 10, color: 'var(--text-tertiary)', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{PLATFORM_EMOJIS[p]}</span> {PLATFORM_LABELS[p]}
                           </span>
                         ))}
                         {c.objective && (
@@ -328,7 +328,7 @@ export default function CampaignsPage() {
                         onClick={e => { e.stopPropagation(); handleDelete(c.id); }}
                         style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', opacity: 0.6 }}
                       >
-                        🗑️
+                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>delete</span>
                       </button>
                     </div>
                   </div>
@@ -369,8 +369,8 @@ export default function CampaignsPage() {
 
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
               {selectedCampaign.platforms.map(p => (
-                <span key={p} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>
-                  {PLATFORM_EMOJIS[p]} {PLATFORM_LABELS[p]}
+                <span key={p} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 13 }}>{PLATFORM_EMOJIS[p]}</span> {PLATFORM_LABELS[p]}
                 </span>
               ))}
             </div>
@@ -406,7 +406,7 @@ export default function CampaignsPage() {
                   {posts.map(post => (
                     <div key={post.id} className="card" style={{ padding: '10px 12px', borderRadius: 8 }}>
                       <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}>
-                        {PLATFORM_EMOJIS[post.platform]} {PLATFORM_LABELS[post.platform]}
+                        <span className="material-symbols-rounded" style={{ fontSize: 13 }}>{PLATFORM_EMOJIS[post.platform]}</span> {PLATFORM_LABELS[post.platform]}
                         {post.scheduled_at && <span style={{ color: 'var(--text-tertiary)', marginLeft: 6 }}>· {new Date(post.scheduled_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
@@ -454,7 +454,7 @@ export default function CampaignsPage() {
                         color: form.platforms.includes(p) ? '#fff' : 'var(--text-primary)',
                       }}
                     >
-                      {PLATFORM_EMOJIS[p]} {PLATFORM_LABELS[p]}
+                      <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{PLATFORM_EMOJIS[p]}</span> {PLATFORM_LABELS[p]}
                     </button>
                   ))}
                 </div>

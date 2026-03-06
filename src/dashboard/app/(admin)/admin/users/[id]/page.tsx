@@ -33,16 +33,16 @@ import UserDangerTab from './UserDangerTab';
 //           Feature Flags, Danger Zone
 // ═══════════════════════════════════════════════════
 
-const TABS: { id: TabId; label: string; emoji: string }[] = [
-  { id: 'profil', label: 'Profil', emoji: '👤' },
-  { id: 'wallet', label: 'Wallet', emoji: '💰' },
-  { id: 'preferences', label: 'Préférences', emoji: '⚙️' },
-  { id: 'entreprise', label: 'Entreprise', emoji: '🏢' },
-  { id: 'usage', label: 'Usage', emoji: '📊' },
-  { id: 'gamification', label: 'Gamification', emoji: '🎮' },
-  { id: 'notifications', label: 'Notifications', emoji: '🔔' },
-  { id: 'feature_flags', label: 'Feature Flags', emoji: '🚩' },
-  { id: 'danger', label: 'Danger Zone', emoji: '⚠️' },
+const TABS: { id: TabId; label: string; materialIcon: string }[] = [
+  { id: 'profil', label: 'Profil', materialIcon: 'person' },
+  { id: 'wallet', label: 'Wallet', materialIcon: 'savings' },
+  { id: 'preferences', label: 'Préférences', materialIcon: 'settings' },
+  { id: 'entreprise', label: 'Entreprise', materialIcon: 'business' },
+  { id: 'usage', label: 'Usage', materialIcon: 'bar_chart' },
+  { id: 'gamification', label: 'Gamification', materialIcon: 'sports_esports' },
+  { id: 'notifications', label: 'Notifications', materialIcon: 'notifications' },
+  { id: 'feature_flags', label: 'Feature Flags', materialIcon: 'flag' },
+  { id: 'danger', label: 'Danger Zone', materialIcon: 'warning' },
 ];
 
 // ── Toast Component ──
@@ -55,7 +55,7 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
 
   return (
     <div style={styles.toast(type)} onClick={onClose}>
-      {type === 'success' ? '✅' : '❌'} {message}
+      <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{type === 'success' ? 'check_circle' : 'cancel'}</span> {message}
     </div>
   );
 }
@@ -242,7 +242,7 @@ export default function UserDetailPage() {
             style={styles.tab(activeTab === tab.id)}
             onClick={() => setActiveTab(tab.id)}
           >
-            {tab.emoji} {tab.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{tab.materialIcon}</span> {tab.label}
           </button>
         ))}
       </div>

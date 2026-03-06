@@ -16,14 +16,14 @@ interface DataTableProps<T> {
 export default function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
-  emptyIcon = '📋',
+  emptyIcon = 'assignment',
   emptyText = 'Aucune donnée',
   onRowClick,
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
       <div className="empty-state">
-        <div className="empty-state-icon">{emptyIcon}</div>
+        <div className="empty-state-icon"><span className="material-symbols-rounded" style={{ fontSize: 32 }}>{emptyIcon}</span></div>
         <div className="empty-state-text">{emptyText}</div>
       </div>
     );

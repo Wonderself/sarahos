@@ -44,14 +44,14 @@ const STEP_NUM_STYLE: React.CSSProperties = {
 };
 
 const SECTIONS = [
-  { id: 'architecture', icon: '🏗️', label: 'Architecture' },
-  { id: 'add-page', icon: '📄', label: 'Ajouter une page' },
-  { id: 'add-agent', icon: '🤖', label: 'Ajouter un agent' },
-  { id: 'pricing', icon: '💰', label: 'Modifier le pricing' },
-  { id: 'integrations', icon: '🔌', label: 'Intégrations' },
-  { id: 'deploy', icon: '🚀', label: 'Déploiement' },
-  { id: 'troubleshooting', icon: '🔧', label: 'Troubleshooting' },
-  { id: 'evolutions', icon: '📅', label: 'Évolutions hebdo' },
+  { id: 'architecture', icon: 'architecture', label: 'Architecture' },
+  { id: 'add-page', icon: 'description', label: 'Ajouter une page' },
+  { id: 'add-agent', icon: 'smart_toy', label: 'Ajouter un agent' },
+  { id: 'pricing', icon: 'savings', label: 'Modifier le pricing' },
+  { id: 'integrations', icon: 'power', label: 'Intégrations' },
+  { id: 'deploy', icon: 'rocket_launch', label: 'Déploiement' },
+  { id: 'troubleshooting', icon: 'build', label: 'Troubleshooting' },
+  { id: 'evolutions', icon: 'calendar_month', label: 'Évolutions hebdo' },
 ];
 
 export default function GuidePage() {
@@ -76,14 +76,14 @@ export default function GuidePage() {
               border: '1px solid var(--border-secondary)', textDecoration: 'none',
             }}
           >
-            {s.icon} {s.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{s.icon}</span> {s.label}
           </a>
         ))}
       </div>
 
       {/* ═══ 1. Architecture ═══ */}
       <section id="architecture" className="section">
-        <h2 className="section-title">🏗️ Architecture du projet</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>architecture</span> Architecture du projet</h2>
         <div className="card p-20">
           <div style={CODE_BLOCK_STYLE}>{`Freenzy.io Dashboard
 ├── src/dashboard/
@@ -136,7 +136,7 @@ export default function GuidePage() {
 
       {/* ═══ 2. Ajouter une page ═══ */}
       <section id="add-page" className="section">
-        <h2 className="section-title">📄 Ajouter une page</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>description</span> Ajouter une page</h2>
         <div className="card p-20">
           {[
             {
@@ -146,13 +146,13 @@ export default function GuidePage() {
                 <div>
                   <div className="flex flex-wrap gap-8" style={{ marginTop: 4 }}>
                     {[
-                      { section: 'admin/', desc: 'Pages de gestion (stats, users, billing)', icon: '🛠️' },
-                      { section: 'client/', desc: 'Pages client interactives (chat, docs, équipe)', icon: '👤' },
-                      { section: 'system/', desc: 'Pages système (agents, events, tâches)', icon: '⚙️' },
-                      { section: 'infra/', desc: 'Pages infrastructure (health, metrics, mémoire)', icon: '🖥️' },
+                      { section: 'admin/', desc: 'Pages de gestion (stats, users, billing)', icon: 'build' },
+                      { section: 'client/', desc: 'Pages client interactives (chat, docs, équipe)', icon: 'person' },
+                      { section: 'system/', desc: 'Pages système (agents, events, tâches)', icon: 'settings' },
+                      { section: 'infra/', desc: 'Pages infrastructure (health, metrics, mémoire)', icon: 'desktop_windows' },
                     ].map(s => (
                       <div key={s.section} className="bg-tertiary rounded-sm border" style={{ flex: '1 1 200px', padding: '8px 12px' }}>
-                        <div className="text-md font-bold">{s.icon} {s.section}</div>
+                        <div className="text-md font-bold"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{s.icon}</span> {s.section}</div>
                         <div className="text-xs text-muted" style={{ marginTop: 2 }}>{s.desc}</div>
                       </div>
                     ))}
@@ -265,7 +265,7 @@ export default function GuidePage() {
 
       {/* ═══ 3. Ajouter un agent ═══ */}
       <section id="add-agent" className="section">
-        <h2 className="section-title">🤖 Ajouter un agent</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>smart_toy</span> Ajouter un agent</h2>
         <div className="card p-20">
           <div className="alert alert-info mb-16">
             Un seul fichier à modifier : <strong>lib/agent-config.ts</strong>. Le nouvel agent apparaîtra automatiquement partout dans l&apos;application.
@@ -320,15 +320,15 @@ export default function GuidePage() {
                   <span>Le nouvel agent apparaît instantanément dans :</span>
                   <div className="flex flex-wrap gap-6 mt-8">
                     {[
-                      { page: 'Chat', icon: '💬', desc: 'Sélecteur d\'agents' },
-                      { page: 'Réunions', icon: '🤝', desc: 'Liste des participants' },
-                      { page: 'Équipe', icon: '👥', desc: 'Fiche agent recrutement' },
-                      { page: 'Agent Studio', icon: '🎨', desc: 'Personnalisation' },
+                      { page: 'Chat', icon: 'chat', desc: 'Sélecteur d\'agents' },
+                      { page: 'Réunions', icon: 'handshake', desc: 'Liste des participants' },
+                      { page: 'Équipe', icon: 'group', desc: 'Fiche agent recrutement' },
+                      { page: 'Agent Studio', icon: 'palette', desc: 'Personnalisation' },
                     ].map(p => (
                       <span key={p.page} className="text-sm bg-tertiary border items-center" style={{
                         padding: '6px 12px', borderRadius: 8, display: 'inline-flex', gap: 6,
                       }}>
-                        <span>{p.icon}</span>
+                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{p.icon}</span>
                         <strong>{p.page}</strong>
                         <span className="text-xs text-muted">— {p.desc}</span>
                       </span>
@@ -351,7 +351,7 @@ export default function GuidePage() {
 
       {/* ═══ 4. Modifier le pricing ═══ */}
       <section id="pricing" className="section">
-        <h2 className="section-title">💰 Modifier le pricing</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>savings</span> Modifier le pricing</h2>
         <div className="card p-20">
           <h3 className="text-base font-bold mb-12">Packs de crédits</h3>
           <p className="text-md text-secondary mb-8 leading-relaxed">
@@ -434,7 +434,7 @@ export default function GuidePage() {
 
       {/* ═══ 5. Integrations ═══ */}
       <section id="integrations" className="section">
-        <h2 className="section-title">🔌 Connecter une intégration</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>power</span> Connecter une intégration</h2>
         <div className="alert alert-info mb-16">
           Pattern général : ajouter les variables .env → créer le service → créer la route API → connecter au frontend.
           <br />Voir la page <a href="/admin/roadmap" style={{ color: 'var(--accent)', fontWeight: 600 }}>Roadmap</a> pour la liste complète des intégrations.
@@ -444,7 +444,7 @@ export default function GuidePage() {
           {[
             {
               name: 'Stripe (Paiements)',
-              icon: '💳',
+              icon: 'credit_card',
               difficulty: 'Moyen',
               steps: [
                 'Créer un compte sur stripe.com et récupérer les clés API',
@@ -457,7 +457,7 @@ export default function GuidePage() {
             },
             {
               name: 'Twilio (SMS/WhatsApp)',
-              icon: '📱',
+              icon: 'phone_iphone',
               difficulty: 'Moyen',
               steps: [
                 'Créer un compte sur twilio.com',
@@ -468,7 +468,7 @@ export default function GuidePage() {
             },
             {
               name: 'ElevenLabs (Voix TTS)',
-              icon: '🔊',
+              icon: 'volume_up',
               difficulty: 'Facile',
               steps: [
                 'Créer un compte sur elevenlabs.io et copier l\'API key',
@@ -479,7 +479,7 @@ export default function GuidePage() {
             },
             {
               name: 'Resend (Email transactionnel)',
-              icon: '📧',
+              icon: 'mail',
               difficulty: 'Facile',
               steps: [
                 'Créer un compte sur resend.com',
@@ -489,7 +489,7 @@ export default function GuidePage() {
             },
             {
               name: 'fal.ai (Photo & Video IA)',
-              icon: '🎨',
+              icon: 'palette',
               difficulty: 'Facile',
               steps: [
                 'Déjà intégré — fal.ai Flux/schnell pour les photos (synchrone)',
@@ -501,7 +501,7 @@ export default function GuidePage() {
           ].map(integ => (
             <div key={integ.name} className="card p-16">
               <div className="flex items-center gap-8 mb-8">
-                <span style={{ fontSize: 18 }}>{integ.icon}</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{integ.icon}</span>
                 <span className="text-base font-bold">{integ.name}</span>
                 <span className="badge badge-info" style={{ fontSize: 10 }}>{integ.difficulty}</span>
               </div>
@@ -517,7 +517,7 @@ export default function GuidePage() {
 
       {/* ═══ 6. Deploiement ═══ */}
       <section id="deploy" className="section">
-        <h2 className="section-title">🚀 Déploiement</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span> Déploiement</h2>
         <div className="card p-20">
           <h3 className="text-base font-bold mb-12">Développement local</h3>
           <div className="flex flex-col gap-8">
@@ -594,7 +594,7 @@ export default function GuidePage() {
 
       {/* ═══ 7. Troubleshooting ═══ */}
       <section id="troubleshooting" className="section">
-        <h2 className="section-title">🔧 Troubleshooting</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>build</span> Troubleshooting</h2>
         <div className="flex flex-col gap-8">
           {[
             {
@@ -666,7 +666,7 @@ export default function GuidePage() {
 
       {/* ═══ 8. Évolutions hebdo ═══ */}
       <section id="evolutions" className="section">
-        <h2 className="section-title">📅 Évolutions hebdomadaires</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>calendar_month</span> Évolutions hebdomadaires</h2>
         <div className="card p-20">
           <div className="alert alert-info mb-16">
             <strong>Règle d&apos;or :</strong> Chaque évolution après la mise en ligne initiale doit être testée séparément par l&apos;admin avant d&apos;être déployée en production. Un cycle par semaine.

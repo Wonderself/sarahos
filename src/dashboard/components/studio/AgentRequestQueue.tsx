@@ -82,7 +82,7 @@ export default function AgentRequestQueue({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 14 }}>📥</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>inbox</span>
           <span style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>
             Demandes d&apos;agents
           </span>
@@ -138,7 +138,7 @@ export default function AgentRequestQueue({
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 16,
                   }}>
-                    {req.agentEmoji}
+                    <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{req.agentEmoji}</span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
@@ -240,7 +240,7 @@ export default function AgentRequestQueue({
                           background: isFulfilling ? '#94a3b8' : '#10b981', color: 'white',
                         }}
                       >
-                        {isFulfilling ? '⏳ Envoi...' : `✅ Valider & envoyer à ${req.agentName.replace('Agent ', '')}`}
+                        {isFulfilling ? <><span className="material-symbols-rounded" style={{ fontSize: 11 }}>hourglass_empty</span> Envoi...</> : <><span className="material-symbols-rounded" style={{ fontSize: 11 }}>check_circle</span> Valider &amp; envoyer à {req.agentName.replace('Agent ', '')}</>}
                       </button>
                     ) : (
                       <span style={{ fontSize: 11, color: '#5b6cf7', fontStyle: 'italic', padding: '6px 0' }}>
@@ -275,11 +275,11 @@ export default function AgentRequestQueue({
                     padding: '6px 10px', borderRadius: 8, background: '#f9fafb',
                     border: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: 8,
                   }}>
-                    <span style={{ fontSize: 12 }}>{req.agentEmoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{req.agentEmoji}</span>
                     <span style={{ fontSize: 11, color: '#6b7280', flex: 1 }}>
                       {req.title}
                     </span>
-                    <span style={{ fontSize: 10, color: '#10b981', fontWeight: 600 }}>✓ Envoyé</span>
+                    <span style={{ fontSize: 10, color: '#10b981', fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> Envoyé</span>
                     <button
                       onClick={() => handleDelete(req.id)}
                       style={{
@@ -288,7 +288,7 @@ export default function AgentRequestQueue({
                       }}
                       title="Supprimer"
                     >
-                      ✕
+                      <span className="material-symbols-rounded" style={{ fontSize: 10 }}>close</span>
                     </button>
                   </div>
                 ))}

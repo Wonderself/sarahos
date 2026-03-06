@@ -73,7 +73,7 @@ export default function AgentModePage() {
             disabled={switching}
             className={`p-4 rounded-xl border-2 text-left transition-all ${mode === 'pro' ? 'border-blue-500 bg-blue-600/10' : 'border-gray-600 hover:border-gray-500'}`}
           >
-            <span className="text-2xl">🚀</span>
+            <span className="text-2xl"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span></span>
             <p className="text-white font-bold mt-2">Mode Pro</p>
             {mode === 'pro' && <span className="text-xs text-blue-400 mt-1 inline-block">Actif</span>}
           </button>
@@ -82,7 +82,7 @@ export default function AgentModePage() {
             disabled={switching}
             className={`p-4 rounded-xl border-2 text-left transition-all ${mode === 'eco' ? 'border-green-500 bg-green-600/10' : 'border-gray-600 hover:border-gray-500'}`}
           >
-            <span className="text-2xl">⚡</span>
+            <span className="text-2xl"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bolt</span></span>
             <p className="text-white font-bold mt-2">Mode Éco</p>
             {mode === 'eco' && <span className="text-xs text-green-400 mt-1 inline-block">Actif</span>}
           </button>
@@ -92,12 +92,12 @@ export default function AgentModePage() {
         <div className="mt-4 p-4 bg-gray-900 rounded-lg">
           {mode === 'pro' ? (
             <>
-              <p className="text-white text-sm font-medium">🚀 Résultats détaillés, agents qui collaborent</p>
+              <p className="text-white text-sm font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span> Résultats détaillés, agents qui collaborent</p>
               <p className="text-gray-400 text-xs mt-2">Consomme tes crédits ~3x plus vite</p>
             </>
           ) : (
             <>
-              <p className="text-white text-sm font-medium">⚡ Rapide, efficace, économique</p>
+              <p className="text-white text-sm font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bolt</span> Rapide, efficace, économique</p>
               <p className="text-gray-400 text-xs mt-2">Tes crédits durent ~3x plus longtemps</p>
             </>
           )}
@@ -112,40 +112,40 @@ export default function AgentModePage() {
       {showInfo && (
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-white font-medium">🚀 Pro vs ⚡ Éco</h3>
-            <button onClick={() => setShowInfo(false)} className="text-gray-500 hover:text-white">✕</button>
+            <h3 className="text-white font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span> Pro vs <span className="material-symbols-rounded" style={{ fontSize: 18 }}>bolt</span> Éco</h3>
+            <button onClick={() => setShowInfo(false)} className="text-gray-500 hover:text-white"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>close</span></button>
           </div>
 
           <div className="bg-gray-900 rounded-lg p-4">
-            <p className="text-white text-sm font-medium">🚀 MODE PRO</p>
+            <p className="text-white text-sm font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span> MODE PRO</p>
             <p className="text-gray-400 text-xs mt-2">
               Tes agents travaillent ensemble, se consultent, et te donnent des réponses riches et complètes.
             </p>
             <div className="mt-2 space-y-1">
-              <p className="text-green-400 text-xs">✅ Projets créatifs complexes</p>
-              <p className="text-green-400 text-xs">✅ Création de contenu pro</p>
-              <p className="text-green-400 text-xs">✅ Quand tu veux le meilleur résultat</p>
-              <p className="text-yellow-400 text-xs">⚠️ Tes crédits s&apos;épuisent ~3x plus vite</p>
+              <p className="text-green-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Projets créatifs complexes</p>
+              <p className="text-green-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Création de contenu pro</p>
+              <p className="text-green-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Quand tu veux le meilleur résultat</p>
+              <p className="text-yellow-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>warning</span> Tes crédits s&apos;épuisent ~3x plus vite</p>
             </div>
           </div>
 
           <div className="bg-gray-900 rounded-lg p-4">
-            <p className="text-white text-sm font-medium">⚡ MODE ÉCO</p>
+            <p className="text-white text-sm font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bolt</span> MODE ÉCO</p>
             <p className="text-gray-400 text-xs mt-2">
               Chaque agent va droit au but. Réponses rapides, crédits préservés.
             </p>
             <div className="mt-2 space-y-1">
-              <p className="text-green-400 text-xs">✅ Tâches simples et quotidiennes</p>
-              <p className="text-green-400 text-xs">✅ Quand tu veux économiser</p>
-              <p className="text-green-400 text-xs">✅ Réponses instantanées</p>
-              <p className="text-yellow-400 text-xs">⚠️ Pas de collaboration entre agents</p>
-              <p className="text-yellow-400 text-xs">⚠️ Réponses plus courtes</p>
+              <p className="text-green-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Tâches simples et quotidiennes</p>
+              <p className="text-green-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Quand tu veux économiser</p>
+              <p className="text-green-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Réponses instantanées</p>
+              <p className="text-yellow-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>warning</span> Pas de collaboration entre agents</p>
+              <p className="text-yellow-400 text-xs"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>warning</span> Réponses plus courtes</p>
             </div>
           </div>
 
           <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-800/50">
             <p className="text-blue-300 text-xs">
-              💡 Tu peux changer quand tu veux. Tes conversations et tes réglages sont toujours conservés. C&apos;est juste la façon dont tes agents travaillent qui change.
+              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>lightbulb</span> Tu peux changer quand tu veux. Tes conversations et tes réglages sont toujours conservés. C&apos;est juste la façon dont tes agents travaillent qui change.
             </p>
           </div>
 
@@ -160,7 +160,7 @@ export default function AgentModePage() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setShowConfirm(null)}>
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 max-w-sm w-full" onClick={e => e.stopPropagation()}>
             <h3 className="text-white font-medium">
-              Passer en Mode {showConfirm === 'pro' ? 'Pro 🚀' : 'Éco ⚡'} ?
+              Passer en Mode {showConfirm === 'pro' ? <>Pro <span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span></> : <>Éco <span className="material-symbols-rounded" style={{ fontSize: 18 }}>bolt</span></>} ?
             </h3>
             <p className="text-gray-400 text-sm mt-3">
               {showConfirm === 'eco'
@@ -190,8 +190,8 @@ export default function AgentModePage() {
           <thead>
             <tr className="text-gray-500 border-b border-gray-700">
               <th className="py-2 text-left">Paramètre</th>
-              <th className="py-2 text-center">🚀 Pro</th>
-              <th className="py-2 text-center">⚡ Éco</th>
+              <th className="py-2 text-center"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span> Pro</th>
+              <th className="py-2 text-center"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bolt</span> Éco</th>
             </tr>
           </thead>
           <tbody className="text-gray-300">

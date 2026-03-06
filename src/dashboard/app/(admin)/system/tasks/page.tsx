@@ -169,7 +169,7 @@ export default async function TasksPage() {
                           width: 18, height: 18, fontSize: 10, flexShrink: 0,
                           background: done ? 'var(--success)' : 'var(--bg-tertiary)', color: done ? 'white' : 'var(--text-muted)',
                         }}>
-                          {done ? '✓' : '○'}
+                          {done ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> : <span className="material-symbols-rounded" style={{ fontSize: 10 }}>radio_button_unchecked</span>}
                         </span>
                         <span className="flex-1 text-md font-medium" style={{ textDecoration: done ? 'line-through' : 'none' }}>
                           {String(t['id'] ?? '')} — {String(t['title'] ?? `Task ${i}`)}

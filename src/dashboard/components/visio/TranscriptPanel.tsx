@@ -47,7 +47,7 @@ export default function TranscriptPanel({ messages, agentName, agentEmoji, agent
             background: msg.role === 'user' ? '#e0e7ff' : `${agentColor}20`,
             fontSize: 14,
           }}>
-            {msg.role === 'user' ? '👤' : agentEmoji}
+            {msg.role === 'user' ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>person</span> : <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{agentEmoji}</span>}
           </div>
           <div style={{
             maxWidth: '80%', padding: '8px 12px', borderRadius: 12,

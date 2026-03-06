@@ -14,11 +14,11 @@ interface Referral {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string; icon: string }> = {
-  pending: { label: 'En attente', color: '#f59e0b', icon: '⏳' },
-  month1_ok: { label: 'Mois 1 valide', color: '#3b82f6', icon: '✅' },
-  qualified: { label: 'Qualifie', color: '#22c55e', icon: '🎉' },
-  rewarded: { label: 'Recompense', color: '#22c55e', icon: '💰' },
-  failed: { label: 'Non qualifie', color: '#ef4444', icon: '❌' },
+  pending: { label: 'En attente', color: '#f59e0b', icon: 'hourglass_empty' },
+  month1_ok: { label: 'Mois 1 valide', color: '#3b82f6', icon: 'check_circle' },
+  qualified: { label: 'Qualifie', color: '#22c55e', icon: 'celebration' },
+  rewarded: { label: 'Recompense', color: '#22c55e', icon: 'savings' },
+  failed: { label: 'Non qualifie', color: '#ef4444', icon: 'cancel' },
 };
 
 export default function ReferralsPage() {
@@ -92,7 +92,7 @@ export default function ReferralsPage() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Parrainage</h1>
-          <p className="page-subtitle">Invitez vos amis, gagnez des crédits</p>
+          <p className="page-subtitle">Invitez vos amis, gagnez des <span className="fz-logo-word">crédits</span></p>
         </div>
       </div>
 
@@ -102,10 +102,10 @@ export default function ReferralsPage() {
         border: '2px solid #5b6cf730', padding: '24px 20px',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
-          <span style={{ fontSize: 48 }}>🎁</span>
+          <span style={{ fontSize: 48 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>redeem</span></span>
           <div className="flex-1" style={{ minWidth: 240 }}>
             <div className="font-bold" style={{ fontSize: 20, marginBottom: 6 }}>
-              Gagnez 20 EUR de crédits gratuits !
+              Gagnez 20 EUR de crédits <span className="fz-logo-word">gratuits</span> !
             </div>
             <div className="text-md text-secondary" style={{ lineHeight: 1.6 }}>
               Partagez votre lien d&apos;invitation. Pour chaque filleul qualifié, vous recevez
@@ -128,7 +128,7 @@ export default function ReferralsPage() {
             {referralCode ? getReferralLink() : 'Chargement...'}
           </div>
           <button onClick={copyLink} className="btn btn-primary btn-sm" disabled={!referralCode}>
-            {copied ? '✅ Copie !' : 'Copier'}
+            {copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Copié !</> : 'Copier'}
           </button>
           {shareSupported && (
             <button onClick={shareLink} className="btn btn-secondary btn-sm" disabled={!referralCode}>
@@ -165,17 +165,17 @@ export default function ReferralsPage() {
         <div className="section-title" style={{ marginBottom: 16 }}>Comment ça marche</div>
         <div className="grid-4" style={{ gap: 12 }}>
           {[
-            { step: '1', icon: '🔗', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
-            { step: '2', icon: '✍️', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
-            { step: '3', icon: '📊', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
-            { step: '4', icon: '💰', title: 'Récompense', desc: '20 EUR de crédits pour vous (10 EUR/mois)' },
+            { step: '1', icon: 'link', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
+            { step: '2', icon: 'draw', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
+            { step: '3', icon: 'bar_chart', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
+            { step: '4', icon: 'savings', title: 'Récompense', desc: '20 EUR de crédits pour vous (10 EUR/mois)' },
           ].map(s => (
             <div key={s.step} className="text-center" style={{ padding: '12px 8px' }}>
               <div className="flex-center" style={{
                 width: 40, height: 40, borderRadius: '50%', margin: '0 auto 8px',
                 background: 'var(--accent-muted)', fontSize: 20,
               }}>
-                {s.icon}
+                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{s.icon}</span>
               </div>
               <div className="text-sm font-bold mb-4">{s.title}</div>
               <div className="text-xs text-muted" style={{ lineHeight: 1.5 }}>{s.desc}</div>
@@ -197,7 +197,7 @@ export default function ReferralsPage() {
           <div className="card"><div className="animate-pulse text-muted">Chargement...</div></div>
         ) : referrals.length === 0 ? (
           <div className="card text-center" style={{ padding: '32px 20px' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>👥</div>
+            <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>group</span></div>
             <div className="text-md text-secondary" style={{ marginBottom: 16 }}>
               Vous n&apos;avez pas encore de filleul.
             </div>
@@ -226,7 +226,7 @@ export default function ReferralsPage() {
                       <td className="font-semibold">{ref.referredEmail}</td>
                       <td className="text-center">
                         <span style={{ color: st.color, fontWeight: 600, fontSize: 12 }}>
-                          {st.icon} {st.label}
+                          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{st.icon}</span> {st.label}
                         </span>
                       </td>
                       <td className="text-center text-sm">

@@ -21,6 +21,7 @@ interface TeamAgent {
   name: string;
   role: string;
   emoji: string;
+  materialIcon: string;
   level: string;
   description: string;
   tagline: string;
@@ -50,6 +51,7 @@ function buildTeamAgents(tier: string): TeamAgent[] {
       name: resolved.name,
       role: resolved.role,
       emoji: resolved.emoji,
+      materialIcon: (resolved as any).materialIcon ?? 'smart_toy',
       level: def.level,
       description: def.description,
       tagline: def.tagline,
@@ -79,6 +81,7 @@ export default function TeamPage() {
   const [wsActivity, setWsActivity] = useState<Array<{ id: string; action: string; userName?: string; createdAt: string }>>([]);
   const [wsName, setWsName] = useState('');
   const [creatingWs, setCreatingWs] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     try {
@@ -95,7 +98,7 @@ export default function TeamPage() {
   }, []);
 
   function getToken() {
-    return document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+    try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token; } catch { return undefined; }
   }
 
   async function loadWorkspaces() {
@@ -111,7 +114,9 @@ export default function TeamPage() {
           loadWorkspaceData(first.id);
         }
       }
-    } catch {}
+    } catch {
+      setError('Impossible de charger les espaces de travail');
+    }
   }
 
   async function loadWorkspaceData(wsId: string) {
@@ -124,12 +129,15 @@ export default function TeamPage() {
       ]);
       if (membersRes.ok) { const d = await membersRes.json(); setMembers(d.members ?? []); }
       if (activityRes.ok) { const d = await activityRes.json(); setWsActivity(d.activity ?? []); }
-    } catch {}
+    } catch {
+      setError('Impossible de charger les données de l\'espace');
+    }
   }
 
   async function createWorkspace() {
     if (!wsName.trim()) return;
     setCreatingWs(true);
+    setError('');
     try {
       const token = getToken();
       const res = await fetch('/api/portal/workspaces', {
@@ -143,14 +151,19 @@ export default function TeamPage() {
         setActiveWorkspace(data.workspace.id);
         setWsName('');
         loadWorkspaceData(data.workspace.id);
+      } else {
+        setError('Erreur lors de la création de l\'espace');
       }
-    } catch {}
+    } catch {
+      setError('Erreur de connexion');
+    }
     setCreatingWs(false);
   }
 
   async function sendInvite() {
     if (!inviteEmail.trim() || !activeWorkspace) return;
     setInviting(true);
+    setError('');
     try {
       const token = getToken();
       const res = await fetch(`/api/portal/workspaces/${activeWorkspace}/invite`, {
@@ -161,8 +174,12 @@ export default function TeamPage() {
       if (res.ok) {
         setInviteEmail('');
         loadWorkspaceData(activeWorkspace);
+      } else {
+        setError('Erreur lors de l\'envoi de l\'invitation');
       }
-    } catch {}
+    } catch {
+      setError('Erreur de connexion');
+    }
     setInviting(false);
   }
 
@@ -188,12 +205,19 @@ export default function TeamPage() {
 
   return (
     <div className="client-page-scrollable">
+      {/* Error banner */}
+      {error && (
+        <div className="alert alert-danger" style={{ margin: '0 0 16px', fontSize: 13 }} onClick={() => setError('')}>
+          {error}
+        </div>
+      )}
+
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">Mon équipe</h1>
+          <h1 className="page-title">Mon <span className="fz-logo-word">équipe</span></h1>
           <p className="page-subtitle">
-            Agents IA, espace collaboratif et activité
+            <span className="fz-logo-word">Agents IA</span>, espace collaboratif et activité
           </p>
         </div>
         <Link href="/client/chat" className="btn btn-primary">
@@ -204,9 +228,9 @@ export default function TeamPage() {
       {/* Tabs */}
       <div className="flex gap-4 mb-8" style={{ borderBottom: '1px solid var(--border)' }}>
         {([
-          { id: 'agents' as const, label: 'Mon équipe IA', icon: '🤖' },
-          { id: 'workspace' as const, label: 'Espace collaboratif', icon: '👥' },
-          { id: 'activity' as const, label: 'Activité', icon: '📊' },
+          { id: 'agents' as const, label: 'Mon équipe IA', icon: 'smart_toy' },
+          { id: 'workspace' as const, label: 'Espace collaboratif', icon: 'group' },
+          { id: 'activity' as const, label: 'Activité', icon: 'bar_chart' },
         ]).map(tab => (
           <button
             key={tab.id}
@@ -224,7 +248,7 @@ export default function TeamPage() {
               padding: '8px 16px',
             }}
           >
-            {tab.icon} {tab.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{tab.icon}</span> {tab.label}
           </button>
         ))}
       </div>
@@ -248,11 +272,11 @@ export default function TeamPage() {
               }}>
                 <div className="flex gap-12 mb-12" style={{ alignItems: 'flex-start' }}>
                   <div className="flex-center rounded-lg" style={{
-                    width: 52, height: 52, fontSize: 26,
+                    width: 52, height: 52,
                     background: agent.color + '22', border: `1px solid ${agent.color}44`,
                     flexShrink: 0,
                   }}>
-                    {agent.emoji}
+                    <span className="material-symbols-rounded" style={{ fontSize: 26, color: agent.color }}>{agent.materialIcon}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex flex-between" style={{ alignItems: 'flex-start' }}>
@@ -296,13 +320,13 @@ export default function TeamPage() {
                     Discuter &rarr;
                   </Link>
                   <Link href="/client/agents/customize" className="btn btn-ghost btn-sm" title="Personnaliser">
-                    🎨
+                    <span className="material-symbols-rounded" style={{ fontSize: 16 }}>palette</span>
                   </Link>
                 </div>
 
                 {agent.isCustomized && (
                   <div className="mt-8 text-xs text-accent font-semibold text-center">
-                    ✨ Personnalisé via Agent Studio
+                    <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>auto_awesome</span> Personnalisé via Agent Studio
                   </div>
                 )}
 
@@ -329,10 +353,10 @@ export default function TeamPage() {
               }}>
                 <div className="flex gap-12 mb-12" style={{ alignItems: 'flex-start' }}>
                   <div className="flex-center rounded-lg bg-tertiary" style={{
-                    width: 52, height: 52, fontSize: 26,
+                    width: 52, height: 52,
                     flexShrink: 0, filter: 'grayscale(0.3)',
                   }}>
-                    {agent.emoji}
+                    <span className="material-symbols-rounded" style={{ fontSize: 26, color: agent.color }}>{agent.materialIcon}</span>
                   </div>
                   <div className="flex-1">
                     <div className="text-lg font-bold text-secondary">{agent.role}</div>
@@ -372,7 +396,7 @@ export default function TeamPage() {
 
       {/* Bottom CTA */}
       <div className="text-center rounded-lg bg-secondary border mt-16" style={{ padding: '40px 20px' }}>
-        <div className="mb-12" style={{ fontSize: 36 }}>🏢</div>
+        <div className="mb-12"><span className="material-symbols-rounded" style={{ fontSize: 36 }}>business</span></div>
         <div className="text-xl font-bold mb-8">
           Votre équipe IA travaille ensemble
         </div>
@@ -392,7 +416,7 @@ export default function TeamPage() {
         <div>
           {workspaces.length === 0 ? (
             <div className="text-center rounded-lg bg-secondary border" style={{ padding: '60px 20px' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>👥</div>
+              <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>group</span></div>
               <h3 className="text-lg font-bold mb-4">Créez votre premier espace collaboratif</h3>
               <p className="text-sm text-secondary mb-16" style={{ maxWidth: 400, margin: '0 auto 20px' }}>
                 Invitez votre équipe pour travailler ensemble : données partagées, agents communs, actions assignées.
@@ -538,7 +562,7 @@ export default function TeamPage() {
         <div>
           {wsActivity.length === 0 ? (
             <div className="text-center" style={{ padding: '60px 20px', color: 'var(--text-secondary)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>📊</div>
+              <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bar_chart</span></div>
               <p className="text-sm">Aucune activité pour le moment.</p>
               {workspaces.length === 0 && (
                 <p className="text-xs mt-4">Créez un espace collaboratif pour voir l&apos;activité de votre équipe.</p>

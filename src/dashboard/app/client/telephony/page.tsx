@@ -194,7 +194,7 @@ export default function TelephonyPage() {
   })) ?? [];
 
   const healthColor = health?.status === 'ok' ? '#22c55e' : health?.status === 'degraded' ? '#f59e0b' : '#ef4444';
-  const healthLabel = health?.status === 'ok' ? '✅ Opérationnel' : health?.status === 'degraded' ? '⚠️ Dégradé' : '❌ En panne';
+  const healthLabel = health?.status === 'ok' ? 'Opérationnel' : health?.status === 'degraded' ? 'Dégradé' : 'En panne';
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
@@ -202,21 +202,21 @@ export default function TelephonyPage() {
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div>
-          <h1 className="page-title">📞 Téléphonie</h1>
-          <p className="page-subtitle">Historique des appels Twilio, gestion des personas et métriques du pipeline vocal.</p>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 22 }}>call</span> Téléphonie</h1>
+          <p className="page-subtitle">Historique des appels <span className="fz-logo-word">Twilio</span>, gestion des personas et métriques du pipeline vocal.</p>
         </div>
       </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Total appels', value: String(totalCalls), icon: '📞', color: 'var(--accent)' },
-          { label: 'Taux de succès', value: `${successRate}%`, icon: '✅', color: '#22c55e' },
-          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: '⏱️', color: '#f59e0b' },
-          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: '💰', color: '#3b82f6' },
+          { label: 'Total appels', value: String(totalCalls), icon: 'call', color: 'var(--accent)' },
+          { label: 'Taux de succès', value: `${successRate}%`, icon: 'check_circle', color: '#22c55e' },
+          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: 'timer', color: '#f59e0b' },
+          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: 'savings', color: '#3b82f6' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-            <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
+            <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
             <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
           </div>
@@ -253,7 +253,7 @@ export default function TelephonyPage() {
             </div>
             {displayedCalls.length > 0 && (
               <button onClick={exportCSV} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-                ⬇️ Export CSV
+                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Export CSV
               </button>
             )}
           </div>
@@ -262,15 +262,15 @@ export default function TelephonyPage() {
             <div className="text-tertiary animate-pulse" style={{ textAlign: 'center', padding: '40px 0' }}>Chargement...</div>
           ) : displayedCalls.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>📞</div>
+              <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>call</span></div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucun appel{filterStatus !== 'all' ? ' ' + STATUS_LABELS[filterStatus as CallStatus].toLowerCase() : ''}</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Les appels Twilio apparaîtront ici.</div>
+              <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Les appels <span className="fz-logo-word">Twilio</span> apparaîtront ici.</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {displayedCalls.map(call => (
                 <div key={call.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ fontSize: 24, flexShrink: 0 }}>📞</div>
+                  <div style={{ flexShrink: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>call</span></div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600 }}>
                       {call.from && call.to ? `${call.from} → ${call.to}` : call.from ?? call.to ?? 'Appel entrant'}
@@ -302,7 +302,7 @@ export default function TelephonyPage() {
             <div className="text-tertiary animate-pulse" style={{ textAlign: 'center', padding: '40px 0' }}>Chargement des personas...</div>
           ) : personas.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🎭</div>
+              <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>theater_comedy</span></div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucune persona disponible</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Les personas vocales apparaîtront ici.</div>
             </div>
@@ -316,7 +316,7 @@ export default function TelephonyPage() {
                     </span>
                   )}
                   <div style={{ textAlign: 'center', marginBottom: 14 }}>
-                    <div style={{ fontSize: 40, marginBottom: 8 }}>{p.emoji ?? (p.name.toLowerCase().includes('sarah') ? '👩' : '👨')}</div>
+                    <div style={{ marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>{p.emoji ? 'person' : 'person'}</span></div>
                     <div style={{ fontSize: 15, fontWeight: 700 }}>{p.name}</div>
                     <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{p.language}</div>
                   </div>
@@ -325,7 +325,7 @@ export default function TelephonyPage() {
                   )}
                   {p.voice && (
                     <div style={{ fontSize: 11, color: 'var(--text-tertiary)', textAlign: 'center', marginBottom: 14 }}>
-                      🎤 {p.voice}
+                      <span className="material-symbols-rounded" style={{ fontSize: 11 }}>mic</span> {p.voice}
                     </div>
                   )}
                   {!p.active && (
@@ -360,16 +360,16 @@ export default function TelephonyPage() {
                     {healthLabel}
                   </span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                <div className="fz-grid-3" style={{ display: 'grid', gap: 10 }}>
                   {[
-                    { label: 'STT (Transcription)', value: health?.stt ?? 'N/A', icon: '🎤' },
-                    { label: 'LLM (Réponse)', value: health?.llm ?? 'N/A', icon: '🤖' },
-                    { label: 'TTS (Synthèse)', value: health?.tts ?? 'N/A', icon: '🔊' },
+                    { label: 'STT (Transcription)', value: health?.stt ?? 'N/A', icon: 'mic' },
+                    { label: 'LLM (Réponse)', value: health?.llm ?? 'N/A', icon: 'smart_toy' },
+                    { label: 'TTS (Synthèse)', value: health?.tts ?? 'N/A', icon: 'volume_up' },
                   ].map(item => (
                     <div key={item.label} style={{ textAlign: 'center', padding: '12px', background: 'var(--bg-secondary)', borderRadius: 10 }}>
-                      <div style={{ fontSize: 22, marginBottom: 4 }}>{item.icon}</div>
+                      <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{item.icon}</span></div>
                       <div style={{ fontSize: 12, fontWeight: 600, color: item.value === 'ok' ? '#22c55e' : item.value === 'degraded' ? '#f59e0b' : 'var(--text-secondary)' }}>
-                        {item.value === 'ok' ? '✅ OK' : item.value === 'degraded' ? '⚠️ Dégradé' : item.value}
+                        {item.value === 'ok' ? 'OK' : item.value === 'degraded' ? 'Dégradé' : item.value}
                       </div>
                       <div style={{ fontSize: 10, color: 'var(--text-tertiary)', marginTop: 2 }}>{item.label}</div>
                     </div>
@@ -383,13 +383,13 @@ export default function TelephonyPage() {
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Latences moyennes</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 20 }}>
                     {[
-                      { label: 'STT', value: metrics.sttLatency, icon: '🎤' },
-                      { label: 'LLM', value: metrics.llmLatency, icon: '🤖' },
-                      { label: 'TTS', value: metrics.ttsLatency, icon: '🔊' },
-                      { label: 'Total', value: metrics.totalLatency, icon: '⚡', highlight: true },
+                      { label: 'STT', value: metrics.sttLatency, icon: 'mic' },
+                      { label: 'LLM', value: metrics.llmLatency, icon: 'smart_toy' },
+                      { label: 'TTS', value: metrics.ttsLatency, icon: 'volume_up' },
+                      { label: 'Total', value: metrics.totalLatency, icon: 'bolt', highlight: true },
                     ].map(m => (
                       <div key={m.label} className="card" style={{ padding: '12px', textAlign: 'center', background: m.highlight ? 'var(--accent)10' : undefined }}>
-                        <div style={{ fontSize: 18, marginBottom: 4 }}>{m.icon}</div>
+                        <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{m.icon}</span></div>
                         <div style={{ fontSize: 18, fontWeight: 700, color: m.highlight ? 'var(--accent)' : 'var(--text-primary)' }}>
                           {m.value != null ? `${m.value}ms` : '—'}
                         </div>

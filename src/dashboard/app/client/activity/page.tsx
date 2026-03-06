@@ -13,22 +13,22 @@ interface Activity {
   created_at: string;
 }
 
-const ACTION_EMOJI: Record<string, string> = {
-  login: '\uD83D\uDD11',
-  deposit: '\uD83D\uDCB0',
-  withdrawal: '\uD83D\uDCB8',
-  update_preferences: '\u2699\uFE0F',
-  chat: '\uD83D\uDCAC',
-  meeting: '\uD83E\uDD1D',
-  document: '\uD83D\uDCC4',
-  register: '\uD83C\uDF89',
-  password_reset: '\uD83D\uDD12',
-  logout: '\uD83D\uDEAA',
-  update_profile: '\uD83D\uDC64',
-  agent_call: '\uD83E\uDD16',
-  billing: '\uD83D\uDCB3',
-  upload: '\uD83D\uDCE4',
-  download: '\uD83D\uDCE5',
+const ACTION_ICON: Record<string, string> = {
+  login: 'key',
+  deposit: 'savings',
+  withdrawal: 'payments',
+  update_preferences: 'settings',
+  chat: 'chat',
+  meeting: 'handshake',
+  document: 'description',
+  register: 'celebration',
+  password_reset: 'lock',
+  logout: 'logout',
+  update_profile: 'person',
+  agent_call: 'smart_toy',
+  billing: 'credit_card',
+  upload: 'upload',
+  download: 'download',
 };
 
 const ACTION_LABEL: Record<string, string> = {
@@ -49,8 +49,8 @@ const ACTION_LABEL: Record<string, string> = {
   download: 'Telechargement',
 };
 
-function getActionEmoji(action: string): string {
-  return ACTION_EMOJI[action] ?? '\uD83D\uDCDD';
+function getActionIcon(action: string): string {
+  return ACTION_ICON[action] ?? 'edit_note';
 }
 
 function getActionLabel(action: string): string {
@@ -175,7 +175,7 @@ export default function ActivityPage() {
       <div className="flex-center" style={{ minHeight: 400, flexDirection: 'column', gap: 12 }}>
         {loadingTimedOut ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 8 }}>&#128268;</div>
+            <div style={{ fontSize: 48, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>link_off</span></div>
             <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>
               Impossible de charger les données
             </div>
@@ -208,10 +208,10 @@ export default function ActivityPage() {
             fontSize: 22, fontWeight: 700, color: 'var(--text-primary)',
             letterSpacing: '-0.02em', marginBottom: 6,
           }}>
-            {'\uD83D\uDCCB'} Journal d&apos;Activité
+            <span className="material-symbols-rounded" style={{ fontSize: 22 }}>assignment</span> Journal d&apos;<span className="fz-logo-word">Activité</span>
           </h1>
           <p style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>
-            Historique de toutes vos actions sur la plateforme
+            Historique de toutes vos actions sur la <span className="fz-logo-word">plateforme</span>
           </p>
         </div>
         {activities.length > 0 && (
@@ -234,7 +234,7 @@ export default function ActivityPage() {
               color: 'var(--text-primary)', cursor: 'pointer',
             }}
           >
-            📥 Export CSV
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Export CSV
           </button>
         )}
       </div>
@@ -251,7 +251,7 @@ export default function ActivityPage() {
           background: 'var(--bg-secondary)', borderRadius: 16,
           border: '1px solid var(--border-primary)',
         }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>{'\uD83D\uDCED'}</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>inbox</span></div>
           <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
             Aucune activite pour le moment
           </div>
@@ -314,7 +314,7 @@ export default function ActivityPage() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 18, flexShrink: 0,
                     }}>
-                      {getActionEmoji(activity.action)}
+                      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{getActionIcon(activity.action)}</span>
                     </div>
 
                     {/* Content */}

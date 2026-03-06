@@ -84,16 +84,16 @@ export default function ClaudePage() {
             gap: 16,
           }}>
             {[
-              { icon: '🛡️', title: 'Securite #1 mondiale', desc: 'Anthropic est le leader mondial en securite IA. Constitutional AI, RLHF, alignement. Vos donnees ne sont jamais utilisees pour l\'entrainement.' },
-              { icon: '⚡', title: 'Performance de pointe', desc: 'Claude surpasse GPT-4 et Gemini sur les benchmarks de raisonnement, codage et comprehension de texte.' },
-              { icon: '🧠', title: 'Comprehension profonde', desc: 'Fenetre de contexte de 200K tokens. Claude comprend des documents entiers et le contexte de votre entreprise.' },
-              { icon: '🇫🇷', title: 'Excellent en francais', desc: 'Claude excelle en francais avec une comprehension native des nuances et du vocabulaire professionnel.' },
+              { icon: 'shield', title: 'Securite #1 mondiale', desc: 'Anthropic est le leader mondial en securite IA. Constitutional AI, RLHF, alignement. Vos donnees ne sont jamais utilisees pour l\'entrainement.' },
+              { icon: 'bolt', title: 'Performance de pointe', desc: 'Claude surpasse GPT-4 et Gemini sur les benchmarks de raisonnement, codage et comprehension de texte.' },
+              { icon: 'psychology', title: 'Comprehension profonde', desc: 'Fenetre de contexte de 200K tokens. Claude comprend des documents entiers et le contexte de votre entreprise.' },
+              { icon: 'flag', title: 'Excellent en francais', desc: 'Claude excelle en francais avec une comprehension native des nuances et du vocabulaire professionnel.' },
             ].map(c => (
               <div key={c.title} style={{
                 padding: 24, borderRadius: 12,
                 background: '#f5f5f7',
               }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{c.icon}</div>
+                <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{c.icon}</span></div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{c.title}</div>
                 <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.6 }}>{c.desc}</div>
               </div>
@@ -140,7 +140,7 @@ export default function ClaudePage() {
                   'Comprehension contextuelle avancee',
                 ].map(f => (
                   <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#86868b' }}>
-                    <span style={{ color: '#1d1d1f', fontWeight: 600, fontSize: 12 }}>&#10003;</span> {f}
+                    <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 14 }}>check</span> {f}
                   </div>
                 ))}
               </div>
@@ -176,7 +176,7 @@ export default function ClaudePage() {
                   'Le modele le plus puissant d\'Anthropic',
                 ].map(f => (
                   <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#86868b' }}>
-                    <span style={{ color: '#1d1d1f', fontWeight: 600, fontSize: 12 }}>&#10003;</span> {f}
+                    <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 14 }}>check</span> {f}
                   </div>
                 ))}
               </div>
@@ -213,15 +213,15 @@ export default function ClaudePage() {
               display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
             }}>
               {[
-                { icon: '🔍', title: 'Analyse', desc: 'Decompose le probleme en sous-elements' },
-                { icon: '⚖️', title: 'Evaluation', desc: 'Compare les scenarios et leurs impacts' },
-                { icon: '🎯', title: 'Decision', desc: 'Formule une recommandation argumentee' },
+                { icon: 'search', title: 'Analyse', desc: 'Decompose le probleme en sous-elements' },
+                { icon: 'balance', title: 'Evaluation', desc: 'Compare les scenarios et leurs impacts' },
+                { icon: 'target', title: 'Decision', desc: 'Formule une recommandation argumentee' },
               ].map(s => (
                 <div key={s.title} style={{
                   textAlign: 'center', padding: 16, borderRadius: 10,
                   background: '#fff',
                 }}>
-                  <div style={{ fontSize: 24, marginBottom: 8 }}>{s.icon}</div>
+                  <div style={{ fontSize: 24, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', marginBottom: 4 }}>{s.title}</div>
                   <div style={{ fontSize: 12, color: '#86868b', lineHeight: 1.5 }}>{s.desc}</div>
                 </div>
@@ -248,7 +248,7 @@ export default function ClaudePage() {
                   borderBottom: i < DEFAULT_AGENTS.length - 1 ? '1px solid #f5f5f7' : 'none',
                   background: '#fff',
                 }}>
-                  <div style={{ fontSize: 20 }}>{agent.emoji}</div>
+                  <div style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f' }}>{agent.name}</div>
                     <div style={{ fontSize: 12, color: '#86868b' }}>{agent.role}</div>
@@ -279,15 +279,15 @@ export default function ClaudePage() {
             gap: 16,
           }}>
             {[
-              { icon: '🏛️', title: 'Constitutional AI', desc: 'Systeme d\'auto-regulation qui garantit des reponses sures, honnetes et utiles. Principes ethiques stricts.' },
-              { icon: '🔐', title: 'Donnees protegees', desc: 'Zero retention de donnees. Chiffrement en transit et au repos. Conforme RGPD.' },
-              { icon: '⚖️', title: 'Alignement IA', desc: 'Leader mondial en alignement IA. L\'IA agit dans l\'interet de l\'utilisateur. Audits independants.' },
-              { icon: '🏆', title: 'Benchmarks #1', desc: 'Classe #1 sur MMLU, HumanEval, GSM8K. Le plus performant en raisonnement et comprehension.' },
+              { icon: 'account_balance', title: 'Constitutional AI', desc: 'Systeme d\'auto-regulation qui garantit des reponses sures, honnetes et utiles. Principes ethiques stricts.' },
+              { icon: 'lock', title: 'Donnees protegees', desc: 'Zero retention de donnees. Chiffrement en transit et au repos. Conforme RGPD.' },
+              { icon: 'balance', title: 'Alignement IA', desc: 'Leader mondial en alignement IA. L\'IA agit dans l\'interet de l\'utilisateur. Audits independants.' },
+              { icon: 'trophy', title: 'Benchmarks #1', desc: 'Classe #1 sur MMLU, HumanEval, GSM8K. Le plus performant en raisonnement et comprehension.' },
             ].map(c => (
               <div key={c.title} style={{
                 padding: 24, borderRadius: 12, background: '#f5f5f7',
               }}>
-                <div style={{ fontSize: 24, marginBottom: 10 }}>{c.icon}</div>
+                <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{c.icon}</span></div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{c.title}</div>
                 <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.6 }}>{c.desc}</div>
               </div>
@@ -308,10 +308,10 @@ export default function ClaudePage() {
             gap: 16,
           }}>
             {[
-              { icon: '💬', title: 'WhatsApp', desc: 'Parlez a vos agents par WhatsApp et notes vocales', href: '/whatsapp' },
-              { icon: '🔊', title: 'ElevenLabs', desc: 'Voix ultra-realistes Flash v2.5 pour les reponses vocales', href: '#' },
-              { icon: '📅', title: 'Google Calendar', desc: 'Synchronisation agenda et planification automatique', href: '#' },
-              { icon: '🎤', title: 'Deepgram', desc: 'Transcription vocale Nova-2 avec 98% de precision', href: '#' },
+              { icon: 'chat', title: 'WhatsApp', desc: 'Parlez a vos agents par WhatsApp et notes vocales', href: '/whatsapp' },
+              { icon: 'volume_up', title: 'ElevenLabs', desc: 'Voix ultra-realistes Flash v2.5 pour les reponses vocales', href: '#' },
+              { icon: 'calendar_month', title: 'Google Calendar', desc: 'Synchronisation agenda et planification automatique', href: '#' },
+              { icon: 'mic', title: 'Deepgram', desc: 'Transcription vocale Nova-2 avec 98% de precision', href: '#' },
             ].map(t => (
               <Link key={t.title} href={t.href} style={{
                 textDecoration: 'none', color: 'inherit',
@@ -319,7 +319,7 @@ export default function ClaudePage() {
                 border: '1px solid #f5f5f7', background: '#fff',
                 transition: 'background 0.2s',
               }}>
-                <div style={{ fontSize: 28, marginBottom: 10 }}>{t.icon}</div>
+                <div style={{ fontSize: 28, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{t.icon}</span></div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 4 }}>{t.title}</div>
                 <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.6 }}>{t.desc}</div>
               </Link>
@@ -352,7 +352,7 @@ export default function ClaudePage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, marginTop: 16 }}>
             {['Claude Sonnet & Opus', `${DEFAULT_AGENTS.length} agents IA`, 'Extended Thinking'].map(t => (
               <span key={t} style={{ fontSize: 12, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <span style={{ color: '#1d1d1f', fontWeight: 600 }}>&#10003;</span> {t}
+                <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 14 }}>check</span> {t}
               </span>
             ))}
           </div>

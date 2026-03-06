@@ -85,53 +85,53 @@ interface WidgetMeta {
 // ─── Widget Registry ───
 
 const CATEGORIES = [
-  { id: 'productivite', emoji: '\u{1F4BC}', label: 'Productivité' },
-  { id: 'agenda', emoji: '\u{1F4C5}', label: 'Agenda & Organisation' },
-  { id: 'bienetre', emoji: '\u{1F33F}', label: 'Bien-être' },
-  { id: 'information', emoji: '\u{1F4F0}', label: 'Information' },
-  { id: 'business', emoji: '\u{1F4CA}', label: 'Business / Freenzy' },
-  { id: 'personnel', emoji: '\u{1F3E0}', label: 'Personnel' },
+  { id: 'productivite', emoji: 'work', label: 'Productivité' },
+  { id: 'agenda', emoji: 'calendar_month', label: 'Agenda & Organisation' },
+  { id: 'bienetre', emoji: 'spa', label: 'Bien-être' },
+  { id: 'information', emoji: 'newspaper', label: 'Information' },
+  { id: 'business', emoji: 'bar_chart', label: 'Business / Freenzy' },
+  { id: 'personnel', emoji: 'home', label: 'Personnel' },
 ];
 
 const WIDGETS: WidgetMeta[] = [
-  { id: 'todos', emoji: '\u2705', label: 'Tâches du jour', category: 'productivite', defaultVisible: true },
-  { id: 'objectifs', emoji: '\u{1F3AF}', label: 'Objectifs du jour', category: 'productivite', defaultVisible: true },
-  { id: 'priorites', emoji: '\u{1F947}', label: 'Priorités Top 3', category: 'productivite', defaultVisible: true },
-  { id: 'notes', emoji: '\u{1F4DD}', label: 'Notes rapides', category: 'productivite', defaultVisible: true },
-  { id: 'pomodoro', emoji: '\u{1F345}', label: 'Minuteur Pomodoro', category: 'productivite', defaultVisible: true },
-  { id: 'focus', emoji: '\u{1F4A1}', label: 'Compteur Focus', category: 'productivite', defaultVisible: false },
-  { id: 'schedule', emoji: '\u{1F553}', label: 'Planning horaire', category: 'productivite', defaultVisible: false },
-  { id: 'calendrier', emoji: '\u{1F4C6}', label: 'Calendrier du jour', category: 'agenda', defaultVisible: true },
-  { id: 'reunions', emoji: '\u{1F465}', label: 'Réunions du jour', category: 'agenda', defaultVisible: true },
-  { id: 'rappels', emoji: '\u{1F514}', label: 'Rappels', category: 'agenda', defaultVisible: true },
-  { id: 'echeances', emoji: '\u23F0', label: 'Échéances', category: 'agenda', defaultVisible: false },
-  { id: 'semaine', emoji: '\u{1F5D3}\uFE0F', label: 'Planning semaine', category: 'agenda', defaultVisible: false },
-  { id: 'humeur', emoji: '\u{1F60A}', label: 'Humeur du jour', category: 'bienetre', defaultVisible: true },
-  { id: 'hydratation', emoji: '\u{1F4A7}', label: 'Tracker hydratation', category: 'bienetre', defaultVisible: true },
-  { id: 'activite', emoji: '\u{1F3C3}', label: 'Activité physique', category: 'bienetre', defaultVisible: false },
-  { id: 'meditation', emoji: '\u{1F9D8}', label: 'Méditation', category: 'bienetre', defaultVisible: false },
-  { id: 'sommeil', emoji: '\u{1F634}', label: 'Sommeil', category: 'bienetre', defaultVisible: true },
-  { id: 'gratitude', emoji: '\u{1F49C}', label: 'Gratitude', category: 'bienetre', defaultVisible: false },
-  { id: 'affirmation', emoji: '\u2728', label: 'Affirmation du jour', category: 'bienetre', defaultVisible: false },
-  { id: 'meteo', emoji: '\u{1F324}\uFE0F', label: 'Météo', category: 'information', defaultVisible: true },
-  { id: 'citation', emoji: '\u{1F4AC}', label: 'Citation du jour', category: 'information', defaultVisible: true },
-  { id: 'horoscope', emoji: '\u{1F52E}', label: 'Horoscope', category: 'information', defaultVisible: false },
-  { id: 'actualites', emoji: '\u{1F4F0}', label: 'Actualités', category: 'information', defaultVisible: false },
-  { id: 'anniversaires', emoji: '\u{1F382}', label: 'Anniversaires', category: 'information', defaultVisible: false },
-  { id: 'ephemeride', emoji: '\u{1F4D6}', label: 'Éphéméride', category: 'information', defaultVisible: false },
-  { id: 'credits', emoji: '\u{1F4B3}', label: 'Crédits restants', category: 'business', defaultVisible: true },
-  { id: 'agents', emoji: '\u{1F916}', label: 'Agents actifs', category: 'business', defaultVisible: true },
-  { id: 'messagesNonLus', emoji: '\u{1F514}', label: 'Messages non lus', category: 'business', defaultVisible: false },
-  { id: 'projets', emoji: '\u{1F4C1}', label: 'Projets actifs', category: 'business', defaultVisible: false },
-  { id: 'kpis', emoji: '\u{1F4CA}', label: 'KPIs du jour', category: 'business', defaultVisible: false },
-  { id: 'resume', emoji: '\u{1F4CB}', label: 'Résumé hier', category: 'business', defaultVisible: false },
-  { id: 'budget', emoji: '\u{1F4B0}', label: 'Budget du jour', category: 'business', defaultVisible: false },
-  { id: 'repas', emoji: '\u{1F37D}\uFE0F', label: 'Menu du jour', category: 'personnel', defaultVisible: false },
-  { id: 'lecture', emoji: '\u{1F4D6}', label: 'Lecture en cours', category: 'personnel', defaultVisible: false },
-  { id: 'habitudes', emoji: '\u{1F525}', label: 'Habitudes quotidiennes', category: 'personnel', defaultVisible: true },
-  { id: 'contactsFav', emoji: '\u{1F4DE}', label: 'Contacts favoris', category: 'personnel', defaultVisible: false },
-  { id: 'playlist', emoji: '\u{1F3B5}', label: 'Playlist du jour', category: 'personnel', defaultVisible: false },
-  { id: 'journal', emoji: '\u{1F512}', label: 'Journal intime', category: 'personnel', defaultVisible: false },
+  { id: 'todos', emoji: 'check_circle', label: 'Tâches du jour', category: 'productivite', defaultVisible: true },
+  { id: 'objectifs', emoji: 'target', label: 'Objectifs du jour', category: 'productivite', defaultVisible: true },
+  { id: 'priorites', emoji: 'military_tech', label: 'Priorités Top 3', category: 'productivite', defaultVisible: true },
+  { id: 'notes', emoji: 'edit_note', label: 'Notes rapides', category: 'productivite', defaultVisible: true },
+  { id: 'pomodoro', emoji: 'timer', label: 'Minuteur Pomodoro', category: 'productivite', defaultVisible: true },
+  { id: 'focus', emoji: 'lightbulb', label: 'Compteur Focus', category: 'productivite', defaultVisible: false },
+  { id: 'schedule', emoji: 'schedule', label: 'Planning horaire', category: 'productivite', defaultVisible: false },
+  { id: 'calendrier', emoji: 'calendar_today', label: 'Calendrier du jour', category: 'agenda', defaultVisible: true },
+  { id: 'reunions', emoji: 'group', label: 'Réunions du jour', category: 'agenda', defaultVisible: true },
+  { id: 'rappels', emoji: 'notifications', label: 'Rappels', category: 'agenda', defaultVisible: true },
+  { id: 'echeances', emoji: 'alarm', label: 'Échéances', category: 'agenda', defaultVisible: false },
+  { id: 'semaine', emoji: 'date_range', label: 'Planning semaine', category: 'agenda', defaultVisible: false },
+  { id: 'humeur', emoji: 'mood', label: 'Humeur du jour', category: 'bienetre', defaultVisible: true },
+  { id: 'hydratation', emoji: 'water_drop', label: 'Tracker hydratation', category: 'bienetre', defaultVisible: true },
+  { id: 'activite', emoji: 'directions_run', label: 'Activité physique', category: 'bienetre', defaultVisible: false },
+  { id: 'meditation', emoji: 'self_improvement', label: 'Méditation', category: 'bienetre', defaultVisible: false },
+  { id: 'sommeil', emoji: 'bedtime', label: 'Sommeil', category: 'bienetre', defaultVisible: true },
+  { id: 'gratitude', emoji: 'favorite', label: 'Gratitude', category: 'bienetre', defaultVisible: false },
+  { id: 'affirmation', emoji: 'auto_awesome', label: 'Affirmation du jour', category: 'bienetre', defaultVisible: false },
+  { id: 'meteo', emoji: 'partly_cloudy_day', label: 'Météo', category: 'information', defaultVisible: true },
+  { id: 'citation', emoji: 'chat', label: 'Citation du jour', category: 'information', defaultVisible: true },
+  { id: 'horoscope', emoji: 'mystery', label: 'Horoscope', category: 'information', defaultVisible: false },
+  { id: 'actualites', emoji: 'newspaper', label: 'Actualités', category: 'information', defaultVisible: false },
+  { id: 'anniversaires', emoji: 'cake', label: 'Anniversaires', category: 'information', defaultVisible: false },
+  { id: 'ephemeride', emoji: 'auto_stories', label: 'Éphéméride', category: 'information', defaultVisible: false },
+  { id: 'credits', emoji: 'credit_card', label: 'Crédits restants', category: 'business', defaultVisible: true },
+  { id: 'agents', emoji: 'smart_toy', label: 'Agents actifs', category: 'business', defaultVisible: true },
+  { id: 'messagesNonLus', emoji: 'notifications', label: 'Messages non lus', category: 'business', defaultVisible: false },
+  { id: 'projets', emoji: 'folder', label: 'Projets actifs', category: 'business', defaultVisible: false },
+  { id: 'kpis', emoji: 'bar_chart', label: 'KPIs du jour', category: 'business', defaultVisible: false },
+  { id: 'resume', emoji: 'assignment', label: 'Résumé hier', category: 'business', defaultVisible: false },
+  { id: 'budget', emoji: 'savings', label: 'Budget du jour', category: 'business', defaultVisible: false },
+  { id: 'repas', emoji: 'restaurant', label: 'Menu du jour', category: 'personnel', defaultVisible: false },
+  { id: 'lecture', emoji: 'auto_stories', label: 'Lecture en cours', category: 'personnel', defaultVisible: false },
+  { id: 'habitudes', emoji: 'local_fire_department', label: 'Habitudes quotidiennes', category: 'personnel', defaultVisible: true },
+  { id: 'contactsFav', emoji: 'call', label: 'Contacts favoris', category: 'personnel', defaultVisible: false },
+  { id: 'playlist', emoji: 'music_note', label: 'Playlist du jour', category: 'personnel', defaultVisible: false },
+  { id: 'journal', emoji: 'lock', label: 'Journal intime', category: 'personnel', defaultVisible: false },
 ];
 
 // ─── Built-in Content ───
@@ -213,18 +213,18 @@ const AFFIRMATIONS = [
 ];
 
 const ZODIAC_SIGNS = [
-  { id: 'belier', emoji: '\u2648', label: 'Bélier', dates: '21 mars - 19 avril' },
-  { id: 'taureau', emoji: '\u2649', label: 'Taureau', dates: '20 avril - 20 mai' },
-  { id: 'gemeaux', emoji: '\u264A', label: 'Gémeaux', dates: '21 mai - 20 juin' },
-  { id: 'cancer', emoji: '\u264B', label: 'Cancer', dates: '21 juin - 22 juillet' },
-  { id: 'lion', emoji: '\u264C', label: 'Lion', dates: '23 juillet - 22 août' },
-  { id: 'vierge', emoji: '\u264D', label: 'Vierge', dates: '23 août - 22 sept.' },
-  { id: 'balance', emoji: '\u264E', label: 'Balance', dates: '23 sept. - 22 oct.' },
-  { id: 'scorpion', emoji: '\u264F', label: 'Scorpion', dates: '23 oct. - 21 nov.' },
-  { id: 'sagittaire', emoji: '\u2650', label: 'Sagittaire', dates: '22 nov. - 21 déc.' },
-  { id: 'capricorne', emoji: '\u2651', label: 'Capricorne', dates: '22 déc. - 19 janv.' },
-  { id: 'verseau', emoji: '\u2652', label: 'Verseau', dates: '20 janv. - 18 fév.' },
-  { id: 'poissons', emoji: '\u2653', label: 'Poissons', dates: '19 fév. - 20 mars' },
+  { id: 'belier', emoji: 'star', label: 'Bélier', dates: '21 mars - 19 avril' },
+  { id: 'taureau', emoji: 'star', label: 'Taureau', dates: '20 avril - 20 mai' },
+  { id: 'gemeaux', emoji: 'star', label: 'Gémeaux', dates: '21 mai - 20 juin' },
+  { id: 'cancer', emoji: 'star', label: 'Cancer', dates: '21 juin - 22 juillet' },
+  { id: 'lion', emoji: 'star', label: 'Lion', dates: '23 juillet - 22 août' },
+  { id: 'vierge', emoji: 'star', label: 'Vierge', dates: '23 août - 22 sept.' },
+  { id: 'balance', emoji: 'star', label: 'Balance', dates: '23 sept. - 22 oct.' },
+  { id: 'scorpion', emoji: 'star', label: 'Scorpion', dates: '23 oct. - 21 nov.' },
+  { id: 'sagittaire', emoji: 'star', label: 'Sagittaire', dates: '22 nov. - 21 déc.' },
+  { id: 'capricorne', emoji: 'star', label: 'Capricorne', dates: '22 déc. - 19 janv.' },
+  { id: 'verseau', emoji: 'star', label: 'Verseau', dates: '20 janv. - 18 fév.' },
+  { id: 'poissons', emoji: 'star', label: 'Poissons', dates: '19 fév. - 20 mars' },
 ];
 
 const ZODIAC_MESSAGES = [
@@ -286,19 +286,19 @@ const SAINTS: Record<string, string> = {
 };
 
 const DEFAULT_HABITS: HabitItem[] = [
-  { id: 'h1', label: 'Méditer', emoji: '\u{1F9D8}', streak: 0, doneToday: false },
-  { id: 'h2', label: 'Exercice', emoji: '\u{1F3C3}', streak: 0, doneToday: false },
-  { id: 'h3', label: 'Lire', emoji: '\u{1F4D6}', streak: 0, doneToday: false },
-  { id: 'h4', label: 'Boire 2L', emoji: '\u{1F4A7}', streak: 0, doneToday: false },
-  { id: 'h5', label: 'Écrire', emoji: '\u270D\uFE0F', streak: 0, doneToday: false },
+  { id: 'h1', label: 'Méditer', emoji: 'self_improvement', streak: 0, doneToday: false },
+  { id: 'h2', label: 'Exercice', emoji: 'directions_run', streak: 0, doneToday: false },
+  { id: 'h3', label: 'Lire', emoji: 'auto_stories', streak: 0, doneToday: false },
+  { id: 'h4', label: 'Boire 2L', emoji: 'water_drop', streak: 0, doneToday: false },
+  { id: 'h5', label: 'Écrire', emoji: 'edit', streak: 0, doneToday: false },
 ];
 
 const MOOD_OPTIONS = [
-  { emoji: '\u{1F629}', label: 'Terrible', color: '#dc2626' },
-  { emoji: '\u{1F641}', label: 'Pas top', color: '#f97316' },
-  { emoji: '\u{1F610}', label: 'Neutre', color: '#eab308' },
-  { emoji: '\u{1F642}', label: 'Bien', color: '#22c55e' },
-  { emoji: '\u{1F929}', label: 'Super !', color: '#5b6cf7' },
+  { emoji: 'sentiment_very_dissatisfied', label: 'Terrible', color: '#dc2626' },
+  { emoji: 'sentiment_dissatisfied', label: 'Pas top', color: '#f97316' },
+  { emoji: 'sentiment_neutral', label: 'Neutre', color: '#eab308' },
+  { emoji: 'sentiment_satisfied', label: 'Bien', color: '#22c55e' },
+  { emoji: 'sentiment_very_satisfied', label: 'Super !', color: '#5b6cf7' },
 ];
 
 const NEWS_TABS = [
@@ -309,10 +309,10 @@ const NEWS_TABS = [
 ];
 
 const PLAYLIST_PRESETS: Record<string, string> = {
-  concentration: '\u{1F3A7} Playlist Concentration : musique lo-fi, ambient, classique douce — parfait pour le deep work.',
-  energie: '\u26A1 Playlist Énergie : pop dynamique, rock, électro — pour booster votre productivité !',
-  detente: '\u{1F33F} Playlist Détente : jazz chill, bossa nova, sons de la nature — pour décompresser.',
-  motivation: '\u{1F525} Playlist Motivation : hip-hop inspirant, musique épique, discours motivants.',
+  concentration: 'Playlist Concentration : musique lo-fi, ambient, classique douce — parfait pour le deep work.',
+  energie: 'Playlist Énergie : pop dynamique, rock, électro — pour booster votre productivité !',
+  detente: 'Playlist Détente : jazz chill, bossa nova, sons de la nature — pour décompresser.',
+  motivation: 'Playlist Motivation : hip-hop inspirant, musique épique, discours motivants.',
 };
 
 // ─── Helpers ───
@@ -558,9 +558,9 @@ export default function JourneePage() {
     const token = session.token;
     if (!token) return;
     fetch(`${API_BASE}/portal/wallet`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(d => { if (d.balance != null) setWalletBalance(d.balance); }).catch(() => {});
+      .then(r => r.ok ? r.json() : null).then(d => { if (d?.balance != null) setWalletBalance(d.balance); }).catch(() => {});
     fetch(`${API_BASE}/portal/projects`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json()).then(d => { if (Array.isArray(d)) setProjectCount(d.length); else if (d.projects) setProjectCount(d.projects.length); }).catch(() => {});
+      .then(r => r.ok ? r.json() : null).then(d => { if (Array.isArray(d)) setProjectCount(d.length); else if (d?.projects) setProjectCount(d.projects.length); }).catch(() => {});
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -591,10 +591,10 @@ export default function JourneePage() {
       <div style={cardStyle}>
         <button onClick={() => toggleCollapse(id)} style={cardHeaderStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 18 }}>{meta.emoji}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{meta.emoji}</span>
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{meta.label}</span>
           </div>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)', transform: isCol ? 'rotate(-90deg)' : 'rotate(0)', transition: 'transform 0.2s', display: 'inline-block' }}>{'\u25BC'}</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'var(--text-muted)', transform: isCol ? 'rotate(-90deg)' : 'rotate(0)', transition: 'transform 0.2s', display: 'inline-block' }}>expand_more</span>
         </button>
         {!isCol && <div style={cardBodyStyle}>{children}</div>}
       </div>
@@ -625,7 +625,7 @@ export default function JourneePage() {
             <input type="checkbox" checked={t.done} onChange={() => updateData({ todos: data.todos.map(x => x.id === t.id ? { ...x, done: !x.done } : x) })}
               style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }} />
             <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)', textDecoration: t.done ? 'line-through' : 'none', opacity: t.done ? 0.5 : 1 }}>{t.text}</span>
-            <button onClick={() => updateData({ todos: data.todos.filter(x => x.id !== t.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 14 }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ todos: data.todos.filter(x => x.id !== t.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 14 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
         {total > 0 && <button onClick={() => updateData({ todos: [] })} style={{ ...btnGhostStyle, marginTop: 8, fontSize: 11 }}>Tout effacer</button>}
@@ -655,7 +655,7 @@ export default function JourneePage() {
 
   // ── W03: Priorités ──
   function renderPriorites() {
-    const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
+    const medals = ['military_tech', 'workspace_premium', 'emoji_events'];
     const swap = (i: number, j: number) => {
       if (j < 0 || j > 2) return;
       const next = [...data.priorites];
@@ -667,11 +667,11 @@ export default function JourneePage() {
       <W id="priorites">
         {data.priorites.map((p, i) => (
           <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-            <span style={{ fontSize: 20 }}>{medals[i]}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{medals[i]}</span>
             <input style={{ ...inputStyle, flex: 1 }} placeholder={`Priorité ${i + 1}...`} value={p.text}
               onChange={e => { const next = [...data.priorites]; next[i] = { ...next[i], text: e.target.value }; updateData({ priorites: next }); }} />
-            <button onClick={() => swap(i, i - 1)} disabled={i === 0} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 0 ? 0.3 : 1 }}>{'\u25B2'}</button>
-            <button onClick={() => swap(i, i + 1)} disabled={i === 2} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 2 ? 0.3 : 1 }}>{'\u25BC'}</button>
+            <button onClick={() => swap(i, i - 1)} disabled={i === 0} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 0 ? 0.3 : 1 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>arrow_upward</span></button>
+            <button onClick={() => swap(i, i + 1)} disabled={i === 2} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 2 ? 0.3 : 1 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>arrow_downward</span></button>
           </div>
         ))}
       </W>
@@ -704,13 +704,13 @@ export default function JourneePage() {
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12 }}>
             <button style={{ ...btnSmStyle, background: accentCol, minWidth: 80 }} onClick={() => updateData({ pomodoroRunning: !data.pomodoroRunning })}>
-              {data.pomodoroRunning ? '\u23F8 Pause' : '\u25B6 Start'}
+              {data.pomodoroRunning ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>pause</span> Pause</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>play_arrow</span> Start</>}
             </button>
             <button style={btnGhostStyle} onClick={() => updateData({ pomodoroTimeLeft: isWork ? 25*60 : 5*60, pomodoroRunning: false })}>Reset</button>
             <button style={btnGhostStyle} onClick={() => {
               const nextMode = isWork ? 'break' : 'work';
               updateData({ pomodoroMode: nextMode, pomodoroTimeLeft: nextMode === 'work' ? 25*60 : 5*60, pomodoroRunning: false });
-            }}>Skip {'\u23ED'}</button>
+            }}>Skip <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>skip_next</span></button>
           </div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 10 }}>Sessions : {data.pomodoroSessions}/4</div>
         </div>
@@ -731,7 +731,7 @@ export default function JourneePage() {
           <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: 'var(--accent)', width: `${pct}%`, transition: 'width 0.5s' }} /></div>
           <button style={{ ...btnSmStyle, marginTop: 12, background: data.focusRunning ? '#dc2626' : 'var(--accent)' }}
             onClick={() => updateData({ focusRunning: !data.focusRunning, focusStartedAt: data.focusRunning ? 0 : Date.now() })}>
-            {data.focusRunning ? <><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#fff', marginRight: 6, animation: 'pulse 1s infinite' }} />Stop</> : '\u25B6 Démarrer focus'}
+            {data.focusRunning ? <><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#fff', marginRight: 6, animation: 'pulse 1s infinite' }} />Stop</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>play_arrow</span> Démarrer focus</>}
           </button>
         </div>
       </W>
@@ -792,7 +792,7 @@ export default function JourneePage() {
           <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--border-primary)' }}>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', width: 45, flexShrink: 0 }}>{r.time}</span>
             <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)' }}>{r.title}</span>
-            <button onClick={() => updateData({ reunions: data.reunions.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ reunions: data.reunions.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
       </W>
@@ -817,7 +817,7 @@ export default function JourneePage() {
               style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }} />
             {r.time && <span style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 600 }}>{r.time}</span>}
             <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)', textDecoration: r.done ? 'line-through' : 'none', opacity: r.done ? 0.5 : 1 }}>{r.text}</span>
-            <button onClick={() => updateData({ rappels: data.rappels.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ rappels: data.rappels.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
       </W>
@@ -845,7 +845,7 @@ export default function JourneePage() {
               <span style={{ fontSize: 11, color: overdue ? '#dc2626' : 'var(--text-muted)', fontWeight: 600, width: 75, flexShrink: 0 }}>{e.date}</span>
               <span style={{ padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600, color: '#fff', background: prioColor[e.priority], flexShrink: 0 }}>{e.priority}</span>
               <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)' }}>{e.text}</span>
-              <button onClick={() => updateData({ echeances: data.echeances.filter(x => x.id !== e.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}>{'\u2715'}</button>
+              <button onClick={() => updateData({ echeances: data.echeances.filter(x => x.id !== e.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
             </div>
           );
         })}
@@ -863,7 +863,7 @@ export default function JourneePage() {
           {dayNames.map((name, i) => (
             <div key={i} style={{ textAlign: 'center', padding: '8px 2px', borderRadius: 8, background: i === todayIdx ? 'var(--accent)' : 'var(--bg-tertiary)', color: i === todayIdx ? '#fff' : 'var(--text-primary)' }}>
               <div style={{ fontSize: 11, fontWeight: 600 }}>{name}</div>
-              <div style={{ fontSize: 18, marginTop: 2 }}>{i === todayIdx ? '\u{1F4CD}' : '\u00B7'}</div>
+              <div style={{ fontSize: 18, marginTop: 2 }}>{i === todayIdx ? <span className="material-symbols-rounded" style={{ fontSize: 18 }}>location_on</span> : '\u00B7'}</div>
             </div>
           ))}
         </div>
@@ -880,7 +880,7 @@ export default function JourneePage() {
             <button key={i} onClick={() => updateData({ mood: i })} style={{
               fontSize: data.mood === i ? 36 : 28, padding: 4, border: data.mood === i ? `2px solid ${m.color}` : '2px solid transparent',
               borderRadius: 12, background: data.mood === i ? `${m.color}15` : 'transparent', cursor: 'pointer', transition: 'all 0.2s',
-            }}>{m.emoji}</button>
+            }}><span className="material-symbols-rounded" style={{ fontSize: data.mood === i ? 36 : 28, color: m.color }}>{m.emoji}</span></button>
           ))}
         </div>
         {data.mood >= 0 && <div style={{ textAlign: 'center', marginTop: 8, fontSize: 13, color: MOOD_OPTIONS[data.mood].color, fontWeight: 600 }}>
@@ -900,7 +900,7 @@ export default function JourneePage() {
             <button key={i} onClick={() => updateData({ waterCount: data.waterCount === i + 1 ? i : i + 1 })} style={{
               fontSize: 24, padding: 4, border: 'none', background: 'transparent', cursor: 'pointer',
               opacity: i < data.waterCount ? 1 : 0.25, transition: 'opacity 0.2s',
-            }}>{'\u{1F4A7}'}</button>
+            }}><span className="material-symbols-rounded" style={{ fontSize: 24, color: '#3b82f6' }}>water_drop</span></button>
           ))}
         </div>
         <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: '#3b82f6', width: `${Math.min(100, (data.waterCount / glasses) * 100)}%`, transition: 'width 0.3s' }} /></div>
@@ -920,9 +920,9 @@ export default function JourneePage() {
         </div>
         {data.exercises.map(ex => (
           <div key={ex.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
-            <span style={{ fontSize: 14 }}>{'\u{1F3C3}'}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>directions_run</span>
             <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)' }}>{ex.text}</span>
-            <button onClick={() => updateData({ exercises: data.exercises.filter(x => x.id !== ex.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ exercises: data.exercises.filter(x => x.id !== ex.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
         {data.exercises.length === 0 && <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center' }}>Aucune activité enregistrée</div>}
@@ -946,7 +946,7 @@ export default function JourneePage() {
           {data.meditationRunning && <div style={{ fontSize: 14, color: '#22c55e', marginTop: 6 }}>Respirez...</div>}
           <button style={{ ...btnSmStyle, marginTop: 12, background: data.meditationRunning ? '#dc2626' : '#22c55e', minWidth: 100 }}
             onClick={() => updateData({ meditationRunning: !data.meditationRunning })}>
-            {data.meditationRunning ? '\u23F8 Stop' : '\u{1F9D8} Méditer'}
+            {data.meditationRunning ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>pause</span> Stop</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>self_improvement</span> Méditer</>}
           </button>
           {data.meditationTotal > 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>Total aujourd'hui : {data.meditationTotal} min</div>}
         </div>
@@ -958,11 +958,11 @@ export default function JourneePage() {
   function renderSommeil() {
     const h = data.sleepHours;
     const col = h < 6 ? '#dc2626' : h < 7 ? '#f97316' : h <= 9 ? '#22c55e' : '#eab308';
-    const emoji = h < 5 ? '\u{1F634}' : h < 7 ? '\u{1F62A}' : h <= 9 ? '\u{1F60C}' : '\u{1F4A4}';
+    const sleepIcon = h < 5 ? 'bedtime' : h < 7 ? 'bedtime' : h <= 9 ? 'sentiment_satisfied' : 'nightlight';
     return (
       <W id="sommeil">
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36 }}>{emoji}</div>
+          <div style={{ fontSize: 36 }}><span className="material-symbols-rounded" style={{ fontSize: 36, color: col }}>{sleepIcon}</span></div>
           <div style={{ fontSize: 24, fontWeight: 600, color: col, margin: '6px 0' }}>{h}h</div>
           <input type="range" min={0} max={12} step={0.5} value={h} onChange={e => updateData({ sleepHours: parseFloat(e.target.value) })}
             style={{ width: '100%', accentColor: col }} />
@@ -980,7 +980,7 @@ export default function JourneePage() {
         <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>{filled}/3 gratitudes</div>
         {data.gratitude.map((g, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 16 }}>{'\u{1F49C}'}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#a855f7' }}>favorite</span>
             <input style={inputStyle} placeholder="Aujourd'hui, je suis reconnaissant pour..." value={g}
               onChange={e => { const next = [...data.gratitude]; next[i] = e.target.value; updateData({ gratitude: next }); }} />
           </div>
@@ -996,7 +996,7 @@ export default function JourneePage() {
     return (
       <W id="affirmation">
         <div style={{ background: 'linear-gradient(135deg, rgba(91,108,247,0.08), rgba(168,85,247,0.08))', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-          <div style={{ fontSize: 24, marginBottom: 8 }}>{'\u2728'}</div>
+          <div style={{ fontSize: 24, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>auto_awesome</span></div>
           <div style={{ fontSize: 15, fontStyle: 'italic', color: 'var(--text-primary)', lineHeight: 1.5 }}>{text}</div>
         </div>
         <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
@@ -1011,11 +1011,11 @@ export default function JourneePage() {
   // ── W20: Météo ──
   function renderMeteo() {
     const h = currentTime.getHours();
-    const weatherEmoji = h >= 6 && h < 20 ? '\u{1F324}\uFE0F' : '\u{1F319}';
+    const weatherIcon = h >= 6 && h < 20 ? 'partly_cloudy_day' : 'dark_mode';
     return (
       <W id="meteo">
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 48 }}>{weatherEmoji}</div>
+          <div style={{ fontSize: 48 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>{weatherIcon}</span></div>
           <input style={{ ...inputStyle, textAlign: 'center', maxWidth: 200, margin: '8px auto' }} placeholder="Votre ville..." value={data.weatherCity}
             onChange={e => updateData({ weatherCity: e.target.value })} />
           <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>Données météo simulées pour {data.weatherCity || '...'}</div>
@@ -1052,11 +1052,11 @@ export default function JourneePage() {
             <button key={z.id} onClick={() => updateData({ horoscopeSign: z.id })} style={{
               padding: '4px 8px', borderRadius: 8, fontSize: 12, border: data.horoscopeSign === z.id ? '2px solid var(--accent)' : '1px solid var(--border-primary)',
               background: data.horoscopeSign === z.id ? 'rgba(91,108,247,0.1)' : 'var(--bg-tertiary)', cursor: 'pointer', color: 'var(--text-primary)',
-            }}>{z.emoji} {z.label}</button>
+            }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{z.emoji}</span> {z.label}</button>
           ))}
         </div>
         {sign && <div style={{ background: 'var(--bg-secondary)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>{sign.emoji}</div>
+          <div style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{sign.emoji}</span></div>
           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{sign.label}</div>
           <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{sign.dates}</div>
           <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 8, lineHeight: 1.5 }}>{ZODIAC_MESSAGES[signIdx >= 0 ? signIdx : 0]}</div>
@@ -1079,7 +1079,7 @@ export default function JourneePage() {
         </div>
         {tab.items.map((item, i) => (
           <div key={i} style={{ padding: '6px 0', borderBottom: '1px solid var(--border-primary)', fontSize: 13, color: 'var(--text-primary)' }}>
-            {'\u{1F4F0}'} {item}
+            <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>newspaper</span> {item}
           </div>
         ))}
         <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 6, fontStyle: 'italic' }}>Actualités simulées</div>
@@ -1099,14 +1099,14 @@ export default function JourneePage() {
           <button style={btnSmStyle} onClick={() => { if (newBdayName.trim() && newBdayDate) { updateData({ birthdays: [...data.birthdays, { id: uid(), name: newBdayName.trim(), date: newBdayDate }] }); setNewBdayName(''); setNewBdayDate(''); } }}>+</button>
         </div>
         {todayBdays.length > 0 && <div style={{ background: 'rgba(234,179,8,0.1)', borderRadius: 8, padding: 10, marginBottom: 8 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#eab308' }}>{'\u{1F382}'} Aujourd'hui !</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#eab308' }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>cake</span> Aujourd'hui !</div>
           {todayBdays.map(b => <div key={b.id} style={{ fontSize: 13, color: 'var(--text-primary)' }}>{b.name}</div>)}
         </div>}
         {data.birthdays.map(b => (
           <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 13 }}>
             <span style={{ color: 'var(--text-primary)' }}>{b.name}</span>
             <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{b.date}</span>
-            <button onClick={() => updateData({ birthdays: data.birthdays.filter(x => x.id !== b.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13, marginLeft: 'auto' }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ birthdays: data.birthdays.filter(x => x.id !== b.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13, marginLeft: 'auto' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
       </W>
@@ -1121,7 +1121,7 @@ export default function JourneePage() {
     return (
       <W id="ephemeride">
         <div style={{ marginBottom: 8 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}>{'\u{1F4D6}'} Ce jour dans l'histoire</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>auto_stories</span> Ce jour dans l'histoire</div>
           {events.map((ev, i) => <div key={i} style={{ fontSize: 13, color: 'var(--text-primary)', padding: '3px 0' }}>{'\u2022'} {ev}</div>)}
         </div>
         <div style={{ fontSize: 12, color: 'var(--text-muted)', borderTop: '1px solid var(--border-primary)', paddingTop: 8 }}>
@@ -1150,7 +1150,7 @@ export default function JourneePage() {
     return (
       <W id="agents">
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>{'\u{1F916}'}</div>
+          <div style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>smart_toy</span></div>
           <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--accent)' }}>28</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>agents disponibles</div>
         </div>
@@ -1163,7 +1163,7 @@ export default function JourneePage() {
     return (
       <W id="messagesNonLus">
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>{notifCount > 0 ? '\u{1F514}' : '\u2705'}</div>
+          <div style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{notifCount > 0 ? 'notifications_active' : 'check_circle'}</span></div>
           <div style={{ fontSize: 20, fontWeight: 600, color: notifCount > 0 ? '#f97316' : '#22c55e' }}>{notifCount}</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{notifCount > 0 ? 'messages non lus' : 'Aucun message non lu'}</div>
         </div>
@@ -1176,7 +1176,7 @@ export default function JourneePage() {
     return (
       <W id="projets">
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>{'\u{1F4C1}'}</div>
+          <div style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>folder</span></div>
           <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--accent)' }}>{projectCount}</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>projets actifs</div>
         </div>
@@ -1190,13 +1190,13 @@ export default function JourneePage() {
       <W id="kpis">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           {[
-            { label: 'Messages', value: '0', emoji: '\u{1F4AC}' },
-            { label: 'Documents', value: '0', emoji: '\u{1F4C4}' },
-            { label: 'Connexion', value: `${Math.floor((Date.now() - (data.focusStartedAt || Date.now())) / 60000)} min`, emoji: '\u23F1\uFE0F' },
-            { label: 'Crédits', value: walletBalance != null ? `${(walletBalance / 1000000).toFixed(1)}` : '...', emoji: '\u{1F4B3}' },
+            { label: 'Messages', value: '0', emoji: 'chat' },
+            { label: 'Documents', value: '0', emoji: 'description' },
+            { label: 'Connexion', value: `${Math.floor((Date.now() - (data.focusStartedAt || Date.now())) / 60000)} min`, emoji: 'timer' },
+            { label: 'Crédits', value: walletBalance != null ? `${(walletBalance / 1000000).toFixed(1)}` : '...', emoji: 'credit_card' },
           ].map((kpi, i) => (
             <div key={i} style={{ background: 'var(--bg-secondary)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
-              <div style={{ fontSize: 18 }}>{kpi.emoji}</div>
+              <div style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{kpi.emoji}</span></div>
               <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>{kpi.value}</div>
               <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{kpi.label}</div>
             </div>
@@ -1237,16 +1237,16 @@ export default function JourneePage() {
   // ── W33: Repas ──
   function renderRepas() {
     const meals = [
-      { key: 'mealPetitDej' as const, label: 'Petit-déjeuner', emoji: '\u{1F950}' },
-      { key: 'mealDejeuner' as const, label: 'Déjeuner', emoji: '\u{1F37D}\uFE0F' },
-      { key: 'mealDiner' as const, label: 'Dîner', emoji: '\u{1F31C}' },
-      { key: 'mealSnack' as const, label: 'Snack', emoji: '\u{1F36A}' },
+      { key: 'mealPetitDej' as const, label: 'Petit-déjeuner', emoji: 'bakery_dining' },
+      { key: 'mealDejeuner' as const, label: 'Déjeuner', emoji: 'restaurant' },
+      { key: 'mealDiner' as const, label: 'Dîner', emoji: 'dark_mode' },
+      { key: 'mealSnack' as const, label: 'Snack', emoji: 'cookie' },
     ];
     return (
       <W id="repas">
         {meals.map(m => (
           <div key={m.key} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 18 }}>{m.emoji}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{m.emoji}</span>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', width: 90, flexShrink: 0 }}>{m.label}</div>
             <input style={{ ...inputStyle, flex: 1, fontSize: 12 }} placeholder="..." value={data[m.key]}
               onChange={e => updateData({ [m.key]: e.target.value } as Partial<JourneeData>)} />
@@ -1279,21 +1279,21 @@ export default function JourneePage() {
       <W id="habitudes">
         {data.habits.map(h => (
           <div key={h.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--border-primary)' }}>
-            <span style={{ fontSize: 16 }}>{h.emoji}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{h.emoji}</span>
             <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)' }}>{h.label}</span>
-            {h.streak > 0 && <span style={{ fontSize: 11, color: '#f97316', fontWeight: 600 }}>{'\u{1F525}'}{h.streak}j</span>}
+            {h.streak > 0 && <span style={{ fontSize: 11, color: '#f97316', fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>local_fire_department</span>{h.streak}j</span>}
             <button onClick={() => {
               const next = data.habits.map(x => x.id === h.id ? { ...x, doneToday: !x.doneToday, streak: !x.doneToday ? x.streak + 1 : Math.max(0, x.streak - 1) } : x);
               updateData({ habits: next });
             }} style={{ padding: '4px 10px', borderRadius: 8, fontSize: 12, border: 'none', cursor: 'pointer', background: h.doneToday ? '#22c55e' : 'var(--bg-tertiary)', color: h.doneToday ? '#fff' : 'var(--text-primary)', fontWeight: 600 }}>
-              {h.doneToday ? '\u2713' : 'Fait'}
+              {h.doneToday ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : 'Fait'}
             </button>
-            <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 12 }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
         <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
           <input style={{ ...inputStyle, flex: 1 }} placeholder="Nouvelle habitude..." value={newHabitLabel} onChange={e => setNewHabitLabel(e.target.value)} />
-          <button style={btnSmStyle} onClick={() => { if (newHabitLabel.trim()) { updateData({ habits: [...data.habits, { id: uid(), label: newHabitLabel.trim(), emoji: '\u2B50', streak: 0, doneToday: false }] }); setNewHabitLabel(''); } }}>+</button>
+          <button style={btnSmStyle} onClick={() => { if (newHabitLabel.trim()) { updateData({ habits: [...data.habits, { id: uid(), label: newHabitLabel.trim(), emoji: 'star', streak: 0, doneToday: false }] }); setNewHabitLabel(''); } }}>+</button>
         </div>
       </W>
     );
@@ -1306,14 +1306,14 @@ export default function JourneePage() {
         <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
           <input style={{ ...inputStyle, flex: 1 }} placeholder="Nom..." value={newContactName} onChange={e => setNewContactName(e.target.value)} />
           <input style={{ ...inputStyle, width: 120 }} placeholder="Téléphone..." value={newContactPhone} onChange={e => setNewContactPhone(e.target.value)} />
-          <button style={btnSmStyle} onClick={() => { if (newContactName.trim()) { updateData({ contacts: [...data.contacts, { id: uid(), name: newContactName.trim(), phone: newContactPhone, emoji: '\u{1F464}' }] }); setNewContactName(''); setNewContactPhone(''); } }}>+</button>
+          <button style={btnSmStyle} onClick={() => { if (newContactName.trim()) { updateData({ contacts: [...data.contacts, { id: uid(), name: newContactName.trim(), phone: newContactPhone, emoji: 'person' }] }); setNewContactName(''); setNewContactPhone(''); } }}>+</button>
         </div>
         {data.contacts.map(c => (
           <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--border-primary)' }}>
-            <span style={{ fontSize: 16 }}>{c.emoji}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{c.emoji}</span>
             <span style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)' }}>{c.name}</span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.phone}</span>
-            <button onClick={() => updateData({ contacts: data.contacts.filter(x => x.id !== c.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}>{'\u2715'}</button>
+            <button onClick={() => updateData({ contacts: data.contacts.filter(x => x.id !== c.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
           </div>
         ))}
       </W>
@@ -1364,13 +1364,13 @@ export default function JourneePage() {
       <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)', borderRadius: 12, padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Configurer mes widgets</span>
-          <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-muted)' }}>{'\u2715'}</button>
+          <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
         </div>
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 12 }}>
           <button onClick={() => setConfigFilter('all')} style={{ ...btnGhostStyle, background: configFilter === 'all' ? 'var(--accent)' : 'var(--bg-tertiary)', color: configFilter === 'all' ? '#fff' : 'var(--text-primary)', fontSize: 11 }}>Tous</button>
           {CATEGORIES.map(c => (
             <button key={c.id} onClick={() => setConfigFilter(c.id)} style={{ ...btnGhostStyle, background: configFilter === c.id ? 'var(--accent)' : 'var(--bg-tertiary)', color: configFilter === c.id ? '#fff' : 'var(--text-primary)', fontSize: 11 }}>
-              {c.emoji} {c.label}
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{c.emoji}</span> {c.label}
             </button>
           ))}
         </div>
@@ -1382,7 +1382,7 @@ export default function JourneePage() {
               background: isVisible(w.id) ? 'rgba(91,108,247,0.08)' : 'var(--bg-secondary)',
               cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
             }}>
-              <span style={{ fontSize: 16 }}>{w.emoji}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{w.emoji}</span>
               <span style={{ fontSize: 12, color: 'var(--text-primary)', flex: 1 }}>{w.label}</span>
               <div style={{ width: 32, height: 18, borderRadius: 9, background: isVisible(w.id) ? 'var(--accent)' : 'var(--bg-tertiary)', position: 'relative', transition: 'background 0.2s' }}>
                 <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: isVisible(w.id) ? 16 : 2, transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
@@ -1423,22 +1423,22 @@ export default function JourneePage() {
     <div className="page-container client-page-scrollable" style={{ maxWidth: 1200, margin: '0 auto', padding: '20px 16px' }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        <div style={{ fontSize: 48, marginBottom: 4 }}>{'\u{1F4C5}'}</div>
+        <div style={{ fontSize: 48, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>calendar_month</span></div>
         <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--text-muted)', letterSpacing: '-0.03em', fontFamily: 'monospace' }}>
           {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
         </div>
         <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', margin: '8px 0 4px', letterSpacing: '-0.02em' }}>
           {getGreeting()}{session.displayName ? `, ${session.displayName}` : ''} !
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--text-secondary)', textTransform: 'capitalize', margin: '0 0 4px' }}>{formatFrenchDate()}</p>
-        <p style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500 }}>Votre journée en un coup d'œil</p>
+        <p style={{ fontSize: 14, color: 'var(--text-secondary)', textTransform: 'capitalize', margin: '0 0 4px' }}><span className="fz-logo-word">{formatFrenchDate()}</span></p>
+        <p style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500 }}>Votre journée <span className="fz-logo-word">intelligente</span> en un coup d&apos;œil</p>
       </div>
 
       {/* Tab switcher */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 20 }}>
         {[
-          { id: 'briefing', label: '☀️ Briefing IA' },
-          { id: 'widgets', label: '📅 Ma Journée' },
+          { id: 'briefing', label: 'Briefing IA', icon: 'wb_sunny' },
+          { id: 'widgets', label: 'Ma Journée', icon: 'calendar_today' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -1449,9 +1449,10 @@ export default function JourneePage() {
               background: activeTab === tab.id ? 'var(--accent)' : 'var(--bg-secondary)',
               color: activeTab === tab.id ? '#fff' : 'var(--text-secondary)',
               cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
+              display: 'flex', alignItems: 'center', gap: 6,
             }}
           >
-            {tab.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{tab.icon}</span> {tab.label}
           </button>
         ))}
       </div>
@@ -1464,7 +1465,7 @@ export default function JourneePage() {
         {/* Config button */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
           <button onClick={() => setShowConfig(!showConfig)} style={{ ...btnSmStyle, background: showConfig ? '#dc2626' : 'var(--accent)', fontSize: 13, padding: '8px 20px' }}>
-            {showConfig ? '\u2715 Fermer' : `\u2699\uFE0F Configurer mes widgets (${visibleCount}/${WIDGETS.length})`}
+            {showConfig ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>close</span> Fermer</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>settings</span> Configurer mes widgets ({visibleCount}/{WIDGETS.length})</>}
           </button>
         </div>
 
@@ -1477,7 +1478,7 @@ export default function JourneePage() {
           return (
             <div key={cat.id} style={{ marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <span style={{ fontSize: 18 }}>{cat.emoji}</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{cat.emoji}</span>
                 <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>{cat.label}</span>
                 <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{catWidgets.length} widget{catWidgets.length > 1 ? 's' : ''}</span>
               </div>
@@ -1493,7 +1494,7 @@ export default function JourneePage() {
 
         {visibleCount === 0 && (
           <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u{1F4AD}'}</div>
+            <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>chat_bubble</span></div>
             <div style={{ fontSize: 15 }}>Aucun widget actif. Cliquez sur &quot;Configurer&quot; pour en activer.</div>
           </div>
         )}

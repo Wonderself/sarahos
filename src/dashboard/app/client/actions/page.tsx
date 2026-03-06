@@ -47,7 +47,7 @@ const ALL_PRIORITIES = ['low', 'medium', 'high', 'urgent'];
 // ─── Helpers ───
 
 function getToken(): string | undefined {
-  return document.cookie.split(';').find(c => c.trim().startsWith('fz-token='))?.split('=')[1];
+  try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token; } catch { return undefined; }
 }
 
 function getAgentName(agentId: string): string {
@@ -55,7 +55,11 @@ function getAgentName(agentId: string): string {
 }
 
 function getAgentEmoji(agentId: string): string {
-  return ALL_AGENTS.find(a => a.id === agentId)?.emoji ?? '🤖';
+  return ALL_AGENTS.find(a => a.id === agentId)?.emoji ?? '';
+}
+
+function getAgentMaterialIcon(agentId: string): string {
+  return (ALL_AGENTS.find(a => a.id === agentId) as any)?.materialIcon ?? 'smart_toy';
 }
 
 // ─── Page Component ───
@@ -171,9 +175,9 @@ export default function ActionsPage() {
       {/* Header */}
       <div className="flex flex-between items-center mb-8 flex-wrap gap-6">
         <div>
-          <h1 className="text-xl font-bold">Centre d&apos;actions</h1>
+          <h1 className="text-xl font-bold">Centre d&apos;<span className="fz-logo-word">actions</span></h1>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Actions proposées par vos agents, suivi et exécution
+            Actions proposées par vos <span className="fz-logo-word">agents</span>, suivi et exécution
           </p>
         </div>
         <div className="flex gap-6 items-center">
@@ -181,7 +185,7 @@ export default function ActionsPage() {
             onClick={() => setViewMode(viewMode === 'kanban' ? 'list' : 'kanban')}
             className="btn btn-secondary btn-sm"
           >
-            {viewMode === 'kanban' ? '📋 Liste' : '📊 Kanban'}
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{viewMode === 'kanban' ? 'assignment' : 'bar_chart'}</span> {viewMode === 'kanban' ? 'Liste' : 'Kanban'}
           </button>
           <button
             onClick={() => setShowAddModal(true)}
@@ -266,7 +270,7 @@ export default function ActionsPage() {
           padding: '60px 20px', background: 'var(--bg-secondary)',
           borderRadius: 8, border: '1px solid var(--border)',
         }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>⚡</div>
+          <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bolt</span></div>
           <h3 className="text-lg font-semibold mb-4">Aucune action pour le moment</h3>
           <p className="text-sm" style={{ color: 'var(--text-secondary)', maxWidth: 400, margin: '0 auto' }}>
             Discutez avec vos agents dans le chat — ils proposeront des actions concrètes
@@ -277,7 +281,7 @@ export default function ActionsPage() {
 
       {/* Kanban View */}
       {!loading && actions.length > 0 && viewMode === 'kanban' && (
-        <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)', minHeight: 400 }}>
+        <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', minHeight: 400 }}>
           {COLUMNS.map(col => (
             <div key={col.id}>
               <div className="flex items-center gap-6 mb-6" style={{ padding: '0 4px' }}>
@@ -315,7 +319,7 @@ export default function ActionsPage() {
                 border: '1px solid var(--border)',
               }}
             >
-              <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
+              <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? <span className="material-symbols-rounded" style={{ fontSize: 16 }}>bolt</span>}</span>
               <div style={{ flex: 1 }}>
                 <div className="text-sm font-medium">{action.title}</div>
                 <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>
@@ -404,7 +408,7 @@ function ActionCard({
       }}
     >
       <div className="flex items-center gap-6 mb-4">
-        <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
+        <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[action.type] ?? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span>}</span>
         <span className="text-sm font-medium" style={{ flex: 1, lineHeight: 1.3 }}>{action.title}</span>
       </div>
       {action.description && (
@@ -429,7 +433,7 @@ function ActionCard({
         </div>
         {action.sourceAgent && (
           <span className="text-xs" title={getAgentName(action.sourceAgent)}>
-            {getAgentEmoji(action.sourceAgent)}
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{getAgentMaterialIcon(action.sourceAgent)}</span>
           </span>
         )}
       </div>

@@ -22,7 +22,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'general',
     label: 'Général',
-    icon: '🏢',
+    icon: 'business',
     color: '#6366f1',
     questions: [
       {
@@ -72,7 +72,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'agents',
     label: 'Agents IA',
-    icon: '🤖',
+    icon: 'smart_toy',
     color: '#22c55e',
     questions: [
       {
@@ -126,7 +126,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'pricing',
     label: 'Tarifs & Crédits',
-    icon: '💰',
+    icon: 'savings',
     color: '#f59e0b',
     questions: [
       {
@@ -184,7 +184,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'tech',
     label: 'Technologies',
-    icon: '⚡',
+    icon: 'bolt',
     color: '#3b82f6',
     questions: [
       {
@@ -234,7 +234,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'security',
     label: 'Sécurité & RGPD',
-    icon: '🔒',
+    icon: 'lock',
     color: '#dc2626',
     questions: [
       {
@@ -284,7 +284,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'whatsapp',
     label: 'WhatsApp & Téléphonie',
-    icon: '📱',
+    icon: 'phone_iphone',
     color: '#25D366',
     questions: [
       {
@@ -334,7 +334,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'studio',
     label: 'Studio Créatif',
-    icon: '🎨',
+    icon: 'palette',
     color: '#ec4899',
     questions: [
       {
@@ -384,7 +384,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'custom',
     label: 'Sur mesure',
-    icon: '🛠️',
+    icon: 'build',
     color: '#8b5cf6',
     questions: [
       {
@@ -434,7 +434,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'dashboard',
     label: 'Flashboard',
-    icon: '📊',
+    icon: 'bar_chart',
     color: '#f97316',
     questions: [
       {
@@ -484,7 +484,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'enterprise',
     label: 'Entreprise',
-    icon: '🏛️',
+    icon: 'account_balance',
     color: '#9333ea',
     questions: [
       {

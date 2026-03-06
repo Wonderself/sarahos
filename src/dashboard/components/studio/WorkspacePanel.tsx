@@ -52,7 +52,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
           padding: 30, textAlign: 'center', border: '2px dashed #e5e7eb',
           borderRadius: 12, color: '#9ca3af', fontSize: 13,
         }}>
-          <div style={{ fontSize: 28, marginBottom: 8 }}>💬</div>
+          <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>chat</span></div>
           <div>Discutez avec l&apos;agent pour definir votre projet.</div>
           <div style={{ fontSize: 11, marginTop: 4 }}>
             Les elements apparaitront ici au fur et a mesure.

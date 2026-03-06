@@ -99,20 +99,20 @@ export const ACTION_TYPE_LABELS: Record<string, string> = {
 };
 
 export const ACTION_TYPE_ICONS: Record<string, string> = {
-  task: '✅',
-  social_post: '📱',
-  calendar_event: '📅',
-  phone_call: '📞',
-  email: '✉️',
-  document: '📄',
-  meeting: '🤝',
-  campaign: '📢',
-  crm_entry: '👤',
-  strategy_update: '🎯',
-  budget_action: '💰',
-  notification_setup: '🔔',
-  follow_up: '🔄',
-  custom: '⚡',
+  task: 'check_circle',
+  social_post: 'phone_iphone',
+  calendar_event: 'calendar_month',
+  phone_call: 'call',
+  email: 'mail',
+  document: 'description',
+  meeting: 'handshake',
+  campaign: 'campaign',
+  crm_entry: 'person',
+  strategy_update: 'target',
+  budget_action: 'savings',
+  notification_setup: 'notifications',
+  follow_up: 'sync',
+  custom: 'bolt',
 };
 
 export function formatDueDate(isoDate: string): string {

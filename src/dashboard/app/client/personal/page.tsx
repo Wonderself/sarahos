@@ -24,10 +24,10 @@ import {
 // ─── Personal agent categories ───
 
 const PERSONAL_CATEGORIES = [
-  { title: 'Finances Personnelles', icon: '💰', ids: ['fz-budget', 'fz-negociateur', 'fz-impots'] as AgentTypeId[] },
-  { title: 'Freelances & Carriere', icon: '💼', ids: ['fz-comptable', 'fz-chasseur', 'fz-portfolio', 'fz-cv'] as AgentTypeId[] },
-  { title: 'Vie & Decisions', icon: '🧠', ids: ['fz-contradicteur', 'fz-coach'] as AgentTypeId[] },
-  { title: 'Creatif & Bien-etre', icon: '🎨', ids: ['fz-ecrivain', 'fz-cineaste', 'fz-deconnexion'] as AgentTypeId[] },
+  { title: 'Finances Personnelles', icon: 'savings', ids: ['fz-budget', 'fz-negociateur', 'fz-impots'] as AgentTypeId[] },
+  { title: 'Freelances & Carriere', icon: 'work', ids: ['fz-comptable', 'fz-chasseur', 'fz-portfolio', 'fz-cv'] as AgentTypeId[] },
+  { title: 'Vie & Decisions', icon: 'psychology', ids: ['fz-contradicteur', 'fz-coach'] as AgentTypeId[] },
+  { title: 'Creatif & Bien-etre', icon: 'palette', ids: ['fz-ecrivain', 'fz-cineaste', 'fz-deconnexion'] as AgentTypeId[] },
 ];
 
 const PERSONAL_STORAGE_KEY = 'fz_personal_agents_active';
@@ -51,6 +51,7 @@ interface TeamAgent {
   requiredPlan: string;
   priceCredits: number;
   modes: { id: string; name: string; description: string; icon: string }[];
+  materialIcon?: string;
 }
 
 const SHORT_ID_MAP: Record<string, string> = {
@@ -212,9 +213,9 @@ export default function PersonalAgentsPage() {
       {/* ─── Header ─── */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">Mes agents</h1>
+          <h1 className="page-title">Mes <span className="fz-logo-word">agents</span></h1>
           <p className="page-subtitle">
-            Gérez votre équipe IA et explorez le marketplace — {totalActive} agent{totalActive > 1 ? 's' : ''} actif{totalActive > 1 ? 's' : ''}
+            Gérez votre équipe <span className="fz-logo-word">IA</span> et explorez le marketplace — {totalActive} agent{totalActive > 1 ? 's' : ''} actif{totalActive > 1 ? 's' : ''}
           </p>
         </div>
         <div className="page-actions flex gap-8 items-center">
@@ -240,7 +241,7 @@ export default function PersonalAgentsPage() {
             boxShadow: activeTab === 'equipe' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          🧑 Mon équipe
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>person</span> Mon équipe
         </button>
         <button
           onClick={() => setActiveTab('marketplace')}
@@ -253,7 +254,7 @@ export default function PersonalAgentsPage() {
             boxShadow: activeTab === 'marketplace' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          🛒 Marketplace
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>storefront</span> Marketplace
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
             background: activeTab === 'marketplace' ? 'var(--accent)' : 'var(--bg-tertiary)',
@@ -286,7 +287,7 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#5b6cf715', fontSize: 18,
           }}>
-            🏢
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>business</span>
           </div>
           <div>
             <h2 className="text-xl font-bold">Mon équipe</h2>
@@ -325,7 +326,7 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#8b7cf815', fontSize: 18,
           }}>
-            🧑
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>person</span>
           </div>
           <div>
             <h2 className="text-xl font-bold">Mes agents personnalises</h2>
@@ -359,7 +360,7 @@ export default function PersonalAgentsPage() {
                 onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-hover)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-secondary)'; }}
               >
-                <span style={{ fontSize: 16 }}>{cat.icon}</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{cat.icon}</span>
                 <span className="text-md font-semibold text-primary" style={{ flex: 1, textAlign: 'left' }}>{cat.title}</span>
                 <span className="text-xs text-muted">{activeInCat}/{agents.length} actifs</span>
                 <span style={{
@@ -397,7 +398,7 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#22c55e15', fontSize: 18,
           }}>
-            🚀
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span>
           </div>
           <div>
             <h2 className="text-xl font-bold">Recruter de nouveaux agents</h2>
@@ -409,7 +410,7 @@ export default function PersonalAgentsPage() {
 
         {inactiveBusinessAgents.length === 0 && (
           <div className="card p-24" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>celebration</span></div>
             <p className="text-md font-semibold mb-4">Équipe au complet !</p>
             <p className="text-sm text-muted">
               Tous les agents d&apos;entreprise sont actifs dans votre équipe.
@@ -444,10 +445,10 @@ export default function PersonalAgentsPage() {
           </div>
           <div className="flex gap-12 flex-wrap">
             <Link href="/client/chat" className="btn btn-primary" style={{ textDecoration: 'none' }}>
-              💬 Discuter avec mes agents
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat</span> Discuter avec mes agents
             </Link>
             <Link href="/client/agents/customize" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
-              🎨 Personnaliser mes agents
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>palette</span> Personnaliser mes agents
             </Link>
           </div>
         </div>
@@ -461,7 +462,7 @@ export default function PersonalAgentsPage() {
           {/* Search bar */}
           <div style={{ position: 'relative', marginBottom: 16 }}>
             <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--text-muted)' }}>
-              🔍
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>search</span>
             </span>
             <input
               type="text"
@@ -547,12 +548,12 @@ export default function PersonalAgentsPage() {
                     <div style={{ display: 'flex', gap: 6 }}>
                       {agent.badge === 'populaire' && (
                         <span style={{ padding: '2px 8px', borderRadius: 10, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600 }}>
-                          🔥 Populaire
+                          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>local_fire_department</span> Populaire
                         </span>
                       )}
                       {agent.badge === 'nouveau' && (
                         <span style={{ padding: '2px 8px', borderRadius: 10, background: '#dbeafe', color: '#1e40af', fontSize: 11, fontWeight: 600 }}>
-                          ✨ Nouveau
+                          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>auto_awesome</span> Nouveau
                         </span>
                       )}
                     </div>
@@ -588,7 +589,7 @@ export default function PersonalAgentsPage() {
                         transition: 'all 0.2s',
                       }}
                     >
-                      {isInstallingThis ? '...' : isInstalled ? '✅ Installe' : 'Installer'}
+                      {isInstallingThis ? '...' : isInstalled ? <><span className="material-symbols-rounded" style={{ fontSize: 13 }}>check_circle</span> Installe</> : 'Installer'}
                     </button>
                   </div>
                 </div>
@@ -598,7 +599,7 @@ export default function PersonalAgentsPage() {
 
           {mpFiltered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>🔎</div>
+              <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>search</span></div>
               <p style={{ fontSize: 15 }}>Aucun agent ne correspond a votre recherche.</p>
               <button
                 onClick={() => { setMpSearch(''); setMpCategory('Tous'); }}
@@ -673,7 +674,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
           width: 42, height: 42, fontSize: 22,
           background: `${agent.color}15`,
         }}>
-          {agent.emoji}
+          <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
         </div>
         <div style={{ flex: 1 }}>
           <div className="font-bold text-base">{agent.name}</div>
@@ -755,7 +756,7 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
           width: 42, height: 42, fontSize: 22,
           background: `${agent.color}10`,
         }}>
-          {agent.emoji}
+          <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
         </div>
         <div style={{ flex: 1 }}>
           <div className="font-semibold text-base">{agent.name}</div>
@@ -824,7 +825,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
               background: `${agent.color}15`,
             }}
           >
-            {agent.emoji}
+            <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
           </div>
           <div>
             <div className="font-bold text-base">{agent.name}</div>
@@ -881,7 +882,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
             style={{ fontSize: 11, padding: '4px 10px' }}
             title={mode.description}
           >
-            <span style={{ marginRight: 4 }}>{mode.icon}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 11, marginRight: 4 }}>{mode.icon}</span>
             {mode.name}
           </button>
         ))}
@@ -905,7 +906,7 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.6'; }}
     >
       <div className="flex items-center gap-12">
-        <span style={{ fontSize: 20 }}>{agent.emoji}</span>
+        <span className="material-symbols-rounded" style={{ fontSize: 20, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
         <div>
           <span className="text-sm font-semibold">{agent.name}</span>
           <span className="text-xs text-muted" style={{ marginLeft: 8 }}>{agent.role}</span>

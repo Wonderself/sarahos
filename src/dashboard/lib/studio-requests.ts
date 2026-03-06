@@ -175,7 +175,7 @@ export function seedDemoRequestsIfEmpty(): void {
       {
         agentId: 'fz-reseaux-sociaux',
         agentName: 'Agent Réseaux Sociaux',
-        agentEmoji: '📱',
+        agentEmoji: 'phone_iphone',
         agentColor: '#e879f9',
         type: 'photo',
         title: '3 visuels Instagram — Lancement produit',
@@ -186,7 +186,7 @@ export function seedDemoRequestsIfEmpty(): void {
       {
         agentId: 'fz-commercial',
         agentName: 'Agent Commercial',
-        agentEmoji: '💼',
+        agentEmoji: 'work',
         agentColor: '#3b82f6',
         type: 'photo',
         title: 'Bannière LinkedIn — Profil entreprise',
@@ -197,7 +197,7 @@ export function seedDemoRequestsIfEmpty(): void {
       {
         agentId: 'fz-marketing',
         agentName: 'Agent Marketing',
-        agentEmoji: '📢',
+        agentEmoji: 'campaign',
         agentColor: '#f59e0b',
         type: 'video',
         title: 'Vidéo présentation — Offre entreprise 60s',

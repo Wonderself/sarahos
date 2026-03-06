@@ -1,10 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useUserData } from '../../../../lib/use-user-data';
 
 function getToken(): string {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token ?? ''; }
   catch { return ''; }
+}
+
+interface StrategyBlob {
+  [key: string]: unknown;
+  objectives: Objective[];
+  actions: ActionItem[];
+  notes: Note[];
+  generatedPlan: string;
 }
 
 interface Objective {
@@ -30,14 +39,14 @@ interface Note {
 }
 
 const DEFAULT_FOLDERS = [
-  { id: 'marketing', name: 'Marketing', icon: '📣', color: 'blue' },
-  { id: 'finance', name: 'Finance', icon: '💰', color: 'green' },
-  { id: 'tech', name: 'Tech', icon: '💻', color: 'purple' },
-  { id: 'commercial', name: 'Commercial', icon: '🤝', color: 'yellow' },
-  { id: 'rh', name: 'RH', icon: '👥', color: 'pink' },
-  { id: 'juridique', name: 'Juridique', icon: '⚖️', color: 'red' },
-  { id: 'operations', name: 'Opérations', icon: '⚙️', color: 'orange' },
-  { id: 'divers', name: 'Divers', icon: '📦', color: 'gray' },
+  { id: 'marketing', name: 'Marketing', icon: 'campaign', color: 'blue' },
+  { id: 'finance', name: 'Finance', icon: 'savings', color: 'green' },
+  { id: 'tech', name: 'Tech', icon: 'terminal', color: 'purple' },
+  { id: 'commercial', name: 'Commercial', icon: 'handshake', color: 'yellow' },
+  { id: 'rh', name: 'RH', icon: 'group', color: 'pink' },
+  { id: 'juridique', name: 'Juridique', icon: 'balance', color: 'red' },
+  { id: 'operations', name: 'Opérations', icon: 'settings', color: 'orange' },
+  { id: 'divers', name: 'Divers', icon: 'inventory_2', color: 'gray' },
 ];
 
 const PRIORITY_COLORS = { haute: 'text-red-400', moyenne: 'text-yellow-400', basse: 'text-green-400' };
@@ -45,29 +54,20 @@ const STATUS_LABELS = { en_cours: 'En cours', en_pause: 'En pause', termine: 'Te
 
 export default function MyStrategyPage() {
   const [tab, setTab] = useState<'objectives' | 'actions' | 'plan' | 'notes'>('objectives');
-  const [objectives, setObjectives] = useState<Objective[]>([]);
-  const [actions, setActions] = useState<ActionItem[]>([]);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [generatedPlan, setGeneratedPlan] = useState('');
+  const { data: blob, setData: setBlob } = useUserData<StrategyBlob>('admin_strategy', { objectives: [], actions: [], notes: [], generatedPlan: '' }, 'fz_admin_strategy');
+  const { objectives, actions, notes, generatedPlan } = blob;
+  const setObjectives = (o: Objective[]) => setBlob(prev => ({ ...prev, objectives: o }));
+  const setActions = (a: ActionItem[]) => setBlob(prev => ({ ...prev, actions: a }));
+  const setNotes = (n: Note[]) => setBlob(prev => ({ ...prev, notes: n }));
+  const setGeneratedPlan = (p: string) => setBlob(prev => ({ ...prev, generatedPlan: p }));
   const [generating, setGenerating] = useState(false);
   const [showNewObj, setShowNewObj] = useState(false);
   const [newObj, setNewObj] = useState<{ title: string; description: string; deadline: string; priority: 'haute' | 'moyenne' | 'basse' }>({ title: '', description: '', deadline: '', priority: 'moyenne' });
   const [newNote, setNewNote] = useState('');
   const [newAction, setNewAction] = useState({ title: '', folderId: 'marketing' });
 
-  useEffect(() => {
-    try {
-      const data = JSON.parse(localStorage.getItem('fz_admin_strategy') ?? '{}');
-      if (data.objectives) setObjectives(data.objectives);
-      if (data.actions) setActions(data.actions);
-      if (data.notes) setNotes(data.notes);
-      if (data.generatedPlan) setGeneratedPlan(data.generatedPlan);
-    } catch { /* */ }
-  }, []);
-
-  const save = (obj?: Objective[], act?: ActionItem[], nt?: Note[], plan?: string) => {
-    const data = { objectives: obj ?? objectives, actions: act ?? actions, notes: nt ?? notes, generatedPlan: plan ?? generatedPlan };
-    localStorage.setItem('fz_admin_strategy', JSON.stringify(data));
+  const save = (_obj?: Objective[], _act?: ActionItem[], _nt?: Note[], _plan?: string) => {
+    // useUserData auto-persists — this is now a no-op kept for call-site compatibility
   };
 
   const addObjective = () => {
@@ -198,7 +198,7 @@ export default function MyStrategyPage() {
           <div className="flex gap-2 items-end">
             <input value={newAction.title} onChange={e => setNewAction({ ...newAction, title: e.target.value })} placeholder="Nouvelle action..." className="flex-1 bg-gray-800 border border-gray-700 rounded-lg p-2 text-white text-sm" />
             <select value={newAction.folderId} onChange={e => setNewAction({ ...newAction, folderId: e.target.value })} className="bg-gray-800 border border-gray-700 rounded-lg p-2 text-white text-sm">
-              {DEFAULT_FOLDERS.map(f => <option key={f.id} value={f.id}>{f.icon} {f.name}</option>)}
+              {DEFAULT_FOLDERS.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
             </select>
             <button onClick={addAction} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">Ajouter</button>
           </div>
@@ -207,11 +207,11 @@ export default function MyStrategyPage() {
             if (folderActions.length === 0) return null;
             return (
               <div key={folder.id} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                <h3 className="text-white font-medium mb-2">{folder.icon} {folder.name} ({folderActions.filter(a => !a.done).length}/{folderActions.length})</h3>
+                <h3 className="text-white font-medium mb-2"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{folder.icon}</span> {folder.name} ({folderActions.filter(a => !a.done).length}/{folderActions.length})</h3>
                 {folderActions.map(a => (
                   <div key={a.id} className="flex items-center gap-2 py-1">
                     <button onClick={() => toggleAction(a.id)} className={`w-5 h-5 rounded border ${a.done ? 'bg-green-600 border-green-600' : 'border-gray-600'} flex items-center justify-center text-xs text-white`}>
-                      {a.done ? '✓' : ''}
+                      {a.done ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
                     </button>
                     <span className={`text-sm ${a.done ? 'text-gray-500 line-through' : 'text-gray-300'}`}>{a.title}</span>
                     <button onClick={() => { const upd = actions.filter(x => x.id !== a.id); setActions(upd); save(undefined, upd); }} className="ml-auto text-red-500 text-xs hover:text-red-400">×</button>

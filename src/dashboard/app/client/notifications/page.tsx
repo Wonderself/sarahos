@@ -21,10 +21,10 @@ interface Notification {
 
 
 const TYPE_ICONS: Record<NotifType, string> = {
-  alert: '🔴',
-  session: '🔗',
-  update: '⬆️',
-  info: 'ℹ️',
+  alert: 'circle',
+  session: 'link',
+  update: 'arrow_upward',
+  info: 'info',
 };
 
 const TYPE_LABELS: Record<NotifType, string> = {
@@ -135,7 +135,7 @@ export default function NotificationsPage() {
               id: 'alert-credits-low',
               type: 'alert',
               title: 'Crédits bas',
-              body: `Il vous reste ${credits} crédit${Number(credits) < 2 ? '' : 's'}. Rechargez votre compte pour continuer à utiliser vos agents.`,
+              body: `Il vous reste ${credits} crédit${Number(credits) < 2 ? '' : 's'}. Rechargez votre compte pour continuer à utiliser vos agents IA.`,
               date: new Date().toISOString(),
               actionLabel: 'Recharger →',
               actionHref: '/client/account',
@@ -226,7 +226,7 @@ export default function NotificationsPage() {
       <div className="page-header">
         <div>
           <h1 className="page-title">
-            Notifications
+            <span className="fz-logo-word">Notifications</span>
             {unreadCount > 0 && (
               <span style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -239,8 +239,8 @@ export default function NotificationsPage() {
           </h1>
           <p className="page-subtitle">
             {unreadCount > 0
-              ? `${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}`
-              : 'Tout est à jour'}
+              ? <>{unreadCount} notification{unreadCount > 1 ? 's' : ''} non lue{unreadCount > 1 ? 's' : ''}</>
+              : <><span className="fz-logo-word">Tout est à jour</span></>}
           </p>
         </div>
         {unreadCount > 0 && (
@@ -272,12 +272,12 @@ export default function NotificationsPage() {
       {/* Content */}
       {loading ? (
         <div className="text-center text-muted" style={{ padding: 60 }}>
-          <div className="animate-pulse" style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
+          <div className="animate-pulse" style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>notifications</span></div>
           <div>Chargement des notifications...</div>
         </div>
       ) : filtered.length === 0 ? (
         <div className="card text-center" style={{ padding: '60px 24px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
           <div className="text-xl font-bold mb-8">Tout est parfait !</div>
           <div className="text-md text-secondary">Aucune notification dans cette catégorie.</div>
         </div>
@@ -300,7 +300,7 @@ export default function NotificationsPage() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: typeColor[notif.type] + '15', fontSize: 18,
                 }}>
-                  {TYPE_ICONS[notif.type]}
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{TYPE_ICONS[notif.type]}</span>
                 </div>
 
                 {/* Content */}
@@ -356,7 +356,7 @@ export default function NotificationsPage() {
       {/* Bottom CTA if no alerts */}
       {!loading && notifications.filter(n => n.type === 'alert').length === 0 && (
         <div className="card text-center mt-16" style={{ padding: '24px 20px', background: 'var(--success-muted)', borderColor: 'var(--success)' }}>
-          <span style={{ fontSize: 24 }}>✅</span>
+          <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>check_circle</span></span>
           <div className="text-base font-semibold mt-6" style={{ color: 'var(--success)' }}>
             Aucune alerte active — Votre compte est en bonne santé
           </div>

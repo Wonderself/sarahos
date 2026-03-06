@@ -21,7 +21,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['ANTHROPIC_API_KEY'],
     difficulty: 'Facile',
     category: 'IA',
-    icon: '🤖',
+    icon: 'smart_toy',
   },
   {
     name: 'PostgreSQL',
@@ -30,7 +30,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['DATABASE_URL'],
     difficulty: 'Facile',
     category: 'Infrastructure',
-    icon: '🗄️',
+    icon: 'database',
   },
   {
     name: 'Redis',
@@ -39,7 +39,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['REDIS_URL'],
     difficulty: 'Facile',
     category: 'Infrastructure',
-    icon: '⚡',
+    icon: 'bolt',
   },
   {
     name: 'Resend (Email)',
@@ -49,7 +49,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['RESEND_API_KEY', 'EMAIL_FROM'],
     difficulty: 'Facile',
     category: 'Notifications',
-    icon: '📧',
+    icon: 'mail',
   },
   {
     name: 'JWT Auth',
@@ -58,7 +58,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['JWT_SECRET'],
     difficulty: 'Facile',
     category: 'Sécurité',
-    icon: '🔐',
+    icon: 'lock',
   },
   {
     name: 'Twilio (SMS + Voice)',
@@ -68,7 +68,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_PHONE_NUMBER'],
     difficulty: 'Moyen',
     category: 'Téléphonie',
-    icon: '📱',
+    icon: 'phone_iphone',
   },
   {
     name: 'Twilio WhatsApp',
@@ -78,7 +78,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['TWILIO_WHATSAPP_FROM'],
     difficulty: 'Moyen',
     category: 'Messagerie',
-    icon: '💬',
+    icon: 'chat',
   },
   {
     name: 'ElevenLabs (TTS)',
@@ -88,7 +88,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['ELEVENLABS_API_KEY', 'ELEVENLABS_VOICE_ID'],
     difficulty: 'Facile',
     category: 'Voix',
-    icon: '🎙️',
+    icon: 'mic',
   },
   {
     name: 'fal.ai (Photo & Video IA)',
@@ -98,7 +98,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['FAL_KEY'],
     difficulty: 'Facile',
     category: 'Création',
-    icon: '🎨',
+    icon: 'palette',
   },
   // Planned (next)
   {
@@ -109,7 +109,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_PUBLISHABLE_KEY'],
     difficulty: 'Moyen',
     category: 'Paiement',
-    icon: '💳',
+    icon: 'credit_card',
   },
   // Future
   {
@@ -120,7 +120,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['DEEPGRAM_API_KEY'],
     difficulty: 'Facile',
     category: 'Avatar',
-    icon: '🎧',
+    icon: 'headphones',
   },
   {
     name: 'D-ID (Avatar Video)',
@@ -130,7 +130,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['DID_API_KEY'],
     difficulty: 'Moyen',
     category: 'Avatar',
-    icon: '🎥',
+    icon: 'videocam',
   },
   {
     name: 'Google Calendar',
@@ -140,7 +140,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'],
     difficulty: 'Complexe',
     category: 'Productivité',
-    icon: '📅',
+    icon: 'calendar_month',
   },
   {
     name: 'Slack',
@@ -150,7 +150,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['SLACK_BOT_TOKEN', 'SLACK_SIGNING_SECRET'],
     difficulty: 'Moyen',
     category: 'Productivité',
-    icon: '💼',
+    icon: 'work',
   },
   {
     name: 'Meta Business (Facebook/Instagram)',
@@ -160,7 +160,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['META_ACCESS_TOKEN', 'META_APP_SECRET', 'META_PAGE_ID'],
     difficulty: 'Complexe',
     category: 'Marketing',
-    icon: '📣',
+    icon: 'campaign',
   },
   {
     name: 'LinkedIn API',
@@ -170,7 +170,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['LINKEDIN_ACCESS_TOKEN', 'LINKEDIN_ORG_ID'],
     difficulty: 'Complexe',
     category: 'Marketing',
-    icon: '💼',
+    icon: 'work',
   },
   {
     name: 'Mistral / Llama (LLM Open Source)',
@@ -180,7 +180,7 @@ const INTEGRATIONS: Integration[] = [
     envVars: ['MISTRAL_API_KEY'],
     difficulty: 'Moyen',
     category: 'IA',
-    icon: '🧠',
+    icon: 'psychology',
   },
 ];
 
@@ -208,7 +208,7 @@ export default function RoadmapPage() {
       <div className="card card-lift p-20">
         <div className="flex flex-between mb-12" style={{ alignItems: 'flex-start' }}>
           <div className="flex gap-8 items-center">
-            <span style={{ fontSize: 24 }}>{integration.icon}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{integration.icon}</span>
             <div>
               <div className="text-base font-bold">{integration.name}</div>
               <span style={{ fontSize: 10 }} className="text-muted">{integration.category}</span>

@@ -61,15 +61,19 @@ function selectNextSpeaker(agents: Array<{id: string; name: string; role: string
 // ─── POST Handler ───
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  let body: Record<string, unknown>;
+  try { body = await req.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
   const token = body.token as string;
   if (!token) return NextResponse.json({ error: 'No token' }, { status: 401 });
 
   const { topic, agentId, agentName, agentRole, previousMessages: prevMsgs, agents, companyContext, userDirection } = body;
   const previousMessages = (prevMsgs as Array<{ speaker: string; content: string }>) ?? [];
 
-  // Smart rotation when agents array is present, fallback to cyclic
-  const currentAgent = agents
+  // Smart rotation when selectNextSpeaker exists, fallback to cyclic
+  if (!agents || !Array.isArray(agents) || agents.length === 0) {
+    return NextResponse.json({ error: 'agents array is required' }, { status: 400 });
+  }
+  const currentAgent = selectNextSpeaker
     ? selectNextSpeaker(agents, previousMessages)
     : agents[previousMessages.length % agents.length];
 

@@ -96,17 +96,17 @@ export default function MarketplacePage() {
       {/* ── Header ── */}
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
-          {'\u{1F3EA}'} Marketplace des Agents
+          <span className="material-symbols-rounded" style={{ fontSize: 28 }}>storefront</span> Marketplace des <span className="fz-logo-word">Agents</span>
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
-          Explorez et installez des agents IA specialises pour automatiser vos taches quotidiennes.
+          Explorez et installez des <span className="fz-logo-word">agents IA</span> specialises pour <span className="fz-logo-word">automatiser</span> vos taches quotidiennes.
         </p>
       </div>
 
       {/* ── Featured Section ── */}
       <div style={{ marginBottom: 40 }}>
         <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 16 }}>
-          {'\u2B50'} Agents vedettes
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>star</span> Agents vedettes
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {featuredAgents.map((agent, idx) => (
@@ -156,7 +156,7 @@ export default function MarketplacePage() {
                     transition: 'all 0.2s',
                   }}
                 >
-                  {installing === agent.id ? '...' : installed.has(agent.id) ? '\u2705 Installe' : 'Installer'}
+                  {installing === agent.id ? '...' : installed.has(agent.id) ? <><span className="material-symbols-rounded" style={{ fontSize: 13 }}>check_circle</span> Installe</> : 'Installer'}
                 </button>
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function MarketplacePage() {
         {/* Search bar */}
         <div style={{ position: 'relative', marginBottom: 16 }}>
           <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--text-muted)' }}>
-            {'\u{1F50D}'}
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>search</span>
           </span>
           <input
             type="text"
@@ -270,7 +270,7 @@ export default function MarketplacePage() {
 
       {filtered.length === 0 && (
         <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u{1F50E}'}</div>
+          <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>search</span></div>
           <p style={{ fontSize: 15 }}>Aucun agent ne correspond a votre recherche.</p>
           <button
             onClick={() => { setSearch(''); setCategory('Tous'); }}
@@ -307,7 +307,7 @@ export default function MarketplacePage() {
         <StatItem label="Agents disponibles" value={TEMPLATES.length.toString()} />
         <StatItem label="Agents installes" value={installed.size.toString()} />
         <StatItem label="Categories" value={(CATEGORIES.length - 1).toString()} />
-        <StatItem label="Gratuits" value={TEMPLATES.filter((t) => t.tier === 'free').length.toString()} />
+        <StatItem label="100% Gratuits" value={TEMPLATES.length.toString()} />
       </div>
     </div>
   );
@@ -364,7 +364,7 @@ function AgentCard({
                 fontWeight: 600,
               }}
             >
-              {'\u{1F525}'} Populaire
+              <span className="material-symbols-rounded" style={{ fontSize: 11 }}>local_fire_department</span> Populaire
             </span>
           )}
           {agent.badge === 'nouveau' && (
@@ -378,7 +378,7 @@ function AgentCard({
                 fontWeight: 600,
               }}
             >
-              {'\u2728'} Nouveau
+              <span className="material-symbols-rounded" style={{ fontSize: 11 }}>auto_awesome</span> Nouveau
             </span>
           )}
         </div>
@@ -405,13 +405,13 @@ function AgentCard({
           style={{
             padding: '2px 10px',
             borderRadius: 10,
-            background: agent.tier === 'free' ? 'var(--success-muted)' : 'var(--purple-muted)',
-            color: agent.tier === 'free' ? 'var(--success)' : 'var(--purple)',
+            background: 'var(--success-muted)',
+            color: 'var(--success)',
             fontSize: 11,
             fontWeight: 600,
           }}
         >
-          {agent.tier === 'free' ? 'Gratuit' : 'Premium'}
+          Gratuit
         </span>
       </div>
 
@@ -462,7 +462,7 @@ function AgentCard({
             }
           }}
         >
-          {isInstalling ? '...' : isInstalled ? '\u2705 Installe' : 'Installer'}
+          {isInstalling ? '...' : isInstalled ? <><span className="material-symbols-rounded" style={{ fontSize: 13 }}>check_circle</span> Installe</> : 'Installer'}
         </button>
       </div>
     </div>

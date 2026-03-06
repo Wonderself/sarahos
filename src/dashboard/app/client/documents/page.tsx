@@ -75,7 +75,7 @@ const TEMPLATES: DocTemplate[] = [
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'email-pro',
-    icon: '📧',
+    icon: 'mail',
     title: 'Email professionnel',
     description: 'Rédigez un email professionnel adapté à votre contexte: prospection, relance, partenariat, etc.',
     category: 'Communication',
@@ -89,7 +89,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'proposal',
-    icon: '📋',
+    icon: 'assignment',
     title: 'Proposition commerciale',
     description: 'Générez une proposition complète: contexte, solution, tarification, prochaines étapes.',
     category: 'Commercial',
@@ -104,7 +104,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'business-plan',
-    icon: '🎯',
+    icon: 'target',
     title: 'Business Plan',
     description: 'Structurez votre plan d\'affaires: vision, marché, stratégie, projections financières.',
     category: 'Stratégie',
@@ -119,7 +119,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'social-post',
-    icon: '📱',
+    icon: 'phone_iphone',
     title: 'Post réseaux sociaux',
     description: 'Créez du contenu engageant pour LinkedIn, Instagram, Twitter/X, Facebook.',
     category: 'Marketing',
@@ -134,7 +134,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'meeting-notes',
-    icon: '📝',
+    icon: 'edit_note',
     title: 'Compte-rendu de réunion',
     description: 'Structurez vos notes de réunion: participants, décisions, actions, deadlines.',
     category: 'Organisation',
@@ -148,7 +148,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'job-description',
-    icon: '🤝',
+    icon: 'handshake',
     title: 'Fiche de poste',
     description: 'Rédigez une offre d\'emploi attractive et complète pour recruter les meilleurs talents.',
     category: 'RH',
@@ -163,7 +163,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'newsletter',
-    icon: '📰',
+    icon: 'newspaper',
     title: 'Newsletter',
     description: 'Créez une newsletter engageante pour vos clients ou votre équipe.',
     category: 'Marketing',
@@ -178,7 +178,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'legal-contract',
-    icon: '⚖️',
+    icon: 'balance',
     title: 'Modèle de contrat',
     description: 'Générez un brouillon de contrat: NDA, prestation, partenariat. À faire valider par un juriste.',
     category: 'Juridique',
@@ -193,7 +193,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'rapport',
-    icon: '📊',
+    icon: 'bar_chart',
     title: 'Rapport',
     description: 'Générez un rapport professionnel: analyse, résultats, recommandations.',
     category: 'Stratégie',
@@ -208,7 +208,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'presentation',
-    icon: '🖥️',
+    icon: 'computer',
     title: 'Présentation',
     description: 'Structurez une présentation slide par slide avec notes speaker.',
     category: 'Communication',
@@ -223,7 +223,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'brief-creatif',
-    icon: '🎨',
+    icon: 'palette',
     title: 'Brief créatif',
     description: 'Rédigez un brief créatif complet pour agence, designer ou équipe interne.',
     category: 'Marketing',
@@ -239,7 +239,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'devis-facture',
-    icon: '🧾',
+    icon: 'receipt',
     title: 'Devis / Facture',
     description: 'Générez un devis ou une facture professionnelle avec toutes les mentions légales obligatoires.',
     category: 'Commercial',
@@ -254,7 +254,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-marketing-digital',
-    icon: '📈',
+    icon: 'trending_up',
     title: 'Plan marketing digital',
     description: 'Élaborez un plan marketing digital complet avec objectifs, canaux, budget et KPIs mesurables.',
     category: 'Marketing',
@@ -269,7 +269,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'cahier-des-charges',
-    icon: '📐',
+    icon: 'architecture',
     title: 'Cahier des charges',
     description: 'Rédigez un cahier des charges technique ou fonctionnel complet pour votre projet.',
     category: 'Organisation',
@@ -284,7 +284,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'communique-presse',
-    icon: '📢',
+    icon: 'campaign',
     title: 'Communiqué de presse',
     description: 'Rédigez un communiqué de presse professionnel pour vos annonces et événements.',
     category: 'Communication',
@@ -299,7 +299,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'analyse-swot',
-    icon: '🔍',
+    icon: 'search',
     title: 'Analyse SWOT',
     description: 'Réalisez une analyse SWOT complète avec matrice et recommandations stratégiques.',
     category: 'Stratégie',
@@ -313,7 +313,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-formation',
-    icon: '🎓',
+    icon: 'school',
     title: 'Plan de formation',
     description: 'Concevez un plan de formation structuré pour développer les compétences de vos équipes.',
     category: 'RH',
@@ -328,7 +328,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'tableau-bord-kpi',
-    icon: '📊',
+    icon: 'bar_chart',
     title: 'Tableau de bord KPI',
     description: 'Concevez un tableau de bord avec les KPIs essentiels pour piloter votre activité.',
     category: 'Finance',
@@ -342,7 +342,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'procedure-interne',
-    icon: '📋',
+    icon: 'assignment',
     title: 'Procédure interne',
     description: 'Documentez vos processus internes avec des étapes claires et des responsabilités définies.',
     category: 'Organisation',
@@ -356,7 +356,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'etude-marche',
-    icon: '🌐',
+    icon: 'language',
     title: 'Étude de marché',
     description: 'Réalisez une étude de marché structurée pour valider votre projet ou orienter votre stratégie.',
     category: 'Stratégie',
@@ -370,7 +370,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'script-vente',
-    icon: '📞',
+    icon: 'call',
     title: 'Script de vente',
     description: 'Créez un script de vente téléphonique ou en face-à-face avec gestion des objections.',
     category: 'Commercial',
@@ -384,7 +384,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'guide-onboarding',
-    icon: '🚀',
+    icon: 'rocket_launch',
     title: 'Guide d\'onboarding',
     description: 'Créez un guide d\'accueil complet pour intégrer efficacement vos nouveaux collaborateurs.',
     category: 'RH',
@@ -398,7 +398,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'politique-confidentialite',
-    icon: '🔒',
+    icon: 'lock',
     title: 'Politique de confidentialité',
     description: 'Générez une politique de confidentialité conforme RGPD pour votre site web ou application.',
     category: 'Juridique',
@@ -412,7 +412,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-communication',
-    icon: '📣',
+    icon: 'campaign',
     title: 'Plan de communication',
     description: 'Élaborez un plan de communication complet avec messages clés, canaux et calendrier.',
     category: 'Communication',
@@ -427,7 +427,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'pitch-deck',
-    icon: '💼',
+    icon: 'work',
     title: 'Pitch deck investisseur',
     description: 'Structurez un pitch deck percutant pour convaincre des investisseurs ou partenaires.',
     category: 'Commercial',
@@ -445,7 +445,7 @@ const TEMPLATES: DocTemplate[] = [
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'cv-resume',
-    icon: '📄',
+    icon: 'description',
     title: 'CV / Résumé',
     description: 'Créez un CV professionnel et percutant adapté au poste que vous visez.',
     category: 'Personnel',
@@ -460,7 +460,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'lettre-motivation',
-    icon: '✉️',
+    icon: 'mail',
     title: 'Lettre de motivation',
     description: 'Rédigez une lettre de motivation convaincante et personnalisée pour votre candidature.',
     category: 'Personnel',
@@ -475,7 +475,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'budget-personnel',
-    icon: '💰',
+    icon: 'savings',
     title: 'Budget personnel',
     description: 'Planifiez votre budget mensuel avec un suivi clair de vos revenus et dépenses.',
     category: 'Finance perso',
@@ -489,7 +489,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-alimentaire',
-    icon: '🥗',
+    icon: 'restaurant',
     title: 'Plan alimentaire',
     description: 'Recevez un plan de repas hebdomadaire équilibré adapté à vos besoins et préférences.',
     category: 'Bien-être',
@@ -503,7 +503,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'programme-fitness',
-    icon: '💪',
+    icon: 'fitness_center',
     title: 'Programme fitness',
     description: 'Obtenez un programme d\'entraînement personnalisé adapté à vos objectifs et votre niveau.',
     category: 'Bien-être',
@@ -518,7 +518,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'objectifs-annee',
-    icon: '🎯',
+    icon: 'target',
     title: 'Objectifs de l\'année',
     description: 'Définissez et structurez vos objectifs annuels dans tous les domaines de votre vie.',
     category: 'Développement personnel',
@@ -532,7 +532,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'journal-gratitude',
-    icon: '🙏',
+    icon: 'volunteer_activism',
     title: 'Journal de gratitude',
     description: 'Recevez des prompts de gratitude personnalisés pour cultiver le bien-être au quotidien.',
     category: 'Développement personnel',
@@ -546,7 +546,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'discours-toast',
-    icon: '🎤',
+    icon: 'mic',
     title: 'Discours / Toast',
     description: 'Rédigez un discours mémorable pour un mariage, anniversaire, départ ou tout événement.',
     category: 'Personnel',
@@ -561,7 +561,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'lettre-reclamation',
-    icon: '📮',
+    icon: 'markunread_mailbox',
     title: 'Lettre de réclamation',
     description: 'Rédigez une lettre de réclamation efficace auprès d\'une administration ou entreprise.',
     category: 'Personnel',
@@ -575,7 +575,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-voyage',
-    icon: '✈️',
+    icon: 'flight',
     title: 'Plan de voyage',
     description: 'Planifiez votre voyage de A à Z avec un itinéraire détaillé et des conseils pratiques.',
     category: 'Loisirs',
@@ -590,7 +590,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'lettre-resiliation',
-    icon: '✂️',
+    icon: 'content_cut',
     title: 'Lettre de résiliation',
     description: 'Rédigez une lettre de résiliation conforme pour tout type d\'abonnement ou contrat.',
     category: 'Personnel',
@@ -604,7 +604,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'bilan-competences',
-    icon: '🧭',
+    icon: 'explore',
     title: 'Bilan de compétences',
     description: 'Réalisez un auto-bilan de vos compétences pour orienter votre carrière ou une reconversion.',
     category: 'Développement personnel',
@@ -618,7 +618,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'liste-courses',
-    icon: '🛒',
+    icon: 'storefront',
     title: 'Liste de courses optimisée',
     description: 'Générez une liste de courses intelligente organisée par rayon avec astuces économiques.',
     category: 'Organisation perso',
@@ -632,7 +632,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'routine-matin',
-    icon: '🌅',
+    icon: 'wb_twilight',
     title: 'Routine du matin',
     description: 'Concevez une routine matinale sur mesure pour démarrer chaque journée avec énergie.',
     category: 'Bien-être',
@@ -646,7 +646,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-epargne',
-    icon: '🏦',
+    icon: 'account_balance',
     title: 'Plan d\'épargne',
     description: 'Élaborez une stratégie d\'épargne personnalisée pour atteindre vos objectifs financiers.',
     category: 'Finance perso',
@@ -661,7 +661,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'checklist-demenagement',
-    icon: '📦',
+    icon: 'inventory_2',
     title: 'Checklist déménagement',
     description: 'Obtenez une checklist complète pour organiser votre déménagement sans stress.',
     category: 'Organisation perso',
@@ -675,7 +675,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'testament-numerique',
-    icon: '🔐',
+    icon: 'lock',
     title: 'Testament numérique',
     description: 'Documentez vos accès numériques et volontés pour votre patrimoine digital.',
     category: 'Juridique perso',
@@ -688,7 +688,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'lettre-recommandation',
-    icon: '⭐',
+    icon: 'star',
     title: 'Lettre de recommandation',
     description: 'Rédigez une lettre de recommandation professionnelle pour un collègue ou collaborateur.',
     category: 'Personnel',
@@ -703,7 +703,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-carriere',
-    icon: '📈',
+    icon: 'trending_up',
     title: 'Plan de carrière',
     description: 'Élaborez un plan de développement de carrière structuré sur 1 à 5 ans.',
     category: 'Développement personnel',
@@ -717,7 +717,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'email-personnel-delicat',
-    icon: '💬',
+    icon: 'chat',
     title: 'Email personnel délicat',
     description: 'Rédigez un email personnel sensible : excuses, confrontation, annonce difficile.',
     category: 'Personnel',
@@ -732,7 +732,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'recette-personnalisee',
-    icon: '👨‍🍳',
+    icon: 'cooking',
     title: 'Recette personnalisée',
     description: 'Obtenez une recette sur mesure adaptée à vos ingrédients, régime et niveau culinaire.',
     category: 'Loisirs',
@@ -746,7 +746,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'plan-lecture',
-    icon: '📚',
+    icon: 'menu_book',
     title: 'Plan de lecture',
     description: 'Recevez un plan de lecture personnalisé avec des recommandations adaptées à vos goûts.',
     category: 'Loisirs',
@@ -760,7 +760,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'bilan-financier-personnel',
-    icon: '📉',
+    icon: 'trending_down',
     title: 'Bilan financier personnel',
     description: 'Faites le point complet sur votre situation financière avec des recommandations concrètes.',
     category: 'Finance perso',
@@ -775,7 +775,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'projet-passion',
-    icon: '🚀',
+    icon: 'rocket_launch',
     title: 'Projet passion',
     description: 'Structurez et planifiez votre projet passion pour le concrétiser étape par étape.',
     category: 'Développement personnel',
@@ -790,7 +790,7 @@ const TEMPLATES: DocTemplate[] = [
   },
   {
     id: 'meditation-guidee',
-    icon: '🧘',
+    icon: 'self_improvement',
     title: 'Méditation guidée',
     description: 'Recevez un script de méditation guidée personnalisé à lire ou écouter.',
     category: 'Bien-être',
@@ -937,13 +937,13 @@ export default function DocumentsPage() {
         <div className="flex items-center gap-12 mb-24">
           <button onClick={() => setViewingDoc(null)} className="btn btn-ghost btn-sm">← Retour</button>
           <div className="flex-1">
-            <h2 className="font-bold" style={{ fontSize: 18 }}>{tpl?.icon} {viewingDoc.title}</h2>
+            <h2 className="font-bold" style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{tpl?.icon ?? 'description'}</span> {viewingDoc.title}</h2>
             <div className="text-sm text-muted">
               {new Date(viewingDoc.createdAt).toLocaleString('fr-FR')} | {viewingDoc.tokens} tokens | {(viewingDoc.cost / 1_000_000).toFixed(4)} cr
             </div>
           </div>
           <button onClick={() => copyToClipboard(viewingDoc.content)} className="btn btn-primary btn-sm">
-            {copied ? '✓ Copié !' : 'Copier'}
+            {copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Copié !</> : 'Copier'}
           </button>
           <button onClick={() => {
             const blob = new Blob([viewingDoc.content], { type: 'text/plain;charset=utf-8' });
@@ -971,7 +971,7 @@ export default function DocumentsPage() {
         <div className="flex items-center gap-12 mb-24">
           <button onClick={() => { setSelectedTemplate(null); setFieldValues({}); }} className="btn btn-ghost btn-sm">← Retour</button>
           <div className="flex-1">
-            <h2 className="font-bold" style={{ fontSize: 18 }}>{selectedTemplate.icon} {selectedTemplate.title}</h2>
+            <h2 className="font-bold" style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{selectedTemplate.icon}</span> {selectedTemplate.title}</h2>
             <div className="text-md text-secondary">{selectedTemplate.description}</div>
           </div>
           <VoiceInput
@@ -1061,7 +1061,7 @@ export default function DocumentsPage() {
             {generating ? (
               <span className="animate-pulse">{DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name} rédige votre document...</span>
             ) : (
-              <>✨ Générer le document</>
+              <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>auto_awesome</span> Générer le document</>
             )}
           </button>
         </div>
@@ -1076,7 +1076,7 @@ export default function DocumentsPage() {
     <div className="client-page-scrollable">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Générateur de Documents</h1>
+          <h1 className="page-title">Générateur de <span className="fz-logo-word">Documents</span></h1>
           <p className="page-subtitle">
             {DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name} rédige pour vous : emails, propositions, contrats, posts... Choisissez un modèle et personnalisez.
           </p>
@@ -1119,7 +1119,7 @@ export default function DocumentsPage() {
                 width: 48, height: 48,
                 fontSize: 24, background: tpl.color + '22', flexShrink: 0,
               }}>
-                {tpl.icon}
+                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{tpl.icon}</span>
               </div>
               <div>
                 <div className="font-bold mb-4" style={{ fontSize: 15 }}>{tpl.title}</div>
@@ -1140,9 +1140,9 @@ export default function DocumentsPage() {
       <div className="section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
           <div>
-            <div className="section-title" style={{ marginBottom: 4 }}>🧠 Base de connaissance</div>
+            <div className="section-title" style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>psychology</span> Base de connaissance</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
-              Documents uploadés et injectés automatiquement dans vos agents
+              Documents uploadés et injectés <span className="fz-logo-word">automatiquement</span> dans vos agents
             </div>
           </div>
           {kbStorage && (
@@ -1166,7 +1166,7 @@ export default function DocumentsPage() {
           <div className="text-center text-tertiary" style={{ padding: 24 }}>Chargement...</div>
         ) : kbDocs.length === 0 ? (
           <div className="card text-center" style={{ padding: '32px 20px' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>📂</div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>folder_open</span></div>
             <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 6 }}>Aucun document uploadé</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
               Utilisez le composant d&apos;upload ci-dessus pour enrichir la base de connaissance de vos agents
@@ -1180,7 +1180,7 @@ export default function DocumentsPage() {
               return (
                 <div key={doc.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ fontSize: 22, flexShrink: 0 }}>
-                    {doc.filename.endsWith('.pdf') ? '📕' : doc.filename.endsWith('.docx') ? '📘' : doc.filename.endsWith('.xlsx') ? '📗' : '📄'}
+                    <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{doc.filename.endsWith('.pdf') ? 'picture_as_pdf' : doc.filename.endsWith('.docx') ? 'description' : doc.filename.endsWith('.xlsx') ? 'table_chart' : 'description'}</span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.filename}</div>
@@ -1221,14 +1221,14 @@ export default function DocumentsPage() {
                 <div key={doc.id} className="flex items-center gap-12 bg-secondary rounded-md" style={{
                   padding: '8px 12px',
                 }}>
-                  <span style={{ fontSize: 20 }}>{tpl?.icon ?? '📄'}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{tpl?.icon ?? 'description'}</span>
                   <div className="flex-1" style={{ minWidth: 0 }}>
                     <div className="text-md font-semibold truncate">{doc.title}</div>
                     <div className="text-xs text-muted">{new Date(doc.createdAt).toLocaleString('fr-FR')}</div>
                   </div>
                   <button onClick={() => setViewingDoc(doc)} className="btn btn-ghost btn-sm">Voir</button>
                   <button onClick={() => copyToClipboard(doc.content)} className="btn btn-ghost btn-sm">Copier</button>
-                  <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} className="btn btn-ghost btn-sm text-danger" aria-label="Supprimer le document">✕</button>
+                  <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} className="btn btn-ghost btn-sm text-danger" aria-label="Supprimer le document"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
                 </div>
               );
             })}

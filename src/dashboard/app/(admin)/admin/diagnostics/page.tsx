@@ -17,11 +17,11 @@ interface ServiceStatus {
 }
 
 function StatusBadge({ status }: { status: ServiceStatus['status'] }) {
-  const cfg: Record<string, { color: string; bg: string; border: string; label: string }> = {
-    ok:       { color: '#16a34a', bg: '#16a34a18', border: '#16a34a44', label: '✅ Opérationnel' },
-    error:    { color: '#ef4444', bg: '#ef444418', border: '#ef444444', label: '❌ Erreur' },
-    warning:  { color: '#f59e0b', bg: '#f59e0b18', border: '#f59e0b44', label: '⚠️ Non configuré' },
-    checking: { color: '#5b6cf7', bg: '#5b6cf718', border: '#5b6cf744', label: '⏳ Vérification…' },
+  const cfg: Record<string, { color: string; bg: string; border: string; icon: string; label: string }> = {
+    ok:       { color: '#16a34a', bg: '#16a34a18', border: '#16a34a44', icon: 'check_circle', label: 'Opérationnel' },
+    error:    { color: '#ef4444', bg: '#ef444418', border: '#ef444444', icon: 'cancel', label: 'Erreur' },
+    warning:  { color: '#f59e0b', bg: '#f59e0b18', border: '#f59e0b44', icon: 'warning', label: 'Non configuré' },
+    checking: { color: '#5b6cf7', bg: '#5b6cf718', border: '#5b6cf744', icon: 'hourglass_empty', label: 'Vérification…' },
   };
   const c = cfg[status];
   return (
@@ -30,7 +30,7 @@ function StatusBadge({ status }: { status: ServiceStatus['status'] }) {
       padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600,
       color: c.color, background: c.bg, border: `1px solid ${c.border}`, whiteSpace: 'nowrap',
     }}>
-      {c.label}
+      <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{c.icon}</span> {c.label}
     </span>
   );
 }
@@ -79,7 +79,7 @@ function AudioTest() {
     <div style={{ marginTop: 12 }}>
       {step === 'idle' && (
         <button className="btn btn-primary btn-sm" onClick={runTest}>
-          🎙️ Tester la transcription (3s d&apos;enregistrement)
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>mic</span> Tester la transcription (3s d&apos;enregistrement)
         </button>
       )}
       {step === 'recording' && (
@@ -89,11 +89,11 @@ function AudioTest() {
         </div>
       )}
       {step === 'transcribing' && (
-        <span style={{ color: '#5b6cf7', fontWeight: 600, fontSize: 13 }}>⏳ Transcription en cours…</span>
+        <span style={{ color: '#5b6cf7', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Transcription en cours…</span>
       )}
       {step === 'done' && (
         <div>
-          <div style={{ color: '#16a34a', fontWeight: 700, marginBottom: 6 }}>✅ Transcription réussie</div>
+          <div style={{ color: '#16a34a', fontWeight: 700, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Transcription réussie</div>
           <div style={{ padding: '8px 12px', background: 'var(--bg-secondary)', borderRadius: 8, fontSize: 13, fontStyle: 'italic', border: '1px solid var(--border-primary)' }}>
             &ldquo;{transcript}&rdquo;
           </div>
@@ -104,7 +104,7 @@ function AudioTest() {
       )}
       {step === 'error' && (
         <div>
-          <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 13 }}>❌ {errorMsg}</div>
+          <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>cancel</span> {errorMsg}</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
             Vérifiez que DEEPGRAM_API_KEY est configurée et que vous avez accordé l&apos;accès au micro.
           </div>
@@ -157,12 +157,12 @@ function WhatsAppSendTest() {
           onChange={e => setPhone(e.target.value)}
         />
         <button className="btn btn-primary btn-sm" onClick={sendTest} disabled={sending || !phone}>
-          {sending ? '…' : '📤 Envoyer test'}
+          {sending ? '…' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>upload</span> Envoyer test</>}
         </button>
       </div>
       {result && (
         <div style={{ marginTop: 8, color: result.ok ? '#16a34a' : '#ef4444', fontWeight: 600, fontSize: 12 }}>
-          {result.ok ? '✅ ' : '❌ '}{result.msg}
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{result.ok ? 'check_circle' : 'cancel'}</span> {result.msg}
         </div>
       )}
     </div>
@@ -203,7 +203,7 @@ function LiveTestCard({ title, desc, endpoint, method, resultKey }: {
       </button>
       {status !== 'idle' && status !== 'running' && (
         <div style={{ marginTop: 8, fontSize: 12, color: status === 'ok' ? '#16a34a' : '#ef4444', fontWeight: 600 }}>
-          {status === 'ok' ? '✅ ' : '❌ '}{result}
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{status === 'ok' ? 'check_circle' : 'cancel'}</span> {result}
         </div>
       )}
     </div>
@@ -254,7 +254,7 @@ function LiveTestCardWithInput({ title, desc, endpoint, inputPlaceholder, inputL
       <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>{inputLabel}</div>
       {status !== 'idle' && status !== 'running' && (
         <div style={{ fontSize: 12, color: status === 'ok' ? '#16a34a' : '#ef4444', fontWeight: 600 }}>
-          {status === 'ok' ? '✅ ' : '❌ '}{result}
+          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{status === 'ok' ? 'check_circle' : 'cancel'}</span> {result}
         </div>
       )}
     </div>
@@ -267,15 +267,15 @@ function LiveTestCardWithInput({ title, desc, endpoint, inputPlaceholder, inputL
 
 export default function DiagnosticsPage() {
   const [services, setServices] = useState<ServiceStatus[]>([
-    { name: 'Backend API', icon: '⚡', status: 'checking', message: 'Vérification…' },
-    { name: 'PostgreSQL', icon: '🗄️', status: 'checking', message: 'Vérification…', envVars: ['DATABASE_URL'] },
-    { name: 'Redis', icon: '🔴', status: 'checking', message: 'Vérification…', envVars: ['REDIS_URL'] },
-    { name: 'Anthropic IA', icon: '🤖', status: 'checking', message: 'Vérification…', envVars: ['ANTHROPIC_API_KEY'] },
-    { name: 'Deepgram (STT/TTS)', icon: '🎙️', status: 'checking', message: 'Vérification…', envVars: ['DEEPGRAM_API_KEY'], hint: 'Requis pour transcription vocale et synthèse TTS' },
-    { name: 'ElevenLabs (TTS)', icon: '🔊', status: 'checking', message: 'Vérification…', envVars: ['ELEVENLABS_API_KEY'], hint: 'Optionnel — fallback sur Deepgram si absent' },
-    { name: 'Twilio (SMS/Voix)', icon: '📞', status: 'checking', message: 'Vérification…', envVars: ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_FROM_NUMBER'] },
-    { name: 'WhatsApp Meta API', icon: '💬', status: 'checking', message: 'Vérification…', envVars: ['WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_ACCESS_TOKEN', 'WHATSAPP_APP_SECRET'], hint: 'Nécessite un compte Meta Business Manager' },
-    { name: 'Resend (Email)', icon: '📧', status: 'checking', message: 'Vérification…', envVars: ['RESEND_API_KEY'] },
+    { name: 'Backend API', icon: 'bolt', status: 'checking', message: 'Vérification…' },
+    { name: 'PostgreSQL', icon: 'database', status: 'checking', message: 'Vérification…', envVars: ['DATABASE_URL'] },
+    { name: 'Redis', icon: 'memory', status: 'checking', message: 'Vérification…', envVars: ['REDIS_URL'] },
+    { name: 'Anthropic IA', icon: 'smart_toy', status: 'checking', message: 'Vérification…', envVars: ['ANTHROPIC_API_KEY'] },
+    { name: 'Deepgram (STT/TTS)', icon: 'mic', status: 'checking', message: 'Vérification…', envVars: ['DEEPGRAM_API_KEY'], hint: 'Requis pour transcription vocale et synthèse TTS' },
+    { name: 'ElevenLabs (TTS)', icon: 'volume_up', status: 'checking', message: 'Vérification…', envVars: ['ELEVENLABS_API_KEY'], hint: 'Optionnel — fallback sur Deepgram si absent' },
+    { name: 'Twilio (SMS/Voix)', icon: 'call', status: 'checking', message: 'Vérification…', envVars: ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_FROM_NUMBER'] },
+    { name: 'WhatsApp Meta API', icon: 'chat', status: 'checking', message: 'Vérification…', envVars: ['WHATSAPP_PHONE_NUMBER_ID', 'WHATSAPP_ACCESS_TOKEN', 'WHATSAPP_APP_SECRET'], hint: 'Nécessite un compte Meta Business Manager' },
+    { name: 'Resend (Email)', icon: 'mail', status: 'checking', message: 'Vérification…', envVars: ['RESEND_API_KEY'] },
   ]);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
 
@@ -357,7 +357,7 @@ export default function DiagnosticsPage() {
     <div className="admin-page-scrollable">
       <div className="page-header">
         <div>
-          <h1 className="page-title">🔍 Diagnostics</h1>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 22 }}>search</span> Diagnostics</h1>
           <p className="page-subtitle">
             État des services et intégrations
             {lastChecked && (
@@ -368,22 +368,22 @@ export default function DiagnosticsPage() {
           </p>
         </div>
         <div className="page-actions">
-          <button className="btn btn-secondary" onClick={checkAll}>🔄 Actualiser</button>
+          <button className="btn btn-secondary" onClick={checkAll}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>refresh</span> Actualiser</button>
         </div>
       </div>
 
       {/* KPIs */}
       <div className="grid-4 section">
         <div className="stat-card">
-          <span className="stat-label">✅ Opérationnels</span>
+          <span className="stat-label"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Opérationnels</span>
           <span className="stat-value text-success">{okCount}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label">⚠️ Non configurés</span>
+          <span className="stat-label"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> Non configurés</span>
           <span className="stat-value text-warning">{warnCount}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label">❌ En erreur</span>
+          <span className="stat-label"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>cancel</span> En erreur</span>
           <span className="stat-value text-danger">{errCount}</span>
         </div>
         <div className="stat-card">
@@ -400,12 +400,12 @@ export default function DiagnosticsPage() {
             <div key={svc.name} className="card" style={{ padding: '14px 18px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flex: 1, minWidth: 0 }}>
-                  <span style={{ fontSize: 22, flexShrink: 0, marginTop: 1 }}>{svc.icon}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 22, flexShrink: 0, marginTop: 1 }}>{svc.icon}</span>
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{ fontWeight: 700, fontSize: 14 }}>{svc.name}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{svc.message}</div>
                     {svc.hint && svc.status !== 'ok' && (
-                      <div style={{ fontSize: 11, color: '#f59e0b', marginTop: 4 }}>💡 {svc.hint}</div>
+                      <div style={{ fontSize: 11, color: '#f59e0b', marginTop: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>lightbulb</span> {svc.hint}</div>
                     )}
                     {svc.envVars && svc.envVars.length > 0 && svc.status !== 'ok' && (
                       <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -425,7 +425,7 @@ export default function DiagnosticsPage() {
 
       {/* Audio Test */}
       <div className="section">
-        <h2 className="section-title">🎙️ Test Microphone & Transcription</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>mic</span> Test Microphone & Transcription</h2>
         <div className="card">
           <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12 }}>
             Enregistre 3 secondes depuis votre micro et transcrit via Deepgram STT.
@@ -437,7 +437,7 @@ export default function DiagnosticsPage() {
 
       {/* WhatsApp */}
       <div className="section">
-        <h2 className="section-title">💬 Configuration WhatsApp</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>chat</span> Configuration WhatsApp</h2>
         <div className="card">
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Variables d&apos;environnement requises</div>
@@ -468,24 +468,24 @@ export default function DiagnosticsPage() {
 
       {/* ── Tests actifs ── */}
       <div className="section">
-        <h2 className="section-title">🧪 Tests en conditions réelles</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>science</span> Tests en conditions réelles</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
           <LiveTestCard
-            title="🤖 Test Anthropic"
+            title="Test Anthropic"
             desc="Envoie un mini prompt et vérifie la réponse Claude"
             endpoint={`${API_BASE}/admin/test/anthropic`}
             method="POST"
             resultKey="reply"
           />
           <LiveTestCard
-            title="🔊 Test ElevenLabs TTS"
+            title="Test ElevenLabs TTS"
             desc="Synthétise 'Bonjour, je suis Sarah' et vérifie le retour audio"
             endpoint={`${API_BASE}/admin/test/tts`}
             method="POST"
             resultKey="message"
           />
           <LiveTestCardWithInput
-            title="📧 Test Email (Resend)"
+            title="Test Email (Resend)"
             desc="Envoie un email de test à l'adresse admin"
             endpoint={`${API_BASE}/admin/test/email`}
             inputPlaceholder="email@exemple.com"
@@ -493,7 +493,7 @@ export default function DiagnosticsPage() {
             inputParam="to"
           />
           <LiveTestCardWithInput
-            title="📱 Test SMS (Twilio)"
+            title="Test SMS (Twilio)"
             desc="Envoie un SMS de test au numéro indiqué"
             endpoint={`${API_BASE}/admin/test/sms`}
             inputPlaceholder="+33612345678"
@@ -505,7 +505,7 @@ export default function DiagnosticsPage() {
 
       {/* .env template */}
       <div className="section">
-        <h2 className="section-title">⚙️ Template .env Backend</h2>
+        <h2 className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>settings</span> Template .env Backend</h2>
         <div className="card">
           <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 10 }}>
             Ajoutez dans le fichier <code style={{ fontFamily: 'monospace' }}>.env</code> à la racine du projet, puis :{' '}

@@ -31,13 +31,13 @@ export default function BillingCharts({ tierData }: { tierData?: TierEntry[] }) 
     const h = { Authorization: `Bearer ${getToken()}` };
     try {
       const [r, g, t] = await Promise.all([
-        fetch(`${API}/analytics/revenue-trend?period=${p}`, { headers: h }).then(r => r.json()),
-        fetch(`${API}/analytics/user-growth?period=${p}`, { headers: h }).then(r => r.json()),
-        fetch(`${API}/analytics/top-clients?limit=10`, { headers: h }).then(r => r.json()),
+        fetch(`${API}/analytics/revenue-trend?period=${p}`, { headers: h }).then(r => r.ok ? r.json() : []),
+        fetch(`${API}/analytics/user-growth?period=${p}`, { headers: h }).then(r => r.ok ? r.json() : []),
+        fetch(`${API}/analytics/top-clients?limit=10`, { headers: h }).then(r => r.ok ? r.json() : []),
       ]);
-      setRevenue(r as RevenuePoint[]);
-      setGrowth(g as GrowthPoint[]);
-      setTopClients((t as TopClient[]).slice(0, 10));
+      setRevenue(Array.isArray(r) ? r : []);
+      setGrowth(Array.isArray(g) ? g : []);
+      setTopClients(Array.isArray(t) ? t.slice(0, 10) : []);
     } catch { /* empty */ }
     setLoading(false);
   }

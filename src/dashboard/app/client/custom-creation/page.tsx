@@ -4,29 +4,29 @@ import { useState } from 'react';
 
 // Pre-built marketplace modules
 const MARKETPLACE_MODULES = [
-  { id: 'mod-invoice', name: 'Facturation Auto', emoji: '🧾', category: 'Finance', desc: 'Génération automatique de factures, devis et relances clients.', author: 'Freenzy Team', price: 1, downloads: 234, rating: 4.8 },
-  { id: 'mod-crm-mini', name: 'Mini CRM', emoji: '📇', category: 'Commercial', desc: 'Gestion de contacts, suivi de pipeline et relances automatiques.', author: 'Pierre D.', price: 1, downloads: 189, rating: 4.6 },
-  { id: 'mod-newsletter', name: 'Newsletter IA', emoji: '📨', category: 'Marketing', desc: 'Rédaction et envoi automatique de newsletters personnalisées.', author: 'Freenzy Team', price: 1, downloads: 312, rating: 4.9 },
-  { id: 'mod-inventory', name: 'Gestion de Stock', emoji: '📦', category: 'Logistique', desc: 'Suivi de stock en temps réel avec alertes de réapprovisionnement.', author: 'Marie L.', price: 1, downloads: 145, rating: 4.5 },
-  { id: 'mod-hr-onboard', name: 'Onboarding RH', emoji: '🎓', category: 'RH', desc: 'Parcours d\'intégration automatisé pour les nouveaux employés.', author: 'Freenzy Team', price: 1, downloads: 98, rating: 4.7 },
-  { id: 'mod-expense', name: 'Notes de Frais', emoji: '🧮', category: 'Finance', desc: 'Scan de reçus, catégorisation et export comptable automatique.', author: 'Thomas R.', price: 1, downloads: 276, rating: 4.8 },
-  { id: 'mod-booking', name: 'Prise de RDV', emoji: '📅', category: 'Service Client', desc: 'Système de réservation en ligne avec rappels automatiques.', author: 'Freenzy Team', price: 1, downloads: 421, rating: 4.9 },
-  { id: 'mod-survey', name: 'Sondages & Feedback', emoji: '📊', category: 'Marketing', desc: 'Création de sondages clients avec analyse IA des résultats.', author: 'Julie M.', price: 1, downloads: 167, rating: 4.4 },
-  { id: 'mod-contracts', name: 'Gestion Contrats', emoji: '📝', category: 'Juridique', desc: 'Génération, suivi et renouvellement automatique des contrats.', author: 'Freenzy Team', price: 1, downloads: 203, rating: 4.7 },
-  { id: 'mod-social-auto', name: 'Auto-Post Social', emoji: '🤖', category: 'Marketing', desc: 'Planification et publication automatique sur tous les réseaux.', author: 'Maxime B.', price: 1, downloads: 389, rating: 4.6 },
-  { id: 'mod-chatbot', name: 'Chatbot Site Web', emoji: '💬', category: 'Service Client', desc: 'Widget chatbot IA intégrable sur votre site en 2 minutes.', author: 'Freenzy Team', price: 1, downloads: 512, rating: 4.9 },
-  { id: 'mod-reporting', name: 'Reporting Auto', emoji: '📈', category: 'Management', desc: 'Rapports hebdomadaires générés par IA avec graphiques.', author: 'Nicolas P.', price: 1, downloads: 234, rating: 4.5 },
+  { id: 'mod-invoice', name: 'Facturation Auto', emoji: 'receipt', category: 'Finance', desc: 'Génération automatique de factures, devis et relances clients.', author: 'Freenzy Team', downloads: 234, rating: 4.8 },
+  { id: 'mod-crm-mini', name: 'Mini CRM', emoji: 'contacts', category: 'Commercial', desc: 'Gestion de contacts, suivi de pipeline et relances automatiques.', author: 'Pierre D.', downloads: 189, rating: 4.6 },
+  { id: 'mod-newsletter', name: 'Newsletter IA', emoji: 'mail', category: 'Marketing', desc: 'Rédaction et envoi automatique de newsletters personnalisées.', author: 'Freenzy Team', downloads: 312, rating: 4.9 },
+  { id: 'mod-inventory', name: 'Gestion de Stock', emoji: 'inventory_2', category: 'Logistique', desc: 'Suivi de stock en temps réel avec alertes de réapprovisionnement.', author: 'Marie L.', downloads: 145, rating: 4.5 },
+  { id: 'mod-hr-onboard', name: 'Onboarding RH', emoji: 'school', category: 'RH', desc: 'Parcours d\'intégration automatisé pour les nouveaux employés.', author: 'Freenzy Team', downloads: 98, rating: 4.7 },
+  { id: 'mod-expense', name: 'Notes de Frais', emoji: 'calculate', category: 'Finance', desc: 'Scan de reçus, catégorisation et export comptable automatique.', author: 'Thomas R.', downloads: 276, rating: 4.8 },
+  { id: 'mod-booking', name: 'Prise de RDV', emoji: 'calendar_month', category: 'Service Client', desc: 'Système de réservation en ligne avec rappels automatiques.', author: 'Freenzy Team', downloads: 421, rating: 4.9 },
+  { id: 'mod-survey', name: 'Sondages & Feedback', emoji: 'bar_chart', category: 'Marketing', desc: 'Création de sondages clients avec analyse IA des résultats.', author: 'Julie M.', downloads: 167, rating: 4.4 },
+  { id: 'mod-contracts', name: 'Gestion Contrats', emoji: 'edit_note', category: 'Juridique', desc: 'Génération, suivi et renouvellement automatique des contrats.', author: 'Freenzy Team', downloads: 203, rating: 4.7 },
+  { id: 'mod-social-auto', name: 'Auto-Post Social', emoji: 'smart_toy', category: 'Marketing', desc: 'Planification et publication automatique sur tous les réseaux.', author: 'Maxime B.', downloads: 389, rating: 4.6 },
+  { id: 'mod-chatbot', name: 'Chatbot Site Web', emoji: 'chat', category: 'Service Client', desc: 'Widget chatbot IA intégrable sur votre site en 2 minutes.', author: 'Freenzy Team', downloads: 512, rating: 4.9 },
+  { id: 'mod-reporting', name: 'Reporting Auto', emoji: 'trending_up', category: 'Management', desc: 'Rapports hebdomadaires générés par IA avec graphiques.', author: 'Nicolas P.', downloads: 234, rating: 4.5 },
 ];
 
 const CATEGORIES = ['Tous', 'Finance', 'Commercial', 'Marketing', 'RH', 'Service Client', 'Logistique', 'Juridique', 'Management'];
 
 const CUSTOM_SERVICES = [
-  { id: 'custom-module-simple', emoji: '🧩', label: 'Module simple', desc: 'Un module fonctionnel standard adapté à votre besoin', price: '50 €', delay: '48-72h' },
-  { id: 'custom-module-complex', emoji: '⚙️', label: 'Module avancé', desc: 'Module complexe avec intégrations et logique métier', price: 'Sur devis', delay: '1-2 semaines' },
-  { id: 'custom-website', emoji: '🌐', label: 'Site web sur mesure', desc: 'Site vitrine, e-commerce ou webapp — 5X plus rapide et 5X moins cher que le marché', price: 'Dès 490 €', delay: '1-3 semaines' },
-  { id: 'custom-software', emoji: '💻', label: 'Logiciel sur mesure', desc: 'Application métier, SaaS, outil interne — Nos équipes boostées à l\'IA', price: 'Sur devis', delay: '2-6 semaines' },
-  { id: 'custom-mobile', emoji: '📱', label: 'Application mobile', desc: 'iOS & Android natif ou cross-platform — Design + Développement', price: 'Sur devis', delay: '3-8 semaines' },
-  { id: 'custom-automation', emoji: '🔗', label: 'Automatisation & API', desc: 'Intégrations Zapier, API sur mesure, workflows automatisés', price: 'Dès 150 €', delay: '48h-1 semaine' },
+  { id: 'custom-module-simple', emoji: 'extension', label: 'Module simple', desc: 'Un module fonctionnel standard adapté à votre besoin', price: 'Faire une demande', delay: '48-72h' },
+  { id: 'custom-module-complex', emoji: 'settings', label: 'Module avancé', desc: 'Module complexe avec intégrations et logique métier', price: 'Faire une demande', delay: '1-2 semaines' },
+  { id: 'custom-website', emoji: 'language', label: 'Site web sur mesure', desc: 'Site vitrine, e-commerce ou webapp — 5X plus rapide et 5X moins cher que le marché', price: 'Faire une demande', delay: '1-3 semaines' },
+  { id: 'custom-software', emoji: 'terminal', label: 'Logiciel sur mesure', desc: 'Application métier, SaaS, outil interne — Nos équipes boostées à l\'IA', price: 'Faire une demande', delay: '2-6 semaines' },
+  { id: 'custom-mobile', emoji: 'phone_iphone', label: 'Application mobile', desc: 'iOS & Android natif ou cross-platform — Design + Développement', price: 'Faire une demande', delay: '3-8 semaines' },
+  { id: 'custom-automation', emoji: 'link', label: 'Automatisation & API', desc: 'Intégrations Zapier, API sur mesure, workflows automatisés', price: 'Faire une demande', delay: '48h-1 semaine' },
 ];
 
 export default function ModulesSurMesurePage() {
@@ -83,15 +83,16 @@ export default function ModulesSurMesurePage() {
         }),
       });
       if (!res.ok) {
-        const existing = JSON.parse(localStorage.getItem('fz_custom_quotes') ?? '[]');
+        let existing: unknown[] = [];
+        try { existing = JSON.parse(localStorage.getItem('fz_custom_quotes') ?? '[]'); } catch { /* */ }
         existing.push({ ...orderForm, projectType: selectedService, createdAt: new Date().toISOString(), status: 'pending' });
         localStorage.setItem('fz_custom_quotes', JSON.stringify(existing));
       }
       setSubmitted(true);
     } catch {
-      const existing = JSON.parse(localStorage.getItem('fz_custom_quotes') ?? '[]');
+      let existing: unknown[] = [];
+      try { existing = JSON.parse(localStorage.getItem('fz_custom_quotes') ?? '[]'); } catch { /* */ }
       existing.push({ ...orderForm, projectType: selectedService, createdAt: new Date().toISOString(), status: 'pending' });
-      localStorage.setItem('fz_custom_quotes', JSON.stringify(existing));
       setSubmitted(true);
     } finally {
       setSubmitting(false);
@@ -101,7 +102,7 @@ export default function ModulesSurMesurePage() {
   if (submitted) {
     return (
       <div style={{ maxWidth: 600, margin: '80px auto', textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
         <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
           Demande envoyée !
         </h2>
@@ -123,18 +124,18 @@ export default function ModulesSurMesurePage() {
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
       {/* Header */}
       <div className="page-header">
-        <h1 className="page-title">Modules sur mesure</h1>
+        <h1 className="page-title">Modules <span className="fz-logo-word">sur mesure</span></h1>
         <p className="page-subtitle">
-          Installez des modules prêts à l&apos;emploi à 1€ ou commandez du sur mesure.
-          Nos équipes boostées à l&apos;IA livrent 5X plus vite et 5X moins cher.
+          Installez des modules <span className="fz-logo-word">gratuits</span> ou commandez du sur mesure.
+          Nos équipes boostées à l&apos;<span className="fz-logo-word">IA</span> livrent 5X plus vite et 5X moins cher.
         </p>
       </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '2px solid var(--border-primary)' }}>
         {[
-          { id: 'marketplace' as const, label: '🛍️ Marketplace', count: MARKETPLACE_MODULES.length },
-          { id: 'custom' as const, label: '🛠️ Sur mesure' },
+          { id: 'marketplace' as const, label: 'Marketplace', icon: 'storefront', count: MARKETPLACE_MODULES.length },
+          { id: 'custom' as const, label: 'Sur mesure', icon: 'build' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -148,7 +149,7 @@ export default function ModulesSurMesurePage() {
               transition: 'all 0.15s',
             }}
           >
-            {tab.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{tab.icon}</span> {tab.label}
             {tab.count !== undefined && (
               <span className="badge badge-neutral" style={{ marginLeft: 8, fontSize: 10 }}>{tab.count}</span>
             )}
@@ -167,15 +168,15 @@ export default function ModulesSurMesurePage() {
             <div className="badge" style={{ padding: '6px 12px', background: 'var(--accent-muted)', color: 'var(--accent)' }}>
               {MARKETPLACE_MODULES.length} modules disponibles
             </div>
-            <div className="badge" style={{ padding: '6px 12px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
-              1€ / module
+            <div className="badge" style={{ padding: '6px 12px', background: '#16a34a15', color: '#16a34a' }}>
+              100% Gratuit
             </div>
           </div>
 
           {/* Search */}
           <input
             type="text"
-            placeholder="🔍 Rechercher un module..."
+            placeholder="Rechercher un module..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="input w-full mb-16"
@@ -211,7 +212,7 @@ export default function ModulesSurMesurePage() {
                 <div key={mod.id} className="card" style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 10, position: 'relative' }}>
                   {/* Module header */}
                   <div className="flex items-center gap-8">
-                    <span style={{ fontSize: 28 }}>{mod.emoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 28 }}>{mod.emoji}</span>
                     <div style={{ flex: 1 }}>
                       <div className="text-md font-bold">{mod.name}</div>
                       <div className="text-xs text-muted">{mod.category}</div>
@@ -220,7 +221,7 @@ export default function ModulesSurMesurePage() {
                       padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 800,
                       background: '#16a34a15', color: '#16a34a',
                     }}>
-                      {mod.price}€
+                      Gratuit
                     </div>
                   </div>
 
@@ -231,7 +232,7 @@ export default function ModulesSurMesurePage() {
                   <div className="flex items-center gap-8 text-xs text-muted">
                     <span>par {mod.author}</span>
                     <span>•</span>
-                    <span>⭐ {mod.rating}</span>
+                    <span><span className="material-symbols-rounded" style={{ fontSize: 12 }}>star</span> {mod.rating}</span>
                     <span>•</span>
                     <span>{mod.downloads} installs</span>
                   </div>
@@ -245,7 +246,7 @@ export default function ModulesSurMesurePage() {
                       ...(isInstalled ? { color: 'var(--success)', borderColor: 'var(--success)' } : {}),
                     }}
                   >
-                    {isInstalled ? '✓ Installé — Désinstaller' : '+ Installer (1€)'}
+                    {isInstalled ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Installé — Désinstaller</> : '+ Installer'}
                   </button>
                 </div>
               );
@@ -264,11 +265,11 @@ export default function ModulesSurMesurePage() {
             background: 'linear-gradient(135deg, var(--accent-muted), #8b7cf815)',
             border: '1px solid var(--accent)',
           }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>💡</div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>lightbulb</span></div>
             <div className="text-lg font-bold mb-4">Devenez créateur de modules</div>
             <p className="text-sm text-secondary" style={{ maxWidth: 500, margin: '0 auto 16px' }}>
               Vous avez une idée de module ? Créez-le et soyez crédité(e) ! Votre nom apparaît
-              sur le module et il est vendu à 1€ à toute la communauté. Module simple : 50€ de développement.
+              sur le module et il est disponible gratuitement pour toute la communauté.
             </p>
             <button
               className="btn btn-primary"
@@ -290,7 +291,7 @@ export default function ModulesSurMesurePage() {
             border: '1px solid var(--accent)',
           }}>
             <div className="flex items-center gap-8 mb-8">
-              <span style={{ fontSize: 24 }}>⚡</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>bolt</span>
               <div className="text-md font-bold" style={{ color: 'var(--accent)' }}>
                 Pourquoi nous sommes différents
               </div>
@@ -317,7 +318,7 @@ export default function ModulesSurMesurePage() {
                   transition: 'all 0.15s',
                 }}
               >
-                <div style={{ fontSize: 28, marginBottom: 8 }}>{service.emoji}</div>
+                <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{service.emoji}</span></div>
                 <div className="text-md font-bold" style={{ marginBottom: 4 }}>{service.label}</div>
                 <p className="text-sm text-secondary" style={{ lineHeight: 1.5, margin: '0 0 12px' }}>{service.desc}</p>
                 <div className="flex items-center gap-8">
@@ -359,7 +360,7 @@ export default function ModulesSurMesurePage() {
           {/* Trust section */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             <div className="card" style={{ padding: 20 }}>
-              <div className="text-md font-bold mb-8">🔒 Processus transparent</div>
+              <div className="text-md font-bold mb-8"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lock</span> Processus transparent</div>
               <ul className="text-sm text-secondary" style={{ lineHeight: 2, margin: 0, paddingLeft: 16 }}>
                 <li>Devis détaillé sous 48h</li>
                 <li>Validation humaine à chaque étape</li>
@@ -368,7 +369,7 @@ export default function ModulesSurMesurePage() {
               </ul>
             </div>
             <div className="card" style={{ padding: 20 }}>
-              <div className="text-md font-bold mb-8">⚡ Notre expertise</div>
+              <div className="text-md font-bold mb-8"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span> Notre expertise</div>
               <ul className="text-sm text-secondary" style={{ lineHeight: 2, margin: 0, paddingLeft: 16 }}>
                 <li>Équipe développeurs seniors + IA</li>
                 <li>Stack moderne (React, Next.js, Node)</li>
@@ -393,13 +394,13 @@ export default function ModulesSurMesurePage() {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                Demander un devis
+                Faire une demande
               </h2>
               <button
                 onClick={() => setShowOrderForm(false)}
                 style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-tertiary)' }}
               >
-                ✕
+                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>close</span>
               </button>
             </div>
 

@@ -368,16 +368,23 @@ export const repondeurConfigSchema = z.object({
 
 // ── Alarms (Reveil Intelligent) ──
 
+const alarmModes = z.enum(['standard', 'motivant', 'doux', 'energique', 'spirituel', 'humoristique', 'informatif', 'custom', 'dur', 'sympa', 'drole', 'fou', 'zen']);
+const deliveryMethods = z.enum(['phone_call', 'whatsapp', 'whatsapp_message', 'sms']);
+
 export const createAlarmSchema = z.object({
   label: z.string().min(1).max(200).optional(),
   hour: z.number().int().min(0).max(23),
   minute: z.number().int().min(0).max(59),
   days: z.array(z.number().int().min(0).max(6)).optional(),
   isActive: z.boolean().optional(),
-  mode: z.enum(['standard', 'motivant', 'doux', 'energique', 'spirituel', 'humoristique', 'informatif', 'custom']).optional(),
+  mode: alarmModes.optional(),
   rubrics: z.array(z.string().max(50)).max(18).optional(),
-  deliveryMethod: z.enum(['phone_call', 'whatsapp', 'sms']).optional(),
+  deliveryMethod: deliveryMethods.optional(),
   voiceId: z.string().max(100).optional(),
+  phoneNumber: z.string().max(20).optional(),
+  birthDate: z.string().max(20).optional(),
+  customAnnouncement: z.string().max(2000).optional(),
+  contentModules: z.record(z.unknown()).optional(),
   projectId: z.string().uuid().nullable().optional(),
 });
 
@@ -387,10 +394,14 @@ export const updateAlarmSchema = z.object({
   minute: z.number().int().min(0).max(59).optional(),
   days: z.array(z.number().int().min(0).max(6)).optional(),
   isActive: z.boolean().optional(),
-  mode: z.enum(['standard', 'motivant', 'doux', 'energique', 'spirituel', 'humoristique', 'informatif', 'custom']).optional(),
+  mode: alarmModes.optional(),
   rubrics: z.array(z.string().max(50)).max(18).optional(),
-  deliveryMethod: z.enum(['phone_call', 'whatsapp', 'sms']).optional(),
+  deliveryMethod: deliveryMethods.optional(),
   voiceId: z.string().max(100).optional(),
+  phoneNumber: z.string().max(20).optional(),
+  birthDate: z.string().max(20).optional(),
+  customAnnouncement: z.string().max(2000).optional(),
+  contentModules: z.record(z.unknown()).optional(),
 });
 
 // ── Personal Agents ──

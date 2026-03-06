@@ -108,7 +108,7 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Auto-topup</span>
           <span style={{ ...styles.kpiValue, fontSize: 22 }}>
-            {wallet?.autoTopupEnabled ? '✅ Actif' : '❌ Inactif'}
+            {wallet?.autoTopupEnabled ? 'Actif' : 'Inactif'}
           </span>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
       {/* Deposit & Refund Forms */}
       <div style={styles.grid2}>
         <div style={styles.card}>
-          <div style={styles.cardTitle}>💰 Deposer des credits</div>
+          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>savings</span> Deposer des credits</div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Montant (en credits)</label>
             <input
@@ -143,12 +143,12 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
             onClick={handleDeposit}
             disabled={submitting === 'deposit'}
           >
-            {submitting === 'deposit' ? 'Depot en cours...' : '💰 Deposer'}
+            {submitting === 'deposit' ? 'Depot en cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer</>}
           </button>
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>🔄 Rembourser</div>
+          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>refresh</span> Rembourser</div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Montant (en credits)</label>
             <input
@@ -175,7 +175,7 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
             onClick={handleRefund}
             disabled={submitting === 'refund'}
           >
-            {submitting === 'refund' ? 'Remboursement en cours...' : '🔄 Rembourser'}
+            {submitting === 'refund' ? 'Remboursement en cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>refresh</span> Rembourser</>}
           </button>
         </div>
       </div>
@@ -183,8 +183,8 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
       {/* Transaction History */}
       <div style={styles.card}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <div style={styles.cardTitle}>📜 Historique des transactions (20 dernieres)</div>
-          <button style={styles.btnSecondary} onClick={onRefresh}>🔄 Rafraichir</button>
+          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>receipt_long</span> Historique des transactions (20 dernieres)</div>
+          <button style={styles.btnSecondary} onClick={onRefresh}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>refresh</span> Rafraichir</button>
         </div>
         {transactions.length === 0 ? (
           <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 30, fontSize: 14 }}>

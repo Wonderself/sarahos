@@ -38,8 +38,8 @@ const MODE_COLORS: Record<string, string> = {
 };
 
 const DELIVERY_LABELS: Record<string, string> = {
-  phone_call: '\u{1F4DE} Appel',
-  whatsapp_message: '\u{1F4AC} WhatsApp',
+  phone_call: 'Appel',
+  whatsapp_message: 'WhatsApp',
 };
 
 function fmt(d: string) {

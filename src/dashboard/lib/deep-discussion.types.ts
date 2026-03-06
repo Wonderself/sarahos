@@ -6,23 +6,23 @@ export type DiscussionCategory =
   | 'artistic' | 'ethical' | 'technological' | 'psychological'
   | 'sociological' | 'historical' | 'spiritual' | 'existential';
 
-export const DISCUSSION_CATEGORIES: { id: DiscussionCategory; label: string; emoji: string }[] = [
-  { id: 'philosophical', label: 'Philosophie', emoji: '🏛️' },
-  { id: 'religious', label: 'Religion', emoji: '🕊️' },
-  { id: 'cultural', label: 'Culture', emoji: '🎭' },
-  { id: 'civilizational', label: 'Civilisation', emoji: '🌍' },
-  { id: 'personal', label: 'Personnel', emoji: '🪞' },
-  { id: 'scientific', label: 'Science', emoji: '🔬' },
-  { id: 'economic', label: 'Économie', emoji: '📈' },
-  { id: 'geopolitical', label: 'Géopolitique', emoji: '🗺️' },
-  { id: 'artistic', label: 'Art', emoji: '🎨' },
-  { id: 'ethical', label: 'Éthique', emoji: '⚖️' },
-  { id: 'technological', label: 'Technologie', emoji: '🤖' },
-  { id: 'psychological', label: 'Psychologie', emoji: '🧠' },
-  { id: 'sociological', label: 'Sociologie', emoji: '👥' },
-  { id: 'historical', label: 'Histoire', emoji: '📜' },
-  { id: 'spiritual', label: 'Spiritualité', emoji: '✨' },
-  { id: 'existential', label: 'Existentiel', emoji: '♾️' },
+export const DISCUSSION_CATEGORIES: { id: DiscussionCategory; label: string; materialIcon: string }[] = [
+  { id: 'philosophical', label: 'Philosophie', materialIcon: 'account_balance' },
+  { id: 'religious', label: 'Religion', materialIcon: 'volunteer_activism' },
+  { id: 'cultural', label: 'Culture', materialIcon: 'theater_comedy' },
+  { id: 'civilizational', label: 'Civilisation', materialIcon: 'public' },
+  { id: 'personal', label: 'Personnel', materialIcon: 'person' },
+  { id: 'scientific', label: 'Science', materialIcon: 'science' },
+  { id: 'economic', label: 'Économie', materialIcon: 'trending_up' },
+  { id: 'geopolitical', label: 'Géopolitique', materialIcon: 'map' },
+  { id: 'artistic', label: 'Art', materialIcon: 'palette' },
+  { id: 'ethical', label: 'Éthique', materialIcon: 'balance' },
+  { id: 'technological', label: 'Technologie', materialIcon: 'smart_toy' },
+  { id: 'psychological', label: 'Psychologie', materialIcon: 'psychology' },
+  { id: 'sociological', label: 'Sociologie', materialIcon: 'group' },
+  { id: 'historical', label: 'Histoire', materialIcon: 'history_edu' },
+  { id: 'spiritual', label: 'Spiritualité', materialIcon: 'auto_awesome' },
+  { id: 'existential', label: 'Existentiel', materialIcon: 'all_inclusive' },
 ];
 
 export type DiscussionStatus = 'active' | 'paused' | 'completed';
@@ -83,35 +83,35 @@ export interface DiscussionTemplate {
   category: DiscussionCategory;
   starterPrompt: string;
   description: string;
-  emoji: string;
+  materialIcon: string;
   tags?: string[];
 }
 
 // Transversal tags for template navigation
-export const DISCUSSION_TAGS: { id: string; label: string; emoji: string }[] = [
-  { id: 'debat', label: 'Débat', emoji: '⚡' },
-  { id: 'introspection', label: 'Introspection', emoji: '🪞' },
-  { id: 'societe', label: 'Société', emoji: '🏛️' },
-  { id: 'futur', label: 'Futur', emoji: '🚀' },
-  { id: 'histoire', label: 'Histoire', emoji: '📜' },
-  { id: 'morale', label: 'Morale', emoji: '⚖️' },
-  { id: 'identite', label: 'Identité', emoji: '🎭' },
-  { id: 'liberte', label: 'Liberté', emoji: '🕊️' },
-  { id: 'pouvoir', label: 'Pouvoir', emoji: '👑' },
-  { id: 'amour', label: 'Amour', emoji: '❤️' },
-  { id: 'mort', label: 'Mort', emoji: '🌅' },
-  { id: 'sens', label: 'Sens', emoji: '♾️' },
-  { id: 'justice', label: 'Justice', emoji: '🏛️' },
-  { id: 'progres', label: 'Progrès', emoji: '📈' },
-  { id: 'nature-humaine', label: 'Nature humaine', emoji: '🧬' },
-  { id: 'foi', label: 'Foi', emoji: '🙏' },
-  { id: 'conscience', label: 'Conscience', emoji: '💫' },
+export const DISCUSSION_TAGS: { id: string; label: string; materialIcon: string }[] = [
+  { id: 'debat', label: 'Débat', materialIcon: 'bolt' },
+  { id: 'introspection', label: 'Introspection', materialIcon: 'person' },
+  { id: 'societe', label: 'Société', materialIcon: 'account_balance' },
+  { id: 'futur', label: 'Futur', materialIcon: 'rocket_launch' },
+  { id: 'histoire', label: 'Histoire', materialIcon: 'history_edu' },
+  { id: 'morale', label: 'Morale', materialIcon: 'balance' },
+  { id: 'identite', label: 'Identité', materialIcon: 'theater_comedy' },
+  { id: 'liberte', label: 'Liberté', materialIcon: 'volunteer_activism' },
+  { id: 'pouvoir', label: 'Pouvoir', materialIcon: 'crown' },
+  { id: 'amour', label: 'Amour', materialIcon: 'favorite' },
+  { id: 'mort', label: 'Mort', materialIcon: 'wb_twilight' },
+  { id: 'sens', label: 'Sens', materialIcon: 'all_inclusive' },
+  { id: 'justice', label: 'Justice', materialIcon: 'account_balance' },
+  { id: 'progres', label: 'Progrès', materialIcon: 'trending_up' },
+  { id: 'nature-humaine', label: 'Nature humaine', materialIcon: 'biotech' },
+  { id: 'foi', label: 'Foi', materialIcon: 'self_improvement' },
+  { id: 'conscience', label: 'Conscience', materialIcon: 'lightbulb' },
 ];
 
 export interface TemplateSection {
   id: string;
   title: string;
-  emoji: string;
+  materialIcon: string;
   description: string;
   templates: DiscussionTemplate[];
 }
@@ -139,7 +139,7 @@ export interface ShareContent {
 export interface SharePlatform {
   id: string;
   label: string;
-  emoji: string;
+  materialIcon: string;
   color: string;
   maxLength: number;
 }

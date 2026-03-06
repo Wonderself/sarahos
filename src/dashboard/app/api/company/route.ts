@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  let body: Record<string, unknown>;
+  try { body = await req.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
   const token = body.token as string;
   if (!token) return NextResponse.json({ error: 'No token' }, { status: 401 });
 
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   const existing = profiles.get(userId) ?? {};
-  const updated = { ...existing, ...body.profile, updatedAt: new Date().toISOString() };
+  const updated = { ...existing, ...(body.profile as Record<string, unknown>), updatedAt: new Date().toISOString() };
   profiles.set(userId, updated);
 
   // Also store in backend memory if available

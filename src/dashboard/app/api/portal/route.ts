@@ -2,12 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
-const ALLOWED_EXACT_PATHS = new Set(['/portal/wallet', '/portal/usage', '/portal/dashboard', '/portal/profile', '/portal/active-agents', '/custom-creation/quotes', '/documents', '/documents/storage', '/billing/wallet/auto-topup', '/portal/preferences', '/portal/company-profile', '/portal/gamification', '/portal/activity', '/portal/sessions', '/billing/invoices', '/portal/notifications/stream', '/portal/alarms', '/portal/projects', '/notifications', '/billing/usage', '/personal/config', '/campaigns', '/financial/summary', '/financial/costs', '/billing/pricing', '/avatar/personas', '/avatar/personas/switch', '/avatar/pipeline/health', '/portal/referrals', '/portal/agents/custom', '/portal/modules']);
+const ALLOWED_EXACT_PATHS = new Set(['/portal/wallet', '/portal/usage', '/portal/dashboard', '/portal/profile', '/portal/active-agents', '/custom-creation/quotes', '/video-pro/quotes', '/documents', '/documents/storage', '/billing/wallet/auto-topup', '/portal/preferences', '/portal/company-profile', '/portal/gamification', '/portal/activity', '/portal/sessions', '/billing/invoices', '/portal/notifications/stream', '/portal/alarms', '/portal/projects', '/notifications', '/billing/usage', '/personal/config', '/campaigns', '/financial/summary', '/financial/costs', '/billing/pricing', '/avatar/personas', '/avatar/personas/switch', '/avatar/pipeline/health', '/portal/referrals', '/portal/agents/custom', '/portal/modules', '/portal/social/analyze', '/portal/social/competitor', '/portal/social/search']);
 
 const ALLOWED_PREFIXES = ['/portal/user-data/', '/billing/invoices/', '/portal/alarms/', '/portal/projects/', '/personal/', '/notifications/', '/portal/sessions/', '/documents/', '/campaigns/', '/financial/', '/avatar/telephony/', '/avatar/pipeline/', '/avatars/', '/portal/agents/custom/', '/portal/modules/'];
 
+function normalizePath(p: string): string {
+  const clean = p.split('?')[0];
+  const parts = clean.split('/').filter(Boolean);
+  const resolved: string[] = [];
+  for (const seg of parts) {
+    if (seg === '..') resolved.pop();
+    else if (seg !== '.') resolved.push(seg);
+  }
+  return '/' + resolved.join('/');
+}
+
 function isAllowedPath(path: string): boolean {
-  const cleanPath = path.split('?')[0];
+  const cleanPath = normalizePath(path);
   if (ALLOWED_EXACT_PATHS.has(cleanPath)) return true;
   return ALLOWED_PREFIXES.some(prefix => cleanPath.startsWith(prefix));
 }

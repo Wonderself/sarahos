@@ -45,7 +45,7 @@ export default function UserNotificationsTab({ userId, showToast }: {
   return (
     <div>
       <div style={styles.card}>
-        <div style={styles.cardTitle}>🔔 Envoyer une notification</div>
+        <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>notifications</span> Envoyer une notification</div>
 
         <div style={styles.grid2}>
           <div style={styles.formGroup}>
@@ -57,7 +57,7 @@ export default function UserNotificationsTab({ userId, showToast }: {
             >
               {CHANNELS.map(c => (
                 <option key={c} value={c}>
-                  {c === 'in_app' ? '📱 In-App' : c === 'email' ? '📧 Email' : c === 'sms' ? '💬 SMS' : '📲 WhatsApp'}
+                  {c === 'in_app' ? 'In-App' : c === 'email' ? 'Email' : c === 'sms' ? 'SMS' : 'WhatsApp'}
                 </option>
               ))}
             </select>
@@ -101,7 +101,7 @@ export default function UserNotificationsTab({ userId, showToast }: {
               border: `1px solid ${channel === c ? 'var(--accent)' : 'var(--border-primary)'}`,
               cursor: 'pointer',
             }} onClick={() => setChannel(c)}>
-              {c === 'in_app' ? '📱 In-App' : c === 'email' ? '📧 Email' : c === 'sms' ? '💬 SMS' : '📲 WhatsApp'}
+              {c === 'in_app' ? 'In-App' : c === 'email' ? 'Email' : c === 'sms' ? 'SMS' : 'WhatsApp'}
               {c !== 'in_app' && (
                 <span style={{ fontSize: 10, marginLeft: 4, opacity: 0.6 }}>(stub)</span>
               )}
@@ -114,7 +114,7 @@ export default function UserNotificationsTab({ userId, showToast }: {
           onClick={handleSend}
           disabled={sending}
         >
-          {sending ? 'Envoi en cours...' : '📤 Envoyer la notification'}
+          {sending ? 'Envoi en cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>outbox</span> Envoyer la notification</>}
         </button>
       </div>
 
@@ -125,7 +125,7 @@ export default function UserNotificationsTab({ userId, showToast }: {
         borderColor: 'var(--info)',
       }}>
         <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-          <strong>ℹ️ Information sur les canaux:</strong>
+          <strong><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>info</span> Information sur les canaux:</strong>
           <ul style={{ marginTop: 8, paddingLeft: 20 }}>
             <li><strong>In-App</strong> — Notification stockee en base, visible dans le dashboard client</li>
             <li><strong>Email</strong> — Stub (integration SMTP a venir)</li>

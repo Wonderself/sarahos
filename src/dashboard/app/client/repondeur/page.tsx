@@ -59,17 +59,17 @@ interface Summary {
 
 // ── Static data ──────────────────────────────────────────────────────────────
 const MODES = [
-  { value: 'professional', label: 'Professionnel', icon: '🏢', desc: 'Répondeur entreprise formel' },
-  { value: 'family_humor', label: 'Famille & Humour', icon: '😄', desc: 'Messages avec blagues' },
-  { value: 'order_taking', label: 'Prise de commande', icon: '🛒', desc: 'Capture structurée de commandes' },
-  { value: 'emergency', label: 'Urgence', icon: '🚨', desc: 'Triage + alerte immédiate' },
-  { value: 'concierge', label: 'Concierge', icon: '🎩', desc: 'Service premium style palace' },
-  { value: 'support_technique', label: 'Support tech', icon: '💻', desc: 'Diagnostic IT premier niveau' },
-  { value: 'qualification', label: 'Qualification', icon: '📊', desc: 'Qualification prospects BANT' },
-  { value: 'humoristique_debride', label: 'Humour débridé', icon: '🤪', desc: 'Blagues non-stop, délire total' },
-  { value: 'butler_british', label: 'Butler british', icon: '🎭', desc: 'Majordome flegmatique british' },
-  { value: 'coach_sportif', label: 'Coach sportif', icon: '💪', desc: 'Énergie et motivation pure' },
-  { value: 'ami_proche', label: 'Ami proche', icon: '🤝', desc: 'Ton décontracté, comme un pote' },
+  { value: 'professional', label: 'Professionnel', icon: 'business', desc: 'Répondeur entreprise formel' },
+  { value: 'family_humor', label: 'Famille & Humour', icon: 'mood', desc: 'Messages avec blagues' },
+  { value: 'order_taking', label: 'Prise de commande', icon: 'storefront', desc: 'Capture structurée de commandes' },
+  { value: 'emergency', label: 'Urgence', icon: 'emergency', desc: 'Triage + alerte immédiate' },
+  { value: 'concierge', label: 'Concierge', icon: 'diamond', desc: 'Service premium style palace' },
+  { value: 'support_technique', label: 'Support tech', icon: 'terminal', desc: 'Diagnostic IT premier niveau' },
+  { value: 'qualification', label: 'Qualification', icon: 'bar_chart', desc: 'Qualification prospects BANT' },
+  { value: 'humoristique_debride', label: 'Humour débridé', icon: 'theater_comedy', desc: 'Blagues non-stop, délire total' },
+  { value: 'butler_british', label: 'Butler british', icon: 'theater_comedy', desc: 'Majordome flegmatique british' },
+  { value: 'coach_sportif', label: 'Coach sportif', icon: 'fitness_center', desc: 'Énergie et motivation pure' },
+  { value: 'ami_proche', label: 'Ami proche', icon: 'handshake', desc: 'Ton décontracté, comme un pote' },
 ];
 
 const STYLES = [
@@ -83,33 +83,33 @@ const STYLES = [
 ];
 
 const SKILLS = [
-  { value: 'message_taking', label: 'Prise de message', always: true, icon: '📝' },
-  { value: 'faq_answering', label: 'Réponses FAQ', icon: '❓' },
-  { value: 'appointment_scheduling', label: 'Prise de RDV', icon: '📅' },
-  { value: 'order_capture', label: 'Capture commande', icon: '🛒' },
-  { value: 'complaint_handling', label: 'Gestion réclamations', icon: '⚠️' },
-  { value: 'vip_detection', label: 'Détection VIP', icon: '⭐' },
-  { value: 'spam_filtering', label: 'Filtrage spam', icon: '🛡️' },
-  { value: 'language_detection', label: 'Détection langue', icon: '🌍' },
-  { value: 'callback_scheduling', label: 'Planification rappel', icon: '📞' },
-  { value: 'sentiment_analysis', label: 'Analyse sentiment', icon: '🎭' },
+  { value: 'message_taking', label: 'Prise de message', always: true, icon: 'edit_note' },
+  { value: 'faq_answering', label: 'Réponses FAQ', icon: 'help' },
+  { value: 'appointment_scheduling', label: 'Prise de RDV', icon: 'calendar_month' },
+  { value: 'order_capture', label: 'Capture commande', icon: 'storefront' },
+  { value: 'complaint_handling', label: 'Gestion réclamations', icon: 'warning' },
+  { value: 'vip_detection', label: 'Détection VIP', icon: 'star' },
+  { value: 'spam_filtering', label: 'Filtrage spam', icon: 'shield' },
+  { value: 'language_detection', label: 'Détection langue', icon: 'language' },
+  { value: 'callback_scheduling', label: 'Planification rappel', icon: 'call' },
+  { value: 'sentiment_analysis', label: 'Analyse sentiment', icon: 'theater_comedy' },
 ];
 
 const PRESETS = [
-  { id: 'blagues', label: 'Perso blagues', emoji: '🤪', mode: 'humoristique_debride', style: 'casual_fun' },
-  { id: 'corporate', label: 'Entreprise', emoji: '🏢', mode: 'professional', style: 'formal_corporate' },
-  { id: 'vip', label: 'Concierge VIP', emoji: '🎩', mode: 'concierge', style: 'luxe_concierge' },
-  { id: 'medical', label: 'Médical', emoji: '🏥', mode: 'support_technique', style: 'medical_cabinet' },
-  { id: 'startup', label: 'Startup', emoji: '🚀', mode: 'qualification', style: 'tech_startup' },
+  { id: 'blagues', label: 'Perso blagues', emoji: 'theater_comedy', mode: 'humoristique_debride', style: 'casual_fun' },
+  { id: 'corporate', label: 'Entreprise', emoji: 'business', mode: 'professional', style: 'formal_corporate' },
+  { id: 'vip', label: 'Concierge VIP', emoji: 'diamond', mode: 'concierge', style: 'luxe_concierge' },
+  { id: 'medical', label: 'Médical', emoji: 'local_hospital', mode: 'support_technique', style: 'medical_cabinet' },
+  { id: 'startup', label: 'Startup', emoji: 'rocket_launch', mode: 'qualification', style: 'tech_startup' },
 ];
 
 const SCENARIO_TEMPLATES = [
-  { id: 'absent', label: 'En réunion', emoji: '📵', desc: 'Prend un message, rappelle plus tard', mode: 'professional' },
-  { id: 'vacances', label: 'Vacances', emoji: '🏖️', desc: 'Indisponible, urgences seulement', mode: 'emergency' },
-  { id: 'commande', label: 'Commandes', emoji: '🛒', desc: 'Capture les commandes clients', mode: 'order_taking' },
-  { id: 'urgence', label: 'Urgences', emoji: '🚨', desc: 'Filtre et alerte immédiate', mode: 'emergency' },
-  { id: 'rdv', label: 'Prise de RDV', emoji: '📅', desc: 'Propose des créneaux', mode: 'professional' },
-  { id: 'support', label: 'Support', emoji: '🔧', desc: 'Diagnostic premier niveau', mode: 'support_technique' },
+  { id: 'absent', label: 'En réunion', emoji: 'phone_disabled', desc: 'Prend un message, rappelle plus tard', mode: 'professional' },
+  { id: 'vacances', label: 'Vacances', emoji: 'beach_access', desc: 'Indisponible, urgences seulement', mode: 'emergency' },
+  { id: 'commande', label: 'Commandes', emoji: 'storefront', desc: 'Capture les commandes clients', mode: 'order_taking' },
+  { id: 'urgence', label: 'Urgences', emoji: 'emergency', desc: 'Filtre et alerte immédiate', mode: 'emergency' },
+  { id: 'rdv', label: 'Prise de RDV', emoji: 'calendar_month', desc: 'Propose des créneaux', mode: 'professional' },
+  { id: 'support', label: 'Support', emoji: 'build', desc: 'Diagnostic premier niveau', mode: 'support_technique' },
 ];
 
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
@@ -151,12 +151,12 @@ function timeAgo(iso: string): string {
 function StatCard({ icon, value, label, color = '#5b6cf7' }: { icon: string; value: number | string; label: string; color?: string }) {
   return (
     <div style={{
-      background: 'white', borderRadius: 12, padding: '16px 20px',
-      border: '1px solid #e5e7eb', flex: 1, minWidth: 100,
+      background: 'var(--bg-elevated)', borderRadius: 12, padding: '16px 20px',
+      border: '1px solid var(--border-primary)', flex: 1, minWidth: 100,
     }}>
-      <div style={{ fontSize: 22, marginBottom: 4 }}>{icon}</div>
+      <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{icon}</span></div>
       <div style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{label}</div>
+      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{label}</div>
     </div>
   );
 }
@@ -165,7 +165,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
   if (!changed && !saving) return null;
   return (
     <div style={{
-      position: 'sticky', bottom: 0, background: 'white', borderTop: '1px solid #e5e7eb',
+      position: 'sticky', bottom: 0, background: 'var(--bg-elevated)', borderTop: '1px solid var(--border-primary)',
       padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', zIndex: 10,
     }}>
       <button
@@ -227,7 +227,7 @@ export default function RepondeurPage() {
         method: 'PUT', body: JSON.stringify(updates),
       });
       setConfig(data);
-      showSuccess('Sauvegardé ✓');
+      showSuccess('Sauvegardé');
     } catch (e) {
       showError(e instanceof Error ? e.message : 'Erreur de sauvegarde');
     } finally {
@@ -249,7 +249,7 @@ export default function RepondeurPage() {
       });
       setConfig(data);
       setTab('overview');
-      showSuccess('Répondeur activé ! Bienvenue 🎉');
+      showSuccess('Répondeur activé ! Bienvenue');
     } catch (e) {
       showError(e instanceof Error ? e.message : 'Erreur de création');
     } finally {
@@ -262,7 +262,7 @@ export default function RepondeurPage() {
     return (
       <div style={{ padding: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #5b6cf7', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
-        <span style={{ fontSize: 14, color: '#6b7280' }}>Chargement du répondeur...</span>
+        <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>Chargement du répondeur...</span>
       </div>
     );
   }
@@ -288,9 +288,9 @@ export default function RepondeurPage() {
         {toast}
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>🤖</div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>Configurer votre répondeur IA</h1>
-          <p style={{ fontSize: 14, color: '#6b7280', marginTop: 8 }}>
+          <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>smart_toy</span></div>
+          <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>Configurer votre répondeur <span className="fz-logo-word">IA</span></h1>
+          <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 8 }}>
             Votre assistant répondra automatiquement à vos messages WhatsApp
           </p>
           {/* Progress */}
@@ -300,10 +300,10 @@ export default function RepondeurPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 700,
-                  background: wizardStep >= s ? '#5b6cf7' : '#f3f4f6',
-                  color: wizardStep >= s ? 'white' : '#9ca3af',
+                  background: wizardStep >= s ? '#5b6cf7' : 'var(--bg-secondary)',
+                  color: wizardStep >= s ? 'white' : 'var(--text-muted)',
                 }}>{s}</div>
-                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#5b6cf7' : '#e5e7eb' }} />}
+                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#5b6cf7' : 'var(--border-primary)' }} />}
               </div>
             ))}
           </div>
@@ -322,14 +322,14 @@ export default function RepondeurPage() {
                   onClick={() => setWizardScenario(s.id)}
                   style={{
                     padding: 16, borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    border: `2px solid ${wizardScenario === s.id ? '#5b6cf7' : '#e5e7eb'}`,
-                    background: wizardScenario === s.id ? '#eef2ff' : 'white',
+                    border: `2px solid ${wizardScenario === s.id ? '#5b6cf7' : 'var(--border-primary)'}`,
+                    background: wizardScenario === s.id ? '#eef2ff' : 'var(--bg-elevated)',
                     transition: 'all 0.15s',
                   }}
                 >
-                  <div style={{ fontSize: 24, marginBottom: 6 }}>{s.emoji}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f' }}>{s.label}</div>
-                  <div style={{ fontSize: 11, color: '#6b7280', marginTop: 2 }}>{s.desc}</div>
+                  <div style={{ marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.emoji}</span></div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{s.label}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>{s.desc}</div>
                 </button>
               ))}
             </div>
@@ -339,8 +339,8 @@ export default function RepondeurPage() {
                 disabled={!wizardScenario}
                 style={{
                   padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: wizardScenario ? '#5b6cf7' : '#e5e7eb',
-                  color: wizardScenario ? 'white' : '#9ca3af',
+                  background: wizardScenario ? '#5b6cf7' : 'var(--border-primary)',
+                  color: wizardScenario ? 'white' : 'var(--text-muted)',
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
                 }}
               >
@@ -356,11 +356,11 @@ export default function RepondeurPage() {
             <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
               2 — Numéro d'alerte patron
             </h2>
-            <p style={{ fontSize: 13, color: '#6b7280', textAlign: 'center', marginBottom: 20 }}>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', textAlign: 'center', marginBottom: 20 }}>
               Pour les messages urgents, le répondeur vous envoie immédiatement une alerte WhatsApp.
             </p>
-            <div style={{ background: '#f9fafb', borderRadius: 12, padding: 20, border: '1px solid #e5e7eb' }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 8 }}>
+            <div style={{ background: '#f9fafb', borderRadius: 12, padding: 20, border: '1px solid var(--border-primary)' }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 8 }}>
                 Votre numéro WhatsApp
               </label>
               <input
@@ -373,12 +373,12 @@ export default function RepondeurPage() {
                   fontSize: 14, outline: 'none', boxSizing: 'border-box',
                 }}
               />
-              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 6 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6 }}>
                 Optionnel — vous pouvez l'ajouter plus tard dans Paramètres
               </div>
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 24 }}>
-              <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontSize: 13 }}>
+              <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
               <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: '#5b6cf7', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
@@ -394,29 +394,29 @@ export default function RepondeurPage() {
             <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>
               3 — Prêt à démarrer !
             </h2>
-            <div style={{ background: '#f9fafb', borderRadius: 12, padding: 20, border: '1px solid #e5e7eb', marginBottom: 20 }}>
+            <div style={{ background: '#f9fafb', borderRadius: 12, padding: 20, border: '1px solid var(--border-primary)', marginBottom: 20 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <span style={{ fontSize: 20 }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.emoji}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.emoji}</span>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700 }}>Scénario</div>
-                    <div style={{ fontSize: 13, color: '#6b7280' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <span style={{ fontSize: 20 }}>📞</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>call</span>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700 }}>Numéro d'alerte</div>
-                    <div style={{ fontSize: 13, color: '#6b7280' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
                   </div>
                 </div>
               </div>
             </div>
             <div style={{ background: '#eef2ff', borderRadius: 10, padding: 14, fontSize: 12, color: '#4338ca', marginBottom: 20 }}>
-              💡 Après activation, vous pouvez tout personnaliser : modes, styles, FAQ, VIP, planning...
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Après activation, vous pouvez tout personnaliser : modes, styles, FAQ, VIP, planning...
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button onClick={() => setWizardStep(2)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontSize: 13 }}>
+              <button onClick={() => setWizardStep(2)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
               <button
@@ -428,7 +428,7 @@ export default function RepondeurPage() {
                   fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
                 }}
               >
-                {saving ? 'Activation...' : '🚀 Activer le répondeur'}
+                {saving ? 'Activation...' : 'Activer le répondeur'}
               </button>
             </div>
           </div>
@@ -441,11 +441,11 @@ export default function RepondeurPage() {
   // MAIN VIEW (config exists)
   // ══════════════════════════════════════════════════════════════════════════
   const TABS = [
-    { id: 'overview', label: 'Vue d\'ensemble', icon: '📊' },
-    { id: 'config', label: 'Configuration', icon: '⚙️' },
-    { id: 'contacts', label: 'Contacts & FAQ', icon: '👥' },
-    { id: 'inbox', label: 'Boîte de réception', icon: '📥' },
-    { id: 'settings', label: 'Paramètres', icon: '🔧' },
+    { id: 'overview', label: 'Vue d\'ensemble', icon: 'bar_chart' },
+    { id: 'config', label: 'Configuration', icon: 'settings' },
+    { id: 'contacts', label: 'Contacts & FAQ', icon: 'group' },
+    { id: 'inbox', label: 'Boîte de réception', icon: 'inbox' },
+    { id: 'settings', label: 'Paramètres', icon: 'build' },
   ] as const;
 
   return (
@@ -453,13 +453,13 @@ export default function RepondeurPage() {
       {toast}
 
       {/* Page header */}
-      <div style={{ padding: '16px 20px 0', background: 'white', borderBottom: '1px solid #e5e7eb' }}>
+      <div style={{ padding: '16px 20px 0', background: 'var(--bg-elevated)', borderBottom: '1px solid var(--border-primary)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
-          <span style={{ fontSize: 28 }}>🤖</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 28 }}>smart_toy</span>
           <div>
-            <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>Répondeur IA</h1>
-            <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>
-              Votre assistant répond automatiquement à vos messages
+            <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>Répondeur <span className="fz-logo-word">IA</span></h1>
+            <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>
+              Votre assistant répond <span className="fz-logo-word">automatiquement</span> à vos messages
             </p>
           </div>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -488,13 +488,13 @@ export default function RepondeurPage() {
               onClick={() => setTab(t.id)}
               style={{
                 padding: '8px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
-                background: tab === t.id ? 'white' : 'transparent',
-                color: tab === t.id ? '#5b6cf7' : '#6b7280',
+                background: tab === t.id ? 'var(--bg-elevated)' : 'transparent',
+                color: tab === t.id ? '#5b6cf7' : 'var(--text-secondary)',
                 borderRadius: '8px 8px 0 0',
                 borderBottom: tab === t.id ? '2px solid #5b6cf7' : '2px solid transparent',
               }}
             >
-              {t.icon} {t.label}
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{t.icon}</span> {t.label}
             </button>
           ))}
         </div>
@@ -564,43 +564,43 @@ function OverviewTab({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 800 }}>
       {/* Stat cards */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <StatCard icon="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#5b6cf7" />
-        <StatCard icon="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#f59e0b" />
-        <StatCard icon="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#ef4444" />
-        <StatCard icon="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#10b981" />
+        <StatCard icon="chat" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#5b6cf7" />
+        <StatCard icon="storefront" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#f59e0b" />
+        <StatCard icon="emergency" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#ef4444" />
+        <StatCard icon="star" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#10b981" />
       </div>
 
       {/* Current mode */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <span style={{ fontSize: 13, fontWeight: 700 }}>Mode actif</span>
           <button
-            style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer' }}
+            style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)', cursor: 'pointer' }}
             onClick={() => { /* switch to config tab is done externally */ }}
           >
             Changer
           </button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{mode?.icon ?? '🤖'}</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 28 }}>{mode?.icon ?? 'smart_toy'}</span>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700 }}>{mode?.label ?? config.activeMode}</div>
-            <div style={{ fontSize: 12, color: '#6b7280' }}>{mode?.desc ?? ''}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{mode?.desc ?? ''}</div>
           </div>
         </div>
         {config.greetingMessage && (
-          <div style={{ marginTop: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 8, fontSize: 12, color: '#374151', borderLeft: '3px solid #5b6cf7' }}>
+          <div style={{ marginTop: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 8, fontSize: 12, color: 'var(--text-secondary)', borderLeft: '3px solid #5b6cf7' }}>
             "{config.greetingMessage}"
           </div>
         )}
       </div>
 
       {/* Test zone */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>🧪 Tester le répondeur</div>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>science</span> Tester le répondeur</div>
         {testSent ? (
           <div style={{ padding: '10px 14px', background: '#f0fdf4', borderRadius: 8, fontSize: 13, color: '#16a34a', fontWeight: 600 }}>
-            ✓ Message envoyé ! Le répondeur va traiter et répondre.
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Message envoyé ! Le répondeur va traiter et répondre.
           </div>
         ) : (
           <div style={{ display: 'flex', gap: 8 }}>
@@ -610,15 +610,15 @@ function OverviewTab({
               onChange={e => setTestMessage(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && sendTest()}
               placeholder="Ex: Bonjour, je voudrais un devis..."
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none' }}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none' }}
             />
             <button
               onClick={sendTest}
               disabled={!testMessage.trim()}
               style={{
                 padding: '8px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600,
-                background: testMessage.trim() ? '#5b6cf7' : '#e5e7eb',
-                color: testMessage.trim() ? 'white' : '#9ca3af',
+                background: testMessage.trim() ? '#5b6cf7' : 'var(--border-primary)',
+                color: testMessage.trim() ? 'white' : 'var(--text-muted)',
                 cursor: testMessage.trim() ? 'pointer' : 'not-allowed',
               }}
             >
@@ -630,13 +630,13 @@ function OverviewTab({
 
       {/* Recent messages */}
       {recentMessages.length > 0 && (
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📬 Activité récente</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>inbox</span> Activité récente</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {recentMessages.map(m => (
               <div key={m.id} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0',
-                borderBottom: '1px solid #f3f4f6',
+                borderBottom: '1px solid var(--bg-secondary)',
               }}>
                 <span style={{
                   fontSize: 10, padding: '2px 7px', borderRadius: 10, fontWeight: 600, flexShrink: 0, marginTop: 1,
@@ -646,11 +646,11 @@ function OverviewTab({
                   {m.classification}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, color: '#374151', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {m.content}
                   </div>
                 </div>
-                <span style={{ fontSize: 10, color: '#9ca3af', flexShrink: 0 }}>{timeAgo(m.createdAt)}</span>
+                <span style={{ fontSize: 10, color: 'var(--text-muted)', flexShrink: 0 }}>{timeAgo(m.createdAt)}</span>
               </div>
             ))}
           </div>
@@ -698,29 +698,29 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
     <div style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Presets */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>⚡ Presets rapides</div>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span> Presets rapides</div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {PRESETS.map(p => (
             <button
               key={p.id}
               onClick={() => applyPreset(p)}
               style={{
-                padding: '6px 14px', borderRadius: 20, border: '1px solid #e5e7eb',
-                background: mode === p.mode ? '#eef2ff' : 'white',
-                color: mode === p.mode ? '#5b6cf7' : '#374151',
+                padding: '6px 14px', borderRadius: 20, border: '1px solid var(--border-primary)',
+                background: mode === p.mode ? '#eef2ff' : 'var(--bg-elevated)',
+                color: mode === p.mode ? '#5b6cf7' : 'var(--text-secondary)',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}
             >
-              {p.emoji} {p.label}
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{p.emoji}</span> {p.label}
             </button>
           ))}
         </div>
       </div>
 
       {/* Mode selector */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🎭 Mode de réponse</div>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>theater_comedy</span> Mode de réponse</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
           {MODES.map(m => (
             <button
@@ -728,13 +728,13 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onClick={() => { setMode(m.value); markChanged(); }}
               style={{
                 padding: '12px 10px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
-                border: `2px solid ${mode === m.value ? '#5b6cf7' : '#e5e7eb'}`,
-                background: mode === m.value ? '#eef2ff' : '#fafafa',
+                border: `2px solid ${mode === m.value ? '#5b6cf7' : 'var(--border-primary)'}`,
+                background: mode === m.value ? '#eef2ff' : 'var(--bg-secondary)',
               }}
             >
-              <div style={{ fontSize: 20, marginBottom: 4 }}>{m.icon}</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#1d1d1f' }}>{m.label}</div>
-              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 2, lineHeight: 1.3 }}>{m.desc}</div>
+              <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{m.icon}</span></div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-primary)' }}>{m.label}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, lineHeight: 1.3 }}>{m.desc}</div>
             </button>
           ))}
         </div>
@@ -743,8 +743,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       {/* Style + Skills */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         {/* Style */}
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🎨 Style de réponse</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>palette</span> Style de réponse</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {STYLES.map(s => (
               <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? '#eef2ff' : 'transparent' }}>
@@ -756,8 +756,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
         </div>
 
         {/* Skills */}
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🛠️ Compétences actives</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>build</span> Compétences actives</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {SKILLS.map(s => {
               const active = s.always || skills.includes(s.value);
@@ -768,18 +768,18 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
                   style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', borderRadius: 6,
                     border: 'none', cursor: s.always ? 'default' : 'pointer', textAlign: 'left', width: '100%',
-                    background: active ? '#f0fdf4' : '#fafafa',
+                    background: active ? '#f0fdf4' : 'var(--bg-secondary)',
                   }}
                 >
                   <div style={{
                     width: 16, height: 16, borderRadius: 4, flexShrink: 0,
-                    background: active ? '#10b981' : '#e5e7eb',
+                    background: active ? '#10b981' : 'var(--border-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    {active && <span style={{ color: 'white', fontSize: 9, fontWeight: 700 }}>✓</span>}
+                    {active && <span className="material-symbols-rounded" style={{ color: 'white', fontSize: 9, fontWeight: 700 }}>check</span>}
                   </div>
-                  <span style={{ fontSize: 10 }}>{s.icon}</span>
-                  <span style={{ fontSize: 11, fontWeight: active ? 600 : 400, color: active ? '#059669' : '#6b7280' }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 10 }}>{s.icon}</span>
+                  <span style={{ fontSize: 11, fontWeight: active ? 600 : 400, color: active ? '#059669' : 'var(--text-secondary)' }}>
                     {s.label}{s.always ? ' (toujours)' : ''}
                   </span>
                 </button>
@@ -790,11 +790,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       </div>
 
       {/* Messages */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>💬 Messages</div>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat</span> Messages</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
               Message d'accueil
             </label>
             <textarea
@@ -802,11 +802,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onChange={e => { setGreeting(e.target.value); markChanged(); }}
               placeholder="Bonjour, je suis le répondeur de [nom]..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
             />
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
               Message d'absence
             </label>
             <textarea
@@ -814,24 +814,24 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onChange={e => { setAbsence(e.target.value); markChanged(); }}
               placeholder="Je suis actuellement indisponible..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
             />
           </div>
         </div>
         <div style={{ marginTop: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
-            📞 Numéro patron (alertes urgences)
+          <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>call</span> Numéro patron (alertes urgences)
           </label>
           <input
             type="tel"
             value={phone}
             onChange={e => { setPhone(e.target.value); markChanged(); }}
             placeholder="+33 6 12 34 56 78"
-            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
           />
         </div>
         <div style={{ marginTop: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+          <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
             Instructions personnalisées
           </label>
           <textarea
@@ -839,7 +839,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
             onChange={e => { setInstructions(e.target.value); markChanged(); }}
             placeholder="Toujours mentionner notre délai de livraison de 48h..."
             rows={2}
-            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
           />
         </div>
       </div>
@@ -908,21 +908,21 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
   return (
     <div style={{ maxWidth: 760 }}>
       {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: '#f3f4f6', borderRadius: 10, padding: 4, width: 'fit-content' }}>
-        {([['faq', '❓ FAQ', config.faqEntries.length], ['vip', '⭐ VIP', config.vipContacts.length], ['blocked', '🚫 Bloqués', config.blockedContacts.length]] as const).map(([id, label, count]) => (
+      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--bg-secondary)', borderRadius: 10, padding: 4, width: 'fit-content' }}>
+        {([['faq', 'help', 'FAQ', config.faqEntries.length], ['vip', 'star', 'VIP', config.vipContacts.length], ['blocked', 'block', 'Bloqués', config.blockedContacts.length]] as [string, string, string, number][]).map(([id, tabIcon, label, count]) => (
           <button
             key={id}
-            onClick={() => setSubTab(id)}
+            onClick={() => setSubTab(id as 'vip' | 'faq' | 'blocked')}
             style={{
               padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              background: subTab === id ? 'white' : 'transparent',
-              color: subTab === id ? '#5b6cf7' : '#6b7280',
+              background: subTab === id ? 'var(--bg-elevated)' : 'transparent',
+              color: subTab === id ? '#5b6cf7' : 'var(--text-secondary)',
               boxShadow: subTab === id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
           >
-            {label}
-            <span style={{ background: '#e5e7eb', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{tabIcon}</span> {label}
+            <span style={{ background: 'var(--border-primary)', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
       </div>
@@ -931,27 +931,27 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {subTab === 'faq' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Add form */}
-          <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: '#374151' }}>➕ Ajouter une entrée FAQ</div>
+          <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: 'var(--text-secondary)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>add_circle</span> Ajouter une entrée FAQ</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none' }} />
+              <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none' }} />
               <div style={{ display: 'flex', gap: 8 }}>
-                <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
-                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#5b6cf7' : '#e5e7eb', color: newQ && newA ? 'white' : '#9ca3af', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
+                <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
+                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#5b6cf7' : 'var(--border-primary)', color: newQ && newA ? 'white' : 'var(--text-muted)', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
               </div>
             </div>
           </div>
           {/* List */}
           {config.faqEntries.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: '#9ca3af', fontSize: 13 }}>Aucune entrée FAQ</div>
+            <div style={{ textAlign: 'center', padding: 32, color: 'var(--text-muted)', fontSize: 13 }}>Aucune entrée FAQ</div>
           ) : (
             config.faqEntries.map(f => (
-              <div key={f.id} style={{ background: 'white', borderRadius: 10, padding: '12px 14px', border: '1px solid #e5e7eb', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div key={f.id} style={{ background: 'var(--bg-elevated)', borderRadius: 10, padding: '12px 14px', border: '1px solid var(--border-primary)', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f' }}>❓ {f.question}</div>
-                  <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{f.answer}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}><span className="material-symbols-rounded" style={{ fontSize: 13 }}>help</span> {f.question}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{f.answer}</div>
                 </div>
-                <button onClick={() => deleteFaq(f.id)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'white', cursor: 'pointer', flexShrink: 0 }}>Suppr.</button>
+                <button onClick={() => deleteFaq(f.id)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'var(--bg-elevated)', cursor: 'pointer', flexShrink: 0 }}>Suppr.</button>
               </div>
             ))
           )}
@@ -961,26 +961,26 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {/* VIP */}
       {subTab === 'vip' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>➕ Ajouter un contact VIP</div>
+          <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>add_circle</span> Ajouter un contact VIP</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none', width: 140 }} />
-              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none', minWidth: 100 }} />
-              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none', minWidth: 120 }} />
-              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#f59e0b' : '#e5e7eb', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Ajouter</button>
+              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none', width: 140 }} />
+              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none', minWidth: 100 }} />
+              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none', minWidth: 120 }} />
+              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#f59e0b' : 'var(--border-primary)', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Ajouter</button>
             </div>
           </div>
           {config.vipContacts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: '#9ca3af', fontSize: 13 }}>Aucun contact VIP</div>
+            <div style={{ textAlign: 'center', padding: 32, color: 'var(--text-muted)', fontSize: 13 }}>Aucun contact VIP</div>
           ) : (
             config.vipContacts.map((v, i) => (
-              <div key={i} style={{ background: 'white', borderRadius: 10, padding: '10px 14px', border: '1px solid #fef3c7', display: 'flex', gap: 10, alignItems: 'center' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⭐</div>
+              <div key={i} style={{ background: 'var(--bg-elevated)', borderRadius: 10, padding: '10px 14px', border: '1px solid #fef3c7', display: 'flex', gap: 10, alignItems: 'center' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>star</span></div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700 }}>{v.name}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{v.phone}{v.relationship ? ` · ${v.relationship}` : ''}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{v.phone}{v.relationship ? ` · ${v.relationship}` : ''}</div>
                 </div>
-                <button onClick={() => removeVip(v.phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'white', cursor: 'pointer' }}>Retirer</button>
+                <button onClick={() => removeVip(v.phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'var(--bg-elevated)', cursor: 'pointer' }}>Retirer</button>
               </div>
             ))
           )}
@@ -990,21 +990,21 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {/* Blocked */}
       {subTab === 'blocked' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>🚫 Bloquer un numéro</div>
+          <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>block</span> Bloquer un numéro</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <input type="tel" value={newBlocked} onChange={e => setNewBlocked(e.target.value)} placeholder="+33 6 00 00 00 00" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addBlocked()} />
-              <button onClick={addBlocked} disabled={!newBlocked} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newBlocked ? '#ef4444' : '#e5e7eb', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Bloquer</button>
+              <input type="tel" value={newBlocked} onChange={e => setNewBlocked(e.target.value)} placeholder="+33 6 00 00 00 00" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addBlocked()} />
+              <button onClick={addBlocked} disabled={!newBlocked} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newBlocked ? '#ef4444' : 'var(--border-primary)', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Bloquer</button>
             </div>
           </div>
           {config.blockedContacts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: '#9ca3af', fontSize: 13 }}>Aucun numéro bloqué</div>
+            <div style={{ textAlign: 'center', padding: 32, color: 'var(--text-muted)', fontSize: 13 }}>Aucun numéro bloqué</div>
           ) : (
-            <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, border: '1px solid var(--border-primary)', overflow: 'hidden' }}>
               {config.blockedContacts.map((phone, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: i < config.blockedContacts.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
-                  <span style={{ fontSize: 12, flex: 1 }}>🚫 {phone}</span>
-                  <button onClick={() => removeBlocked(phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #e5e7eb', color: '#6b7280', background: 'white', cursor: 'pointer' }}>Débloquer</button>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: i < config.blockedContacts.length - 1 ? '1px solid var(--bg-secondary)' : 'none' }}>
+                  <span style={{ fontSize: 12, flex: 1 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>block</span> {phone}</span>
+                  <button onClick={() => removeBlocked(phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid var(--border-primary)', color: 'var(--text-secondary)', background: 'var(--bg-elevated)', cursor: 'pointer' }}>Débloquer</button>
                 </div>
               ))}
             </div>
@@ -1074,9 +1074,9 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
     <div style={{ maxWidth: 800 }}>
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
-        {([['messages', '💬 Messages', messages.length], ['orders', '🛒 Commandes', orders.length], ['summaries', '📋 Résumés', summaries.length]] as const).map(([id, label, count]) => (
-          <button key={id} onClick={() => setInboxTab(id)} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#5b6cf7' : '#e5e7eb'}`, background: inboxTab === id ? '#eef2ff' : 'white', color: inboxTab === id ? '#5b6cf7' : '#6b7280', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
-            {label} <span style={{ background: '#e5e7eb', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
+        {([['messages', 'chat', 'Messages', messages.length], ['orders', 'storefront', 'Commandes', orders.length], ['summaries', 'assignment', 'Résumés', summaries.length]] as [string, string, string, number][]).map(([id, icon, label, count]) => (
+          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#5b6cf7' : 'var(--border-primary)'}`, background: inboxTab === id ? '#eef2ff' : 'var(--bg-elevated)', color: inboxTab === id ? '#5b6cf7' : 'var(--text-secondary)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{icon}</span> {label} <span style={{ background: 'var(--border-primary)', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
       </div>
@@ -1086,26 +1086,26 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Filter chips */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#5b6cf7' : '#e5e7eb'}`, background: msgFilter === 'all' ? '#eef2ff' : 'white', color: msgFilter === 'all' ? '#5b6cf7' : '#6b7280', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#5b6cf7' : 'var(--border-primary)'}`, background: msgFilter === 'all' ? '#eef2ff' : 'var(--bg-elevated)', color: msgFilter === 'all' ? '#5b6cf7' : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
               Tous ({messages.length})
             </button>
             {Object.entries(classifCounts).map(([c, n]) => (
-              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#5b6cf7' : '#e5e7eb'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#5b6cf7'}12` : 'white', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#5b6cf7') : '#6b7280', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#5b6cf7' : 'var(--border-primary)'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#5b6cf7'}12` : 'var(--bg-elevated)', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#5b6cf7') : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                 {c} ({n})
               </button>
             ))}
           </div>
           {filteredMessages.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Aucun message</div>
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 13 }}>Aucun message</div>
           ) : (
             filteredMessages.map(m => (
-              <div key={m.id} style={{ background: 'white', borderRadius: 10, padding: '12px 14px', border: '1px solid #e5e7eb', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <div key={m.id} style={{ background: 'var(--bg-elevated)', borderRadius: 10, padding: '12px 14px', border: '1px solid var(--border-primary)', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <span style={{ padding: '3px 8px', borderRadius: 10, fontSize: 10, fontWeight: 700, flexShrink: 0, background: `${CLASSIF_COLORS[m.classification] ?? '#64748b'}18`, color: CLASSIF_COLORS[m.classification] ?? '#64748b' }}>
                   {m.classification}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, color: '#374151', marginBottom: 2 }}>{m.content}</div>
-                  <div style={{ fontSize: 10, color: '#9ca3af' }}>{m.direction === 'inbound' ? '← Reçu' : '→ Envoyé'} · {timeAgo(m.createdAt)}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}>{m.content}</div>
+                  <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{m.direction === 'inbound' ? '← Reçu' : '→ Envoyé'} · {timeAgo(m.createdAt)}</div>
                 </div>
               </div>
             ))
@@ -1117,21 +1117,21 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'orders' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {orders.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Aucune commande</div>
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 13 }}>Aucune commande</div>
           ) : (
             orders.map(o => (
-              <div key={o.id} style={{ background: 'white', borderRadius: 10, padding: '12px 14px', border: '1px solid #e5e7eb', display: 'flex', gap: 12, alignItems: 'center' }}>
+              <div key={o.id} style={{ background: 'var(--bg-elevated)', borderRadius: 10, padding: '12px 14px', border: '1px solid var(--border-primary)', display: 'flex', gap: 12, alignItems: 'center' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700 }}>{o.items}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{o.total} · {timeAgo(o.createdAt)}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{o.total} · {timeAgo(o.createdAt)}</div>
                 </div>
-                <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 8, background: o.status === 'pending' ? '#fef3c7' : o.status === 'confirmed' ? '#d1fae5' : '#f3f4f6', color: o.status === 'pending' ? '#92400e' : o.status === 'confirmed' ? '#065f46' : '#6b7280', fontWeight: 600 }}>
+                <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 8, background: o.status === 'pending' ? '#fef3c7' : o.status === 'confirmed' ? '#d1fae5' : 'var(--bg-secondary)', color: o.status === 'pending' ? '#92400e' : o.status === 'confirmed' ? '#065f46' : 'var(--text-secondary)', fontWeight: 600 }}>
                   {o.status}
                 </span>
                 {o.status === 'pending' && (
                   <div style={{ display: 'flex', gap: 4 }}>
                     <button onClick={() => updateOrder(o.id, 'confirmed')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: 'none', background: '#10b981', color: 'white', cursor: 'pointer', fontWeight: 600 }}>Confirmer</button>
-                    <button onClick={() => updateOrder(o.id, 'cancelled')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'white', cursor: 'pointer' }}>Annuler</button>
+                    <button onClick={() => updateOrder(o.id, 'cancelled')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'var(--bg-elevated)', cursor: 'pointer' }}>Annuler</button>
                   </div>
                 )}
               </div>
@@ -1145,19 +1145,19 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#5b6cf7', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-              {generatingSummary ? '⏳ Génération...' : '📋 Générer un résumé maintenant'}
+              {generatingSummary ? 'Génération...' : 'Générer un résumé maintenant'}
             </button>
           </div>
           {summaries.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af', fontSize: 13 }}>Aucun résumé généré</div>
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)', fontSize: 13 }}>Aucun résumé généré</div>
           ) : (
             summaries.map(s => (
-              <div key={s.id} style={{ background: 'white', borderRadius: 10, padding: '12px 14px', border: '1px solid #e5e7eb' }}>
+              <div key={s.id} style={{ background: 'var(--bg-elevated)', borderRadius: 10, padding: '12px 14px', border: '1px solid var(--border-primary)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: '#5b6cf7', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
-                  <span style={{ fontSize: 10, color: '#9ca3af' }}>{timeAgo(s.createdAt)}</span>
+                  <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{timeAgo(s.createdAt)}</span>
                 </div>
-                <pre style={{ fontSize: 11, color: '#374151', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
+                <pre style={{ fontSize: 11, color: 'var(--text-secondary)', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
               </div>
             ))
           )}
@@ -1216,21 +1216,21 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
     <div style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Planning */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <div style={{ fontSize: 13, fontWeight: 700 }}>📅 Planning de disponibilité</div>
+          <div style={{ fontSize: 13, fontWeight: 700 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>calendar_month</span> Planning de disponibilité</div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-            <span style={{ fontSize: 12, color: '#6b7280' }}>Toujours actif</span>
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Toujours actif</span>
             <div
               onClick={() => { setAlwaysOn(!alwaysOn); mark(); }}
               style={{
                 width: 36, height: 20, borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s',
-                background: alwaysOn ? '#5b6cf7' : '#e5e7eb', position: 'relative',
+                background: alwaysOn ? '#5b6cf7' : 'var(--border-primary)', position: 'relative',
               }}
             >
               <div style={{
                 position: 'absolute', top: 2, left: alwaysOn ? 18 : 2,
-                width: 16, height: 16, borderRadius: '50%', background: 'white', transition: 'all 0.2s',
+                width: 16, height: 16, borderRadius: '50%', background: 'var(--bg-elevated)', transition: 'all 0.2s',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
               }} />
             </div>
@@ -1244,15 +1244,15 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
                 const active = rule?.isActive ?? false;
                 return (
                   <button key={i} onClick={() => toggleDay(i + 1)} style={{
-                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#5b6cf7' : '#e5e7eb'}`,
-                    background: active ? '#eef2ff' : 'white', color: active ? '#5b6cf7' : '#9ca3af',
+                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#5b6cf7' : 'var(--border-primary)'}`,
+                    background: active ? '#eef2ff' : 'var(--bg-elevated)', color: active ? '#5b6cf7' : 'var(--text-muted)',
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                   }}>{day}</button>
                 );
               })}
             </div>
             {schedule.filter(r => r.isActive).length > 0 && (
-              <div style={{ fontSize: 11, color: '#6b7280' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
                 Horaires : {schedule.filter(r => r.isActive).map(r => `${DAYS[r.dayOfWeek - 1] ?? ''} ${r.startTime}–${r.endTime}`).join(', ')}
               </div>
             )}
@@ -1262,12 +1262,12 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
 
       {/* Résumés + Langue */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📋 Résumés</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>assignment</span> Résumés</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Fréquence</label>
-              <select value={summaryFreq} onChange={e => { setSummaryFreq(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #e5e7eb', fontSize: 12, outline: 'none', background: 'white' }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Fréquence</label>
+              <select value={summaryFreq} onChange={e => { setSummaryFreq(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid var(--border-primary)', fontSize: 12, outline: 'none', background: 'var(--bg-elevated)' }}>
                 <option value="realtime">Temps réel (urgences)</option>
                 <option value="hourly">Toutes les heures</option>
                 <option value="daily">Quotidien (20h)</option>
@@ -1275,8 +1275,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Canal de livraison</label>
-              <select value={summaryChannel} onChange={e => { setSummaryChannel(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #e5e7eb', fontSize: 12, outline: 'none', background: 'white' }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Canal de livraison</label>
+              <select value={summaryChannel} onChange={e => { setSummaryChannel(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid var(--border-primary)', fontSize: 12, outline: 'none', background: 'var(--bg-elevated)' }}>
                 <option value="whatsapp">WhatsApp</option>
                 <option value="sms">SMS</option>
                 <option value="email">Email</option>
@@ -1286,12 +1286,12 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           </div>
         </div>
 
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🌍 Langue & Format</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>language</span> Langue & Format</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Langue</label>
-              <select value={language} onChange={e => { setLanguage(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #e5e7eb', fontSize: 12, outline: 'none', background: 'white' }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Langue</label>
+              <select value={language} onChange={e => { setLanguage(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid var(--border-primary)', fontSize: 12, outline: 'none', background: 'var(--bg-elevated)' }}>
                 <option value="auto">Auto-détection</option>
                 <option value="fr">Français</option>
                 <option value="en">English</option>
@@ -1300,7 +1300,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#5b6cf7' }} />
                 <span style={{ fontSize: 11, fontWeight: 600, color: '#5b6cf7', minWidth: 50 }}>{maxLen} car.</span>
@@ -1311,36 +1311,36 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       </div>
 
       {/* Téléphonie */}
-      <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📞 Intégration téléphonie</div>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>call</span> Intégration téléphonie</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
           {[
             { id: 'A', label: 'Numéro IA perso', price: '~1-2€/mois', desc: 'Numéro dédié, renvoi conditionnel depuis votre tel', badge: 'Recommandé' },
             { id: 'B', label: 'Numéro IA dédié', price: 'Dès 5€/mois', desc: 'Numéro professionnel séparé pour votre business' },
             { id: 'C', label: 'SIP Trunking', price: 'Sur devis', desc: 'Intégration IPBX pour grandes entreprises' },
           ].map(opt => (
-            <div key={opt.id} style={{ padding: 14, borderRadius: 10, border: '1px solid #e5e7eb', background: '#f9fafb' }}>
+            <div key={opt.id} style={{ padding: 14, borderRadius: 10, border: '1px solid var(--border-primary)', background: '#f9fafb' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 700 }}>Option {opt.id}</span>
                 {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#eef2ff', color: '#5b6cf7', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
               </div>
               <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{opt.label}</div>
               <div style={{ fontSize: 11, color: '#5b6cf7', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
-              <div style={{ fontSize: 10, color: '#9ca3af' }}>{opt.desc}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{opt.desc}</div>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 10, fontSize: 11, color: '#6b7280' }}>
+        <div style={{ marginTop: 10, fontSize: 11, color: 'var(--text-secondary)' }}>
           Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#5b6cf7' }}>support@freenzy.io</a>
         </div>
       </div>
 
       {/* GDPR + Webhooks */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔒 RGPD</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>lock</span> RGPD</div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: 4 }}>Rétention des données</label>
+            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Rétention des données</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#5b6cf7' }} />
               <span style={{ fontSize: 11, fontWeight: 600, color: '#5b6cf7', minWidth: 55 }}>{retention} jours</span>
@@ -1349,22 +1349,22 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
             <button
               onClick={() => fetchAPI('/repondeur/gdpr/export', { method: 'POST', body: '{}' }).then(() => alert('Export en cours...')).catch(() => {})}
-              style={{ flex: 1, padding: '7px 0', borderRadius: 7, border: '1px solid #e5e7eb', background: 'white', fontSize: 11, cursor: 'pointer', fontWeight: 600 }}
+              style={{ flex: 1, padding: '7px 0', borderRadius: 7, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)', fontSize: 11, cursor: 'pointer', fontWeight: 600 }}
             >
-              📤 Exporter
+              <span className="material-symbols-rounded" style={{ fontSize: 12, verticalAlign: 'middle' }}>upload</span> Exporter
             </button>
           </div>
         </div>
 
-        <div style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid #e5e7eb' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔗 Webhook</div>
-          <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 8 }}>URL de notification des événements</div>
+        <div style={{ background: 'var(--bg-elevated)', borderRadius: 12, padding: 16, border: '1px solid var(--border-primary)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>link</span> Webhook</div>
+          <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 8 }}>URL de notification des événements</div>
           <div style={{ display: 'flex', gap: 6 }}>
-            <div style={{ flex: 1, padding: '7px 10px', borderRadius: 7, border: '1px solid #e5e7eb', fontSize: 10, color: '#374151', background: '#f9fafb', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ flex: 1, padding: '7px 10px', borderRadius: 7, border: '1px solid var(--border-primary)', fontSize: 10, color: 'var(--text-secondary)', background: '#f9fafb', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {webhookUrl}
             </div>
-            <button onClick={copyWebhook} style={{ padding: '7px 12px', borderRadius: 7, border: '1px solid #e5e7eb', background: webhookCopied ? '#f0fdf4' : 'white', color: webhookCopied ? '#16a34a' : '#374151', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
-              {webhookCopied ? '✓' : 'Copier'}
+            <button onClick={copyWebhook} style={{ padding: '7px 12px', borderRadius: 7, border: '1px solid var(--border-primary)', background: webhookCopied ? '#f0fdf4' : 'var(--bg-elevated)', color: webhookCopied ? '#16a34a' : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
+              {webhookCopied ? <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check</span> : 'Copier'}
             </button>
           </div>
         </div>

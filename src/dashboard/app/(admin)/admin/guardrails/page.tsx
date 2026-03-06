@@ -126,7 +126,7 @@ export default function GuardrailsPage() {
         {/* Token Budget */}
         <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl">💰</span>
+            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>savings</span>
             <h3 className="text-white font-medium text-sm">Tokens (cette heure)</h3>
           </div>
           <p className="text-2xl font-bold text-white">{(s.tokenBudget.globalHourlyTokens / 1000).toFixed(0)}K</p>
@@ -140,7 +140,7 @@ export default function GuardrailsPage() {
         {/* Circuit Breakers */}
         <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl">🛡️</span>
+            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>shield</span>
             <h3 className="text-white font-medium text-sm">Circuit Breakers</h3>
           </div>
           <p className={`text-2xl font-bold ${LEVEL_COLORS[s.circuitBreakers.level]}`}>
@@ -155,7 +155,7 @@ export default function GuardrailsPage() {
         {/* Model Distribution */}
         <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl">🤖</span>
+            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>smart_toy</span>
             <h3 className="text-white font-medium text-sm">Distribution modèles</h3>
           </div>
           <div className="space-y-2">
@@ -187,7 +187,7 @@ export default function GuardrailsPage() {
         {/* Chains & Loops */}
         <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl">🔗</span>
+            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>link</span>
             <h3 className="text-white font-medium text-sm">Chaînes inter-agents</h3>
           </div>
           <p className="text-2xl font-bold text-white">{s.activeChains}</p>
@@ -242,19 +242,19 @@ export default function GuardrailsPage() {
         <h3 className="text-white font-medium mb-4">Modules de protection</h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {[
-            { name: 'Token Budget', icon: '💰', status: 'active' },
-            { name: 'Circuit Breakers', icon: '🛡️', status: 'active' },
-            { name: 'Loop Detector', icon: '🔗', status: 'active' },
-            { name: 'Memory Optimizer', icon: '🧠', status: 'active' },
-            { name: 'Model Router', icon: '🤖', status: 'active' },
-            { name: 'Credit Guard', icon: '💳', status: 'active' },
-            { name: 'Security', icon: '🔒', status: 'active' },
-            { name: 'Fallback Manager', icon: '🔄', status: 'active' },
-            { name: 'Alert System', icon: '🔔', status: 'active' },
-            { name: 'Mode Toggle', icon: '⚡', status: 'active' },
+            { name: 'Token Budget', icon: 'savings', status: 'active' },
+            { name: 'Circuit Breakers', icon: 'shield', status: 'active' },
+            { name: 'Loop Detector', icon: 'link', status: 'active' },
+            { name: 'Memory Optimizer', icon: 'psychology', status: 'active' },
+            { name: 'Model Router', icon: 'smart_toy', status: 'active' },
+            { name: 'Credit Guard', icon: 'credit_card', status: 'active' },
+            { name: 'Security', icon: 'lock', status: 'active' },
+            { name: 'Fallback Manager', icon: 'refresh', status: 'active' },
+            { name: 'Alert System', icon: 'notifications', status: 'active' },
+            { name: 'Mode Toggle', icon: 'bolt', status: 'active' },
           ].map(m => (
             <div key={m.name} className="bg-gray-900 rounded-lg p-3 text-center">
-              <span className="text-lg">{m.icon}</span>
+              <span className="material-symbols-rounded text-lg" style={{ fontSize: 20 }}>{m.icon}</span>
               <p className="text-white text-xs font-medium mt-1">{m.name}</p>
               <p className="text-green-400 text-xs mt-0.5">Actif</p>
             </div>

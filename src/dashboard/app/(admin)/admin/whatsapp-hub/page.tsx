@@ -77,9 +77,9 @@ export default function WhatsAppHubPage() {
   };
 
   const TABS = [
-    { id: 'conversations', label: 'Conversations', icon: '💬' },
-    { id: 'config', label: 'Configuration', icon: '⚙️' },
-    { id: 'autopilot', label: 'Commandes Autopilot', icon: '🤖' },
+    { id: 'conversations', label: 'Conversations', icon: 'chat' },
+    { id: 'config', label: 'Configuration', icon: 'settings' },
+    { id: 'autopilot', label: 'Commandes Autopilot', icon: 'smart_toy' },
   ] as const;
 
   return (
@@ -92,7 +92,7 @@ export default function WhatsAppHubPage() {
       <div className="flex gap-2">
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-2 rounded-lg text-sm flex items-center gap-2 ${tab === t.id ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
-            <span>{t.icon}</span> {t.label}
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{t.icon}</span> {t.label}
           </button>
         ))}
       </div>
@@ -111,7 +111,7 @@ export default function WhatsAppHubPage() {
               ) : conversations.map((c, i) => (
                 <div key={i} className="bg-gray-800 rounded-xl p-4 border border-gray-700 flex items-center justify-between hover:border-gray-600">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-600/20 rounded-full flex items-center justify-center text-green-400 text-lg">📱</div>
+                    <div className="w-10 h-10 bg-green-600/20 rounded-full flex items-center justify-center text-green-400 text-lg"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>phone_iphone</span></div>
                     <div>
                       <p className="text-white text-sm font-medium">{c.contactName || c.phone}</p>
                       <p className="text-gray-500 text-xs mt-0.5 max-w-md truncate">{c.lastMessage}</p>

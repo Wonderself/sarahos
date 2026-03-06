@@ -28,7 +28,7 @@ export const LEVEL_NAMES = [
   'Partenaire',         // 4
   'Conseiller de confiance', // 5
 ];
-export const LEVEL_ICONS = ['', '👤', '🤝', '💼', '⭐', '💎'];
+export const LEVEL_ICONS = ['', 'person', 'handshake', 'work', 'star', 'diamond'];
 
 function getDefaultBond(agentId: string): AgentBond {
   return {

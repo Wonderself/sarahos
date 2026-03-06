@@ -6,8 +6,7 @@ import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
   { href: '/demo', label: 'Démo' },
-  { href: '/plans', label: 'Tarifs' },
-  { href: '/tarifs-api', label: 'API' },
+  { href: '/plans', label: 'Tarifs & API' },
 ];
 
 export default function PublicNav() {
@@ -28,10 +27,12 @@ export default function PublicNav() {
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? 'rgba(255,255,255,0.88)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
-      WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
-      borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid transparent',
+      background: scrolled
+        ? 'rgba(255,255,255,0.92)'
+        : (isLanding ? 'rgba(10,10,15,0.65)' : 'rgba(255,255,255,0.92)'),
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+      borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
       transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
     }}>
       <div style={{
@@ -44,19 +45,19 @@ export default function PublicNav() {
             className={`fz-logo-text ${isDark ? 'fz-logo-text-dark' : 'fz-logo-text-light'}`}
             style={{ fontSize: 22, transition: 'all 0.3s ease' }}
           >
-            FREENZY.IO
+            freenzy.io
           </span>
         </Link>
 
         {/* Desktop links */}
-        <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           {NAV_LINKS.map(link => (
             <Link
               key={link.href}
               href={link.href}
               style={{
-                fontSize: 13, fontWeight: 500, textDecoration: 'none',
-                padding: '6px 14px', borderRadius: 8,
+                fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em', textDecoration: 'none',
+                padding: '6px 12px', borderRadius: 8,
                 color: isDark
                   ? 'rgba(255,255,255,0.7)'
                   : (pathname === link.href ? '#1d1d1f' : '#6b7280'),
@@ -69,11 +70,11 @@ export default function PublicNav() {
               {link.label}
             </Link>
           ))}
-          <div style={{ width: 1, height: 20, background: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)', margin: '0 6px' }} />
+          <div style={{ width: 1, height: 16, background: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)', margin: '0 4px' }} />
           <Link
             href="/login"
             style={{
-              fontSize: 13, fontWeight: 600, textDecoration: 'none',
+              fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em', textDecoration: 'none',
               padding: '8px 20px', borderRadius: 8,
               background: isDark ? 'rgba(255,255,255,0.1)' : '#1d1d1f',
               color: '#fff',

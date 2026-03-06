@@ -130,9 +130,9 @@ export function CreateUserButton() {
                 onChange={e => setRole(e.target.value)}
                 style={{ width: '100%' }}
               >
-                <option value="viewer">👤 Viewer</option>
-                <option value="operator">🟡 Operator</option>
-                <option value="admin">🔴 Admin</option>
+                <option value="viewer">Viewer</option>
+                <option value="operator">Operator</option>
+                <option value="admin">Admin</option>
               </select>
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
@@ -143,16 +143,16 @@ export function CreateUserButton() {
                 onChange={e => setTier(e.target.value)}
                 style={{ width: '100%' }}
               >
-                <option value="free">🔵 Free</option>
-                <option value="paid">🟢 Paid</option>
-                <option value="demo">🟡 Demo</option>
-                <option value="guest">⚪ Guest</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+                <option value="demo">Demo</option>
+                <option value="guest">Guest</option>
               </select>
             </div>
           </div>
 
           <div className="alert alert-info" style={{ marginTop: 16, fontSize: 12 }}>
-            ℹ️ Un email de bienvenue avec les identifiants sera envoyé automatiquement.
+            <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>info</span> Un email de bienvenue avec les identifiants sera envoye automatiquement.
           </div>
         </form>
       </SlideOver>
@@ -200,7 +200,7 @@ export function DepositButton({ userId, userName }: { userId: string; userName?:
   return (
     <>
       <button className="btn btn-primary btn-xs" onClick={() => setIsOpen(true)}>
-        💰 Déposer
+        <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer
       </button>
 
       <SlideOver
@@ -218,7 +218,7 @@ export function DepositButton({ userId, userName }: { userId: string; userName?:
               type="submit"
               disabled={loading || !amount || parseFloat(amount) <= 0}
             >
-              {loading ? 'En cours…' : '💰 Déposer'}
+              {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer</>}
             </button>
           </>
         }

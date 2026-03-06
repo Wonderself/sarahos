@@ -33,7 +33,12 @@ export function ApprovalActions({ approvalId }: { approvalId: string }) {
   const [loading, setLoading] = useState('');
 
   async function decide(decision: 'APPROVED' | 'DENIED') {
-    const reason = decision === 'DENIED' ? window.prompt('Raison du refus:') ?? '' : '';
+    let reason = '';
+    if (decision === 'DENIED') {
+      const input = window.prompt('Raison du refus:');
+      if (input === null) return; // user cancelled
+      reason = input;
+    }
     setLoading(decision);
     try {
       const res = await fetch('/api/actions', {

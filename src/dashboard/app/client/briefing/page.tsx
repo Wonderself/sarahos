@@ -58,20 +58,20 @@ function parseSections(text: string): { title: string; body: string }[] {
 }
 
 const SECTION_ICONS: Record<string, string> = {
-  'Salutation': '👋',
-  'Priorités du jour': '🎯',
-  'Insight': '💡',
-  'Conseil': '✨',
-  'Tâches': '📋',
-  'Alertes': '⚠️',
-  'Opportunités': '🚀',
+  'Salutation': 'waving_hand',
+  'Priorités du jour': 'target',
+  'Insight': 'lightbulb',
+  'Conseil': 'auto_awesome',
+  'Tâches': 'assignment',
+  'Alertes': 'warning',
+  'Opportunités': 'rocket_launch',
 };
 
 function sectionIcon(title: string): string {
   for (const [key, icon] of Object.entries(SECTION_ICONS)) {
     if (title.toLowerCase().includes(key.toLowerCase())) return icon;
   }
-  return '📌';
+  return 'push_pin';
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -162,7 +162,7 @@ export default function BriefingPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>
-            ☀️ Briefing du jour
+            <span className="material-symbols-rounded" style={{ fontSize: 24 }}>wb_sunny</span> <span className="fz-logo-word">Briefing</span> du jour
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -174,7 +174,7 @@ export default function BriefingPage() {
           disabled={generating || loading}
           className="btn btn-primary btn-sm"
         >
-          {generating ? '⏳ Génération...' : briefing ? '🔄 Rafraîchir' : '✨ Générer'}
+          {generating ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Génération...</> : briefing ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>refresh</span> Rafraîchir</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>auto_awesome</span> Générer</>}
         </button>
       </div>
 
@@ -199,17 +199,17 @@ export default function BriefingPage() {
           background: 'var(--bg-card)', borderRadius: 20,
           border: '2px dashed var(--border)',
         }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}>☀️</div>
+          <div style={{ fontSize: 56, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 56 }}>wb_sunny</span></div>
           <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Pas encore de briefing</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-            Générez votre briefing IA quotidien — priorités du jour, insights business et conseils personnalisés.
+            Générez votre briefing <span className="fz-logo-word">IA</span> quotidien — priorités du jour, insights business et conseils personnalisés.
           </p>
           <button
             onClick={() => generateBriefing(true)}
             disabled={generating}
             className="btn btn-primary"
           >
-            {generating ? '⏳ Génération en cours...' : '✨ Générer mon briefing'}
+            {generating ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Génération en cours...</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>auto_awesome</span> Générer mon briefing</>}
           </button>
         </div>
       )}
@@ -217,7 +217,7 @@ export default function BriefingPage() {
       {/* Generating state */}
       {generating && !briefing && (
         <div style={{ textAlign: 'center', padding: '60px 40px' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">✨</div>
+          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse"><span className="material-symbols-rounded" style={{ fontSize: 40 }}>auto_awesome</span></div>
           <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
             Maëva analyse votre contexte et prépare votre briefing...
           </p>
@@ -240,7 +240,7 @@ export default function BriefingPage() {
             >
               {section.title && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <span style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
                   <span style={{ fontWeight: 700, fontSize: 15 }}>{section.title}</span>
                 </div>
               )}

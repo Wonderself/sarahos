@@ -6,7 +6,7 @@ export interface AgentTemplate {
   name: string;
   category: Category;
   description: string;
-  tier: 'free' | 'paid';
+  tier: 'free';
   installs: number;
   badge?: 'populaire' | 'nouveau';
   featured?: boolean;
@@ -23,7 +23,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Analyste Financier',
     category: 'Finance',
     description: 'Analyse vos etats financiers et previsions budgetaires. Genere des rapports detailles et identifie les tendances cles.',
-    tier: 'paid',
+    tier: 'free',
     installs: 2847,
     badge: 'populaire',
     featured: true,
@@ -45,7 +45,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Social Media Pro',
     category: 'Marketing',
     description: 'Planifie et cree du contenu pour vos reseaux sociaux. Calendrier editorial, hashtags et analyse d\'engagement.',
-    tier: 'paid',
+    tier: 'free',
     installs: 3156,
     badge: 'populaire',
     featured: true,
@@ -65,7 +65,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Lead Generator',
     category: 'Marketing',
     description: 'Identifie et qualifie des prospects. Analyse les profils, score les leads et suggere des approches personnalisees.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1823,
     badge: 'nouveau',
   },
@@ -85,7 +85,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Comptable Expert',
     category: 'Finance',
     description: 'Gere votre comptabilite et declarations fiscales. Suivi des depenses, rapprochement bancaire et bilans.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1654,
   },
   {
@@ -94,7 +94,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'RH Assistant',
     category: 'RH',
     description: 'Aide au recrutement, onboarding et gestion des talents. Redige les offres d\'emploi et planifie les entretiens.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1987,
     badge: 'nouveau',
   },
@@ -123,7 +123,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Veille Concurrentielle',
     category: 'Marketing',
     description: 'Surveille vos concurrents et tendances du marche. Rapports automatises et alertes strategiques.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1198,
     badge: 'nouveau',
   },
@@ -133,7 +133,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Growth Hacker',
     category: 'Marketing',
     description: 'Optimise votre acquisition et conversion. Tests A/B, funnels et strategies de croissance data-driven.',
-    tier: 'paid',
+    tier: 'free',
     installs: 2034,
   },
   {
@@ -170,7 +170,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Juriste Assistant',
     category: 'Finance',
     description: 'Analyse et redige des documents juridiques. Contrats, CGV, conformite RGPD et veille reglementaire.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1423,
   },
 
@@ -181,7 +181,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Process Manager',
     category: 'Productivite',
     description: 'Automatise et optimise vos processus metier. Workflows, templates et suivi de performance.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1876,
   },
   {
@@ -221,7 +221,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Traducteur Multilingue',
     category: 'Communication',
     description: 'Traduit vos contenus en 15+ langues. Adapte le ton et le contexte culturel.',
-    tier: 'paid',
+    tier: 'free',
     installs: 2654,
     badge: 'populaire',
   },
@@ -241,7 +241,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Chatbot Builder',
     category: 'Communication',
     description: 'Cree des chatbots conversationnels pour votre service client. Scripts et arbres de decision.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1743,
   },
 
@@ -252,7 +252,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Optimiseur Fiscal',
     category: 'Finance',
     description: 'Identifie les opportunites d\'optimisation fiscale. Veille reglementaire et recommandations.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1456,
     badge: 'nouveau',
   },
@@ -262,7 +262,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Previsionniste Budget',
     category: 'Finance',
     description: 'Cree des previsions budgetaires precises. Scenarios, simulations et alertes.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1289,
   },
   {
@@ -271,7 +271,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Auditeur Interne',
     category: 'Finance',
     description: 'Realise des audits internes complets. Conformite, risques et recommandations correctives.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1034,
   },
 
@@ -293,7 +293,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Influencer Finder',
     category: 'Marketing',
     description: 'Identifie les influenceurs pertinents pour votre marque. Scoring, matching et suivi ROI.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1567,
     badge: 'nouveau',
   },
@@ -303,7 +303,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Brand Monitor',
     category: 'Marketing',
     description: 'Surveille votre reputation en ligne. Alertes, sentiment analysis et rapports de e-reputation.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1321,
   },
 
@@ -314,7 +314,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Recruteur Pro',
     category: 'RH',
     description: 'Sourcing avance de candidats. Screening CV, scoring et suivi du pipeline recrutement.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1876,
   },
   {
@@ -354,7 +354,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Scenariste Video',
     category: 'Creatif',
     description: 'Ecrit des scripts video professionnels. Storyboards, dialogues et briefs de production.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1123,
   },
   {
@@ -363,7 +363,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'UX Consultant',
     category: 'Creatif',
     description: 'Analyse et ameliore l\'experience utilisateur. Audit UX, wireframes textuels et recommandations.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1398,
     badge: 'nouveau',
   },
@@ -395,7 +395,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'SLA Tracker',
     category: 'Support',
     description: 'Surveille vos engagements de service. Alertes, rapports et analyse des ecarts.',
-    tier: 'paid',
+    tier: 'free',
     installs: 987,
     badge: 'nouveau',
   },
@@ -418,7 +418,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'BI Dashboard Creator',
     category: 'Analyse',
     description: 'Concoit des tableaux de bord analytiques. Metriques, visualisations et rapports automatises.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1678,
   },
   {
@@ -427,7 +427,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Predictive Analytics',
     category: 'Analyse',
     description: 'Previsions basees sur vos donnees. Tendances, anomalies et recommandations predictives.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1456,
     badge: 'nouveau',
   },
@@ -437,7 +437,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Etude de Marche',
     category: 'Analyse',
     description: 'Analyse approfondie de votre marche. Concurrence, tendances et opportunites strategiques.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1234,
   },
 
@@ -448,7 +448,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Expert RGPD',
     category: 'Juridique',
     description: 'Assure votre conformite RGPD. Audit, registre de traitements et recommandations.',
-    tier: 'paid',
+    tier: 'free',
     installs: 2345,
     badge: 'populaire',
   },
@@ -458,7 +458,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Propriete Intellectuelle',
     category: 'Juridique',
     description: 'Protege vos creations. Marques, brevets, droits d\'auteur et strategies de protection.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1098,
   },
   {
@@ -467,7 +467,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Gestion Contentieux',
     category: 'Juridique',
     description: 'Analyse et gere vos litiges. Evaluation des risques, strategies et suivi des procedures.',
-    tier: 'paid',
+    tier: 'free',
     installs: 876,
   },
 
@@ -496,7 +496,7 @@ export const TEMPLATES: AgentTemplate[] = [
     name: 'Crisis Manager',
     category: 'Organisation',
     description: 'Gere les situations de crise. Plans de contingence, communication et resolution.',
-    tier: 'paid',
+    tier: 'free',
     installs: 1123,
     badge: 'nouveau',
   },

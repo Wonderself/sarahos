@@ -16,12 +16,12 @@ interface MeetingMessage {
 }
 
 const MEETING_TEMPLATES = [
-  { icon: '🚀', title: 'Lancement de projet', topic: 'Lancer un nouveau projet stratégique', description: 'Définir les objectifs, les rôles et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
-  { icon: '📊', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les résultats et ajuster la stratégie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
-  { icon: '💡', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'Générer des idées innovantes en équipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
-  { icon: '🛡️', title: 'Résolution de crise', topic: 'Résoudre une situation de crise urgente', description: 'Coordonner la réponse et protéger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
-  { icon: '📅', title: 'Planification annuelle', topic: 'Planification stratégique pour l\'année', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
-  { icon: '🤝', title: 'Partenariat stratégique', topic: 'Évaluer un partenariat ou une acquisition', description: 'Analyser les opportunités et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
+  { icon: 'rocket_launch', title: 'Lancement de projet', topic: 'Lancer un nouveau projet stratégique', description: 'Définir les objectifs, les rôles et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
+  { icon: 'bar_chart', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les résultats et ajuster la stratégie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
+  { icon: 'lightbulb', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'Générer des idées innovantes en équipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
+  { icon: 'shield', title: 'Résolution de crise', topic: 'Résoudre une situation de crise urgente', description: 'Coordonner la réponse et protéger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
+  { icon: 'calendar_month', title: 'Planification annuelle', topic: 'Planification stratégique pour l\'année', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
+  { icon: 'handshake', title: 'Partenariat stratégique', topic: 'Évaluer un partenariat ou une acquisition', description: 'Analyser les opportunités et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
 ];
 
 const TOPIC_SUGGESTIONS = [
@@ -235,9 +235,9 @@ export default function MeetingPage() {
       <div className="client-page-scrollable">
         <div className="page-header">
           <div>
-            <h1 className="page-title">Salle de Réunion</h1>
+            <h1 className="page-title">Salle de <span className="fz-logo-word">Réunion</span></h1>
             <p className="page-subtitle">
-              Réunissez vos agents pour des discussions stratégiques. Ils collaborent, débattent, et proposent des solutions ensemble.
+              Réunissez vos <span className="fz-logo-word">agents</span> pour des discussions stratégiques. Ils collaborent, débattent, et proposent des solutions <span className="fz-logo-word">ensemble</span>.
             </p>
           </div>
         </div>
@@ -259,7 +259,7 @@ export default function MeetingPage() {
                     cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
-                  <span style={{ fontSize: 24 }}>{agent.emoji}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 24, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
                   <div style={{ textAlign: 'left' }}>
                     <div className="text-md font-semibold" style={{ color: selected ? agent.color : 'var(--text-primary)' }}>{agent.role}</div>
                     <div className="text-xs text-muted">{selected ? 'Présent' : 'Inviter'}</div>
@@ -328,7 +328,7 @@ export default function MeetingPage() {
                   background: topic === tpl.topic ? 'var(--accent-muted)' : 'var(--bg-secondary)',
                 }}
               >
-                <div className="text-xl mb-4">{tpl.icon}</div>
+                <div className="text-xl mb-4"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{tpl.icon}</span></div>
                 <div className="text-md font-semibold">{tpl.title}</div>
                 <div className="text-xs text-muted mt-4" style={{ lineHeight: 1.4 }}>{tpl.description}</div>
               </button>
@@ -369,7 +369,7 @@ export default function MeetingPage() {
               width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, background: a.color + '22', border: `2px solid ${a.color}`,
             }}>
-              {a.emoji}
+              <span className="material-symbols-rounded" style={{ fontSize: 16, color: a.color || 'var(--accent)' }}>{a.materialIcon}</span>
             </span>
           ))}
         </div>
@@ -390,7 +390,7 @@ export default function MeetingPage() {
                 width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 20, background: agent.color + '22', border: `2px solid ${agent.color}`, flexShrink: 0,
               }}>
-                {agent.emoji}
+                <span className="material-symbols-rounded" style={{ fontSize: 20, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
               </div>
               <div className="flex-1">
                 <div className="flex gap-8 mb-4" style={{ alignItems: 'baseline' }}>

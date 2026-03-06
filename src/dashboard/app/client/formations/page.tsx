@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useUserData } from '../../../lib/use-user-data';
 
 const DONE_KEY = 'fz_formations_done';
 
@@ -8,77 +9,77 @@ const DONE_KEY = 'fz_formations_done';
 const FORMATIONS = [
   {
     id: 'ia-entreprise',
-    icon: '\uD83D\uDCCA',
+    icon: 'bar_chart',
     title: 'Maitriser l\'IA pour votre entreprise',
     description: 'Apprenez a integrer l\'intelligence artificielle dans vos processus metier. Decouvrez les outils, strategies et bonnes pratiques pour tirer parti de l\'IA au quotidien.',
     level: 'Debutant',
     levelColor: '#22c55e',
     duration: '2h',
-    price: 'Sur devis',
+    price: 'Gratuit',
     available: true,
   },
   {
     id: 'communication-digitale',
-    icon: '\uD83D\uDCAC',
+    icon: 'chat',
     title: 'Communication digitale avancee',
     description: 'Maitrisez les leviers de la communication numerique : strategie de contenu, branding, storytelling et gestion de votre image en ligne pour maximiser votre impact.',
     level: 'Intermediaire',
     levelColor: '#f59e0b',
     duration: '3h',
-    price: 'Sur devis',
+    price: 'Gratuit',
     available: true,
   },
   {
     id: 'reseaux-sociaux',
-    icon: '\uD83D\uDCF1',
+    icon: 'phone_iphone',
     title: 'Reseaux sociaux pour professionnels',
     description: 'Construisez une presence professionnelle forte sur LinkedIn, Instagram et TikTok. Apprenez a creer du contenu engageant et a developper votre communaute.',
     level: 'Debutant',
     levelColor: '#22c55e',
     duration: '2h30',
-    price: 'Sur devis',
+    price: 'Gratuit',
     available: true,
   },
   {
     id: 'contenu-video',
-    icon: '\uD83C\uDFAC',
+    icon: 'videocam',
     title: 'Creation de contenu video',
     description: 'De la conception au montage, maitrisez la creation de videos professionnelles. Tournage smartphone, montage IA, sous-titrage automatique et diffusion multi-plateforme.',
     level: 'Intermediaire',
     levelColor: '#f59e0b',
     duration: '4h',
-    price: 'Sur devis',
+    price: 'Gratuit',
     available: false,
   },
   {
     id: 'email-marketing',
-    icon: '\uD83D\uDCE7',
+    icon: 'mail',
     title: 'Email marketing automatise',
     description: 'Concevez des campagnes email performantes avec l\'IA. Segmentation, personnalisation, automatisation des sequences et analyse des resultats pour un ROI optimal.',
     level: 'Avance',
     levelColor: '#ef4444',
     duration: '3h',
-    price: 'Sur devis',
+    price: 'Gratuit',
     available: false,
   },
   {
     id: 'seo-visibilite',
-    icon: '\uD83D\uDD0D',
+    icon: 'search',
     title: 'SEO et visibilite en ligne',
     description: 'Optimisez votre presence sur les moteurs de recherche. Mots-cles, contenu optimise, backlinks et outils IA pour ameliorer votre positionnement Google.',
     level: 'Debutant',
     levelColor: '#22c55e',
     duration: '2h',
-    price: 'Sur devis',
+    price: 'Gratuit',
     available: true,
   },
 ];
 
 const BENEFITS = [
-  { icon: '\uD83C\uDFAF', title: 'Sur mesure', desc: 'Formations adaptees a votre secteur et vos objectifs' },
-  { icon: '\uD83E\uDDD1\u200D\uD83D\uDCBB', title: 'Expert dedie', desc: 'Formateur specialise avec experience terrain' },
-  { icon: '\uD83D\uDCC8', title: 'Resultats concrets', desc: 'Exercices pratiques et plan d\'action personnalise' },
-  { icon: '\uD83D\uDD04', title: 'Suivi post-formation', desc: '30 jours d\'accompagnement apres chaque session' },
+  { icon: 'target', title: 'Sur mesure', desc: 'Formations adaptees a votre secteur et vos objectifs' },
+  { icon: 'person', title: 'Expert dedie', desc: 'Formateur specialise avec experience terrain' },
+  { icon: 'trending_up', title: 'Resultats concrets', desc: 'Exercices pratiques et plan d\'action personnalise' },
+  { icon: 'refresh', title: 'Suivi post-formation', desc: '30 jours d\'accompagnement apres chaque session' },
 ];
 
 interface FormData {
@@ -97,12 +98,20 @@ const emptyForm: FormData = {
   context: '',
 };
 
+interface FormationRequest extends FormData {
+  createdAt: string;
+  status: string;
+}
+
 export default function FormationsPage() {
   const [form, setForm] = useState<FormData>({ ...emptyForm });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [doneIds, setDoneIds] = useState<Set<string>>(new Set());
+
+  // Formation requests synced to backend
+  const { data: requests, setData: setRequests } = useUserData<FormationRequest[]>('formation_requests', [], 'fz_formation_requests');
 
   useEffect(() => {
     try {
@@ -148,17 +157,11 @@ export default function FormationsPage() {
     }
     setError('');
 
-    try {
-      const existing = JSON.parse(localStorage.getItem('fz_formation_requests') ?? '[]');
-      existing.push({
-        ...form,
-        createdAt: new Date().toISOString(),
-        status: 'pending',
-      });
-      localStorage.setItem('fz_formation_requests', JSON.stringify(existing));
-    } catch {
-      // localStorage full or unavailable — still show success
-    }
+    setRequests(prev => [...prev, {
+      ...form,
+      createdAt: new Date().toISOString(),
+      status: 'pending',
+    }]);
 
     setSubmitted(true);
     setForm({ ...emptyForm });
@@ -174,10 +177,10 @@ export default function FormationsPage() {
   };
 
   const cardStyle: React.CSSProperties = {
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     borderRadius: 16,
     padding: '28px 24px',
-    border: '1px solid #e5e7eb',
+    border: '1px solid var(--border-primary)',
     transition: 'box-shadow 0.25s, transform 0.25s',
     cursor: 'default',
     display: 'flex',
@@ -189,25 +192,25 @@ export default function FormationsPage() {
     width: '100%',
     padding: '12px 16px',
     fontSize: 14,
-    border: '1px solid #e5e7eb',
+    border: '1px solid var(--border-primary)',
     borderRadius: 10,
     outline: 'none',
     fontFamily: 'inherit',
-    background: '#fff',
-    color: '#1d1d1f',
+    background: 'var(--bg-secondary)',
+    color: 'var(--text-primary)',
     transition: 'border-color 0.2s',
   };
 
   const labelStyle: React.CSSProperties = {
     fontSize: 13,
     fontWeight: 600,
-    color: '#374151',
+    color: 'var(--text-secondary)',
     marginBottom: 6,
     display: 'block',
   };
 
   return (
-    <div className="client-page-scrollable" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: 80 }}>
+    <div className="client-page-scrollable" style={{ background: 'var(--bg-primary)', minHeight: '100vh', paddingBottom: 80 }}>
 
       {/* ── Hero Section ── */}
       <section style={{
@@ -231,7 +234,7 @@ export default function FormationsPage() {
             marginBottom: 20,
             backdropFilter: 'blur(8px)',
           }}>
-            {'\uD83C\uDF93'} Services de formation
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>school</span> Services de formation
           </div>
           <h1 style={{
             fontSize: 'clamp(28px, 5vw, 44px)',
@@ -241,7 +244,7 @@ export default function FormationsPage() {
             lineHeight: 1.15,
             marginBottom: 16,
           }}>
-            Formations
+            <span className="fz-logo-word">Formations</span>
           </h1>
           <p style={{
             fontSize: 17,
@@ -250,7 +253,7 @@ export default function FormationsPage() {
             maxWidth: 500,
             margin: '0 auto',
           }}>
-            Developpez vos competences avec l&apos;IA
+            Developpez vos competences avec l&apos;<span className="fz-logo-word">IA</span>
           </p>
         </div>
       </section>
@@ -264,15 +267,15 @@ export default function FormationsPage() {
         }}>
           {BENEFITS.map(b => (
             <div key={b.title} style={{
-              background: '#fff',
+              background: 'var(--bg-elevated)',
               borderRadius: 14,
               padding: '20px 18px',
-              border: '1px solid #e5e7eb',
+              border: '1px solid var(--border-primary)',
               textAlign: 'center',
             }}>
-              <div style={{ fontSize: 28, marginBottom: 8 }}>{b.icon}</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{b.title}</div>
-              <div style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>{b.desc}</div>
+              <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{b.icon}</span></div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>{b.title}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{b.desc}</div>
             </div>
           ))}
         </div>
@@ -284,21 +287,21 @@ export default function FormationsPage() {
           <h2 style={{
             fontSize: 28,
             fontWeight: 700,
-            color: '#1d1d1f',
+            color: 'var(--text-primary)',
             letterSpacing: '-0.03em',
             marginBottom: 8,
           }}>
             Nos formations
           </h2>
-          <p style={{ fontSize: 14, color: '#6b7280', maxWidth: 480, margin: '0 auto' }}>
-            Des programmes concus pour vous rendre autonome rapidement, avec des cas pratiques adaptes a votre activite.
+          <p style={{ fontSize: 14, color: 'var(--text-secondary)', maxWidth: 480, margin: '0 auto' }}>
+            Des programmes concus pour vous rendre <span className="fz-logo-word">autonome</span> rapidement, avec des cas pratiques adaptes a votre activite.
           </p>
         </div>
 
         {/* Search + progress */}
         <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: '#9ca3af' }}>🔍</span>
+            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span></span>
             <input
               type="text"
               placeholder="Rechercher une formation..."
@@ -306,16 +309,16 @@ export default function FormationsPage() {
               onChange={e => setSearch(e.target.value)}
               style={{
                 width: '100%', padding: '10px 12px 10px 36px', fontSize: 14,
-                border: '1px solid #e5e7eb', borderRadius: 10, outline: 'none',
-                fontFamily: 'inherit', background: '#fff', boxSizing: 'border-box',
+                border: '1px solid var(--border-primary)', borderRadius: 10, outline: 'none',
+                fontFamily: 'inherit', background: 'var(--bg-elevated)', boxSizing: 'border-box',
               }}
               onFocus={e => (e.currentTarget.style.borderColor = accent)}
-              onBlur={e => (e.currentTarget.style.borderColor = '#e5e7eb')}
+              onBlur={e => (e.currentTarget.style.borderColor = '')}
             />
           </div>
           {doneCount > 0 && (
             <div style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, flexShrink: 0 }}>
-              ✅ {doneCount}/{FORMATIONS.length} terminée{doneCount > 1 ? 's' : ''}
+              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> {doneCount}/{FORMATIONS.length} terminée{doneCount > 1 ? 's' : ''}
             </div>
           )}
         </div>
@@ -326,8 +329,8 @@ export default function FormationsPage() {
           gap: 20,
         }}>
           {filteredFormations.length === 0 && (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: '#9ca3af' }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>🔍</div>
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>search</span></div>
               <div>Aucune formation ne correspond à votre recherche.</div>
               <button onClick={() => setSearch('')} style={{ marginTop: 10, fontSize: 12, color: accent, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Réinitialiser</button>
             </div>
@@ -380,13 +383,13 @@ export default function FormationsPage() {
                   fontSize: 24,
                   flexShrink: 0,
                 }}>
-                  {f.icon}
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{f.icon}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{
                     fontSize: 16,
                     fontWeight: 700,
-                    color: '#1d1d1f',
+                    color: 'var(--text-primary)',
                     lineHeight: 1.3,
                     marginBottom: 0,
                   }}>
@@ -398,7 +401,7 @@ export default function FormationsPage() {
               {/* Description */}
               <p style={{
                 fontSize: 13,
-                color: '#6b7280',
+                color: 'var(--text-secondary)',
                 lineHeight: 1.6,
                 margin: 0,
                 flex: 1,
@@ -413,7 +416,7 @@ export default function FormationsPage() {
                 gap: 10,
                 flexWrap: 'wrap',
                 paddingTop: 8,
-                borderTop: '1px solid #f3f4f6',
+                borderTop: '1px solid var(--border-primary)',
               }}>
                 {/* Level Badge */}
                 <span style={{
@@ -433,10 +436,10 @@ export default function FormationsPage() {
                   alignItems: 'center',
                   gap: 4,
                   fontSize: 12,
-                  color: '#6b7280',
+                  color: 'var(--text-secondary)',
                   fontWeight: 500,
                 }}>
-                  {'\u23F1\uFE0F'} {f.duration}
+                  <span className="material-symbols-rounded" style={{ fontSize: 12 }}>timer</span> {f.duration}
                 </span>
 
                 {/* Price */}
@@ -477,7 +480,7 @@ export default function FormationsPage() {
                     cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
                   }}
                 >
-                  {doneIds.has(f.id) ? '✅ Terminée' : 'Marquer comme terminée'}
+                  {doneIds.has(f.id) ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Terminée</> : 'Marquer comme terminée'}
                 </button>
               )}
             </div>
@@ -488,26 +491,26 @@ export default function FormationsPage() {
       {/* ── CTA / Quote Request Section ── */}
       <section style={sectionStyle}>
         <div style={{
-          background: '#fff',
+          background: 'var(--bg-elevated)',
           borderRadius: 20,
           padding: 'clamp(24px, 4vw, 48px)',
-          border: '1px solid #e5e7eb',
+          border: '1px solid var(--border-primary)',
           maxWidth: 680,
           margin: '0 auto',
         }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>{'\uD83D\uDCE9'}</div>
+            <div style={{ fontSize: 32, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>mail</span></div>
             <h2 style={{
               fontSize: 24,
               fontWeight: 700,
-              color: '#1d1d1f',
+              color: 'var(--text-primary)',
               letterSpacing: '-0.02em',
               marginBottom: 8,
             }}>
-              Demander un devis
+              Faire une demande
             </h2>
-            <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
-              Decrivez vos besoins et nous vous proposons un programme sur mesure avec tarif adapte.
+            <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
+              Decrivez vos besoins et nous vous proposons un programme sur mesure adapte a votre activite.
             </p>
           </div>
 
@@ -519,7 +522,7 @@ export default function FormationsPage() {
               borderRadius: 14,
               border: '1px solid #bbf7d0',
             }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u2705'}</div>
+              <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
               <h3 style={{ fontSize: 20, fontWeight: 700, color: '#15803d', marginBottom: 8 }}>
                 Demande envoyee !
               </h3>
@@ -534,7 +537,7 @@ export default function FormationsPage() {
                   fontSize: 13,
                   fontWeight: 600,
                   border: '1px solid #bbf7d0',
-                  background: '#fff',
+                  background: 'var(--bg-elevated)',
                   color: '#15803d',
                   cursor: 'pointer',
                 }}
@@ -568,7 +571,7 @@ export default function FormationsPage() {
                   onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
                   style={inputStyle}
                   onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#e5e7eb')}
+                  onBlur={e => (e.currentTarget.style.borderColor = '')}
                 />
               </div>
 
@@ -582,7 +585,7 @@ export default function FormationsPage() {
                   onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
                   style={inputStyle}
                   onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#e5e7eb')}
+                  onBlur={e => (e.currentTarget.style.borderColor = '')}
                 />
               </div>
 
@@ -596,7 +599,7 @@ export default function FormationsPage() {
                   onChange={e => setForm(prev => ({ ...prev, phone: e.target.value }))}
                   style={inputStyle}
                   onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#e5e7eb')}
+                  onBlur={e => (e.currentTarget.style.borderColor = '')}
                 />
               </div>
 
@@ -621,7 +624,7 @@ export default function FormationsPage() {
                           gap: 10,
                           padding: '10px 14px',
                           borderRadius: 10,
-                          border: `1.5px solid ${selected ? accent : '#e5e7eb'}`,
+                          border: `1.5px solid ${selected ? accent : 'var(--border-primary)'}`,
                           background: selected ? `${accent}08` : '#fff',
                           cursor: 'pointer',
                           textAlign: 'left',
@@ -633,7 +636,7 @@ export default function FormationsPage() {
                           width: 20,
                           height: 20,
                           borderRadius: 5,
-                          border: `2px solid ${selected ? accent : '#d1d5db'}`,
+                          border: `2px solid ${selected ? accent : 'var(--border-secondary)'}`,
                           background: selected ? accent : '#fff',
                           display: 'flex',
                           alignItems: 'center',
@@ -643,14 +646,14 @@ export default function FormationsPage() {
                           flexShrink: 0,
                           transition: 'background 0.2s, border-color 0.2s',
                         }}>
-                          {selected ? '\u2713' : ''}
+                          {selected ? <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span> : ''}
                         </span>
-                        <span style={{ fontSize: 16 }}>{f.icon}</span>
+                        <span style={{ fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{f.icon}</span></span>
                         <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f' }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
                             {f.title}
                           </div>
-                          <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 1 }}>
+                          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 1 }}>
                             {f.level} &middot; {f.duration}
                             {!f.available && <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: 6 }}>Bientot</span>}
                           </div>
@@ -675,7 +678,7 @@ export default function FormationsPage() {
                     minHeight: 100,
                   }}
                   onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#e5e7eb')}
+                  onBlur={e => (e.currentTarget.style.borderColor = '')}
                 />
               </div>
 
@@ -704,12 +707,12 @@ export default function FormationsPage() {
                   (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
                 }}
               >
-                Envoyer ma demande de devis
+                Envoyer ma demande
               </button>
 
               <p style={{
                 fontSize: 11,
-                color: '#9ca3af',
+                color: 'var(--text-muted)',
                 textAlign: 'center',
                 lineHeight: 1.5,
                 margin: 0,

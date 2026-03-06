@@ -16,9 +16,9 @@ interface CronEntry {
 
 function statusBadge(status: string | null) {
   if (!status) return <span className="badge badge-neutral">Jamais exécuté</span>;
-  if (status === 'success') return <span className="badge badge-success">✅ Succès</span>;
-  if (status === 'error') return <span className="badge badge-danger">❌ Erreur</span>;
-  if (status === 'manual_trigger') return <span className="badge badge-info">🖱️ Manuel</span>;
+  if (status === 'success') return <span className="badge badge-success"><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check_circle</span> Succes</span>;
+  if (status === 'error') return <span className="badge badge-danger"><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>error</span> Erreur</span>;
+  if (status === 'manual_trigger') return <span className="badge badge-info"><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>mouse</span> Manuel</span>;
   return <span className="badge badge-neutral">{status}</span>;
 }
 

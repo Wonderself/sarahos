@@ -106,7 +106,7 @@ export default function DiscussionsPage() {
   // Social sharing state
   const [shareOpen, setShareOpen] = useState(false);
   const [shareContent, setShareContent] = useState<ShareContent | null>(null);
-  const [connectedPlatforms, setConnectedPlatforms] = useState<{ id: string; label: string; color: string; emoji: string }[]>([]);
+  const [connectedPlatforms, setConnectedPlatforms] = useState<{ id: string; label: string; color: string; materialIcon: string }[]>([]);
 
   // Title editing
   const [editingTitle, setEditingTitle] = useState(false);
@@ -246,7 +246,7 @@ export default function DiscussionsPage() {
         setWizardResult({
           agentId: 'fz-contradicteur',
           agentName: 'Naël',
-          agentEmoji: '⚖️',
+          agentEmoji: 'balance',
           reasoning: 'Agent par défaut sélectionné',
           category: 'philosophical',
           suggestedTitle: wizardInput.trim().slice(0, 60),
@@ -264,7 +264,7 @@ export default function DiscussionsPage() {
         setWizardResult({
           agentId: parsed.agentId,
           agentName: agent?.name ?? 'Expert Personnalisé',
-          agentEmoji: agent?.emoji ?? '🧠',
+          agentEmoji: agent?.materialIcon ?? 'psychology',
           reasoning: parsed.reasoning,
           category: parsed.category,
           suggestedTitle: parsed.suggestedTitle,
@@ -273,7 +273,7 @@ export default function DiscussionsPage() {
         setWizardResult({
           agentId: null,
           agentName: 'Expert Personnalisé',
-          agentEmoji: '🧠',
+          agentEmoji: 'psychology',
           reasoning: 'Analyse automatique',
           category: 'philosophical',
           suggestedTitle: wizardInput.trim().slice(0, 60),
@@ -284,7 +284,7 @@ export default function DiscussionsPage() {
       setWizardResult({
         agentId: 'fz-contradicteur',
         agentName: 'Naël',
-        agentEmoji: '⚖️',
+        agentEmoji: 'balance',
         reasoning: 'Fallback — erreur de connexion',
         category: 'philosophical',
         suggestedTitle: wizardInput.trim().slice(0, 60),
@@ -343,7 +343,7 @@ export default function DiscussionsPage() {
     setWizardResult({
       agentId: null,
       agentName: 'Expert Personnalisé',
-      agentEmoji: template.emoji,
+      agentEmoji: template.materialIcon,
       reasoning: `Template: ${template.title}`,
       category: template.category,
       suggestedTitle: template.title,
@@ -652,10 +652,10 @@ export default function DiscussionsPage() {
       if (!raw) return;
       const keys = JSON.parse(raw);
       const PLATFORMS = [
-        { id: 'linkedin', label: 'LinkedIn', color: '#0077b5', emoji: '💼' },
-        { id: 'facebook', label: 'Facebook', color: '#1877f2', emoji: '👍' },
-        { id: 'twitter', label: 'Twitter/X', color: '#1da1f2', emoji: '🐦' },
-        { id: 'tiktok', label: 'TikTok', color: '#000000', emoji: '🎵' },
+        { id: 'linkedin', label: 'LinkedIn', color: '#0077b5', materialIcon: 'work' },
+        { id: 'facebook', label: 'Facebook', color: '#1877f2', materialIcon: 'thumb_up' },
+        { id: 'twitter', label: 'Twitter/X', color: '#1da1f2', materialIcon: 'share' },
+        { id: 'tiktok', label: 'TikTok', color: '#000000', materialIcon: 'music_note' },
       ];
       const connected = PLATFORMS.filter(p => keys[p.id]?.connected);
       setConnectedPlatforms(connected);
@@ -755,7 +755,7 @@ export default function DiscussionsPage() {
         onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? '#6366F133' : 'var(--border-primary, #1e1e1e)'; e.currentTarget.style.transform = 'none'; }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-          <span style={{ fontSize: 20 }}>{t.emoji}</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{t.materialIcon}</span>
           <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#6366F122', color: '#818CF8' }}>
             {catInfo?.label}
           </span>
@@ -834,7 +834,7 @@ export default function DiscussionsPage() {
           >
             <option value="all">Toutes les catégories</option>
             {DISCUSSION_CATEGORIES.map(c => (
-              <option key={c.id} value={c.id}>{c.emoji} {c.label}</option>
+              <option key={c.id} value={c.id}>{c.label}</option>
             ))}
           </select>
         </div>
@@ -843,9 +843,9 @@ export default function DiscussionsPage() {
         <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px' }}>
           {filtered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--text-secondary, #888)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>🧠</div>
+              <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>psychology</span></div>
               <p style={{ fontSize: 14, fontWeight: 600 }}>Aucune discussion</p>
-              <p style={{ fontSize: 12, marginTop: 4, marginBottom: 16 }}>Lancez votre première discussion profonde</p>
+              <p style={{ fontSize: 12, marginTop: 4, marginBottom: 16 }}>Lancez votre première discussion <span className="fz-logo-word">profonde</span></p>
               <button
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                 style={{
@@ -871,14 +871,14 @@ export default function DiscussionsPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 18 }}>{catInfo?.emoji ?? '🧠'}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{catInfo?.materialIcon ?? 'psychology'}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
                       fontSize: 13, fontWeight: 600, color: 'var(--text-primary, #fff)',
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                       display: 'flex', alignItems: 'center', gap: 4,
                     }}>
-                      {d.starred && <span style={{ color: '#FBBF24', fontSize: 12 }}>★</span>}
+                      {d.starred && <span className="material-symbols-rounded" style={{ color: '#FBBF24', fontSize: 12 }}>star</span>}
                       {d.title}
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)', display: 'flex', gap: 8, marginTop: 2 }}>
@@ -897,7 +897,7 @@ export default function DiscussionsPage() {
                     }}
                     title={d.starred ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                   >
-                    {d.starred ? '★' : '☆'}
+                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{d.starred ? 'star' : 'star_outline'}</span>
                   </button>
                   <span style={{
                     width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
@@ -929,7 +929,7 @@ export default function DiscussionsPage() {
                   <div style={{ marginTop: 4 }}>
                     {topCategories.map(([cat, count]) => {
                       const info = DISCUSSION_CATEGORIES.find(c => c.id === cat);
-                      return <div key={cat}>{info?.emoji} {info?.label}: {count}</div>;
+                      return <div key={cat}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>{info?.materialIcon}</span> {info?.label}: {count}</div>;
                     })}
                   </div>
                 )}
@@ -953,7 +953,7 @@ export default function DiscussionsPage() {
                 border: '1px solid var(--border-primary, #1e1e1e)', padding: '4px 4px 4px 14px',
                 alignItems: 'center',
               }}>
-                <span style={{ color: 'var(--text-secondary, #888)', fontSize: 14 }}>🔍</span>
+                <span className="material-symbols-rounded" style={{ color: 'var(--text-secondary, #888)', fontSize: 14 }}>search</span>
                 <input
                   type="text"
                   placeholder="Chercher un sujet parmi 80+ discussions..."
@@ -976,7 +976,7 @@ export default function DiscussionsPage() {
                   color: '#818CF8', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
                 }}
               >
-                🎲 Sujet aléatoire
+                <span className="material-symbols-rounded" style={{ fontSize: 13 }}>casino</span> Sujet aléatoire
               </button>
               <button
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
@@ -1016,7 +1016,7 @@ export default function DiscussionsPage() {
                       transition: 'all 0.15s',
                     }}
                   >
-                    {tag.emoji} {tag.label}
+                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{tag.materialIcon}</span> {tag.label}
                   </button>
                 );
               })}
@@ -1037,7 +1037,7 @@ export default function DiscussionsPage() {
               const tagInfo = activeTag ? DISCUSSION_TAGS.find(tg => tg.id === activeTag) : null;
               const filterLabel = [
                 templateSearch.trim() ? `"${templateSearch}"` : '',
-                tagInfo ? `${tagInfo.emoji} ${tagInfo.label}` : '',
+                tagInfo ? `${tagInfo.label}` : '',
               ].filter(Boolean).join(' + ');
               return (
               <>
@@ -1076,7 +1076,7 @@ export default function DiscussionsPage() {
                   background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
                   border: '1px solid #6366F133',
                 }}>
-                  <span style={{ fontSize: 36 }}>⚖️</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 36 }}>balance</span>
                   <div style={{ flex: 1 }}>
                     <h3 style={{ margin: 0, fontSize: 15, color: '#fff' }}>Naël — Le Contradicteur</h3>
                     <p style={{ margin: '2px 0 0', fontSize: 12, color: '#94A3B8' }}>
@@ -1098,7 +1098,7 @@ export default function DiscussionsPage() {
                 {/* Daily picks */}
                 <div style={{ marginBottom: 24 }}>
                   <h2 style={{ fontSize: 15, color: 'var(--text-primary, #fff)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span>🎯</span> Discussions du jour
+                    <span className="material-symbols-rounded" style={{ fontSize: 15 }}>target</span> Discussions du jour
                   </h2>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
                     {getDailyTemplates().map(t => (
@@ -1111,7 +1111,7 @@ export default function DiscussionsPage() {
                 {discussions.length > 0 && (
                   <div style={{ marginBottom: 24 }}>
                     <h2 style={{ fontSize: 15, color: 'var(--text-primary, #fff)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span>🕐</span> Reprendre une discussion
+                      <span className="material-symbols-rounded" style={{ fontSize: 15 }}>schedule</span> Reprendre une discussion
                     </h2>
                     <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
                       {discussions.slice(0, 4).map(d => {
@@ -1130,7 +1130,7 @@ export default function DiscussionsPage() {
                             onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-primary, #1e1e1e)')}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                              <span>{catInfo?.emoji}</span>
+                              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{catInfo?.materialIcon}</span>
                               <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{d.title.slice(0, 35)}{d.title.length > 35 ? '...' : ''}</span>
                             </div>
                             <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)' }}>
@@ -1150,7 +1150,7 @@ export default function DiscussionsPage() {
                       fontSize: 15, color: 'var(--text-primary, #fff)', marginBottom: 4,
                       display: 'flex', alignItems: 'center', gap: 8,
                     }}>
-                      <span>{section.emoji}</span> {section.title}
+                      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{section.materialIcon}</span> {section.title}
                     </h2>
                     <p style={{ fontSize: 12, color: 'var(--text-secondary, #888)', margin: '0 0 10px' }}>
                       {section.description}
@@ -1173,7 +1173,7 @@ export default function DiscussionsPage() {
               padding: '12px 20px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
               display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0,
             }}>
-              <span style={{ fontSize: 24 }}>{active.agentEmoji}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 24, color: '#818CF8' }}>{active.agentEmoji}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {editingTitle ? (
@@ -1227,8 +1227,8 @@ export default function DiscussionsPage() {
                         <span key={p.id} title={`${p.label} connecté`} style={{
                           width: 16, height: 16, borderRadius: '50%', background: `${p.color}22`,
                           border: `1px solid ${p.color}44`, display: 'inline-flex', alignItems: 'center',
-                          justifyContent: 'center', fontSize: 8,
-                        }}>{p.emoji}</span>
+                          justifyContent: 'center', fontSize: 10,
+                        }}><span className="material-symbols-rounded" style={{ fontSize: 10 }}>{p.materialIcon}</span></span>
                       ))}
                     </span>
                   )}
@@ -1240,7 +1240,7 @@ export default function DiscussionsPage() {
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
                     background: '#22C55E11', border: '1px solid #22C55E33', color: '#4ADE80',
                   }}>
-                    ✅ Terminée
+                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Terminée
                   </span>
                 ) : active.depth >= 2 && (
                   <button
@@ -1252,7 +1252,7 @@ export default function DiscussionsPage() {
                     }}
                     title="Conclure et obtenir un bilan"
                   >
-                    ✅ Conclure
+                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Conclure
                   </button>
                 )}
                 <button
@@ -1265,7 +1265,7 @@ export default function DiscussionsPage() {
                     color: active.challengeMode ? '#EF4444' : 'var(--text-secondary, #888)',
                   }}
                 >
-                  {active.challengeMode ? '⚔️ Challenge ON' : '⚔️ Challenge'}
+                  {active.challengeMode ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>swords</span> Challenge ON</> : <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>swords</span> Challenge</>}
                 </button>
                 <button
                   onClick={togglePause}
@@ -1276,7 +1276,7 @@ export default function DiscussionsPage() {
                     color: 'var(--text-secondary, #888)',
                   }}
                 >
-                  {active.status === 'active' ? '⏸️ Pause' : '▶️ Reprendre'}
+                  {active.status === 'active' ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>pause</span> Pause</> : <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>play_arrow</span> Reprendre</>}
                 </button>
                 {/* [Item 14] Search in messages */}
                 <button
@@ -1288,7 +1288,7 @@ export default function DiscussionsPage() {
                     color: messageSearchOpen ? '#818CF8' : 'var(--text-secondary, #888)',
                   }}
                 >
-                  🔍
+                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span>
                 </button>
                 <button
                   onClick={handleExport}
@@ -1299,7 +1299,7 @@ export default function DiscussionsPage() {
                     color: 'var(--text-secondary, #888)',
                   }}
                 >
-                  📥 Exporter
+                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Exporter
                 </button>
                 <button
                   onClick={shareDiscussionSummary}
@@ -1322,7 +1322,7 @@ export default function DiscussionsPage() {
                     color: '#EF4444',
                   }}
                 >
-                  🗑️
+                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>delete</span>
                 </button>
               </div>
             </div>
@@ -1364,7 +1364,7 @@ export default function DiscussionsPage() {
                 padding: '6px 20px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
                 display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0,
               }}>
-                <span style={{ fontSize: 13, color: '#888' }}>🔍</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 13, color: '#888' }}>search</span>
                 <input
                   type="text"
                   placeholder="Rechercher dans la discussion..."
@@ -1383,7 +1383,7 @@ export default function DiscussionsPage() {
                     fontSize: 14, padding: '2px 4px',
                   }}
                 >
-                  ✕
+                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
                 </button>
               </div>
             )}
@@ -1440,7 +1440,7 @@ export default function DiscussionsPage() {
             <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
               {active.messages.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-secondary, #888)' }}>
-                  <div style={{ fontSize: 48, marginBottom: 16 }}>{active.agentEmoji}</div>
+                  <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 16, display: 'block', color: '#818CF8' }}>{active.agentEmoji}</span>
                   <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary, #fff)' }}>
                     {active.agentName} est prêt
                   </p>
@@ -1504,7 +1504,7 @@ export default function DiscussionsPage() {
                               }}
                               title="Copier"
                             >
-                              📋
+                              <span className="material-symbols-rounded" style={{ fontSize: 12 }}>content_copy</span>
                             </button>
                             {msg.role === 'assistant' && (
                               <button
@@ -1522,7 +1522,7 @@ export default function DiscussionsPage() {
                         )}
                         {msg.role === 'assistant' && (
                           <div style={{ fontSize: 11, color: '#818CF8', marginBottom: 4 }}>
-                            {active.agentEmoji} {active.agentName}
+                            <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#818CF8' }}>{active.agentEmoji}</span> {active.agentName}
                           </div>
                         )}
                         <div style={{ fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
@@ -1551,7 +1551,7 @@ export default function DiscussionsPage() {
                               fontSize: 12, color: '#A78BFA',
                             }}
                           >
-                            💡 {kp.text}
+                            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> {kp.text}
                             <button
                               onClick={(e) => { e.stopPropagation(); shareKeyPoint(kp); }}
                               style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#A78BFA', fontSize: 11, padding: '0 2px', opacity: 0.6 }}
@@ -1573,7 +1573,7 @@ export default function DiscussionsPage() {
                           fontSize: 12, color: '#FBBF24',
                         }}
                       >
-                        <span style={{ flex: 1 }}>🛡️ Sujet sensible : {sa.topic}</span>
+                        <span style={{ flex: 1 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>shield</span> Sujet sensible : {sa.topic}</span>
                         <button
                           onClick={() => setSensitivityAlerts(prev => prev.filter(a => a.id !== sa.id))}
                           style={{
@@ -1582,7 +1582,7 @@ export default function DiscussionsPage() {
                           }}
                           title="Fermer"
                         >
-                          ✕
+                          <span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span>
                         </button>
                       </div>
                     ))}
@@ -1616,7 +1616,7 @@ export default function DiscussionsPage() {
                       display: 'flex', alignItems: 'center', gap: 6,
                     }}
                   >
-                    🔄 Réessayer
+                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>refresh</span> Réessayer
                   </button>
                 </div>
               )}
@@ -1659,7 +1659,7 @@ export default function DiscussionsPage() {
                 background: '#F59E0B11', display: 'flex', alignItems: 'center', gap: 8,
                 flexShrink: 0,
               }}>
-                <span style={{ fontSize: 13 }}>⏸️</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 13 }}>pause</span>
                 <span style={{ fontSize: 12, color: '#FBBF24', flex: 1 }}>
                   Discussion en pause — cliquez &quot;Reprendre&quot; pour continuer.
                 </span>
@@ -1805,7 +1805,7 @@ export default function DiscussionsPage() {
 
             {wizardStep === 'analyzing' && (
               <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
+                <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>search</span>
                 <p style={{ fontSize: 16, color: 'var(--text-primary, #fff)', fontWeight: 600 }}>
                   Analyse en cours...
                 </p>
@@ -1827,7 +1827,7 @@ export default function DiscussionsPage() {
                   background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #6366F133',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span style={{ fontSize: 36 }}>{wizardResult.agentEmoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#818CF8' }}>{wizardResult.agentEmoji}</span>
                     <div>
                       <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary, #fff)' }}>
                         {wizardResult.agentName}
@@ -1856,7 +1856,7 @@ export default function DiscussionsPage() {
                       }}
                     >
                       {DISCUSSION_CATEGORIES.map(c => (
-                        <option key={c.id} value={c.id}>{c.emoji} {c.label}</option>
+                        <option key={c.id} value={c.id}>{c.label}</option>
                       ))}
                     </select>
                   </div>
@@ -1933,7 +1933,7 @@ export default function DiscussionsPage() {
                 background: '#6366F1', border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
               }}
             >
-              📋 Copier le texte
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>content_copy</span> Copier le texte
             </button>
           </div>
         }
@@ -1948,7 +1948,7 @@ export default function DiscussionsPage() {
             {shareContent?.text}
           </p>
           <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)', marginTop: 8 }}>
-            — {shareContent?.agentEmoji} {shareContent?.agentName} · &quot;{shareContent?.discussionTitle}&quot;
+            — <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#818CF8' }}>{shareContent?.agentEmoji}</span> {shareContent?.agentName} · &quot;{shareContent?.discussionTitle}&quot;
           </div>
         </div>
 
@@ -1962,7 +1962,7 @@ export default function DiscussionsPage() {
               border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
             }}
           >
-            📤 Partager via le système
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>share</span> Partager via le système
           </button>
         )}
 
@@ -1982,7 +1982,7 @@ export default function DiscussionsPage() {
               onMouseEnter={e => { e.currentTarget.style.background = `${p.color}22`; e.currentTarget.style.borderColor = `${p.color}66`; }}
               onMouseLeave={e => { e.currentTarget.style.background = `${p.color}12`; e.currentTarget.style.borderColor = `${p.color}33`; }}
             >
-              {p.emoji} {p.label}
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{p.materialIcon}</span> {p.label}
             </button>
           ))}
         </div>
@@ -1993,7 +1993,7 @@ export default function DiscussionsPage() {
             <span>Comptes connectés :</span>
             {connectedPlatforms.map(p => (
               <span key={p.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 3, padding: '2px 8px', borderRadius: 10, background: `${p.color}11`, color: p.color, fontSize: 10, fontWeight: 600 }}>
-                {p.emoji} {p.label}
+                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{p.materialIcon}</span> {p.label}
               </span>
             ))}
           </div>

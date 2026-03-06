@@ -53,7 +53,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
       {/* Read-only Info */}
       <div style={styles.grid2}>
         <div style={styles.card}>
-          <div style={styles.cardTitle}>👤 Informations</div>
+          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>person</span> Informations</div>
           <div style={styles.infoRow}>
             <span style={styles.infoLabel}>ID</span>
             <span style={{ ...styles.infoValue, fontFamily: 'var(--font-mono)', fontSize: 12 }}>{user.id}</span>
@@ -64,7 +64,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
           </div>
           <div style={styles.infoRow}>
             <span style={styles.infoLabel}>Email confirme</span>
-            <span style={styles.infoValue}>{user.emailConfirmed ? '✅ Oui' : '❌ Non'}</span>
+            <span style={styles.infoValue}>{user.emailConfirmed ? 'Oui' : 'Non'}</span>
           </div>
           <div style={styles.infoRow}>
             <span style={styles.infoLabel}>Numero utilisateur</span>
@@ -97,7 +97,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardTitle}>📊 Activite</div>
+          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>bar_chart</span> Activite</div>
           <div style={styles.kpiCard}>
             <span style={styles.kpiLabel}>Appels API aujourd&apos;hui</span>
             <span style={{ ...styles.kpiValue, color: user.dailyApiCalls > user.dailyApiLimit * 0.8 ? 'var(--warning)' : 'var(--text-primary)' }}>
@@ -128,7 +128,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
 
       {/* Editable Fields */}
       <div style={styles.card}>
-        <div style={styles.cardTitle}>✏️ Modifier le profil</div>
+        <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>edit</span> Modifier le profil</div>
         <div style={styles.grid2}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Nom d&apos;affichage</label>
@@ -196,7 +196,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? 'Sauvegarde...' : '💾 Sauvegarder'}
+            {saving ? 'Sauvegarde...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>save</span> Sauvegarder</>}
           </button>
         </div>
       </div>

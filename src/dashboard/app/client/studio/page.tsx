@@ -6,12 +6,12 @@ import { VIDEO_WORKFLOWS, PHOTO_WORKFLOWS } from '../../../lib/studio-workflows'
 import RoadmapBadge from '../../../components/studio/RoadmapBadge';
 
 const PHOTO_CATEGORIES = [
-  { id: 'all', label: 'Tous', icon: '✨' },
-  { id: 'social', label: 'Social', icon: '📱' },
-  { id: 'commercial', label: 'Commerce', icon: '💼' },
-  { id: 'creative', label: 'Creatif', icon: '🎨' },
-  { id: 'personal', label: 'Personnel', icon: '❤️' },
-  { id: 'professional', label: 'Pro', icon: '💎' },
+  { id: 'all', label: 'Tous', icon: 'auto_awesome' },
+  { id: 'social', label: 'Social', icon: 'phone_iphone' },
+  { id: 'commercial', label: 'Commerce', icon: 'work' },
+  { id: 'creative', label: 'Creatif', icon: 'palette' },
+  { id: 'personal', label: 'Personnel', icon: 'favorite' },
+  { id: 'professional', label: 'Pro', icon: 'diamond' },
 ] as const;
 
 export default function StudioPage() {
@@ -29,10 +29,10 @@ export default function StudioPage() {
     <div className="client-page-scrollable" style={{ padding: 32, maxWidth: 960, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
-          Studio Creatif
+          <span className="fz-logo-word">Studio Creatif</span>
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-tertiary)', lineHeight: 1.6 }}>
-          Creez des photos et videos professionnelles guidees par nos agents specialises.
+          Creez des photos et videos professionnelles guidees par nos <span className="fz-logo-word">agents</span> specialises.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export default function StudioPage() {
             boxShadow: activeTab === 'photo' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          📸 Photo
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>photo_camera</span> Photo
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
             background: activeTab === 'photo' ? 'var(--success)' : 'var(--bg-tertiary)',
@@ -72,7 +72,7 @@ export default function StudioPage() {
             boxShadow: activeTab === 'video' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          🎬 Video
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>movie</span> Video
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
             background: activeTab === 'video' ? 'var(--success)' : 'var(--bg-tertiary)',
@@ -87,9 +87,9 @@ export default function StudioPage() {
       {activeTab === 'photo' && (
         <section style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <span style={{ fontSize: 28 }}>📸</span>
+            <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>photo_camera</span></span>
             <div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Photo Studio</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Photo <span className="fz-logo-word">Studio</span></h2>
               <p style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Guide par Emma — Directrice artistique</p>
             </div>
             <span style={{
@@ -115,7 +115,7 @@ export default function StudioPage() {
                   transition: 'all 0.15s',
                 }}
               >
-                {cat.icon} {cat.label}
+                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{cat.icon}</span> {cat.label}
                 {cat.id !== 'all' && (
                   <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.7 }}>
                     ({PHOTO_WORKFLOWS.filter(w => w.category === cat.id).length})
@@ -141,7 +141,7 @@ export default function StudioPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 22 }}>{wf.icon}</span>
+                  <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{wf.icon}</span></span>
                   <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{wf.label}</span>
                   {wf.id === 'photo-post' && (
                     <span style={{
@@ -173,7 +173,7 @@ export default function StudioPage() {
       {activeTab === 'video' && (
         <section style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <span style={{ fontSize: 28 }}>🎬</span>
+            <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>movie</span></span>
             <div>
               <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Video Studio</h2>
               <p style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Guide par Lucas — Directeur video</p>
@@ -200,7 +200,7 @@ export default function StudioPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <span style={{ fontSize: 22 }}>{wf.icon}</span>
+                  <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{wf.icon}</span></span>
                   <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{wf.label}</span>
                   {!wf.available && <RoadmapBadge />}
                   {wf.available && (
@@ -236,7 +236,7 @@ export default function StudioPage() {
             fontSize: 11, fontWeight: 700, color: 'var(--purple)', textTransform: 'uppercase',
             letterSpacing: 0.5, marginBottom: 8,
           }}>
-            📸 Photo
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>photo_camera</span> Photo
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 12 }}>
             <div style={{ color: 'var(--text-secondary)' }}>Generation image (Nano Banana)</div>
@@ -252,7 +252,7 @@ export default function StudioPage() {
             fontSize: 11, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase',
             letterSpacing: 0.5, marginBottom: 8,
           }}>
-            🎬 Video
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>movie</span> Video
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 12 }}>
             <div style={{ color: 'var(--text-secondary)' }}>Video D-ID (talking head)</div>

@@ -18,13 +18,13 @@ interface UsageData {
 }
 
 const NOTIFICATION_CHANNELS = [
-  { key: 'notifyInApp', icon: '\uD83D\uDD14', label: 'In-App', comingSoon: false },
-  { key: 'notifyEmail', icon: '\uD83D\uDCE7', label: 'Email', comingSoon: false },
-  { key: 'notifySms', icon: '\uD83D\uDCF1', label: 'SMS', comingSoon: true },
-  { key: 'notifyWhatsapp', icon: '\uD83D\uDCAC', label: 'WhatsApp', comingSoon: false },
-  { key: 'notifyLowBalance', icon: '\uD83D\uDCB0', label: 'Alertes solde bas', comingSoon: false },
-  { key: 'notifyDailyReport', icon: '\uD83D\uDCCA', label: 'Rapport quotidien', comingSoon: false },
-  { key: 'notifyWeeklyReport', icon: '\uD83D\uDCC8', label: 'Rapport hebdomadaire', comingSoon: false },
+  { key: 'notifyInApp', icon: 'notifications', label: 'In-App', comingSoon: false },
+  { key: 'notifyEmail', icon: 'mail', label: 'Email', comingSoon: false },
+  { key: 'notifySms', icon: 'phone_iphone', label: 'SMS', comingSoon: true },
+  { key: 'notifyWhatsapp', icon: 'chat', label: 'WhatsApp', comingSoon: false },
+  { key: 'notifyLowBalance', icon: 'savings', label: 'Alertes solde bas', comingSoon: false },
+  { key: 'notifyDailyReport', icon: 'bar_chart', label: 'Rapport quotidien', comingSoon: false },
+  { key: 'notifyWeeklyReport', icon: 'trending_up', label: 'Rapport hebdomadaire', comingSoon: false },
 ];
 
 export default function AccountPage() {
@@ -167,7 +167,8 @@ export default function AccountPage() {
 
   async function revokeSession(jti: string) {
     if (!confirm('Révoquer cette session ? L\'appareil sera déconnecté.')) return;
-    const token = session.token as string;
+    const token = session.token as string | undefined;
+    if (!token) { showError('Session expirée'); return; }
     try {
       const res = await fetch('/api/portal', {
         method: 'POST',
@@ -184,7 +185,8 @@ export default function AccountPage() {
   }
 
   async function downloadInvoice(transactionId: string) {
-    const token = session.token as string;
+    const token = session.token as string | undefined;
+    if (!token) { showError('Session expirée'); return; }
     try {
       const res = await fetch('/api/portal', {
         method: 'POST',
@@ -294,7 +296,7 @@ export default function AccountPage() {
     <div className="client-page-scrollable">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Compte & Crédits</h1>
+          <h1 className="page-title">Compte & <span className="fz-logo-word">Crédits</span></h1>
           <p className="page-subtitle">Votre profil, votre taux, vos crédits</p>
         </div>
       </div>
@@ -341,7 +343,7 @@ export default function AccountPage() {
           <div className="section-title">Code de parrainage</div>
           <div className="card flex-between items-center flex-wrap gap-12">
             <div className="flex items-center gap-12">
-              <span style={{ fontSize: 28 }}>🎁</span>
+              <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>redeem</span></span>
               <div>
                 <div className="text-md font-bold">Invitez vos amis, gagnez 20 EUR de crédits</div>
                 <div className="text-sm text-secondary" style={{ marginTop: 2 }}>
@@ -443,7 +445,7 @@ export default function AccountPage() {
                     POPULAIRE
                   </div>
                 )}
-                <div className="mb-4" style={{ fontSize: 24, marginTop: opt.popular ? 6 : 0 }}>{opt.icon}</div>
+                <div className="mb-4" style={{ fontSize: 24, marginTop: opt.popular ? 6 : 0 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{opt.icon}</span></div>
                 <div className="font-bold" style={{ fontSize: 24, marginBottom: 2 }}>{opt.amount}€</div>
                 <div className="text-sm text-secondary mb-8">{(opt.amount * 100).toLocaleString()} crédits</div>
                 <button className="btn btn-primary btn-sm w-full"
@@ -458,9 +460,9 @@ export default function AccountPage() {
 
       {/* Auto-Recharge */}
       <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 24, marginTop: 24 }}>
-        <h3 className="font-bold text-lg mb-4">{'\uD83D\uDD04'} Recharge Automatique</h3>
+        <h3 className="font-bold text-lg mb-4"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>refresh</span> Recharge Automatique</h3>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
-          Activez la recharge automatique pour ne jamais manquer de crédits.
+          Activez la recharge <span className="fz-logo-word">automatique</span> pour ne jamais manquer de crédits.
           Sans Stripe, un administrateur traitera votre demande manuellement.
         </p>
 
@@ -536,7 +538,7 @@ export default function AccountPage() {
 
       {/* Type de compte */}
       <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 24, marginTop: 24 }}>
-        <h3 className="font-bold text-lg mb-4">🏷️ Type de compte</h3>
+        <h3 className="font-bold text-lg mb-4"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>label</span> Type de compte</h3>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
           Activez le mode Entreprise pour accéder aux modules business et à la section «&nbsp;Mon Entreprise&nbsp;» dans le menu.
         </p>
@@ -550,7 +552,7 @@ export default function AccountPage() {
               textAlign: 'center', transition: 'all 0.2s',
             }}
           >
-            <div style={{ fontSize: 24, marginBottom: 4 }}>👤</div>
+            <div style={{ fontSize: 24, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>person</span></div>
             <div style={{ fontSize: 13, fontWeight: 700, color: !isPro ? 'var(--accent)' : 'var(--text-primary)' }}>Personnel</div>
           </button>
           <button
@@ -562,20 +564,20 @@ export default function AccountPage() {
               textAlign: 'center', transition: 'all 0.2s',
             }}
           >
-            <div style={{ fontSize: 24, marginBottom: 4 }}>🏢</div>
+            <div style={{ fontSize: 24, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>business</span></div>
             <div style={{ fontSize: 13, fontWeight: 700, color: isPro ? 'var(--accent)' : 'var(--text-primary)' }}>Entreprise</div>
           </button>
         </div>
         {isPro && (
           <p className="text-xs text-success" style={{ marginTop: 10 }}>
-            ✅ Section «&nbsp;Mon Entreprise&nbsp;» activée dans le menu — rechargez la page pour voir les changements.
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Section «&nbsp;Mon Entreprise&nbsp;» activée dans le menu — rechargez la page pour voir les changements.
           </p>
         )}
       </div>
 
       {/* Notification Preferences */}
       <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 24, marginTop: 24 }}>
-        <h3 className="font-bold text-lg mb-4">{'\uD83D\uDD14'} Preferences de Notification</h3>
+        <h3 className="font-bold text-lg mb-4"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>notifications</span> Preferences de Notification</h3>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
           Choisissez comment vous souhaitez etre notifie.
         </p>
@@ -600,7 +602,7 @@ export default function AccountPage() {
                 onChange={() => setNotifPrefs(prev => ({ ...prev, [channel.key]: !prev[channel.key] }))}
                 style={{ width: 16, height: 16, cursor: channel.comingSoon ? 'not-allowed' : 'pointer' }}
               />
-              <span className="text-md">{channel.icon} {channel.label}</span>
+              <span className="text-md"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{channel.icon}</span> {channel.label}</span>
               {channel.comingSoon && (
                 <span className="badge badge-warning" style={{ fontSize: 10, marginLeft: 'auto', padding: '2px 6px' }}>
                   Bientot
@@ -630,16 +632,16 @@ export default function AccountPage() {
       <div className="card mt-16 p-16">
         <h3 className="font-bold text-lg mb-16">Canaux de communication</h3>
         {[
-          { icon: '📱', name: 'WhatsApp', desc: 'Parlez a vos agents par message et notes vocales', status: 'Bientot' },
-          { icon: '💬', name: 'SMS', desc: 'Recevez des alertes et rapports par SMS', status: 'Bientot' },
-          { icon: '📧', name: 'Email', desc: 'Notifications et rapports par email', status: 'Bientot' },
-          { icon: '🎤', name: 'Voix (Deepgram)', desc: 'Dictez vos messages et ecoutez les reponses', status: 'Actif' },
+          { icon: 'phone_iphone', name: 'WhatsApp', desc: 'Parlez a vos agents par message et notes vocales', status: 'Bientot' },
+          { icon: 'chat', name: 'SMS', desc: 'Recevez des alertes et rapports par SMS', status: 'Bientot' },
+          { icon: 'mail', name: 'Email', desc: 'Notifications et rapports par email', status: 'Bientot' },
+          { icon: 'mic', name: 'Voix (Deepgram)', desc: 'Dictez vos messages et ecoutez les reponses', status: 'Actif' },
         ].map((ch, i, arr) => (
           <div key={ch.name} className="flex-between items-center" style={{
             padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--border-primary)' : 'none',
           }}>
             <div className="flex items-center gap-8">
-              <span style={{ fontSize: 20 }}>{ch.icon}</span>
+              <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{ch.icon}</span></span>
               <div>
                 <div className="text-base font-semibold">{ch.name}</div>
                 <div className="text-sm text-muted">{ch.desc}</div>
@@ -655,16 +657,16 @@ export default function AccountPage() {
         <h3 className="font-bold text-lg mb-12">Integrations</h3>
         <div className="grid-auto gap-12" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
           {[
-            { icon: '\uD83D\uDDE3\uFE0F', title: 'Voix Premium (ElevenLabs)', desc: 'Voix ultra-realistes', active: true },
-            { icon: '\uD83C\uDFAC', title: 'Avatar Video (D-ID)', desc: 'Vos agents en video', active: false },
-            { icon: '\uD83D\uDCF2', title: 'WhatsApp Business', desc: 'Vos agents sur WhatsApp', active: false },
+            { icon: 'record_voice_over', title: 'Voix Premium (ElevenLabs)', desc: 'Voix ultra-realistes', active: true },
+            { icon: 'videocam', title: 'Avatar Video (D-ID)', desc: 'Vos agents en video', active: false },
+            { icon: 'phone_iphone', title: 'WhatsApp Business', desc: 'Vos agents sur WhatsApp', active: false },
           ].map(item => (
             <div key={item.title} className="border rounded-md p-12" style={{
               background: item.active ? '#22c55e08' : 'var(--bg-primary)',
               borderColor: item.active ? '#22c55e44' : undefined,
             }}>
               <div className="flex-between items-center mb-4">
-                <span style={{ fontSize: 22 }}>{item.icon}</span>
+                <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{item.icon}</span></span>
                 <span className={`badge ${item.active ? 'badge-success' : 'badge-warning'}`} style={{ fontSize: 10 }}>
                   {item.active ? 'Actif' : 'Bientot'}
                 </span>
@@ -699,7 +701,7 @@ export default function AccountPage() {
 
       {/* Sessions */}
       <div className="section">
-        <div className="section-title">🔐 Appareils connectés</div>
+        <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>lock</span> Appareils connectés</div>
         {sessions.length === 0 ? (
           <div className="card text-center" style={{ padding: '24px', color: 'var(--text-tertiary)', fontSize: 13 }}>
             Aucune session active trouvée
@@ -709,7 +711,7 @@ export default function AccountPage() {
             {sessions.map(s => (
               <div key={s.jti} className="card" style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ fontSize: 22, flexShrink: 0 }}>
-                  {/mobile|android|iphone/i.test(s.userAgent ?? '') ? '📱' : '💻'}
+                  {/mobile|android|iphone/i.test(s.userAgent ?? '') ? 'phone_iphone' : 'terminal'}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -742,11 +744,11 @@ export default function AccountPage() {
       {/* Invoices */}
       {invoices.length > 0 && (
         <div className="section">
-          <div className="section-title">🧾 Factures</div>
+          <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>receipt</span> Factures</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {invoices.slice(0, 10).map(inv => (
               <div key={inv.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ fontSize: 20, flexShrink: 0 }}>🧾</div>
+                <div style={{ fontSize: 20, flexShrink: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>receipt</span></div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 13 }}>
                     Dépôt de {(Number(inv.amount ?? 0) / 1_000_000).toFixed(0)} crédits
@@ -759,7 +761,7 @@ export default function AccountPage() {
                   onClick={() => downloadInvoice(inv.transactionId ?? inv.id)}
                   style={{ fontSize: 12, fontWeight: 600, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', cursor: 'pointer', flexShrink: 0 }}
                 >
-                  📥 Télécharger
+                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span> Télécharger
                 </button>
               </div>
             ))}

@@ -198,7 +198,7 @@ function PhotoStudioContent() {
                 boxShadow: mode === 'free' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              ✏️ Création libre
+              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>edit</span> Création libre
             </button>
             <button
               onClick={() => setMode('request')}
@@ -210,7 +210,7 @@ function PhotoStudioContent() {
                 boxShadow: mode === 'request' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              📥 Demandes agents
+              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span> Demandes agents
               {pendingRequests.length > 0 && (
                 <span style={{
                   fontSize: 9, fontWeight: 700, background: '#ef4444', color: 'white',
@@ -242,7 +242,7 @@ function PhotoStudioContent() {
           borderBottom: `1px solid ${activeRequest.agentColor}30`,
           padding: '7px 16px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
         }}>
-          <span style={{ fontSize: 16 }}>{activeRequest.agentEmoji}</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{activeRequest.agentEmoji}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: activeRequest.agentColor }}>
               {activeRequest.agentName}
@@ -261,7 +261,7 @@ function PhotoStudioContent() {
             onClick={() => setActiveRequest(null)}
             style={{ fontSize: 10, color: '#6b7280', background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            ✕
+            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span>
           </button>
         </div>
       )}
@@ -277,7 +277,7 @@ function PhotoStudioContent() {
           <ChatPanel
             systemPrompt={systemPrompt}
             agentName="emma-photo"
-            agentEmoji="📸"
+            agentEmoji="photo_camera"
             agentLabel="Emma — Photo"
             token={token}
             onAgentAction={handleAgentAction}
@@ -431,7 +431,7 @@ function PhotoStudioContent() {
                 }}>
                   {workflow.steps[currentStep]?.title ?? 'Brief'}
                 </div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', display: 'block', marginBottom: 6 }}>
                   Notes & brief créatif
                 </label>
                 <textarea
@@ -461,7 +461,7 @@ function PhotoStudioContent() {
                       background: '#06b6d4', color: 'white', fontSize: 13, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
-                    ⬇ Télécharger le brief
+                    <span className="material-symbols-rounded" style={{ fontSize: 13, verticalAlign: 'middle' }}>download</span> Télécharger le brief
                   </button>
                 )}
               </div>

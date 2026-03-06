@@ -243,7 +243,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
             position: 'absolute', left: 10, top: '50%',
             transform: 'translateY(-50%)', fontSize: 12,
             color: 'var(--text-muted)', pointerEvents: 'none',
-          }}>🔍</span>
+          }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>search</span></span>
           <input
             className="input input-sm"
             placeholder="Rechercher par email ou nom…"
@@ -260,10 +260,10 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
           style={{ width: 'auto', minWidth: 110 }}
         >
           <option value="">Tous les tiers</option>
-          <option value="paid">🟢 Paid</option>
-          <option value="free">🔵 Free</option>
-          <option value="demo">🟡 Demo</option>
-          <option value="guest">⚪ Guest</option>
+          <option value="paid">Paid</option>
+          <option value="free">Free</option>
+          <option value="demo">Demo</option>
+          <option value="guest">Guest</option>
         </select>
 
         <select
@@ -272,10 +272,10 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
           onChange={e => { setFilterRole(e.target.value); setPage(1); }}
           style={{ width: 'auto', minWidth: 120 }}
         >
-          <option value="">Tous les rôles</option>
-          <option value="admin">🔴 Admin</option>
-          <option value="operator">🟡 Operator</option>
-          <option value="viewer">⚪ Viewer</option>
+          <option value="">Tous les roles</option>
+          <option value="admin">Admin</option>
+          <option value="operator">Operator</option>
+          <option value="viewer">Viewer</option>
         </select>
 
         <select
@@ -285,13 +285,13 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
           style={{ width: 'auto', minWidth: 100 }}
         >
           <option value="">Tous</option>
-          <option value="active">✅ Actifs</option>
-          <option value="inactive">❌ Inactifs</option>
+          <option value="active">Actifs</option>
+          <option value="inactive">Inactifs</option>
         </select>
 
         {hasFilters && (
           <button className="btn btn-ghost btn-sm" onClick={resetFilters}>
-            ✕ Reset
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span> Reset
           </button>
         )}
 
@@ -308,13 +308,13 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
           </span>
           <div className="bulk-actions">
             <button className="btn-bulk" onClick={() => openOverlay('bulk-deposit')}>
-              💰 Déposer crédits
+              <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer credits
             </button>
             <button className="btn-bulk" onClick={() => openOverlay('bulk-tier')}>
               Changer tier
             </button>
             <button className="btn-bulk" onClick={() => openOverlay('bulk-notify')}>
-              📤 Notifier
+              <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>outbox</span> Notifier
             </button>
           </div>
           <button
@@ -322,7 +322,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
             style={{ marginLeft: 'auto', opacity: 0.8 }}
             onClick={() => setSelectedIds(new Set())}
           >
-            ✕ Désélectionner
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span> Désélectionner
           </button>
         </div>
       )}
@@ -338,7 +338,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                   onClick={toggleSelectAll}
                   title={allPageSelected ? 'Tout désélectionner' : 'Tout sélectionner'}
                 >
-                  {allPageSelected ? '✓' : ''}
+                  {allPageSelected ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
                 </div>
               </th>
               <SortTh field="displayName" label="Utilisateur" />
@@ -356,7 +356,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
               <tr>
                 <td colSpan={9}>
                   <div className="empty-state">
-                    <div className="empty-state-icon">{hasFilters ? '🔍' : '👥'}</div>
+                    <div className="empty-state-icon"><span className="material-symbols-rounded" style={{ fontSize: 32 }}>{hasFilters ? 'search' : 'group'}</span></div>
                     <div className="empty-state-text">
                       {hasFilters ? 'Aucun résultat pour ces filtres' : 'Aucun utilisateur'}
                     </div>
@@ -379,7 +379,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                       className={`custom-checkbox${selectedIds.has(user.id) ? ' checked' : ''}`}
                       onClick={() => toggleSelect(user.id)}
                     >
-                      {selectedIds.has(user.id) ? '✓' : ''}
+                      {selectedIds.has(user.id) ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
                     </div>
                   </td>
 
@@ -462,7 +462,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                         title="Déposer des crédits"
                         onClick={() => openOverlay('deposit', user)}
                       >
-                        💰
+                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>savings</span>
                       </button>
                       <button
                         className="btn btn-secondary btn-xs"
@@ -481,7 +481,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                         title="Régénérer la clé API"
                         onClick={() => openOverlay('reset-key', user)}
                       >
-                        🔑
+                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>key</span>
                       </button>
                       {user.isActive ? (
                         <button
@@ -732,7 +732,7 @@ function DepositSlideOver({
             type="submit"
             disabled={loading || !amount || parseFloat(amount) <= 0}
           >
-            {loading ? 'En cours…' : '💰 Déposer'}
+            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer</>}
           </button>
         </>
       }
@@ -811,9 +811,9 @@ function RoleSlideOver({
         <label className="form-label">Nouveau rôle</label>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {[
-            { value: 'admin', label: '🔴 Admin', desc: 'Accès complet à toutes les fonctionnalités et à la console admin.' },
-            { value: 'operator', label: '🟡 Operator', desc: 'Peut gérer les agents et les campagnes. Pas d\'accès admin.' },
-            { value: 'viewer', label: '⚪ Viewer', desc: 'Accès lecture seule au dashboard client standard.' },
+            { value: 'admin', label: 'Admin', desc: 'Acces complet a toutes les fonctionnalites et a la console admin.' },
+            { value: 'operator', label: 'Operator', desc: 'Peut gerer les agents et les campagnes. Pas d\'acces admin.' },
+            { value: 'viewer', label: 'Viewer', desc: 'Acces lecture seule au dashboard client standard.' },
           ].map(option => (
             <label
               key={option.value}
@@ -892,10 +892,10 @@ function TierSlideOver({
         <label className="form-label">Nouveau tier</label>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {[
-            { value: 'paid', label: '🟢 Paid', desc: 'Abonnement payant actif. Accès complet + agents personnels.' },
-            { value: 'free', label: '🔵 Free', desc: 'Accès gratuit limité. 100 appels API/jour.' },
-            { value: 'demo', label: '🟡 Demo', desc: 'Accès démo temporaire. Expire après 14 jours.' },
-            { value: 'guest', label: '⚪ Guest', desc: 'Accès visiteur minimal. Pas de chat ni agents.' },
+            { value: 'paid', label: 'Paid', desc: 'Abonnement payant actif. Acces complet + agents personnels.' },
+            { value: 'free', label: 'Free', desc: 'Acces gratuit limite. 100 appels API/jour.' },
+            { value: 'demo', label: 'Demo', desc: 'Acces demo temporaire. Expire apres 14 jours.' },
+            { value: 'guest', label: 'Guest', desc: 'Acces visiteur minimal. Pas de chat ni agents.' },
           ].map(option => (
             <label
               key={option.value}
@@ -960,13 +960,13 @@ function ResetKeySlideOver({
             onClick={() => onSubmit(user.id)}
             disabled={loading}
           >
-            {loading ? 'En cours…' : '🔑 Régénérer'}
+            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>key</span> Regenerer</>}
           </button>
         </>
       }
     >
       <div className="alert alert-warning" style={{ marginBottom: 16 }}>
-        ⚠️ L'ancienne clé API sera <strong>invalidée immédiatement</strong>. L'utilisateur devra mettre à jour ses intégrations.
+        <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>warning</span> L&apos;ancienne cle API sera <strong>invalidee immediatement</strong>. L'utilisateur devra mettre à jour ses intégrations.
       </div>
       <p className="text-sm text-secondary">
         Régénérer la clé API de <strong>{user.displayName}</strong> ({user.email}) ?
@@ -1053,7 +1053,7 @@ function BulkDepositSlideOver({
             }}
             disabled={loading || !amount || parseFloat(amount) <= 0}
           >
-            {loading ? 'En cours…' : `💰 Déposer pour ${count} users`}
+            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer pour {count} users</>}
           </button>
         </>
       }
@@ -1125,10 +1125,10 @@ function BulkTierSlideOver({
         <label className="form-label">Nouveau tier</label>
         <select className="select" value={tier} onChange={e => setTier(e.target.value)} style={{ width: '100%' }}>
           <option value="">Choisir un tier…</option>
-          <option value="paid">🟢 Paid</option>
-          <option value="free">🔵 Free</option>
-          <option value="demo">🟡 Demo</option>
-          <option value="guest">⚪ Guest</option>
+          <option value="paid">Paid</option>
+          <option value="free">Free</option>
+          <option value="demo">Demo</option>
+          <option value="guest">Guest</option>
         </select>
       </div>
     </SlideOver>
@@ -1163,7 +1163,7 @@ function BulkNotifySlideOver({
             onClick={() => title && message && onSubmit(title, message)}
             disabled={loading || !title || !message}
           >
-            {loading ? 'En cours…' : `📤 Envoyer à ${count} users`}
+            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>outbox</span> Envoyer a {count} users</>}
           </button>
         </>
       }

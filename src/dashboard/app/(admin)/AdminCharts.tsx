@@ -310,7 +310,7 @@ export default function AdminCharts({ billingStats, tokenUsage, agentCounts }: A
   ].filter(d => d.value > 0) : [];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+    <div className="fz-grid-3" style={{ display: 'grid', gap: 12 }}>
       {/* Users by tier */}
       <div className="card" style={{ padding: 16 }}>
         <div className="text-md font-bold mb-8">Utilisateurs par tier</div>

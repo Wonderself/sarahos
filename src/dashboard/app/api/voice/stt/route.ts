@@ -16,6 +16,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
     }
 
+    // Limit file size to 25MB to prevent memory exhaustion
+    if (audioFile.size > 25 * 1024 * 1024) {
+      return NextResponse.json({ error: 'Audio file too large (max 25MB)' }, { status: 413 });
+    }
+
     const audioBuffer = Buffer.from(await audioFile.arrayBuffer());
 
     const res = await fetch(

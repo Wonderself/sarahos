@@ -56,7 +56,7 @@ export default function DocumentActions({ documentId, filename }: Props) {
         opacity: loading ? 0.6 : 1,
       }}
     >
-      {loading ? '...' : '\uD83D\uDDD1\uFE0F'}
+      {loading ? '...' : <span className="material-symbols-rounded" style={{ fontSize: 16 }}>delete</span>}
     </button>
   );
 }

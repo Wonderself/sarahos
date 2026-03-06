@@ -17,16 +17,16 @@ interface CheckItem {
 }
 
 const CHECKLIST: CheckItem[] = [
-  { id: 'postgres', label: 'PostgreSQL connecté', description: 'Base de données principale opérationnelle', testEndpoint: '/health', icon: '🗄️', category: 'Infrastructure' },
-  { id: 'redis', label: 'Redis connecté', description: 'Cache et sessions opérationnels', testEndpoint: '/health', icon: '⚡', category: 'Infrastructure' },
-  { id: 'admin_user', label: 'Compte admin créé', description: 'Au moins un compte avec le rôle admin', link: '/admin/users', icon: '👤', category: 'Sécurité' },
-  { id: '2fa', label: '2FA activée sur le compte admin', description: 'Authentification à deux facteurs configurée', link: '/admin/security', icon: '🔒', category: 'Sécurité' },
-  { id: 'anthropic', label: 'Anthropic API configurée', description: 'ANTHROPIC_API_KEY définie et valide', testEndpoint: '/admin/test/anthropic', testMethod: 'POST', icon: '🤖', category: 'Intégrations IA' },
-  { id: 'elevenlabs', label: 'ElevenLabs TTS configuré', description: 'ELEVENLABS_API_KEY définie et valide', testEndpoint: '/admin/test/tts', testMethod: 'POST', icon: '🎙️', category: 'Intégrations IA' },
-  { id: 'twilio', label: 'Twilio SMS configuré', description: 'TWILIO_ACCOUNT_SID, AUTH_TOKEN, FROM_NUMBER définis', icon: '📱', category: 'Communications' },
-  { id: 'resend', label: 'Resend email configuré', description: 'RESEND_API_KEY définie pour les emails transactionnels', icon: '📧', category: 'Communications' },
-  { id: 'first_user', label: 'Premier client créé', description: 'Au moins un utilisateur avec le rôle client', link: '/admin/users', icon: '🧑', category: 'Contenu' },
-  { id: 'pricing', label: 'Grille tarifaire configurée', description: 'Tarifs LLM configurés via POST /billing/pricing', link: '/admin/tokens', icon: '💡', category: 'Contenu' },
+  { id: 'postgres', label: 'PostgreSQL connecté', description: 'Base de données principale opérationnelle', testEndpoint: '/health', icon: 'database', category: 'Infrastructure' },
+  { id: 'redis', label: 'Redis connecté', description: 'Cache et sessions opérationnels', testEndpoint: '/health', icon: 'bolt', category: 'Infrastructure' },
+  { id: 'admin_user', label: 'Compte admin créé', description: 'Au moins un compte avec le rôle admin', link: '/admin/users', icon: 'person', category: 'Sécurité' },
+  { id: '2fa', label: '2FA activée sur le compte admin', description: 'Authentification à deux facteurs configurée', link: '/admin/security', icon: 'lock', category: 'Sécurité' },
+  { id: 'anthropic', label: 'Anthropic API configurée', description: 'ANTHROPIC_API_KEY définie et valide', testEndpoint: '/admin/test/anthropic', testMethod: 'POST', icon: 'smart_toy', category: 'Intégrations IA' },
+  { id: 'elevenlabs', label: 'ElevenLabs TTS configuré', description: 'ELEVENLABS_API_KEY définie et valide', testEndpoint: '/admin/test/tts', testMethod: 'POST', icon: 'mic', category: 'Intégrations IA' },
+  { id: 'twilio', label: 'Twilio SMS configuré', description: 'TWILIO_ACCOUNT_SID, AUTH_TOKEN, FROM_NUMBER définis', icon: 'phone_iphone', category: 'Communications' },
+  { id: 'resend', label: 'Resend email configuré', description: 'RESEND_API_KEY définie pour les emails transactionnels', icon: 'mail', category: 'Communications' },
+  { id: 'first_user', label: 'Premier client créé', description: 'Au moins un utilisateur avec le rôle client', link: '/admin/users', icon: 'person', category: 'Contenu' },
+  { id: 'pricing', label: 'Grille tarifaire configurée', description: 'Tarifs LLM configurés via POST /billing/pricing', link: '/admin/tokens', icon: 'lightbulb', category: 'Contenu' },
 ];
 
 const CATEGORIES = [...new Set(CHECKLIST.map(c => c.category))];
@@ -43,7 +43,8 @@ export default function SetupPage() {
       setCompleted(new Set(saved));
     } catch { /* empty */ }
 
-    fetch(`${API}/health`).then(r => r.json()).then((d: { postgres?: { status?: string }; redis?: { status?: string } }) => {
+    fetch(`${API}/health`).then(r => r.ok ? r.json() : null).then((d: { postgres?: { status?: string }; redis?: { status?: string } } | null) => {
+      if (!d) { setHealth({ postgres: false, redis: false }); return; }
       setHealth({
         postgres: d?.postgres?.status === 'healthy',
         redis: d?.redis?.status === 'healthy',
@@ -81,7 +82,7 @@ export default function SetupPage() {
       });
       const data = await res.json() as { ok?: boolean; status?: string; message?: string };
       const ok = data.ok === true || res.ok;
-      setTestResults(r => ({ ...r, [item.id]: { ok, message: data.message ?? (ok ? 'OK ✅' : 'Erreur ❌') } }));
+      setTestResults(r => ({ ...r, [item.id]: { ok, message: data.message ?? (ok ? 'OK' : 'Erreur') } }));
       if (ok) markDone(item.id);
     } catch (e) {
       setTestResults(r => ({ ...r, [item.id]: { ok: false, message: e instanceof Error ? e.message : 'Erreur' } }));
@@ -106,7 +107,7 @@ export default function SetupPage() {
       <div className="card section">
         <div className="setup-progress-header">
           <span className="setup-progress-label">
-            {done === total ? '🎉 Configuration complète !' : `${done} / ${total} étapes complétées`}
+            {done === total ? <><span className="material-symbols-rounded" style={{ fontSize: 16 }}>celebration</span> Configuration complète !</> : `${done} / ${total} étapes complétées`}
           </span>
           <span className="setup-progress-pct" style={{ color: pct === 100 ? 'var(--success)' : 'var(--accent)' }}>{pct}%</span>
         </div>
@@ -119,10 +120,10 @@ export default function SetupPage() {
         {health && (
           <div className="setup-health-row">
             <span style={{ color: health.postgres ? 'var(--success)' : 'var(--danger)' }}>
-              {health.postgres ? '✅' : '❌'} PostgreSQL
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{health.postgres ? 'check_circle' : 'cancel'}</span> PostgreSQL
             </span>
             <span style={{ color: health.redis ? 'var(--success)' : 'var(--danger)' }}>
-              {health.redis ? '✅' : '❌'} Redis
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{health.redis ? 'check_circle' : 'cancel'}</span> Redis
             </span>
           </div>
         )}
@@ -144,7 +145,7 @@ export default function SetupPage() {
                 const testResult = testResults[item.id];
                 return (
                   <div key={item.id} className={`setup-item${isDone ? ' done' : ''}`}>
-                    <span className="setup-item-icon">{item.icon}</span>
+                    <span className="setup-item-icon"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{item.icon}</span></span>
                     <div className="setup-item-body">
                       <span className={`setup-item-label${isDone ? ' done' : ''}`}>
                         {item.label}
@@ -163,18 +164,18 @@ export default function SetupPage() {
                           onClick={() => runTest(item)}
                           disabled={testing === item.id}
                         >
-                          {testing === item.id ? '…' : '🔍 Tester'}
+                          {testing === item.id ? '…' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span> Tester</>}
                         </button>
                       )}
                       {item.link && (
-                        <a href={item.link} className="btn btn-ghost btn-xs">🔗 Config</a>
+                        <a href={item.link} className="btn btn-ghost btn-xs"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>link</span> Config</a>
                       )}
                       <button
                         className={`btn btn-xs ${isDone ? 'btn-ghost' : 'btn-success'}`}
                         onClick={() => toggleDone(item.id)}
                         style={{ minWidth: 28 }}
                       >
-                        {isDone ? '↩' : '✓'}
+                        {isDone ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>undo</span> : <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span>}
                       </button>
                     </div>
                   </div>

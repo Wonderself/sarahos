@@ -19,6 +19,8 @@ export async function POST(req: NextRequest) {
 
     // ── D-ID: talking head (requires sourceUrl + API key) ──────────────────
     if (sourceUrl && DID_API_KEY) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 30_000);
       const res = await fetch('https://api.d-id.com/talks', {
         method: 'POST',
         headers: {
@@ -34,7 +36,9 @@ export async function POST(req: NextRequest) {
           },
           config: { fluent: true, pad_audio: 0.5 },
         }),
+        signal: ctrl.signal,
       });
+      clearTimeout(timer);
 
       if (!res.ok) {
         const errText = await res.text();
@@ -54,6 +58,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Use fal.ai queue for async generation (LTX Video takes ~30-90s)
+    const falCtrl = new AbortController();
+    const falTimer = setTimeout(() => falCtrl.abort(), 30_000);
     const res = await fetch('https://queue.fal.run/fal-ai/ltx-video', {
       method: 'POST',
       headers: {
@@ -68,7 +74,9 @@ export async function POST(req: NextRequest) {
         guidance_scale: 3,
         num_inference_steps: 40,
       }),
+      signal: falCtrl.signal,
     });
+    clearTimeout(falTimer);
 
     if (!res.ok) {
       const errText = await res.text();

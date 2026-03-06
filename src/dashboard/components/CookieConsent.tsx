@@ -1,34 +1,63 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+
+const STORAGE_KEY = 'fz_cookies_accepted';
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
-      const accepted = localStorage.getItem('fz_cookies_accepted');
-      if (!accepted) setVisible(true);
+      if (!localStorage.getItem(STORAGE_KEY)) setVisible(true);
     } catch { /* SSR or localStorage error */ }
   }, []);
 
+  // Dismiss on click outside
+  useEffect(() => {
+    if (!visible) return;
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        accept();
+      }
+    }
+    // Delay listener to avoid instant dismiss
+    const timer = setTimeout(() => document.addEventListener('click', handleClick), 300);
+    return () => { clearTimeout(timer); document.removeEventListener('click', handleClick); };
+  });
+
   function accept() {
-    try { localStorage.setItem('fz_cookies_accepted', String(Date.now())); } catch { /* */ }
+    try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch { /* */ }
     setVisible(false);
   }
 
   if (!visible) return null;
 
   return (
-    <div style={{
-      position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999,
-      background: '#1d1d1f', color: '#f5f5f7', padding: '14px 24px',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,
-      flexWrap: 'wrap', fontSize: 13,
-    }}>
-      <span>
-        Ce site utilise uniquement des cookies necessaires au fonctionnement du service.{' '}
+    <div
+      ref={ref}
+      style={{
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        zIndex: 9999,
+        background: '#1d1d1f',
+        color: '#ccc',
+        padding: '10px 16px',
+        borderRadius: 10,
+        fontSize: 12,
+        maxWidth: 340,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        opacity: 0.92,
+      }}
+    >
+      <span style={{ flex: 1, lineHeight: 1.4 }}>
+        Cookies essentiels uniquement.{' '}
         <Link href="/legal/cookies" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
           En savoir plus
         </Link>
@@ -36,11 +65,18 @@ export default function CookieConsent() {
       <button
         onClick={accept}
         style={{
-          background: '#5b6cf7', color: 'white', border: 'none', padding: '7px 20px',
-          borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+          background: '#5b6cf7',
+          color: 'white',
+          border: 'none',
+          padding: '5px 14px',
+          borderRadius: 6,
+          fontSize: 11,
+          fontWeight: 600,
+          cursor: 'pointer',
+          whiteSpace: 'nowrap',
         }}
       >
-        Accepter
+        OK
       </button>
     </div>
   );

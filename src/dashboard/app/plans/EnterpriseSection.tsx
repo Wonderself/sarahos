@@ -40,10 +40,10 @@ export default function EnterpriseSection() {
         <div className="text-center" style={{ marginBottom: 36 }}>
           <div style={{ fontSize: 44, marginBottom: 14 }}>&#x1F3E2;</div>
           <h3 className="section-heading" style={{ fontSize: 26, fontWeight: 700, color: '#111827', marginBottom: 10, letterSpacing: '-0.02em' }}>
-            Entreprise — White-Label SaaS
+            <span className="fz-accent-word">Entreprise</span> — White-Label SaaS
           </h3>
           <p className="section-subheading" style={{ fontSize: 16, color: '#6b7280', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
-            Votre propre plateforme Freenzy.io, sur mesure. Instance dediee, securite maximale, branding personnalise.
+            Votre propre plateforme Freenzy.io, <span className="fz-accent-word">sur mesure</span>. Instance dédiée, sécurité maximale, branding personnalisé.
           </p>
         </div>
 

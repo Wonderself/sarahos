@@ -39,7 +39,7 @@ const CAT_COLORS: Record<TxCategory, string> = {
   income: '#22c55e', expense: '#ef4444', savings: '#3b82f6', investment: '#8b7cf8',
 };
 const CAT_ICONS: Record<TxCategory, string> = {
-  income: '💰', expense: '💸', savings: '🏦', investment: '📈',
+  income: 'savings', expense: 'money_off', savings: 'account_balance', investment: 'trending_up',
 };
 
 function fmt(cents: number) {
@@ -188,7 +188,7 @@ export default function BudgetPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>💰</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>savings</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement du budget...</div>
       </div>
     );
@@ -204,11 +204,11 @@ export default function BudgetPage() {
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title">💰 Budget Personnel</h1>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>savings</span> Budget Personnel</h1>
           <p className="page-subtitle">Suivez vos revenus, dépenses et objectifs d&apos;épargne</p>
         </div>
         <Link href="/client/chat?agent=fz-budget" className="btn btn-primary btn-sm">
-          💬 Analyser avec fz-budget
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>chat</span> Analyser avec fz-budget
         </Link>
       </div>
 
@@ -217,13 +217,13 @@ export default function BudgetPage() {
       {/* Stats cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Solde ce mois', value: fmt(balance), icon: '⚖️', color: balance >= 0 ? '#22c55e' : '#ef4444' },
-          { label: 'Revenus', value: fmt(totalIncome), icon: '💰', color: '#22c55e' },
-          { label: 'Dépenses', value: fmt(totalExpenses), icon: '💸', color: '#ef4444' },
-          { label: 'Épargne', value: fmt(totalSavings), icon: '🏦', color: '#3b82f6' },
+          { label: 'Solde ce mois', value: fmt(balance), icon: 'balance', color: balance >= 0 ? '#22c55e' : '#ef4444' },
+          { label: 'Revenus', value: fmt(totalIncome), icon: 'savings', color: '#22c55e' },
+          { label: 'Dépenses', value: fmt(totalExpenses), icon: 'money_off', color: '#ef4444' },
+          { label: 'Épargne', value: fmt(totalSavings), icon: 'account_balance', color: '#3b82f6' },
         ].map(stat => (
           <div key={stat.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 24, marginBottom: 6 }}>{stat.icon}</div>
+            <div style={{ fontSize: 24, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{stat.icon}</span></div>
             <div style={{ fontSize: 18, fontWeight: 700, color: stat.color }}>{stat.value}</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{stat.label}</div>
           </div>
@@ -243,7 +243,7 @@ export default function BudgetPage() {
               color: activeSection === tab ? '#fff' : 'var(--text-primary)',
             }}
           >
-            {tab === 'overview' ? '📊 Vue d\'ensemble' : tab === 'transactions' ? '📋 Transactions' : '🎯 Objectifs'}
+            {tab === 'overview' ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bar_chart</span> Vue d&apos;ensemble</> : tab === 'transactions' ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Transactions</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>target</span> Objectifs</>}
           </button>
         ))}
       </div>
@@ -256,7 +256,7 @@ export default function BudgetPage() {
           </h3>
           {transactions.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-tertiary)' }}>
-              <div style={{ fontSize: 36, marginBottom: 8 }}>📊</div>
+              <div style={{ fontSize: 36, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 36 }}>bar_chart</span></div>
               <div>Ajoutez des transactions pour voir votre évolution</div>
             </div>
           ) : (
@@ -299,7 +299,7 @@ export default function BudgetPage() {
 
           {displayedTx.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>assignment</span></div>
               <div style={{ fontWeight: 600, marginBottom: 6 }}>Aucune transaction</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
                 Enregistrez vos revenus et dépenses pour suivre votre budget
@@ -353,7 +353,7 @@ export default function BudgetPage() {
           </div>
           {goals.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>🎯</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>target</span></div>
               <div style={{ fontWeight: 600, marginBottom: 6 }}>Aucun objectif</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
                 Définissez des objectifs d&apos;épargne ou d&apos;investissement
@@ -387,7 +387,7 @@ export default function BudgetPage() {
                       }} />
                     </div>
                     {goal.status === 'completed' && (
-                      <div style={{ fontSize: 12, color: '#22c55e', marginTop: 6 }}>✅ Objectif atteint !</div>
+                      <div style={{ fontSize: 12, color: '#22c55e', marginTop: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Objectif atteint !</div>
                     )}
                   </div>
                 );
@@ -404,7 +404,7 @@ export default function BudgetPage() {
           alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
         }}>
           <div className="card" style={{ width: '100%', maxWidth: 420, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Ajouter une transaction</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>add_circle</span> Ajouter une transaction</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Libellé</label>
@@ -464,7 +464,7 @@ export default function BudgetPage() {
           alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
         }}>
           <div className="card" style={{ width: '100%', maxWidth: 380, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>🎯 Nouvel objectif</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>target</span> Nouvel objectif</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Nom de l&apos;objectif</label>

@@ -15,56 +15,56 @@ interface TourStep {
 
 const TOUR_STEPS: TourStep[] = [
   {
-    emoji: '🏠',
+    emoji: 'home',
     title: 'Votre tableau de bord',
     description: 'C\'est votre quartier général. Briefing du jour, crédits, activité récente et résumé de vos agents — tout en un coup d\'œil.',
     href: '/client/dashboard',
     cta: 'Voir mon dashboard',
   },
   {
-    emoji: '💬',
+    emoji: 'chat',
     title: 'Discutez avec vos agents',
     description: 'Le Chat est le cœur de Freenzy. Choisissez un agent et posez-lui n\'importe quelle question — il répond en temps réel.',
     href: '/client/chat',
     cta: 'Ouvrir le Chat',
   },
   {
-    emoji: '👥',
+    emoji: 'group',
     title: 'Votre équipe d\'agents',
     description: '24 agents IA spécialisés. Activez ou désactivez ceux qui correspondent à vos besoins, explorez le marketplace pour en ajouter.',
     href: '/client/personal',
     cta: 'Gérer mes agents',
   },
   {
-    emoji: '🎨',
+    emoji: 'palette',
     title: 'Personnalisez vos agents',
     description: 'Ajustez la personnalité, les instructions et le style de chaque agent. Plus ils sont configurés, plus ils sont efficaces.',
     href: '/client/agents/customize',
     cta: 'Personnaliser',
   },
   {
-    emoji: '📄',
+    emoji: 'description',
     title: 'Partagez vos documents',
     description: 'Uploadez vos documents d\'entreprise — vos agents les utilisent pour contextualiser leurs réponses. Jusqu\'à 50 MB.',
     href: '/client/documents',
     cta: 'Uploader un document',
   },
   {
-    emoji: '📞',
+    emoji: 'call',
     title: 'Répondeur Intelligent',
     description: 'Votre secrétaire IA répond à vos appels, SMS et WhatsApp. Configurez les plages horaires et les règles de réponse.',
     href: '/client/repondeur',
     cta: 'Configurer le Répondeur',
   },
   {
-    emoji: '👤',
+    emoji: 'person',
     title: 'Votre compte & crédits',
     description: 'Gérez votre solde de crédits, configurez la recharge automatique, et invitez des amis pour gagner de la commission.',
     href: '/client/account',
     cta: 'Voir mon compte',
   },
   {
-    emoji: '🛒',
+    emoji: 'storefront',
     title: 'Le Marketplace',
     description: '48 templates d\'agents prêts à l\'emploi. Installez en 1 clic les agents adaptés à votre secteur d\'activité.',
     href: '/client/marketplace',
@@ -167,7 +167,7 @@ export default function OnboardingTour() {
         </div>
 
         {/* Emoji */}
-        <div style={{ textAlign: 'center', fontSize: 52, marginBottom: 20 }}>{current.emoji}</div>
+        <div style={{ textAlign: 'center', fontSize: 52, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 52 }}>{current.emoji}</span></div>
 
         {/* Title */}
         <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: 'center', marginBottom: 12, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
@@ -195,7 +195,7 @@ export default function OnboardingTour() {
             {current.cta} →
           </Link>
           <button onClick={next} className="btn btn-ghost" style={{ flex: 1, fontSize: 14 }}>
-            {isLast ? 'Terminer ✅' : 'Suivant →'}
+            {isLast ? <><span>Terminer </span><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span></> : 'Suivant →'}
           </button>
         </div>
 
@@ -219,7 +219,7 @@ export function TourRestartButton() {
   }
   return (
     <button onClick={restart} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-      🗺️ Reprendre le tour
+      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>map</span> Reprendre le tour
     </button>
   );
 }

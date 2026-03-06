@@ -81,9 +81,9 @@ export default async function OverviewPage() {
         </div>
         <div className="admin-dashboard-status">
           <div className="admin-security-checks">
-            <span className="admin-security-check">&#10003; AES</span>
-            <span className="admin-security-check">&#10003; JWT</span>
-            <span className="admin-security-check">&#10003; Isol.</span>
+            <span className="admin-security-check"><span className="material-symbols-rounded mi-success" style={{ fontSize: 11 }}>check</span> AES</span>
+            <span className="admin-security-check"><span className="material-symbols-rounded mi-success" style={{ fontSize: 11 }}>check</span> JWT</span>
+            <span className="admin-security-check"><span className="material-symbols-rounded mi-success" style={{ fontSize: 11 }}>check</span> Isol.</span>
           </div>
           <span className={`admin-infra-dot ${health.status === 'ok' ? 'ok' : 'error'}`} style={{ width: 10, height: 10 }} />
           <span style={{ fontSize: 12 }}>{upH}h{upM}m</span>

@@ -39,7 +39,7 @@ const TYPE_LABELS: Record<ProjectType, string> = {
   roman: 'Roman', scenario: 'Scénario', essai: 'Essai', nouvelles: 'Nouvelles', autre: 'Autre',
 };
 const TYPE_ICONS: Record<ProjectType, string> = {
-  roman: '📖', scenario: '🎬', essai: '📝', nouvelles: '✨', autre: '📄',
+  roman: 'menu_book', scenario: 'movie', essai: 'edit_note', nouvelles: 'auto_awesome', autre: 'description',
 };
 const STATUS_LABELS: Record<ProjectStatus, string> = {
   draft: 'Brouillon', in_progress: 'En cours', revision: 'Révision', completed: 'Terminé', paused: 'Pause',
@@ -215,7 +215,7 @@ export default function EcrivainPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>✍️</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>draw</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement de vos projets...</div>
       </div>
     );
@@ -246,7 +246,7 @@ export default function EcrivainPage() {
                   {editorWordCount.toLocaleString('fr-FR')} mots
                 </span>
                 <span style={{ fontSize: 11, color: editorSaving ? '#f59e0b' : editorSaved ? '#22c55e' : 'var(--text-tertiary)' }}>
-                  {editorSaving ? '⏳ Sauvegarde...' : editorSaved ? '✅ Sauvegardé' : ''}
+                  {editorSaving ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>hourglass_empty</span> Sauvegarde...</> : editorSaved ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Sauvegardé</> : ''}
                 </span>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function EcrivainPage() {
 
             {selectedChapter.ai_notes && (
               <div className="card" style={{ padding: 16, borderLeft: '3px solid var(--accent)' }}>
-                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8, color: 'var(--accent)' }}>🤖 Notes AI</div>
+                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8, color: 'var(--accent)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>smart_toy</span> Notes AI</div>
                 <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{selectedChapter.ai_notes}</div>
               </div>
             )}
@@ -301,7 +301,7 @@ export default function EcrivainPage() {
               className="btn btn-primary btn-sm"
               style={{ textAlign: 'center', textDecoration: 'none' }}
             >
-              ✍️ Continuer avec fz-écrivain
+              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>draw</span> Continuer avec fz-écrivain
             </Link>
           </div>
         </div>
@@ -371,7 +371,7 @@ export default function EcrivainPage() {
           <div className="text-center text-tertiary" style={{ padding: 40 }}>Chargement des chapitres...</div>
         ) : chapters.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ fontSize: 36, marginBottom: 12 }}>📖</div>
+            <div style={{ fontSize: 36, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 36 }}>menu_book</span></div>
             <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun chapitre</div>
             <button onClick={() => setShowChapterModal(true)} className="btn btn-primary btn-sm">Écrire le premier chapitre</button>
           </div>
@@ -417,7 +417,7 @@ export default function EcrivainPage() {
         {showChapterModal && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
             <div className="card" style={{ width: '100%', maxWidth: 360, padding: 24 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>📖 Nouveau chapitre</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>menu_book</span> Nouveau chapitre</h3>
               <input className="input" placeholder="Titre du chapitre..." value={chapterForm.title} onChange={e => setChapterForm({ title: e.target.value })} autoFocus />
               <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
                 <button onClick={() => setShowChapterModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
@@ -442,7 +442,7 @@ export default function EcrivainPage() {
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title">✍️ Atelier d&apos;écriture</h1>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>draw</span> Atelier d&apos;écriture</h1>
           <p className="page-subtitle">Vos projets littéraires, scénarios et essais</p>
         </div>
         <button onClick={() => setShowProjectModal(true)} className="btn btn-primary">+ Nouveau projet</button>
@@ -452,13 +452,13 @@ export default function EcrivainPage() {
 
       {projects.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '80px 40px' }}>
-          <div style={{ fontSize: 52, marginBottom: 16 }}>✍️</div>
+          <div style={{ fontSize: 52, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 52 }}>draw</span></div>
           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Votre atelier vous attend</div>
           <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 24, maxWidth: 360, margin: '0 auto 24px' }}>
             Démarrez un roman, un scénario, un essai... fz-écrivain vous accompagne à chaque étape.
           </div>
           <button onClick={() => setShowProjectModal(true)} className="btn btn-primary">
-            ✍️ Créer mon premier projet
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>draw</span> Créer mon premier projet
           </button>
         </div>
       ) : (
@@ -499,7 +499,7 @@ export default function EcrivainPage() {
       {showProjectModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 460, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>✍️ Nouveau projet</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>draw</span> Nouveau projet</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Titre</label>

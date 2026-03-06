@@ -6,7 +6,7 @@ import Link from 'next/link';
 const SERVICES = [
   {
     id: 'corporate',
-    icon: '\uD83C\uDFAC',
+    icon: 'movie',
     title: 'Video corporate',
     subtitle: 'Presentation d\'entreprise',
     description:
@@ -16,7 +16,7 @@ const SERVICES = [
   },
   {
     id: 'social',
-    icon: '\uD83D\uDCF1',
+    icon: 'phone_iphone',
     title: 'Contenu reseaux sociaux',
     subtitle: 'Reels, TikTok, Shorts',
     description:
@@ -26,7 +26,7 @@ const SERVICES = [
   },
   {
     id: 'podcast',
-    icon: '\uD83C\uDF99\uFE0F',
+    icon: 'mic',
     title: 'Podcasts video',
     subtitle: 'Enregistrement & montage',
     description:
@@ -36,7 +36,7 @@ const SERVICES = [
   },
   {
     id: 'formation',
-    icon: '\uD83D\uDCDA',
+    icon: 'menu_book',
     title: 'Videos de formation',
     subtitle: 'Tutoriels & e-learning',
     description:
@@ -46,7 +46,7 @@ const SERVICES = [
   },
   {
     id: 'ecommerce',
-    icon: '\uD83D\uDED2',
+    icon: 'shopping_cart',
     title: 'Videos produit e-commerce',
     subtitle: 'Mise en valeur produit',
     description:
@@ -56,7 +56,7 @@ const SERVICES = [
   },
   {
     id: 'motion',
-    icon: '\uD83C\uDFA8',
+    icon: 'palette',
     title: 'Motion design',
     subtitle: 'Animations & infographies',
     description:
@@ -111,16 +111,17 @@ export default function VideoProPage() {
       });
 
       if (!res.ok) {
-        const existing = JSON.parse(localStorage.getItem('fz_video_pro_quotes') ?? '[]');
+        let existing: unknown[] = [];
+        try { existing = JSON.parse(localStorage.getItem('fz_video_pro_quotes') ?? '[]'); } catch { /* */ }
         existing.push({ ...form, createdAt: new Date().toISOString(), status: 'pending' });
         localStorage.setItem('fz_video_pro_quotes', JSON.stringify(existing));
       }
 
       setSubmitted(true);
     } catch {
-      const existing = JSON.parse(localStorage.getItem('fz_video_pro_quotes') ?? '[]');
+      let existing: unknown[] = [];
+      try { existing = JSON.parse(localStorage.getItem('fz_video_pro_quotes') ?? '[]'); } catch { /* */ }
       existing.push({ ...form, createdAt: new Date().toISOString(), status: 'pending' });
-      localStorage.setItem('fz_video_pro_quotes', JSON.stringify(existing));
       setSubmitted(true);
     } finally {
       setSubmitting(false);
@@ -136,11 +137,11 @@ export default function VideoProPage() {
   if (submitted) {
     return (
       <div style={{ maxWidth: 600, margin: '80px auto', textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16, color: '#10b981' }}>&#10003;</div>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
+        <div style={{ fontSize: 48, marginBottom: 16, color: '#10b981' }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check</span></div>
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
           Demande envoyee avec succes !
         </h2>
-        <p style={{ fontSize: 14, color: '#86868b', lineHeight: 1.6, marginBottom: 24 }}>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 24 }}>
           Notre equipe de production va etudier votre brief et vous recontacter sous 24 a 48h
           avec une proposition detaillee et un planning de realisation.
         </p>
@@ -181,11 +182,11 @@ export default function VideoProPage() {
             Freenzy.io Production
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
-            Video Pro
+            <span className="fz-logo-word">Video Pro</span>
           </h1>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6, maxWidth: 560, margin: 0 }}>
-            Productions video professionnelles assistees par IA.
-            De l&apos;idee au produit fini, nos agents et nos experts creent vos contenus video avec qualite et rapidite.
+            Productions video professionnelles assistees par <span className="fz-logo-word">IA</span>.
+            De l&apos;idee au produit fini, nos <span className="fz-logo-word">agents</span> et nos experts creent vos contenus video avec qualite et rapidite.
           </p>
         </div>
       </div>
@@ -199,7 +200,7 @@ export default function VideoProPage() {
           <div
             key={svc.id}
             style={{
-              background: '#fff', borderRadius: 14, border: '1px solid #e5e7eb',
+              background: 'var(--bg-elevated)', borderRadius: 14, border: '1px solid var(--border-primary)',
               padding: '24px 20px', display: 'flex', flexDirection: 'column',
               transition: 'all 0.2s ease',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
@@ -215,23 +216,23 @@ export default function VideoProPage() {
               (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
             }}
           >
-            <div style={{ fontSize: 32, marginBottom: 12 }}>{svc.icon}</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#1d1d1f', marginBottom: 2 }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>{svc.icon}</span></div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>
               {svc.title}
             </div>
             <div style={{ fontSize: 12, color: '#5b6cf7', fontWeight: 600, marginBottom: 10 }}>
               {svc.subtitle}
             </div>
-            <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
               {svc.description}
             </p>
             <div style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '10px 0', borderTop: '1px solid #f3f4f6', marginBottom: 12,
+              padding: '10px 0', borderTop: '1px solid var(--border-primary)', marginBottom: 12,
             }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{svc.price}</div>
-                <div style={{ fontSize: 11, color: '#86868b' }}>{svc.delivery}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{svc.price}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{svc.delivery}</div>
               </div>
             </div>
             <button
@@ -259,16 +260,16 @@ export default function VideoProPage() {
 
       {/* Studio Creatif Link */}
       <div style={{
-        background: '#f5f3ff', borderRadius: 14, padding: '20px 24px',
+        background: 'var(--accent-muted)', borderRadius: 14, padding: '20px 24px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 12, marginBottom: 40,
-        border: '1px solid #e0d9fa',
+        border: '1px solid var(--border-primary)',
       }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
             Ou creez vous-meme dans notre Studio Creatif
           </div>
-          <div style={{ fontSize: 13, color: '#6b7280' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
             Generez vos propres videos et photos guidees par nos agents IA, en toute autonomie.
           </div>
         </div>
@@ -288,21 +289,21 @@ export default function VideoProPage() {
 
       {/* Devis Section */}
       <div id="devis-section" style={{
-        background: '#fff', borderRadius: 16, border: '1px solid #e5e7eb',
+        background: 'var(--bg-elevated)', borderRadius: 16, border: '1px solid var(--border-primary)',
         padding: '32px 28px', marginBottom: 40,
         boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
       }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
           Demander un devis
         </h2>
-        <p style={{ fontSize: 13, color: '#86868b', marginBottom: 24 }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 24 }}>
           Decrivez votre projet et recevez une proposition personnalisee sous 48h.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Name */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
               Nom complet *
             </label>
             <input
@@ -311,18 +312,18 @@ export default function VideoProPage() {
               placeholder="Votre nom"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #e5e5e5', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
 
           {/* Email */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
               Email *
             </label>
             <input
@@ -332,12 +333,12 @@ export default function VideoProPage() {
               placeholder="votre@email.com"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #e5e5e5', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
         </div>
@@ -345,7 +346,7 @@ export default function VideoProPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Phone */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
               Telephone (optionnel)
             </label>
             <input
@@ -354,18 +355,18 @@ export default function VideoProPage() {
               placeholder="+33 6 12 34 56 78"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #e5e5e5', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
 
           {/* Service Select */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
               Service souhaite *
             </label>
             <select
@@ -373,16 +374,16 @@ export default function VideoProPage() {
               onChange={e => setForm(prev => ({ ...prev, service: e.target.value }))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #e5e5e5', fontSize: 13, fontFamily: 'var(--font-sans)',
-                background: '#fff', outline: 'none', transition: 'border-color 0.15s',
+                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                background: 'var(--bg-elevated)', outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
-              onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             >
               <option value="">Selectionnez un service</option>
               {SERVICES.map(s => (
-                <option key={s.id} value={s.id}>{s.icon} {s.title}</option>
+                <option key={s.id} value={s.id}>{s.title}</option>
               ))}
             </select>
           </div>
@@ -390,7 +391,7 @@ export default function VideoProPage() {
 
         {/* Brief */}
         <div style={{ marginBottom: 14 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', marginBottom: 4, display: 'block' }}>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
             Brief du projet *
           </label>
           <textarea
@@ -400,18 +401,18 @@ export default function VideoProPage() {
             rows={4}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid #e5e5e5', fontSize: 13, fontFamily: 'var(--font-sans)',
+              border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
               resize: 'vertical', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
             onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
-            onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}
+            onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           />
         </div>
 
         {/* Budget */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f', marginBottom: 4, display: 'block' }}>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
             Budget estimatif
           </label>
           <select
@@ -419,12 +420,12 @@ export default function VideoProPage() {
             onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid #e5e5e5', fontSize: 13, fontFamily: 'var(--font-sans)',
-              background: '#fff', outline: 'none', transition: 'border-color 0.15s',
+              border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
+              background: 'var(--bg-elevated)', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
             onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
-            onBlur={e => { e.currentTarget.style.borderColor = '#e5e5e5'; }}
+            onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           >
             {BUDGET_OPTIONS.map(b => (
               <option key={b.value} value={b.value}>{b.label}</option>
@@ -458,7 +459,7 @@ export default function VideoProPage() {
           {submitting ? 'Envoi en cours...' : 'Envoyer la demande de devis'}
         </button>
 
-        <p style={{ fontSize: 11, color: '#a1a1a6', textAlign: 'center', marginTop: 12, marginBottom: 0 }}>
+        <p style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center', marginTop: 12, marginBottom: 0 }}>
           Notre equipe de production analysera votre brief et vous enverra une proposition detaillee sous 48h.
         </p>
       </div>

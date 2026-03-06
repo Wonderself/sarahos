@@ -35,7 +35,7 @@ const TYPE_LABELS: Record<RecordType, string> = {
   invoice: 'Facture', expense: 'Dépense', revenue: 'Revenu',
 };
 const TYPE_ICONS: Record<RecordType, string> = {
-  invoice: '🧾', expense: '💸', revenue: '💰',
+  invoice: 'receipt', expense: 'money_off', revenue: 'savings',
 };
 const STATUS_LABELS: Record<RecordStatus, string> = {
   pending: 'En attente', paid: 'Payée', overdue: 'En retard', cancelled: 'Annulée',
@@ -192,7 +192,7 @@ export default function ComptablePage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>🧾</div>
+        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>receipt</span></div>
         <div className="text-md text-tertiary animate-pulse">Chargement de la comptabilité...</div>
       </div>
     );
@@ -208,12 +208,12 @@ export default function ComptablePage() {
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title">🧾 Comptabilité</h1>
+          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>receipt</span> Comptabilité</h1>
           <p className="page-subtitle">Factures, dépenses et rappels fiscaux</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={exportCSV} className="btn btn-ghost btn-sm">📥 Export CSV</button>
-          <Link href="/client/chat?agent=fz-comptable" className="btn btn-primary btn-sm">💬 fz-comptable</Link>
+          <button onClick={exportCSV} className="btn btn-ghost btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span> Export CSV</button>
+          <Link href="/client/chat?agent=fz-comptable" className="btn btn-primary btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>chat</span> fz-comptable</Link>
         </div>
       </div>
 
@@ -222,13 +222,13 @@ export default function ComptablePage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: `CA ${currentQ}`, value: fmt(totalCA), icon: '💰', color: '#22c55e' },
-          { label: `Charges ${currentQ}`, value: fmt(totalCharges), icon: '💸', color: '#ef4444' },
-          { label: 'Bénéfice net', value: fmt(benef), icon: '📊', color: benef >= 0 ? '#22c55e' : '#ef4444' },
-          { label: 'En retard', value: `${overdueCount} facture${overdueCount !== 1 ? 's' : ''}`, icon: '⚠️', color: overdueCount > 0 ? '#ef4444' : '#22c55e' },
+          { label: `CA ${currentQ}`, value: fmt(totalCA), icon: 'savings', color: '#22c55e' },
+          { label: `Charges ${currentQ}`, value: fmt(totalCharges), icon: 'money_off', color: '#ef4444' },
+          { label: 'Bénéfice net', value: fmt(benef), icon: 'bar_chart', color: benef >= 0 ? '#22c55e' : '#ef4444' },
+          { label: 'En retard', value: `${overdueCount} facture${overdueCount !== 1 ? 's' : ''}`, icon: 'warning', color: overdueCount > 0 ? '#ef4444' : '#22c55e' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
+            <div style={{ fontSize: 22, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{s.icon}</span></div>
             <div style={{ fontSize: 18, fontWeight: 700, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{s.label}</div>
           </div>
@@ -237,10 +237,10 @@ export default function ComptablePage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        {([['records', '📋 Enregistrements'], ['reminders', '⏰ Rappels fiscaux'], ['recap', '📊 Récap trimestriel']] as const).map(([t, l]) => (
+        {([['records', 'assignment', 'Enregistrements'], ['reminders', 'alarm', 'Rappels fiscaux'], ['recap', 'bar_chart', 'Récap trimestriel']] as [string, string, string][]).map(([t, icon, label]) => (
           <button
             key={t}
-            onClick={() => setActiveTab(t)}
+            onClick={() => setActiveTab(t as 'records' | 'reminders' | 'recap')}
             style={{
               padding: '8px 16px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
               border: activeTab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--border-primary)',
@@ -248,7 +248,7 @@ export default function ComptablePage() {
               color: activeTab === t ? '#fff' : 'var(--text-primary)',
             }}
           >
-            {l}
+            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{icon}</span> {label}
           </button>
         ))}
       </div>
@@ -272,7 +272,7 @@ export default function ComptablePage() {
 
           {displayed.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>🧾</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>receipt</span></div>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun enregistrement</div>
               <button onClick={() => setShowRecordModal(true)} className="btn btn-primary btn-sm">+ Première entrée</button>
             </div>
@@ -326,7 +326,7 @@ export default function ComptablePage() {
           </div>
           {reminders.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>⏰</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>alarm</span></div>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun rappel fiscal</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
                 TVA, IS, URSSAF... configurez vos rappels pour ne rien oublier
@@ -358,8 +358,8 @@ export default function ComptablePage() {
                         {r.note && <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{r.note}</div>}
                       </div>
                       <div style={{ fontSize: 12, fontWeight: 600, color: isOverdue ? '#ef4444' : 'var(--text-tertiary)', flexShrink: 0 }}>
-                        📅 {new Date(r.due_date).toLocaleDateString('fr-FR')}
-                        {isOverdue && <span style={{ marginLeft: 4, color: '#ef4444' }}>⚠️ En retard</span>}
+                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>calendar_month</span> {new Date(r.due_date).toLocaleDateString('fr-FR')}
+                        {isOverdue && <span style={{ marginLeft: 4, color: '#ef4444' }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>warning</span> En retard</span>}
                       </div>
                     </div>
                   );
@@ -405,7 +405,7 @@ export default function ComptablePage() {
       {showRecordModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 460, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Nouvel enregistrement</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>add_circle</span> Nouvel enregistrement</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
@@ -454,7 +454,7 @@ export default function ComptablePage() {
       {showReminderModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 380, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>⏰ Nouveau rappel fiscal</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>alarm</span> Nouveau rappel fiscal</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Titre</label>

@@ -38,7 +38,7 @@ ${COMPANY_NAME} se reserve le droit de suspendre ou supprimer tout compte en cas
     id: 'service',
     title: 'Article 3 — Description du Service',
     content: `Freenzy.io met a disposition de l'Utilisateur :
-- 24 agents d'intelligence artificielle (12 business + 12 personnels) specialises dans differents domaines (communication, marketing, video, photo, finance, RH, etc.)
+- 34 agents d'intelligence artificielle (22 business + 12 personnels) specialises dans differents domaines (communication, marketing, video, photo, finance, RH, qualite, data, produit, design, RSE, operations, formation, innovation, international, etc.)
 - Un studio creatif pour la production video et photo assistee par IA
 - Un systeme de repondeur intelligent configurable
 - Des outils de gestion documentaire et d'analyse

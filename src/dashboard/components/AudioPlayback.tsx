@@ -6,10 +6,11 @@ import type { AgentGender } from '../lib/agent-config';
 interface AudioPlaybackProps {
   text: string;
   gender?: AgentGender;
+  voice?: string;
   size?: 'sm' | 'md';
 }
 
-export default function AudioPlayback({ text, gender = 'F', size = 'sm' }: AudioPlaybackProps) {
+export default function AudioPlayback({ text, gender = 'F', voice, size = 'sm' }: AudioPlaybackProps) {
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [error, setError] = useState('');
@@ -41,7 +42,7 @@ export default function AudioPlayback({ text, gender = 'F', size = 'sm' }: Audio
       const res = await fetch('/api/voice/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text.slice(0, 2000), gender }),
+        body: JSON.stringify({ text: text.slice(0, 2000), gender, voice }),
       });
 
       if (!res.ok) {

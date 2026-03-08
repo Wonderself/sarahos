@@ -475,7 +475,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
         label: 'Agents IA',
         icon: '●',
         status: 'fonctionnel',
-        description: 'Liste des 24 agents système (L1/L2/L3) avec statuts, niveaux, Agent Config SlideOver.',
+        description: 'Liste des 34 agents système (L1/L2/L3) avec statuts, niveaux, Agent Config SlideOver.',
         testInstructions: [
           'Vérifier l\'affichage des agents par niveau (L1/L2/L3)',
           'Vérifier les statuts et actions disponibles',

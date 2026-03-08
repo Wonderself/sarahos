@@ -1041,6 +1041,56 @@ export default function ChatPage() {
                 'Analyse mon positionnement marche',
                 'Comment structurer ma croissance ?',
                 'Conseille-moi sur la levee de fonds',
+              ] : selectedAgent.id === 'fz-qualite' ? [
+                'Lance un audit qualite interne',
+                'Analyse cette non-conformite avec Ishikawa',
+                'Prepare ma certification ISO 9001',
+                'Cree un plan DMAIC pour ce probleme',
+              ] : selectedAgent.id === 'fz-data' ? [
+                'Analyse ce dataset et trouve des insights',
+                'Concois un dashboard pour mes KPIs',
+                'Quel modele ML pour ce probleme ?',
+                'Aide-moi a structurer ma data governance',
+              ] : selectedAgent.id === 'fz-product' ? [
+                'Structure ma roadmap produit Q2',
+                'Priorise mon backlog avec RICE',
+                'Redige des user stories pour cette feature',
+                'Lance un discovery sprint',
+              ] : selectedAgent.id === 'fz-csm' ? [
+                'Analyse le risque de churn de mes clients',
+                'Structure mon onboarding client',
+                'Prepare une QBR pour ce client',
+                'Comment ameliorer mon NPS ?',
+              ] : selectedAgent.id === 'fz-rse' ? [
+                'Realise mon bilan carbone simplifie',
+                'Prepare mon reporting CSRD',
+                'Definis ma strategie RSE',
+                'Quels ODD prioriser pour mon secteur ?',
+              ] : selectedAgent.id === 'fz-operations' ? [
+                'Optimise ce processus avec le Lean',
+                'Cartographie ma supply chain',
+                'Identifie les goulots d\'etranglement',
+                'Planifie ce projet complexe',
+              ] : selectedAgent.id === 'fz-design' ? [
+                'Cree un brief creatif pour ce projet',
+                'Audite l\'UX de mon application',
+                'Structure mon design system',
+                'Comment ameliorer l\'accessibilite ?',
+              ] : selectedAgent.id === 'fz-formation' ? [
+                'Concois un module de formation',
+                'Elabore mon plan de formation annuel',
+                'Evalue l\'impact de cette formation',
+                'Cree un parcours d\'onboarding',
+              ] : selectedAgent.id === 'fz-innovation' ? [
+                'Anime un Design Sprint',
+                'Genere des idees avec SCAMPER',
+                'Evalue cette idee avec Impact/Effort',
+                'Definis un MVP pour ce concept',
+              ] : selectedAgent.id === 'fz-international' ? [
+                'Analyse ce marche etranger (PESTEL)',
+                'Quel mode d\'entree pour ce pays ?',
+                'Adapte ma strategie a cette culture',
+                'Aide-moi avec les Incoterms',
               ] : [
                 'Pose-moi ta question',
                 'Comment puis-je t\'aider ?',

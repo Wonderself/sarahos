@@ -77,7 +77,7 @@ const ACTION_COSTS = [
 
 // ─── Stats badges (reverse ticker)
 const STATS_BADGES = [
-  { icon: 'smart_toy', value: '72+', label: 'agents' },
+  { icon: 'smart_toy', value: '82+', label: 'agents' },
   { icon: 'psychology', value: '6+', label: 'modeles IA' },
   { icon: 'bolt', value: '5 min', label: 'onboarding' },
   { icon: 'diamond', value: '0%', label: 'commission' },
@@ -85,7 +85,7 @@ const STATS_BADGES = [
   { icon: 'language', value: '50+', label: 'langues' },
   { icon: 'quiz', value: '103', label: 'FAQ' },
   { icon: 'shopping_cart', value: '48', label: 'templates' },
-  { icon: 'business_center', value: '12', label: 'agents Business' },
+  { icon: 'business_center', value: '22', label: 'agents Business' },
   { icon: 'person', value: '12', label: 'agents Perso' },
   { icon: 'verified_user', value: 'RGPD', label: 'conforme' },
   { icon: 'lock', value: 'AES-256', label: 'chiffrement' },
@@ -330,7 +330,7 @@ export default function LandingPage() {
               color: 'rgba(255,255,255,0.44)',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
             }}>
-              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>72 agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.62)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span>
+              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>82 agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.62)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span>
             </p>
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
@@ -782,7 +782,7 @@ export default function LandingPage() {
                 { icon: 'language', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#5b6cf7' },
                 { icon: 'flag', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
                 { icon: 'bolt', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
-                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '82+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, data, produit, qualité, RSE, design, formation, innovation, international… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark">
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block' }}>{item.icon}</span>

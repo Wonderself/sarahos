@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Connexion — Accédez à Flashboard | Freenzy.io',
-  description: 'Connectez-vous à Flashboard ou créez votre compte gratuit. 72 agents IA disponibles immédiatement, sans carte bancaire.',
+  description: 'Connectez-vous à Flashboard ou créez votre compte gratuit. 82 agents IA disponibles immédiatement, sans carte bancaire.',
   keywords: [
     'connexion Freenzy', 'login Flashboard', 'créer compte IA PME',
     'inscription Freenzy gratuit', 'compte IA entreprise', 's\'inscrire Flashboard',
   ],
   openGraph: {
     title: 'Se connecter à Flashboard | Freenzy.io',
-    description: 'Créez votre compte gratuit — sans carte bancaire. 72 agents IA disponibles immédiatement.',
+    description: 'Créez votre compte gratuit — sans carte bancaire. 82 agents IA disponibles immédiatement.',
     type: 'website',
     url: 'https://freenzy.io/login',
     locale: 'fr_FR',

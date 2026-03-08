@@ -102,12 +102,12 @@ export default function GuidePage() {
 │   │   ├── AdminShell.tsx      → Shell admin avec sidebar + health check
 │   │   └── NavLink.tsx         → Composant lien actif sidebar
 │   └── lib/
-│       ├── agent-config.ts     → 24 agents IA, configs, system prompts (~1800 lignes)
+│       ├── agent-config.ts     → 34 agents IA, configs, system prompts (~2200 lignes)
 │       ├── api-client.ts       → Client API serveur (backend)
 │       ├── deep-discussion.*   → Deep Discussions (85+ templates, utils)
 │       └── gamification.ts     → Moteur XP / niveaux / achievements
 └── Backend Express 5 (port 3010)
-    ├── 24 agents IA (12+12 L1 + 4 L2 + 4 L3)
+    ├── 34 agents IA (22+12 L1 + 4 L2 + 4 L3)
     ├── PostgreSQL 16 + pgvector
     ├── Redis 7
     ├── fal.ai (photo + video)
@@ -120,7 +120,7 @@ export default function GuidePage() {
                 { label: 'Pages admin', desc: 'Composants serveur (server components). Pas de useState, pas de localStorage. Données chargées côté serveur via api-client.ts.' },
                 { label: 'Pages client', desc: 'Composants client (\'use client\'). Utilisent useState, useEffect, localStorage. Authentification par token JWT stocké dans localStorage.' },
                 { label: 'API routes', desc: 'Fichiers route.ts dans app/api/. Servent de proxy vers le backend Express (port 3010). Évitent les problèmes CORS.' },
-                { label: 'Agent config', desc: 'Tout est dans lib/agent-config.ts (~1800 lignes) : 24 agents client, leurs prompts, personnalités, expertises. Le backend gère 24 agents (12+12 L1 + 4 L2 + 4 L3). Les pages importent DEFAULT_AGENTS pour afficher les agents.' },
+                { label: 'Agent config', desc: 'Tout est dans lib/agent-config.ts (~2200 lignes) : 34 agents client (22 business + 12 personnels), leurs prompts, personnalités, expertises. Le backend gère 34 agents (22+12 L1 + 4 L2 + 4 L3). Les pages importent DEFAULT_AGENTS pour afficher les agents.' },
                 { label: 'Stockage client', desc: 'localStorage avec préfixe fz_ : fz_session, fz_company_profile, fz_agent_configs, fz_chat_history, fz_gamification, etc.' },
                 { label: 'Styles CSS', desc: 'Un seul fichier globals.css avec ~1000 classes réutilisables (.card, .btn, .grid-2, .badge, .section, etc.). Pas de Tailwind.' },
               ].map(c => (

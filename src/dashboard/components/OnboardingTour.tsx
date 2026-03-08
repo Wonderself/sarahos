@@ -31,7 +31,7 @@ const TOUR_STEPS: TourStep[] = [
   {
     emoji: 'group',
     title: 'Votre équipe d\'agents',
-    description: '24 agents IA spécialisés. Activez ou désactivez ceux qui correspondent à vos besoins, explorez le marketplace pour en ajouter.',
+    description: '34 agents IA spécialisés (22 business + 12 personnels). Activez ou désactivez ceux qui correspondent à vos besoins, explorez le marketplace pour en ajouter.',
     href: '/client/personal',
     cta: 'Gérer mes agents',
   },

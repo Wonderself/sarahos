@@ -29,7 +29,7 @@ export default function MyAgentsPage() {
     <div className="space-y-6 admin-page-scrollable">
       <div>
         <h1 className="text-2xl font-bold text-white">Mes Agents</h1>
-        <p className="text-gray-400 mt-1">24 agents IA disponibles — business + personnels</p>
+        <p className="text-gray-400 mt-1">34 agents IA disponibles — 22 business + 12 personnels</p>
       </div>
 
       {/* Filters */}

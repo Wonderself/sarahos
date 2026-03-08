@@ -334,7 +334,7 @@ export default function RoadmapPage() {
               status: 'active' as const,
               items: [
                 'Dashboard admin + client (80+ pages)',
-                '24 agents IA (12+12 L1, 4 L2, 4 L3)',
+                '34 agents IA (22+12 L1, 4 L2, 4 L3)',
                 'Deep Discussions (85+ templates, Opus, tags, partage social)',
                 'Studio créatif fal.ai (photo + vidéo IA)',
                 'Admin Dashboard refondu (charts, diagnostics, 2FA, GlobalSearch)',

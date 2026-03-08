@@ -9,11 +9,20 @@ const EVENT_NAME = 'fz-audience-change';
 export function useAudience() {
   const [audience, setAudienceState] = useState<AudienceType | null>(null);
 
-  // Read from localStorage on mount (SSR-safe)
+  // Read from URL param (priority) or localStorage on mount (SSR-safe)
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as AudienceType | null;
-    if (stored && stored in AUDIENCE_CONFIGS) {
-      setAudienceState(stored);
+    // 1. URL param (highest priority — ad campaigns)
+    const params = new URLSearchParams(window.location.search);
+    const urlAudience = params.get('audience') as AudienceType | null;
+    if (urlAudience && urlAudience in AUDIENCE_CONFIGS) {
+      setAudienceState(urlAudience);
+      localStorage.setItem(STORAGE_KEY, urlAudience);
+    } else {
+      // 2. Fall back to localStorage
+      const stored = localStorage.getItem(STORAGE_KEY) as AudienceType | null;
+      if (stored && stored in AUDIENCE_CONFIGS) {
+        setAudienceState(stored);
+      }
     }
 
     // Listen for changes from other components on the same page

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import CookieConsent from '../components/CookieConsent';
+import AnalyticsLoader from '../components/AnalyticsLoader';
 import { getAllFaqItems } from '../lib/faq-data';
 import './globals.css';
 
@@ -289,10 +290,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+
+        {/* GA4 Consent Mode v2 — must execute before gtag.js loads */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              analytics_storage: 'denied',
+              ad_storage: 'denied',
+            });
+          `}}
+        />
       </head>
       <body>
         {children}
         <CookieConsent />
+        <AnalyticsLoader />
       </body>
     </html>
   );

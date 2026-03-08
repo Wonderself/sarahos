@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import PublicNav from '../../../components/PublicNav';
 import PublicFooter from '../../../components/PublicFooter';
 import EnterpriseSection from '../../plans/EnterpriseSection';
 import { TOTAL_AGENTS_DISPLAY } from '../../../lib/agent-config';
 import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
+import { getOrderedFaqCategories } from '../../../lib/faq-utils';
+import { useSectionObserver } from '../../../hooks/useSectionObserver';
+import { trackPageView, trackCtaClick, trackFaqOpened } from '../../../lib/analytics';
+import { useAudience } from '../../../lib/use-audience';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -231,6 +235,22 @@ export default function LandingPage() {
   const [faqCat, setFaqCat]                 = useState(0);
   const [demoTab, setDemoTab]               = useState(0);
 
+  const { audience, setAudience, config } = useAudience();
+
+  // FAQ reorder by audience
+  const orderedFaq = useMemo(() => getOrderedFaqCategories(FAQ_CATEGORIES, audience), [audience]);
+  useEffect(() => { setFaqCat(0); setOpenFaq(null); }, [audience]);
+
+  // Section observer for scroll tracking
+  const heroRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+  const sectionRefs = useMemo(() => ({ hero: heroRef, faq: faqRef, cta: ctaRef }), []);
+  useSectionObserver(sectionRefs);
+
+  // Page view on mount
+  useEffect(() => { trackPageView('/variants/v019-mercredi', 'v019-mercredi', audience); }, [audience]);
+
   const visibleAgents  = showAllAgents  ? ALL_AGENTS   : ALL_AGENTS.slice(0, AGENTS_PREVIEW);
   const visibleModels  = showAllModels  ? AI_MODELS    : AI_MODELS.slice(0, MODELS_PREVIEW);
   const visibleEco     = showAllEco     ? ECOSYSTEM    : ECOSYSTEM.slice(0, ECO_PREVIEW);
@@ -244,7 +264,7 @@ export default function LandingPage() {
       <main style={{ paddingTop: 56 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
-        <section style={{
+        <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(40px, 5vw, 60px) 24px clamp(28px, 3vw, 40px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -296,7 +316,7 @@ export default function LandingPage() {
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/login?mode=register" className="lp-cta-primary" style={{
+              <Link href="/login?mode=register" className="lp-cta-primary" onClick={() => trackCtaClick('hero_cta', '/login?mode=register', audience, '/variants/v019-mercredi')} style={{
                 padding: '13px 30px', background: '#6366f1', color: '#fff',
                 borderRadius: 10, fontWeight: 800, fontSize: 15, textDecoration: 'none',
               }}>
@@ -916,7 +936,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
-        <section id="faq" style={{ background: '#f7f7f7', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
+        <section ref={faqRef} id="faq" style={{ background: '#f7f7f7', padding: 'clamp(48px, 6vw, 72px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontSize: 11, fontWeight: 800, color: '#f97316', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>FAQ</p>
@@ -933,7 +953,7 @@ export default function LandingPage() {
               display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center',
               marginBottom: 28, padding: '0 8px',
             }}>
-              {FAQ_CATEGORIES.map((cat, ci) => (
+              {orderedFaq.map((cat, ci) => (
                 <button
                   key={cat.id}
                   onClick={() => { setFaqCat(ci); setOpenFaq(null); }}
@@ -963,28 +983,31 @@ export default function LandingPage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
               padding: '10px 16px', borderRadius: 10,
-              background: `${FAQ_CATEGORIES[faqCat].color}08`,
-              border: `1px solid ${FAQ_CATEGORIES[faqCat].color}18`,
+              background: `${orderedFaq[faqCat].color}08`,
+              border: `1px solid ${orderedFaq[faqCat].color}18`,
             }}>
-              <span style={{ fontSize: 18 }}>{FAQ_CATEGORIES[faqCat].icon}</span>
-              <span style={{ fontSize: 14, fontWeight: 800, color: FAQ_CATEGORIES[faqCat].color }}>
-                {FAQ_CATEGORIES[faqCat].label}
+              <span style={{ fontSize: 18 }}>{orderedFaq[faqCat].icon}</span>
+              <span style={{ fontSize: 14, fontWeight: 800, color: orderedFaq[faqCat].color }}>
+                {orderedFaq[faqCat].label}
               </span>
               <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>
-                {FAQ_CATEGORIES[faqCat].questions.length} questions
+                {orderedFaq[faqCat].questions.length} questions
               </span>
             </div>
 
             {/* Questions */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {FAQ_CATEGORIES[faqCat].questions.map((faq, i) => {
+              {orderedFaq[faqCat].questions.map((faq, i) => {
                 const isOpen = openFaq === i;
-                const catColor = FAQ_CATEGORIES[faqCat].color;
+                const catColor = orderedFaq[faqCat].color;
                 return (
                   <div
                     key={`${faqCat}-${i}`}
                     className="lp-faq-item"
-                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    onClick={() => {
+                      if (!isOpen) trackFaqOpened(faq.q, orderedFaq[faqCat].label);
+                      setOpenFaq(isOpen ? null : i);
+                    }}
                     style={{
                       background: isOpen ? '#fafaff' : '#fff',
                       border: isOpen ? `1.5px solid ${catColor}40` : '1px solid #ebebeb',
@@ -1020,7 +1043,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ CTA FINAL ════════════════════════════════════════ */}
-        <section style={{
+        <section ref={ctaRef} style={{
           background: 'linear-gradient(165deg, #0a0a0f 0%, #1a1a2e 100%)',
           padding: 'clamp(56px, 8vw, 96px) 24px',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -1046,7 +1069,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 32 }}>
               {totalAgents} agents IA. Toutes les IA du marché. 0% de commission. Sans carte bancaire.
             </p>
-            <Link href="/login?mode=register" className="lp-cta-primary" style={{
+            <Link href="/login?mode=register" className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', '/login?mode=register', audience, '/variants/v019-mercredi')} style={{
               display: 'inline-block', padding: '15px 40px',
               background: '#6366f1', color: '#fff',
               borderRadius: 12, fontWeight: 800, fontSize: 16,

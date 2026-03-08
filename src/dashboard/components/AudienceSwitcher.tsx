@@ -1,6 +1,7 @@
 'use client';
 
 import { AudienceType, AUDIENCE_CONFIGS } from '../lib/audience-data';
+import { trackAudienceSelected } from '../lib/analytics';
 
 const AUDIENCES: AudienceType[] = ['particulier', 'freelance', 'entreprise'];
 
@@ -52,7 +53,11 @@ export default function AudienceSwitcher({ audience, onChange, variant = 'dark' 
         return (
           <button
             key={a}
-            onClick={() => onChange(isActive ? null : a)}
+            onClick={() => {
+              const next = isActive ? null : a;
+              if (next) trackAudienceSelected(next);
+              onChange(next);
+            }}
             style={{
               position: 'relative',
               zIndex: 1,

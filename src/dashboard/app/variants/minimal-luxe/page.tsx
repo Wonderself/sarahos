@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import PublicNav from '../../../components/PublicNav';
 import PublicFooter from '../../../components/PublicFooter';
@@ -10,6 +10,9 @@ import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
 import AudienceStickyBar from '../../../components/AudienceStickyBar';
 import { useAudience } from '../../../lib/use-audience';
 import { VARIANT_ANGLES, AUDIENCE_CONFIGS, AudienceType } from '../../../lib/audience-data';
+import { getOrderedFaqCategories } from '../../../lib/faq-utils';
+import { useSectionObserver } from '../../../hooks/useSectionObserver';
+import { trackPageView, trackCtaClick, trackFaqOpened } from '../../../lib/analytics';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -276,6 +279,20 @@ export default function MinimalLuxePage() {
   const [toolTab, setToolTab]               = useState(0);
 
   const { audience, setAudience, config } = useAudience();
+
+  // FAQ reorder by audience
+  const orderedFaq = useMemo(() => getOrderedFaqCategories(FAQ_CATEGORIES, audience), [audience]);
+  useEffect(() => { setFaqCat(0); setOpenFaq(null); }, [audience]);
+
+  // Section observer for scroll tracking
+  const heroRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+  const sectionRefs = useMemo(() => ({ hero: heroRef, faq: faqRef, cta: ctaRef }), []);
+  useSectionObserver(sectionRefs);
+
+  // Page view on mount
+  useEffect(() => { trackPageView('/variants/minimal-luxe', 'minimal-luxe', audience); }, [audience]);
   const variantAngle = VARIANT_ANGLES.find(v => v.variantId === 'minimal-luxe');
   const variantHero = audience && variantAngle ? variantAngle.heroes[audience] : null;
   const ctaLabel = config?.cta.label || 'Commencer';
@@ -290,7 +307,7 @@ export default function MinimalLuxePage() {
       <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
-        <section style={{
+        <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #1a1715 0%, #211e1a 100%)',
           padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -351,7 +368,7 @@ export default function MinimalLuxePage() {
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <Link href={ctaHref} className="lp-cta-primary" style={{
+              <Link href={ctaHref} className="lp-cta-primary" onClick={() => trackCtaClick('hero_cta', '/login?mode=register', audience, '/variants/minimal-luxe')} style={{
                 padding: '12px 20px', background: '#c8a97e', color: '#1a1715',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
@@ -843,7 +860,7 @@ export default function MinimalLuxePage() {
         )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
-        <section id="faq" style={{ background: '#f5f0ea', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section id="faq" ref={faqRef} style={{ background: '#f5f0ea', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 500, color: '#c8a97e', letterSpacing: 6, marginBottom: 10 }}>FAQ</p>
@@ -860,7 +877,7 @@ export default function MinimalLuxePage() {
               display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center',
               marginBottom: 28, padding: '0 8px',
             }}>
-              {FAQ_CATEGORIES.map((cat, ci) => (
+              {orderedFaq.map((cat, ci) => (
                 <button
                   key={cat.id}
                   onClick={() => { setFaqCat(ci); setOpenFaq(null); }}
@@ -890,28 +907,31 @@ export default function MinimalLuxePage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
               padding: '10px 16px', borderRadius: 10,
-              background: `${FAQ_CATEGORIES[faqCat].color}08`,
-              border: `1px solid ${FAQ_CATEGORIES[faqCat].color}18`,
+              background: `${orderedFaq[faqCat].color}08`,
+              border: `1px solid ${orderedFaq[faqCat].color}18`,
             }}>
-              <span style={{ fontSize: 18 }}>{FAQ_CATEGORIES[faqCat].icon}</span>
-              <span style={{ fontSize: 14, fontWeight: 600, color: FAQ_CATEGORIES[faqCat].color }}>
-                {FAQ_CATEGORIES[faqCat].label}
+              <span style={{ fontSize: 18 }}>{orderedFaq[faqCat].icon}</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: orderedFaq[faqCat].color }}>
+                {orderedFaq[faqCat].label}
               </span>
               <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>
-                {FAQ_CATEGORIES[faqCat].questions.length} questions
+                {orderedFaq[faqCat].questions.length} questions
               </span>
             </div>
 
             {/* Questions */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {FAQ_CATEGORIES[faqCat].questions.map((faq, i) => {
+              {orderedFaq[faqCat].questions.map((faq, i) => {
                 const isOpen = openFaq === i;
-                const catColor = FAQ_CATEGORIES[faqCat].color;
+                const catColor = orderedFaq[faqCat].color;
                 return (
                   <div
                     key={`${faqCat}-${i}`}
                     className="lp-faq-item"
-                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    onClick={() => {
+                      if (!isOpen) trackFaqOpened(faq.q, orderedFaq[faqCat].label);
+                      setOpenFaq(isOpen ? null : i);
+                    }}
                     style={{
                       background: isOpen ? '#faf8f5' : '#fff',
                       border: isOpen ? `1.5px solid ${catColor}40` : '1px solid #e8e0d8',
@@ -947,7 +967,7 @@ export default function MinimalLuxePage() {
         </section>
 
         {/* ══ CTA FINAL ════════════════════════════════════════ */}
-        <section style={{
+        <section ref={ctaRef} style={{
           background: 'linear-gradient(165deg, #1a1715 0%, #211e1a 50%, #1a1715 100%)',
           padding: 'clamp(56px, 8vw, 96px) 24px',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -973,7 +993,7 @@ export default function MinimalLuxePage() {
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.32)', marginBottom: 32 }}>
               <span style={{ color: '#c8a97e', fontWeight: 500 }}>{totalAgents} agents IA</span>. Toutes les IA du march&eacute;. <span style={{ color: '#c8a97e', fontWeight: 500 }}>0% de commission</span>. Sans carte bancaire.
             </p>
-            <Link href={ctaHref} className="lp-cta-primary" style={{
+            <Link href={ctaHref} className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', '/login?mode=register', audience, '/variants/minimal-luxe')} style={{
               display: 'inline-block', padding: '15px 40px',
               background: '#c8a97e', color: '#1a1715',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16,

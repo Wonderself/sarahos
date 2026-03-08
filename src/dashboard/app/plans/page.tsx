@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { DEFAULT_AGENTS, PERSONAL_AGENTS, TOTAL_AGENTS_DISPLAY } from '../../lib/agent-config';
 import EnterpriseSection from './EnterpriseSection';
@@ -7,6 +8,8 @@ import PublicNav from '../../components/PublicNav';
 import PublicFooter from '../../components/PublicFooter';
 import AudienceStickyBar from '../../components/AudienceStickyBar';
 import { useAudience } from '../../lib/use-audience';
+import { useSectionObserver } from '../../hooks/useSectionObserver';
+import { trackPageView, trackCtaClick } from '../../lib/analytics';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -61,6 +64,16 @@ const cell = { padding: '12px 16px', fontSize: 13, borderBottom: '1px solid #f0f
 export default function PlansPage() {
   const { audience, setAudience, config } = useAudience();
 
+  // Section observer
+  const heroRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+  const sectionRefs = useMemo(() => ({ hero: heroRef, faq: faqRef, cta: ctaRef }), []);
+  useSectionObserver(sectionRefs);
+
+  // Page view on mount
+  useEffect(() => { trackPageView('/plans', 'plans', audience); }, [audience]);
+
   // Audience-aware CTA
   const ctaLabel = config?.cta.label || 'Commencer gratuitement';
   const ctaHref = config?.cta.href || '/login?mode=register';
@@ -84,7 +97,7 @@ export default function PlansPage() {
       <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section style={{
+      <section ref={heroRef} style={{
         background: 'linear-gradient(160deg, #0a0a0f 0%, #12121a 55%, #0e0e18 100%)',
         padding: 'clamp(90px, 11vw, 120px) 24px clamp(70px, 8vw, 96px)',
         paddingTop: 'clamp(142px, 14vw, 172px)',
@@ -144,7 +157,7 @@ export default function PlansPage() {
             </div>
           )}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: config ? 28 : 0 }}>
-            <Link href={ctaHref} style={{
+            <Link href={ctaHref} onClick={() => trackCtaClick('hero_cta', ctaHref, audience, '/plans')} style={{
               padding: '14px 32px', background: '#5b6cf7', color: '#fff',
               borderRadius: 12, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 15, textDecoration: 'none',
               boxShadow: '0 0 28px rgba(91,108,247,0.35)',
@@ -216,7 +229,7 @@ export default function PlansPage() {
               <p style={{ ...sectionSubtitle, maxWidth: 380 }}>
                 Aucune commission ajoutée sur vos actions. Vous payez uniquement le coût brut des tokens IA, au prix officiel du fournisseur.
               </p>
-              <Link href={ctaHref} style={{
+              <Link href={ctaHref} onClick={() => trackCtaClick('pricing_cta', ctaHref, audience, '/plans')} style={{
                 display: 'inline-block', marginTop: 28,
                 padding: '13px 28px', background: '#1d1d1f', color: '#fff',
                 borderRadius: 10, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, textDecoration: 'none',
@@ -579,7 +592,7 @@ export default function PlansPage() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" style={{ ...sectionPad, paddingTop: 0, maxWidth: 680, margin: '0 auto clamp(64px, 8vw, 96px)' }}>
+        <section ref={faqRef} id="faq" style={{ ...sectionPad, paddingTop: 0, maxWidth: 680, margin: '0 auto clamp(64px, 8vw, 96px)' }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={eyebrow}>FAQ</p>
             <h2 style={sectionTitle}>Questions fréquentes</h2>
@@ -646,7 +659,7 @@ export default function PlansPage() {
       )}
 
       {/* FINAL CTA */}
-      <section style={{
+      <section ref={ctaRef} style={{
         background: 'linear-gradient(165deg, #0a0a0f 0%, #1a1a2e 100%)',
         padding: 'clamp(70px, 9vw, 110px) 24px',
         textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -668,7 +681,7 @@ export default function PlansPage() {
           <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, marginBottom: 38 }}>
             {totalAgents}+ agents <span className="fz-logo-word">IA</span>. Toutes les IA du marché. 0% de commission.
           </p>
-          <Link href={ctaHref} style={{
+          <Link href={ctaHref} onClick={() => trackCtaClick('final_cta', ctaHref, audience, '/plans')} style={{
             display: 'inline-block',
             padding: '15px 40px',
             background: '#5b6cf7', color: '#fff',

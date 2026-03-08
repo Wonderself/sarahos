@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import PublicNav from '../../../components/PublicNav';
 import PublicFooter from '../../../components/PublicFooter';
@@ -10,6 +10,9 @@ import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
 import AudienceStickyBar from '../../../components/AudienceStickyBar';
 import { useAudience } from '../../../lib/use-audience';
 import { VARIANT_ANGLES, AUDIENCE_CONFIGS, AudienceType } from '../../../lib/audience-data';
+import { getOrderedFaqCategories } from '../../../lib/faq-utils';
+import { useSectionObserver } from '../../../hooks/useSectionObserver';
+import { trackPageView, trackCtaClick, trackFaqOpened } from '../../../lib/analytics';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -276,6 +279,21 @@ export default function BoldDisrupteurPage() {
   const [toolTab, setToolTab]               = useState(0);
 
   const { audience, setAudience, config } = useAudience();
+
+  // FAQ reorder by audience
+  const orderedFaq = useMemo(() => getOrderedFaqCategories(FAQ_CATEGORIES, audience), [audience]);
+  useEffect(() => { setFaqCat(0); setOpenFaq(null); }, [audience]);
+
+  // Section observer for scroll tracking
+  const heroRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+  const sectionRefs = useMemo(() => ({ hero: heroRef, faq: faqRef, cta: ctaRef }), []);
+  useSectionObserver(sectionRefs);
+
+  // Page view on mount
+  useEffect(() => { trackPageView('/variants/bold-disrupteur', 'bold-disrupteur', audience); }, [audience]);
+
   const variantAngle = VARIANT_ANGLES.find(v => v.variantId === 'bold-disrupteur');
   const variantHero = audience && variantAngle ? variantAngle.heroes[audience] : null;
   const ctaLabel = config?.cta.label || 'Commencer gratuitement';
@@ -290,7 +308,7 @@ export default function BoldDisrupteurPage() {
       <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
-        <section style={{
+        <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #1a1a2e 0%, #16162a 100%)',
           padding: 'clamp(40px, 5vw, 64px) 24px clamp(32px, 4vw, 48px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -346,7 +364,7 @@ export default function BoldDisrupteurPage() {
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <Link href={ctaHref} className="lp-cta-primary" style={{
+              <Link href={ctaHref} className="lp-cta-primary" onClick={() => trackCtaClick('hero_cta', '/login?mode=register', audience, '/variants/bold-disrupteur')} style={{
                 padding: '14px 24px', background: '#ff3b30', color: '#fff',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(13px, 3.5vw, 17px)', textDecoration: 'none',
                 minHeight: 48, whiteSpace: 'nowrap',
@@ -846,7 +864,7 @@ export default function BoldDisrupteurPage() {
         )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
-        <section id="faq" style={{ background: '#fff5f5', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+        <section ref={faqRef} id="faq" style={{ background: '#fff5f5', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 800, color: '#ff3b30', letterSpacing: 5, textTransform: 'uppercase', marginBottom: 10 }}>FAQ</p>
@@ -863,7 +881,7 @@ export default function BoldDisrupteurPage() {
               display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center',
               marginBottom: 28, padding: '0 8px',
             }}>
-              {FAQ_CATEGORIES.map((cat, ci) => (
+              {orderedFaq.map((cat, ci) => (
                 <button
                   key={cat.id}
                   onClick={() => { setFaqCat(ci); setOpenFaq(null); }}
@@ -893,28 +911,31 @@ export default function BoldDisrupteurPage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
               padding: '10px 16px', borderRadius: 10,
-              background: `${FAQ_CATEGORIES[faqCat].color}08`,
-              border: `2px solid ${FAQ_CATEGORIES[faqCat].color}18`,
+              background: `${orderedFaq[faqCat].color}08`,
+              border: `2px solid ${orderedFaq[faqCat].color}18`,
             }}>
-              <span style={{ fontSize: 18 }}>{FAQ_CATEGORIES[faqCat].icon}</span>
-              <span style={{ fontSize: 15, fontWeight: 900, color: FAQ_CATEGORIES[faqCat].color }}>
-                {FAQ_CATEGORIES[faqCat].label}
+              <span style={{ fontSize: 18 }}>{orderedFaq[faqCat].icon}</span>
+              <span style={{ fontSize: 15, fontWeight: 900, color: orderedFaq[faqCat].color }}>
+                {orderedFaq[faqCat].label}
               </span>
               <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto', fontWeight: 700 }}>
-                {FAQ_CATEGORIES[faqCat].questions.length} questions
+                {orderedFaq[faqCat].questions.length} questions
               </span>
             </div>
 
             {/* Questions */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {FAQ_CATEGORIES[faqCat].questions.map((faq, i) => {
+              {orderedFaq[faqCat].questions.map((faq, i) => {
                 const isOpen = openFaq === i;
-                const catColor = FAQ_CATEGORIES[faqCat].color;
+                const catColor = orderedFaq[faqCat].color;
                 return (
                   <div
                     key={`${faqCat}-${i}`}
                     className="lp-faq-item"
-                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    onClick={() => {
+                      if (!isOpen) trackFaqOpened(faq.q, orderedFaq[faqCat].label);
+                      setOpenFaq(isOpen ? null : i);
+                    }}
                     style={{
                       background: isOpen ? '#fff5f5' : '#fff',
                       border: isOpen ? `2px solid ${catColor}40` : '1px solid #ebebeb',
@@ -951,7 +972,7 @@ export default function BoldDisrupteurPage() {
         </section>
 
         {/* ══ CTA FINAL ════════════════════════════════════════ */}
-        <section style={{
+        <section ref={ctaRef} style={{
           background: 'linear-gradient(165deg, #1a1a2e 0%, #0f0f1a 50%, #1a1a2e 100%)',
           padding: 'clamp(64px, 10vw, 112px) 24px',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -977,7 +998,7 @@ export default function BoldDisrupteurPage() {
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)', marginBottom: 36, fontWeight: 600 }}>
               <span style={{ color: '#ffe600', fontWeight: 800 }}>{totalAgents} agents IA</span>. Toutes les IA du march&eacute;. <span style={{ color: '#ffe600', fontWeight: 800 }}>0% de commission</span>. Sans carte bancaire.
             </p>
-            <Link href={ctaHref} className="lp-cta-primary" style={{
+            <Link href={ctaHref} className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', '/login?mode=register', audience, '/variants/bold-disrupteur')} style={{
               display: 'inline-block', padding: '18px 48px',
               background: '#ff3b30', color: '#fff',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 18,

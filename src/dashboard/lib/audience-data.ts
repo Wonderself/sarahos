@@ -321,3 +321,14 @@ export const TOKEN_PRICING = [
     ],
   },
 ];
+
+// ═══════════════════════════════════════════════════════════════
+// FAQ CATEGORY ORDER — reordonnement par audience
+// Toutes les categories restent visibles, juste reordonnees.
+// ═══════════════════════════════════════════════════════════════
+
+export const FAQ_CATEGORY_ORDER: Record<AudienceType, string[]> = {
+  particulier: ['general', 'pricing', 'agents', 'security', 'tech', 'whatsapp', 'studio', 'dashboard', 'custom', 'enterprise'],
+  freelance:   ['agents', 'pricing', 'general', 'whatsapp', 'tech', 'studio', 'dashboard', 'security', 'custom', 'enterprise'],
+  entreprise:  ['enterprise', 'security', 'agents', 'custom', 'tech', 'pricing', 'dashboard', 'general', 'whatsapp', 'studio'],
+};

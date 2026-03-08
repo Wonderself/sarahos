@@ -197,13 +197,7 @@ const jsonLd = {
         '0% commission à vie pour les early adopters',
       ],
       screenshot: `${SITE_URL}/opengraph-image`,
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.9',
-        ratingCount: '47',
-        bestRating: '5',
-        worstRating: '1',
-      },
+      /* aggregateRating removed — no verified reviews yet */
       author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
       publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
     },

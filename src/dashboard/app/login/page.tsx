@@ -159,7 +159,7 @@ export default function LoginPage() {
       }));
       if (data.activeAgents) setActiveAgentIds(data.activeAgents);
       localStorage.setItem('fz_welcome_pending', 'true');
-      console.log('[FREENZY] Login response — role:', data.role, 'email:', data.email);
+      /* login info logged server-side only */
       const redirectParam = new URLSearchParams(window.location.search).get('redirect');
       if (redirectParam && redirectParam.startsWith('/')) {
         window.location.href = redirectParam;

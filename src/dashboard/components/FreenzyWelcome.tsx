@@ -9,7 +9,7 @@ interface FreenzyWelcomeProps {
   onDismiss: () => void;
 }
 
-const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg') ?? { name: 'Sarah', materialIcon: 'verified' };
+const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg') ?? { name: 'Freenzy', materialIcon: 'verified' };
 
 const QUICK_ACTIONS: Array<{ icon: string; label: string; desc: string; href: string }> = [
   { icon: 'chat', label: `Discuter avec ${dgAgent.name}`, desc: `${DEFAULT_AGENTS.length} agents prets`, href: '/client/chat' },

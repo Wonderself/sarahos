@@ -2022,9 +2022,10 @@ export const COMMISSION_TIERS = [
 
 export const SIGNUP_BONUS_CREDITS = 50;
 
-// Total agents count including marketplace templates (82 = 34 core + 48 marketplace)
-// 34 core = 22 business + 12 personnels
-export const TOTAL_AGENTS_DISPLAY = 82;
+// 34 core agents = 22 business + 12 personnels
+export const TOTAL_AGENTS_DISPLAY = 34;
+// Marketplace templates (separate from core agents)
+export const MARKETPLACE_TEMPLATES_COUNT = 48;
 
 // Legacy alias
 export type CreditPack = DepositOption;

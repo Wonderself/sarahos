@@ -35,6 +35,12 @@ const VARIANTS = [
     desc: 'Dégradés fluides, esthétique glassmorphism — « Le futur est là ».',
     colors: ['#7c3aed', '#06b6d4', '#f43f5e'],
   },
+  {
+    slug: 'v019-mercredi',
+    name: 'v0.19 — Mercredi 5 mars',
+    desc: 'Version du premier deploy Coolify. Emojis partout, 72 agents, structure de base.',
+    colors: ['#6366f1', '#0a0a0f', '#22c55e'],
+  },
 ];
 
 export default function VariantsIndex() {

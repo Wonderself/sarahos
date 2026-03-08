@@ -433,6 +433,202 @@ const VARIANTS: LandingVersion[] = [
     score: 71,
   },
   {
+    id: 'ct-roi', name: 'Copy Test — ROI / Economies', number: 'R',
+    desc: 'Angle de vente : chiffres et economies. Hero "Remplacez 5 employes pour le prix d\'un cafe". Focus sur le cout par agent vs salaire humain, ROI immediat, comparaisons chiffrees. Section tarifs/credits promue en 3e position. "Pourquoi" retitree "Les chiffres, rien que les chiffres". Hero compact (tickers above the fold a 100% zoom).',
+    date: '8 mars 2026',
+    badge: { text: 'COPY TEST', type: 'variant' },
+    colors: ['#5b6cf7', '#22c55e', '#f59e0b'],
+    meta: [{ label: 'Angle', value: 'ROI / Economies' }, { label: 'CTA', value: 'Calculer mes economies' }, { label: 'Cible ideale', value: 'Freelances + TPE sensibles au prix' }],
+    link: '/variants/copy-tests/roi-economie',
+    sections: ['Hero compact', 'Tickers', 'Credits/Couts (promu)', 'Demo', 'Outils', 'Scenarios+Tech', 'WhatsApp', '"Les chiffres" (6 cards ROI)', 'Enterprise', 'FAQ', 'CTA final'],
+    reviews: [
+      { label: 'FORCES', type: 'good', items: [
+        'Argument le plus universel en B2B SaaS — le prix parle a tous',
+        'Chiffres concrets (847EUR/an, 12h/semaine, ROI x47) — credible et memorisable',
+        'Section tarifs promue = le visiteur voit le cout immediatement (reduit la friction)',
+        'Ideal pour Google Ads "cout assistant IA" / "alternative moins chere"',
+        'Les 3 audiences ont des chiffres adaptes (Particulier = economie, Freelance = temps, Entreprise = ROI)',
+      ]},
+      { label: 'RISQUES', type: 'issue', items: [
+        'Peut donner une impression "low cost" si les chiffres dominent trop le messaging',
+        'Les economies annoncees (847EUR/an) doivent etre justifiables — risque de sur-promesse',
+        'Le "prix d\'un cafe" est un cliche marketing — certains prospects trouveront ca reducteur',
+        'Ne met pas en avant les features uniques (orchestration, marketplace, multi-modeles)',
+      ]},
+      { label: 'RECOMMANDATION', type: 'missing', items: [
+        'Meilleur angle pour les campagnes Google Ads "prix" et "comparatif"',
+        'A tester en priorite sur le segment Freelance (le plus sensible au cout)',
+        'Ajouter un vrai calculateur interactif pour renforcer l\'angle ROI',
+      ]},
+    ],
+    score: 68,
+  },
+  {
+    id: 'ct-urgence', name: 'Copy Test — Urgence / FOMO', number: 'U',
+    desc: 'Angle de vente : peur de manquer, pression concurrentielle. Hero "Vos concurrents automatisent deja". Badge avec dot vert anime + "5 000 places a 0% commission". Strip urgence avec compteurs (inscrits, places restantes). "Pourquoi" retitree "Ce que vous perdez chaque jour sans IA". Hero compact.',
+    date: '8 mars 2026',
+    badge: { text: 'COPY TEST', type: 'variant' },
+    colors: ['#ef4444', '#f59e0b', '#5b6cf7'],
+    meta: [{ label: 'Angle', value: 'Urgence / FOMO' }, { label: 'CTA', value: 'Prendre ma place' }, { label: 'Cible ideale', value: 'Dirigeants + decideurs sous pression' }],
+    link: '/variants/copy-tests/urgence-fomo',
+    sections: ['Hero compact', 'Tickers', 'Strip urgence (nouveau)', 'Demo', 'Scenarios+Tech', 'Outils', 'WhatsApp', '"Ce que vous perdez" (6 cards)', 'Creation', 'Enterprise', 'FAQ', 'CTA final'],
+    reviews: [
+      { label: 'FORCES', type: 'good', items: [
+        'Le FOMO est le levier psychologique le plus puissant en marketing digital',
+        'Le compteur de places (5000 a 0% commission) cree une urgence credible',
+        'Le messaging "vos concurrents" active la peur de la perte — plus puissant que le gain',
+        'Strip urgence avec compteurs = preuve sociale + scarcity en un seul element',
+        'Ideal pour les campagnes Meta Ads (retargeting, audiences similaires)',
+      ]},
+      { label: 'RISQUES', type: 'issue', items: [
+        'L\'urgence artificielle peut etre percue comme du marketing agressif / spam',
+        'Si le compteur ne bouge jamais, la credibilite s\'effondre (besoin de donnees reelles)',
+        '"Vos concurrents automatisent deja" est inveriable — certains prospects le sauront',
+        'En France, la pression commerciale est moins acceptee qu\'aux US',
+        'Le messaging "perte" peut creer de l\'anxiete plutot que de l\'action',
+      ]},
+      { label: 'RECOMMANDATION', type: 'missing', items: [
+        'A tester sur des campagnes courtes (7-14 jours) avec un vrai compteur dynamique',
+        'Combiner avec du retargeting Meta Ads pour les visiteurs qui n\'ont pas converti',
+        'ATTENTION : si les compteurs sont statiques, retirer la section urgence strip',
+      ]},
+    ],
+    score: 62,
+  },
+  {
+    id: 'ct-simplicite', name: 'Copy Test — Simplicite / Anti-tech', number: 'S',
+    desc: 'Angle de vente : zero complexite, WhatsApp-first. Hero "Envoyez un WhatsApp. Votre IA fait le reste." WhatsApp promu en 3e section (avec 6 messages au lieu de 3). Section "3 etapes" ajoutee (Ecrivez → L\'IA comprend → C\'est fait). TECH_FEATURES supprime (trop technique). "Pourquoi" retitree "Pourquoi c\'est si simple". Hero compact.',
+    date: '8 mars 2026',
+    badge: { text: 'COPY TEST', type: 'variant' },
+    colors: ['#22c55e', '#5b6cf7', '#0a0a0f'],
+    meta: [{ label: 'Angle', value: 'Simplicite / Anti-tech' }, { label: 'CTA', value: 'Essayer maintenant' }, { label: 'Cible ideale', value: 'Particuliers + PME non-tech' }],
+    link: '/variants/copy-tests/simplicite',
+    sections: ['Hero compact', 'Tickers', 'WhatsApp (promu, enrichi)', '3 etapes (nouveau)', 'Demo', 'Outils', 'Scenarios (sans Tech)', '"Pourquoi c\'est si simple" (6 cards)', 'Enterprise', 'FAQ', 'CTA final'],
+    reviews: [
+      { label: 'FORCES', type: 'good', items: [
+        'L\'obstacle #1 a l\'adoption IA est la complexite percue — cet angle l\'elimine',
+        'WhatsApp promu en 3e section = le visiteur voit immediatement comment ca marche',
+        '6 messages WhatsApp au lieu de 3 — plus de preuves de simplicite',
+        '"3 etapes" est le pattern marketing le plus efficace pour reduire la friction',
+        'Suppression de TECH_FEATURES = coherent avec le messaging anti-tech',
+        'Ideal pour les segments Particulier et PME traditionnelles (boulanger, artisan, etc.)',
+      ]},
+      { label: 'RISQUES', type: 'issue', items: [
+        'Le messaging "anti-tech" peut repousser les early adopters tech (Freelance dev, startup)',
+        'Trop insister sur la simplicite peut donner une impression de produit basique',
+        'Sans TECH_FEATURES, les prospects techniques n\'ont pas d\'infos sur la stack',
+        'Le "zero formation" est une promesse forte — le produit doit la tenir',
+      ]},
+      { label: 'RECOMMANDATION', type: 'missing', items: [
+        'Meilleur angle pour les particuliers et les PME traditionnelles (artisans, commercants)',
+        'A tester en priorite avec des ads Facebook ciblant les 35-55 ans non-tech',
+        'Combiner avec une video demo WhatsApp reelle pour maximiser la conversion',
+      ]},
+    ],
+    score: 70,
+    scoreLabel: 'Score potentiel',
+  },
+  {
+    id: 'ct-preuve', name: 'Copy Test — Preuve Sociale / Autorite', number: 'P',
+    desc: 'Angle de vente : trust, temoignages, partenaires. Hero "Deja adopte par des milliers de pros." 3 nouvelles sections : Trust logos (Anthropic, Twilio, etc.), Temoignages (4 cards), Stats panel (2400+ utilisateurs, 99.9% uptime). "Pourquoi" retitree "Pourquoi ils nous choisissent" (securite, RGPD, 2FA). Hero compact.',
+    date: '8 mars 2026',
+    badge: { text: 'COPY TEST', type: 'variant' },
+    colors: ['#5b6cf7', '#22c55e', '#9333ea'],
+    meta: [{ label: 'Angle', value: 'Preuve Sociale / Autorite' }, { label: 'CTA', value: 'Rejoindre la communaute' }, { label: 'Cible ideale', value: 'Entreprises + professions reglementees' }],
+    link: '/variants/copy-tests/preuve-sociale',
+    sections: ['Hero compact', 'Trust logos (nouveau)', 'Tickers', 'Temoignages (nouveau)', 'Stats panel (nouveau)', 'Demo', 'Outils', 'Scenarios+Tech', 'WhatsApp', '"Pourquoi ils nous choisissent" (6 cards)', 'Enterprise', 'FAQ', 'CTA final'],
+    reviews: [
+      { label: 'FORCES', type: 'good', items: [
+        'La preuve sociale est le levier #1 pour les profils risk-averse (PME, professions liberales)',
+        'Les logos tech partenaires (Anthropic, Twilio) conferent une legitimite immediate',
+        'Les temoignages (meme fictifs pour l\'instant) donnent un visage humain au produit',
+        'Le stats panel (2400+ utilisateurs, 99.9% uptime) rassure les decideurs',
+        'Section securite renforcee (RGPD, AES-256, 2FA) — cle pour les entreprises',
+        'Ideal pour les campagnes LinkedIn ciblant les DRH, DAF, DSI',
+      ]},
+      { label: 'RISQUES', type: 'issue', items: [
+        'ATTENTION : les temoignages sont FICTIFS — risque ethique et legal si decouvert',
+        'Les chiffres (2400+ utilisateurs) doivent etre vrais ou retires avant mise en production',
+        'La section "Trust logos" utilise les noms des fournisseurs tech, pas de vrais clients',
+        'Trop de sections "social proof" (logos + temoignages + stats) peut sembler sur-compense',
+        'Le messaging "deja adopte" est credible uniquement si les chiffres le confirment',
+      ]},
+      { label: 'RECOMMANDATION', type: 'missing', items: [
+        'NE PAS deployer en production avec des temoignages fictifs — remplacer par de vrais des que possible',
+        'Conserver la structure (logos + stats + temoignages) et la remplir avec des donnees reelles',
+        'Meilleur angle pour le segment Entreprise — a tester avec des ads LinkedIn B2B',
+        'Ajouter des logos de vrais clients des qu\'il y en a (meme 3-4 suffisent)',
+      ]},
+    ],
+    score: 65,
+    scoreLabel: 'Score (avec donnees reelles: 78)',
+  },
+  {
+    id: 'ct-probleme', name: 'Copy Test — Probleme → Solution', number: 'PS',
+    desc: 'Angle de vente : pain points d\'abord, puis liberation. Hero "Noye dans l\'admin ? On a la solution." Strip problemes (4 cards rouge/orange : appels manques, devis en retard, posts non publies, compta en desordre). Section "revelation solution" avec transition avant/apres. "Pourquoi" retitree "La solution complete". Hero compact.',
+    date: '8 mars 2026',
+    badge: { text: 'COPY TEST', type: 'variant' },
+    colors: ['#ef4444', '#f97316', '#22c55e'],
+    meta: [{ label: 'Angle', value: 'Probleme → Solution' }, { label: 'CTA', value: 'Reprendre le controle' }, { label: 'Cible ideale', value: 'Freelances surcharges + dirigeants PME' }],
+    link: '/variants/copy-tests/probleme-solution',
+    sections: ['Hero compact', 'Strip problemes (nouveau)', 'Revelation solution (nouveau)', 'Demo', 'Tickers', 'Outils', 'Scenarios+Tech', 'WhatsApp', 'Creation', '"La solution complete" (6 cards)', 'Enterprise', 'FAQ', 'CTA final'],
+    reviews: [
+      { label: 'FORCES', type: 'good', items: [
+        'Le framework PAS (Problem-Agitate-Solve) est le plus efficace en copywriting',
+        'Le visiteur se reconnait dans les problemes — connexion emotionnelle immediate',
+        'La transition "avant/apres" est visuellement impactante et convaincante',
+        'Le messaging "16h/jour et toujours en retard" touche le vecu reel des freelances',
+        'Les stats dans le strip problemes (73% des appels, 60% de chances en moins) sont persuasives',
+        'Le CTA "Reprendre le controle" est empowerant — pas agressif',
+      ]},
+      { label: 'RISQUES', type: 'issue', items: [
+        'Commencer par les problemes peut creer une impression negative du debut de page',
+        'Les stats citees (73%, 60%) doivent etre sourcees ou retirees',
+        'Le framing "noye dans l\'admin" peut sembler condescendant pour certains decideurs',
+        'Si le produit ne resout pas TOUS les problemes mentionnes, deception garantie',
+      ]},
+      { label: 'RECOMMANDATION', type: 'missing', items: [
+        'Meilleur angle pour les freelances surcharges — a tester en priorite sur ce segment',
+        'A combiner avec du retargeting : ceux qui voient les problemes mais ne convertissent pas → relance solution',
+        'Sourcer les stats ou les retirer avant mise en production',
+      ]},
+    ],
+    score: 72,
+    scoreLabel: 'Score potentiel',
+  },
+  {
+    id: 'ct-vision', name: 'Copy Test — Vision / Futuriste', number: 'V',
+    desc: 'Angle de vente : futur du travail, transformation digitale. Hero "Le CEO du futur ne travaille plus seul." Section showcase des 6 modeles IA (nouveau). Scenarios+Tech fusionnes avec framing futuriste ("L\'intelligence artificielle en action"). Creation retitree "Construisez le futur". "Pourquoi" retitree "L\'IA accessible a tous, des aujourd\'hui". Hero compact.',
+    date: '8 mars 2026',
+    badge: { text: 'COPY TEST', type: 'variant' },
+    colors: ['#9333ea', '#5b6cf7', '#3b82f6'],
+    meta: [{ label: 'Angle', value: 'Vision / Futuriste' }, { label: 'CTA', value: 'Devenir pionnier' }, { label: 'Cible ideale', value: 'Early adopters + innovateurs' }],
+    link: '/variants/copy-tests/vision-futuriste',
+    sections: ['Hero compact', 'Tickers', 'Showcase 6 modeles IA (nouveau)', 'Demo', 'Scenarios+Tech (fusionnes, futuriste)', 'Outils', 'Creation ("Construisez le futur")', 'WhatsApp', '"L\'IA accessible a tous" (6 cards)', 'Enterprise', 'FAQ', 'CTA final'],
+    reviews: [
+      { label: 'FORCES', type: 'good', items: [
+        'Le messaging aspirationnel attire les early adopters et les innovateurs',
+        'La section showcase 6 modeles IA est unique — aucune autre variante ne la propose',
+        '"Le CEO du futur" est un positionnement ambitieux et memorisable',
+        'Le framing futuriste justifie les features avancees (multi-modeles, orchestration, marketplace)',
+        'Ideal pour les campagnes Product Hunt, Hacker News, LinkedIn influenceurs tech',
+      ]},
+      { label: 'RISQUES', type: 'issue', items: [
+        'Le messaging "futuriste" peut sembler deconnecte pour les PME traditionnelles',
+        '"Devenir pionnier" n\'est pas un CTA actionnable — le visiteur ne sait pas ce qu\'il obtient',
+        'Le segment "innovateurs" est petit — ce n\'est pas le gros du marche PME',
+        'Les promesses futuristes creent des attentes elevees — le produit doit suivre',
+        'Le "CEO du futur" peut exclure les non-dirigeants (employes, freelances debutants)',
+      ]},
+      { label: 'RECOMMANDATION', type: 'missing', items: [
+        'A utiliser pour le lancement sur Product Hunt et les communautes tech',
+        'Ne PAS utiliser comme landing principale — trop niche pour le marche global',
+        'A combiner avec une demo live du multi-modeles pour prouver les claims',
+      ]},
+    ],
+    score: 58,
+  },
+  {
     id: 'v019-mercredi-v2', name: 'v0.19 Mercredi V2 (+ Audience + GA4)', number: 'W2',
     desc: 'Copie de la version mercredi (1er deploy) avec audience switcher + GA4 + FAQ reorder. Meme structure emojis + indigo mais personnalisee par audience. Utile pour mesurer : est-ce que le switcher audience ameliore meme une vieille version ?',
     date: '8 mars 2026',
@@ -681,9 +877,9 @@ export default function VariantsPage() {
           <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
             {[
               { val: '11', lbl: 'Versions' },
-              { val: '8', lbl: 'Variantes' },
+              { val: '14', lbl: 'Variantes' },
               { val: '82', lbl: 'Agents' },
-              { val: '3', lbl: 'Audiences' },
+              { val: '6', lbl: 'Copy Tests' },
               { val: 'GA4', lbl: 'Analytics' },
             ].map((s, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
@@ -723,10 +919,21 @@ export default function VariantsPage() {
             <LandingCard v={PRODUCTION} baseUrl={baseUrl} isActive />
           </div>
 
+          {/* ═══ COPY TESTS ═══ */}
+          <SectionTitle icon="science">Copy Tests — 6 angles de vente</SectionTitle>
+          <p style={{ fontSize: 13, color: text2, marginBottom: 20, marginTop: -16, lineHeight: 1.65 }}>
+            6 variantes basees sur Original V2 avec des angles de vente differents. Meme design (hero compact, tickers above the fold), meme features (audience switcher, GA4, FAQ reorder), mais un messaging et une structure de sections differents. Chaque variante a des sections uniques adaptees a son angle.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: 20, marginBottom: 48 }}>
+            {VARIANTS.filter(v => v.id.startsWith('ct-')).map((v) => (
+              <LandingCard key={v.id} v={v} baseUrl={baseUrl} />
+            ))}
+          </div>
+
           {/* ═══ VARIANTES ═══ */}
           <SectionTitle icon="palette">Variantes de style</SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: 20, marginBottom: 48 }}>
-            {VARIANTS.map((v) => (
+            {VARIANTS.filter(v => !v.id.startsWith('ct-')).map((v) => (
               <LandingCard key={v.id} v={v} baseUrl={baseUrl} />
             ))}
           </div>
@@ -760,30 +967,36 @@ export default function VariantsPage() {
                   'Section Enterprise conditionnelle — bon UX pour les particuliers',
                   'IntersectionObserver tracking — donnees de scroll sans impact performance',
                 ]},
-                { label: 'PROCHAINES ETAPES (PRIORITE HAUTE)', type: 'missing', items: [
-                  '1. Screenshot/mockup du dashboard Flashboard dans le hero — le visiteur doit VOIR le produit en < 3s',
-                  '2. Video demo 30-60s (appel → repondeur → resume WhatsApp → dashboard) — conversion x2 attendue',
-                  '3. Social proof reel — compteur "X utilisateurs", logos clients, reviews Trustpilot/Google',
-                  '4. Micro-animations au scroll (fade-in, slide-up) — perception de qualite',
-                  '5. A/B testing : V11 actuelle vs Gradient Wave sur les 3 segments audience',
-                  '6. Hotjar/Clarity — heatmaps et session recordings pour identifier les points de friction',
-                  '7. Comparatif prix interactif (Freenzy vs ChatGPT Plus vs Jasper vs alternatives)',
+                { label: 'COPY TESTS — CLASSEMENT PAR POTENTIEL', type: 'good', items: [
+                  '1. Probleme → Solution (72/100) — framework PAS (Problem-Agitate-Solve), connexion emotionnelle forte',
+                  '2. Simplicite (70/100) — elimination de l\'obstacle #1 (complexite percue), ideal non-tech',
+                  '3. ROI / Economies (68/100) — argument universel, chiffres concrets, ideal Google Ads',
+                  '4. Preuve Sociale (65/100 → 78 avec donnees reelles) — trust + autorite, ideal B2B LinkedIn',
+                  '5. Urgence / FOMO (62/100) — puissant mais risque si compteurs statiques',
+                  '6. Vision / Futuriste (58/100) — niche early adopters, pas pour le marche global',
                 ]},
-                { label: 'PROCHAINES ETAPES (PRIORITE MOYENNE)', type: 'missing', items: [
-                  'Exit intent popup avec lead magnet ("Guide gratuit : 10 agents IA pour votre PME")',
-                  'Chat widget live — parler a un agent IA directement sur la landing',
-                  'Urgency : progress bar "0% commission pour les 5000 premiers" avec compteur',
-                  'Section use-cases par secteur (restaurant, immo, e-commerce, cabinet comptable)',
-                  'Progressive disclosure : hero court → "En savoir plus" → sections detaillees',
-                  'Landing pages dediees par secteur (/pour/restaurants, /pour/avocats, etc.)',
+                { label: 'PROCHAINES ETAPES (PRIORITE HAUTE)', type: 'missing', items: [
+                  '1. A/B tester les 3 meilleurs copy tests (Probleme, Simplicite, ROI) sur chaque segment audience',
+                  '2. Screenshot/mockup du dashboard Flashboard dans le hero — le visiteur doit VOIR le produit en < 3s',
+                  '3. Remplacer les temoignages fictifs (Preuve Sociale) par de vrais retours des que possible',
+                  '4. Video demo 30-60s (appel → repondeur → resume WhatsApp → dashboard) — conversion x2 attendue',
+                  '5. Hotjar/Clarity — heatmaps et session recordings pour identifier les points de friction',
+                  '6. Sourcer les stats citees (Probleme → Solution) ou les retirer avant mise en prod',
+                  '7. Connecter le compteur urgence (FOMO) a des donnees reelles ou le retirer',
+                ]},
+                { label: 'MATRICE COPY TEST × AUDIENCE', type: 'missing', items: [
+                  'Particulier → Simplicite (zero friction, WhatsApp-first) ou Probleme (charge mentale)',
+                  'Freelance → ROI (cout/temps) ou Probleme (16h/jour, surcharge)',
+                  'Entreprise → Preuve Sociale (trust, securite, partenaires) ou ROI (ROI x47)',
+                  'Early adopter → Vision Futuriste (multi-modeles, orchestration, pionnier)',
+                  'Campagnes courtes → Urgence FOMO (scarcity, places limitees)',
                 ]},
                 { label: 'EVITER', type: 'issue', items: [
+                  'Deployer Preuve Sociale en prod avec temoignages fictifs — risque ethique et legal',
+                  'Utiliser les compteurs FOMO statiques — detruit la credibilite si decouvert',
                   'Messaging agressif type "on remplace votre equipe" — les PME francaises veulent de l\'AIDE',
-                  'Rouge/jaune vif (Bold Disrupteur) — connotation discount/spam en France',
-                  'Page encore plus longue sans navigation interne (deja 1028 lignes)',
-                  'Fond clair pour la landing (clash avec le dark dashboard apres login)',
-                  'Multiplier les variantes sans A/B testing — on accumule du code sans donnees',
-                  'Temoignages fictifs — mieux vaut pas de social proof que du faux',
+                  'Multiplier les variantes sans A/B testing — on a maintenant 14 variantes, il faut des donnees',
+                  'Deployer Vision Futuriste comme landing principale — trop niche, exclut 80% du marche',
                 ]},
               ]}
               score={0}
@@ -794,7 +1007,7 @@ export default function VariantsPage() {
 
         {/* Footer signature */}
         <div style={{ textAlign: 'center', padding: '40px 24px', color: text2, fontSize: 11, borderTop: `1px solid ${border}` }}>
-          FREENZY.IO — Landing Page Audit V3 — Genere par Claude Opus 4.6 — 8 mars 2026 — V11 (Audience + GA4 + FAQ Reorder)
+          FREENZY.IO — Landing Page Audit V4 — Genere par Claude Opus 4.6 — 8 mars 2026 — V11 + 6 Copy Tests
         </div>
       </main>
       <PublicFooter />

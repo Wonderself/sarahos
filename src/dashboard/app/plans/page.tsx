@@ -1,16 +1,38 @@
-import type { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 import { DEFAULT_AGENTS, PERSONAL_AGENTS, TOTAL_AGENTS_DISPLAY } from '../../lib/agent-config';
 import EnterpriseSection from './EnterpriseSection';
 import PublicNav from '../../components/PublicNav';
 import PublicFooter from '../../components/PublicFooter';
+import AudienceStickyBar from '../../components/AudienceStickyBar';
+import { useAudience } from '../../lib/use-audience';
 
-const totalAgents = TOTAL_AGENTS_DISPLAY; // 72 (24 core + 48 marketplace)
+const totalAgents = TOTAL_AGENTS_DISPLAY;
 
-export const metadata: Metadata = {
-  title: 'Tarifs — Gratuit, payez uniquement ce que vous utilisez | Freenzy.io',
-  description: `Freenzy.io : accès gratuit, ${totalAgents}+ agents IA, 0% de commission pour tous, à vie. Pas de minimum, pas d'abonnement.`,
-};
+// ── Data from tarifs-api (merged) ──────────────────────────
+const ACTION_COSTS = [
+  { icon: 'chat', action: 'Chat avec agent IA', model: 'Claude Haiku', credits: 0.5, per50: '100 chats', color: '#22c55e' },
+  { icon: 'mail', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#5b6cf7' },
+  { icon: 'phone_iphone', action: 'Post reseaux sociaux', model: 'Claude Haiku', credits: 0.8, per50: '62 posts', color: '#3b82f6' },
+  { icon: 'description', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#5b6cf7' },
+  { icon: 'call', action: 'Appel repondeur IA', model: 'Twilio + Haiku', credits: 5, per50: '10 appels', color: '#f97316' },
+  { icon: 'outbox', action: 'Appel sortant IA', model: 'Twilio + Sonnet', credits: 16, per50: '3 appels', color: '#f97316' },
+  { icon: 'chat', action: 'WhatsApp Business IA', model: 'Claude Haiku', credits: 0.4, per50: '125 msgs', color: '#22c55e' },
+  { icon: 'record_voice_over', action: 'Message vocal TTS', model: 'ElevenLabs', credits: 4.5, per50: '11 msgs', color: '#f59e0b' },
+  { icon: 'image', action: 'Image IA creee', model: 'DALL-E / Flux', credits: 7, per50: '7 images', color: '#9333ea' },
+  { icon: 'movie', action: 'Clip video 30s', model: 'Runway ML', credits: 40, per50: '1 clip', color: '#ec4899' },
+  { icon: 'handshake', action: 'Reunion IA structuree', model: 'Claude Opus', credits: 8, per50: '6 reunions', color: '#9333ea' },
+];
+
+const MODEL_PRICES = [
+  { model: 'Claude Haiku', input: '$0.80', output: '$4.00', usage: 'FAQ, chat, posts réseaux, WhatsApp', color: '#22c55e' },
+  { model: 'Claude Sonnet', input: '$3.00', output: '$15.00', usage: 'Emails, documents, analyses', color: '#5b6cf7' },
+  { model: 'Claude Opus', input: '$15.00', output: '$75.00', usage: 'Stratégie, DG, décisions critiques', color: '#9333ea' },
+  { model: 'ElevenLabs TTS', input: '€0.18', output: '/ 1 000 chars', usage: 'Voix naturelle, messages vocaux', color: '#f59e0b' },
+  { model: 'Twilio Voice', input: '$0.014', output: '/ min', usage: 'Appels entrants & sortants', color: '#f97316' },
+  { model: 'Runway ML Gen-3', input: '$0.05', output: '/ seconde vidéo', usage: 'Génération vidéo', color: '#ec4899' },
+];
 
 // ── Shared styles ────────────────────────────────────────
 const eyebrow: React.CSSProperties = {
@@ -34,19 +56,38 @@ const card: React.CSSProperties = {
   border: '1px solid #e5e7eb',
   borderRadius: 16,
 };
+const cell = { padding: '12px 16px', fontSize: 13, borderBottom: '1px solid #f0f0f0' } as const;
 
 export default function PlansPage() {
+  const { audience, setAudience, config } = useAudience();
+
+  // Audience-aware CTA
+  const ctaLabel = config?.cta.label || 'Commencer gratuitement';
+  const ctaHref = config?.cta.href || '/login?mode=register';
+
+  // Credits breakdown — audience-specific or default
+  const creditsItems = config?.tarifsExample.items || [
+    { action: 'Chats', count: '~72' },
+    { action: 'Emails', count: '~40' },
+    { action: 'Documents', count: '~14' },
+    { action: 'Réunions', count: '~6' },
+    { action: 'Analyses', count: '~19' },
+  ];
+  const creditsLabel = config?.tarifsExample.details || 'Hors vidéo et avatars';
+
   return (
     <div style={{
       background: '#fff', color: '#1d1d1f',
       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif',
     }}>
       <PublicNav />
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section style={{
         background: 'linear-gradient(160deg, #0a0a0f 0%, #12121a 55%, #0e0e18 100%)',
         padding: 'clamp(90px, 11vw, 120px) 24px clamp(70px, 8vw, 96px)',
+        paddingTop: 'clamp(142px, 14vw, 172px)',
         textAlign: 'center', position: 'relative', overflow: 'hidden',
       }}>
         <div style={{
@@ -56,30 +97,59 @@ export default function PlansPage() {
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          {config?.hero.badge && (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: 'rgba(91,108,247,0.12)', border: '1px solid rgba(91,108,247,0.25)',
+              color: '#a5b4fc', padding: '5px 16px', borderRadius: 40,
+              fontSize: 11, fontWeight: 700, marginBottom: 20, letterSpacing: 0.5,
+            }}>
+              {config.hero.badge}
+            </div>
+          )}
           <h1 style={{
             fontSize: 'clamp(34px, 6vw, 64px)', fontWeight: 700,
             fontFamily: 'var(--font-display)',
             color: '#fff', letterSpacing: -2.5, lineHeight: 1.02, marginBottom: 18,
           }}>
-            <span className="fz-logo-word">Gratuit</span>.
-            <br />
-            <span style={{ color: 'rgba(255,255,255,0.38)' }}>
-              Payez ce que vous utilisez.
-            </span>
+            {config ? (
+              config.hero.headline
+            ) : (
+              <>
+                <span className="fz-logo-word">Gratuit</span>.
+                <br />
+                <span style={{ color: 'rgba(255,255,255,0.38)' }}>
+                  Payez ce que vous utilisez.
+                </span>
+              </>
+            )}
           </h1>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, maxWidth: 480, margin: '0 auto 10px' }}>
-            {totalAgents}+ agents IA. 0% de commission pour tous.
+            {config ? config.hero.subheadline : `${totalAgents}+ agents IA. 0% de commission pour tous.`}
           </p>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', marginBottom: 36 }}>
-            Pas de minimum · Pas d&apos;abonnement · {DEFAULT_AGENTS.length} business · {PERSONAL_AGENTS.length} personnels · marketplace
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/login?mode=register" style={{
+          {!config && (
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', marginBottom: 36 }}>
+              Pas de minimum · Pas d&apos;abonnement · {DEFAULT_AGENTS.length} business · {PERSONAL_AGENTS.length} personnels · marketplace
+            </p>
+          )}
+          {config?.bonusMessage && (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)',
+              color: '#4ade80', padding: '6px 18px', borderRadius: 40,
+              fontSize: 12, fontWeight: 600, marginBottom: 28,
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>redeem</span>
+              {config.bonusMessage}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: config ? 28 : 0 }}>
+            <Link href={ctaHref} style={{
               padding: '14px 32px', background: '#5b6cf7', color: '#fff',
               borderRadius: 12, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 15, textDecoration: 'none',
               boxShadow: '0 0 28px rgba(91,108,247,0.35)',
             }}>
-              S&apos;inscrire gratuitement
+              {ctaLabel}
             </Link>
             <a href="#faq" style={{
               padding: '14px 22px',
@@ -117,8 +187,28 @@ export default function PlansPage() {
           </div>
         </div>
 
-        {/* COMMISSION */}
+        {/* COMMENT CA MARCHE — dark card from tarifs-api */}
         <section style={sectionPad}>
+          <div style={{ background: '#0a0a0f', borderRadius: 14, padding: '24px 28px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#a5b4fc', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 14 }}>Comment ça marche</div>
+            <div className="lp-plans-howto">
+              {[
+                { n: '1 crédit', sub: '≈ €0.01', desc: 'Unité de base' },
+                { n: '0%', sub: 'de marge', desc: 'Prix officiel fournisseur' },
+                { n: '∞', sub: 'validité', desc: 'Vos crédits n\'expirent jamais' },
+              ].map((item, i) => (
+                <div key={i} style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', fontWeight: 700, color: '#a5b4fc', letterSpacing: -1 }}>{item.n}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{item.sub}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 4 }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* COMMISSION */}
+        <section style={{ ...sectionPad, paddingTop: 0 }}>
           <div className="lp-plans-commission">
             <div>
               <p style={eyebrow}>Commission</p>
@@ -126,12 +216,12 @@ export default function PlansPage() {
               <p style={{ ...sectionSubtitle, maxWidth: 380 }}>
                 Aucune commission ajoutée sur vos actions. Vous payez uniquement le coût brut des tokens IA, au prix officiel du fournisseur.
               </p>
-              <Link href="/login?mode=register" style={{
+              <Link href={ctaHref} style={{
                 display: 'inline-block', marginTop: 28,
                 padding: '13px 28px', background: '#1d1d1f', color: '#fff',
                 borderRadius: 10, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, textDecoration: 'none',
               }}>
-                Commencer gratuitement
+                {ctaLabel}
               </Link>
             </div>
             <div style={{ ...card, padding: '36px 32px' }}>
@@ -242,28 +332,103 @@ export default function PlansPage() {
 
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
 
-        {/* CREDITS BREAKDOWN */}
+        {/* CREDITS BREAKDOWN — audience-adapted */}
         <section style={sectionPad}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={eyebrow}>Ce que vous pouvez faire</p>
             <h2 style={sectionTitle}>Des actions concrètes, au centime près.</h2>
-            <p style={{ ...sectionSubtitle, fontSize: 13 }}>Avec 50 crédits (5€) · Hors vidéo et avatars</p>
+            <p style={{ ...sectionSubtitle, fontSize: 13 }}>Avec 50 crédits (5€) · {creditsLabel}</p>
           </div>
           <div className="lp-plans-credits">
-            {[
-              { count: '~72', label: 'Chats' },
-              { count: '~40', label: 'Emails' },
-              { count: '~14', label: 'Documents' },
-              { count: '~6', label: 'Réunions' },
-              { count: '~19', label: 'Analyses' },
-            ].map(ex => (
-              <div key={ex.label} style={{ padding: '24px 16px', textAlign: 'center', ...card }}>
+            {creditsItems.map(ex => (
+              <div key={ex.action} style={{ padding: '24px 16px', textAlign: 'center', ...card }}>
                 <div style={{ fontSize: 28, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#1d1d1f', letterSpacing: -1.5, lineHeight: 1 }}>
                   {ex.count}
                 </div>
-                <div style={{ fontSize: 12, color: '#86868b', marginTop: 6, fontWeight: 600 }}>{ex.label}</div>
+                <div style={{ fontSize: 12, color: '#86868b', marginTop: 6, fontWeight: 600 }}>{ex.action}</div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ACTION COSTS TABLE — from tarifs-api */}
+        <section style={{ ...sectionPad, paddingTop: 0 }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={eyebrow}>Tarifs détaillés</p>
+            <h2 style={sectionTitle}>Prix par action, transparent.</h2>
+            <p style={sectionSubtitle}>Toutes les actions disponibles dès l&apos;inscription</p>
+          </div>
+          <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+            <div className="lp-table-scroll">
+              <table style={{ width: '100%', minWidth: 540, borderCollapse: 'collapse', fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: '#f9f9f9', borderBottom: '1px solid #e5e7eb' }}>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Action</th>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Modèle</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Crédits/action</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Avec 50 cr (5€)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ACTION_COSTS.map((item, i) => (
+                    <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                      <td style={{ ...cell }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span>
+                          <span style={{ color: '#1d1d1f' }}>{item.action}</span>
+                        </span>
+                      </td>
+                      <td style={{ ...cell, color: '#6b7280' }}>{item.model}</td>
+                      <td style={{ ...cell, textAlign: 'right', fontWeight: 700, color: item.color }}>{item.credits}</td>
+                      <td style={{ ...cell, textAlign: 'right', fontWeight: 800, color: item.color }}>{item.per50}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* MODEL PRICES TABLE — from tarifs-api */}
+        <section style={{ ...sectionPad, paddingTop: 0 }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={eyebrow}>Prix officiels fournisseurs</p>
+            <h2 style={sectionTitle}>0% de marge. 0% de commission.</h2>
+            <p style={sectionSubtitle}>Freenzy applique exactement ces tarifs, sans marge, sans commission.</p>
+          </div>
+          <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+            <div className="lp-table-scroll">
+              <table style={{ width: '100%', minWidth: 540, borderCollapse: 'collapse', fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: '#f9f9f9', borderBottom: '1px solid #e5e7eb' }}>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Modèle</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Prix input</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Prix output</th>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Usage type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {MODEL_PRICES.map((m, i) => (
+                    <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                      <td style={{ ...cell }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: m.color, flexShrink: 0, display: 'inline-block' }} />
+                          <span style={{ fontWeight: 700, color: '#1d1d1f' }}>{m.model}</span>
+                        </span>
+                      </td>
+                      <td style={{ ...cell, textAlign: 'right', fontFamily: 'monospace', color: '#374151' }}>{m.input}</td>
+                      <td style={{ ...cell, textAlign: 'right', fontFamily: 'monospace', color: '#374151' }}>{m.output}</td>
+                      <td style={{ ...cell, color: '#6b7280', fontSize: 12 }}>{m.usage}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0' }}>
+              <p style={{ fontSize: 11, color: '#9ca3af', margin: 0 }}>
+                * Prix Anthropic, ElevenLabs, Twilio, Runway publiés sur leurs sites respectifs. Mis à jour automatiquement.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -293,58 +458,15 @@ export default function PlansPage() {
 
       </div>
 
-      {/* COSTS — light bg */}
+      {/* TELEPHONY — light bg */}
       <section style={{ background: '#f5f5f7', padding: 'clamp(64px, 8vw, 96px) 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={eyebrow}>Coûts détaillés</p>
-            <h2 style={sectionTitle}>Combien coûte chaque action ?</h2>
+            <h2 style={sectionTitle}>Téléphonie Twilio</h2>
           </div>
           <div className="lp-plans-costs">
-
-            {/* Main table */}
-            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-                <thead>
-                  <tr>
-                    <th style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#86868b', textTransform: 'uppercase', letterSpacing: 1, borderBottom: '1px solid #f2f2f2' }}>
-                      Action
-                    </th>
-                    <th style={{ padding: '14px 20px', textAlign: 'right', fontSize: 11, fontWeight: 700, color: '#22c55e', textTransform: 'uppercase', letterSpacing: 1, borderBottom: '1px solid #f2f2f2' }}>
-                      Coût · 0% commission
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { action: 'Chat simple', cost: 0.69 },
-                    { action: 'Email rédigé', cost: 1.10 },
-                    { action: 'Analyse marketing', cost: 2.40 },
-                    { action: 'Document généré', cost: 3.45 },
-                    { action: 'Briefing du jour', cost: 2.70 },
-                    { action: 'Réunion IA (3 agents)', cost: 8.28 },
-                    { action: 'Conseil stratégique', cost: 8.25 },
-                  ].map((row, i, arr) => (
-                    <tr key={row.action}>
-                      <td style={{ padding: '13px 20px', fontWeight: 500, color: '#1d1d1f', borderBottom: i < arr.length - 1 ? '1px solid #f8f8f8' : 'none' }}>
-                        {row.action}
-                      </td>
-                      <td style={{ padding: '13px 20px', textAlign: 'right', fontWeight: 700, color: '#1d1d1f', borderBottom: i < arr.length - 1 ? '1px solid #f8f8f8' : 'none' }}>
-                        {row.cost.toFixed(2)} cr
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Telephony */}
-            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden' }}>
-              <div style={{ padding: '14px 20px', borderBottom: '1px solid #f2f2f2' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#86868b', textTransform: 'uppercase', letterSpacing: 1 }}>
-                  Téléphonie Twilio
-                </span>
-              </div>
+            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden', maxWidth: 560, margin: '0 auto' }}>
               {[
                 ['Appels entrants (France)', '~0.01€/min'],
                 ['Appels sortants (France)', '~0.014€/min'],
@@ -352,7 +474,7 @@ export default function PlansPage() {
                 ['Numéro local', '~1–2€/mois'],
                 ['WhatsApp', 'Inclus'],
               ].map(([service, cost], i, arr) => (
-                <div key={service} style={{
+                <div key={String(service)} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: '13px 20px',
                   borderBottom: i < arr.length - 1 ? '1px solid #f8f8f8' : 'none',
@@ -481,6 +603,10 @@ export default function PlansPage() {
                 a: `ChatGPT Plus : 20€/mois, 1 agent généraliste. Freenzy.io : gratuit + usage, ${DEFAULT_AGENTS.length} agents business spécialisés + ${PERSONAL_AGENTS.length} agents personnels, voix ElevenLabs, vidéo IA, photo IA, téléphonie Twilio.`,
               },
               {
+                q: 'Comment fonctionne le calcul des tokens ?',
+                a: "Chaque action consomme des tokens IA (input + output). Le coût est calculé au prix officiel du fournisseur (ex: Claude Haiku $0.80/M input, $4/M output). Nous facturons au centime près, sans marge ni commission. 1 crédit ≈ €0.01.",
+              },
+              {
                 q: 'La sécurité des données ?',
                 a: "Chiffrement AES-256, conformité RGPD, hébergement Europe. Isolation stricte des données par compte. Claude (Anthropic) ne s'entraîne pas sur vos données.",
               },
@@ -514,8 +640,10 @@ export default function PlansPage() {
 
       </div>
 
-      {/* ENTERPRISE */}
-      <EnterpriseSection />
+      {/* ENTERPRISE — conditional */}
+      {(!audience || audience === 'entreprise') && (
+        <EnterpriseSection />
+      )}
 
       {/* FINAL CTA */}
       <section style={{
@@ -540,7 +668,7 @@ export default function PlansPage() {
           <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, marginBottom: 38 }}>
             {totalAgents}+ agents <span className="fz-logo-word">IA</span>. Toutes les IA du marché. 0% de commission.
           </p>
-          <Link href="/login?mode=register" style={{
+          <Link href={ctaHref} style={{
             display: 'inline-block',
             padding: '15px 40px',
             background: '#5b6cf7', color: '#fff',
@@ -548,12 +676,27 @@ export default function PlansPage() {
             textDecoration: 'none',
             boxShadow: '0 0 36px rgba(91,108,247,0.3)',
           }}>
-            Commencer gratuitement
+            {ctaLabel}
           </Link>
         </div>
       </section>
 
       <PublicFooter />
+
+      {/* Responsive CSS for plans layout */}
+      <style>{`
+        .lp-plans-howto {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+        }
+        @media (max-width: 480px) {
+          .lp-plans-howto {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

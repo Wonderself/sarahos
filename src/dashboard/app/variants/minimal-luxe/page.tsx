@@ -7,6 +7,9 @@ import PublicFooter from '../../../components/PublicFooter';
 import EnterpriseSection from '../../plans/EnterpriseSection';
 import { TOTAL_AGENTS_DISPLAY } from '../../../lib/agent-config';
 import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
+import AudienceStickyBar from '../../../components/AudienceStickyBar';
+import { useAudience } from '../../../lib/use-audience';
+import { VARIANT_ANGLES, AUDIENCE_CONFIGS, AudienceType } from '../../../lib/audience-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -272,12 +275,19 @@ export default function MinimalLuxePage() {
   const [demoTab, setDemoTab]               = useState(0);
   const [toolTab, setToolTab]               = useState(0);
 
+  const { audience, setAudience, config } = useAudience();
+  const variantAngle = VARIANT_ANGLES.find(v => v.variantId === 'minimal-luxe');
+  const variantHero = audience && variantAngle ? variantAngle.heroes[audience] : null;
+  const ctaLabel = config?.cta.label || 'Commencer';
+  const ctaHref = config?.cta.href || '/login?mode=register';
+
   const demo = DEMO_SCENARIOS[demoTab];
 
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 56 }}>
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="light" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section style={{
@@ -316,7 +326,7 @@ export default function MinimalLuxePage() {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}>
-              Tout.<br />Simplifi&eacute;.
+              {variantHero?.headline || <>Tout.<br />Simplifi&eacute;.</>}
             </h1>
 
             <p style={{
@@ -325,7 +335,7 @@ export default function MinimalLuxePage() {
               letterSpacing: 6,
               marginBottom: 8,
             }}>
-              L&apos;essentiel, magnifi&eacute;.
+              {variantHero?.subheadline || <>L&apos;essentiel, magnifi&eacute;.</>}
             </p>
 
             <p style={{
@@ -333,18 +343,21 @@ export default function MinimalLuxePage() {
               color: 'rgba(255,255,255,0.44)',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
             }}>
-              Une seule application pour tout. <span style={{ color: '#c8a97e', fontWeight: 500 }}>R&eacute;seaux sociaux, messagerie, intelligence artificielle, divertissement.</span> <span style={{ color: 'rgba(255,255,255,0.62)' }}>Freenzy r&eacute;unit ce qui &eacute;tait dispers&eacute;.</span>
+              {variantHero?.subheadline
+                ? variantHero.subheadline
+                : <>Une seule application pour tout. <span style={{ color: '#c8a97e', fontWeight: 500 }}>R&eacute;seaux sociaux, messagerie, intelligence artificielle, divertissement.</span> <span style={{ color: 'rgba(255,255,255,0.62)' }}>Freenzy r&eacute;unit ce qui &eacute;tait dispers&eacute;.</span></>
+              }
             </p>
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <Link href="/login?mode=register" className="lp-cta-primary" style={{
+              <Link href={ctaHref} className="lp-cta-primary" style={{
                 padding: '12px 20px', background: '#c8a97e', color: '#1a1715',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
                 transition: 'all 0.3s ease',
               }}>
-                D&eacute;couvrir Freenzy
+                {ctaLabel}
               </Link>
               <Link href="/plans" style={{
                 padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
@@ -823,9 +836,11 @@ export default function MinimalLuxePage() {
         </section>
 
         {/* ══ ENTERPRISE ═══════════════════════════════════════ */}
+        {(!audience || audience === 'entreprise') && (
         <section style={{ background: '#faf8f5', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <EnterpriseSection />
         </section>
+        )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
         <section id="faq" style={{ background: '#f5f0ea', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
@@ -958,14 +973,14 @@ export default function MinimalLuxePage() {
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.32)', marginBottom: 32 }}>
               <span style={{ color: '#c8a97e', fontWeight: 500 }}>{totalAgents} agents IA</span>. Toutes les IA du march&eacute;. <span style={{ color: '#c8a97e', fontWeight: 500 }}>0% de commission</span>. Sans carte bancaire.
             </p>
-            <Link href="/login?mode=register" className="lp-cta-primary" style={{
+            <Link href={ctaHref} className="lp-cta-primary" style={{
               display: 'inline-block', padding: '15px 40px',
               background: '#c8a97e', color: '#1a1715',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16,
               textDecoration: 'none',
               transition: 'all 0.3s ease',
             }}>
-              Commencer l&apos;exp&eacute;rience
+              {ctaLabel}
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
               <Link href="/plans" style={{ color: 'rgba(255,255,255,0.22)', textDecoration: 'none' }}>Tarifs d&eacute;taill&eacute;s &rarr;</Link>

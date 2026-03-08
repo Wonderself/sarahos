@@ -7,6 +7,9 @@ import PublicFooter from '../../../components/PublicFooter';
 import EnterpriseSection from '../../plans/EnterpriseSection';
 import { TOTAL_AGENTS_DISPLAY } from '../../../lib/agent-config';
 import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
+import AudienceStickyBar from '../../../components/AudienceStickyBar';
+import { useAudience } from '../../../lib/use-audience';
+import { VARIANT_ANGLES, AUDIENCE_CONFIGS, AudienceType } from '../../../lib/audience-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -272,12 +275,19 @@ export default function BoldDisrupteurPage() {
   const [demoTab, setDemoTab]               = useState(0);
   const [toolTab, setToolTab]               = useState(0);
 
+  const { audience, setAudience, config } = useAudience();
+  const variantAngle = VARIANT_ANGLES.find(v => v.variantId === 'bold-disrupteur');
+  const variantHero = audience && variantAngle ? variantAngle.heroes[audience] : null;
+  const ctaLabel = config?.cta.label || 'Commencer gratuitement';
+  const ctaHref = config?.cta.href || '/login?mode=register';
+
   const demo = DEMO_SCENARIOS[demoTab];
 
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 56 }}>
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section style={{
@@ -313,7 +323,7 @@ export default function BoldDisrupteurPage() {
               marginBottom: 14, letterSpacing: -4,
               textTransform: 'uppercase',
             }}>
-              FACEBOOK<br />C&apos;EST FINI.
+              {variantHero?.headline || <>FACEBOOK<br />C&apos;EST FINI.</>}
             </h1>
 
             <p style={{
@@ -322,7 +332,7 @@ export default function BoldDisrupteurPage() {
               letterSpacing: 3, textTransform: 'uppercase',
               marginBottom: 8,
             }}>
-              FREENZY PREND LA REL&Egrave;VE.
+              {variantHero?.subheadline || <>FREENZY PREND LA REL&Egrave;VE.</>}
             </p>
 
             <p style={{
@@ -336,14 +346,14 @@ export default function BoldDisrupteurPage() {
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <Link href="/login?mode=register" className="lp-cta-primary" style={{
+              <Link href={ctaHref} className="lp-cta-primary" style={{
                 padding: '14px 24px', background: '#ff3b30', color: '#fff',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(13px, 3.5vw, 17px)', textDecoration: 'none',
                 minHeight: 48, whiteSpace: 'nowrap',
                 boxShadow: '0 4px 24px rgba(255,59,48,0.35)',
                 border: '3px solid rgba(255,255,255,0.15)',
               }}>
-                T&eacute;l&eacute;charger Freenzy
+                {ctaLabel}
               </Link>
               <Link href="#pourquoi" style={{
                 padding: '14px 18px', minHeight: 48, whiteSpace: 'nowrap',
@@ -829,9 +839,11 @@ export default function BoldDisrupteurPage() {
         </section>
 
         {/* ══ ENTERPRISE ═══════════════════════════════════════ */}
+        {(!audience || audience === 'entreprise') && (
         <section style={{ background: '#fff', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <EnterpriseSection />
         </section>
+        )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
         <section id="faq" style={{ background: '#fff5f5', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
@@ -965,7 +977,7 @@ export default function BoldDisrupteurPage() {
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)', marginBottom: 36, fontWeight: 600 }}>
               <span style={{ color: '#ffe600', fontWeight: 800 }}>{totalAgents} agents IA</span>. Toutes les IA du march&eacute;. <span style={{ color: '#ffe600', fontWeight: 800 }}>0% de commission</span>. Sans carte bancaire.
             </p>
-            <Link href="/login?mode=register" className="lp-cta-primary" style={{
+            <Link href={ctaHref} className="lp-cta-primary" style={{
               display: 'inline-block', padding: '18px 48px',
               background: '#ff3b30', color: '#fff',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 18,
@@ -973,7 +985,7 @@ export default function BoldDisrupteurPage() {
               boxShadow: '0 4px 24px rgba(255,59,48,0.4)',
               border: '3px solid rgba(255,255,255,0.15)',
             }}>
-              Rejoindre Freenzy — 0&euro;
+              {ctaLabel}
             </Link>
             <div style={{ marginTop: 16, fontSize: 13 }}>
               <Link href="/plans" style={{ color: 'rgba(255,255,255,0.32)', textDecoration: 'none', fontWeight: 700 }}>Tarifs d&eacute;taill&eacute;s &rarr;</Link>

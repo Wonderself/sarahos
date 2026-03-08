@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import PublicNav from '../components/PublicNav';
 import PublicFooter from '../components/PublicFooter';
+import AudienceStickyBar from '../components/AudienceStickyBar';
 import EnterpriseSection from './plans/EnterpriseSection';
 import { TOTAL_AGENTS_DISPLAY } from '../lib/agent-config';
 import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../lib/faq-data';
+import { useAudience } from '../lib/use-audience';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -271,13 +273,23 @@ export default function LandingPage() {
   const [faqCat, setFaqCat]                 = useState(0);
   const [demoTab, setDemoTab]               = useState(0);
   const [toolTab, setToolTab]               = useState(0);
+  const { audience, setAudience, config }   = useAudience();
 
   const demo = DEMO_SCENARIOS[demoTab];
+
+  // Audience-aware agents list
+  const displayAgents = config ? config.agents : ALL_AGENTS;
+  // Audience-aware hero
+  const heroHeadline = config?.hero.headline;
+  const heroSub = config?.hero.subheadline;
+  const heroBadge = config?.hero.badge;
+  const heroCta = config?.cta;
 
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 56 }}>
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section style={{
@@ -301,19 +313,19 @@ export default function LandingPage() {
                 fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap',
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0 }} />
-                <span className="lp-green-badge-full">Pro &amp; Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet</span>
-                <span className="lp-green-badge-mobile">Pros &amp; Particuliers · 0% frais · Personnalisable 100% · Simple et complet</span>
+                <span className="lp-green-badge-full">{heroBadge || 'Pro & Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet'}</span>
+                <span className="lp-green-badge-mobile">{heroBadge || 'Pros & Particuliers · 0% frais · Personnalisable 100% · Simple et complet'}</span>
               </span>
             </div>
 
             <h1 className="lp-gradient-h1" style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(32px, 7.8vw, 94px)',
+              fontSize: heroHeadline ? 'clamp(28px, 6vw, 72px)' : 'clamp(32px, 7.8vw, 94px)',
               fontWeight: 700, lineHeight: 0.92,
               marginBottom: 14, letterSpacing: -4,
-              textTransform: 'uppercase',
+              textTransform: heroHeadline ? 'none' : 'uppercase',
             }}>
-              Utilisez<br />vraiment l&apos;IA.
+              {heroHeadline ? heroHeadline : <>Utilisez<br />vraiment l&apos;IA.</>}
             </h1>
 
             <p style={{
@@ -330,17 +342,33 @@ export default function LandingPage() {
               color: 'rgba(255,255,255,0.44)',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
             }}>
-              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>82 agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.62)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span>
+              {heroSub ? (
+                <span style={{ color: 'rgba(255,255,255,0.62)' }}>{heroSub}</span>
+              ) : (
+                <><span style={{ color: '#a5b4fc', fontWeight: 700 }}>82 agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.62)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
+              )}
             </p>
+
+            {/* Bonus message per audience */}
+            {config?.bonusMessage && (
+              <p style={{
+                fontSize: 12, color: '#86efac', fontWeight: 600, marginBottom: 16,
+                background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.18)',
+                display: 'inline-block', padding: '5px 16px', borderRadius: 20,
+              }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>redeem</span>
+                {config.bonusMessage}
+              </p>
+            )}
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <Link href="/login?mode=register" className="lp-cta-primary" style={{
+              <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" style={{
                 padding: '12px 20px', background: '#5b6cf7', color: '#fff',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
               }}>
-                Commencer gratuitement
+                {heroCta?.label || 'Commencer gratuitement'}
               </Link>
               <Link href="/plans" style={{
                 padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
@@ -817,10 +845,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ ENTERPRISE ═══════════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
-          <EnterpriseSection />
-        </section>
+        {/* ══ ENTERPRISE (visible si audience null ou entreprise) ══ */}
+        {(!audience || audience === 'entreprise') && (
+          <section id="enterprise" style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+            <EnterpriseSection />
+          </section>
+        )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
         <section id="faq" style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
@@ -953,13 +983,13 @@ export default function LandingPage() {
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 32 }}>
               <span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents} agents IA</span>. Toutes les IA du marché. <span style={{ color: '#a5b4fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
             </p>
-            <Link href="/login?mode=register" className="lp-cta-primary" style={{
+            <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" style={{
               display: 'inline-block', padding: '15px 40px',
               background: '#5b6cf7', color: '#fff',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16,
               textDecoration: 'none',
             }}>
-              Commencer gratuitement
+              {heroCta?.label || 'Commencer gratuitement'}
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
               <Link href="/plans" style={{ color: 'rgba(255,255,255,0.28)', textDecoration: 'none' }}>Tarifs détaillés →</Link>

@@ -7,6 +7,9 @@ import PublicFooter from '../../../components/PublicFooter';
 import EnterpriseSection from '../../plans/EnterpriseSection';
 import { TOTAL_AGENTS_DISPLAY } from '../../../lib/agent-config';
 import { FAQ_CATEGORIES, TOTAL_FAQ_COUNT } from '../../../lib/faq-data';
+import AudienceStickyBar from '../../../components/AudienceStickyBar';
+import { useAudience } from '../../../lib/use-audience';
+import { VARIANT_ANGLES, AUDIENCE_CONFIGS, AudienceType } from '../../../lib/audience-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
@@ -272,6 +275,12 @@ export default function LandingPage() {
   const [demoTab, setDemoTab]               = useState(0);
   const [toolTab, setToolTab]               = useState(0);
 
+  const { audience, setAudience, config } = useAudience();
+  const variantAngle = VARIANT_ANGLES.find(v => v.variantId === 'gradient-wave');
+  const variantHero = audience && variantAngle ? variantAngle.heroes[audience] : null;
+  const ctaLabel = config?.cta.label || 'Commencer gratuitement';
+  const ctaHref = config?.cta.href || '/login?mode=register';
+
   const demo = DEMO_SCENARIOS[demoTab];
 
   // Gradient text style helper
@@ -304,7 +313,8 @@ export default function LandingPage() {
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 56 }}>
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section style={{
@@ -341,7 +351,7 @@ export default function LandingPage() {
               textTransform: 'uppercase',
               ...gradientTextStyle,
             }}>
-              Le futur<br />est arriv&eacute;.
+              {variantHero?.headline || <>Le futur<br />est arriv&eacute;.</>}
             </h1>
 
             <p style={{
@@ -358,19 +368,19 @@ export default function LandingPage() {
               color: 'rgba(255,255,255,0.44)',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
             }}>
-              Freenzy fusionne tout ce que vous utilisez. <span style={{ color: '#c4b5fd', fontWeight: 700 }}>R&eacute;seau social, messagerie, jeux, IA, cr&eacute;ation, productivit&eacute;</span> &mdash; <span style={{ color: 'rgba(255,255,255,0.62)' }}>une seule app fluide et intelligente. L&apos;avenir du digital.</span>
+              {variantHero?.subheadline || <>Freenzy fusionne tout ce que vous utilisez. <span style={{ color: '#c4b5fd', fontWeight: 700 }}>R&eacute;seau social, messagerie, jeux, IA, cr&eacute;ation, productivit&eacute;</span> &mdash; <span style={{ color: 'rgba(255,255,255,0.62)' }}>une seule app fluide et intelligente. L&apos;avenir du digital.</span></>}
             </p>
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <Link href="/login?mode=register" className="lp-cta-primary" style={{
+              <Link href={ctaHref} className="lp-cta-primary" style={{
                 padding: '12px 20px', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
                 boxShadow: '0 0 30px rgba(124,58,237,0.3)',
                 transition: 'all 0.3s',
               }}>
-                Entrer dans le futur
+                {ctaLabel}
               </Link>
               <Link href="/plans" style={{
                 padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
@@ -854,9 +864,11 @@ export default function LandingPage() {
         </section>
 
         {/* ══ ENTERPRISE ═══════════════════════════════════════ */}
+        {(!audience || audience === 'entreprise') && (
         <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <EnterpriseSection />
         </section>
+        )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
         <section id="faq" style={{ background: '#f0f0ff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
@@ -990,7 +1002,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 32 }}>
               <span style={{ color: '#c4b5fd', fontWeight: 700 }}>{totalAgents} agents IA</span>. Toutes les IA du march&eacute;. <span style={{ color: '#c4b5fd', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
             </p>
-            <Link href="/login?mode=register" className="lp-cta-primary" style={{
+            <Link href={ctaHref} className="lp-cta-primary" style={{
               display: 'inline-block', padding: '15px 40px',
               background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16,
@@ -998,7 +1010,7 @@ export default function LandingPage() {
               boxShadow: '0 0 40px rgba(124,58,237,0.3)',
               transition: 'all 0.3s',
             }}>
-              Commencer maintenant &mdash; 0&euro;
+              {ctaLabel}
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
               <Link href="/plans" style={{ color: 'rgba(255,255,255,0.28)', textDecoration: 'none' }}>Tarifs d&eacute;taill&eacute;s &rarr;</Link>

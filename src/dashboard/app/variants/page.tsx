@@ -268,6 +268,32 @@ const VARIANTS: LandingVersion[] = [
     score: 70,
     scoreLabel: 'Score potentiel',
   },
+  {
+    id: 'original-v2', name: 'Original V2 (+ Audience)', number: 'O2',
+    desc: 'Copie de la version actuelle avec switcher audience Particulier/Freelance/Entreprise. Hero, CTAs et section Enterprise s\'adaptent selon l\'audience selectionnee. Persistance localStorage.',
+    date: '8 mars 2026',
+    badge: { text: 'VARIANTE', type: 'variant' },
+    colors: ['#5b6cf7', '#0a0a0f', '#22c55e'],
+    meta: [{ label: 'Style', value: 'V8 + segmentation audience' }, { label: 'Feature', value: 'Switcher iOS Particulier/Freelance/Entreprise' }],
+    link: '/variants/original-v2',
+    reviews: [
+      { label: 'NOUVEAUTE', type: 'good', items: ['Switcher audience sticky sous le nav', 'Hero adapte par audience (headline, subheadline, badge)', 'CTAs contextualises (Essayer / Lancer / Demo)', 'Section Enterprise masquee pour Particulier et Freelance'] },
+    ],
+    score: 68,
+  },
+  {
+    id: 'v019-mercredi-v2', name: 'v0.19 Mercredi V2 (+ Audience)', number: 'W2',
+    desc: 'Copie de la version mercredi (1er deploy) avec switcher audience. Meme structure emojis + indigo mais avec hero et CTAs adaptes par audience.',
+    date: '8 mars 2026',
+    badge: { text: 'VARIANTE', type: 'variant' },
+    colors: ['#6366f1', '#0a0a0f', '#22c55e'],
+    meta: [{ label: 'Style', value: 'v0.19 mercredi + segmentation audience' }, { label: 'Feature', value: 'Switcher iOS Particulier/Freelance/Entreprise' }],
+    link: '/variants/v019-mercredi-v2',
+    reviews: [
+      { label: 'NOUVEAUTE', type: 'good', items: ['Switcher audience ajoute a la version historique', 'Permet de comparer l\'impact du switcher sur une ancienne version'] },
+    ],
+    score: 38,
+  },
 ];
 
 /* ═══════════════════════════════════════════════════════════

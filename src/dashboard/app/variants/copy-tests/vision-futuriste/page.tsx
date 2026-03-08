@@ -93,6 +93,8 @@ export default function LandingPageVisionFuturiste() {
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(20px, 3vw, 32px) 24px clamp(16px, 2vw, 24px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
+          minHeight: 'calc(100vh - 188px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <div className="lp-hero-glow-anim" style={{
             position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',

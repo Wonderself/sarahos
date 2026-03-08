@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freenzy.io — Landing Page Audit & Variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090b;
+    --card: #141418;
+    --border: #27272a;
+    --text: #fafafa;
+    --text2: #a1a1aa;
+    --accent: #5b6cf7;
+    --green: #22c55e;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --cyan: #06b6d4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .material-symbols-rounded { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+
+  /* Header */
+  .header { padding: 48px 24px 32px; text-align: center; border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .header h1 span { color: var(--accent); }
+  .header p { color: var(--text2); font-size: 14px; max-width: 600px; margin: 0 auto; }
+  .header .stats { display: flex; gap: 24px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .header .stat { text-align: center; }
+  .header .stat .val { font-size: 24px; font-weight: 800; color: var(--accent); }
+  .header .stat .lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Timeline */
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+  .section-title { font-size: 18px; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .section-title .material-symbols-rounded { color: var(--accent); }
+
+  /* Landing Cards */
+  .landing-grid { display: flex; flex-direction: column; gap: 32px; }
+
+  .landing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .landing-card:hover { border-color: var(--accent); }
+  .landing-card.active { border-color: var(--green); box-shadow: 0 0 20px rgba(34,197,94,0.1); }
+
+  .card-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-number {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+  }
+  .card-header h2 { font-size: 16px; font-weight: 700; flex: 1; }
+  .card-header .badge {
+    font-size: 10px; font-weight: 700; padding: 3px 10px;
+    border-radius: 100px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .badge-active { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-variant { background: rgba(91,108,247,0.15); color: var(--accent); }
+  .badge-archived { background: rgba(161,161,170,0.15); color: var(--text2); }
+  .badge-v0 { background: rgba(245,158,11,0.15); color: var(--orange); }
+
+  .card-body { padding: 24px; }
+
+  .card-meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .meta-item { font-size: 12px; }
+  .meta-item .meta-label { color: var(--text2); margin-bottom: 2px; }
+  .meta-item .meta-value { font-weight: 600; }
+
+  .card-desc { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.7; }
+
+  .card-colors { display: flex; gap: 6px; margin-bottom: 20px; }
+  .color-dot {
+    width: 24px; height: 24px; border-radius: 6px;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .card-sections { margin-bottom: 20px; }
+  .card-sections h4 { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .section-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .section-tag {
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.06); color: var(--text2);
+  }
+
+  /* Claude Review */
+  .claude-review {
+    background: rgba(91,108,247,0.06);
+    border: 1px solid rgba(91,108,247,0.2);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .claude-review-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px; font-size: 12px; font-weight: 700; color: var(--accent);
+  }
+  .review-section { margin-bottom: 12px; }
+  .review-section:last-child { margin-bottom: 0; }
+  .review-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .review-label.good { color: var(--green); }
+  .review-label.issue { color: var(--red); }
+  .review-label.missing { color: var(--orange); }
+  .review-list { list-style: none; padding: 0; }
+  .review-list li {
+    font-size: 12px; color: var(--text2); padding: 2px 0;
+    padding-left: 16px; position: relative;
+  }
+  .review-list li::before {
+    content: '';
+    position: absolute; left: 0; top: 10px;
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .review-list.good li::before { background: var(--green); }
+  .review-list.issue li::before { background: var(--red); }
+  .review-list.missing li::before { background: var(--orange); }
+
+  .score-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(91,108,247,0.15);
+  }
+  .score-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+  .score-value { font-size: 14px; font-weight: 800; min-width: 40px; text-align: right; }
+
+  /* Links */
+  .card-links { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .card-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; padding: 6px 14px;
+    border-radius: 8px; text-decoration: none; transition: all 0.2s;
+  }
+  .card-link .material-symbols-rounded { font-size: 14px; }
+  .card-link-primary { background: var(--accent); color: #fff; }
+  .card-link-primary:hover { background: #4a5ae6; }
+  .card-link-secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
+  .card-link-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .card-link-git { background: rgba(161,161,170,0.1); color: var(--text2); border: 1px solid var(--border); }
+  .card-link-git:hover { border-color: var(--text2); }
+
+  /* URL switcher */
+  .url-switcher {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 24px; padding: 12px 16px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    font-size: 12px;
+  }
+  .url-switcher label { color: var(--text2); font-weight: 600; }
+  .url-switcher select {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 6px; font-size: 12px; font-family: 'Inter', sans-serif;
+  }
+  .url-switcher .current-base { color: var(--accent); font-weight: 600; margin-left: auto; font-family: monospace; }
+
+  /* Workflow section */
+  .workflow { margin-top: 60px; }
+  .workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .workflow-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px;
+  }
+  .workflow-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .workflow-card p { font-size: 12px; color: var(--text2); }
+  .workflow-card code { background: rgba(91,108,247,0.15); color: var(--accent); padding: 1px 6px; border-radius: 4px; font-size: 11px; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .card-meta { grid-template-columns: 1fr; }
+    .header .stats { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>FREENZY.IO</span> — Landing Pages</h1>
+  <p>Historique complet de toutes les versions de landing page testees, avec analyse Claude de ce qui fonctionne et ce qui manque.</p>
+  <div class="stats">
+    <div class="stat"><div class="val">8</div><div class="lbl">Versions</div></div>
+    <div class="stat"><div class="val">5</div><div class="lbl">Variantes</div></div>
+    <div class="stat"><div class="val">82</div><div class="lbl">Agents</div></div>
+    <div class="stat"><div class="val">v0.19+</div><div class="lbl">Version</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- URL Switcher -->
+  <div class="url-switcher">
+    <span class="material-symbols-rounded" style="font-size:16px;color:var(--accent)">link</span>
+    <label>Base URL :</label>
+    <select id="baseUrlSelect" onchange="updateLinks()">
+      <option value="http://localhost:3001">localhost:3001 (dev local)</option>
+      <option value="https://freenzy.io">freenzy.io (production)</option>
+    </select>
+    <span class="current-base" id="currentBase">http://localhost:3001</span>
+  </div>
+
+  <!-- ═══ PRODUCTION ACTUELLE ═══ -->
+  <div class="section-title">
+    <span class="material-symbols-rounded">rocket_launch</span>
+    Landing Active (Production)
+  </div>
+
+  <div class="landing-grid">
+
+    <!-- V8 — CURRENT -->
+    <div class="landing-card active">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(34,197,94,0.15); color: var(--green);">8</div>
+        <h2>Design System Refresh + 82 Agents</h2>
+        <span class="badge badge-active">EN PROD</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Commit</div><div class="meta-value">1f9f068</div></div>
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">8 mars 2026</div></div>
+          <div class="meta-item"><div class="meta-label">Branche</div><div class="meta-value">main</div></div>
+          <div class="meta-item"><div class="meta-label">Fichier</div><div class="meta-value">app/page.tsx (~970 lignes)</div></div>
+        </div>
+        <div class="card-links">
+          <a class="card-link card-link-primary page-link" href="http://localhost:3001/" target="_blank" data-path="/">
+            <span class="material-symbols-rounded">open_in_new</span> Voir la landing
+          </a>
+          <a class="card-link card-link-secondary page-link" href="http://localhost:3001/variants" target="_blank" data-path="/variants">
+            <span class="material-symbols-rounded">palette</span> Toutes les variantes
+          </a>
+          <a class="card-link card-link-git" href="https://github.com/Wonderself/sarahos/blob/main/src/dashboard/app/page.tsx" target="_blank">
+            <span class="material-symbols-rounded">code</span> Code source
+          </a>
+        </div>
+        <p class="card-desc">
+          Version actuelle en production. Blue-violet (#5b6cf7), Material Icons partout, 82 agents (22 business + 12 perso + 48 marketplace).
+          11 sections: hero, stats ticker, outils IA, modeles IA, ecosysteme, agents tabs, avantages, temoignages, FAQ, CTA final, footer.
+          Animations CSS natives. Dark theme unifie.
+        </p>
+        <div class="card-colors">
+          <div class="color-dot" style="background:#5b6cf7" title="#5b6cf7 accent"></div>
+          <div class="color-dot" style="background:#0a0a0f" title="#0a0a0f bg"></div>
+          <div class="color-dot" style="background:#22c55e" title="#22c55e green"></div>
+          <div class="color-dot" style="background:#a5b4fc" title="#a5b4fc highlight"></div>
+        </div>
+        <div class="card-sections">
+          <h4>Sections</h4>
+          <div class="section-tags">
+            <span class="section-tag">Hero + CTA</span>
+            <span class="section-tag">Stats Ticker</span>
+            <span class="section-tag">Outils IA (6)</span>
+            <span class="section-tag">Modeles IA (6)</span>
+            <span class="section-tag">Ecosysteme (6)</span>
+            <span class="section-tag">Agent Tabs (12)</span>
+            <span class="section-tag">Avantages (6)</span>
+            <span class="section-tag">Temoignages</span>
+            <span class="section-tag">FAQ Accordion</span>
+            <span class="section-tag">CTA Final</span>
+            <span class="section-tag">Enterprise Section</span>
+          </div>
+        </div>
+
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude — mis a jour le 8 mars 2026
+          </div>
+          <div class="review-section">
+            <div class="review-label good">CE QUI FONCTIONNE</div>
+            <ul class="review-list good">
+              <li>Hero clair avec proposition de valeur "Free & Easy" immediate</li>
+              <li>Stats ticker dynamique (82+ agents, 0% commission, 24/7)</li>
+              <li>Tous les modeles IA listes (Claude, GPT, Gemini, Llama, Grok, Mistral)</li>
+              <li>Agent tabs interactifs avec descriptions detaillees</li>
+              <li>FAQ accordion integree dans la landing (pas une page separee)</li>
+              <li>CTA fort "Commencer gratuitement" repete 3 fois</li>
+              <li>Material Icons uniforme (plus d'emojis)</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">PROBLEMES IDENTIFIES</div>
+            <ul class="review-list issue">
+              <li>Page trop longue (~970 lignes JSX) — risque de bounce au scroll</li>
+              <li>Pas de video demo / screencast du produit en action</li>
+              <li>Pas de preuve sociale reelle (temoignages fictifs, pas de logos clients)</li>
+              <li>Le hero ne montre pas le produit — aucun screenshot/mockup du dashboard</li>
+              <li>Le "0% commission" est repete trop souvent, dilue le message</li>
+              <li>Sections "Ecosysteme" et "Modeles IA" peu differenciees visuellement</li>
+              <li>Pas d'animation d'entree (les sections apparaissent d'un bloc)</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label missing">CE QUI MANQUE</div>
+            <ul class="review-list missing">
+              <li>Screenshot/mockup du dashboard Flashboard dans le hero</li>
+              <li>Video demo de 30-60s montrant le produit</li>
+              <li>Logos de clients ou partenaires ("Ils nous font confiance")</li>
+              <li>Comparatif visuel prix vs concurrence (tableau ou cards)</li>
+              <li>Section "Comment ca marche" en 3 etapes illustrees</li>
+              <li>Micro-animations au scroll (fade-in, slide-up)</li>
+              <li>Indicateur de scroll ou ancres de navigation</li>
+              <li>Social proof : nombre d'utilisateurs, reviews, ratings</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score global</span>
+            <div class="score-track"><div class="score-fill" style="width:62%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">62%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ HISTORIQUE ═══ -->
+  <div class="section-title" style="margin-top:48px">
+    <span class="material-symbols-rounded">history</span>
+    Historique des versions
+  </div>
+
+  <div class="landing-grid">
+
+    <!-- V7 — Design System Refresh -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(91,108,247,0.15); color: var(--accent);">7</div>
+        <h2>Design System Refresh — Material Icons</h2>
+        <span class="badge badge-archived">1e7090d</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">6 mars 2026</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Emojis → Material Icons partout</div></div>
+        </div>
+        <p class="card-desc">
+          Migration massive : tous les emojis remplaces par Material Symbols Rounded. Blue-violet #5b6cf7. 72 agents (avant l'ajout des 10 enterprise).
+          Cookie consent, audit securite, streaming fixes. Landing identique a V6 visuellement mais code propre.
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">AMELIORATIONS</div>
+            <ul class="review-list good">
+              <li>Coherence visuelle : Material Icons uniforme (plus de mix emoji/icon)</li>
+              <li>Chiffres corrects : 72 agents a l'epoque (coherent)</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">RESTE A FAIRE</div>
+            <ul class="review-list issue">
+              <li>Memes problemes structurels que V6 (pas de demo, pas de screenshot)</li>
+              <li>Le passage emojis → icons n'a pas change la structure de la page</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:58%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">58%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V6 — Blue-Violet Accent -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(91,108,247,0.15); color: var(--accent);">6</div>
+        <h2>Blue-Violet Accent — Design Harmony</h2>
+        <span class="badge badge-archived">00133d2</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">6 mars 2026 (matin)</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Purple #6366f1 → Blue-violet #5b6cf7</div></div>
+        </div>
+        <p class="card-desc">
+          Shift de couleur accent sur 80 fichiers. Unification dark/light themes. Logo FREENZY.IO dans le nav.
+          Meme structure de page, couleurs plus froides et professionnelles.
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">AMELIORATIONS</div>
+            <ul class="review-list good">
+              <li>Couleur plus distinctive et unique (pas le classique Tailwind indigo)</li>
+              <li>Harmonie visuelle globale amelioree</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">LIMITATIONS</div>
+            <ul class="review-list issue">
+              <li>Changement cosmetique uniquement — la structure n'a pas change</li>
+              <li>Toujours pas de differentiation claire du hero</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:55%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">55%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V5 — Landing Polish -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(245,158,11,0.15); color: var(--orange);">5</div>
+        <h2>Landing Polish — Logo, Sections, Mobile</h2>
+        <span class="badge badge-archived">84f667d</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">6 mars 2026</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Polissage general + fixes mobile</div></div>
+        </div>
+        <p class="card-desc">
+          Corrections de bugs mobile, logo recentre, sections reordonnees. Ajustements de padding et spacing.
+          Pas de changement structural majeur, mais meilleure experience mobile.
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">AMELIORATIONS</div>
+            <ul class="review-list good">
+              <li>Responsive mobile corrige (plus de debordements)</li>
+              <li>Logo gradient propre</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">LIMITATIONS</div>
+            <ul class="review-list issue">
+              <li>Polish sans refonte — les problemes de fond restent</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:50%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">50%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V4 — Refonte Landing -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(245,158,11,0.15); color: var(--orange);">4</div>
+        <h2>Refonte Landing — Outils, Logo Gradient, Reorg</h2>
+        <span class="badge badge-archived">b9f1008</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">6 mars 2026 (2h du matin)</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Premiere vraie refonte de la structure</div></div>
+        </div>
+        <p class="card-desc">
+          Grande refonte : ajout des outils users (6 actions concretes), logo gradient anime, reorganisation complete des sections.
+          Introduction du bento grid, agent tabs, et FAQ accordion. C'est la base de la landing actuelle.
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">AMELIORATIONS</div>
+            <ul class="review-list good">
+              <li>Premiere version avec une vraie structure marketing</li>
+              <li>Outils concrets montres (pas juste "IA pour tout")</li>
+              <li>FAQ integree — reduit les frictions</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">LIMITATIONS</div>
+            <ul class="review-list issue">
+              <li>Premiere iteration — trop d'infos, pas assez de hierarchie</li>
+              <li>Hero encore generique ("Free & Easy" sans visuel produit)</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:48%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">48%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V3 — UX Refonte Mobile-First -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(161,161,170,0.15); color: var(--text2);">3</div>
+        <h2>UX Refonte Mobile-First</h2>
+        <span class="badge badge-archived">00fbc9a</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">5 mars 2026</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Responsive complet, navigation mobile</div></div>
+        </div>
+        <p class="card-desc">
+          Focus mobile-first pour le dashboard ET la landing. Bottom tab bar, sidebar responsive, topbar mobile.
+          La landing a gagne un meilleur responsive mais la structure etait encore basique.
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">LIMITATIONS</div>
+            <ul class="review-list issue">
+              <li>Landing secondaire — le focus etait sur le dashboard</li>
+              <li>Structure hero tres simple, peu de sections marketing</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:35%;background:var(--red)"></div></div>
+            <div class="score-value" style="color:var(--red)">35%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V2 — Freenzy v0.19 -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(161,161,170,0.15); color: var(--text2);">2</div>
+        <h2>Freenzy.io v0.19 — Premier deploy</h2>
+        <span class="badge badge-archived">a1782f2</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">5 mars 2026</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Post-rebranding SARAH OS → Freenzy.io</div></div>
+        </div>
+        <p class="card-desc">
+          Premiere version deployable apres le rebranding complet. Logo FREENZY.IO, navigation simplifiee (Demo + Login seulement),
+          24 agents avec prefixe fz-*. Landing fonctionnelle mais pas optimisee marketing.
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">LIMITATIONS</div>
+            <ul class="review-list issue">
+              <li>Landing "par defaut" — pas de reflexion marketing</li>
+              <li>Branding nouveau mais page generique</li>
+              <li>Pas de sections differenciantes</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:25%;background:var(--red)"></div></div>
+            <div class="score-value" style="color:var(--red)">25%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V1 — SARAH OS -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(161,161,170,0.15); color: var(--text2);">1</div>
+        <h2>SARAH OS v0.10 — Initial</h2>
+        <span class="badge badge-v0">V0</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">1 mars 2026</div></div>
+          <div class="meta-item"><div class="meta-label">Delta</div><div class="meta-value">Premier commit, nom SARAH OS</div></div>
+        </div>
+        <p class="card-desc">
+          Version initiale sous le nom SARAH OS. Landing simple avec hero, description du produit, et boutons d'action.
+          Prefixes sarah-*, emojis partout, navigation complete (Tarifs, Claude AI, WhatsApp, Demo).
+        </p>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">LIMITATIONS</div>
+            <ul class="review-list issue">
+              <li>Nom "SARAH OS" pas assez commercial</li>
+              <li>Navigation trop complexe (5+ liens publics)</li>
+              <li>Landing technique, pas marketing</li>
+              <li>Emojis au lieu d'icons — aspect non-professionnel</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:15%;background:var(--red)"></div></div>
+            <div class="score-value" style="color:var(--red)">15%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ VARIANTES ═══ -->
+  <div class="section-title" style="margin-top:48px">
+    <span class="material-symbols-rounded">palette</span>
+    Variantes de style (branche claude/landing-page-variants)
+  </div>
+
+  <div class="landing-grid">
+
+    <!-- Neon Futuriste -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(0,240,255,0.15); color: #00f0ff;">N</div>
+        <h2>Neon Futuriste</h2>
+        <span class="badge badge-variant">VARIANTE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Style</div><div class="meta-value">Cyberpunk, neons vifs, messaging agressif</div></div>
+          <div class="meta-item"><div class="meta-label">Slogan</div><div class="meta-value">"On remplace tout"</div></div>
+        </div>
+        <div class="card-links">
+          <a class="card-link card-link-primary page-link" href="http://localhost:3001/variants/neon-futuriste" target="_blank" data-path="/variants/neon-futuriste">
+            <span class="material-symbols-rounded">open_in_new</span> Voir cette variante
+          </a>
+          <a class="card-link card-link-git" href="https://github.com/Wonderself/sarahos/blob/main/src/dashboard/app/variants/neon-futuriste/page.tsx" target="_blank">
+            <span class="material-symbols-rounded">code</span> Code
+          </a>
+        </div>
+        <p class="card-desc">Esthetique cyberpunk avec neons cyan et magenta sur fond ultra-sombre. Messaging agressif style Y Combinator — "On remplace votre equipe". Typographie bold, effets glow, animations agressives.</p>
+        <div class="card-colors">
+          <div class="color-dot" style="background:#00f0ff" title="Cyan neon"></div>
+          <div class="color-dot" style="background:#0a001a" title="Dark purple"></div>
+          <div class="color-dot" style="background:#ff00aa" title="Magenta"></div>
+        </div>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">POINTS FORTS</div>
+            <ul class="review-list good">
+              <li>Tres impactant visuellement, memorable</li>
+              <li>Messaging clair et direct ("on remplace tout")</li>
+              <li>Bon pour capter l'attention des early adopters tech</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">RISQUES</div>
+            <ul class="review-list issue">
+              <li>Trop agressif pour les PME traditionnelles (cible principale)</li>
+              <li>Le messaging "on remplace" peut faire peur aux decideurs</li>
+              <li>Lisibilite reduite avec les effets neon sur ecran mobile</li>
+              <li>Connotation "startup tech" peut exclure des secteurs (artisans, commerce)</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:45%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">45%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Minimal Luxe -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(200,169,126,0.15); color: #c8a97e;">M</div>
+        <h2>Minimal Luxe</h2>
+        <span class="badge badge-variant">VARIANTE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Style</div><div class="meta-value">Minimaliste premium, tons neutres chauds</div></div>
+          <div class="meta-item"><div class="meta-label">Slogan</div><div class="meta-value">"L'app essentielle"</div></div>
+        </div>
+        <div class="card-links">
+          <a class="card-link card-link-primary page-link" href="http://localhost:3001/variants/minimal-luxe" target="_blank" data-path="/variants/minimal-luxe">
+            <span class="material-symbols-rounded">open_in_new</span> Voir cette variante
+          </a>
+          <a class="card-link card-link-git" href="https://github.com/Wonderself/sarahos/blob/main/src/dashboard/app/variants/minimal-luxe/page.tsx" target="_blank">
+            <span class="material-symbols-rounded">code</span> Code
+          </a>
+        </div>
+        <p class="card-desc">Design epure, tons creme et or. Typographie fine et elegante. Beaucoup de blanc, espacement genereux. Messaging calme et rassurant — "L'app essentielle pour votre business". Style Apple/Notion.</p>
+        <div class="card-colors">
+          <div class="color-dot" style="background:#c8a97e" title="Gold"></div>
+          <div class="color-dot" style="background:#faf8f5" title="Cream"></div>
+          <div class="color-dot" style="background:#1a1a1a" title="Dark text"></div>
+        </div>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">POINTS FORTS</div>
+            <ul class="review-list good">
+              <li>Perception premium — inspire confiance aux decideurs</li>
+              <li>Lisibilite excellente, peu de distractions</li>
+              <li>Style Apple/Notion reconnu et apprecie</li>
+              <li>Bien pour le B2B et les professions liberales</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">RISQUES</div>
+            <ul class="review-list issue">
+              <li>Peut paraitre "cher" alors que le produit est gratuit</li>
+              <li>Manque d'energie/dynamisme pour un produit IA</li>
+              <li>Le fond clair entre en conflit avec le dark theme du dashboard</li>
+              <li>Moins memorable que les variantes plus colorees</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:55%;background:var(--orange)"></div></div>
+            <div class="score-value" style="color:var(--orange)">55%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bold Disrupteur -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(255,59,48,0.15); color: #ff3b30;">B</div>
+        <h2>Bold Disrupteur</h2>
+        <span class="badge badge-variant">VARIANTE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Style</div><div class="meta-value">Couleurs vives, typographie massive</div></div>
+          <div class="meta-item"><div class="meta-label">Slogan</div><div class="meta-value">"Le nouveau Facebook"</div></div>
+        </div>
+        <div class="card-links">
+          <a class="card-link card-link-primary page-link" href="http://localhost:3001/variants/bold-disrupteur" target="_blank" data-path="/variants/bold-disrupteur">
+            <span class="material-symbols-rounded">open_in_new</span> Voir cette variante
+          </a>
+          <a class="card-link card-link-git" href="https://github.com/Wonderself/sarahos/blob/main/src/dashboard/app/variants/bold-disrupteur/page.tsx" target="_blank">
+            <span class="material-symbols-rounded">code</span> Code
+          </a>
+        </div>
+        <p class="card-desc">Rouge + jaune vif sur fond sombre. Typographie XXL, messaging provocateur. Style Y Combinator / Superhuman. Bold et polarisant — "Le Facebook de l'IA pour entreprises".</p>
+        <div class="card-colors">
+          <div class="color-dot" style="background:#ff3b30" title="Red"></div>
+          <div class="color-dot" style="background:#ffe600" title="Yellow"></div>
+          <div class="color-dot" style="background:#1a1a2e" title="Dark bg"></div>
+        </div>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">POINTS FORTS</div>
+            <ul class="review-list good">
+              <li>Impossible de l'ignorer — tres fort taux de clic potentiel</li>
+              <li>Messaging ambitieux qui positionne haut</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">RISQUES</div>
+            <ul class="review-list issue">
+              <li>"Le nouveau Facebook" est pretentieux et irrealiste — credibilite zero</li>
+              <li>Rouge + jaune = aesthetique "promo/discount", pas premium</li>
+              <li>Trop polarisant — exclut les profils conservateurs (la majorite des PME)</li>
+              <li>Le messaging promet plus que le produit ne delivre actuellement</li>
+              <li>Fatigue visuelle rapide avec les couleurs saturees</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score</span>
+            <div class="score-track"><div class="score-fill" style="width:30%;background:var(--red)"></div></div>
+            <div class="score-value" style="color:var(--red)">30%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradient Wave -->
+    <div class="landing-card">
+      <div class="card-header">
+        <div class="card-number" style="background: rgba(124,58,237,0.15); color: #7c3aed;">G</div>
+        <h2>Gradient Wave</h2>
+        <span class="badge badge-variant">VARIANTE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item"><div class="meta-label">Style</div><div class="meta-value">Degrades fluides, glassmorphism</div></div>
+          <div class="meta-item"><div class="meta-label">Slogan</div><div class="meta-value">"Le futur est la"</div></div>
+        </div>
+        <div class="card-links">
+          <a class="card-link card-link-primary page-link" href="http://localhost:3001/variants/gradient-wave" target="_blank" data-path="/variants/gradient-wave">
+            <span class="material-symbols-rounded">open_in_new</span> Voir cette variante
+          </a>
+          <a class="card-link card-link-git" href="https://github.com/Wonderself/sarahos/blob/main/src/dashboard/app/variants/gradient-wave/page.tsx" target="_blank">
+            <span class="material-symbols-rounded">code</span> Code
+          </a>
+        </div>
+        <p class="card-desc">Degrades purple → cyan → rose. Effets glassmorphism (cartes transparentes blur). Animations fluides de vagues. Style Linear/Vercel. Esthetique futuriste mais accessible.</p>
+        <div class="card-colors">
+          <div class="color-dot" style="background:#7c3aed" title="Purple"></div>
+          <div class="color-dot" style="background:#06b6d4" title="Cyan"></div>
+          <div class="color-dot" style="background:#f43f5e" title="Rose"></div>
+        </div>
+        <div class="claude-review">
+          <div class="claude-review-header">
+            <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+            Analyse Claude
+          </div>
+          <div class="review-section">
+            <div class="review-label good">POINTS FORTS</div>
+            <ul class="review-list good">
+              <li>Le plus equilibre visuellement — moderne sans etre agressif</li>
+              <li>Glassmorphism tendance (Linear, Vercel, Stripe)</li>
+              <li>Palette cohérente avec le blue-violet du dashboard</li>
+              <li>Bon compromis entre impact et lisibilite</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label issue">RISQUES</div>
+            <ul class="review-list issue">
+              <li>Glassmorphism peut rendre le texte moins lisible sur certains fonds</li>
+              <li>Risque d'etre generique (beaucoup de SaaS utilisent ce style)</li>
+              <li>Performances : les effets blur sont couteux sur mobile bas de gamme</li>
+            </ul>
+          </div>
+          <div class="review-section">
+            <div class="review-label missing">RECOMMANDATION</div>
+            <ul class="review-list missing">
+              <li>MEILLEUR CANDIDAT pour remplacer la landing actuelle</li>
+              <li>A combiner avec le contenu de V8 (82 agents, Material Icons)</li>
+              <li>Ajouter un hero avec screenshot du dashboard</li>
+            </ul>
+          </div>
+          <div class="score-bar">
+            <span style="font-size:11px;color:var(--text2)">Score potentiel</span>
+            <div class="score-track"><div class="score-fill" style="width:70%;background:var(--green)"></div></div>
+            <div class="score-value" style="color:var(--green)">70%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ RECOMMANDATIONS GLOBALES ═══ -->
+  <div class="section-title" style="margin-top:48px">
+    <span class="material-symbols-rounded">tips_and_updates</span>
+    Recommandations globales
+  </div>
+
+  <div class="landing-card">
+    <div class="card-body">
+      <div class="claude-review">
+        <div class="claude-review-header">
+          <span class="material-symbols-rounded" style="font-size:16px">auto_awesome</span>
+          Synthese Claude — Prochaine landing ideale
+        </div>
+        <div class="review-section">
+          <div class="review-label good">GARDER DE V8 (ACTUELLE)</div>
+          <ul class="review-list good">
+            <li>Contenu : 82 agents, 6 modeles IA, ecosysteme, FAQ 103 questions</li>
+            <li>Material Icons partout</li>
+            <li>Blue-violet #5b6cf7 comme accent</li>
+            <li>Structure de donnees (AI_MODELS, ECOSYSTEM, STATS_BADGES)</li>
+          </ul>
+        </div>
+        <div class="review-section">
+          <div class="review-label missing">AJOUTER</div>
+          <ul class="review-list missing">
+            <li><strong>Hero avec screenshot du dashboard</strong> — montrer le produit immediatement</li>
+            <li><strong>Video demo 30s</strong> — une demo vaut 1000 mots</li>
+            <li><strong>"Comment ca marche" en 3 etapes</strong> — 1. Creez votre compte, 2. Parlez a vos agents, 3. Tout est automatise</li>
+            <li><strong>Social proof reel</strong> — compteur utilisateurs, reviews, logos</li>
+            <li><strong>Comparatif prix</strong> — tableau Freenzy vs ChatGPT Plus vs alternatives</li>
+            <li><strong>Animations au scroll</strong> — IntersectionObserver pour fade-in progressif</li>
+            <li><strong>Glassmorphism subtil</strong> (de Gradient Wave) — cards transparentes</li>
+          </ul>
+        </div>
+        <div class="review-section">
+          <div class="review-label issue">EVITER</div>
+          <ul class="review-list issue">
+            <li>Messaging agressif ("on remplace tout") — les PME veulent de l'aide, pas du remplacement</li>
+            <li>Rouge/jaune vif — connotation discount</li>
+            <li>Page trop longue sans navigation interne</li>
+            <li>Fond clair (clash avec le dark dashboard)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center; padding: 40px 24px; color: var(--text2); font-size: 11px; border-top: 1px solid var(--border); margin-top: 40px;">
+  FREENZY.IO — Landing Page Audit — Genere par Claude Opus 4.6 — 8 mars 2026
+</div>
+
+<script>
+function updateLinks() {
+  const base = document.getElementById('baseUrlSelect').value;
+  document.getElementById('currentBase').textContent = base;
+  document.querySelectorAll('.page-link').forEach(link => {
+    const path = link.getAttribute('data-path');
+    if (path) link.href = base + path;
+  });
+}
+</script>
+</body>
+</html>

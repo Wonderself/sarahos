@@ -12,265 +12,137 @@ import { useAudience } from '../lib/use-audience';
 import { getOrderedFaqCategories } from '../lib/faq-utils';
 import { useSectionObserver } from '../hooks/useSectionObserver';
 import { trackPageView, trackCtaClick, trackFaqOpened } from '../lib/analytics';
+import {
+  ACTIVITY, STATS_BADGES, DEMO_SCENARIOS, SCENARIOS, TECH_FEATURES,
+  WA_MESSAGES, TOOL_CATEGORIES, CUSTOM_EXAMPLES, WHY_FREENZY, TRUST_BADGES,
+  LANDING_AGENTS,
+} from '../lib/landing-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
-// ─── Modèles IA
-const AI_MODELS = [
-  { name: 'Claude · Anthropic', sub: 'Haiku · Sonnet · Opus 4 · Extended Thinking', icon: 'auto_awesome', color: '#D97706' },
-  { name: 'GPT · OpenAI', sub: 'GPT-4o · o3 · GPT-4.5', icon: 'smart_toy', color: '#10a37f' },
-  { name: 'Gemini · Google', sub: 'Flash · Pro · Ultra', icon: 'diamond', color: '#4285f4' },
-  { name: 'Llama · Meta', sub: 'Llama 4 · open source', icon: 'smart_toy', color: '#0668E1' },
-  { name: 'Grok · xAI', sub: 'Grok 3 · raisonnement temps réel', icon: 'bolt', color: '#6b7280' },
-  { name: 'Mistral · Cohere', sub: 'IA europeenne · et tous les prochains', icon: 'waves', color: '#f97316' },
-];
+/* ═══════════════════════════════════════════════════════════
+   CAROUSEL COMPONENT
+   ═══════════════════════════════════════════════════════════ */
 
-// ─── Écosystème
-const ECOSYSTEM = [
-  { name: 'ElevenLabs', sub: 'Voix naturelle · TTS premium', icon: 'mic' },
-  { name: 'Twilio', sub: 'Appels entrants · SMS · WhatsApp', icon: 'call' },
-  { name: 'pgvector', sub: 'Memoire longue duree · RAG', icon: 'psychology' },
-  { name: 'WhatsApp Business', sub: 'Messages IA entrants & sortants', icon: 'chat' },
-  { name: 'Runway ML', sub: 'Generation video IA', icon: 'movie' },
-  { name: 'DALL-E · Flux', sub: 'Generation image IA', icon: 'image' },
-  { name: 'Redis', sub: 'Cache · sessions temps reel', icon: 'bolt' },
-  { name: 'Stripe', sub: 'Paiement · facturation securisee', icon: 'credit_card' },
-];
+function Carousel({ items, renderItem, autoPlay = 4000 }: {
+  items: any[];
+  renderItem: (item: any, i: number) => React.ReactNode;
+  autoPlay?: number;
+}) {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const len = items.length;
 
-// ─── Agents
-const ALL_AGENTS = [
-  { icon: 'call', name: 'Répondeur 24/7', cat: 'Business' },
-  { icon: 'handshake', name: 'Assistante', cat: 'Business' },
-  { icon: 'rocket_launch', name: 'Commercial', cat: 'Business' },
-  { icon: 'campaign', name: 'Marketing', cat: 'Business' },
-  { icon: 'group', name: 'RH', cat: 'Business' },
-  { icon: 'campaign', name: 'Communication', cat: 'Business' },
-  { icon: 'savings', name: 'Finance', cat: 'Business' },
-  { icon: 'code', name: 'Dev', cat: 'Business' },
-  { icon: 'gavel', name: 'Juridique', cat: 'Business' },
-  { icon: 'target', name: 'Direction Générale', cat: 'Business' },
-  { icon: 'movie', name: 'Vidéo', cat: 'Business' },
-  { icon: 'photo_camera', name: 'Photo / Visuel', cat: 'Business' },
-  { icon: 'credit_card', name: 'Budget perso', cat: 'Perso' },
-  { icon: 'handshake', name: 'Négociateur', cat: 'Perso' },
-  { icon: 'bar_chart', name: 'Impôts', cat: 'Perso' },
-  { icon: 'receipt_long', name: 'Comptable', cat: 'Perso' },
-  { icon: 'home', name: 'Chasseur immo', cat: 'Perso' },
-  { icon: 'trending_up', name: 'Portfolio', cat: 'Perso' },
-  { icon: 'description', name: 'CV & carrière', cat: 'Perso' },
-  { icon: 'chat', name: 'Contradicteur', cat: 'Perso' },
-  { icon: 'edit', name: 'Écrivain', cat: 'Perso' },
-  { icon: 'movie', name: 'Cinéaste', cat: 'Perso' },
-  { icon: 'self_improvement', name: 'Coach', cat: 'Perso' },
-  { icon: 'landscape', name: 'Déconnexion', cat: 'Perso' },
-];
+  useEffect(() => {
+    if (paused || !autoPlay) return;
+    const t = setInterval(() => setIdx(p => (p + 1) % len), autoPlay);
+    return () => clearInterval(t);
+  }, [paused, autoPlay, len]);
 
-// ─── Actions avec crédits
-const ACTION_COSTS = [
-  { icon: 'chat', action: 'Chat avec agent IA', model: 'Haiku', count: '100 chats', color: '#22c55e' },
-  { icon: 'mail', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#5b6cf7' },
-  { icon: 'phone_iphone', action: 'Post réseaux sociaux', model: 'Haiku', count: '62 posts', color: '#3b82f6' },
-  { icon: 'description', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#5b6cf7' },
-  { icon: 'call', action: 'Appel répondeur IA', model: 'Twilio + Haiku', count: '10 appels', color: '#f97316' },
-  { icon: 'call_made', action: 'Appel sortant IA', model: 'Twilio + Sonnet', count: '3 appels', color: '#f97316' },
-  { icon: 'chat', action: 'WhatsApp Business IA', model: 'Haiku', count: '125 msgs', color: '#22c55e' },
-  { icon: 'record_voice_over', action: 'Message vocal TTS', model: 'ElevenLabs', count: '11 msgs', color: '#f59e0b' },
-  { icon: 'image', action: 'Image IA créée', model: 'DALL-E · Flux', count: '7 images', color: '#9333ea' },
-  { icon: 'movie', action: 'Clip vidéo 30s', model: 'Runway ML', count: '1 clip', color: '#ec4899' },
-  { icon: 'handshake', action: 'Réunion IA structurée', model: 'Opus', count: '6 réunions', color: '#9333ea' },
-];
+  // Show 4 on desktop, wrap around
+  const visibleCount = 4;
+  const visible: number[] = [];
+  for (let i = 0; i < visibleCount; i++) visible.push((idx + i) % len);
 
-// ─── Stats badges (reverse ticker)
-const STATS_BADGES = [
-  { icon: 'smart_toy', value: '34', label: 'agents IA' },
-  { icon: 'psychology', value: '6+', label: 'modeles IA' },
-  { icon: 'bolt', value: '5 min', label: 'onboarding' },
-  { icon: 'diamond', value: '0%', label: 'commission' },
-  { icon: 'dark_mode', value: '24/7', label: 'actifs' },
-  { icon: 'language', value: '50+', label: 'langues' },
-  { icon: 'quiz', value: '103', label: 'FAQ' },
-  { icon: 'shopping_cart', value: '48', label: 'templates' },
-  { icon: 'business_center', value: '22', label: 'agents Business' },
-  { icon: 'person', value: '12', label: 'agents Perso' },
-  { icon: 'verified_user', value: 'RGPD', label: 'conforme' },
-  { icon: 'lock', value: 'AES-256', label: 'chiffrement' },
-  { icon: 'phone_iphone', value: '8', label: 'modes Reveil' },
-  { icon: 'target', value: '50', label: 'credits offerts' },
-];
+  return (
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{ position: 'relative' }}
+    >
+      <div className="lp-carousel-grid" style={{
+        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12,
+      }}>
+        {visible.map((vi, i) => (
+          <div key={`${vi}-${i}`} style={{ animation: 'lp-fade-in 0.4s ease' }}>
+            {renderItem(items[vi], vi)}
+          </div>
+        ))}
+      </div>
+      {/* Dots */}
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 16 }}>
+        {items.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIdx(i)}
+            aria-label={`Voir exemple ${i + 1}`}
+            style={{
+              width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
+              background: idx === i ? '#8b5cf6' : '#d1d5db', cursor: 'pointer',
+              transition: 'all 0.3s', padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
-// ─── Live activity feed
-const ACTIVITY = [
-  { icon: 'call', text: 'Appel traité · lead qualifié', agent: 'Répondeur', color: '#22c55e', ago: '2 min' },
-  { icon: 'mail', text: 'Proposition commerciale envoyée', agent: 'Commercial', color: '#5b6cf7', ago: '4 min' },
-  { icon: 'phone_iphone', text: '3 posts LinkedIn programmés', agent: 'Marketing', color: '#3b82f6', ago: '8 min' },
-  { icon: 'bar_chart', text: 'Rapport mensuel généré', agent: 'Finance', color: '#f59e0b', ago: '13 min' },
-  { icon: 'alarm', text: 'Briefing matinal envoyé', agent: 'Réveil IA', color: '#f97316', ago: '19 min' },
-  { icon: 'image', text: 'Visuel créé · campagne Été 2026', agent: 'Photo/Visuel', color: '#9333ea', ago: '24 min' },
-  { icon: 'description', text: 'NDA bilingue généré', agent: 'Juridique', color: '#5b6cf7', ago: '31 min' },
-  { icon: 'chat', text: '12 messages WhatsApp traités', agent: 'Assistante', color: '#22c55e', ago: '39 min' },
-  { icon: 'movie', text: 'Clip vidéo 30s créé', agent: 'Vidéo', color: '#ec4899', ago: '47 min' },
-  { icon: 'handshake', text: 'Stratégie Q2 synthétisée', agent: 'DG', color: '#9333ea', ago: '1h' },
-];
+/* ═══════════════════════════════════════════════════════════
+   TECH CAROUSEL (horizontal scroll on mobile, carousel desktop)
+   ═══════════════════════════════════════════════════════════ */
 
-// ─── Interactive demo scenarios
-const DEMO_SCENARIOS = [
-  {
-    tab: 'Répondeur',
-    tabIcon: 'call',
-    color: '#22c55e',
-    prompt: "Antoine Bernard vient d'appeler. Demande de devis, budget estimé 4 800€.",
-    lines: [
-      { label: 'Statut', text: 'Appel traité · 2 min 14s' },
-      { label: 'Lead', text: 'Qualifié · devis 4 800€' },
-      { label: 'Action', text: 'RDV calendrier · demain 9h30' },
-      { label: 'Notif.', text: 'Résumé envoyé par WhatsApp' },
-    ],
-    model: 'Haiku + Twilio · 5 crédits',
-  },
-  {
-    tab: 'Email',
-    tabIcon: 'mail',
-    color: '#5b6cf7',
-    prompt: 'Rédige une proposition pour Acme Corp — intégration SaaS, budget 12 000€.',
-    lines: [
-      { label: 'Objet', text: 'Proposition · Intégration SaaS · Acme Corp' },
-      { label: 'Corps', text: '487 mots · ton pro · personnalisé' },
-      { label: 'Annexes', text: 'Planning · CGV · Devis PDF' },
-      { label: 'Envoi', text: 'Planifié lundi 8h30 · suivi auto' },
-    ],
-    model: 'Sonnet · 1.1 crédits',
-  },
-  {
-    tab: 'Social',
-    tabIcon: 'phone_iphone',
-    color: '#3b82f6',
-    prompt: 'Crée 3 posts LinkedIn pour notre lancement produit, ton expert + storytelling.',
-    lines: [
-      { label: 'Post 1', text: 'Hook storytelling · 280 mots · hashtags' },
-      { label: 'Post 2', text: 'Stats-first · data produit · 190 mots' },
-      { label: 'Post 3', text: 'Question engagement · 120 mots · CTA' },
-      { label: 'Planif.', text: 'Lun · Mer · Ven 9h · LinkedIn + Twitter' },
-    ],
-    model: 'Haiku · 2.4 crédits',
-  },
-  {
-    tab: 'Document',
-    tabIcon: 'description',
-    color: '#9333ea',
-    prompt: 'Génère un NDA bilingue FR/EN pour un partenariat avec une startup US.',
-    lines: [
-      { label: 'Document', text: 'NDA bilingue · 4 pages · RGPD conforme' },
-      { label: 'Clauses', text: '12 articles · durée 3 ans' },
-      { label: 'Export', text: 'PDF signable + Word éditable' },
-      { label: 'Révision', text: 'Validé par agent Juridique IA' },
-    ],
-    model: 'Sonnet · 3.5 crédits',
-  },
-];
+function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
+  const [idx, setIdx] = useState(0);
+  const len = items.length;
 
-// ─── Scenarios (from demo — detailed use-cases)
-const SCENARIOS = [
-  {
-    title: 'Répondeur IA 24/7',
-    desc: 'Un prospect appelle à 22h. L\'agent répond, qualifie le lead, envoie un résumé WhatsApp et planifie un RDV.',
-    steps: ['Réception appel Twilio', 'Qualification lead par IA', 'Résumé WhatsApp + RDV calendrier'],
-    tech: 'Twilio + Claude Haiku + WhatsApp',
-    color: '#22c55e',
-  },
-  {
-    title: 'Réveil Intelligent',
-    desc: 'Chaque matin à 7h : météo, agenda, actualités sectorielles, KPIs et priorités du jour en audio.',
-    steps: ['Collecte données multi-sources', 'Synthèse personnalisée IA', 'Livraison audio ElevenLabs'],
-    tech: 'Claude Sonnet + ElevenLabs + Cron',
-    color: '#f59e0b',
-  },
-  {
-    title: 'Factory Documents',
-    desc: 'Générez contrats, devis, NDA, CGV en langage naturel. Export PDF signable, archivage auto.',
-    steps: ['Prompt en langage naturel', 'Génération structurée IA', 'Export PDF + archivage'],
-    tech: 'Claude Sonnet · 3.5 crédits/doc',
-    color: '#5b6cf7',
-  },
-  {
-    title: 'Social Media Autopilot',
-    desc: 'Créez et planifiez vos posts LinkedIn, Twitter, Instagram. Ton adapté, hashtags, calendrier éditorial.',
-    steps: ['Brief créatif', 'Rédaction multi-formats IA', 'Planification + publication'],
-    tech: 'Claude Haiku · 2.4 crédits/post',
-    color: '#3b82f6',
-  },
-];
+  useEffect(() => {
+    const t = setInterval(() => setIdx(p => (p + 1) % len), 5000);
+    return () => clearInterval(t);
+  }, [len]);
 
-// ─── Technologies spotlight
-const TECH_FEATURES = [
-  {
-    title: 'Claude AI · Anthropic',
-    desc: 'Le cerveau de vos agents. Haiku pour la vitesse, Sonnet pour la précision, Opus avec Extended Thinking pour les décisions stratégiques.',
-    points: ['3 niveaux de puissance', 'Extended Thinking (Opus)', 'Mémoire contextuelle longue'],
-    color: '#D97706',
-  },
-  {
-    title: 'ElevenLabs · Voix Premium',
-    desc: 'Voix naturelle multilingue pour le réveil intelligent, les messages vocaux et les appels sortants.',
-    points: ['Multilingual v2', 'Voix personnalisable', '11 langues'],
-    color: '#8B5CF6',
-  },
-  {
-    title: 'Twilio · Téléphonie',
-    desc: 'Appels entrants, sortants, SMS et WhatsApp Business. Votre agent répond 24/7, qualifie et transmet.',
-    points: ['Appels entrants/sortants', 'SMS + WhatsApp', 'Numéro local dédié'],
-    color: '#f97316',
-  },
-  {
-    title: 'Studio Créatif · IA',
-    desc: 'Générez photos, visuels, clips vidéo et avatars parlants. Intégré directement dans votre dashboard.',
-    points: ['Photo IA (Flux/DALL-E)', 'Vidéo IA (Runway/D-ID)', 'Avatars parlants'],
-    color: '#ec4899',
-  },
-];
+  return (
+    <div>
+      <div className="lp-scenario-steps" style={{ gap: 14 }}>
+        {items.map((t, i) => (
+          <div key={i} className="lp-app-card" style={{
+            padding: '20px 22px',
+            opacity: i === idx ? 1 : 0.6,
+            transform: i === idx ? 'scale(1.02)' : 'scale(1)',
+            transition: 'all 0.3s ease',
+            border: i === idx ? `1px solid ${t.color}33` : undefined,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{t.title}</h3>
+            </div>
+            <p style={{ fontSize: 12, color: '#555', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {t.points.map((p, j) => (
+                <span key={j} style={{
+                  fontSize: 11, color: '#4b5563', background: '#f0f0f0',
+                  padding: '3px 10px', borderRadius: 20,
+                }}>
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Dots */}
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 14 }}>
+        {items.map((t, i) => (
+          <button
+            key={i}
+            onClick={() => setIdx(i)}
+            aria-label={`Technologie ${t.title}`}
+            style={{
+              width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
+              background: idx === i ? t.color : '#d1d5db', cursor: 'pointer',
+              transition: 'all 0.3s', padding: 0,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
-// ─── WhatsApp messages mockup
-const WA_MESSAGES = [
-  { from: 'agent', text: 'Résumé de la journée :\n· 3 appels traités\n· 2 leads qualifiés\n· 1 devis envoyé', time: '18:32' },
-  { from: 'user', text: 'Envoie le devis à contact@acme.fr', time: '18:33' },
-  { from: 'agent', text: 'Devis envoyé à contact@acme.fr · suivi planifié J+3', time: '18:33' },
-];
+/* ═══════════════════════════════════════════════════════════
+   MAIN PAGE
+   ═══════════════════════════════════════════════════════════ */
 
-// ─── Outils utilisateurs (par catégorie)
-const TOOL_CATEGORIES = [
-  { id: 'comm', label: 'Communication', icon: 'call', tools: [
-    { icon: 'call', name: 'Repondeur intelligent 24/7', desc: 'Repond a vos appels, qualifie les leads, prend les RDV automatiquement.' },
-    { icon: 'chat', name: 'WhatsApp Business IA', desc: 'Messages entrants et sortants, notifications, pilotage par WhatsApp.' },
-    { icon: 'phone_forwarded', name: 'Appels sortants IA', desc: 'Prospection, relances et confirmations par telephone avec voix naturelle.' },
-    { icon: 'mail', name: 'Email IA professionnel', desc: 'Redaction, envoi et suivi automatique de vos emails business.' },
-  ]},
-  { id: 'prod', label: 'Productivite', icon: 'bolt', tools: [
-    { icon: 'alarm', name: 'Reveil intelligent & Brief', desc: 'Briefing personnalise chaque matin : agenda, priorites, meteo, actus.' },
-    { icon: 'target', name: 'Plan d\'action quotidien', desc: 'Objectifs structures, taches priorisees, suivi de progression en temps reel.' },
-    { icon: 'description', name: 'Documents & contrats IA', desc: 'Generation de devis, contrats, NDA, rapports en quelques secondes.' },
-    { icon: 'handshake', name: 'Reunions structurees IA', desc: 'Ordre du jour, compte-rendu, decisions et actions — tout automatise.' },
-  ]},
-  { id: 'create', label: 'Creation', icon: 'palette', tools: [
-    { icon: 'photo_camera', name: 'Studio Photo IA', desc: 'Creez des visuels pro, logos, bannières avec DALL-E et Flux.' },
-    { icon: 'movie', name: 'Studio Video IA', desc: 'Clips video 30s, talking heads, animations pour vos reseaux.' },
-    { icon: 'phone_iphone', name: 'Reseaux sociaux IA', desc: 'Posts LinkedIn, Twitter, Instagram generes et planifies automatiquement.' },
-    { icon: 'campaign', name: 'Campagnes marketing IA', desc: 'Strategies, contenus et calendrier editorial generes par IA.' },
-  ]},
-  { id: 'gestion', label: 'Gestion', icon: 'bar_chart', tools: [
-    { icon: 'savings', name: 'Comptabilite & finances', desc: 'Suivi tresorerie, factures, depenses et rapports financiers IA.' },
-    { icon: 'group', name: 'Suivi clients & CRM', desc: 'Pipeline commercial, relances automatiques, historique client complet.' },
-    { icon: 'gavel', name: 'Veille juridique IA', desc: 'Alertes reglementaires, analyse de contrats, conformite automatisee.' },
-    { icon: 'person', name: 'RH & recrutement IA', desc: 'Tri de CV, entretiens structures, onboarding automatise.' },
-  ]},
-  { id: 'perso', label: 'Personnel', icon: 'self_improvement', tools: [
-    { icon: 'credit_card', name: 'Budget & depenses perso', desc: 'Suivi de vos finances personnelles, alertes et conseils d\'economie.' },
-    { icon: 'home', name: 'Chasseur immobilier IA', desc: 'Veille immobiliere, alertes, analyse de marche et negociation.' },
-    { icon: 'description', name: 'CV & carriere IA', desc: 'CV optimise, lettres de motivation, preparation d\'entretiens.' },
-    { icon: 'self_improvement', name: 'Coach bien-etre IA', desc: 'Conseils sante, meditation, deconnexion et equilibre vie pro/perso.' },
-  ]},
-];
-
-
-// ═══════════════════════════════════════════════════════════
 export default function LandingPage() {
   const [openFaq, setOpenFaq]               = useState<number | null>(null);
   const [faqCat, setFaqCat]                 = useState(0);
@@ -298,9 +170,8 @@ export default function LandingPage() {
 
   const demo = DEMO_SCENARIOS[demoTab];
 
-  // Audience-aware agents list
-  const displayAgents = config ? config.agents : ALL_AGENTS;
-  // Audience-aware hero
+  // Audience-aware
+  const displayAgents = config ? config.agents : LANDING_AGENTS;
   const heroHeadline = config?.hero.headline;
   const heroSub = config?.hero.subheadline;
   const heroBadge = config?.hero.badge;
@@ -312,7 +183,7 @@ export default function LandingPage() {
       <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
       <main style={{ paddingTop: 108 }}>
 
-        {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
+        {/* ══ HERO ═══════════════════════════════════════════ */}
         <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
@@ -360,13 +231,13 @@ export default function LandingPage() {
 
             <p style={{
               fontSize: 'clamp(14px, 1.8vw, 17px)',
-              color: 'rgba(255,255,255,0.44)',
+              color: 'rgba(255,255,255,0.65)',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
             }}>
               {heroSub ? (
-                <span style={{ color: 'rgba(255,255,255,0.62)' }}>{heroSub}</span>
+                <span style={{ color: 'rgba(255,255,255,0.75)' }}>{heroSub}</span>
               ) : (
-                <><span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents} agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.62)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
+                <><span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.75)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
               )}
             </p>
 
@@ -394,7 +265,7 @@ export default function LandingPage() {
               <Link href="/plans" style={{
                 padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
                 background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.11)',
-                color: 'rgba(255,255,255,0.68)', borderRadius: 10, fontWeight: 600,
+                color: 'rgba(255,255,255,0.78)', borderRadius: 10, fontWeight: 600,
                 fontSize: 'clamp(11px, 3vw, 14px)', textDecoration: 'none',
               }}>
                 Voir les tarifs
@@ -413,8 +284,8 @@ export default function LandingPage() {
                 <div key={i} className="lp-ticker-item lp-activity-chip" style={{ gap: 8, padding: '6px 14px' }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 13 }}>{item.icon}</span>
                   <span style={{ color: item.color, fontWeight: 700, fontSize: 11 }}>{item.agent}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11 }}>{item.text}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: 10 }}>· {item.ago}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: 11 }}>{item.text}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10 }}>· {item.ago}</span>
                 </div>
               ))}
             </div>
@@ -444,7 +315,7 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
                 Vos <span className="fz-accent-word">outils</span>, prêts à l&apos;emploi.
               </h2>
-              <p style={{ color: '#86868b', fontSize: 14 }}>Tout ce dont vous avez besoin, activé en <span className="fz-accent-word">un clic</span>.</p>
+              <p style={{ color: '#666', fontSize: 14 }}>Tout ce dont vous avez besoin, activé en <span className="fz-accent-word">un clic</span>.</p>
             </div>
 
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -452,11 +323,13 @@ export default function LandingPage() {
                 <button
                   key={cat.id}
                   onClick={() => setToolTab(i)}
+                  aria-selected={toolTab === i}
+                  role="tab"
                   style={{
                     padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
                     border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
                     background: toolTab === i ? '#5b6cf7' : '#f0f0f0',
-                    color: toolTab === i ? '#fff' : '#6b7280',
+                    color: toolTab === i ? '#fff' : '#555',
                     boxShadow: toolTab === i ? '0 2px 12px rgba(91,108,247,0.25)' : 'none',
                     transition: 'all 0.2s',
                     display: 'flex', alignItems: 'center', gap: 6,
@@ -489,14 +362,14 @@ export default function LandingPage() {
                         padding: '2px 8px', borderRadius: 20,
                       }}>Inclus</span>
                     </div>
-                    <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{tool.desc}</p>
+                    <p style={{ fontSize: 12, color: '#555', lineHeight: 1.55 }}>{tool.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div style={{ textAlign: 'center', marginTop: 24 }}>
-              <span style={{ fontSize: 12, color: '#9ca3af' }}>
+              <span style={{ fontSize: 12, color: '#888' }}>
                 {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils inclus dans tous les plans
               </span>
             </div>
@@ -513,17 +386,19 @@ export default function LandingPage() {
               </h2>
             </div>
 
-            <div style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 2 }}>
+            <div role="tablist" style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 2 }}>
               {DEMO_SCENARIOS.map((s, i) => (
                 <button
                   key={i}
                   className="lp-demo-tab"
                   onClick={() => setDemoTab(i)}
+                  role="tab"
+                  aria-selected={demoTab === i}
                   style={{
                     padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
                     border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
                     background: demoTab === i ? s.color : 'rgba(255,255,255,0.06)',
-                    color: demoTab === i ? '#fff' : 'rgba(255,255,255,0.45)',
+                    color: demoTab === i ? '#fff' : 'rgba(255,255,255,0.65)',
                     boxShadow: demoTab === i ? `0 0 20px ${s.color}44` : 'none',
                     transition: 'all 0.2s',
                   }}
@@ -546,7 +421,7 @@ export default function LandingPage() {
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ffbe2e', display: 'inline-block' }} />
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.22)', marginLeft: 6 }}>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginLeft: 6 }}>
                   Flashboard · Agent {demo.tab}
                 </span>
               </div>
@@ -556,11 +431,11 @@ export default function LandingPage() {
                     width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
                     background: 'rgba(255,255,255,0.07)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}><span className="material-symbols-rounded" style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>person</span></div>
+                  }}><span className="material-symbols-rounded" style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>person</span></div>
                   <div style={{
                     background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)',
                     borderRadius: '0 12px 12px 12px', padding: '9px 13px',
-                    fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55, maxWidth: 520,
+                    fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 1.55, maxWidth: 520,
                   }}>
                     {demo.prompt}
                   </div>
@@ -591,14 +466,14 @@ export default function LandingPage() {
                           borderRadius: '0 8px 8px 0', padding: '7px 11px',
                           display: 'flex', gap: 10, alignItems: 'baseline',
                         }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: 0.4, flexShrink: 0, minWidth: 58 }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 0.4, flexShrink: 0, minWidth: 58 }}>
                             {line.label}
                           </span>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.68)' }}>{line.text}</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)' }}>{line.text}</span>
                         </div>
                       ))}
                     </div>
-                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>{demo.model}</div>
+                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{demo.model}</div>
                   </div>
                 </div>
               </div>
@@ -610,11 +485,11 @@ export default function LandingPage() {
         <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ca marche</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ça marche</p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
                 <span className="fz-accent-word">Concret</span>. <span className="fz-accent-word">Automatisé</span>. <span className="fz-accent-word">Instantané</span>.
               </h2>
-              <p style={{ color: '#86868b', fontSize: 14 }}>Vos agents traitent tout, <span className="fz-accent-word">24h/24</span>. Voici ce que ça donne.</p>
+              <p style={{ color: '#666', fontSize: 14 }}>Vos agents traitent tout, <span className="fz-accent-word">24h/24</span>. Voici ce que ça donne.</p>
             </div>
 
             {/* Scenarios concrets */}
@@ -623,10 +498,10 @@ export default function LandingPage() {
                 <div key={i} className="lp-app-card">
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, marginBottom: 14 }} />
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</h3>
-                  <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
+                  <p style={{ fontSize: 13, color: '#555', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {s.steps.map((step, j) => (
-                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#4b5563' }}>
+                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#444' }}>
                         <span style={{
                           width: 20, height: 20, borderRadius: '50%',
                           background: `${s.color}14`, color: s.color,
@@ -637,36 +512,16 @@ export default function LandingPage() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 14, fontSize: 11, color: '#9ca3af' }}>{s.tech}</div>
+                  <div style={{ marginTop: 14, fontSize: 11, color: '#888' }}>{s.tech}</div>
                 </div>
               ))}
             </div>
 
-            {/* Technologies intégrées */}
+            {/* Technologies intégrées — carousel */}
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9ca3af', letterSpacing: 3, textTransform: 'uppercase' }}>Propulse par</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#888', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
             </div>
-            <div className="lp-scenario-steps" style={{ gap: 14 }}>
-              {TECH_FEATURES.map((t, i) => (
-                <div key={i} className="lp-app-card" style={{ padding: '20px 22px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{t.title}</h3>
-                  </div>
-                  <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {t.points.map((p, j) => (
-                      <span key={j} style={{
-                        fontSize: 11, color: '#4b5563', background: '#f0f0f0',
-                        padding: '3px 10px', borderRadius: 20,
-                      }}>
-                        {p}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <TechCarousel items={TECH_FEATURES} />
           </div>
         </section>
 
@@ -679,12 +534,12 @@ export default function LandingPage() {
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
                   Vos agents sur <span className="fz-accent-word" style={{ color: '#22c55e' }}>WhatsApp</span>.
                 </h2>
-                <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.65, marginBottom: 20 }}>
+                <p style={{ fontSize: 14, color: '#555', lineHeight: 1.65, marginBottom: 20 }}>
                   Recevez les résumés, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents répondent en <span className="fz-accent-word" style={{ color: '#22c55e' }}>temps réel</span>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#4b5563' }}>
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#444' }}>
                       <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 16 }}>check_circle</span> {f}
                     </div>
                   ))}
@@ -695,7 +550,7 @@ export default function LandingPage() {
                 maxWidth: 340, width: '100%',
               }}>
                 <div style={{ textAlign: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}>Freenzy Assistant</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.8)' }}>Freenzy Assistant</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {WA_MESSAGES.map((msg, i) => (
@@ -707,7 +562,7 @@ export default function LandingPage() {
                       whiteSpace: 'pre-line',
                     }}>
                       {msg.text}
-                      <div style={{ fontSize: 10, color: '#9ca3af', textAlign: 'right', marginTop: 3 }}>{msg.time}</div>
+                      <div style={{ fontSize: 10, color: '#888', textAlign: 'right', marginTop: 3 }}>{msg.time}</div>
                     </div>
                   ))}
                 </div>
@@ -726,7 +581,7 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
                 Créez vos propres <span className="fz-accent-word" style={{ color: '#8b5cf6' }}>modules</span>.
               </h2>
-              <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
+              <p style={{ fontSize: 15, color: '#555', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
                 Chaque entreprise est <span className="fz-accent-word" style={{ color: '#8b5cf6' }}>unique</span>. Créez des modules IA adaptés à votre métier, ou confiez-nous leur conception.
               </p>
             </div>
@@ -741,7 +596,7 @@ export default function LandingPage() {
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
                   Vous créez
                 </h3>
-                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.65, marginBottom: 18 }}>
+                <p style={{ fontSize: 13, color: '#555', lineHeight: 1.65, marginBottom: 18 }}>
                   Depuis votre tableau de bord, définissez un agent personnalisé en quelques minutes : nom, rôle, instructions, ton, et outils connectés.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -751,7 +606,7 @@ export default function LandingPage() {
                     'Connectez vos outils (email, CRM, WhatsApp…)',
                     'Testez et déployez instantanément',
                   ].map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div key={i} style={{ fontSize: 12, color: '#444', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <span className="material-symbols-rounded" style={{ color: '#8b5cf6', fontSize: 14 }}>check_circle</span> {p}
                     </div>
                   ))}
@@ -764,8 +619,8 @@ export default function LandingPage() {
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
                   On crée pour vous
                 </h3>
-                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.65, marginBottom: 18 }}>
-                  Besoin d'un module complexe ou spécifique à votre secteur ? Notre équipe le conçoit, le configure et le déploie dans votre espace.
+                <p style={{ fontSize: 13, color: '#555', lineHeight: 1.65, marginBottom: 18 }}>
+                  Besoin d&apos;un module complexe ou spécifique à votre secteur ? Notre équipe le conçoit, le configure et le déploie dans votre espace.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
@@ -774,7 +629,7 @@ export default function LandingPage() {
                     'Intégrations personnalisées (API, bases de données)',
                     'Formation et accompagnement inclus',
                   ].map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div key={i} style={{ fontSize: 12, color: '#444', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <span className="material-symbols-rounded" style={{ color: '#8b5cf6', fontSize: 14 }}>check_circle</span> {p}
                     </div>
                   ))}
@@ -782,30 +637,26 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Examples */}
+            {/* Examples — CAROUSEL */}
             <div className="lp-app-card" style={{ padding: '24px 28px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
                 Exemples de modules créés par nos utilisateurs
               </p>
-              <div className="lp-custom-examples" style={{
-                display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12,
-              }}>
-                {[
-                  { icon: 'home', name: 'Agent Immobilier', desc: 'Rédige les annonces, qualifie les leads, planifie les visites' },
-                  { icon: 'gavel', name: 'Veille Juridique', desc: 'Surveille les changements réglementaires et alerte en temps réel' },
-                  { icon: 'restaurant', name: 'Maître d\'Hôtel IA', desc: 'Gère les réservations, allergies, menus du jour par WhatsApp' },
-                  { icon: 'package_2', name: 'Suivi Logistique', desc: 'Traque les colis, prévient les retards, notifie les clients' },
-                ].map((ex, i) => (
-                  <div key={i} style={{
+              <Carousel
+                items={CUSTOM_EXAMPLES}
+                autoPlay={3500}
+                renderItem={(ex: typeof CUSTOM_EXAMPLES[0]) => (
+                  <div style={{
                     padding: '16px 14px', borderRadius: 12,
                     background: '#fafafa', border: '1px solid #f0f0f0',
+                    minHeight: 120,
                   }}>
                     <span className="material-symbols-rounded" style={{ fontSize: 22, marginBottom: 8, display: 'block' }}>{ex.icon}</span>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{ex.name}</div>
-                    <div style={{ fontSize: 11, color: '#6b7280', lineHeight: 1.55 }}>{ex.desc}</div>
+                    <div style={{ fontSize: 11, color: '#555', lineHeight: 1.55 }}>{ex.desc}</div>
                   </div>
-                ))}
-              </div>
+                )}
+              />
             </div>
           </div>
         </section>
@@ -820,23 +671,16 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5 }}>
                 L&apos;IA <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>accessible</span> à tous.
               </h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
                 Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>complète</span>, <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>gratuite</span>, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous.
               </p>
             </div>
             <div className="lp-scenario-steps" style={{ gap: 16 }}>
-              {[
-                { icon: 'diamond', title: '0% de commission', desc: 'Vous payez le prix officiel des fournisseurs IA. Pas de markup, pas de marge cachée. Ce que ça coûte réellement, c\'est ce que vous payez.', color: '#22c55e' },
-                { icon: 'lock_open', title: 'Aucun abonnement', desc: 'Pas de forfait mensuel, pas d\'engagement. Vous rechargez des crédits quand vous en avez besoin. Vos crédits n\'expirent jamais.', color: '#f59e0b' },
-                { icon: 'language', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#5b6cf7' },
-                { icon: 'flag', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
-                { icon: 'bolt', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
-                { icon: 'smart_toy', title: '34 agents + 48 templates', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, data, produit, qualité, RSE, design, formation, innovation, international… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
-              ].map((item, i) => (
+              {WHY_FREENZY.map((item, i) => (
                 <div key={i} className="lp-app-card-dark">
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block' }}>{item.icon}</span>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{item.title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>{item.desc}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -847,16 +691,10 @@ export default function LandingPage() {
               marginTop: 40, paddingTop: 32,
               borderTop: '1px solid rgba(255,255,255,0.06)',
             }}>
-              {[
-                { icon: 'lock', text: 'Chiffrement AES-256' },
-                { icon: 'verified_user', text: 'Serveurs EU · RGPD' },
-                { icon: 'credit_card', text: 'Paiement Stripe PCI' },
-                { icon: 'shield', text: '2FA · TOTP' },
-                { icon: 'bar_chart', text: 'Audit logs complets' },
-              ].map((badge, i) => (
+              {TRUST_BADGES.map((badge, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'center', gap: 7,
-                  fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.28)',
+                  fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
                 }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 15 }}>{badge.icon}</span>
                   {badge.text}
@@ -881,13 +719,13 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1 }}>
                 <span className="fz-accent-word" style={{ color: '#f97316' }}>{TOTAL_FAQ_COUNT}</span> réponses à vos questions.
               </h2>
-              <p style={{ fontSize: 14, color: '#86868b', marginTop: 8 }}>
+              <p style={{ fontSize: 14, color: '#666', marginTop: 8 }}>
                 Tout ce que vous devez savoir sur Freenzy.io, classé par thème.
               </p>
             </div>
 
             {/* Category tabs */}
-            <div style={{
+            <div role="tablist" style={{
               display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center',
               marginBottom: 28, padding: '0 8px',
             }}>
@@ -895,12 +733,14 @@ export default function LandingPage() {
                 <button
                   key={cat.id}
                   onClick={() => { setFaqCat(ci); setOpenFaq(null); }}
+                  role="tab"
+                  aria-selected={faqCat === ci}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 5,
                     padding: '10px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700, minHeight: 44,
                     border: 'none', cursor: 'pointer',
                     background: faqCat === ci ? cat.color : '#fff',
-                    color: faqCat === ci ? '#fff' : '#6b7280',
+                    color: faqCat === ci ? '#fff' : '#555',
                     boxShadow: faqCat === ci ? `0 2px 12px ${cat.color}33` : '0 1px 3px rgba(0,0,0,0.04)',
                     transition: 'all 0.2s',
                   }}
@@ -928,7 +768,7 @@ export default function LandingPage() {
               <span style={{ fontSize: 14, fontWeight: 800, color: orderedFaq[faqCat].color }}>
                 {orderedFaq[faqCat].label}
               </span>
-              <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>
+              <span style={{ fontSize: 12, color: '#888', marginLeft: 'auto' }}>
                 {orderedFaq[faqCat].questions.length} questions
               </span>
             </div>
@@ -960,7 +800,7 @@ export default function LandingPage() {
                         width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
                         background: isOpen ? catColor : '#f0f0f0',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
+                        fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#888',
                         transition: 'all 0.2s',
                       }}>
                         {isOpen ? '−' : '+'}
@@ -1004,8 +844,8 @@ export default function LandingPage() {
               Votre équipe IA<br />
               <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>vous attend.</span>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 32 }}>
-              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents} agents IA</span>. Toutes les IA du marché. <span style={{ color: '#a5b4fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 32 }}>
+              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents}+ agents IA</span>. Toutes les IA du marché. <span style={{ color: '#a5b4fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
             </p>
             <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
               display: 'inline-block', padding: '15px 40px',
@@ -1016,7 +856,7 @@ export default function LandingPage() {
               {heroCta?.label || 'Commencer gratuitement'}
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
-              <Link href="/plans" style={{ color: 'rgba(255,255,255,0.28)', textDecoration: 'none' }}>Tarifs détaillés →</Link>
+              <Link href="/plans" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Tarifs détaillés →</Link>
             </div>
           </div>
         </section>

@@ -1743,6 +1743,23 @@ a { color: inherit; text-decoration: none; }
   /* Hero smaller padding */
   .lp-hero-checkmarks { gap: 10px !important; font-size: 10px !important; }
   .lp-hero-checkmarks span { font-size: 10px !important; }
+
+  /* Carousel: 2 cols on phone */
+  .lp-carousel-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ═══ Carousel fade animation ═══ */
+@keyframes lp-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Carousel responsive */
+@media (max-width: 768px) {
+  .lp-carousel-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 480px) {
+  .lp-carousel-grid { grid-template-columns: 1fr !important; }
 }
 
 /* Extra-small ≤ 374px */

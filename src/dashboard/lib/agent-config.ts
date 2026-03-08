@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════
 //   FREENZY.IO — Flashboard Agent Config Module
-//   Source unique de vérité pour les 34 agents (22 business + 12 personnels)
+//   100 agents (22 business + 12 personal + 66 extended in agent-config-extended.ts)
 // ═══════════════════════════════════════════════════
 
 // ─── Types ───
@@ -2022,8 +2022,8 @@ export const COMMISSION_TIERS = [
 
 export const SIGNUP_BONUS_CREDITS = 50;
 
-// 34 core agents = 22 business + 12 personnels
-export const TOTAL_AGENTS_DISPLAY = 34;
+// 100 core agents = 22 business + 12 personal + 38 extended business + 28 extended personal
+export const TOTAL_AGENTS_DISPLAY = 100;
 // Marketplace templates (separate from core agents)
 export const MARKETPLACE_TEMPLATES_COUNT = 48;
 

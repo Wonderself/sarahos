@@ -184,6 +184,8 @@ export class CronService {
       check_alarms:                  () => this.checkAlarms(),
       check_referral_qualifications: () => this.checkReferralQualifications(),
       check_batch_results:           () => this.checkPendingBatches(),
+      action_reminders:              () => this.checkActionReminders(),
+      action_due_alerts:             () => this.checkOverdueActions(),
       autopilot_daily_audit:         () => this.runAutopilotDailyAudit(),
       autopilot_proposal_reminder:   () => this.remindPendingProposals(),
       autopilot_proposal_expire:     () => this.expireStaleProposals(),

@@ -84,8 +84,8 @@ export default function AudioPlayback({ text, gender = 'F', voice, size = 'sm' }
         width: btnSize, height: btnSize, borderRadius: '50%', border: 'none',
         cursor: loading ? 'default' : 'pointer',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: playing ? '#5b6cf722' : 'transparent',
-        color: playing ? '#5b6cf7' : error ? '#ef4444' : 'var(--text-muted)',
+        background: playing ? '#7c3aed22' : 'transparent',
+        color: playing ? '#7c3aed' : error ? '#ef4444' : 'var(--text-muted)',
         transition: 'all 0.2s ease',
         fontFamily: 'var(--font-sans)',
       }}

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import PublicNav from '@/components/PublicNav';
 import PublicFooter from '@/components/PublicFooter';
 
@@ -462,7 +463,7 @@ export default function VsAlternativesPage() {
             Rejoignez les premiers utilisateurs et bénéficiez de 50 crédits offerts
             pour tester tous les agents.
           </p>
-          <a
+          <Link
             href="/register"
             style={{
               display: 'inline-flex',
@@ -483,7 +484,7 @@ export default function VsAlternativesPage() {
             <span className="material-symbols-rounded" style={{ fontSize: 20 }}>
               arrow_forward
             </span>
-          </a>
+          </Link>
         </div>
       </section>
 

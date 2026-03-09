@@ -128,7 +128,7 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
           onCancel={() => setPreview(null)}
         />
         {uploading && (
-          <div style={{ fontSize: 12, color: '#5b6cf7', marginTop: 8, textAlign: 'center' }}>
+          <div style={{ fontSize: 12, color: '#7c3aed', marginTop: 8, textAlign: 'center' }}>
             Sauvegarde en cours...
           </div>
         )}
@@ -147,7 +147,7 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
         onDrop={handleDrop}
         onClick={() => fileRef.current?.click()}
         style={{
-          border: `2px dashed ${dragOver ? '#5b6cf7' : '#e5e7eb'}`,
+          border: `2px dashed ${dragOver ? '#7c3aed' : '#e5e7eb'}`,
           borderRadius: 10,
           padding: '20px 16px',
           textAlign: 'center',
@@ -164,7 +164,7 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
           style={{ display: 'none' }}
         />
         {uploading ? (
-          <div style={{ fontSize: 13, color: '#5b6cf7' }}>Analyse du document...</div>
+          <div style={{ fontSize: 13, color: '#7c3aed' }}>Analyse du document...</div>
         ) : (
           <>
             <div style={{ fontSize: 22, marginBottom: 6 }}>+</div>

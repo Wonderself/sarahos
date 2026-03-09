@@ -70,8 +70,8 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
         {!hasProfile && (
           <div style={{
             padding: '12px 14px', marginBottom: 14, borderRadius: 10,
-            background: 'linear-gradient(135deg, #5b6cf70a, #8b7cf808)',
-            border: '1px solid #5b6cf725',
+            background: 'linear-gradient(135deg, #7c3aed0a, #06b6d408)',
+            border: '1px solid #7c3aed25',
           }}>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, marginBottom: 4 }}>
               Configurons votre profil !

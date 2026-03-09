@@ -108,7 +108,7 @@ export default function MarketplaceCreatePage() {
   // ─── Styles
   const cardBg = 'rgba(255,255,255,0.04)';
   const borderColor = 'rgba(255,255,255,0.08)';
-  const accent = '#5b6cf7';
+  const accent = '#7c3aed';
   const catColor = CATEGORY_COLORS[category] || accent;
 
   return (

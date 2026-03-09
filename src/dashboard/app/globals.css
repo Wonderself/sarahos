@@ -192,7 +192,7 @@ a { color: inherit; text-decoration: none; }
   width: 32px;
   height: 32px;
   border-radius: var(--radius-md);
-  background: var(--gw-gradient, linear-gradient(135deg, var(--accent), #8b7cf8));
+  background: var(--gw-gradient, linear-gradient(135deg, #7c3aed, #06b6d4));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -400,7 +400,7 @@ a { color: inherit; text-decoration: none; }
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--gw-gradient, linear-gradient(135deg, #5b6cf7, #8b7cf8));
+  background: var(--gw-gradient, linear-gradient(135deg, #7c3aed, #06b6d4));
   display: flex;
   align-items: center;
   justify-content: center;

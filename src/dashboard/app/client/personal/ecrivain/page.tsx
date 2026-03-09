@@ -45,7 +45,7 @@ const STATUS_LABELS: Record<ProjectStatus, string> = {
   draft: 'Brouillon', in_progress: 'En cours', revision: 'Révision', completed: 'Terminé', paused: 'Pause',
 };
 const STATUS_COLORS: Record<ProjectStatus, string> = {
-  draft: '#6b7280', in_progress: '#3b82f6', revision: '#f59e0b', completed: '#22c55e', paused: '#8b7cf8',
+  draft: '#6b7280', in_progress: '#3b82f6', revision: '#f59e0b', completed: '#22c55e', paused: '#06b6d4',
 };
 const CHAPTER_STATUS_LABELS: Record<ChapterStatus, string> = { draft: 'Brouillon', revision: 'Révision', final: 'Final' };
 const CHAPTER_STATUS_COLORS: Record<ChapterStatus, string> = { draft: '#6b7280', revision: '#f59e0b', final: '#22c55e' };

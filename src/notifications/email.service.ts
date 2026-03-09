@@ -130,7 +130,7 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<boo
       </a>
     </div>
     <p style="font-size:13px;color:#9ca3af;line-height:1.6;">
-      Vous avez des questions ? Repondez simplement a cet email, notre equipe est la pour vous.
+      Des questions ? Contactez-nous sur <a href="${config.APP_URL}/demo" style="color:#7c3aed;">notre page d'aide</a>.
     </p>
   `;
 

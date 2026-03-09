@@ -82,7 +82,7 @@ export default function PushPermissionBanner() {
         {/* Icon */}
         <span
           className="material-symbols-rounded"
-          style={{ fontSize: 28, color: '#5b6cf7', flexShrink: 0 }}
+          style={{ fontSize: 28, color: '#7c3aed', flexShrink: 0 }}
         >
           notifications_active
         </span>
@@ -119,7 +119,7 @@ export default function PushPermissionBanner() {
           <button
             onClick={handleActivate}
             style={{
-              background: '#5b6cf7',
+              background: '#7c3aed',
               border: 'none',
               borderRadius: 8,
               padding: '7px 16px',
@@ -130,7 +130,7 @@ export default function PushPermissionBanner() {
               transition: 'background 0.2s',
             }}
             onMouseEnter={(e) => { (e.target as HTMLElement).style.background = '#4f5fe0'; }}
-            onMouseLeave={(e) => { (e.target as HTMLElement).style.background = '#5b6cf7'; }}
+            onMouseLeave={(e) => { (e.target as HTMLElement).style.background = '#7c3aed'; }}
           >
             Activer
           </button>

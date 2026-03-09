@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import PublicNav from '@/components/PublicNav';
 import PublicFooter from '@/components/PublicFooter';
 import { CASE_STUDIES } from '@/lib/case-studies-data';
@@ -442,7 +443,7 @@ export default function CasImmobilierPage() {
 
       {/* CTA */}
       <section style={{ padding: '0 24px 120px', textAlign: 'center' }}>
-        <a
+        <Link
           href="/register"
           style={{
             display: 'inline-flex',
@@ -463,7 +464,7 @@ export default function CasImmobilierPage() {
           <span className="material-symbols-rounded" style={{ fontSize: 20 }}>
             arrow_forward
           </span>
-        </a>
+        </Link>
       </section>
 
       <PublicFooter />

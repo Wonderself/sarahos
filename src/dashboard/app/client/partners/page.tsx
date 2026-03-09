@@ -45,7 +45,7 @@ const PARTNER_CATEGORIES = [
         category: 'B2B2C Ultra-innovant',
         description: 'Solution marketing B2B2C de nouvelle generation. Automatisation, acquisition, fidélisation et analytics avances. Connectez-vous directement a la plateforme EYO.',
         emoji: 'rocket_launch',
-        color: '#5b6cf7',
+        color: '#7c3aed',
         url: 'https://eyo-app.com',
       },
     ] as Partner[],

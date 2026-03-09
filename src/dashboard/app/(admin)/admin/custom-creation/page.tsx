@@ -60,7 +60,7 @@ export default async function AdminCustomCreationPage() {
         {[
           { label: 'Total demandes', value: String(quotes.length), color: '#1d1d1f' },
           { label: 'Nouvelles', value: String(quotes.filter(q => q.status === 'new').length), color: '#d97706' },
-          { label: 'En cours', value: String(quotes.filter(q => ['reviewing', 'quoted', 'in_progress'].includes(q.status)).length), color: '#5b6cf7' },
+          { label: 'En cours', value: String(quotes.filter(q => ['reviewing', 'quoted', 'in_progress'].includes(q.status)).length), color: '#7c3aed' },
           { label: 'Terminees', value: String(quotes.filter(q => ['accepted', 'completed'].includes(q.status)).length), color: '#16a34a' },
         ].map(s => (
           <div key={s.label} style={{ padding: '16px', background: '#f5f5f7', borderRadius: 10, textAlign: 'center' }}>

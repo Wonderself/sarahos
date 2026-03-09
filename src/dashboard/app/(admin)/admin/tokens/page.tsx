@@ -161,14 +161,14 @@ export default async function TokensPage() {
               title: 'Configurer la concision des agents',
               desc: 'Dans Agent Studio, réglez "Longueur de réponse" à 0-30 (concis). Moins de tokens output = moins de crédits.',
               saving: 'Économie : jusqu\'à -60% output tokens',
-              color: '#5b6cf7',
+              color: '#7c3aed',
             },
             {
               icon: 'business',
               title: 'Remplir le profil entreprise',
               desc: 'Un profil complet évite les questions de clarification. L\'agent comprend directement le contexte = moins d\'échanges.',
               saving: 'Économie : -30% d\'échanges en moyenne',
-              color: '#8b7cf8',
+              color: '#06b6d4',
             },
             {
               icon: 'wb_sunny',

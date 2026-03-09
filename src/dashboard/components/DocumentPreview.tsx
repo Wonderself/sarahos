@@ -119,7 +119,7 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
               <button
                 onClick={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
                 style={{
-                  fontSize: 10, color: '#5b6cf7', background: 'none', border: 'none',
+                  fontSize: 10, color: '#7c3aed', background: 'none', border: 'none',
                   cursor: 'pointer', padding: '2px 6px',
                 }}
               >
@@ -165,7 +165,7 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
             disabled={selected.size === 0}
             style={{
               padding: '8px 16px', borderRadius: 8, border: 'none',
-              background: selected.size > 0 ? '#5b6cf7' : '#94a3b8',
+              background: selected.size > 0 ? '#7c3aed' : '#94a3b8',
               color: 'white', fontSize: 12, fontWeight: 600,
               cursor: selected.size > 0 ? 'pointer' : 'not-allowed',
             }}

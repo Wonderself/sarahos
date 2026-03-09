@@ -4,16 +4,15 @@ import { useState } from 'react';
 import QuoteForm from './QuoteForm';
 
 const FEATURES = [
-  { icon: '&#x1F3E2;', text: 'Instance dediee sur nos serveurs' },
+  { icon: '&#x1F3E0;', text: 'Instance dediee — infrastructure isolee pour grandes entreprises' },
   { icon: '&#x1F310;', text: 'Domaine personnalise (votre-entreprise.freenzy.io)' },
   { icon: '&#x1F511;', text: 'Vos propres cles API Anthropic' },
   { icon: '&#x1F512;', text: 'Isolation complete des donnees' },
-  { icon: '&#x2B50;', text: 'Support prioritaire & SLA garanti' },
+  { icon: '&#x2B50;', text: 'Support prioritaire 24/7' },
+  { icon: '&#x1F4CB;', text: 'SLA garanti — disponibilite et temps de reponse contractuels' },
   { icon: '&#x1F3A8;', text: 'Personnalisation agents & branding' },
   { icon: '&#x1F393;', text: 'Formation equipe incluse' },
   { icon: '&#x1F6E1;', text: '100% securise — aucun code source partage' },
-  { icon: '&#x1F3E0;', text: 'Instance dediee — infrastructure isolee pour grandes entreprises' },
-  { icon: '&#x1F4CB;', text: 'SLA garanti — disponibilite et temps de reponse contractuels' },
   { icon: '&#x1F3F7;', text: 'White-label disponible — votre marque, votre identite' },
 ];
 

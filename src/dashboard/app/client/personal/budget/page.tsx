@@ -36,7 +36,7 @@ const CAT_LABELS: Record<TxCategory, string> = {
   income: 'Revenu', expense: 'Dépense', savings: 'Épargne', investment: 'Investissement',
 };
 const CAT_COLORS: Record<TxCategory, string> = {
-  income: '#22c55e', expense: '#ef4444', savings: '#3b82f6', investment: '#8b7cf8',
+  income: '#22c55e', expense: '#ef4444', savings: '#3b82f6', investment: '#06b6d4',
 };
 const CAT_ICONS: Record<TxCategory, string> = {
   income: 'savings', expense: 'money_off', savings: 'account_balance', investment: 'trending_up',

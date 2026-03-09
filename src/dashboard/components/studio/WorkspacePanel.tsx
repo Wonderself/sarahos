@@ -37,7 +37,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
       height: '100%', overflowY: 'auto', padding: 20, background: '#fafafa',
     }}>
       <div style={{
-        fontSize: 11, fontWeight: 600, color: '#5b6cf7', textTransform: 'uppercase',
+        fontSize: 11, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase',
         letterSpacing: 1, marginBottom: 6,
       }}>
         {step.title}
@@ -144,7 +144,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
                 disabled={!props.costConfirmed || !props.script.trim()}
                 style={{
                   padding: '14px 32px', borderRadius: 10, border: 'none',
-                  background: props.costConfirmed ? '#5b6cf7' : '#d1d5db',
+                  background: props.costConfirmed ? '#7c3aed' : '#d1d5db',
                   color: 'white', fontSize: 14, fontWeight: 600,
                   cursor: props.costConfirmed ? 'pointer' : 'not-allowed',
                 }}

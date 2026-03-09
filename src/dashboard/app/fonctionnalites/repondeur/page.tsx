@@ -90,6 +90,7 @@ const FAQS = [
 
 export default function RepondeurPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [missedCalls, setMissedCalls] = useState(15);
 
   const sectionStyle: React.CSSProperties = {
     maxWidth: 1100,
@@ -175,6 +176,60 @@ export default function RepondeurPage() {
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14.5, lineHeight: 1.65 }}>{feat.desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Temps économisé */}
+      <section style={{ padding: '80px 24px', maxWidth: 900, margin: '0 auto' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 16 }}>
+          Combien de temps gagnez-vous ?
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Comparez votre quotidien sans et avec Freenzy.
+        </p>
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+          {/* Sans Freenzy */}
+          <div style={{ flex: '1 1 260px', maxWidth: 320, background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 16, padding: '32px 28px', textAlign: 'center' }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 44, color: '#ef4444', marginBottom: 16, display: 'block' }}>phone_missed</span>
+            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: '#ef4444' }}>Sans Freenzy</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '12px 16px' }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: '#ef4444' }}>15 min</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>par appel manqué</div>
+              </div>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0 }}>Rappeler, qualifier, noter</p>
+              <div style={{ background: 'rgba(239,68,68,0.1)', borderRadius: 10, padding: '12px 16px' }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: '#ef4444' }}>~4h / semaine</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>perdues</div>
+              </div>
+            </div>
+          </div>
+          {/* Arrow */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed' }}>arrow_forward</span>
+          </div>
+          {/* Avec Freenzy */}
+          <div style={{ flex: '1 1 260px', maxWidth: 320, background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.15)', borderRadius: 16, padding: '32px 28px', textAlign: 'center' }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 44, color: '#22c55e', marginBottom: 16, display: 'block' }}>smart_toy</span>
+            <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: '#22c55e' }}>Avec Freenzy</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '12px 16px' }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: '#22c55e' }}>0 min</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>d&apos;effort</div>
+              </div>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0 }}>L&apos;IA qualifie + résume + notifie</p>
+              <div style={{ background: 'rgba(34,197,94,0.1)', borderRadius: 10, padding: '12px 16px' }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: '#22c55e' }}>4h récupérées</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>/ semaine</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Bottom stat */}
+        <div style={{ marginTop: 40, textAlign: 'center', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)', borderRadius: 16, padding: '24px 28px', maxWidth: 700, marginLeft: 'auto', marginRight: 'auto' }}>
+          <div style={{ fontSize: 'clamp(16px, 3vw, 20px)', fontWeight: 700, color: '#fff' }}>
+            Sur 1 an = <span style={{ color: '#7c3aed' }}>200+ heures</span> récupérées = <span style={{ color: '#22c55e' }}>~5 000€</span> de productivité
+          </div>
         </div>
       </section>
 
@@ -267,6 +322,26 @@ export default function RepondeurPage() {
         </div>
       </section>
 
+      {/* Sécurité & Conformité — Trust Badges */}
+      <section style={{ padding: '80px 24px', maxWidth: 900, margin: '0 auto' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 48 }}>
+          Confiance & Conformité
+        </h2>
+        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {[
+            { icon: 'verified_user', label: 'RGPD Confiant', color: '#22c55e' },
+            { icon: 'enhanced_encryption', label: 'Données chiffrées', color: '#06b6d4' },
+            { icon: 'dns', label: 'Serveurs EU', color: '#7c3aed' },
+            { icon: 'fingerprint', label: 'Signature Twilio HMAC', color: '#f59e0b' },
+          ].map((badge, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 100, padding: '12px 24px' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 22, color: badge.color }}>{badge.icon}</span>
+              <span style={{ fontWeight: 700, fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>{badge.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* FAQ */}
       <section style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
@@ -289,6 +364,110 @@ export default function RepondeurPage() {
               )}
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Calculateur de ROI */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
+          Calculateur de ROI
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Estimez combien vous perdez chaque mois en appels manqués.
+        </p>
+        <div style={{ maxWidth: 600, margin: '0 auto', ...cardStyle, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
+          <label style={{ display: 'block', fontWeight: 600, fontSize: 15, marginBottom: 16 }}>
+            Combien d&apos;appels manqués par mois ?
+          </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
+            <input
+              type="range"
+              min={1}
+              max={100}
+              value={missedCalls}
+              onChange={(e) => setMissedCalls(Number(e.target.value))}
+              style={{ flex: 1, accentColor: '#5b6cf7' }}
+            />
+            <span style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7', minWidth: 50, textAlign: 'right' }}>{missedCalls}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>Manque à gagner ({missedCalls} x 85€)</span>
+              <span style={{ fontWeight: 700, fontSize: 18, color: '#ef4444' }}>{(missedCalls * 85).toLocaleString('fr-FR')} €</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.2)', borderRadius: 10 }}>
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>Coût Freenzy ({missedCalls} x 5 cr x 0.05€)</span>
+              <span style={{ fontWeight: 700, fontSize: 18, color: '#5b6cf7' }}>{(missedCalls * 5 * 0.05).toFixed(2).replace('.', ',')} €</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10 }}>
+              <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, fontWeight: 600 }}>Économie nette / mois</span>
+              <span style={{ fontWeight: 800, fontSize: 24, color: '#22c55e' }}>{(missedCalls * 85 - missedCalls * 5 * 0.05).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sécurité & Conformité */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
+          Sécurité & Conformité
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Vos données et celles de vos clients sont protégées à chaque instant.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, maxWidth: 900, margin: '0 auto' }}>
+          {[
+            { icon: 'verified_user', title: 'RGPD conforme', desc: 'Données hébergées en EU' },
+            { icon: 'enhanced_encryption', title: 'Chiffrement AES-256', desc: 'Appels et données chiffrés de bout en bout' },
+            { icon: 'shield', title: 'Isolation des données', desc: 'Chaque compte est cloisonné' },
+            { icon: 'auto_delete', title: 'Pas de rétention', desc: 'Données supprimées après 90 jours' },
+          ].map((item, i) => (
+            <div key={i} style={{ ...cardStyle, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', textAlign: 'center', padding: '28px 20px' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#22c55e', marginBottom: 12, display: 'block' }}>{item.icon}</span>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{item.title}</h3>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.5 }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Vs secrétaire traditionnelle */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
+          Vs secrétaire traditionnelle
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Comparez et faites le bon choix pour votre entreprise.
+        </p>
+        <div style={{ maxWidth: 800, margin: '0 auto', overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, background: 'rgba(255,255,255,0.04)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <thead>
+              <tr>
+                <th style={{ padding: '18px 20px', textAlign: 'left', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Critère</th>
+                <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Secrétaire</th>
+                <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#5b6cf7', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Freenzy Répondeur</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { criteria: 'Disponibilité', secretary: 'Lun-Ven 9h-18h', freenzy: '24/7/365' },
+                { criteria: 'Coût mensuel', secretary: '2 500€+', freenzy: '~15€/mois (300 appels)' },
+                { criteria: 'Temps de réponse', secretary: 'Variable', freenzy: '< 2 secondes' },
+                { criteria: 'Qualification leads', secretary: 'Manuelle', freenzy: 'Automatique + scoring' },
+                { criteria: 'Résumé WhatsApp', secretary: 'Non', freenzy: 'Instantané' },
+                { criteria: 'Langues', secretary: '1-2', freenzy: '12+' },
+              ].map((row, i) => (
+                <tr key={i} style={{ borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  <td style={{ padding: '14px 20px', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>{row.criteria}</td>
+                  <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>{row.secretary}</td>
+                  <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#22c55e' }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 6 }}>check_circle</span>
+                    {row.freenzy}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 

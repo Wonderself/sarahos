@@ -244,6 +244,67 @@ export default function DocumentsPage() {
         </div>
       </section>
 
+      {/* Types de documents — expanded grid */}
+      <section style={{ padding: '80px 24px', maxWidth: 1100, margin: '0 auto' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 16 }}>
+          Tous les types de documents
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          12 catégories couvrant tous vos besoins professionnels.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 18, maxWidth: 1000, margin: '0 auto' }}>
+          {[
+            { icon: 'request_quote', title: 'Devis commercial', credits: 3 },
+            { icon: 'handshake', title: 'Contrat de prestation', credits: 5 },
+            { icon: 'lock', title: 'NDA / Confidentialité', credits: 4 },
+            { icon: 'gavel', title: 'CGV', credits: 4 },
+            { icon: 'policy', title: 'CGU', credits: 4 },
+            { icon: 'privacy_tip', title: 'Mentions légales RGPD', credits: 3 },
+            { icon: 'assignment', title: 'Lettre de mission', credits: 3 },
+            { icon: 'receipt_long', title: 'Facture détaillée', credits: 3 },
+            { icon: 'sell', title: 'Proposition commerciale', credits: 4 },
+            { icon: 'groups', title: 'PV de réunion', credits: 2 },
+            { icon: 'assessment', title: "Rapport d'activité", credits: 4 },
+            { icon: 'person', title: 'CV professionnel', credits: 3 },
+          ].map((doc, i) => (
+            <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '22px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 30, color: '#7c3aed', flexShrink: 0 }}>{doc.icon}</span>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 0, margin: 0 }}>{doc.title}</h3>
+              </div>
+              <div style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 700, color: '#a78bfa', whiteSpace: 'nowrap' }}>
+                ~{doc.credits} cr
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Qualité professionnelle */}
+      <section style={{ padding: '80px 24px', maxWidth: 900, margin: '0 auto' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 16 }}>
+          Qualité professionnelle
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Des documents prêts à signer, pas des brouillons.
+        </p>
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {[
+            { icon: 'gavel', title: 'Structure juridique', desc: 'Numérotation articles, clauses types, références croisées. Chaque document suit les normes de rédaction juridique.' },
+            { icon: 'tune', title: 'Personnalisation auto', desc: 'Votre SIRET, nom, adresse injectés automatiquement. Plus besoin de remplir manuellement vos coordonnées.' },
+            { icon: 'picture_as_pdf', title: 'Export pro', desc: "PDF avec en-tête, pied de page, numérotation. Résultat impeccable, prêt à envoyer à vos clients." },
+          ].map((item, i) => (
+            <div key={i} style={{ flex: '1 1 260px', maxWidth: 320, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '32px 28px', textAlign: 'center' }}>
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(124,58,237,0.12)', border: '2px solid rgba(124,58,237,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#7c3aed' }}>{item.icon}</span>
+              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 10 }}>{item.title}</h3>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Pricing */}
       <section style={sectionStyle}>
         <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.15)' }}>
@@ -296,6 +357,99 @@ export default function DocumentsPage() {
                   {faq.a}
                 </div>
               )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Types de documents */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
+          Types de documents
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          12 catégories de documents professionnels, prêts en quelques secondes.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 18, maxWidth: 1000, margin: '0 auto' }}>
+          {[
+            { icon: 'handshake', title: 'Contrat commercial', desc: 'Clauses adaptées, mentions légales' },
+            { icon: 'lock', title: 'NDA / Confidentialité', desc: 'Protection propriété intellectuelle' },
+            { icon: 'gavel', title: 'CGV', desc: 'Conditions générales de vente conformes' },
+            { icon: 'policy', title: 'CGU', desc: "Conditions d'utilisation pour sites web" },
+            { icon: 'request_quote', title: 'Devis professionnel', desc: 'Calculs TTC/HT automatiques' },
+            { icon: 'receipt_long', title: 'Facture', desc: 'Numérotation, TVA, mentions obligatoires' },
+            { icon: 'assignment', title: 'Lettre de mission', desc: 'Cadrage périmètre, honoraires' },
+            { icon: 'sell', title: 'Proposition commerciale', desc: 'Offre structurée avec chiffrage' },
+            { icon: 'groups', title: 'PV de réunion', desc: 'Décisions, actions, prochaines étapes' },
+            { icon: 'mail', title: 'Email professionnel', desc: 'Ton adapté au contexte' },
+            { icon: 'assessment', title: "Rapport d'activité", desc: 'KPIs, analyses, recommandations' },
+            { icon: 'person', title: 'CV / Lettre de motivation', desc: 'Templates modernes' },
+          ].map((doc, i) => (
+            <div key={i} style={{ ...cardStyle, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', padding: '22px 20px' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 30, color: '#a78bfa', marginBottom: 10, display: 'block' }}>{doc.icon}</span>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>{doc.title}</h3>
+              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, lineHeight: 1.5, margin: 0 }}>{doc.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Sécurité & Conformité */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
+          Sécurité & Conformité
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Vos documents sont protégés à chaque étape.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20, maxWidth: 960, margin: '0 auto' }}>
+          {[
+            { icon: 'verified_user', title: 'RGPD conforme', desc: 'Données hébergées en EU' },
+            { icon: 'enhanced_encryption', title: 'Chiffrement AES-256', desc: 'Documents chiffrés de bout en bout' },
+            { icon: 'shield', title: 'Isolation des données', desc: 'Chaque compte est cloisonné' },
+            { icon: 'auto_delete', title: 'Pas de rétention', desc: 'Données supprimées après 90 jours' },
+            { icon: 'visibility_off', title: 'Aucune donnée partagée avec l\'IA', desc: 'Vos documents restent confidentiels' },
+          ].map((item, i) => (
+            <div key={i} style={{ ...cardStyle, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', textAlign: 'center', padding: '28px 20px' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#22c55e', marginBottom: 12, display: 'block' }}>{item.icon}</span>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{item.title}</h3>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.5 }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Structure professionnelle garantie */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
+          Structure professionnelle garantie
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
+          Chaque document généré inclut une structure complète et conforme.
+        </p>
+        <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {[
+            { icon: 'badge', text: 'En-tête avec vos coordonnées' },
+            { icon: 'format_list_numbered', text: 'Numérotation automatique (Article 1, 1.1, 1.1.1)' },
+            { icon: 'library_books', text: 'Clauses types (force majeure, RGPD, confidentialité)' },
+            { icon: 'footer', text: 'Pied de page légal avec pagination' },
+            { icon: 'picture_as_pdf', text: 'Export PDF avec mise en page soignée' },
+          ].map((item, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, position: 'relative', paddingLeft: 24 }}>
+              {/* Vertical line */}
+              {i < 4 && (
+                <div style={{ position: 'absolute', left: 39, top: 40, width: 2, height: 'calc(100% - 16px)', background: 'rgba(124,58,237,0.2)' }} />
+              )}
+              {/* Circle with check */}
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(124,58,237,0.15)', border: '2px solid rgba(124,58,237,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#a78bfa' }}>check</span>
+              </div>
+              <div style={{ padding: '6px 0 28px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#a78bfa' }}>{item.icon}</span>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>{item.text}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>

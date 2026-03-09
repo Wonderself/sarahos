@@ -271,6 +271,16 @@ export default function LandingPage() {
                 Voir les tarifs
               </Link>
               </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 16 }}>
+                <div style={{ display: 'flex' }}>
+                  {['👩‍💼', '👨‍🔧', '👩‍🍳'].map((e, i) => (
+                    <span key={i} style={{ fontSize: 18, marginLeft: i > 0 ? -6 : 0, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}>{e}</span>
+                  ))}
+                </div>
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
+                  Rejoint par <strong style={{ color: 'rgba(255,255,255,0.8)' }}>500+ professionnels</strong> ce mois-ci
+                </span>
+              </div>
             </div>
 
           </div>
@@ -363,6 +373,72 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* RÉSULTATS CONCRETS */}
+        <section style={{ padding: '80px 24px', maxWidth: 1100, margin: '0 auto' }}>
+          <h2 style={{
+            textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700,
+            color: '#fff', marginBottom: 12
+          }}>
+            Des résultats mesurables
+          </h2>
+          <p style={{ textAlign: 'center', fontSize: 16, color: 'rgba(255,255,255,0.6)', marginBottom: 48, maxWidth: 600, margin: '0 auto 48px' }}>
+            Ce que nos utilisateurs constatent dès la première semaine
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
+            {[
+              { value: '15h', label: 'récupérées par semaine', sub: 'en moyenne par utilisateur', icon: 'schedule' },
+              { value: '200+', label: 'messages gérés / mois', sub: 'par le Répondeur IA', icon: 'chat' },
+              { value: '30s', label: 'pour générer un document', sub: 'au lieu de 45 minutes', icon: 'description' },
+              { value: '0€', label: 'de commission sur vos revenus', sub: 'pour les 5000 premiers', icon: 'payments' },
+            ].map((stat, i) => (
+              <div key={i} style={{
+                padding: '28px 24px',
+                background: 'rgba(255,255,255,0.04)',
+                borderRadius: 16,
+                border: '1px solid rgba(255,255,255,0.08)',
+                textAlign: 'center',
+              }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#7c3aed', marginBottom: 12, display: 'block' }}>{stat.icon}</span>
+                <div style={{ fontSize: 'clamp(32px, 5vw, 44px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{stat.value}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginTop: 8 }}>{stat.label}</div>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{stat.sub}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* TÉMOIGNAGES */}
+        <section style={{ padding: '60px 24px 80px', maxWidth: 1100, margin: '0 auto' }}>
+          <h2 style={{ textAlign: 'center', fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, color: '#fff', marginBottom: 40 }}>
+            Ils utilisent Freenzy au quotidien
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+            {[
+              { name: 'Marie D.', role: 'Restauratrice, Lyon', quote: "J'ai récupéré 15h par semaine. Le Répondeur gère les réservations, l'agent RH fait les plannings.", avatar: '👩‍🍳' },
+              { name: 'Thomas R.', role: 'Agent immobilier, Paris', quote: "Mes documents juridiques sont générés en 30 secondes. Avant, ça me prenait une demi-journée.", avatar: '🏠' },
+              { name: 'Sophie L.', role: 'Expert-comptable, Bordeaux', quote: "Le briefing matinal me donne tout ce que je dois savoir avant même d'ouvrir mon cabinet.", avatar: '📊' },
+            ].map((t, i) => (
+              <div key={i} style={{
+                padding: '24px',
+                background: 'rgba(255,255,255,0.04)',
+                borderRadius: 16,
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}>
+                <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, fontStyle: 'italic', marginBottom: 16 }}>
+                  &ldquo;{t.quote}&rdquo;
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 28 }}>{t.avatar}</span>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{t.name}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

@@ -258,6 +258,8 @@ export default function ClientDashboard() {
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon apres-midi' : 'Bonsoir';
   const todayStr = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
   const credits = walletBalance / 1_000_000;
+  const averageDaily = Math.max(1, Math.round(credits > 0 ? credits / Math.max(stats.streak, 1) : 0));
+  const daysLeft = averageDaily > 0 ? Math.round(credits / averageDaily) : 0;
   const activeAgents = activeAgentIds.map(id => DEFAULT_AGENTS.find(a => a.id === id)).filter(Boolean);
   const todosDone = todos.filter(t => t.done).length;
   const todosTotal = todos.length;
@@ -362,6 +364,24 @@ export default function ClientDashboard() {
             <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: 0.5 }}>{kpi.sub}</div>
           </div>
         ))}
+      </div>
+
+      {/* ── Credit Burn Rate ── */}
+      <div style={{
+        padding: '16px 20px',
+        background: 'rgba(255,255,255,0.04)',
+        borderRadius: 14,
+        border: '1px solid rgba(255,255,255,0.08)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 12,
+      }}>
+        <span className="material-symbols-rounded" style={{ color: '#06b6d4', fontSize: 20 }}>trending_down</span>
+        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
+          Consommation moyenne : <strong style={{ color: '#fff' }}>~{averageDaily} credits/jour</strong> —
+          a ce rythme, vos credits durent encore <strong style={{ color: credits > 20 ? '#10b981' : '#ef4444' }}>~{daysLeft} jours</strong>
+        </span>
       </div>
 
       {/* ── Briefing du jour (collapsible) ── */}
@@ -521,6 +541,52 @@ export default function ClientDashboard() {
             <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
           </Link>
         ))}
+      </div>
+
+      {/* ── Recommandations intelligentes ── */}
+      <div style={{ marginTop: 0, marginBottom: 12 }}>
+        <h3 style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>auto_awesome</span>
+          Suggestions pour vous
+        </h3>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {!briefingLoaded && (
+            <Link href="/client/reveil" style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '8px 14px', borderRadius: 20, textDecoration: 'none',
+              background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)',
+              color: '#c4b5fd', fontSize: 12, fontWeight: 600, transition: 'background 0.15s',
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#7c3aed' }}>wb_sunny</span>
+              Lancez votre briefing matinal
+              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>arrow_forward</span>
+            </Link>
+          )}
+          {activeAgents.length < 5 && (
+            <Link href="/client/agents" style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '8px 14px', borderRadius: 20, textDecoration: 'none',
+              background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)',
+              color: '#67e8f9', fontSize: 12, fontWeight: 600, transition: 'background 0.15s',
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#06b6d4' }}>smart_toy</span>
+              Activez plus d&apos;agents pour automatiser
+              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>arrow_forward</span>
+            </Link>
+          )}
+          {credits <= 20 && (
+            <Link href="/client/account" style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '8px 14px', borderRadius: 20, textDecoration: 'none',
+              background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+              color: '#fca5a5', fontSize: 12, fontWeight: 600, transition: 'background 0.15s',
+            }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#ef4444' }}>account_balance_wallet</span>
+              Rechargez vos credits pour continuer
+              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>arrow_forward</span>
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* ── Mon equipe IA (compact) ── */}

@@ -216,11 +216,11 @@ export default function LandingPage() {
   return (
     <>
       <PublicNav />
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
       <main style={{ paddingTop: 0 }}>
 
         {/* ══ HERO + TICKERS viewport wrapper ═══════════════ */}
         <div className="lp-hero-viewport">
-        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
 
         {/* ══ HERO ═══════════════════════════════════════════ */}
         <section ref={heroRef} style={{

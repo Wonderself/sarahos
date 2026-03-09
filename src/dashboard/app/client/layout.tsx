@@ -418,10 +418,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     window.addEventListener('storage', onStorage);
 
     // ── New features init ──
-    // Quick onboarding
-    if (!localStorage.getItem('fz_quick_onboarding_done')) {
-      setShowQuickOnboarding(true);
-    }
+    // Quick onboarding — disabled: the FreenzyWelcome popup handles first-time guidance
+    // if (!localStorage.getItem('fz_quick_onboarding_done')) {
+    //   setShowQuickOnboarding(true);
+    // }
     // Push permission banner
     if (!localStorage.getItem('fz_push_permission_asked') && 'Notification' in window && Notification.permission === 'default') {
       setShowPushBanner(true);

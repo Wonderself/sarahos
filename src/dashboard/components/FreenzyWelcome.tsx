@@ -35,55 +35,55 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
     <div className="welcome-overlay" onClick={onDismiss}>
       <div className="welcome-card" onClick={e => e.stopPropagation()}>
         {/* Logo + Greeting — compact */}
-        <div style={{ textAlign: 'center', marginBottom: 16 }}>
-          <div className="fz-logo-text" style={{ fontSize: 20, margin: '0 auto 10px', color: 'var(--accent)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 12 }}>
+          <div className="fz-logo-text" style={{ fontSize: 18, margin: '0 auto 6px', color: 'var(--accent)' }}>
             freenzy.io
           </div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 2 }}>
             {greeting}, {userName || 'cher client'} !
           </h2>
-          <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: 380, margin: '0 auto' }}>
+          <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: 380, margin: '0 auto' }}>
             Votre equipe de <span className="fz-logo-word">{agentDetails.length} agents IA</span> est prete.
           </p>
         </div>
 
         {/* Agents preview — scrollable row */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
-          {agentDetails.slice(0, 12).map(a => (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 4, marginBottom: 10, flexWrap: 'wrap' }}>
+          {agentDetails.slice(0, 10).map(a => (
             <div key={a.id} title={a.role} style={{
-              width: 30, height: 30, borderRadius: 8,
+              width: 26, height: 26, borderRadius: 6,
               background: a.color + '22', border: `1px solid ${a.color}44`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 15, color: a.color }}>{a.materialIcon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 13, color: a.color }}>{a.materialIcon}</span>
             </div>
           ))}
-          {agentDetails.length > 12 && (
+          {agentDetails.length > 10 && (
             <div style={{
-              width: 30, height: 30, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'var(--bg-tertiary)', fontSize: 10, fontWeight: 700, color: 'var(--text-muted)',
-            }}>+{agentDetails.length - 12}</div>
+              width: 26, height: 26, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'var(--bg-tertiary)', fontSize: 9, fontWeight: 700, color: 'var(--text-muted)',
+            }}>+{agentDetails.length - 10}</div>
           )}
         </div>
 
         {/* Onboarding CTA */}
         {!hasProfile && (
           <div style={{
-            padding: '12px 14px', marginBottom: 14, borderRadius: 10,
+            padding: '10px 12px', marginBottom: 10, borderRadius: 10,
             background: 'linear-gradient(135deg, #7c3aed0a, #06b6d408)',
             border: '1px solid #7c3aed25',
           }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, marginBottom: 4 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, marginBottom: 2 }}>
               Configurons votre profil !
             </div>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 10 }}>
-              C&apos;est la que <span className="fz-logo-word">l&apos;IA</span> montre sa vraie puissance. Plus vos agents connaissent votre entreprise, plus leurs reponses sont precises et personnalisees. 5 minutes qui changent tout.
+            <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 8 }}>
+              Plus vos agents connaissent votre entreprise, plus leurs réponses sont précises. <strong>5 minutes</strong> qui changent tout.
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <Link href="/client/onboarding" onClick={onDismiss} className="btn btn-primary" style={{ fontSize: 13, padding: '8px 18px' }}>
+              <Link href="/client/onboarding" onClick={onDismiss} className="btn btn-primary" style={{ fontSize: 12, padding: '6px 16px' }}>
                 Configurer
               </Link>
-              <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+              <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
                 Plus tard
               </button>
             </div>
@@ -91,26 +91,26 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
         )}
 
         {/* Quick actions — 2x2 grid */}
-        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+        <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
           Que souhaitez-vous faire ?
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 10 }}>
           {QUICK_ACTIONS.map(action => (
             <Link
               key={action.label}
               href={action.href}
               onClick={onDismiss}
               style={{
-                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px',
-                borderRadius: 10, background: 'var(--bg-primary)',
+                display: 'flex', alignItems: 'center', gap: 6, padding: '8px 10px',
+                borderRadius: 8, background: 'var(--bg-primary)',
                 border: '1px solid var(--border-primary)', textDecoration: 'none', color: 'inherit',
                 transition: 'border-color 0.15s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 20, color: 'var(--accent)', flexShrink: 0 }}>{action.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--accent)', flexShrink: 0 }}>{action.icon}</span>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{action.label}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{action.desc}</div>
+                <div style={{ fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{action.label}</div>
+                <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>{action.desc}</div>
               </div>
             </Link>
           ))}
@@ -118,7 +118,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
 
         {/* Dismiss */}
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+          <button onClick={onDismiss} className="btn btn-ghost" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
             Passer et aller au dashboard
           </button>
         </div>

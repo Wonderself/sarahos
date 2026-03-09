@@ -382,7 +382,8 @@ export default function LandingPage() {
         </section>
 
         {/* RÉSULTATS CONCRETS */}
-        <section style={{ padding: '80px 24px', maxWidth: 1100, margin: '0 auto' }}>
+        <section style={{ background: '#0a0a0f', padding: 'clamp(40px, 5vw, 80px) 24px' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{
             textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700,
             color: '#fff', marginBottom: 12
@@ -413,18 +414,20 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          </div>
         </section>
 
         {/* TÉMOIGNAGES */}
-        <section style={{ padding: '60px 24px 80px', maxWidth: 1100, margin: '0 auto' }}>
+        <section style={{ background: '#111118', padding: 'clamp(40px, 5vw, 60px) 24px' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{ textAlign: 'center', fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, color: '#fff', marginBottom: 40 }}>
             Ils utilisent Freenzy au quotidien
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
             {[
-              { name: 'Marie D.', role: 'Restauratrice, Lyon', quote: "J'ai récupéré 15h par semaine. Le Répondeur gère les réservations, l'agent RH fait les plannings.", avatar: '👩‍🍳' },
-              { name: 'Thomas R.', role: 'Agent immobilier, Paris', quote: "Mes documents juridiques sont générés en 30 secondes. Avant, ça me prenait une demi-journée.", avatar: '🏠' },
-              { name: 'Sophie L.', role: 'Expert-comptable, Bordeaux', quote: "Le briefing matinal me donne tout ce que je dois savoir avant même d'ouvrir mon cabinet.", avatar: '📊' },
+              { name: 'Marie D.', role: 'Restauratrice, Lyon', quote: "J'ai récupéré 15h par semaine. Le Répondeur gère les réservations, l'agent RH fait les plannings.", icon: 'restaurant', color: '#f97316' },
+              { name: 'Thomas R.', role: 'Agent immobilier, Paris', quote: "Mes documents juridiques sont générés en 30 secondes. Avant, ça me prenait une demi-journée.", icon: 'home', color: '#3b82f6' },
+              { name: 'Sophie L.', role: 'Expert-comptable, Bordeaux', quote: "Le briefing matinal me donne tout ce que je dois savoir avant même d'ouvrir mon cabinet.", icon: 'bar_chart', color: '#22c55e' },
             ].map((t, i) => (
               <div key={i} style={{
                 padding: '24px',
@@ -436,7 +439,13 @@ export default function LandingPage() {
                   &ldquo;{t.quote}&rdquo;
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 28 }}>{t.avatar}</span>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: '50%',
+                    background: `${t.color}18`, border: `1px solid ${t.color}33`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: t.color }}>{t.icon}</span>
+                  </div>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{t.name}</div>
                     <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{t.role}</div>
@@ -444,6 +453,7 @@ export default function LandingPage() {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </section>
 

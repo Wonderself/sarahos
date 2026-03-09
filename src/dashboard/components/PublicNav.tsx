@@ -10,10 +10,16 @@ const NAV_LINKS = [
 ];
 
 const FEATURE_LINKS = [
-  { href: '/fonctionnalites/repondeur', label: 'Répondeur IA', icon: 'smart_toy' },
-  { href: '/fonctionnalites/documents', label: 'Générateur de documents', icon: 'description' },
-  { href: '/fonctionnalites/social', label: 'Pilotage réseaux sociaux', icon: 'share' },
+  { href: '/fonctionnalites/repondeur', label: 'Répondeur IA 24/7', icon: 'call' },
+  { href: '/fonctionnalites/documents', label: 'Documents & contrats IA', icon: 'description' },
+  { href: '/fonctionnalites/social', label: 'Réseaux sociaux IA', icon: 'share' },
   { href: '/fonctionnalites/reveil', label: 'Briefing matinal', icon: 'wb_sunny' },
+  { href: '/demo#technologies', label: 'Studio Créatif (Photo/Vidéo)', icon: 'movie' },
+  { href: '/demo#whatsapp', label: 'WhatsApp Business IA', icon: 'chat' },
+  { href: '/fonctionnalites/agents', label: '100+ Agents IA', icon: 'smart_toy' },
+  { href: '/fonctionnalites/discussions', label: 'Discussions profondes', icon: 'psychology' },
+  { href: '/fonctionnalites/arcade', label: 'Arcade & Gamification', icon: 'sports_esports' },
+  { href: '/fonctionnalites/marketplace', label: 'Marketplace (50 templates)', icon: 'storefront' },
 ];
 
 export default function PublicNav() {
@@ -116,7 +122,7 @@ export default function PublicNav() {
                 onMouseLeave={handleFeaturesLeave}
                 style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-                  marginTop: 8, minWidth: 260,
+                  marginTop: 8, minWidth: 300, maxHeight: 420, overflowY: 'auto',
                   background: '#14141b', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 12, padding: '8px',
                   boxShadow: '0 16px 48px rgba(0,0,0,0.4)',

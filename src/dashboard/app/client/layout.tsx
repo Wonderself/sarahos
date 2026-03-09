@@ -82,10 +82,33 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
       { href: '/client/referrals', icon: 'redeem', label: 'Parrainer', visible: true, order: 3 },
       { href: '/client/rewards', icon: 'card_giftcard', label: 'Récompenses', visible: true, order: 4 },
       { href: '/client/activity', icon: 'history', label: "Journal d'activité", visible: true, order: 5 },
-      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 6 },
+      { href: '/client/timeline', icon: 'timeline', label: 'Timeline', visible: true, order: 6 },
+      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 7 },
     ],
   },
 ];
+
+const DIVERTISSEMENT_SECTION: SectionConfig = {
+  id: 'divertissement',
+  title: 'Divertissement',
+  visible: true,
+  order: 3,
+  items: [
+    { href: '/client/games', icon: 'sports_esports', label: 'Arcade', visible: true, order: 0 },
+    { href: '/client/games/create', icon: 'add_circle', label: 'Créer un jeu', visible: true, order: 1 },
+    { href: '/client/games/community', icon: 'groups', label: 'Communauté', visible: true, order: 2 },
+  ],
+};
+
+const DEVELOPPEUR_SECTION: SectionConfig = {
+  id: 'developpeur',
+  title: 'Développeur',
+  visible: true,
+  order: 10,
+  items: [
+    { href: '/client/widget', icon: 'code', label: 'Widget', visible: true, order: 0 },
+  ],
+};
 
 const AGENTS_PERSONNELS_SECTION: SectionConfig = {
   id: 'agents-perso',
@@ -136,11 +159,17 @@ function buildDefaultSections(isPro: boolean): SectionConfig[] {
   const disc: SectionConfig = JSON.parse(JSON.stringify(DISCUSSIONS_SECTION));
   disc.order = base.length;
   base.push(disc);
+  const divert: SectionConfig = JSON.parse(JSON.stringify(DIVERTISSEMENT_SECTION));
+  divert.order = base.length;
+  base.push(divert);
   if (isPro) {
     const ent: SectionConfig = JSON.parse(JSON.stringify(MON_ENTREPRISE_SECTION));
     ent.order = base.length;
     base.push(ent);
   }
+  const dev: SectionConfig = JSON.parse(JSON.stringify(DEVELOPPEUR_SECTION));
+  dev.order = base.length;
+  base.push(dev);
   return base;
 }
 
@@ -162,6 +191,16 @@ function loadMenuSections(desktop: boolean, isPro: boolean): SectionConfig[] {
           const disc: SectionConfig = JSON.parse(JSON.stringify(DISCUSSIONS_SECTION));
           disc.order = sections.length;
           sections.push(disc);
+        }
+        if (!sections.find(s => s.id === 'divertissement')) {
+          const divert: SectionConfig = JSON.parse(JSON.stringify(DIVERTISSEMENT_SECTION));
+          divert.order = sections.length;
+          sections.push(divert);
+        }
+        if (!sections.find(s => s.id === 'developpeur')) {
+          const dev: SectionConfig = JSON.parse(JSON.stringify(DEVELOPPEUR_SECTION));
+          dev.order = sections.length;
+          sections.push(dev);
         }
         if (isPro && !sections.find(s => s.id === 'entreprise')) {
           const ent: SectionConfig = JSON.parse(JSON.stringify(MON_ENTREPRISE_SECTION));

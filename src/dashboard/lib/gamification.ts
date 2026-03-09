@@ -121,7 +121,7 @@ function checkAchievements(state: GamificationState): { state: GamificationState
 }
 
 export interface XPEvent {
-  type: 'message' | 'document' | 'meeting' | 'profile_complete' | 'recruit_agent' | 'customize_agent' | 'agent_bond_levelup' | 'agent_feedback';
+  type: 'message' | 'document' | 'meeting' | 'profile_complete' | 'recruit_agent' | 'customize_agent' | 'agent_bond_levelup' | 'agent_feedback' | 'game_played' | 'game_high_score';
   tokens?: number;
   cost?: number;
 }
@@ -135,6 +135,8 @@ const XP_REWARDS: Record<string, number> = {
   customize_agent: 40,
   agent_bond_levelup: 30,
   agent_feedback: 5,
+  game_played: 5,
+  game_high_score: 15,
 };
 
 export function recordEvent(event: XPEvent): { state: GamificationState; leveledUp: boolean; newAchievements: string[] } {

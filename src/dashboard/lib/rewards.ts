@@ -230,6 +230,32 @@ export const REWARD_ACTIONS: RewardAction[] = [
     description: 'Effectuez votre premier dépôt de crédits',
     icon: 'savings', credits: 10, category: 'milestone', oneTime: true,
   },
+
+  // GAMES — Arcade
+  {
+    id: 'play_first_game',
+    label: 'Première partie',
+    description: 'Jouez votre première partie dans l\'Arcade',
+    icon: 'sports_esports', credits: 5, category: 'engagement', oneTime: true,
+  },
+  {
+    id: 'play_10_games',
+    label: '10 parties jouées',
+    description: 'Jouez 10 parties dans l\'Arcade — vous êtes accro !',
+    icon: 'stadia_controller', credits: 15, category: 'milestone', oneTime: true,
+  },
+  {
+    id: 'daily_challenge_streak_7',
+    label: '7 défis quotidiens',
+    description: 'Complétez le défi du jour 7 jours d\'affilée',
+    icon: 'local_fire_department', credits: 20, category: 'milestone', oneTime: true,
+  },
+  {
+    id: 'download_qr',
+    label: 'Télécharger le QR code',
+    description: 'Téléchargez votre QR code de parrainage',
+    icon: 'qr_code', credits: 3, category: 'engagement', oneTime: true,
+  },
 ];
 
 // ─── Category metadata

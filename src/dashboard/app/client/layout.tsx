@@ -80,8 +80,9 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
       { href: '/client/analytics', icon: 'analytics', label: 'Analytics', visible: true, order: 1 },
       { href: '/client/finances', icon: 'credit_card', label: 'Finances', visible: true, order: 2 },
       { href: '/client/referrals', icon: 'redeem', label: 'Parrainer', visible: true, order: 3 },
-      { href: '/client/activity', icon: 'history', label: "Journal d'activité", visible: true, order: 4 },
-      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 5 },
+      { href: '/client/rewards', icon: 'card_giftcard', label: 'Récompenses', visible: true, order: 4 },
+      { href: '/client/activity', icon: 'history', label: "Journal d'activité", visible: true, order: 5 },
+      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 6 },
     ],
   },
 ];

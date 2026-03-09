@@ -89,9 +89,7 @@ export default function CreateGamePage() {
       setMessage('Jeu généré avec succès !');
     }, 1500);
 
-    // Log the prompt that would be sent to AI
-    const _aiPrompt = buildGamePrompt(prompt, type);
-    void _aiPrompt;
+    // In production, buildGamePrompt(prompt, type) would be sent to AI API
   }, [prompt, type]);
 
   const handlePublish = useCallback(() => {
@@ -110,7 +108,7 @@ export default function CreateGamePage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f', padding: '32px 24px' }}>
+    <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
@@ -133,7 +131,7 @@ export default function CreateGamePage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#8b5cf6' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed' }}>
             auto_awesome
           </span>
           <div>
@@ -156,12 +154,12 @@ export default function CreateGamePage() {
                 onClick={() => setType(opt.value)}
                 style={{
                   flex: 1,
-                  background: type === opt.value ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.04)',
-                  border: `1px solid ${type === opt.value ? '#8b5cf6' : 'rgba(255,255,255,0.08)'}`,
+                  background: type === opt.value ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${type === opt.value ? '#7c3aed' : 'rgba(255,255,255,0.08)'}`,
                   borderRadius: 10,
                   padding: '12px 16px',
                   cursor: 'pointer',
-                  color: type === opt.value ? '#8b5cf6' : 'rgba(255,255,255,0.5)',
+                  color: type === opt.value ? '#7c3aed' : 'rgba(255,255,255,0.5)',
                   fontSize: 13,
                   fontWeight: 600,
                   display: 'flex',
@@ -189,7 +187,7 @@ export default function CreateGamePage() {
             rows={4}
             style={{
               width: '100%',
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(255,255,255,0.05)',
               border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: 10,
               padding: '14px 16px',
@@ -208,7 +206,7 @@ export default function CreateGamePage() {
           onClick={handleGenerate}
           disabled={!prompt.trim() || generating}
           style={{
-            background: generating ? 'rgba(139,92,246,0.3)' : 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+            background: generating ? 'rgba(124,58,237,0.3)' : 'linear-gradient(135deg, #7c3aed, #06b6d4)',
             color: '#fff',
             border: 'none',
             borderRadius: 10,
@@ -233,8 +231,8 @@ export default function CreateGamePage() {
         {message && (
           <div
             style={{
-              background: published ? 'rgba(34,197,94,0.1)' : 'rgba(139,92,246,0.1)',
-              color: published ? '#22c55e' : '#8b5cf6',
+              background: published ? 'rgba(34,197,94,0.1)' : 'rgba(124,58,237,0.1)',
+              color: published ? '#22c55e' : '#7c3aed',
               padding: '10px 16px',
               borderRadius: 10,
               fontSize: 13,
@@ -257,10 +255,10 @@ export default function CreateGamePage() {
                 <div
                   key={i}
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
+                    background: 'rgba(255,255,255,0.05)',
                     borderRadius: 10,
                     padding: '14px 16px',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.08)',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -287,9 +285,9 @@ export default function CreateGamePage() {
                           fontSize: 11,
                           padding: '3px 10px',
                           borderRadius: 6,
-                          background: c === q.answer ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.04)',
+                          background: c === q.answer ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)',
                           color: c === q.answer ? '#22c55e' : 'rgba(255,255,255,0.5)',
-                          border: c === q.answer ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.06)',
+                          border: c === q.answer ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
                         {c}

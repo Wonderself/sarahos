@@ -91,6 +91,8 @@ export function loadRatings(): Record<string, { rating: number; ratedAt: string 
 }
 
 export function rateGame(gameId: string, rating: number): void {
+  // Validate rating bounds
+  rating = Math.max(1, Math.min(5, Math.round(rating)));
   // Save user's rating
   const ratings = loadRatings();
   ratings[gameId] = { rating, ratedAt: new Date().toISOString() };

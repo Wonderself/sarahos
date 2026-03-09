@@ -262,7 +262,7 @@ export default function ModulesSurMesurePage() {
           {/* Become a creator CTA */}
           <div className="card mt-24" style={{
             padding: 24, textAlign: 'center',
-            background: 'linear-gradient(135deg, var(--accent-muted), #8b7cf815)',
+            background: 'linear-gradient(135deg, var(--accent-muted), #06b6d415)',
             border: '1px solid var(--accent)',
           }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>lightbulb</span></div>
@@ -287,7 +287,7 @@ export default function ModulesSurMesurePage() {
           {/* AI advantage banner */}
           <div className="card mb-20" style={{
             padding: 20,
-            background: 'linear-gradient(135deg, #5b6cf708, #8b7cf808)',
+            background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)',
             border: '1px solid var(--accent)',
           }}>
             <div className="flex items-center gap-8 mb-8">

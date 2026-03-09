@@ -115,7 +115,7 @@ const SCENARIO_TEMPLATES = [
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 const CLASSIF_COLORS: Record<string, string> = {
-  urgent: '#ef4444', vip: '#f59e0b', order: '#5b6cf7', complaint: '#f97316',
+  urgent: '#ef4444', vip: '#f59e0b', order: '#7c3aed', complaint: '#f97316',
   appointment: '#0ea5e9', faq: '#10b981', family: '#ec4899', spam: '#94a3b8',
   general: '#64748b', blocked: '#dc2626',
 };
@@ -148,7 +148,7 @@ function timeAgo(iso: string): string {
 }
 
 // ── Shared sub-components ─────────────────────────────────────────────────────
-function StatCard({ icon, value, label, color = '#5b6cf7' }: { icon: string; value: number | string; label: string; color?: string }) {
+function StatCard({ icon, value, label, color = '#7c3aed' }: { icon: string; value: number | string; label: string; color?: string }) {
   return (
     <div style={{
       background: 'var(--bg-elevated)', borderRadius: 12, padding: '16px 20px',
@@ -173,7 +173,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
         disabled={saving}
         style={{
           padding: '8px 20px', borderRadius: 8, border: 'none',
-          background: saving ? '#c7d2fe' : '#5b6cf7', color: 'white',
+          background: saving ? '#c4b5fd' : '#7c3aed', color: 'white',
           fontSize: 13, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
         }}
       >
@@ -261,7 +261,7 @@ export default function RepondeurPage() {
   if (loading) {
     return (
       <div style={{ padding: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #5b6cf7', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #7c3aed', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
         <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>Chargement du répondeur...</span>
       </div>
     );
@@ -300,10 +300,10 @@ export default function RepondeurPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 700,
-                  background: wizardStep >= s ? '#5b6cf7' : 'var(--bg-secondary)',
+                  background: wizardStep >= s ? '#7c3aed' : 'var(--bg-secondary)',
                   color: wizardStep >= s ? 'white' : 'var(--text-muted)',
                 }}>{s}</div>
-                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#5b6cf7' : 'var(--border-primary)' }} />}
+                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#7c3aed' : 'var(--border-primary)' }} />}
               </div>
             ))}
           </div>
@@ -322,8 +322,8 @@ export default function RepondeurPage() {
                   onClick={() => setWizardScenario(s.id)}
                   style={{
                     padding: 16, borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    border: `2px solid ${wizardScenario === s.id ? '#5b6cf7' : 'var(--border-primary)'}`,
-                    background: wizardScenario === s.id ? '#eef2ff' : 'var(--bg-elevated)',
+                    border: `2px solid ${wizardScenario === s.id ? '#7c3aed' : 'var(--border-primary)'}`,
+                    background: wizardScenario === s.id ? '#f3eeff' : 'var(--bg-elevated)',
                     transition: 'all 0.15s',
                   }}
                 >
@@ -339,7 +339,7 @@ export default function RepondeurPage() {
                 disabled={!wizardScenario}
                 style={{
                   padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: wizardScenario ? '#5b6cf7' : 'var(--border-primary)',
+                  background: wizardScenario ? '#7c3aed' : 'var(--border-primary)',
                   color: wizardScenario ? 'white' : 'var(--text-muted)',
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
                 }}
@@ -381,7 +381,7 @@ export default function RepondeurPage() {
               <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
-              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: '#5b6cf7', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: '#7c3aed', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                 Continuer →
               </button>
             </div>
@@ -412,7 +412,7 @@ export default function RepondeurPage() {
                 </div>
               </div>
             </div>
-            <div style={{ background: '#eef2ff', borderRadius: 10, padding: 14, fontSize: 12, color: '#4338ca', marginBottom: 20 }}>
+            <div style={{ background: '#f3eeff', borderRadius: 10, padding: 14, fontSize: 12, color: '#4338ca', marginBottom: 20 }}>
               <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Après activation, vous pouvez tout personnaliser : modes, styles, FAQ, VIP, planning...
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
@@ -424,7 +424,7 @@ export default function RepondeurPage() {
                 disabled={saving}
                 style={{
                   padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: saving ? '#c7d2fe' : '#10b981', color: 'white',
+                  background: saving ? '#c4b5fd' : '#10b981', color: 'white',
                   fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
                 }}
               >
@@ -489,9 +489,9 @@ export default function RepondeurPage() {
               style={{
                 padding: '8px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
                 background: tab === t.id ? 'var(--bg-elevated)' : 'transparent',
-                color: tab === t.id ? '#5b6cf7' : 'var(--text-secondary)',
+                color: tab === t.id ? '#7c3aed' : 'var(--text-secondary)',
                 borderRadius: '8px 8px 0 0',
-                borderBottom: tab === t.id ? '2px solid #5b6cf7' : '2px solid transparent',
+                borderBottom: tab === t.id ? '2px solid #7c3aed' : '2px solid transparent',
               }}
             >
               <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{t.icon}</span> {t.label}
@@ -564,7 +564,7 @@ function OverviewTab({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 800 }}>
       {/* Stat cards */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <StatCard icon="chat" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#5b6cf7" />
+        <StatCard icon="chat" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#7c3aed" />
         <StatCard icon="storefront" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#f59e0b" />
         <StatCard icon="emergency" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#ef4444" />
         <StatCard icon="star" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#10b981" />
@@ -589,7 +589,7 @@ function OverviewTab({
           </div>
         </div>
         {config.greetingMessage && (
-          <div style={{ marginTop: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 8, fontSize: 12, color: 'var(--text-secondary)', borderLeft: '3px solid #5b6cf7' }}>
+          <div style={{ marginTop: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 8, fontSize: 12, color: 'var(--text-secondary)', borderLeft: '3px solid #7c3aed' }}>
             "{config.greetingMessage}"
           </div>
         )}
@@ -617,7 +617,7 @@ function OverviewTab({
               disabled={!testMessage.trim()}
               style={{
                 padding: '8px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600,
-                background: testMessage.trim() ? '#5b6cf7' : 'var(--border-primary)',
+                background: testMessage.trim() ? '#7c3aed' : 'var(--border-primary)',
                 color: testMessage.trim() ? 'white' : 'var(--text-muted)',
                 cursor: testMessage.trim() ? 'pointer' : 'not-allowed',
               }}
@@ -707,8 +707,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onClick={() => applyPreset(p)}
               style={{
                 padding: '6px 14px', borderRadius: 20, border: '1px solid var(--border-primary)',
-                background: mode === p.mode ? '#eef2ff' : 'var(--bg-elevated)',
-                color: mode === p.mode ? '#5b6cf7' : 'var(--text-secondary)',
+                background: mode === p.mode ? '#f3eeff' : 'var(--bg-elevated)',
+                color: mode === p.mode ? '#7c3aed' : 'var(--text-secondary)',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}
             >
@@ -728,8 +728,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onClick={() => { setMode(m.value); markChanged(); }}
               style={{
                 padding: '12px 10px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
-                border: `2px solid ${mode === m.value ? '#5b6cf7' : 'var(--border-primary)'}`,
-                background: mode === m.value ? '#eef2ff' : 'var(--bg-secondary)',
+                border: `2px solid ${mode === m.value ? '#7c3aed' : 'var(--border-primary)'}`,
+                background: mode === m.value ? '#f3eeff' : 'var(--bg-secondary)',
               }}
             >
               <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{m.icon}</span></div>
@@ -747,8 +747,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>palette</span> Style de réponse</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {STYLES.map(s => (
-              <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? '#eef2ff' : 'transparent' }}>
-                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#5b6cf7' }} />
+              <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? '#f3eeff' : 'transparent' }}>
+                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#7c3aed' }} />
                 <span style={{ fontSize: 12, fontWeight: style === s.value ? 600 : 400 }}>{s.label}</span>
               </label>
             ))}
@@ -916,7 +916,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
             style={{
               padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
               background: subTab === id ? 'var(--bg-elevated)' : 'transparent',
-              color: subTab === id ? '#5b6cf7' : 'var(--text-secondary)',
+              color: subTab === id ? '#7c3aed' : 'var(--text-secondary)',
               boxShadow: subTab === id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
@@ -937,7 +937,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
               <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none' }} />
               <div style={{ display: 'flex', gap: 8 }}>
                 <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border-primary)', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
-                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#5b6cf7' : 'var(--border-primary)', color: newQ && newA ? 'white' : 'var(--text-muted)', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
+                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#7c3aed' : 'var(--border-primary)', color: newQ && newA ? 'white' : 'var(--text-muted)', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
               </div>
             </div>
           </div>
@@ -1075,7 +1075,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
         {([['messages', 'chat', 'Messages', messages.length], ['orders', 'storefront', 'Commandes', orders.length], ['summaries', 'assignment', 'Résumés', summaries.length]] as [string, string, string, number][]).map(([id, icon, label, count]) => (
-          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#5b6cf7' : 'var(--border-primary)'}`, background: inboxTab === id ? '#eef2ff' : 'var(--bg-elevated)', color: inboxTab === id ? '#5b6cf7' : 'var(--text-secondary)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
+          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#7c3aed' : 'var(--border-primary)'}`, background: inboxTab === id ? '#f3eeff' : 'var(--bg-elevated)', color: inboxTab === id ? '#7c3aed' : 'var(--text-secondary)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
             <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{icon}</span> {label} <span style={{ background: 'var(--border-primary)', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
@@ -1086,11 +1086,11 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Filter chips */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#5b6cf7' : 'var(--border-primary)'}`, background: msgFilter === 'all' ? '#eef2ff' : 'var(--bg-elevated)', color: msgFilter === 'all' ? '#5b6cf7' : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#7c3aed' : 'var(--border-primary)'}`, background: msgFilter === 'all' ? '#f3eeff' : 'var(--bg-elevated)', color: msgFilter === 'all' ? '#7c3aed' : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
               Tous ({messages.length})
             </button>
             {Object.entries(classifCounts).map(([c, n]) => (
-              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#5b6cf7' : 'var(--border-primary)'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#5b6cf7'}12` : 'var(--bg-elevated)', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#5b6cf7') : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#7c3aed' : 'var(--border-primary)'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#7c3aed'}12` : 'var(--bg-elevated)', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#7c3aed') : 'var(--text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                 {c} ({n})
               </button>
             ))}
@@ -1144,7 +1144,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'summaries' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#5b6cf7', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#7c3aed', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
               {generatingSummary ? 'Génération...' : 'Générer un résumé maintenant'}
             </button>
           </div>
@@ -1154,7 +1154,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
             summaries.map(s => (
               <div key={s.id} style={{ background: 'var(--bg-elevated)', borderRadius: 10, padding: '12px 14px', border: '1px solid var(--border-primary)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#5b6cf7', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
                   <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{timeAgo(s.createdAt)}</span>
                 </div>
                 <pre style={{ fontSize: 11, color: 'var(--text-secondary)', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
@@ -1225,7 +1225,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               onClick={() => { setAlwaysOn(!alwaysOn); mark(); }}
               style={{
                 width: 36, height: 20, borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s',
-                background: alwaysOn ? '#5b6cf7' : 'var(--border-primary)', position: 'relative',
+                background: alwaysOn ? '#7c3aed' : 'var(--border-primary)', position: 'relative',
               }}
             >
               <div style={{
@@ -1244,8 +1244,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
                 const active = rule?.isActive ?? false;
                 return (
                   <button key={i} onClick={() => toggleDay(i + 1)} style={{
-                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#5b6cf7' : 'var(--border-primary)'}`,
-                    background: active ? '#eef2ff' : 'var(--bg-elevated)', color: active ? '#5b6cf7' : 'var(--text-muted)',
+                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#7c3aed' : 'var(--border-primary)'}`,
+                    background: active ? '#f3eeff' : 'var(--bg-elevated)', color: active ? '#7c3aed' : 'var(--text-muted)',
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                   }}>{day}</button>
                 );
@@ -1302,8 +1302,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             <div>
               <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#5b6cf7' }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: '#5b6cf7', minWidth: 50 }}>{maxLen} car.</span>
+                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#7c3aed' }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: '#7c3aed', minWidth: 50 }}>{maxLen} car.</span>
               </div>
             </div>
           </div>
@@ -1322,16 +1322,16 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             <div key={opt.id} style={{ padding: 14, borderRadius: 10, border: '1px solid var(--border-primary)', background: '#f9fafb' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 700 }}>Option {opt.id}</span>
-                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#eef2ff', color: '#5b6cf7', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
+                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#f3eeff', color: '#7c3aed', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
               </div>
               <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{opt.label}</div>
-              <div style={{ fontSize: 11, color: '#5b6cf7', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
+              <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
               <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{opt.desc}</div>
             </div>
           ))}
         </div>
         <div style={{ marginTop: 10, fontSize: 11, color: 'var(--text-secondary)' }}>
-          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#5b6cf7' }}>support@freenzy.io</a>
+          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#7c3aed' }}>support@freenzy.io</a>
         </div>
       </div>
 
@@ -1342,8 +1342,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>Rétention des données</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#5b6cf7' }} />
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#5b6cf7', minWidth: 55 }}>{retention} jours</span>
+              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#7c3aed' }} />
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#7c3aed', minWidth: 55 }}>{retention} jours</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>

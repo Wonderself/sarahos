@@ -62,7 +62,7 @@ export default function DocumentsAnalyticsPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-[#5b6cf7]">{data.totalDocuments}</div>
+          <div className="text-2xl font-bold text-[#7c3aed]">{data.totalDocuments}</div>
           <div className="text-xs text-[var(--muted)]">Documents uploades</div>
         </div>
         <div className="card p-4 text-center">

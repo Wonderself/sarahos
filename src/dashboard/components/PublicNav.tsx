@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -9,12 +9,23 @@ const NAV_LINKS = [
   { href: '/plans', label: 'Tarifs & API' },
 ];
 
+const FEATURE_LINKS = [
+  { href: '/fonctionnalites/repondeur', label: 'Répondeur IA', icon: 'smart_toy' },
+  { href: '/fonctionnalites/documents', label: 'Générateur de documents', icon: 'description' },
+  { href: '/fonctionnalites/social', label: 'Pilotage réseaux sociaux', icon: 'share' },
+  { href: '/fonctionnalites/reveil', label: 'Briefing matinal', icon: 'wb_sunny' },
+];
+
 export default function PublicNav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [featuresOpen, setFeaturesOpen] = useState(false);
+  const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
+  const featuresTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLanding = pathname === '/';
   const isDark = !scrolled && isLanding;
+  const isFeaturesActive = pathname.startsWith('/fonctionnalites');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -22,7 +33,27 @@ export default function PublicNav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); setMobileFeaturesOpen(false); }, [pathname]);
+
+  const handleFeaturesEnter = () => {
+    if (featuresTimeoutRef.current) clearTimeout(featuresTimeoutRef.current);
+    setFeaturesOpen(true);
+  };
+  const handleFeaturesLeave = () => {
+    featuresTimeoutRef.current = setTimeout(() => setFeaturesOpen(false), 200);
+  };
+
+  const linkStyle = (href: string) => ({
+    fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em', textDecoration: 'none' as const,
+    padding: '6px 12px', borderRadius: 8,
+    color: isDark
+      ? 'rgba(255,255,255,0.7)'
+      : (pathname === href ? '#1d1d1f' : '#6b7280'),
+    background: pathname === href
+      ? (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)')
+      : 'transparent',
+    transition: 'all 0.2s ease',
+  });
 
   return (
     <nav style={{
@@ -51,21 +82,91 @@ export default function PublicNav() {
 
         {/* Desktop links */}
         <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {/* Fonctionnalités dropdown */}
+          <div
+            onMouseEnter={handleFeaturesEnter}
+            onMouseLeave={handleFeaturesLeave}
+            style={{ position: 'relative' }}
+          >
+            <button
+              onClick={() => setFeaturesOpen(o => !o)}
+              style={{
+                ...linkStyle('/fonctionnalites'),
+                color: isDark
+                  ? 'rgba(255,255,255,0.7)'
+                  : (isFeaturesActive ? '#1d1d1f' : '#6b7280'),
+                background: isFeaturesActive
+                  ? (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)')
+                  : 'transparent',
+                border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 4,
+              }}
+            >
+              Fonctionnalités
+              <span className="material-symbols-rounded" style={{
+                fontSize: 16,
+                transition: 'transform 0.2s ease',
+                transform: featuresOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}>expand_more</span>
+            </button>
+
+            {featuresOpen && (
+              <div
+                onMouseEnter={handleFeaturesEnter}
+                onMouseLeave={handleFeaturesLeave}
+                style={{
+                  position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+                  marginTop: 8, minWidth: 260,
+                  background: '#14141b', border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 12, padding: '8px',
+                  boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+                }}
+              >
+                {FEATURE_LINKS.map(fl => (
+                  <Link
+                    key={fl.href}
+                    href={fl.href}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '10px 14px', borderRadius: 8,
+                      textDecoration: 'none',
+                      color: pathname === fl.href ? '#fff' : 'rgba(255,255,255,0.7)',
+                      background: pathname === fl.href ? 'rgba(91,108,247,0.15)' : 'transparent',
+                      fontSize: 13, fontWeight: 500, fontFamily: 'var(--font-display)',
+                      transition: 'background 0.15s ease, color 0.15s ease',
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+                      (e.currentTarget as HTMLElement).style.color = '#fff';
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.background = pathname === fl.href ? 'rgba(91,108,247,0.15)' : 'transparent';
+                      (e.currentTarget as HTMLElement).style.color = pathname === fl.href ? '#fff' : 'rgba(255,255,255,0.7)';
+                    }}
+                  >
+                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#5b6cf7' }}>{fl.icon}</span>
+                    {fl.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Cas d'usage */}
+          <Link href="/cas/restaurant" style={linkStyle('/cas/restaurant')}>
+            Cas d&apos;usage
+          </Link>
+
+          {/* Comparaison */}
+          <Link href="/vs-alternatives" style={linkStyle('/vs-alternatives')}>
+            Comparaison
+          </Link>
+
           {NAV_LINKS.map(link => (
             <Link
               key={link.href}
               href={link.href}
-              style={{
-                fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em', textDecoration: 'none',
-                padding: '6px 12px', borderRadius: 8,
-                color: isDark
-                  ? 'rgba(255,255,255,0.7)'
-                  : (pathname === link.href ? '#1d1d1f' : '#6b7280'),
-                background: pathname === link.href
-                  ? (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)')
-                  : 'transparent',
-                transition: 'all 0.2s ease',
-              }}
+              style={linkStyle(link.href)}
             >
               {link.label}
             </Link>
@@ -108,6 +209,70 @@ export default function PublicNav() {
           padding: '20px 24px',
           display: 'flex', flexDirection: 'column', gap: 4,
         }}>
+          {/* Mobile Fonctionnalités accordion */}
+          <button
+            onClick={() => setMobileFeaturesOpen(o => !o)}
+            style={{
+              fontSize: 15, fontWeight: 500, textDecoration: 'none',
+              padding: '14px 16px', borderRadius: 8,
+              color: isFeaturesActive ? '#5b6cf7' : '#4b5563',
+              background: isFeaturesActive ? 'rgba(91,108,247,0.06)' : 'transparent',
+              border: 'none', cursor: 'pointer', textAlign: 'left',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            Fonctionnalités
+            <span className="material-symbols-rounded" style={{
+              fontSize: 18,
+              transition: 'transform 0.2s ease',
+              transform: mobileFeaturesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}>expand_more</span>
+          </button>
+          {mobileFeaturesOpen && (
+            <div style={{ paddingLeft: 12, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {FEATURE_LINKS.map(fl => (
+                <Link
+                  key={fl.href}
+                  href={fl.href}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    fontSize: 14, fontWeight: 500, textDecoration: 'none',
+                    padding: '10px 16px', borderRadius: 8,
+                    color: pathname === fl.href ? '#5b6cf7' : '#6b7280',
+                    background: pathname === fl.href ? 'rgba(91,108,247,0.06)' : 'transparent',
+                  }}
+                >
+                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#5b6cf7' }}>{fl.icon}</span>
+                  {fl.label}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <Link
+            href="/cas/restaurant"
+            style={{
+              fontSize: 15, fontWeight: 500, textDecoration: 'none',
+              padding: '14px 16px', borderRadius: 8,
+              color: pathname.startsWith('/cas') ? '#5b6cf7' : '#4b5563',
+              background: pathname.startsWith('/cas') ? 'rgba(91,108,247,0.06)' : 'transparent',
+            }}
+          >
+            Cas d&apos;usage
+          </Link>
+          <Link
+            href="/vs-alternatives"
+            style={{
+              fontSize: 15, fontWeight: 500, textDecoration: 'none',
+              padding: '14px 16px', borderRadius: 8,
+              color: pathname === '/vs-alternatives' ? '#5b6cf7' : '#4b5563',
+              background: pathname === '/vs-alternatives' ? 'rgba(91,108,247,0.06)' : 'transparent',
+            }}
+          >
+            Comparaison
+          </Link>
+
           {NAV_LINKS.map(link => (
             <Link
               key={link.href}

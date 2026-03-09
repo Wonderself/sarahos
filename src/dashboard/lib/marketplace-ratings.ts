@@ -37,6 +37,7 @@ export function loadRatings(): Record<string, TemplateRating> {
 }
 
 export function rateTemplate(templateId: string, rating: number): void {
+  rating = Math.max(1, Math.min(5, Math.round(rating)));
   const ratings = loadRatings();
   ratings[templateId] = { rating, ratedAt: new Date().toISOString() };
   localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings));

@@ -6,6 +6,7 @@ import {
   getClaimCount, getTotalPossibleCredits, getShareUrl,
 } from '../../../lib/rewards';
 import type { RewardsState, RewardAction } from '../../../lib/rewards';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 type Category = keyof typeof REWARD_CATEGORIES;
 
@@ -20,6 +21,7 @@ function getReferralCode() {
 }
 
 export default function RewardsPage() {
+  const isMobile = useIsMobile();
   const [state, setState] = useState<RewardsState>({ totalEarned: 0, claimed: [], pendingActions: [] });
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -86,8 +88,8 @@ export default function RewardsPage() {
 
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#f59e0b' }}>card_giftcard</span>
+        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: '#fff', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 26 : 32, color: '#f59e0b' }}>card_giftcard</span>
           Récompenses
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>
@@ -97,38 +99,41 @@ export default function RewardsPage() {
 
       {/* Stats strip */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28,
+        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 10 : 14, marginBottom: 28,
       }}>
         <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
+          backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>{state.totalEarned}</div>
           <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, marginTop: 4 }}>CRÉDITS GAGNÉS</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
+          backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#f59e0b' }}>{state.claimed.length}</div>
           <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPLÉTÉES</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
+          backdropFilter: 'blur(12px)',
         }}>
-          <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>{progress}%</div>
+          <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>{progress}%</div>
           <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, marginTop: 4 }}>PROGRESSION</div>
         </div>
       </div>
 
       {/* Progress bar */}
       <div style={{
-        background: 'rgba(255,255,255,0.06)', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
+        background: 'rgba(255,255,255,0.07)', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
       }}>
         <div style={{
           width: `${progress}%`, height: '100%', borderRadius: 6,
-          background: 'linear-gradient(90deg, #22c55e, #5b6cf7)',
+          background: 'linear-gradient(90deg, #22c55e, #06b6d4)',
           transition: 'width 0.5s ease',
         }} />
       </div>
@@ -171,7 +176,7 @@ export default function RewardsPage() {
           style={{
             padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
             fontSize: 12, fontWeight: 700,
-            background: activeCategory === 'all' ? '#5b6cf7' : 'rgba(255,255,255,0.06)',
+            background: activeCategory === 'all' ? '#7c3aed' : 'rgba(255,255,255,0.06)',
             color: activeCategory === 'all' ? '#fff' : 'rgba(255,255,255,0.6)',
           }}
         >
@@ -209,10 +214,11 @@ export default function RewardsPage() {
             <div
               key={action.id}
               style={{
-                background: claimed ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.04)',
+                background: claimed ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.04)',
                 border: `1px solid ${claimed ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 14, padding: '16px 20px',
-                display: 'flex', alignItems: 'center', gap: 14,
+                display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 14,
+                flexWrap: isMobile ? 'wrap' as const : 'nowrap' as const,
                 opacity: claimed ? 0.5 : 1,
                 transition: 'all 0.2s',
               }}
@@ -280,13 +286,14 @@ export default function RewardsPage() {
       {/* Bottom summary */}
       <div style={{
         marginTop: 32, padding: '20px 24px', borderRadius: 14,
-        background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.15)',
+        background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)',
+        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
         textAlign: 'center',
       }}>
         <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>
           Total possible
         </div>
-        <div style={{ fontSize: 32, fontWeight: 800, color: '#5b6cf7' }}>
+        <div style={{ fontSize: 32, fontWeight: 800, color: '#7c3aed' }}>
           {totalPossible} crédits
         </div>
         <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>

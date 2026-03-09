@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { recordGameScore } from '@/lib/games-engine';
+import Link from 'next/link';
 
 const ICONS = [
   'favorite', 'star', 'diamond', 'bolt',
@@ -15,14 +16,15 @@ interface Card {
   pairId: number;
   flipped: boolean;
   matched: boolean;
+  justMatched: boolean;
 }
 
 function createCards(pairs: number = 8): Card[] {
   const icons = ICONS.slice(0, pairs);
   const cards: Card[] = [];
   icons.forEach((icon, i) => {
-    cards.push({ id: i * 2, icon, pairId: i, flipped: false, matched: false });
-    cards.push({ id: i * 2 + 1, icon, pairId: i, flipped: false, matched: false });
+    cards.push({ id: i * 2, icon, pairId: i, flipped: false, matched: false, justMatched: false });
+    cards.push({ id: i * 2 + 1, icon, pairId: i, flipped: false, matched: false, justMatched: false });
   });
   // Shuffle
   for (let i = cards.length - 1; i > 0; i--) {
@@ -32,7 +34,7 @@ function createCards(pairs: number = 8): Card[] {
   return cards;
 }
 
-const COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#16a34a', '#eab308', '#a855f7'];
+const COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#7c3aed', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#16a34a', '#eab308', '#a855f7'];
 
 export default function MemoryGame() {
   const [cards, setCards] = useState<Card[]>([]);
@@ -42,6 +44,17 @@ export default function MemoryGame() {
   const [running, setRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
+  const matchAnimRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flipBackRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (matchAnimRef.current) clearTimeout(matchAnimRef.current);
+      if (flipBackRef.current) clearTimeout(flipBackRef.current);
+    };
+  }, []);
 
   const reset = useCallback(() => {
     setCards(createCards(8));
@@ -51,6 +64,7 @@ export default function MemoryGame() {
     setRunning(true);
     setGameOver(false);
     setLocked(false);
+    setFinalScore(0);
   }, []);
 
   useEffect(() => { reset(); }, [reset]);
@@ -75,29 +89,37 @@ export default function MemoryGame() {
         setLocked(true);
         const [a, b] = newFlipped;
         if (newCards[a].pairId === newCards[b].pairId) {
-          // Match
+          // Match — mark justMatched for animation
           const matched = newCards.map((c, i) =>
-            i === a || i === b ? { ...c, matched: true } : c
+            i === a || i === b ? { ...c, matched: true, justMatched: true } : c
           );
           setCards(matched);
           setFlipped([]);
           setLocked(false);
+
+          // Clear justMatched after animation
+          matchAnimRef.current = setTimeout(() => {
+            setCards((prev) => prev.map((c) => ({ ...c, justMatched: false })));
+            matchAnimRef.current = null;
+          }, 600);
 
           // Check win
           if (matched.every((c) => c.matched)) {
             setRunning(false);
             setGameOver(true);
             const score = Math.max(50, 1000 - (moves + 1) * 20 - timer * 5);
+            setFinalScore(score);
             recordGameScore('memory', score);
           }
         } else {
           // No match — flip back
-          setTimeout(() => {
+          flipBackRef.current = setTimeout(() => {
             setCards((prev) =>
               prev.map((c, i) => (i === a || i === b ? { ...c, flipped: false } : c))
             );
             setFlipped([]);
             setLocked(false);
+            flipBackRef.current = null;
           }, 800);
         }
       }
@@ -108,7 +130,7 @@ export default function MemoryGame() {
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
       {/* Stats */}
       <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
@@ -125,12 +147,15 @@ export default function MemoryGame() {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* Grid — responsive: cards adapt to screen width, capped at 80px */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 80px)',
-          gap: 10,
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: 8,
+          width: '100%',
+          maxWidth: 360,
+          touchAction: 'manipulation',
         }}
       >
         {cards.map((card, idx) => {
@@ -140,14 +165,13 @@ export default function MemoryGame() {
               key={card.id}
               onClick={() => handleClick(idx)}
               style={{
-                width: 80,
-                height: 80,
+                aspectRatio: '1',
                 borderRadius: 12,
                 background: show
                   ? card.matched
                     ? `${COLORS[card.pairId]}22`
-                    : 'rgba(255,255,255,0.06)'
-                  : 'rgba(255,255,255,0.04)',
+                    : 'rgba(255,255,255,0.08)'
+                  : 'rgba(255,255,255,0.05)',
                 border: show
                   ? `2px solid ${COLORS[card.pairId]}88`
                   : '2px solid rgba(255,255,255,0.08)',
@@ -155,22 +179,30 @@ export default function MemoryGame() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: show ? 'default' : 'pointer',
-                transition: 'transform 0.3s, background 0.3s',
-                transform: show ? 'rotateY(0deg)' : 'rotateY(0deg)',
-                opacity: card.matched ? 0.6 : 1,
+                transition: 'transform 0.4s ease, background 0.3s, box-shadow 0.3s',
+                transform: card.justMatched
+                  ? 'scale(1.12)'
+                  : show
+                    ? 'rotateY(0deg)'
+                    : 'rotateY(180deg)',
+                boxShadow: card.justMatched
+                  ? `0 0 16px ${COLORS[card.pairId]}66`
+                  : 'none',
+                opacity: card.matched && !card.justMatched ? 0.65 : 1,
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               {show ? (
                 <span
                   className="material-symbols-rounded"
-                  style={{ fontSize: 32, color: COLORS[card.pairId] }}
+                  style={{ fontSize: 'min(8vw, 32px)', color: COLORS[card.pairId] }}
                 >
                   {card.icon}
                 </span>
               ) : (
                 <span
                   className="material-symbols-rounded"
-                  style={{ fontSize: 24, color: 'rgba(255,255,255,0.15)' }}
+                  style={{ fontSize: 'min(6vw, 24px)', color: 'rgba(255,255,255,0.15)' }}
                 >
                   help
                 </span>
@@ -181,28 +213,44 @@ export default function MemoryGame() {
       </div>
 
       {gameOver && (
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 16, marginBottom: 4 }}>
+        <div style={{ textAlign: 'center', marginTop: 8 }}>
+          <div style={{ color: '#22c55e', fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
             Bravo !
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, marginBottom: 16 }}>
-            {moves} coups en {formatTime(timer)} — Score : {Math.max(50, 1000 - moves * 20 - timer * 5)}
+          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginBottom: 20 }}>
+            {moves} coups en {formatTime(timer)} — Score : {finalScore}
           </div>
-          <button
-            onClick={reset}
-            style={{
-              background: '#8b5cf6',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 10,
-              padding: '10px 24px',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            Rejouer
-          </button>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={reset}
+              style={{
+                background: '#7c3aed',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 10,
+                padding: '12px 28px',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Rejouer
+            </button>
+            <Link
+              href="/client/games"
+              style={{
+                color: 'rgba(255,255,255,0.5)',
+                textDecoration: 'none',
+                fontSize: 14,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+              }}
+            >
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+              Arcade
+            </Link>
+          </div>
         </div>
       )}
     </div>

@@ -41,6 +41,19 @@ export function saveWidgetConfig(config: WidgetConfig): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
 }
 
+function escapeAttr(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 export function generateEmbedCode(config: WidgetConfig, baseUrl: string = 'https://freenzy.io'): string {
-  return `<script src="${baseUrl}/embed/chat.js" data-agent="${config.agentId}" data-color="${config.primaryColor}" data-position="${config.position}" data-welcome="${config.welcomeMessage}" data-title="${config.headerTitle}" data-radius="${config.borderRadius}" data-width="${config.width}" data-height="${config.height}"></script>`;
+  // Validate baseUrl is a proper https URL
+  try {
+    const url = new URL(baseUrl);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+      baseUrl = 'https://freenzy.io';
+    }
+  } catch {
+    baseUrl = 'https://freenzy.io';
+  }
+  return `<script src="${escapeAttr(baseUrl)}/embed/chat.js" data-agent="${escapeAttr(config.agentId)}" data-color="${escapeAttr(config.primaryColor)}" data-position="${escapeAttr(config.position)}" data-welcome="${escapeAttr(config.welcomeMessage)}" data-title="${escapeAttr(config.headerTitle)}" data-radius="${config.borderRadius}" data-width="${config.width}" data-height="${config.height}"></script>`;
 }

@@ -144,8 +144,8 @@ export default function MyStrategyPage() {
 
       <div className="flex gap-2">
         {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-2 rounded-lg text-sm ${tab === t.id ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
-            {t.label} {t.count > 0 && <span className="ml-1 bg-gray-700 px-1.5 py-0.5 rounded text-xs">{t.count}</span>}
+          <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-2 rounded-lg text-sm ${tab === t.id ? 'bg-[#7c3aed] text-white' : 'bg-[#1a0e3a] text-gray-400'}`}>
+            {t.label} {t.count > 0 && <span className="ml-1 bg-white/[0.08] px-1.5 py-0.5 rounded text-xs">{t.count}</span>}
           </button>
         ))}
       </div>
@@ -153,16 +153,16 @@ export default function MyStrategyPage() {
       {/* Objectives */}
       {tab === 'objectives' && (
         <div className="space-y-3">
-          <button onClick={() => setShowNewObj(!showNewObj)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+          <button onClick={() => setShowNewObj(!showNewObj)} className="px-4 py-2 bg-[#7c3aed] text-white rounded-lg text-sm hover:bg-[#6d28d9]">
             + Nouvel objectif
           </button>
           {showNewObj && (
-            <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 space-y-3">
-              <input value={newObj.title} onChange={e => setNewObj({ ...newObj, title: e.target.value })} placeholder="Titre" className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white text-sm" />
-              <textarea value={newObj.description} onChange={e => setNewObj({ ...newObj, description: e.target.value })} placeholder="Description" rows={2} className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white text-sm resize-none" />
+            <div className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08] space-y-3">
+              <input value={newObj.title} onChange={e => setNewObj({ ...newObj, title: e.target.value })} placeholder="Titre" className="w-full bg-[#0f0720] border border-white/[0.08] rounded-lg p-2 text-white text-sm" />
+              <textarea value={newObj.description} onChange={e => setNewObj({ ...newObj, description: e.target.value })} placeholder="Description" rows={2} className="w-full bg-[#0f0720] border border-white/[0.08] rounded-lg p-2 text-white text-sm resize-none" />
               <div className="flex gap-3">
-                <input type="date" value={newObj.deadline} onChange={e => setNewObj({ ...newObj, deadline: e.target.value })} className="bg-gray-900 border border-gray-700 rounded-lg p-2 text-white text-sm" />
-                <select value={newObj.priority} onChange={e => setNewObj({ ...newObj, priority: e.target.value as 'haute' | 'moyenne' | 'basse' })} className="bg-gray-900 border border-gray-700 rounded-lg p-2 text-white text-sm">
+                <input type="date" value={newObj.deadline} onChange={e => setNewObj({ ...newObj, deadline: e.target.value })} className="bg-[#0f0720] border border-white/[0.08] rounded-lg p-2 text-white text-sm" />
+                <select value={newObj.priority} onChange={e => setNewObj({ ...newObj, priority: e.target.value as 'haute' | 'moyenne' | 'basse' })} className="bg-[#0f0720] border border-white/[0.08] rounded-lg p-2 text-white text-sm">
                   <option value="haute">Haute</option>
                   <option value="moyenne">Moyenne</option>
                   <option value="basse">Basse</option>
@@ -172,9 +172,9 @@ export default function MyStrategyPage() {
             </div>
           )}
           {objectives.length === 0 ? (
-            <div className="bg-gray-800/50 rounded-xl p-8 text-center text-gray-500 border border-gray-700/50">Aucun objectif défini</div>
+            <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">Aucun objectif défini</div>
           ) : objectives.map(o => (
-            <div key={o.id} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+            <div key={o.id} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08]">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-white font-medium">{o.title}</h3>
@@ -196,8 +196,8 @@ export default function MyStrategyPage() {
       {tab === 'actions' && (
         <div className="space-y-4">
           <div className="flex gap-2 items-end">
-            <input value={newAction.title} onChange={e => setNewAction({ ...newAction, title: e.target.value })} placeholder="Nouvelle action..." className="flex-1 bg-gray-800 border border-gray-700 rounded-lg p-2 text-white text-sm" />
-            <select value={newAction.folderId} onChange={e => setNewAction({ ...newAction, folderId: e.target.value })} className="bg-gray-800 border border-gray-700 rounded-lg p-2 text-white text-sm">
+            <input value={newAction.title} onChange={e => setNewAction({ ...newAction, title: e.target.value })} placeholder="Nouvelle action..." className="flex-1 bg-[#1a0e3a] border border-white/[0.08] rounded-lg p-2 text-white text-sm" />
+            <select value={newAction.folderId} onChange={e => setNewAction({ ...newAction, folderId: e.target.value })} className="bg-[#1a0e3a] border border-white/[0.08] rounded-lg p-2 text-white text-sm">
               {DEFAULT_FOLDERS.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
             </select>
             <button onClick={addAction} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">Ajouter</button>
@@ -206,11 +206,11 @@ export default function MyStrategyPage() {
             const folderActions = actions.filter(a => a.folderId === folder.id);
             if (folderActions.length === 0) return null;
             return (
-              <div key={folder.id} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+              <div key={folder.id} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08]">
                 <h3 className="text-white font-medium mb-2"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{folder.icon}</span> {folder.name} ({folderActions.filter(a => !a.done).length}/{folderActions.length})</h3>
                 {folderActions.map(a => (
                   <div key={a.id} className="flex items-center gap-2 py-1">
-                    <button onClick={() => toggleAction(a.id)} className={`w-5 h-5 rounded border ${a.done ? 'bg-green-600 border-green-600' : 'border-gray-600'} flex items-center justify-center text-xs text-white`}>
+                    <button onClick={() => toggleAction(a.id)} className={`w-5 h-5 rounded border ${a.done ? 'bg-green-600 border-green-600' : 'border-white/[0.08]'} flex items-center justify-center text-xs text-white`}>
                       {a.done ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
                     </button>
                     <span className={`text-sm ${a.done ? 'text-gray-500 line-through' : 'text-gray-300'}`}>{a.title}</span>
@@ -230,15 +230,15 @@ export default function MyStrategyPage() {
             {generating ? 'Génération...' : 'Générer plan d\'attaque IA'}
           </button>
           {generatedPlan ? (
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <div className="bg-[#1a0e3a] rounded-xl p-6 border border-white/[0.08]">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white font-medium">Plan stratégique IA</h3>
-                <button onClick={() => navigator.clipboard.writeText(generatedPlan)} className="px-3 py-1 bg-gray-700 text-gray-300 rounded text-xs">Copier</button>
+                <button onClick={() => navigator.clipboard.writeText(generatedPlan)} className="px-3 py-1 bg-white/[0.08] text-gray-300 rounded text-xs">Copier</button>
               </div>
               <div className="prose prose-invert prose-sm max-w-none whitespace-pre-wrap text-gray-300">{generatedPlan}</div>
             </div>
           ) : (
-            <div className="bg-gray-800/50 rounded-xl p-8 text-center text-gray-500 border border-gray-700/50">
+            <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
               {objectives.length === 0 ? 'Ajoutez des objectifs d\'abord' : 'Cliquez pour générer un plan stratégique'}
             </div>
           )}
@@ -249,11 +249,11 @@ export default function MyStrategyPage() {
       {tab === 'notes' && (
         <div className="space-y-3">
           <div className="flex gap-2">
-            <textarea value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="Nouvelle note..." rows={2} className="flex-1 bg-gray-800 border border-gray-700 rounded-lg p-3 text-white text-sm resize-none" />
+            <textarea value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="Nouvelle note..." rows={2} className="flex-1 bg-[#1a0e3a] border border-white/[0.08] rounded-lg p-3 text-white text-sm resize-none" />
             <button onClick={addNote} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm self-end">Ajouter</button>
           </div>
           {notes.map(n => (
-            <div key={n.id} className="bg-gray-800 rounded-xl p-4 border border-gray-700 flex justify-between">
+            <div key={n.id} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08] flex justify-between">
               <div>
                 <p className="text-gray-300 text-sm whitespace-pre-wrap">{n.content}</p>
                 <p className="text-gray-600 text-xs mt-2">{new Date(n.createdAt).toLocaleString('fr-FR')}</p>

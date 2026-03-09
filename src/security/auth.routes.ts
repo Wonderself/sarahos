@@ -161,6 +161,23 @@ export function createAuthRouter(): Router {
         logger.warn('Failed to send confirmation email', { email: cleanEmail, error: e });
       }
 
+      // Send J+0 welcome email (best-effort)
+      try {
+        const { sendWelcomeEmail } = await import('../notifications/email.service');
+        await sendWelcomeEmail(cleanEmail, displayName.trim());
+        // Log J+0 step
+        const { dbClient: db } = await import('../infra');
+        if (db.isConnected()) {
+          const { v4: uuidv4 } = await import('uuid');
+          await db.query(
+            `INSERT INTO email_sequence_log (id, user_id, step, sent_at) VALUES ($1, $2, 'j0', NOW()) ON CONFLICT DO NOTHING`,
+            [uuidv4(), user.id],
+          );
+        }
+      } catch (e) {
+        logger.warn('Failed to send welcome email', { email: cleanEmail, error: e });
+      }
+
       // Record referral if applicable
       if (user.referredBy) {
         try {

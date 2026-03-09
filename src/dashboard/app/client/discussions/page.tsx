@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
 import { ALL_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
+import { useIsMobile } from '../../../lib/use-media-query';
 import {
   MAX_DEEP_CONTEXT,
   DEEP_DISCUSSION_MODEL,
@@ -68,6 +69,7 @@ function getDepthMilestone(depth: number): { label: string; progress: number } {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function DiscussionsPage() {
+  const isMobile = useIsMobile();
   const { data: discussions, setData: setDiscussions } =
     useUserData<DeepDiscussion[]>('deep_discussions', [], 'fz_deep_discussions');
 
@@ -747,16 +749,16 @@ export default function DiscussionsPage() {
         onClick={onClick}
         style={{
           padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
-          background: highlight ? 'linear-gradient(135deg, #1a1a2e, #16213e)' : 'var(--bg-secondary, #111)',
-          border: `1px solid ${highlight ? '#6366F133' : 'var(--border-primary, #1e1e1e)'}`,
+          background: highlight ? 'linear-gradient(135deg, #1a0a2e, #0f1a3e)' : 'var(--bg-secondary, #111)',
+          border: `1px solid ${highlight ? '#7c3aed33' : 'var(--border-primary, #1e1e1e)'}`,
           transition: 'border-color 0.2s, transform 0.15s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = '#6366F1'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? '#6366F133' : 'var(--border-primary, #1e1e1e)'; e.currentTarget.style.transform = 'none'; }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? '#7c3aed33' : 'var(--border-primary, #1e1e1e)'; e.currentTarget.style.transform = 'none'; }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{t.materialIcon}</span>
-          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#6366F122', color: '#818CF8' }}>
+          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#7c3aed22', color: '#a78bfa' }}>
             {catInfo?.label}
           </span>
         </div>
@@ -773,7 +775,7 @@ export default function DiscussionsPage() {
               return tagInfo ? (
                 <span key={tagId} style={{
                   fontSize: 9, padding: '1px 6px', borderRadius: 8,
-                  background: '#6366F111', color: '#818CF8', whiteSpace: 'nowrap',
+                  background: '#7c3aed11', color: '#a78bfa', whiteSpace: 'nowrap',
                 }}>
                   {tagInfo.label}
                 </span>
@@ -793,20 +795,24 @@ export default function DiscussionsPage() {
       : 'En réflexion...';
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
 
       {/* ─── Left Panel: Discussion List ─── */}
-      <div style={{
-        width: 320, minWidth: 320, borderRight: '1px solid var(--border-primary, #1e1e1e)',
+      {(!isMobile || !activeId) && <div style={{
+        width: isMobile ? '100%' : 320, minWidth: isMobile ? 'auto' : 320,
+        borderRight: isMobile ? 'none' : '1px solid var(--border-primary, #1e1e1e)',
+        borderBottom: isMobile ? '1px solid var(--border-primary, #1e1e1e)' : 'none',
         display: 'flex', flexDirection: 'column', background: 'var(--bg-secondary, #111)',
+        ...(isMobile ? { flex: 1 } : {}),
       }}>
+
         {/* Header */}
         <div style={{ padding: '16px 16px 12px' }}>
           <button
             onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
             style={{
               width: '100%', padding: '10px 16px', borderRadius: 8,
-              background: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
               color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14,
             }}
           >
@@ -850,7 +856,7 @@ export default function DiscussionsPage() {
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                 style={{
                   padding: '8px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-                  background: '#8B5CF6', color: '#fff', border: 'none', cursor: 'pointer',
+                  background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
                 }}
               >
                 Nouvelle discussion
@@ -866,7 +872,7 @@ export default function DiscussionsPage() {
                 style={{
                   padding: '12px 12px', marginBottom: 4, borderRadius: 8, cursor: 'pointer',
                   background: activeId === d.id ? 'var(--bg-active, #1a1a2e)' : 'transparent',
-                  border: activeId === d.id ? '1px solid #6366F133' : '1px solid transparent',
+                  border: activeId === d.id ? '1px solid #7c3aed33' : '1px solid transparent',
                   transition: 'all 0.15s',
                 }}
               >
@@ -937,14 +943,29 @@ export default function DiscussionsPage() {
             )}
           </div>
         )}
-      </div>
+      </div>}
 
       {/* ─── Right Panel: Active Discussion or Landing ─── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {(!isMobile || activeId) && <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Mobile back button */}
+        {isMobile && active && (
+          <button
+            onClick={() => setActiveId(null)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px',
+              background: 'var(--bg-secondary)', border: 'none', borderBottom: '1px solid var(--border-primary)',
+              color: 'var(--text-primary)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>arrow_back</span>
+            Retour aux discussions
+          </button>
+        )}
 
         {!active ? (
           /* ─── Landing: Rich Template Browser ─── */
-          <div style={{ flex: 1, overflowY: 'auto', padding: '24px 24px 60px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '16px 12px 60px' : '24px 24px 60px' }}>
             {/* Top bar: Create + Search + Random */}
             <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
               <div style={{
@@ -973,7 +994,7 @@ export default function DiscussionsPage() {
                 style={{
                   padding: '10px 16px', borderRadius: 10, cursor: 'pointer',
                   background: 'var(--bg-secondary, #111)', border: '1px solid var(--border-primary, #1e1e1e)',
-                  color: '#818CF8', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
+                  color: '#a78bfa', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
                 }}
               >
                 <span className="material-symbols-rounded" style={{ fontSize: 13 }}>casino</span> Sujet aléatoire
@@ -982,7 +1003,7 @@ export default function DiscussionsPage() {
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                 style={{
                   padding: '10px 16px', borderRadius: 10, cursor: 'pointer',
-                  background: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
                   border: 'none', color: '#fff', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
                 }}
               >
@@ -1010,9 +1031,9 @@ export default function DiscussionsPage() {
                     style={{
                       padding: '5px 12px', borderRadius: 16, fontSize: 12, cursor: 'pointer',
                       whiteSpace: 'nowrap', fontWeight: isActive ? 600 : 400,
-                      background: isActive ? '#6366F122' : 'var(--bg-secondary, #111)',
-                      border: `1px solid ${isActive ? '#6366F1' : 'var(--border-primary, #1e1e1e)'}`,
-                      color: isActive ? '#818CF8' : 'var(--text-secondary, #888)',
+                      background: isActive ? '#7c3aed22' : 'var(--bg-secondary, #111)',
+                      border: `1px solid ${isActive ? '#7c3aed' : 'var(--border-primary, #1e1e1e)'}`,
+                      color: isActive ? '#a78bfa' : 'var(--text-secondary, #888)',
                       transition: 'all 0.15s',
                     }}
                   >
@@ -1056,7 +1077,7 @@ export default function DiscussionsPage() {
                       onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(templateSearch || ''); setWizardResult(null); }}
                       style={{
                         marginTop: 8, padding: '10px 20px', borderRadius: 8,
-                        background: '#8B5CF6', color: '#fff', border: 'none', cursor: 'pointer',
+                        background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
                         fontWeight: 600, fontSize: 14,
                       }}
                     >
@@ -1073,8 +1094,8 @@ export default function DiscussionsPage() {
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20,
                   padding: '16px 20px', borderRadius: 12,
-                  background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-                  border: '1px solid #6366F133',
+                  background: 'linear-gradient(135deg, #1a0a2e, #0f1a3e)',
+                  border: '1px solid #7c3aed33',
                 }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 36 }}>balance</span>
                   <div style={{ flex: 1 }}>
@@ -1087,7 +1108,7 @@ export default function DiscussionsPage() {
                     onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                     style={{
                       padding: '8px 16px', borderRadius: 8, whiteSpace: 'nowrap',
-                      background: '#8B5CF6', color: '#fff', border: 'none', cursor: 'pointer',
+                      background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
                       fontWeight: 600, fontSize: 13,
                     }}
                   >
@@ -1126,7 +1147,7 @@ export default function DiscussionsPage() {
                               border: '1px solid var(--border-primary, #1e1e1e)',
                               transition: 'border-color 0.2s',
                             }}
-                            onMouseEnter={e => (e.currentTarget.style.borderColor = '#6366F1')}
+                            onMouseEnter={e => (e.currentTarget.style.borderColor = '#7c3aed')}
                             onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-primary, #1e1e1e)')}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
@@ -1173,7 +1194,7 @@ export default function DiscussionsPage() {
               padding: '12px 20px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
               display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 24, color: '#818CF8' }}>{active.agentEmoji}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 24, color: '#a78bfa' }}>{active.agentEmoji}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {editingTitle ? (
@@ -1195,7 +1216,7 @@ export default function DiscussionsPage() {
                       autoFocus
                       style={{
                         margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--text-primary, #fff)',
-                        background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #6366F1',
+                        background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #7c3aed',
                         borderRadius: 6, padding: '2px 8px', outline: 'none', minWidth: 200,
                       }}
                     />
@@ -1210,7 +1231,7 @@ export default function DiscussionsPage() {
                   )}
                   <span style={{
                     fontSize: 10, padding: '2px 8px', borderRadius: 10,
-                    background: '#6366F122', color: '#818CF8',
+                    background: '#7c3aed22', color: '#a78bfa',
                   }}>
                     {DISCUSSION_CATEGORIES.find(c => c.id === active.category)?.label}
                   </span>
@@ -1283,9 +1304,9 @@ export default function DiscussionsPage() {
                   onClick={() => { setMessageSearchOpen(!messageSearchOpen); setMessageSearch(''); }}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: messageSearchOpen ? '#6366F122' : 'var(--bg-secondary, #111)',
-                    border: `1px solid ${messageSearchOpen ? '#6366F1' : 'var(--border-primary, #1e1e1e)'}`,
-                    color: messageSearchOpen ? '#818CF8' : 'var(--text-secondary, #888)',
+                    background: messageSearchOpen ? '#7c3aed22' : 'var(--bg-secondary, #111)',
+                    border: `1px solid ${messageSearchOpen ? '#7c3aed' : 'var(--border-primary, #1e1e1e)'}`,
+                    color: messageSearchOpen ? '#a78bfa' : 'var(--text-secondary, #888)',
                   }}
                 >
                   <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span>
@@ -1396,14 +1417,14 @@ export default function DiscussionsPage() {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
                   <span style={{ fontSize: 10, color: 'var(--text-secondary, #888)' }}>Profondeur</span>
-                  <span style={{ fontSize: 10, color: '#818CF8', fontWeight: 600 }}>
+                  <span style={{ fontSize: 10, color: '#a78bfa', fontWeight: 600 }}>
                     {getDepthMilestone(active.depth).label}
                   </span>
                 </div>
                 <div style={{ height: 3, borderRadius: 2, background: '#1e1e1e', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', borderRadius: 2,
-                    background: 'linear-gradient(90deg, #8B5CF6, #6366F1)',
+                    background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
                     width: `${getDepthMilestone(active.depth).progress}%`,
                     transition: 'width 0.6s ease',
                   }} />
@@ -1425,7 +1446,7 @@ export default function DiscussionsPage() {
                     key={kp.id}
                     style={{
                       fontSize: 11, padding: '4px 10px', borderRadius: 12,
-                      background: '#8B5CF622', color: '#A78BFA', whiteSpace: 'nowrap',
+                      background: '#7c3aed22', color: '#A78BFA', whiteSpace: 'nowrap',
                       maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis',
                     }}
                     title={kp.text}
@@ -1440,7 +1461,7 @@ export default function DiscussionsPage() {
             <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
               {active.messages.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-secondary, #888)' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 16, display: 'block', color: '#818CF8' }}>{active.agentEmoji}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 16, display: 'block', color: '#a78bfa' }}>{active.agentEmoji}</span>
                   <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary, #fff)' }}>
                     {active.agentName} est prêt
                   </p>
@@ -1486,7 +1507,7 @@ export default function DiscussionsPage() {
                       <div style={{
                         maxWidth: '80%', padding: '12px 16px', borderRadius: 12, position: 'relative',
                         background: msg.role === 'user'
-                          ? 'linear-gradient(135deg, #6366F1, #8B5CF6)'
+                          ? 'linear-gradient(135deg, #7c3aed, #06b6d4)'
                           : 'var(--bg-secondary, #111)',
                         border: msg.role === 'assistant'
                           ? `1px solid ${isHighlighted ? '#FBBF24' : 'var(--border-primary, #1e1e1e)'}`
@@ -1521,8 +1542,8 @@ export default function DiscussionsPage() {
                           </div>
                         )}
                         {msg.role === 'assistant' && (
-                          <div style={{ fontSize: 11, color: '#818CF8', marginBottom: 4 }}>
-                            <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#818CF8' }}>{active.agentEmoji}</span> {active.agentName}
+                          <div style={{ fontSize: 11, color: '#a78bfa', marginBottom: 4 }}>
+                            <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#a78bfa' }}>{active.agentEmoji}</span> {active.agentName}
                           </div>
                         )}
                         <div style={{ fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
@@ -1547,7 +1568,7 @@ export default function DiscussionsPage() {
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
                               padding: '4px 12px', marginRight: 6, marginBottom: 4, borderRadius: 8,
-                              background: '#8B5CF611', border: '1px solid #8B5CF633',
+                              background: '#7c3aed11', border: '1px solid #7c3aed33',
                               fontSize: 12, color: '#A78BFA',
                             }}
                           >
@@ -1638,14 +1659,14 @@ export default function DiscussionsPage() {
                     style={{
                       padding: '10px 14px', borderRadius: 10, fontSize: 12, cursor: 'pointer',
                       background: 'var(--bg-secondary, #111)',
-                      border: '1px solid #6366F133', textAlign: 'left',
+                      border: '1px solid #7c3aed33', textAlign: 'left',
                       color: 'var(--text-primary, #ddd)', transition: 'border-color 0.2s, transform 0.15s',
                       display: 'flex', alignItems: 'flex-start', gap: 8,
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#6366F1'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#6366F133'; e.currentTarget.style.transform = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#7c3aed33'; e.currentTarget.style.transform = 'none'; }}
                   >
-                    <span style={{ color: '#818CF8', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>Q{i + 1}</span>
+                    <span style={{ color: '#a78bfa', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>Q{i + 1}</span>
                     <span style={{ lineHeight: 1.4 }}>{q}</span>
                   </button>
                 ))}
@@ -1707,7 +1728,7 @@ export default function DiscussionsPage() {
                   disabled={loading || !input.trim() || active.status === 'paused' || active.status === 'completed'}
                   style={{
                     padding: '10px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    background: input.trim() ? '#8B5CF6' : '#333', color: '#fff',
+                    background: input.trim() ? '#7c3aed' : '#333', color: '#fff',
                     fontWeight: 600, fontSize: 13, opacity: loading ? 0.5 : 1,
                   }}
                 >
@@ -1724,7 +1745,7 @@ export default function DiscussionsPage() {
                   style={{
                     padding: '8px 12px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
                     background: 'var(--bg-secondary, #111)',
-                    border: '1px solid #8B5CF633',
+                    border: '1px solid #7c3aed33',
                     color: '#A78BFA', fontWeight: 600,
                     opacity: active.messages.length === 0 ? 0.3 : 1,
                   }}
@@ -1735,7 +1756,7 @@ export default function DiscussionsPage() {
             </div>
           </>
         )}
-      </div>
+      </div>}
 
       {/* ─── Wizard Modal ─── */}
       {wizardOpen && (
@@ -1747,8 +1768,9 @@ export default function DiscussionsPage() {
           onClick={e => { if (e.target === e.currentTarget) { setWizardOpen(false); pendingSendRef.current = null; } }}
         >
           <div style={{
-            width: '100%', maxWidth: 520, borderRadius: 16, padding: '32px',
+            width: '100%', maxWidth: 520, borderRadius: isMobile ? 12 : 16, padding: isMobile ? '20px 16px' : '32px',
             background: 'var(--bg-secondary, #111)', border: '1px solid var(--border-primary, #1e1e1e)',
+            margin: isMobile ? '0 12px' : 0, boxSizing: 'border-box' as const,
           }}>
             {wizardStep === 'input' && (
               <>
@@ -1793,7 +1815,7 @@ export default function DiscussionsPage() {
                     disabled={!wizardInput.trim()}
                     style={{
                       padding: '10px 20px', borderRadius: 8, cursor: 'pointer',
-                      background: wizardInput.trim() ? '#8B5CF6' : '#333',
+                      background: wizardInput.trim() ? '#7c3aed' : '#333',
                       border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
                     }}
                   >
@@ -1824,10 +1846,10 @@ export default function DiscussionsPage() {
                 {/* Agent card */}
                 <div style={{
                   padding: '16px', borderRadius: 10, marginBottom: 16,
-                  background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #6366F133',
+                  background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #7c3aed33',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#818CF8' }}>{wizardResult.agentEmoji}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#a78bfa' }}>{wizardResult.agentEmoji}</span>
                     <div>
                       <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary, #fff)' }}>
                         {wizardResult.agentName}
@@ -1894,7 +1916,7 @@ export default function DiscussionsPage() {
                     onClick={startDiscussion}
                     style={{
                       padding: '10px 24px', borderRadius: 8, cursor: 'pointer',
-                      background: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+                      background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
                       border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
                     }}
                   >
@@ -1930,7 +1952,7 @@ export default function DiscussionsPage() {
               onClick={handleCopyShare}
               style={{
                 flex: 1, padding: '10px', borderRadius: 8, cursor: 'pointer',
-                background: '#6366F1', border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
+                background: '#7c3aed', border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
               }}
             >
               <span className="material-symbols-rounded" style={{ fontSize: 14 }}>content_copy</span> Copier le texte
@@ -1948,7 +1970,7 @@ export default function DiscussionsPage() {
             {shareContent?.text}
           </p>
           <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)', marginTop: 8 }}>
-            — <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#818CF8' }}>{shareContent?.agentEmoji}</span> {shareContent?.agentName} · &quot;{shareContent?.discussionTitle}&quot;
+            — <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#a78bfa' }}>{shareContent?.agentEmoji}</span> {shareContent?.agentName} · &quot;{shareContent?.discussionTitle}&quot;
           </div>
         </div>
 
@@ -1958,7 +1980,7 @@ export default function DiscussionsPage() {
             onClick={handleNativeShare}
             style={{
               width: '100%', padding: '12px', borderRadius: 10, marginBottom: 12, cursor: 'pointer',
-              background: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
               border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
             }}
           >

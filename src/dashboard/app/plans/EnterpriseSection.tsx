@@ -12,6 +12,9 @@ const FEATURES = [
   { icon: '&#x1F3A8;', text: 'Personnalisation agents & branding' },
   { icon: '&#x1F393;', text: 'Formation equipe incluse' },
   { icon: '&#x1F6E1;', text: '100% securise — aucun code source partage' },
+  { icon: '&#x1F3E0;', text: 'Instance dediee — infrastructure isolee pour grandes entreprises' },
+  { icon: '&#x1F4CB;', text: 'SLA garanti — disponibilite et temps de reponse contractuels' },
+  { icon: '&#x1F3F7;', text: 'White-label disponible — votre marque, votre identite' },
 ];
 
 export default function EnterpriseSection() {

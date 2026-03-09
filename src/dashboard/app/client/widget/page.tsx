@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { loadWidgetConfig, saveWidgetConfig, generateEmbedCode, DEFAULT_WIDGET_CONFIG, type WidgetConfig } from '../../../lib/widget-config';
 import { ALL_AGENTS } from '../../../lib/agent-config';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 export default function WidgetPage() {
+  const isMobile = useIsMobile();
   const [config, setConfig] = useState<WidgetConfig>(DEFAULT_WIDGET_CONFIG);
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -32,8 +34,8 @@ export default function WidgetPage() {
     <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#5b6cf7' }}>code</span>
+        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 26 : 32, color: '#7c3aed' }}>code</span>
           Widget Embeddable
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>
@@ -41,7 +43,7 @@ export default function WidgetPage() {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20 }}>
         {/* Left: Configuration */}
         <div>
           <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16 }}>
@@ -100,7 +102,7 @@ export default function WidgetPage() {
                   onClick={() => updateConfig({ position: pos })}
                   style={{
                     flex: 1, padding: '10px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    background: config.position === pos ? '#5b6cf7' : 'rgba(255,255,255,0.06)',
+                    background: config.position === pos ? '#7c3aed' : 'rgba(255,255,255,0.06)',
                     color: config.position === pos ? '#fff' : 'rgba(255,255,255,0.5)',
                     fontSize: 12, fontWeight: 700,
                   }}
@@ -184,8 +186,8 @@ export default function WidgetPage() {
           {/* Widget preview */}
           <div style={{
             position: 'relative', height: 500,
-            background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: 14, overflow: 'hidden',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 14, overflow: 'hidden', backdropFilter: 'blur(12px)',
           }}>
             {/* Fake website background */}
             <div style={{ padding: 20 }}>
@@ -205,7 +207,7 @@ export default function WidgetPage() {
                 <div style={{
                   width: Math.min(config.width, 340), height: Math.min(config.height, 420),
                   borderRadius: config.borderRadius, overflow: 'hidden',
-                  background: '#0a0a0f', border: '1px solid rgba(255,255,255,0.12)',
+                  background: '#0f0720', border: '1px solid rgba(255,255,255,0.12)',
                   display: 'flex', flexDirection: 'column',
                   boxShadow: `0 8px 32px ${config.primaryColor}25`,
                 }}>
@@ -289,7 +291,7 @@ export default function WidgetPage() {
 
         <div style={{
           position: 'relative',
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 12, padding: '16px 20px',
         }}>
           <pre style={{
@@ -303,7 +305,7 @@ export default function WidgetPage() {
             style={{
               position: 'absolute', top: 12, right: 12,
               padding: '6px 14px', borderRadius: 6, border: 'none',
-              background: copied ? '#22c55e' : '#5b6cf7', color: '#fff',
+              background: copied ? '#22c55e' : '#7c3aed', color: '#fff',
               fontSize: 12, fontWeight: 700, cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: 4,
             }}
@@ -319,10 +321,10 @@ export default function WidgetPage() {
       {/* Instructions */}
       <div style={{
         marginTop: 20, padding: '16px 20px', borderRadius: 14,
-        background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.12)',
+        background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.12)',
       }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 10 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6, color: '#5b6cf7' }}>help</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6, color: '#7c3aed' }}>help</span>
           Comment ça marche ?
         </div>
         <ol style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 2 }}>

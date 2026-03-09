@@ -268,6 +268,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-title" content={APP_NAME} />
         <meta name="application-name" content={APP_NAME} />
 
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+
         {/* Icons */}
         <link rel="icon" href="/images/logo.jpg" sizes="any" />
         <link rel="apple-touch-icon" href="/images/logo.jpg" />

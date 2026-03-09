@@ -264,10 +264,10 @@ export default function UserDetailPage() {
             }}
           />
           <div style={{
-            background: 'var(--bg-secondary, #1f2937)',
+            background: 'var(--bg-secondary, #1a0e3a)',
             borderRadius: 12,
             padding: 20,
-            border: '1px solid var(--border, #374151)',
+            border: '1px solid var(--border-primary, rgba(255,255,255,0.08))',
             marginTop: 16,
           }}>
             <h3 style={{ color: '#fff', fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Token Budget</h3>
@@ -279,15 +279,15 @@ export default function UserDetailPage() {
                 value={multiplier}
                 onChange={e => setMultiplier(parseFloat(e.target.value) || 1)}
                 style={{
-                  background: '#111827', color: '#fff',
+                  background: '#0f0720', color: '#fff',
                   padding: '6px 12px', borderRadius: 8,
-                  border: '1px solid #374151', width: 96, fontSize: 14,
+                  border: '1px solid rgba(255,255,255,0.08)', width: 96, fontSize: 14,
                 }}
               />
               <button
                 onClick={saveMultiplier}
                 style={{
-                  padding: '6px 14px', background: '#2563eb', color: '#fff',
+                  padding: '6px 14px', background: '#7c3aed', color: '#fff',
                   borderRadius: 8, fontSize: 14, fontWeight: 500, border: 'none', cursor: 'pointer',
                 }}
               >

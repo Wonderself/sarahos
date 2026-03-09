@@ -91,25 +91,25 @@ export default function WhatsAppHubPage() {
 
       <div className="flex gap-2">
         {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-2 rounded-lg text-sm flex items-center gap-2 ${tab === t.id ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+          <button key={t.id} onClick={() => setTab(t.id)} className={`px-4 py-2 rounded-lg text-sm flex items-center gap-2 ${tab === t.id ? 'bg-green-600 text-white' : 'bg-[#1a0e3a] text-gray-400'}`}>
             <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{t.icon}</span> {t.label}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="bg-gray-800/50 rounded-xl p-12 text-center text-gray-500 border border-gray-700/50">Chargement...</div>
+        <div className="bg-[#1a0e3a]/50 rounded-xl p-12 text-center text-gray-500 border border-white/[0.06]">Chargement...</div>
       ) : (
         <>
           {/* Conversations */}
           {tab === 'conversations' && (
             <div className="space-y-2">
               {conversations.length === 0 ? (
-                <div className="bg-gray-800/50 rounded-xl p-12 text-center text-gray-500 border border-gray-700/50">
+                <div className="bg-[#1a0e3a]/50 rounded-xl p-12 text-center text-gray-500 border border-white/[0.06]">
                   Aucune conversation WhatsApp
                 </div>
               ) : conversations.map((c, i) => (
-                <div key={i} className="bg-gray-800 rounded-xl p-4 border border-gray-700 flex items-center justify-between hover:border-gray-600">
+                <div key={i} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08] flex items-center justify-between hover:border-white/[0.15]">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-green-600/20 rounded-full flex items-center justify-center text-green-400 text-lg"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>phone_iphone</span></div>
                     <div>
@@ -129,7 +129,7 @@ export default function WhatsAppHubPage() {
 
           {/* Config */}
           {tab === 'config' && config && (
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 space-y-4">
+            <div className="bg-[#1a0e3a] rounded-xl p-6 border border-white/[0.08] space-y-4">
               <div className="flex items-center gap-2 mb-2">
                 <div className={`w-3 h-3 rounded-full ${config.isConfigured ? 'bg-green-500' : 'bg-red-500'}`} />
                 <span className="text-white font-medium">{config.isConfigured ? 'WhatsApp configuré' : 'WhatsApp non configuré'}</span>
@@ -148,9 +148,9 @@ export default function WhatsAppHubPage() {
                   <p className="text-sm text-gray-300 font-mono mt-1">{config.webhookUrl}</p>
                 </div>
               </div>
-              <div className="pt-4 border-t border-gray-700">
+              <div className="pt-4 border-t border-white/[0.08]">
                 <h4 className="text-white text-sm font-medium mb-2">Variables d&apos;environnement requises</h4>
-                <div className="bg-gray-900 rounded-lg p-3 font-mono text-xs text-gray-400 space-y-1">
+                <div className="bg-[#0f0720] rounded-lg p-3 font-mono text-xs text-gray-400 space-y-1">
                   <p>WHATSAPP_PHONE_NUMBER_ID=...</p>
                   <p>WHATSAPP_ACCESS_TOKEN=...</p>
                   <p>WHATSAPP_VERIFY_TOKEN=...</p>
@@ -164,15 +164,15 @@ export default function WhatsAppHubPage() {
           {/* Autopilot commands */}
           {tab === 'autopilot' && (
             <div className="space-y-4">
-              <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+              <div className="bg-[#1a0e3a] rounded-xl p-6 border border-white/[0.08]">
                 <h3 className="text-white font-medium mb-4">Commandes WhatsApp Autopilot</h3>
                 <p className="text-gray-400 text-sm mb-4">
                   L&apos;admin peut envoyer ces commandes via WhatsApp pour piloter le système autopilot.
-                  Le numéro admin est configuré via <code className="bg-gray-900 px-1 rounded text-xs">ADMIN_WHATSAPP_PHONE</code>.
+                  Le numéro admin est configuré via <code className="bg-[#0f0720] px-1 rounded text-xs">ADMIN_WHATSAPP_PHONE</code>.
                 </p>
                 <div className="space-y-2">
                   {AP_COMMANDS.map(cmd => (
-                    <div key={cmd.command} className="flex items-center gap-4 bg-gray-900 rounded-lg p-3">
+                    <div key={cmd.command} className="flex items-center gap-4 bg-[#0f0720] rounded-lg p-3">
                       <code className="text-green-400 text-sm font-mono whitespace-nowrap">{cmd.command}</code>
                       <span className="text-gray-400 text-sm">{cmd.description}</span>
                     </div>
@@ -180,7 +180,7 @@ export default function WhatsAppHubPage() {
                 </div>
               </div>
 
-              <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+              <div className="bg-[#1a0e3a] rounded-xl p-6 border border-white/[0.08]">
                 <h3 className="text-white font-medium mb-4">Boutons interactifs</h3>
                 <p className="text-gray-400 text-sm mb-4">
                   Quand un agent propose une action, l&apos;admin reçoit un message WhatsApp avec 3 boutons :

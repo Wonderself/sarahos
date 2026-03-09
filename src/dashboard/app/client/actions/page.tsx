@@ -209,7 +209,8 @@ export default function ActionsPage() {
             { label: 'En retard', value: overdueCount, color: '#EF4444' },
           ].map(s => (
             <div key={s.label} className="rounded-sm" style={{
-              padding: '12px', background: 'var(--bg-secondary)', border: '1px solid var(--border)',
+              padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(12px)',
             }}>
               <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
               <div className="text-lg font-bold" style={{ color: s.color }}>{s.value}</div>
@@ -267,8 +268,8 @@ export default function ActionsPage() {
       {/* Empty state */}
       {!loading && actions.length === 0 && (
         <div className="text-center" style={{
-          padding: '60px 20px', background: 'var(--bg-secondary)',
-          borderRadius: 8, border: '1px solid var(--border)',
+          padding: '60px 20px', background: 'rgba(255,255,255,0.05)',
+          borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)',
         }}>
           <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bolt</span></div>
           <h3 className="text-lg font-semibold mb-4">Aucune action pour le moment</h3>
@@ -315,8 +316,8 @@ export default function ActionsPage() {
               className="flex items-center gap-8 rounded-sm cursor-pointer"
               onClick={() => setSelectedAction(action)}
               style={{
-                padding: '10px 12px', background: 'var(--bg-secondary)',
-                border: '1px solid var(--border)',
+                padding: '10px 12px', background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
               }}
             >
               <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? <span className="material-symbols-rounded" style={{ fontSize: 16 }}>bolt</span>}</span>
@@ -403,8 +404,9 @@ function ActionCard({
       onClick={onClick}
       style={{
         padding: '10px 12px',
-        background: 'var(--bg-secondary)',
-        border: isOverdue ? '1px solid #EF444444' : '1px solid var(--border)',
+        background: 'rgba(255,255,255,0.05)',
+        border: isOverdue ? '1px solid #EF444444' : '1px solid rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(12px)',
       }}
     >
       <div className="flex items-center gap-6 mb-4">

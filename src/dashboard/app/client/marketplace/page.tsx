@@ -6,10 +6,12 @@ import {
   TEMPLATES, CATEGORIES, CATEGORY_COLORS, FEATURED_GRADIENTS, MARKETPLACE_STORAGE_KEY as STORAGE_KEY,
   type AgentTemplate, type Category, type SortMode,
 } from '../../../lib/marketplace-data';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ── Component ──
 
 export default function MarketplacePage() {
+  const isMobile = useIsMobile();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<Category>('Tous');
   const [sort, setSort] = useState<SortMode>('populaire');
@@ -92,11 +94,11 @@ export default function MarketplacePage() {
   const featuredAgents = TEMPLATES.filter((t) => t.featured).slice(0, 6);
 
   return (
-    <div className="client-page-scrollable" style={{ padding: '32px 24px', maxWidth: 1200, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '32px 24px', maxWidth: 1200, margin: '0 auto' }}>
       {/* ── Header ── */}
       <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 28 }}>storefront</span> Marketplace des <span className="fz-logo-word">Agents</span>
+        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
+          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 22 : 28 }}>storefront</span> Marketplace des <span className="fz-logo-word">Agents</span>
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
           Explorez et installez des <span className="fz-logo-word">agents IA</span> specialises pour <span className="fz-logo-word">automatiser</span> vos taches quotidiennes.
@@ -108,7 +110,7 @@ export default function MarketplacePage() {
         <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 16 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 18 }}>star</span> Agents vedettes
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {featuredAgents.map((agent, idx) => (
             <div
               key={agent.id}
@@ -253,7 +255,7 @@ export default function MarketplacePage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: 16,
         }}
       >
@@ -296,10 +298,11 @@ export default function MarketplacePage() {
           marginTop: 40,
           padding: '16px 24px',
           borderRadius: 'var(--radius-md)',
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--border-primary)',
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.08)',
           display: 'flex',
           justifyContent: 'space-around',
+          backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
           flexWrap: 'wrap',
           gap: 16,
         }}
@@ -331,14 +334,15 @@ function AgentCard({
   return (
     <div
       style={{
-        background: 'var(--bg-primary)',
+        background: 'rgba(255,255,255,0.05)',
         borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-primary)',
+        border: '1px solid rgba(255,255,255,0.08)',
         padding: 20,
         transition: 'transform 0.2s, box-shadow 0.2s',
         cursor: 'default',
         display: 'flex',
         flexDirection: 'column',
+        backdropFilter: 'blur(12px)',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-3px)';

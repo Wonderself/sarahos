@@ -176,7 +176,7 @@ function dateToKey(d: Date): string {
 }
 
 function platformColor(platformId: string): string {
-  return PLATFORMS.find(p => p.id === platformId)?.color ?? '#5b6cf7';
+  return PLATFORMS.find(p => p.id === platformId)?.color ?? '#7c3aed';
 }
 
 function platformEmoji(platformId: string): string {
@@ -1838,7 +1838,7 @@ export default function SocialMediaPage() {
                       <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>{count}</span>
                       <div style={{
                         width: '100%', maxWidth: 40, height, borderRadius: 'var(--radius-sm)',
-                        background: count > 0 ? 'linear-gradient(180deg, var(--accent), #8b7cf8)' : 'var(--bg-tertiary)',
+                        background: count > 0 ? 'linear-gradient(180deg, var(--accent), #06b6d4)' : 'var(--bg-tertiary)',
                         transition: 'height 0.3s ease',
                       }} />
                       <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)' }}>{day}</span>

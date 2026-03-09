@@ -89,10 +89,13 @@ async function cacheFirst(request) {
 
     const networkResponse = await fetch(request);
 
-    // Cache successful GET responses
+    // Cache successful GET responses (respect no-store)
     if (networkResponse.ok && request.method === 'GET') {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, networkResponse.clone());
+      const cc = networkResponse.headers.get('cache-control') || '';
+      if (!cc.includes('no-store')) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, networkResponse.clone());
+      }
     }
 
     return networkResponse;
@@ -117,10 +120,13 @@ async function networkFirst(request) {
   try {
     const networkResponse = await fetch(request);
 
-    // Cache successful GET responses for offline fallback
+    // Cache successful GET responses for offline fallback (respect no-store)
     if (networkResponse.ok && request.method === 'GET') {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, networkResponse.clone());
+      const cc = networkResponse.headers.get('cache-control') || '';
+      if (!cc.includes('no-store')) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, networkResponse.clone());
+      }
     }
 
     return networkResponse;

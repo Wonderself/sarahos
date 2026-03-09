@@ -7,6 +7,11 @@ import { loadGamification } from '../../lib/gamification';
 import { ALL_AGENTS, getActiveAgentIds } from '../../lib/agent-config';
 import { ToastProvider } from '../../components/Toast';
 import OnboardingTour from '../../components/OnboardingTour';
+import QuickOnboarding from '../../components/QuickOnboarding';
+import OfflineBanner from '../../components/OfflineBanner';
+import PushPermissionBanner from '../../components/PushPermissionBanner';
+import { getFavorites } from '../../lib/favorite-agents';
+import { registerServiceWorker } from '../../lib/push-notifications';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -295,6 +300,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [editingLabel, setEditingLabel] = useState<{ sIdx: number; iIdx: number } | null>(null);
   const [editingSectionTitle, setEditingSectionTitle] = useState<number | null>(null);
 
+  // New features state
+  const [showQuickOnboarding, setShowQuickOnboarding] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
+  const [showPushBanner, setShowPushBanner] = useState(false);
+  const [favoriteAgents, setFavoriteAgents] = useState<string[]>([]);
+
   // Drag-and-drop refs (no re-render needed)
   const sectionDragIdx = useRef<number | null>(null);
   const itemDragRef = useRef<{ sectionIdx: number; itemIdx: number } | null>(null);
@@ -405,8 +416,41 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       if (e.key === 'fz_gamification') refreshGamification();
     };
     window.addEventListener('storage', onStorage);
-    return () => { clearInterval(interval); window.removeEventListener('storage', onStorage); };
+
+    // ── New features init ──
+    // Quick onboarding
+    if (!localStorage.getItem('fz_quick_onboarding_done')) {
+      setShowQuickOnboarding(true);
+    }
+    // Push permission banner
+    if (!localStorage.getItem('fz_push_permission_asked') && 'Notification' in window && Notification.permission === 'default') {
+      setShowPushBanner(true);
+    }
+    // Favorite agents
+    setFavoriteAgents(getFavorites());
+    // Offline detection
+    setIsOffline(!navigator.onLine);
+    const goOffline = () => setIsOffline(true);
+    const goOnline = () => setIsOffline(false);
+    window.addEventListener('offline', goOffline);
+    window.addEventListener('online', goOnline);
+    // Register service worker
+    registerServiceWorker();
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('offline', goOffline);
+      window.removeEventListener('online', goOnline);
+    };
   }, [refreshGamification]);
+
+  // Refresh favorites when localStorage changes
+  useEffect(() => {
+    const onFavChange = () => setFavoriteAgents(getFavorites());
+    window.addEventListener('storage', onFavChange);
+    return () => window.removeEventListener('storage', onFavChange);
+  }, []);
 
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
 
@@ -809,6 +853,36 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         )}
 
+        {/* Favorite agents bar */}
+        {favoriteAgents.length > 0 && (
+          <div style={{ margin: '0 16px 12px', display: 'flex', gap: 8, alignItems: 'center' }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 14, color: '#f59e0b' }}>star</span>
+            {favoriteAgents.map(agId => {
+              const ag = ALL_AGENTS.find(a => a.id === agId);
+              if (!ag) return null;
+              return (
+                <Link
+                  key={agId}
+                  href={`/client/chat?agent=${agId}`}
+                  title={ag.name}
+                  style={{
+                    width: 32, height: 32, borderRadius: '50%',
+                    background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    textDecoration: 'none', fontSize: 16, transition: 'transform 0.15s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.15)')}
+                  onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                >
+                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'var(--accent)' }}>
+                    {ag.materialIcon || 'smart_toy'}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
         {/* Navigation — relative container for customize panel overlay */}
         <div className="sidebar-nav" style={{ position: 'relative', flex: 1 }}>
 
@@ -1072,7 +1146,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
                   alignItems: 'center', justifyContent: 'center',
-                  background: 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
+                  background: 'var(--gw-gradient, linear-gradient(135deg, #7c3aed, #06b6d4))',
                   color: 'white', fontSize: 9, fontWeight: 700,
                 }}>{gamLevel}</span>
               </span>
@@ -1130,8 +1204,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
       {/* Client Content */}
       <div className="client-main-content">
+        <OfflineBanner />
+        <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div className="flex-between p-8" style={{ background: '#5b6cf710', borderBottom: '1px solid #5b6cf733' }}>
+          <div className="flex-between p-8" style={{ background: 'rgba(124,58,237,0.06)', borderBottom: '1px solid rgba(124,58,237,0.2)' }}>
             <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>
               Présentez votre entreprise à vos agents pour des réponses personnalisées
             </span>
@@ -1169,13 +1245,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 90,
           width: 56, height: 56, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #5b6cf7, #8b7cf8)',
+          background: 'var(--gw-gradient, linear-gradient(135deg, #7c3aed, #06b6d4))',
           color: '#fff', display: 'none', alignItems: 'center', justifyContent: 'center',
-          fontSize: 22, boxShadow: '0 4px 20px rgba(91,108,247,0.4)',
+          fontSize: 22, boxShadow: 'var(--gw-shadow-glow, 0 4px 20px rgba(124,58,237,0.4))',
           border: 'none', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(91,108,247,0.5)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(91,108,247,0.4)'; }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(124,58,237,0.5)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(124,58,237,0.4)'; }}
       >
         <span className="material-symbols-rounded mi-white" style={{ fontSize: 22 }}>menu</span>
       </button>
@@ -1235,6 +1311,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
 
     <OnboardingTour />
+    {showQuickOnboarding && (
+      <QuickOnboarding
+        onComplete={() => {
+          setShowQuickOnboarding(false);
+          try { localStorage.setItem('fz_quick_onboarding_done', 'true'); } catch { /* */ }
+        }}
+        onSkip={() => {
+          setShowQuickOnboarding(false);
+          try { localStorage.setItem('fz_quick_onboarding_done', 'true'); } catch { /* */ }
+        }}
+      />
+    )}
     </ToastProvider>
   );
 }

@@ -128,6 +128,11 @@ export class CronService {
         intervalMs: 6 * 60 * 60 * 1000, // Every 6 hours
         handler: () => this.guardrailsCreditAudit(),
       },
+      {
+        name: 'email_sequence',
+        intervalMs: 60 * 60 * 1000, // Every hour — check for J+2/J+5 emails to send
+        handler: () => this.processEmailSequence(),
+      },
     ];
 
     for (const job of jobs) {
@@ -183,6 +188,7 @@ export class CronService {
       autopilot_proposal_reminder:   () => this.remindPendingProposals(),
       autopilot_proposal_expire:     () => this.expireStaleProposals(),
       guardrails_credit_audit:       () => this.guardrailsCreditAudit(),
+      email_sequence:                () => this.processEmailSequence(),
     };
     const handler = handlers[name];
     if (!handler) throw new Error(`Unknown cron job: ${name}`);
@@ -1037,6 +1043,81 @@ export class CronService {
       }
     } catch (error) {
       logger.error('Guardrails credit audit failed', { error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  // ─── Email Sequence: J+0 / J+2 / J+5 ───
+
+  private async processEmailSequence(): Promise<void> {
+    if (!dbClient.isConnected()) return;
+
+    try {
+      // Find users who need J+2 email (created 2 days ago, not yet sent)
+      const j2Users = await dbClient.query(
+        `SELECT id, email, name FROM users
+         WHERE is_active = TRUE
+           AND created_at >= NOW() - INTERVAL '3 days'
+           AND created_at < NOW() - INTERVAL '2 days'
+           AND id NOT IN (
+             SELECT user_id FROM email_sequence_log WHERE step = 'j2'
+           )`,
+      );
+
+      // Find users who need J+5 email (created 5 days ago, not yet sent)
+      const j5Users = await dbClient.query(
+        `SELECT id, email, name FROM users
+         WHERE is_active = TRUE
+           AND created_at >= NOW() - INTERVAL '6 days'
+           AND created_at < NOW() - INTERVAL '5 days'
+           AND id NOT IN (
+             SELECT user_id FROM email_sequence_log WHERE step = 'j5'
+           )`,
+      );
+
+      const { sendGettingStartedEmail, sendSuccessStoryEmail } = await import('../../notifications/email.service');
+
+      let sent = 0;
+
+      for (const row of j2Users.rows) {
+        const user = row as Record<string, unknown>;
+        const email = user['email'] as string;
+        const name = user['name'] as string || 'Utilisateur';
+        const userId = user['id'] as string;
+
+        const success = await sendGettingStartedEmail(email, name);
+        if (success) {
+          await dbClient.query(
+            `INSERT INTO email_sequence_log (id, user_id, step, sent_at)
+             VALUES ($1, $2, 'j2', NOW())`,
+            [uuidv4(), userId],
+          );
+          sent++;
+        }
+      }
+
+      for (const row of j5Users.rows) {
+        const user = row as Record<string, unknown>;
+        const email = user['email'] as string;
+        const name = user['name'] as string || 'Utilisateur';
+        const userId = user['id'] as string;
+
+        const success = await sendSuccessStoryEmail(email, name);
+        if (success) {
+          await dbClient.query(
+            `INSERT INTO email_sequence_log (id, user_id, step, sent_at)
+             VALUES ($1, $2, 'j5', NOW())`,
+            [uuidv4(), userId],
+          );
+          sent++;
+        }
+      }
+
+      if (sent > 0) {
+        logger.info('Email sequence processed', { j2: j2Users.rows.length, j5: j5Users.rows.length, sent });
+      }
+    } catch (error) {
+      logger.error('Email sequence processing failed', {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 }

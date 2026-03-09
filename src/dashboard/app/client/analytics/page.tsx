@@ -30,7 +30,7 @@ const PERIOD_OPTIONS = [
   { label: '90 jours', days: 90 },
 ];
 
-const PIE_COLORS = ['#5b6cf7', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#8b7cf8', '#ec4899', '#14b8a6'];
+const PIE_COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#ec4899', '#14b8a6'];
 
 // Agent names mapping (models → agent names)
 const MODEL_LABELS: Record<string, { icon: string; label: string }> = {

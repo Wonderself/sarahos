@@ -10,6 +10,18 @@ import {
   loadDaily,
   GameScore,
 } from '@/lib/games-engine';
+import {
+  getArcadeProfile,
+  getLevelInfo,
+  getProfileBorderColor,
+  getBadgeDefinitions,
+  getLeaderboard,
+  checkWeeklyReset,
+  ArcadeProfile,
+  ArcadeLeaderboardEntry,
+  Badge,
+} from '@/lib/arcade-profile';
+import BadgeUnlockPopup from '@/components/BadgeUnlockPopup';
 
 export default function GamesHubPage() {
   const [scores, setScores] = useState<Record<string, GameScore>>({});
@@ -17,6 +29,10 @@ export default function GamesHubPage() {
   const [totalCredits, setTotalCredits] = useState(0);
   const [streak, setStreak] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [profile, setProfile] = useState<ArcadeProfile | null>(null);
+  const [leaderboard, setLeaderboard] = useState<ArcadeLeaderboardEntry[]>([]);
+  const [badges, setBadges] = useState<Badge[]>([]);
+  const [lbMode, setLbMode] = useState<'all' | 'weekly'>('all');
 
   useEffect(() => {
     setMounted(true);
@@ -25,59 +41,211 @@ export default function GamesHubPage() {
     setTotalCredits(getTotalCreditsFromGames());
     const daily = loadDaily();
     setStreak(daily.streak || 0);
+
+    checkWeeklyReset();
+    setProfile(getArcadeProfile());
+    setLeaderboard(getLeaderboard());
+    setBadges(getBadgeDefinitions());
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted || !profile) return null;
+
+  const levelInfo = getLevelInfo(profile.totalPoints);
+  const borderColor = getProfileBorderColor(profile.level);
+  const isGradient = borderColor?.startsWith('linear-gradient');
+
+  // Find favorite game
+  const allScores = loadScores();
+  let favoriteGame = '—';
+  let maxPlayed = 0;
+  for (const g of GAME_CATALOG) {
+    const s = allScores[g.slug];
+    if (s && s.gamesPlayed > maxPlayed) {
+      maxPlayed = s.gamesPlayed;
+      favoriteGame = g.name;
+    }
+  }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f', padding: '32px 24px' }}>
-      {/* Header */}
+    <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
+      <BadgeUnlockPopup />
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#8b5cf6' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#7c3aed' }}>
             sports_esports
           </span>
           <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', margin: 0 }}>Arcade</h1>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, margin: '0 0 28px 0' }}>
-          Jouez, gagnez des crédits et grimpez dans le classement
+          Jouez, gagnez des points et grimpez dans le classement
         </p>
 
-        {/* Stats Strip */}
+        {/* ═══ Arcade Profile Card ═══ */}
         <div
           style={{
-            display: 'flex',
-            gap: 16,
-            marginBottom: 32,
-            flexWrap: 'wrap',
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: 14,
+            padding: '24px',
+            marginBottom: 24,
+            backdropFilter: 'blur(12px)',
+            boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+            border: borderColor
+              ? isGradient
+                ? '2px solid transparent'
+                : `2px solid ${borderColor}`
+              : '1px solid rgba(255,255,255,0.08)',
+            ...(isGradient ? {
+              backgroundImage: `${borderColor}, linear-gradient(#0f0720, #0f0720)`,
+              backgroundOrigin: 'border-box',
+              backgroundClip: 'padding-box, border-box',
+            } as React.CSSProperties : {}),
           }}
         >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+            {/* Level badge */}
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>{profile.level}</span>
+            </div>
+
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>{levelInfo.title}</span>
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Niv. {profile.level}</span>
+              </div>
+
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 10 }}>
+                {profile.totalPoints.toLocaleString()} points
+                {levelInfo.level < 50 && (
+                  <span> — {levelInfo.nextLevelPoints.toLocaleString()} pour le prochain niveau</span>
+                )}
+              </div>
+
+              {/* Progress bar */}
+              <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    height: '100%',
+                    width: `${Math.round(levelInfo.progress * 100)}%`,
+                    background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
+                    borderRadius: 3,
+                    transition: 'width 0.5s ease',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Streak */}
+            <div style={{ textAlign: 'center', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#ef4444' }}>
+                  local_fire_department
+                </span>
+                <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>{profile.streak}</span>
+              </div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+                Série{profile.bestStreak > 0 ? ` (record : ${profile.bestStreak})` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══ Badge Showcase ═══ */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#f59e0b' }}>
+              emoji_events
+            </span>
+            <span style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>
+              Badges ({profile.badges.length}/{badges.filter(b => !b.secret).length})
+            </span>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 10,
+              overflowX: 'auto',
+              paddingBottom: 8,
+              scrollbarWidth: 'thin',
+            }}
+          >
+            {badges
+              .filter(b => !b.secret || profile.badges.includes(b.id))
+              .map((badge) => {
+                const earned = profile.badges.includes(badge.id);
+                return (
+                  <div
+                    key={badge.id}
+                    title={`${badge.name} — ${badge.condition}`}
+                    style={{
+                      flexShrink: 0,
+                      width: 72,
+                      textAlign: 'center',
+                      padding: '10px 6px',
+                      borderRadius: 10,
+                      background: earned ? 'rgba(139,92,246,0.1)' : 'rgba(255,255,255,0.02)',
+                      border: earned ? '1px solid rgba(139,92,246,0.2)' : '1px solid rgba(255,255,255,0.04)',
+                      opacity: earned ? 1 : 0.35,
+                      cursor: 'default',
+                    }}
+                  >
+                    <span
+                      className="material-symbols-rounded"
+                      style={{
+                        fontSize: 28,
+                        color: earned ? '#f59e0b' : 'rgba(255,255,255,0.3)',
+                        display: 'block',
+                        marginBottom: 4,
+                      }}
+                    >
+                      {badge.icon}
+                    </span>
+                    <div style={{ fontSize: 9, color: earned ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)', lineHeight: 1.2 }}>
+                      {badge.name}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+
+        {/* ═══ Stats Strip ═══ */}
+        <div style={{ display: 'flex', gap: 16, marginBottom: 32, flexWrap: 'wrap' }}>
           {[
-            { icon: 'videogame_asset', label: 'Parties jouées', value: totalPlayed, color: '#8b5cf6' },
+            { icon: 'videogame_asset', label: 'Parties jouées', value: totalPlayed, color: '#7c3aed' },
             { icon: 'toll', label: 'Crédits gagnés', value: totalCredits, color: '#22c55e' },
-            { icon: 'local_fire_department', label: 'Série quotidienne', value: `${streak} jour${streak !== 1 ? 's' : ''}`, color: '#ef4444' },
+            { icon: 'stars', label: 'Points Arcade', value: profile.totalPoints.toLocaleString(), color: '#f59e0b' },
+            { icon: 'favorite', label: 'Jeu préféré', value: favoriteGame, color: '#ec4899' },
           ].map((stat) => (
             <div
               key={stat.label}
               style={{
-                flex: '1 1 180px',
-                background: 'rgba(255,255,255,0.04)',
+                flex: '1 1 160px',
+                background: 'rgba(255,255,255,0.05)',
                 borderRadius: 12,
-                padding: '16px 20px',
+                padding: '14px 18px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 14,
+                gap: 12,
               }}
             >
-              <span
-                className="material-symbols-rounded"
-                style={{ fontSize: 28, color: stat.color }}
-              >
+              <span className="material-symbols-rounded" style={{ fontSize: 26, color: stat.color }}>
                 {stat.icon}
               </span>
               <div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>{stat.value}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{stat.label}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>{stat.value}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{stat.label}</div>
               </div>
             </div>
           ))}
@@ -88,7 +256,7 @@ export default function GamesHubPage() {
           <Link href="/client/games/create" style={{ textDecoration: 'none' }}>
             <button
               style={{
-                background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,
@@ -108,7 +276,7 @@ export default function GamesHubPage() {
           <Link href="/client/games/community" style={{ textDecoration: 'none' }}>
             <button
               style={{
-                background: 'rgba(255,255,255,0.06)',
+                background: 'rgba(255,255,255,0.07)',
                 color: '#fff',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: 10,
@@ -127,7 +295,112 @@ export default function GamesHubPage() {
           </Link>
         </div>
 
-        {/* Game Cards Grid */}
+        {/* ═══ Leaderboard ═══ */}
+        {leaderboard.length > 0 && (
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#f59e0b' }}>
+                  leaderboard
+                </span>
+                <span style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>Classement</span>
+              </div>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {(['all', 'weekly'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setLbMode(mode)}
+                    style={{
+                      background: lbMode === mode ? 'rgba(139,92,246,0.2)' : 'transparent',
+                      color: lbMode === mode ? '#a78bfa' : 'rgba(255,255,255,0.4)',
+                      border: lbMode === mode ? '1px solid rgba(139,92,246,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: 8,
+                      padding: '5px 12px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {mode === 'all' ? 'Tout' : 'Semaine'}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: 12,
+                border: '1px solid rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(12px)',
+                overflow: 'hidden',
+              }}
+            >
+              {leaderboard.slice(0, 10).map((entry, i) => (
+                <div
+                  key={`${entry.name}-${i}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    padding: '12px 18px',
+                    borderBottom: i < 9 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 13,
+                      fontWeight: 700,
+                      background:
+                        i === 0 ? 'linear-gradient(135deg, #f59e0b, #d97706)'
+                        : i === 1 ? 'linear-gradient(135deg, #94a3b8, #64748b)'
+                        : i === 2 ? 'linear-gradient(135deg, #b45309, #92400e)'
+                        : 'rgba(255,255,255,0.06)',
+                      color: i < 3 ? '#fff' : 'rgba(255,255,255,0.4)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{entry.name}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+                      Niv. {entry.level} — {entry.title}
+                    </div>
+                  </div>
+                  {entry.badges.length > 0 && (
+                    <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
+                      {entry.badges.slice(0, 3).map((bId) => {
+                        const bd = badges.find(b => b.id === bId);
+                        if (!bd) return null;
+                        return (
+                          <span
+                            key={bId}
+                            className="material-symbols-rounded"
+                            title={bd.name}
+                            style={{ fontSize: 16, color: '#f59e0b' }}
+                          >
+                            {bd.icon}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#7c3aed', flexShrink: 0 }}>
+                    {entry.points.toLocaleString()} pts
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ═══ Game Cards Grid ═══ */}
         <div
           style={{
             display: 'grid',
@@ -145,10 +418,11 @@ export default function GamesHubPage() {
               >
                 <div
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 14,
                     padding: '20px 18px',
+                    backdropFilter: 'blur(12px)',
                     cursor: 'pointer',
                     transition: 'transform 0.15s, border-color 0.2s',
                     position: 'relative',
@@ -160,7 +434,7 @@ export default function GamesHubPage() {
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
                   }}
                 >
                   {/* Color accent top */}
@@ -240,7 +514,7 @@ export default function GamesHubPage() {
                         borderRadius: 20,
                       }}
                     >
-                      +{game.creditsPerPlay} cr/partie
+                      +10 pts/partie
                     </div>
                   </div>
                 </div>

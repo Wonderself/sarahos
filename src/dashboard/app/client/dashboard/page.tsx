@@ -6,6 +6,7 @@ import { getActiveAgentIds, DEFAULT_AGENTS } from '../../../lib/agent-config';
 import type { AgentTypeId } from '../../../lib/agent-config';
 import FreenzyWelcome from '../../../components/FreenzyWelcome';
 import { useToast } from '../../../components/Toast';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ───
 
@@ -29,6 +30,7 @@ function getSession() {
 
 export default function ClientDashboard() {
   const { showError } = useToast();
+  const isMobile = useIsMobile();
   const [stats, setStats] = useState<UsageStats>({ totalMessages: 0, totalDocuments: 0, streak: 0 });
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [activeAgentIds, setActiveAgentIds] = useState<AgentTypeId[]>(['fz-repondeur']);
@@ -344,7 +346,7 @@ export default function ClientDashboard() {
       )}
 
       {/* ── 4 KPIs ── */}
-      <div className="dash-kpis" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
+      <div className="dash-kpis" style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
         {[
           { label: 'Credits', value: credits.toFixed(1), color: credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444', sub: 'disponibles' },
           { label: 'Messages', value: String(stats.totalMessages), color: '#6366f1', sub: 'echanges' },
@@ -352,8 +354,9 @@ export default function ClientDashboard() {
           { label: 'Streak', value: `${stats.streak}j`, color: stats.streak > 0 ? '#f59e0b' : '#86868b', sub: stats.streak > 7 ? 'en feu !' : 'consecutifs' },
         ].map(kpi => (
           <div key={kpi.label} style={{
-            background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: 12, padding: '12px 10px', textAlign: 'center',
+            backdropFilter: 'blur(12px)',
           }}>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: kpi.color, letterSpacing: -0.5 }}>{kpi.value}</div>
             <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: 0.5 }}>{kpi.sub}</div>
@@ -363,8 +366,9 @@ export default function ClientDashboard() {
 
       {/* ── Briefing du jour (collapsible) ── */}
       <div style={{
-        background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: 12, marginBottom: 12, overflow: 'hidden',
+        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
       }}>
         <button onClick={() => setShowBriefing(v => !v)} style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
@@ -396,12 +400,13 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Taches + Priorites ── */}
-      <div className="dash-tasks-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+      <div className="dash-tasks-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 12 }}>
 
         {/* Taches du jour */}
         <div style={{
-          background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 12, padding: '14px 16px',
+          backdropFilter: 'blur(12px)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -460,8 +465,9 @@ export default function ClientDashboard() {
 
         {/* Priorites Top 3 */}
         <div style={{
-          background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 12, padding: '14px 16px',
+          backdropFilter: 'blur(12px)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
             <span className="material-symbols-rounded" style={{ fontSize: 16 }}>target</span>
@@ -495,7 +501,7 @@ export default function ClientDashboard() {
 
       {/* ── Acces rapides ── */}
       <div className="dash-quick-actions" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 12,
+        display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 8, marginBottom: 12,
       }}>
         {[
           { href: '/client/chat', icon: 'chat', label: 'Chat' },
@@ -508,7 +514,7 @@ export default function ClientDashboard() {
           <Link key={item.href} href={item.href} style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '10px 12px', borderRadius: 10, textDecoration: 'none', color: 'inherit',
-            background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
             transition: 'border-color 0.15s',
           }}>
             <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{item.icon}</span>
@@ -519,8 +525,9 @@ export default function ClientDashboard() {
 
       {/* ── Mon equipe IA (compact) ── */}
       <div style={{
-        background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: 12, padding: '14px 16px', marginBottom: 12,
+        backdropFilter: 'blur(12px)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
           <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Mon equipe IA</span>
@@ -548,8 +555,9 @@ export default function ClientDashboard() {
 
       {/* ── Credit detail (compact) ── */}
       <div style={{
-        background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: 12, padding: '12px 16px', marginBottom: 12,
+        backdropFilter: 'blur(12px)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

@@ -121,6 +121,62 @@ export function recordGameScore(slug: string, score: number, playerName: string 
   lb[slug] = lb[slug].slice(0, 10);
   saveLeaderboard(lb);
 
+  // Gamification XP + timeline integration
+  try {
+    const { recordEvent } = require('./gamification');
+    recordEvent({ type: 'game_played' });
+    if (isNewBest && prev.gamesPlayed > 0) {
+      recordEvent({ type: 'game_high_score' });
+    }
+  } catch { /* gamification not available */ }
+
+  try {
+    const { recordAction } = require('./action-history');
+    recordAction({
+      type: 'game',
+      title: `Partie de ${game.name}`,
+      description: `Score : ${score}${isNewBest ? ' (nouveau record !)' : ''}`,
+    });
+  } catch { /* action-history not available */ }
+
+  // ─── Arcade Points Integration
+  try {
+    const arcade = require('./arcade-profile');
+    arcade.resetSessionTracking();
+
+    // +10 pts for completing a game
+    arcade.awardPoints(10, 'game_completed');
+    arcade.addSessionPoints(10);
+
+    // +25 pts for new personal best
+    if (isNewBest && prev.gamesPlayed > 0) {
+      arcade.awardPoints(25, 'new_personal_best');
+      arcade.addSessionPoints(25);
+    }
+
+    // First game badge
+    if (prev.gamesPlayed === 0) {
+      const r = arcade.checkAndAwardBadge('first_game');
+      if (r.awarded) arcade.addSessionBadge('first_game');
+    }
+
+    // Update streak
+    arcade.updateStreak();
+
+    // Check all_rounder: played all 10 games
+    const allScores = loadScores();
+    const playableGames = GAME_CATALOG.filter(g => g.slug !== 'daily');
+    const allPlayed = playableGames.every(g => allScores[g.slug] && allScores[g.slug].gamesPlayed > 0);
+    if (allPlayed) {
+      const r = arcade.checkAndAwardBadge('all_rounder');
+      if (r.awarded) arcade.addSessionBadge('all_rounder');
+    }
+
+    // Update leaderboard
+    const profile = arcade.getArcadeProfile();
+    arcade.addToLeaderboard('Joueur', profile.totalPoints, profile.level, profile.title, profile.badges);
+  } catch { /* arcade-profile not available */ }
+
   return { credits, isNewBest, totalGames: scores[slug].gamesPlayed };
 }
 
@@ -152,4 +208,92 @@ export function getTotalGamesPlayed(): number {
 export function getTotalCreditsFromGames(): number {
   const scores = loadScores();
   return Object.values(scores).reduce((sum, s) => sum + s.totalCreditsEarned, 0);
+}
+
+// ─── Arcade: check game-specific badge conditions after a game
+export function checkGameSpecificBadges(slug: string, gameData?: {
+  errors?: number;
+  wpm?: number;
+  timeSeconds?: number;
+  guesses?: number;
+  score?: number;
+  maxTile?: number;
+  perfectQuiz?: boolean;
+  perfectMinesweeper?: boolean;
+}): void {
+  if (!gameData) return;
+  try {
+    const arcade = require('./arcade-profile');
+    let perfectGame = false;
+
+    if (slug === 'memory' && gameData.errors === 0) {
+      const r = arcade.checkAndAwardBadge('perfect_memory');
+      if (r.awarded) arcade.addSessionBadge('perfect_memory');
+      perfectGame = true;
+    }
+    if (slug === 'typing' && gameData.wpm && gameData.wpm > 60) {
+      const r = arcade.checkAndAwardBadge('speed_demon');
+      if (r.awarded) arcade.addSessionBadge('speed_demon');
+    }
+    if (slug === 'sudoku' && gameData.timeSeconds) {
+      if (gameData.timeSeconds < 300) {
+        const r = arcade.checkAndAwardBadge('puzzle_master');
+        if (r.awarded) arcade.addSessionBadge('puzzle_master');
+        perfectGame = true;
+      }
+      if (gameData.timeSeconds < 180) {
+        const r = arcade.checkAndAwardBadge('speed_sudoku');
+        if (r.awarded) arcade.addSessionBadge('speed_sudoku');
+      }
+    }
+    if (slug === 'wordle' && gameData.guesses && gameData.guesses <= 2) {
+      const r = arcade.checkAndAwardBadge('word_genius');
+      if (r.awarded) arcade.addSessionBadge('word_genius');
+      if (gameData.guesses === 1) perfectGame = true;
+    }
+    if (slug === 'snake' && gameData.score && gameData.score > 50) {
+      const r = arcade.checkAndAwardBadge('snake_50');
+      if (r.awarded) arcade.addSessionBadge('snake_50');
+    }
+    if (slug === 'tetris' && gameData.score && gameData.score > 5000) {
+      const r = arcade.checkAndAwardBadge('tetris_master');
+      if (r.awarded) arcade.addSessionBadge('tetris_master');
+    }
+    if (slug === 'quiz' && gameData.perfectQuiz) {
+      const r = arcade.checkAndAwardBadge('quiz_perfect');
+      if (r.awarded) arcade.addSessionBadge('quiz_perfect');
+      perfectGame = true;
+    }
+    if (slug === 'minesweeper' && gameData.perfectMinesweeper) {
+      const r = arcade.checkAndAwardBadge('mine_expert');
+      if (r.awarded) arcade.addSessionBadge('mine_expert');
+      perfectGame = true;
+    }
+    if (slug === 'game2048' && gameData.maxTile && gameData.maxTile >= 2048) {
+      const r = arcade.checkAndAwardBadge('high_2048');
+      if (r.awarded) arcade.addSessionBadge('high_2048');
+    }
+
+    // Perfect game bonus: +50 pts
+    if (perfectGame) {
+      arcade.awardPoints(50, 'perfect_game');
+      arcade.addSessionPoints(50);
+    }
+  } catch { /* arcade-profile not available */ }
+}
+
+// ─── Get points earned in the current game session
+export function getPointsEarnedThisGame(): number {
+  try {
+    const arcade = require('./arcade-profile');
+    return arcade.getSessionPoints();
+  } catch { return 0; }
+}
+
+// ─── Get badges earned in the current game session
+export function getBadgesEarnedThisGame(): string[] {
+  try {
+    const arcade = require('./arcade-profile');
+    return arcade.getSessionBadges();
+  } catch { return []; }
 }

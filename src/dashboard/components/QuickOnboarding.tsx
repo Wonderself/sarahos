@@ -258,7 +258,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
       <div style={{
         width: '100%',
         maxWidth: 640,
-        background: '#0a0a0f',
+        background: '#0f0720',
         borderRadius: 20,
         border: '1px solid rgba(255,255,255,0.1)',
         overflow: 'hidden',
@@ -281,7 +281,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 width: s === step ? 32 : 10,
                 height: 10,
                 borderRadius: 5,
-                background: s <= step ? '#6366f1' : 'rgba(255,255,255,0.12)',
+                background: s <= step ? '#7c3aed' : 'rgba(255,255,255,0.12)',
                 transition: 'all 0.3s ease',
               }} />
             ))}
@@ -337,8 +337,9 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     key={goal.id}
                     onClick={() => selectGoal(goal)}
                     style={{
-                      background: 'rgba(255,255,255,0.04)',
+                      background: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.08)',
+                      backdropFilter: 'blur(12px)',
                       borderRadius: 14,
                       padding: '20px 16px',
                       cursor: 'pointer',
@@ -354,7 +355,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     }}
                     onMouseLeave={e => {
                       (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
                     }}
                   >
                     <div style={{
@@ -539,7 +540,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 flex: 1,
                 background: 'rgba(255,255,255,0.02)',
                 borderRadius: 14,
-                border: '1px solid rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.08)',
                 padding: 16,
                 marginBottom: 16,
                 minHeight: 220,
@@ -578,7 +579,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                         </div>
                       )}
                       <div style={{
-                        background: msg.role === 'user' ? '#6366f1' : 'rgba(255,255,255,0.06)',
+                        background: msg.role === 'user' ? '#7c3aed' : 'rgba(255,255,255,0.06)',
                         borderRadius: 12,
                         padding: '10px 14px',
                         color: '#fff',
@@ -661,7 +662,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     onClick={finish}
                     style={{
                       padding: '14px 36px',
-                      background: '#6366f1',
+                      background: '#7c3aed',
                       border: 'none',
                       borderRadius: 12,
                       color: '#fff',
@@ -715,7 +716,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       width: 44,
                       height: 44,
                       borderRadius: 12,
-                      background: inputText.trim() && !hasReplied && !isTyping ? '#6366f1' : 'rgba(255,255,255,0.06)',
+                      background: inputText.trim() && !hasReplied && !isTyping ? '#7c3aed' : 'rgba(255,255,255,0.06)',
                       border: 'none',
                       cursor: inputText.trim() && !hasReplied && !isTyping ? 'pointer' : 'default',
                       display: 'flex',

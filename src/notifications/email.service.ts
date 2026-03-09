@@ -106,6 +106,123 @@ export async function sendConfirmationEmail(email: string, name: string, token: 
   });
 }
 
+// ─── Email Sequence: J+0 Welcome ───
+
+export async function sendWelcomeEmail(email: string, name: string): Promise<boolean> {
+  const loginUrl = `${config.APP_URL}/login`;
+
+  const body = `
+    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${name}</strong>,</p>
+    <p style="font-size:15px;color:#4b5563;line-height:1.6;">
+      Bienvenue sur Freenzy.io ! Votre compte est pret et <strong>50 credits gratuits</strong> vous attendent deja.
+    </p>
+    <div style="margin:24px 0;padding:20px;background:#f0fdf4;border-radius:12px;border:1px solid #bbf7d0;">
+      <p style="margin:0 0 12px;font-size:15px;color:#16a34a;font-weight:700;">3 choses a faire maintenant :</p>
+      <ol style="margin:0;padding-left:20px;font-size:14px;color:#4b5563;line-height:1.8;">
+        <li><strong>Activez le Repondeur IA</strong> — Repondez a vos clients 24/7 sans lever le petit doigt</li>
+        <li><strong>Generez votre premier document</strong> — Contrat, devis ou facture en 30 secondes</li>
+        <li><strong>Programmez votre briefing matinal</strong> — Votre journee organisee avant meme le cafe</li>
+      </ol>
+    </div>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${loginUrl}" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:white;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
+        Commencer maintenant
+      </a>
+    </div>
+    <p style="font-size:13px;color:#9ca3af;line-height:1.6;">
+      Vous avez des questions ? Repondez simplement a cet email, notre equipe est la pour vous.
+    </p>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: 'Bienvenue sur Freenzy.io — 50 credits offerts !',
+    html: emailTemplate('Bienvenue sur Freenzy.io', body),
+  });
+}
+
+// ─── Email Sequence: J+2 Getting Started ───
+
+export async function sendGettingStartedEmail(email: string, name: string): Promise<boolean> {
+  const dashboardUrl = `${config.APP_URL}/client/dashboard`;
+
+  const body = `
+    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${name}</strong>,</p>
+    <p style="font-size:15px;color:#4b5563;line-height:1.6;">
+      Ca fait 2 jours que vous etes sur Freenzy.io. Voici quelques astuces pour en tirer le maximum :
+    </p>
+    <div style="margin:20px 0;">
+      <div style="padding:16px;background:#f5f3ff;border-radius:10px;border-left:4px solid #7c3aed;margin-bottom:12px;">
+        <p style="margin:0;font-size:14px;color:#111827;font-weight:600;">Astuce #1 : Personnalisez vos agents</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#4b5563;">Chaque agent peut etre adapte a votre ton, vos horaires et votre secteur d'activite. Plus ils vous connaissent, plus ils sont efficaces.</p>
+      </div>
+      <div style="padding:16px;background:#ecfdf5;border-radius:10px;border-left:4px solid #10b981;margin-bottom:12px;">
+        <p style="margin:0;font-size:14px;color:#111827;font-weight:600;">Astuce #2 : Utilisez le chat</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#4b5563;">Posez vos questions en langage naturel a n'importe quel agent. Pas de menu complique, juste une conversation.</p>
+      </div>
+      <div style="padding:16px;background:#eff6ff;border-radius:10px;border-left:4px solid #3b82f6;margin-bottom:12px;">
+        <p style="margin:0;font-size:14px;color:#111827;font-weight:600;">Astuce #3 : Explorez le Marketplace</p>
+        <p style="margin:4px 0 0;font-size:13px;color:#4b5563;">48 templates prets a l'emploi — 23 gratuits. Installez ceux qui correspondent a votre metier en un clic.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${dashboardUrl}" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:white;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
+        Retourner sur mon dashboard
+      </a>
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: 'Vos 3 astuces pour bien demarrer — Freenzy.io',
+    html: emailTemplate('Guide premiers pas', body),
+  });
+}
+
+// ─── Email Sequence: J+5 Success Story ───
+
+export async function sendSuccessStoryEmail(email: string, name: string): Promise<boolean> {
+  const dashboardUrl = `${config.APP_URL}/client/dashboard`;
+
+  const body = `
+    <p style="font-size:15px;color:#111827;line-height:1.6;">Bonjour <strong>${name}</strong>,</p>
+    <p style="font-size:15px;color:#4b5563;line-height:1.6;">
+      Decouvrez comment Marie, restauratrice a Lyon, utilise Freenzy.io au quotidien :
+    </p>
+    <div style="margin:20px 0;padding:20px;background:#fefce8;border-radius:12px;border:1px solid #fde68a;">
+      <p style="margin:0 0 8px;font-size:16px;color:#92400e;font-weight:700;">"J'ai recupere 15h par semaine"</p>
+      <p style="margin:0 0 16px;font-size:14px;color:#4b5563;line-height:1.6;font-style:italic;">
+        "Avant Freenzy, je passais mes soirees a repondre aux messages, faire les plannings et gerer la compta.
+        Maintenant, le Repondeur gere les reservations, l'agent RH fait les plannings, et mon briefing matinal
+        me donne tout ce que je dois savoir en 2 minutes."
+      </p>
+      <p style="margin:0;font-size:13px;color:#92400e;font-weight:600;">Marie D. — Restauratrice, Lyon</p>
+    </div>
+    <div style="margin:24px 0;padding:16px;background:#f8f9fa;border-radius:10px;">
+      <p style="margin:0 0 12px;font-size:14px;color:#111827;font-weight:600;">Ce que Marie utilise le plus :</p>
+      <ul style="margin:0;padding-left:20px;font-size:13px;color:#4b5563;line-height:1.8;">
+        <li>Repondeur IA — 200+ messages geres automatiquement par mois</li>
+        <li>Briefing matinal — Chaque jour a 7h, avec meteo + agenda + chiffres</li>
+        <li>Generateur de documents — Contrats saisonniers generes en 1 clic</li>
+      </ul>
+    </div>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${dashboardUrl}" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:white;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
+        Essayer ces fonctionnalites
+      </a>
+    </div>
+    <p style="font-size:13px;color:#9ca3af;line-height:1.6;">
+      Vous avez aussi une histoire a raconter ? Repondez a cet email, on adore les retours de nos utilisateurs.
+    </p>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: '"J\'ai recupere 15h par semaine" — Temoignage Freenzy.io',
+    html: emailTemplate('Cas d\'usage inspirant', body),
+  });
+}
+
 export async function sendPasswordResetEmail(email: string, name: string, token: string): Promise<boolean> {
   const resetUrl = `${config.APP_URL}/login?mode=reset&token=${token}`;
 

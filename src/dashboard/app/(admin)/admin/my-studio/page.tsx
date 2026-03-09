@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useUserData } from '../../../../lib/use-user-data';
+import { useIsMobile } from '../../../../lib/use-media-query';
 
 // ── Auth helper ──────────────────────────────────────────────────────────────
 function getToken(): string {
@@ -45,10 +46,9 @@ const DURATIONS: { value: VideoDuration; label: string }[] = [
 
 const GALLERY_KEY = 'fz_admin_studio_gallery';
 
-// loadGallery/saveGallery removed — useUserData handles persistence + backend sync
-
 // ── Component ────────────────────────────────────────────────────────────────
 export default function AdminMyStudioPage() {
+  const isMobile = useIsMobile();
   const [mode, setMode] = useState<'photo' | 'video'>('photo');
 
   // Photo state
@@ -139,7 +139,7 @@ export default function AdminMyStudioPage() {
       if (stopped) return;
       try {
         const res = await fetch(`/api/video?id=${videoId}`);
-        if (!res.ok) return; // retry on next tick
+        if (!res.ok) return;
         const data = await res.json();
         if (stopped) return;
         setVideoStatus(data.status);
@@ -160,25 +160,35 @@ export default function AdminMyStudioPage() {
   }, [videoId]);
 
   const clearGallery = () => {
-    if (!confirm('Vider toute la galerie ? Cette action est irréversible.')) return;
+    if (!confirm('Vider toute la galerie ? Cette action est irreversible.')) return;
     setGallery([]);
+  };
+
+  const pad = isMobile ? 16 : 24;
+  const cardStyle = { background: '#1a0e3a', borderRadius: 12, padding: pad };
+  const btnBase = { border: 'none', cursor: 'pointer', borderRadius: 8, fontWeight: 500 as const, fontSize: 14, minHeight: 44 };
+  const inputStyle = {
+    width: '100%', background: '#0f0720', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8,
+    padding: 12, fontSize: 14, color: '#fff', outline: 'none', resize: 'none' as const,
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-6 admin-page-scrollable">
-      <h1 className="text-2xl font-bold">Mon Studio Creatif</h1>
-      <p className="text-gray-400 text-sm">Generez des photos et videos avec l&apos;IA directement depuis l&apos;admin.</p>
+    <div style={{ minHeight: '100vh', background: '#0f0720', color: '#f3f4f6', padding: pad }} className="admin-page-scrollable">
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>Mon Studio Creatif</h1>
+      <p style={{ color: '#9ca3af', fontSize: 14, marginBottom: 24 }}>Generez des photos et videos avec l&apos;IA directement depuis l&apos;admin.</p>
 
       {/* Mode switcher */}
-      <div className="flex gap-2">
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
         {(['photo', 'video'] as const).map(m => (
           <button
             key={m}
             onClick={() => setMode(m)}
-            className={`px-5 py-2 rounded-lg font-medium transition ${
-              mode === m ? 'bg-purple-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }`}
+            style={{
+              ...btnBase, padding: '8px 20px',
+              background: mode === m ? '#7c3aed' : '#1a0e3a',
+              color: mode === m ? '#fff' : '#9ca3af',
+            }}
           >
             {m === 'photo' ? 'Photo' : 'Video'}
           </button>
@@ -187,25 +197,29 @@ export default function AdminMyStudioPage() {
 
       {/* ── Photo Mode ─────────────────────────────────────────────────────── */}
       {mode === 'photo' && (
-        <div className="bg-gray-800 rounded-xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Generation Photo</h2>
+        <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Generation Photo</h2>
 
           <textarea
             value={photoPrompt}
             onChange={e => setPhotoPrompt(e.target.value)}
             placeholder="Decrivez l'image que vous souhaitez generer..."
             rows={3}
-            className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
+            style={{ ...inputStyle, marginBottom: 16 }}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gap: 16, marginBottom: 16,
+          }}>
             {/* Style */}
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Style</label>
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Style</label>
               <select
                 value={photoStyle}
                 onChange={e => setPhotoStyle(e.target.value as PhotoStyle)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm"
+                style={{ ...inputStyle, padding: 8 }}
               >
                 {STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
               </select>
@@ -213,15 +227,17 @@ export default function AdminMyStudioPage() {
 
             {/* Aspect Ratio */}
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Format</label>
-              <div className="flex gap-2">
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Format</label>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {ASPECT_RATIOS.map(a => (
                   <button
                     key={a.value}
                     onClick={() => setAspectRatio(a.value)}
-                    className={`px-3 py-1.5 rounded text-xs font-medium transition ${
-                      aspectRatio === a.value ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                    }`}
+                    style={{
+                      ...btnBase, padding: '6px 12px', fontSize: 12,
+                      background: aspectRatio === a.value ? '#7c3aed' : 'rgba(255,255,255,0.08)',
+                      color: aspectRatio === a.value ? '#fff' : '#d1d5db',
+                    }}
                   >
                     {a.label}
                   </button>
@@ -231,12 +247,14 @@ export default function AdminMyStudioPage() {
 
             {/* HD Toggle */}
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Qualite</label>
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Qualite</label>
               <button
                 onClick={() => setHd(!hd)}
-                className={`px-4 py-1.5 rounded text-xs font-medium transition ${
-                  hd ? 'bg-amber-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                style={{
+                  ...btnBase, padding: '6px 16px', fontSize: 12,
+                  background: hd ? '#d97706' : 'rgba(255,255,255,0.08)',
+                  color: hd ? '#fff' : '#d1d5db',
+                }}
               >
                 {hd ? 'HD Active (Flux Dev)' : 'Standard (Flux Schnell)'}
               </button>
@@ -246,16 +264,20 @@ export default function AdminMyStudioPage() {
           <button
             onClick={generatePhoto}
             disabled={photoLoading || !photoPrompt.trim()}
-            className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition"
+            style={{
+              ...btnBase, padding: '10px 24px',
+              background: (photoLoading || !photoPrompt.trim()) ? 'rgba(255,255,255,0.08)' : '#7c3aed',
+              color: (photoLoading || !photoPrompt.trim()) ? '#6b7280' : '#fff',
+            }}
           >
             {photoLoading ? 'Generation en cours...' : 'Generer la photo'}
           </button>
 
-          {photoError && <p className="text-red-400 text-sm">{photoError}</p>}
+          {photoError && <p style={{ color: '#f87171', fontSize: 14, marginTop: 12 }}>{photoError}</p>}
 
           {photoResult && (
-            <div className="mt-4">
-              <img src={photoResult} alt={photoPrompt} className="max-w-md rounded-lg border border-gray-700" />
+            <div style={{ marginTop: 16 }}>
+              <img src={photoResult} alt={photoPrompt} style={{ maxWidth: isMobile ? '100%' : 400, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }} />
             </div>
           )}
         </div>
@@ -263,27 +285,29 @@ export default function AdminMyStudioPage() {
 
       {/* ── Video Mode ─────────────────────────────────────────────────────── */}
       {mode === 'video' && (
-        <div className="bg-gray-800 rounded-xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Generation Video</h2>
+        <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Generation Video</h2>
 
           <textarea
             value={videoPrompt}
             onChange={e => setVideoPrompt(e.target.value)}
             placeholder="Decrivez la video que vous souhaitez generer..."
             rows={3}
-            className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
+            style={{ ...inputStyle, marginBottom: 16 }}
           />
 
-          <div>
-            <label className="text-xs text-gray-400 mb-1 block">Duree</label>
-            <div className="flex gap-2">
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Duree</label>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {DURATIONS.map(d => (
                 <button
                   key={d.value}
                   onClick={() => setVideoDuration(d.value)}
-                  className={`px-4 py-1.5 rounded text-xs font-medium transition ${
-                    videoDuration === d.value ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
+                  style={{
+                    ...btnBase, padding: '6px 16px', fontSize: 12,
+                    background: videoDuration === d.value ? '#7c3aed' : 'rgba(255,255,255,0.08)',
+                    color: videoDuration === d.value ? '#fff' : '#d1d5db',
+                  }}
                 >
                   {d.label}
                 </button>
@@ -294,19 +318,24 @@ export default function AdminMyStudioPage() {
           <button
             onClick={generateVideo}
             disabled={videoLoading || !videoPrompt.trim()}
-            className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition"
+            style={{
+              ...btnBase, padding: '10px 24px',
+              background: (videoLoading || !videoPrompt.trim()) ? 'rgba(255,255,255,0.08)' : '#7c3aed',
+              color: (videoLoading || !videoPrompt.trim()) ? '#6b7280' : '#fff',
+            }}
           >
             {videoLoading ? 'Lancement...' : 'Generer la video'}
           </button>
 
-          {videoError && <p className="text-red-400 text-sm">{videoError}</p>}
+          {videoError && <p style={{ color: '#f87171', fontSize: 14, marginTop: 12 }}>{videoError}</p>}
 
           {videoStatus && (
-            <div className="flex items-center gap-3 mt-2">
-              <span className={`inline-block w-2.5 h-2.5 rounded-full ${
-                videoStatus === 'done' ? 'bg-green-500' : videoStatus === 'error' ? 'bg-red-500' : 'bg-yellow-500 animate-pulse'
-              }`} />
-              <span className="text-sm text-gray-300">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
+              <span style={{
+                display: 'inline-block', width: 10, height: 10, borderRadius: '50%',
+                background: videoStatus === 'done' ? '#22c55e' : videoStatus === 'error' ? '#ef4444' : '#eab308',
+              }} />
+              <span style={{ fontSize: 14, color: '#d1d5db' }}>
                 {videoStatus === 'queued' && 'En file d\'attente...'}
                 {videoStatus === 'processing' && 'Generation en cours...'}
                 {videoStatus === 'done' && 'Video terminee !'}
@@ -316,44 +345,50 @@ export default function AdminMyStudioPage() {
           )}
 
           {videoResult && (
-            <div className="mt-4">
-              <video src={videoResult} controls className="max-w-md rounded-lg border border-gray-700" />
+            <div style={{ marginTop: 16 }}>
+              <video src={videoResult} controls style={{ maxWidth: isMobile ? '100%' : 400, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }} />
             </div>
           )}
         </div>
       )}
 
       {/* ── Gallery ────────────────────────────────────────────────────────── */}
-      <div className="bg-gray-800 rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Galerie ({gallery.length})</h2>
+      <div style={cardStyle}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600 }}>Galerie ({gallery.length})</h2>
           {gallery.length > 0 && (
-            <button onClick={clearGallery} className="text-xs text-red-400 hover:text-red-300">
+            <button onClick={clearGallery} style={{ fontSize: 12, color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', minHeight: 44, padding: '8px 12px' }}>
               Vider la galerie
             </button>
           )}
         </div>
 
         {gallery.length === 0 && (
-          <p className="text-gray-500 text-sm">Aucune creation pour le moment. Generez votre premiere image ou video !</p>
+          <p style={{ color: '#6b7280', fontSize: 14 }}>Aucune creation pour le moment. Generez votre premiere image ou video !</p>
         )}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: 16,
+        }}>
           {gallery.map(item => (
-            <div key={item.id} className="bg-gray-900 rounded-lg overflow-hidden border border-gray-700 group">
+            <div key={item.id} style={{ background: '#0f0720', borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
               {item.type === 'photo' ? (
-                <img src={item.url} alt={item.prompt} className="w-full h-40 object-cover" />
+                <img src={item.url} alt={item.prompt} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
               ) : (
-                <video src={item.url} className="w-full h-40 object-cover" muted />
+                <video src={item.url} style={{ width: '100%', height: 160, objectFit: 'cover' }} muted />
               )}
-              <div className="p-2">
-                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
-                  item.type === 'photo' ? 'bg-blue-900/50 text-blue-300' : 'bg-purple-900/50 text-purple-300'
-                }`}>
+              <div style={{ padding: 8 }}>
+                <span style={{
+                  fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 500,
+                  background: item.type === 'photo' ? 'rgba(37,99,235,0.2)' : 'rgba(147,51,234,0.2)',
+                  color: item.type === 'photo' ? '#93c5fd' : '#c4b5fd',
+                }}>
                   {item.type === 'photo' ? 'Photo' : 'Video'}
                 </span>
-                <p className="text-xs text-gray-400 mt-1 line-clamp-2">{item.prompt}</p>
-                <p className="text-[10px] text-gray-600 mt-1">
+                <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.prompt}</p>
+                <p style={{ fontSize: 10, color: '#4b5563', marginTop: 4 }}>
                   {new Date(item.createdAt).toLocaleDateString('fr-FR')}
                 </p>
               </div>

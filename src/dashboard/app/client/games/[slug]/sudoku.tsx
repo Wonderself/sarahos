@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { recordGameScore } from '@/lib/games-engine';
 
 type Board = (number | null)[][];
@@ -53,6 +54,24 @@ function generatePuzzle(difficulty: number = 40): { puzzle: Board; solution: num
   return { puzzle, solution };
 }
 
+function useCellSize(): number {
+  const [size, setSize] = useState(36);
+  useEffect(() => {
+    function calc() {
+      // 9 cells + 2 thick borders (2px each) + 6 thin borders (1px each) + 32px padding
+      // Available = min(window.innerWidth - 32, 500) for the grid
+      const available = Math.min(window.innerWidth - 40, 400);
+      // 9 cells, 2 thick borders at 2px = 4px, 6 thin borders at 1px = 6px, outer border 4px
+      const cellMax = Math.floor((available - 14) / 9);
+      setSize(Math.min(cellMax, 44));
+    }
+    calc();
+    window.addEventListener('resize', calc);
+    return () => window.removeEventListener('resize', calc);
+  }, []);
+  return size;
+}
+
 export default function SudokuGame() {
   const [puzzle, setPuzzle] = useState<Board>([]);
   const [solution, setSolution] = useState<number[][]>([]);
@@ -64,6 +83,8 @@ export default function SudokuGame() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [errors, setErrors] = useState<Set<string>>(new Set());
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cellSize = useCellSize();
 
   const reset = useCallback(() => {
     const { puzzle: p, solution: s } = generatePuzzle(40);
@@ -82,9 +103,12 @@ export default function SudokuGame() {
   useEffect(() => { reset(); }, [reset]);
 
   useEffect(() => {
-    if (!running) return;
-    const iv = setInterval(() => setTimer((t) => t + 1), 1000);
-    return () => clearInterval(iv);
+    if (!running) {
+      if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+      return;
+    }
+    timerRef.current = setInterval(() => setTimer((t) => t + 1), 1000);
+    return () => { if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; } };
   }, [running]);
 
   const checkWin = useCallback(
@@ -106,12 +130,16 @@ export default function SudokuGame() {
       newBoard[r][c] = n === 0 ? null : n;
       setBoard(newBoard);
 
-      // Check errors
-      const newErrors = new Set<string>();
-      if (n > 0 && n !== solution[r][c]) {
-        newErrors.add(`${r}-${c}`);
-      }
-      setErrors(newErrors);
+      // Accumulate errors
+      setErrors((prev) => {
+        const next = new Set(prev);
+        if (n > 0 && n !== solution[r][c]) {
+          next.add(`${r}-${c}`);
+        } else {
+          next.delete(`${r}-${c}`);
+        }
+        return next;
+      });
 
       if (checkWin(newBoard)) {
         setRunning(false);
@@ -127,7 +155,21 @@ export default function SudokuGame() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const n = parseInt(e.key);
-      if (n >= 0 && n <= 9) handleInput(n);
+      if (n >= 0 && n <= 9) { handleInput(n); return; }
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        setSelected((prev) => {
+          if (!prev) return [0, 0];
+          const [r, c] = prev;
+          switch (e.key) {
+            case 'ArrowUp': return [Math.max(0, r - 1), c];
+            case 'ArrowDown': return [Math.min(8, r + 1), c];
+            case 'ArrowLeft': return [r, Math.max(0, c - 1)];
+            case 'ArrowRight': return [r, Math.min(8, c + 1)];
+            default: return prev;
+          }
+        });
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -138,8 +180,8 @@ export default function SudokuGame() {
   if (board.length === 0) return null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-      {/* Timer */}
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
+      {/* Stats bar */}
       <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
@@ -147,6 +189,11 @@ export default function SudokuGame() {
           </span>
           {formatTime(timer)}
         </div>
+        {errors.size > 0 && (
+          <div style={{ color: '#ef4444', fontSize: 13 }}>
+            {errors.size} erreur{errors.size > 1 ? 's' : ''}
+          </div>
+        )}
         {won && (
           <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 14 }}>
             Bravo ! Score : {Math.max(100, 1000 - timer * 2)}
@@ -154,12 +201,12 @@ export default function SudokuGame() {
         )}
       </div>
 
-      {/* Board */}
+      {/* Board — responsive cell sizes */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(9, 40px)',
-          gridTemplateRows: 'repeat(9, 40px)',
+          gridTemplateColumns: `repeat(9, ${cellSize}px)`,
+          gridTemplateRows: `repeat(9, ${cellSize}px)`,
           gap: 0,
           border: '2px solid rgba(255,255,255,0.3)',
         }}
@@ -182,12 +229,12 @@ export default function SudokuGame() {
                 key={`${r}-${c}`}
                 onClick={() => setSelected([r, c])}
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: cellSize,
+                  height: cellSize,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 18,
+                  fontSize: Math.max(12, cellSize * 0.45),
                   fontWeight: isFixed ? 700 : 400,
                   color: isError ? '#ef4444' : isFixed ? '#fff' : '#3b82f6',
                   background: isSelected
@@ -208,22 +255,23 @@ export default function SudokuGame() {
         )}
       </div>
 
-      {/* Number pad */}
-      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
+      {/* Number pad — responsive */}
+      <div style={{ display: 'flex', gap: 'clamp(4px, 1.2vw, 6px)', flexWrap: 'wrap', justifyContent: 'center', maxWidth: cellSize * 9 + 50 }}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
           <button
             key={n}
             onClick={() => handleInput(n)}
             style={{
-              width: 40,
-              height: 40,
+              width: Math.max(36, cellSize),
+              height: Math.max(36, cellSize),
               borderRadius: 8,
               background: 'rgba(255,255,255,0.08)',
               color: '#fff',
               border: 'none',
-              fontSize: 16,
+              fontSize: Math.max(14, cellSize * 0.4),
               fontWeight: 600,
               cursor: 'pointer',
+              minHeight: 44,
             }}
           >
             {n}
@@ -232,37 +280,59 @@ export default function SudokuGame() {
         <button
           onClick={() => handleInput(0)}
           style={{
-            width: 40,
-            height: 40,
+            width: Math.max(36, cellSize),
+            height: Math.max(36, cellSize),
             borderRadius: 8,
             background: 'rgba(239,68,68,0.15)',
             color: '#ef4444',
             border: 'none',
             fontSize: 14,
             cursor: 'pointer',
+            minHeight: 44,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <span className="material-symbols-rounded" style={{ fontSize: 18 }}>backspace</span>
         </button>
       </div>
 
-      {gameOver && (
+      {/* Game over / Replay */}
+      {gameOver && won && (
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+          <div style={{ color: '#22c55e', fontWeight: 700, fontSize: 20 }}>
+            Score : {Math.max(100, 1000 - timer * 2)}
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
         <button
           onClick={reset}
           style={{
-            background: '#8b5cf6',
-            color: '#fff',
-            border: 'none',
+            background: gameOver ? '#7c3aed' : 'rgba(255,255,255,0.08)',
+            color: gameOver ? '#fff' : 'rgba(255,255,255,0.5)',
+            border: gameOver ? 'none' : '1px solid rgba(255,255,255,0.1)',
             borderRadius: 10,
-            padding: '10px 24px',
-            fontSize: 14,
+            padding: '12px 28px',
+            fontSize: 15,
             fontWeight: 600,
             cursor: 'pointer',
           }}
         >
-          Nouvelle grille
+          {gameOver ? 'Rejouer' : 'Nouvelle grille'}
         </button>
-      )}
+        {gameOver && (
+          <Link
+            href="/client/games"
+            style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
+          >
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+            Arcade
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

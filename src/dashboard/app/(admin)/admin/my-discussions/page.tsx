@@ -183,19 +183,19 @@ export default function MyDiscussionsPage() {
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-4 admin-page-scrollable">
       {/* Sidebar */}
-      <div className="w-72 flex flex-col bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shrink-0">
-        <div className="p-3 border-b border-gray-700">
-          <button onClick={() => setShowTemplates(!showTemplates)} className="w-full px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+      <div className="w-72 flex flex-col bg-[#1a0e3a] rounded-xl border border-white/[0.08] overflow-hidden shrink-0">
+        <div className="p-3 border-b border-white/[0.08]">
+          <button onClick={() => setShowTemplates(!showTemplates)} className="w-full px-3 py-2 bg-[#7c3aed] text-white rounded-lg text-sm hover:bg-[#6d28d9]">
             + Nouvelle discussion
           </button>
         </div>
         <div className="flex-1 overflow-y-auto">
           {showTemplates && (
-            <div className="p-2 border-b border-gray-700 space-y-1">
+            <div className="p-2 border-b border-white/[0.08] space-y-1">
               {DISCUSSION_TEMPLATES.map(t => {
                 const agent = ALL_AGENTS.find(a => a.id === t.agentId);
                 return (
-                  <button key={t.title} onClick={() => startDiscussion(t)} className="w-full text-left p-2 rounded-lg hover:bg-gray-700 text-sm">
+                  <button key={t.title} onClick={() => startDiscussion(t)} className="w-full text-left p-2 rounded-lg hover:bg-white/[0.07] text-sm">
                     <span><span className="material-symbols-rounded" style={{ fontSize: 14, color: agent?.color || 'var(--accent)' }}>{agent?.materialIcon}</span> {t.title}</span>
                   </button>
                 );
@@ -206,7 +206,7 @@ export default function MyDiscussionsPage() {
             <div
               key={d.id}
               onClick={() => setActiveId(d.id)}
-              className={`p-3 border-b border-gray-700/50 cursor-pointer hover:bg-gray-700/50 ${activeId === d.id ? 'bg-gray-700/50' : ''}`}
+              className={`p-3 border-b border-white/[0.06] cursor-pointer hover:bg-white/[0.07] ${activeId === d.id ? 'bg-white/[0.07]' : ''}`}
             >
               <div className="flex items-center justify-between">
                 <span className="text-white text-sm font-medium truncate"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{d.agentMaterialIcon}</span> {d.title}</span>
@@ -219,24 +219,24 @@ export default function MyDiscussionsPage() {
       </div>
 
       {/* Main chat area */}
-      <div className="flex-1 flex flex-col bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#1a0e3a] rounded-xl border border-white/[0.08] overflow-hidden">
         {active ? (
           <>
-            <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+            <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
               <div>
                 <h2 className="text-white font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{active.agentMaterialIcon}</span> {active.title}</h2>
                 <p className="text-gray-500 text-xs">{active.agentName} • {active.messages.length} messages</p>
               </div>
-              <button onClick={() => exportMarkdown(active)} className="px-3 py-1 bg-gray-700 text-gray-300 rounded text-xs hover:bg-gray-600">
+              <button onClick={() => exportMarkdown(active)} className="px-3 py-1 bg-white/[0.08] text-gray-300 rounded text-xs hover:bg-white/[0.12]">
                 Exporter
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {active.messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-xl p-3 ${m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'}`}>
+                  <div className={`max-w-[80%] rounded-xl p-3 ${m.role === 'user' ? 'bg-[#7c3aed] text-white' : 'bg-white/[0.08] text-gray-200'}`}>
                     <p className="text-sm whitespace-pre-wrap">{m.content || (streaming && i === active.messages.length - 1 ? '...' : '')}</p>
-                    <p className={`text-xs mt-1 ${m.role === 'user' ? 'text-blue-200' : 'text-gray-500'}`}>
+                    <p className={`text-xs mt-1 ${m.role === 'user' ? 'text-purple-200' : 'text-gray-500'}`}>
                       {new Date(m.timestamp).toLocaleTimeString('fr-FR')}
                     </p>
                   </div>
@@ -244,7 +244,7 @@ export default function MyDiscussionsPage() {
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="p-4 border-t border-gray-700">
+            <div className="p-4 border-t border-white/[0.08]">
               <div className="flex gap-2">
                 <input
                   value={input}
@@ -252,9 +252,9 @@ export default function MyDiscussionsPage() {
                   onKeyDown={e => e.key === 'Enter' && !e.shiftKey && !streaming && handleSend()}
                   placeholder="Continuez la discussion..."
                   disabled={streaming}
-                  className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none disabled:opacity-50"
+                  className="flex-1 bg-[#0f0720] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm focus:border-purple-500 focus:outline-none disabled:opacity-50"
                 />
-                <button onClick={handleSend} disabled={streaming || !input.trim()} className="px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50">
+                <button onClick={handleSend} disabled={streaming || !input.trim()} className="px-4 py-2.5 bg-[#7c3aed] text-white rounded-lg text-sm hover:bg-[#6d28d9] disabled:opacity-50">
                   {streaming ? '...' : 'Envoyer'}
                 </button>
               </div>

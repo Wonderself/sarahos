@@ -96,7 +96,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 borderRadius: 12,
                 padding: '10px 14px',
                 display: 'flex', alignItems: 'flex-start', gap: 10,
-                boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.12), 0 0 40px rgba(124,58,237,0.08)',
                 pointerEvents: 'all',
                 animation: 'toastIn 0.2s ease',
               }}
@@ -127,6 +127,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         [data-theme="dark"] {
           --toast-success-bg: #14532d22;
           --toast-error-bg: #7f1d1d22;
+          --toast-bg: #1a0e3a;
         }
       `}</style>
     </ToastContext.Provider>

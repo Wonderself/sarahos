@@ -53,7 +53,7 @@ const ALARM_MODES = [
   { id: 'dur',        icon: 'local_fire_department', label: 'Dur',   color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
   { id: 'sympa',      icon: 'sentiment_satisfied', label: 'Sympa',   color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
   { id: 'drole',      icon: 'mood',              label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
-  { id: 'fou',        icon: 'psychology_alt',    label: 'Fou',        color: '#8b7cf8', desc: 'Un reveil completement delirant et imprevisible' },
+  { id: 'fou',        icon: 'psychology_alt',    label: 'Fou',        color: '#7c3aed', desc: 'Un reveil completement delirant et imprevisible' },
   { id: 'motivant',   icon: 'fitness_center',    label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
   { id: 'zen',        icon: 'self_improvement',  label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
   { id: 'energique',  icon: 'bolt',              label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },
@@ -1381,8 +1381,9 @@ export default function ReveilPage() {
                 <div key={i} style={{
                   display: 'flex', alignItems: 'flex-start', gap: 12,
                   padding: '14px 16px', borderRadius: 12,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(12px)',
                 }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 22, flexShrink: 0, color: '#e4e6eb' }}>{feature.icon}</span>
                   <div>
@@ -1396,7 +1397,7 @@ export default function ReveilPage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '14px 20px', borderRadius: 12,
-              background: 'rgba(91,108,247,0.12)', border: '1px solid rgba(91,108,247,0.2)',
+              background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.2)',
               marginBottom: 20,
             }}>
               <span className="material-symbols-rounded" style={{ fontSize: 22 }}>savings</span>
@@ -1416,7 +1417,7 @@ export default function ReveilPage() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 24px', borderRadius: 12,
-                  background: '#5b6cf7', color: '#fff',
+                  background: '#7c3aed', color: '#fff',
                   fontWeight: 700, fontSize: 14,
                   textDecoration: 'none', transition: 'opacity 0.2s',
                   minHeight: 44,

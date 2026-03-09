@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { recordGameScore } from '@/lib/games-engine';
+import Link from 'next/link';
 
 const ROWS = 9;
 const COLS = 9;
@@ -77,43 +78,58 @@ export default function MinesweeperGame() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [timer, setTimer] = useState(0);
-  const [timerRef, setTimerRef] = useState<ReturnType<typeof setInterval> | null>(null);
   const [flags, setFlags] = useState(0);
   const [started, setStarted] = useState(false);
+  const [flagMode, setFlagMode] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timerValRef = useRef(0);
 
-  const startTimer = useCallback(() => {
-    const iv = setInterval(() => setTimer((t) => t + 1), 1000);
-    setTimerRef(iv);
-    return iv;
-  }, []);
-
-  const stopTimer = useCallback(() => {
-    if (timerRef) clearInterval(timerRef);
-  }, [timerRef]);
+  // Timer effect: runs when started & not gameOver
+  useEffect(() => {
+    if (started && !gameOver) {
+      timerRef.current = setInterval(() => {
+        timerValRef.current += 1;
+        setTimer(timerValRef.current);
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [started, gameOver]);
 
   const initGame = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = null;
+    timerValRef.current = 0;
     setBoard(null);
     setGameOver(false);
     setWon(false);
     setTimer(0);
     setFlags(0);
     setStarted(false);
-    if (timerRef) clearInterval(timerRef);
-  }, [timerRef]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const startNewGame = useCallback(() => { initGame(); }, []);
+    setFlagMode(false);
+  }, []);
 
   const handleClick = useCallback(
     (r: number, c: number) => {
       if (gameOver) return;
 
+      // In flag mode, toggle flag instead of revealing
+      if (flagMode && board) {
+        const cell = board[r][c];
+        if (cell.revealed) return;
+        const newBoard = board.map((row) => row.map((cl) => ({ ...cl })));
+        newBoard[r][c].flagged = !newBoard[r][c].flagged;
+        setBoard(newBoard);
+        setFlags((f) => f + (newBoard[r][c].flagged ? 1 : -1));
+        return;
+      }
+
       let b = board;
       if (!b) {
-        // First click
+        // First click — board generated around safe zone
         b = createBoard(r, c);
         setStarted(true);
-        startTimer();
       }
 
       const cell = b[r][c];
@@ -127,7 +143,6 @@ export default function MinesweeperGame() {
         setBoard(final);
         setGameOver(true);
         setWon(false);
-        stopTimer();
         recordGameScore('minesweeper', 0);
         return;
       }
@@ -140,12 +155,11 @@ export default function MinesweeperGame() {
       if (unrevealed === 0) {
         setGameOver(true);
         setWon(true);
-        stopTimer();
-        const score = Math.max(100, 1000 - timer * 5);
+        const score = Math.max(100, 1000 - timerValRef.current * 5);
         recordGameScore('minesweeper', score);
       }
     },
-    [board, gameOver, startTimer, stopTimer, timer]
+    [board, gameOver, flagMode]
   );
 
   const handleRightClick = useCallback(
@@ -170,10 +184,13 @@ export default function MinesweeperGame() {
 
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
+  // Dynamic cell size: fit 9 cols within available width (max 500px container - 32px padding - 12px grid padding - gaps)
+  // cellSize = (availableWidth - gridPadding*2 - gap*(cols-1)) / cols
+  // We use CSS calc via max-width on the grid, cells are 1fr
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
       {/* Header */}
-      <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
             flag
@@ -186,17 +203,38 @@ export default function MinesweeperGame() {
           </span>
           {formatTime(timer)}
         </div>
+        {/* Flag mode toggle — near header for easy access */}
+        <button
+          onClick={() => setFlagMode((f) => !f)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: flagMode ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.08)',
+            border: flagMode ? '1px solid rgba(239,68,68,0.4)' : '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 10, padding: '6px 14px',
+            color: flagMode ? '#ef4444' : 'rgba(255,255,255,0.6)',
+            fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>
+            {flagMode ? 'flag' : 'touch_app'}
+          </span>
+          {flagMode ? 'Drapeau' : 'Révéler'}
+        </button>
       </div>
 
-      {/* Board */}
+      {/* Board — responsive grid */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${COLS}, 36px)`,
+          gridTemplateColumns: `repeat(${COLS}, 1fr)`,
           gap: 2,
           padding: 6,
-          background: 'rgba(255,255,255,0.03)',
+          background: 'rgba(255,255,255,0.05)',
           borderRadius: 10,
+          width: '100%',
+          maxWidth: 340,
+          touchAction: 'manipulation',
         }}
       >
         {displayBoard.map((row, r) =>
@@ -206,31 +244,31 @@ export default function MinesweeperGame() {
               onClick={() => handleClick(r, c)}
               onContextMenu={(e) => handleRightClick(e, r, c)}
               style={{
-                width: 36,
-                height: 36,
+                aspectRatio: '1',
                 borderRadius: 4,
                 background: cell.revealed
                   ? cell.mine
                     ? 'rgba(239,68,68,0.25)'
-                    : 'rgba(255,255,255,0.06)'
-                  : 'rgba(255,255,255,0.03)',
+                    : 'rgba(255,255,255,0.08)'
+                  : 'rgba(255,255,255,0.05)',
                 border: cell.revealed
-                  ? '1px solid rgba(255,255,255,0.06)'
+                  ? '1px solid rgba(255,255,255,0.08)'
                   : '1px solid rgba(255,255,255,0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: cell.revealed || gameOver ? 'default' : 'pointer',
-                fontSize: 14,
+                fontSize: 'min(3.5vw, 14px)',
                 fontWeight: 700,
                 color: cell.revealed && cell.neighbors > 0 ? NUM_COLORS[cell.neighbors] : 'transparent',
                 transition: 'background 0.1s',
+                WebkitTapHighlightColor: 'transparent',
               }}
             >
               {cell.flagged && !cell.revealed ? (
-                <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#ef4444' }}>flag</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 'min(4vw, 16px)', color: '#ef4444' }}>flag</span>
               ) : cell.revealed && cell.mine ? (
-                <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#ef4444' }}>crisis_alert</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 'min(4vw, 16px)', color: '#ef4444' }}>crisis_alert</span>
               ) : cell.revealed && cell.neighbors > 0 ? (
                 cell.neighbors
               ) : null}
@@ -247,34 +285,55 @@ export default function MinesweeperGame() {
 
       {gameOver && (
         <div style={{ textAlign: 'center' }}>
-          <p style={{ color: won ? '#22c55e' : '#ef4444', fontWeight: 600, marginBottom: 4 }}>
+          <p style={{ color: won ? '#22c55e' : '#ef4444', fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
             {won ? 'Bravo ! Toutes les mines trouvées !' : 'Boom ! Vous avez touché une mine.'}
           </p>
           {won && (
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, marginBottom: 12 }}>
-              Score : {Math.max(100, 1000 - timer * 5)}
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginBottom: 16 }}>
+              Score : {Math.max(100, 1000 - timerValRef.current * 5)}
             </p>
           )}
-          <button
-            onClick={startNewGame}
-            style={{
-              background: '#8b5cf6',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 10,
-              padding: '10px 24px',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            Rejouer
-          </button>
+          {!won && (
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginBottom: 16 }}>
+              Score : 0
+            </p>
+          )}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={initGame}
+              style={{
+                background: '#7c3aed',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 10,
+                padding: '12px 28px',
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Rejouer
+            </button>
+            <Link
+              href="/client/games"
+              style={{
+                color: 'rgba(255,255,255,0.5)',
+                textDecoration: 'none',
+                fontSize: 14,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+              }}
+            >
+              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+              Arcade
+            </Link>
+          </div>
         </div>
       )}
 
       <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>
-        Clic gauche : révéler — Clic droit : drapeau
+        Clic gauche : révéler — Clic droit ou mode drapeau : drapeau
       </p>
     </div>
   );

@@ -149,7 +149,7 @@ export default function GlobalSearch() {
         onClick={() => { setOpen(false); setQuery(''); }}
         style={{
           position: 'fixed', inset: 0, zIndex: 10000,
-          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(2px)',
+          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(12px)',
         }}
       />
 
@@ -160,7 +160,7 @@ export default function GlobalSearch() {
         background: 'var(--bg-primary)',
         borderRadius: 12,
         border: '1px solid var(--border-primary)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(124,58,237,0.15)',
         overflow: 'hidden',
       }}>
         {/* Input */}

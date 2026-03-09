@@ -290,7 +290,7 @@ export default function AccountPage() {
   // Determine tier badge
   const tierBadge = COMMISSION_TIERS.find(t => userNumber <= t.maxUsers);
   const badgeLabel = tierBadge?.badge ?? 'Standard+';
-  const badgeColor = commissionRate === 0 ? '#22c55e' : commissionRate <= 0.05 ? '#5b6cf7' : '#9333ea';
+  const badgeColor = commissionRate === 0 ? '#22c55e' : commissionRate <= 0.05 ? '#7c3aed' : '#9333ea';
 
   return (
     <div className="client-page-scrollable">
@@ -433,13 +433,13 @@ export default function AccountPage() {
             {DEPOSIT_OPTIONS.map(opt => (
               <div key={opt.id} className="card card-lift text-center" style={{
                 padding: 16, position: 'relative',
-                borderColor: opt.popular ? '#5b6cf7' : 'var(--border-primary)',
+                borderColor: opt.popular ? '#7c3aed' : 'var(--border-primary)',
                 borderWidth: opt.popular ? 2 : 1,
               }}>
                 {opt.popular && (
                   <div className="text-xs font-bold" style={{
                     position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)',
-                    background: '#5b6cf7', color: 'white',
+                    background: '#7c3aed', color: 'white',
                     padding: '2px 10px', borderRadius: '0 0 6px 6px', fontSize: 9,
                   }}>
                     POPULAIRE
@@ -653,7 +653,7 @@ export default function AccountPage() {
       </div>
 
       {/* Coming Soon + Active integrations */}
-      <div className="card mt-16 p-16" style={{ background: 'linear-gradient(135deg, #5b6cf708, #8b7cf808)' }}>
+      <div className="card mt-16 p-16" style={{ background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)' }}>
         <h3 className="font-bold text-lg mb-12">Integrations</h3>
         <div className="grid-auto gap-12" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
           {[

@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { generateQR } from '../../../lib/qr-generator';
+import { claimReward } from '../../../lib/rewards';
 
 interface Referral {
   id: string;
@@ -27,6 +29,8 @@ export default function ReferralsPage() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [shareSupported, setShareSupported] = useState(false);
+  const [qrDownloaded, setQrDownloaded] = useState(false);
+  const qrCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     setShareSupported(typeof navigator !== 'undefined' && !!navigator.share);
@@ -83,6 +87,37 @@ export default function ReferralsPage() {
     }
   }
 
+  // Generate QR code when referralCode is available
+  useEffect(() => {
+    if (!referralCode || !qrCanvasRef.current) return;
+    const url = `${window.location.origin}/login?ref=${referralCode}`;
+    generateQR(url, qrCanvasRef.current, { size: 200, foreground: '#7c3aed', background: '#0f0720' });
+  }, [referralCode]);
+
+  const downloadQR = useCallback(() => {
+    if (!qrCanvasRef.current) return;
+    const link = document.createElement('a');
+    link.download = `freenzy-referral-${referralCode}.png`;
+    link.href = qrCanvasRef.current.toDataURL('image/png');
+    link.click();
+    if (!qrDownloaded) {
+      setQrDownloaded(true);
+      claimReward('download_qr');
+    }
+  }, [referralCode, qrDownloaded]);
+
+  const shareToSocial = useCallback((platform: string) => {
+    const url = encodeURIComponent(getReferralLink());
+    const text = encodeURIComponent('Rejoignez Freenzy.io — votre équipe IA complète, 0% de commission !');
+    const urls: Record<string, string> = {
+      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      whatsapp: `https://wa.me/?text=${text}%20${url}`,
+      email: `mailto:?subject=${encodeURIComponent('Rejoignez Freenzy.io')}&body=${text}%20${url}`,
+    };
+    if (urls[platform]) window.open(urls[platform], '_blank');
+  }, [referralCode]);
+
   const totalReferrals = referrals.length;
   const qualifiedReferrals = referrals.filter(r => r.status === 'qualified' || r.status === 'rewarded').length;
   const totalRewards = referrals.reduce((sum, r) => sum + (r.rewardAmount || 0), 0);
@@ -98,12 +133,13 @@ export default function ReferralsPage() {
 
       {/* Hero */}
       <div className="card section" style={{
-        background: 'linear-gradient(135deg, #5b6cf70d, #8b7cf808)',
-        border: '2px solid #5b6cf730', padding: '24px 20px',
+        background: 'linear-gradient(135deg, rgba(124,58,237,0.05), rgba(6,182,212,0.03))',
+        border: '2px solid rgba(124,58,237,0.19)', padding: '24px 20px',
+        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
           <span style={{ fontSize: 48 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>redeem</span></span>
-          <div className="flex-1" style={{ minWidth: 240 }}>
+          <div className="flex-1" style={{ minWidth: 0 }}>
             <div className="font-bold" style={{ fontSize: 20, marginBottom: 6 }}>
               Gagnez 20 EUR de crédits <span className="fz-logo-word">gratuits</span> !
             </div>
@@ -138,6 +174,58 @@ export default function ReferralsPage() {
         </div>
         <div className="text-xs text-muted" style={{ marginTop: 8 }}>
           Code : <strong style={{ color: 'var(--accent)' }}>{referralCode || '...'}</strong>
+        </div>
+      </div>
+
+      {/* QR Code & Social Share */}
+      <div className="card section">
+        <div className="section-title" style={{ marginBottom: 16 }}>QR Code & Partage</div>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ textAlign: 'center' }}>
+            <canvas
+              ref={qrCanvasRef}
+              style={{ borderRadius: 12, border: '1px solid var(--border-primary)' }}
+              width={200}
+              height={200}
+            />
+            <button
+              onClick={downloadQR}
+              className="btn btn-primary btn-sm"
+              style={{ marginTop: 12, width: '100%' }}
+              disabled={!referralCode}
+            >
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Télécharger PNG
+            </button>
+          </div>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div className="text-sm font-bold mb-8">Partagez sur les réseaux</div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {[
+                { id: 'twitter', icon: 'tag', label: 'Twitter / X', color: '#1da1f2' },
+                { id: 'linkedin', icon: 'work', label: 'LinkedIn', color: '#0077b5' },
+                { id: 'whatsapp', icon: 'chat', label: 'WhatsApp', color: '#25d366' },
+                { id: 'email', icon: 'mail', label: 'Email', color: '#8b5cf6' },
+              ].map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => shareToSocial(p.id)}
+                  className="btn btn-sm"
+                  style={{
+                    background: `${p.color}18`, border: `1px solid ${p.color}33`,
+                    color: p.color, fontSize: 12, fontWeight: 600,
+                    display: 'flex', alignItems: 'center', gap: 6,
+                  }}
+                  disabled={!referralCode}
+                >
+                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{p.icon}</span>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            <div className="text-xs text-muted" style={{ marginTop: 12, lineHeight: 1.6 }}>
+              Scannez le QR code ou utilisez les boutons pour partager votre lien de parrainage.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -207,7 +295,8 @@ export default function ReferralsPage() {
           </div>
         ) : (
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            <table className="comparison-table">
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <table className="comparison-table" style={{ minWidth: 600 }}>
               <thead>
                 <tr>
                   <th>Filleul</th>
@@ -246,6 +335,7 @@ export default function ReferralsPage() {
                 })}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>

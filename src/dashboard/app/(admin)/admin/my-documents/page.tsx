@@ -108,7 +108,7 @@ export default function MyDocumentsPage() {
         </div>
         <div className="flex gap-2">
           {(['generate', 'library'] as const).map(t => (
-            <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-lg text-sm ${tab === t ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+            <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-lg text-sm ${tab === t ? 'bg-[#7c3aed] text-white' : 'bg-[#1a0e3a] text-gray-400'}`}>
               {t === 'generate' ? 'Générer' : `Bibliothèque (${docs.length})`}
             </button>
           ))}
@@ -125,7 +125,7 @@ export default function MyDocumentsPage() {
                 <button
                   key={t.id}
                   onClick={() => { setSelectedTemplate(t.id); setResult(''); }}
-                  className={`p-3 rounded-lg border text-left transition-all ${selectedTemplate === t.id ? 'bg-blue-600/10 border-blue-500' : 'bg-gray-800 border-gray-700 hover:border-gray-600'}`}
+                  className={`p-3 rounded-lg border text-left transition-all ${selectedTemplate === t.id ? 'bg-purple-600/10 border-purple-500' : 'bg-[#1a0e3a] border-white/[0.08] hover:border-white/[0.15]'}`}
                 >
                   <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{t.icon}</span>
                   <p className="text-white text-sm font-medium mt-1">{t.title}</p>
@@ -138,7 +138,7 @@ export default function MyDocumentsPage() {
           <div className="space-y-4">
             {template ? (
               <>
-                <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
+                <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{template.icon}</span>
                     <h3 className="text-white font-medium">{template.title}</h3>
@@ -148,22 +148,22 @@ export default function MyDocumentsPage() {
                     onChange={e => setBrief(e.target.value)}
                     placeholder="Décrivez votre besoin en détail..."
                     rows={4}
-                    className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm resize-none focus:border-blue-500 focus:outline-none"
+                    className="w-full bg-[#0f0720] border border-white/[0.08] rounded-lg p-3 text-white text-sm resize-none focus:border-purple-500 focus:outline-none"
                   />
                   <button
                     onClick={generate}
                     disabled={generating || !brief.trim()}
-                    className="mt-3 w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-3 w-full px-4 py-2.5 bg-[#7c3aed] text-white rounded-lg text-sm font-medium hover:bg-[#6d28d9] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {generating ? 'Génération en cours...' : 'Générer'}
                   </button>
                 </div>
                 {result && (
-                  <div ref={resultRef} className="bg-gray-800 rounded-xl p-5 border border-gray-700">
+                  <div ref={resultRef} className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="text-white font-medium text-sm">Résultat</h4>
                       <div className="flex gap-2">
-                        <button onClick={() => navigator.clipboard.writeText(result)} className="px-3 py-1 bg-gray-700 text-gray-300 rounded text-xs hover:bg-gray-600">Copier</button>
+                        <button onClick={() => navigator.clipboard.writeText(result)} className="px-3 py-1 bg-white/[0.08] text-gray-300 rounded text-xs hover:bg-white/[0.12]">Copier</button>
                         <button onClick={saveResult} className="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700">Sauvegarder</button>
                       </div>
                     </div>
@@ -174,7 +174,7 @@ export default function MyDocumentsPage() {
                 )}
               </>
             ) : (
-              <div className="bg-gray-800/50 rounded-xl p-12 text-center text-gray-500 border border-gray-700/50">
+              <div className="bg-[#1a0e3a]/50 rounded-xl p-12 text-center text-gray-500 border border-white/[0.06]">
                 Sélectionnez un template pour commencer
               </div>
             )}
@@ -185,19 +185,19 @@ export default function MyDocumentsPage() {
       {tab === 'library' && (
         <div className="space-y-3">
           {docs.length === 0 ? (
-            <div className="bg-gray-800/50 rounded-xl p-12 text-center text-gray-500 border border-gray-700/50">
+            <div className="bg-[#1a0e3a]/50 rounded-xl p-12 text-center text-gray-500 border border-white/[0.06]">
               Aucun document sauvegardé — générez-en un !
             </div>
           ) : viewDoc ? (
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <div className="bg-[#1a0e3a] rounded-xl p-6 border border-white/[0.08]">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{viewDoc.templateIcon}</span>
                   <h3 className="text-white font-medium">{viewDoc.templateTitle}</h3>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => navigator.clipboard.writeText(viewDoc.content)} className="px-3 py-1 bg-gray-700 text-gray-300 rounded text-xs">Copier</button>
-                  <button onClick={() => setViewDoc(null)} className="px-3 py-1 bg-gray-700 text-gray-300 rounded text-xs">Fermer</button>
+                  <button onClick={() => navigator.clipboard.writeText(viewDoc.content)} className="px-3 py-1 bg-white/[0.08] text-gray-300 rounded text-xs">Copier</button>
+                  <button onClick={() => setViewDoc(null)} className="px-3 py-1 bg-white/[0.08] text-gray-300 rounded text-xs">Fermer</button>
                 </div>
               </div>
               <p className="text-gray-500 text-xs mb-3">Brief: {viewDoc.brief}</p>
@@ -205,7 +205,7 @@ export default function MyDocumentsPage() {
             </div>
           ) : (
             docs.map(doc => (
-              <div key={doc.id} className="bg-gray-800 rounded-xl p-4 border border-gray-700 flex items-center justify-between hover:border-gray-600 cursor-pointer" onClick={() => setViewDoc(doc)}>
+              <div key={doc.id} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08] flex items-center justify-between hover:border-white/[0.15] cursor-pointer" onClick={() => setViewDoc(doc)}>
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{doc.templateIcon}</span>
                   <div>

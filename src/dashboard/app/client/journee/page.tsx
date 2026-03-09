@@ -298,7 +298,7 @@ const MOOD_OPTIONS = [
   { emoji: 'sentiment_dissatisfied', label: 'Pas top', color: '#f97316' },
   { emoji: 'sentiment_neutral', label: 'Neutre', color: '#eab308' },
   { emoji: 'sentiment_satisfied', label: 'Bien', color: '#22c55e' },
-  { emoji: 'sentiment_very_satisfied', label: 'Super !', color: '#5b6cf7' },
+  { emoji: 'sentiment_very_satisfied', label: 'Super !', color: '#7c3aed' },
 ];
 
 const NEWS_TABS = [
@@ -389,8 +389,9 @@ function getDefaultData(): JourneeData {
 // ─── Shared styles ───
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
+  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
   borderRadius: 12, overflow: 'hidden', transition: 'box-shadow 0.2s',
+  backdropFilter: 'blur(12px)',
 };
 const cardHeaderStyle: React.CSSProperties = {
   display: 'flex', alignItems: 'center', justifyContent: 'space-between',

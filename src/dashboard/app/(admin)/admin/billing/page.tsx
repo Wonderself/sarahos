@@ -217,7 +217,7 @@ export default async function BillingPage() {
       {/* Recent Transactions */}
       <div className="section">
         <div className="section-title">Transactions récentes (50 dernières)</div>
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="card table-responsive" style={{ padding: 0 }}>
           <table className="data-table">
             <thead>
               <tr>

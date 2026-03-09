@@ -21,7 +21,7 @@ function StatusBadge({ status }: { status: ServiceStatus['status'] }) {
     ok:       { color: '#16a34a', bg: '#16a34a18', border: '#16a34a44', icon: 'check_circle', label: 'Opérationnel' },
     error:    { color: '#ef4444', bg: '#ef444418', border: '#ef444444', icon: 'cancel', label: 'Erreur' },
     warning:  { color: '#f59e0b', bg: '#f59e0b18', border: '#f59e0b44', icon: 'warning', label: 'Non configuré' },
-    checking: { color: '#5b6cf7', bg: '#5b6cf718', border: '#5b6cf744', icon: 'hourglass_empty', label: 'Vérification…' },
+    checking: { color: '#7c3aed', bg: '#7c3aed18', border: '#7c3aed44', icon: 'hourglass_empty', label: 'Vérification…' },
   };
   const c = cfg[status];
   return (
@@ -89,7 +89,7 @@ function AudioTest() {
         </div>
       )}
       {step === 'transcribing' && (
-        <span style={{ color: '#5b6cf7', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Transcription en cours…</span>
+        <span style={{ color: '#7c3aed', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Transcription en cours…</span>
       )}
       {step === 'done' && (
         <div>

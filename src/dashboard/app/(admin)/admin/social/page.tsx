@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useIsMobile } from '../../../../lib/use-media-query';
 
 // ── Auth helper ──────────────────────────────────────────────────────────────
 function getToken(): string {
@@ -30,7 +31,7 @@ interface SavedPost {
 
 interface CalendarPost {
   id: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   platform: Platform;
   title: string;
   content: string;
@@ -56,11 +57,17 @@ const POST_TYPES: { value: PostType; label: string }[] = [
 const LANGUAGES: Language[] = ['Francais', 'English', 'Bilingue'];
 const GOALS: Goal[] = ['Visibilite', 'Engagement', 'Conversion', 'Education'];
 
-const STATUS_COLORS: Record<CalendarStatus, string> = {
-  brouillon: 'bg-gray-600 text-gray-200',
-  planifie: 'bg-blue-700 text-blue-100',
-  publie: 'bg-green-700 text-green-100',
-  annule: 'bg-red-800 text-red-200',
+const STATUS_BG: Record<CalendarStatus, string> = {
+  brouillon: '#4b5563',
+  planifie: '#1d4ed8',
+  publie: '#15803d',
+  annule: '#991b1b',
+};
+const STATUS_COLOR: Record<CalendarStatus, string> = {
+  brouillon: '#e5e7eb',
+  planifie: '#dbeafe',
+  publie: '#dcfce7',
+  annule: '#fecaca',
 };
 
 const SAVED_KEY = 'fz_admin_saved_posts';
@@ -77,6 +84,7 @@ function saveJSON(key: string, data: unknown) {
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function AdminSocialPage() {
+  const isMobile = useIsMobile();
   const [tab, setTab] = useState<'generator' | 'saved' | 'calendar'>('generator');
   const [platform, setPlatform] = useState<Platform>('linkedin');
 
@@ -108,6 +116,15 @@ export default function AdminSocialPage() {
     setSavedPosts(loadJSON<SavedPost[]>(SAVED_KEY, []));
     setCalendarPosts(loadJSON<CalendarPost[]>(CALENDAR_KEY, []));
   }, []);
+
+  const pad = isMobile ? 16 : 24;
+  const cardStyle = { background: '#1a0e3a', borderRadius: 12, padding: pad };
+  const btnBase = { border: 'none', cursor: 'pointer', borderRadius: 8, fontWeight: 500 as const, fontSize: 14, minHeight: 44 };
+  const inputStyle = {
+    width: '100%', background: '#0f0720', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8,
+    padding: 12, fontSize: 14, color: '#fff', outline: 'none', resize: 'none' as const,
+  };
+  const selectStyle = { ...inputStyle, padding: 8 };
 
   // ── Generate post ────────────────────────────────────────────────────────
   const generatePost = async () => {
@@ -167,7 +184,7 @@ export default function AdminSocialPage() {
   // ── Calendar helpers ─────────────────────────────────────────────────────
   const calendarDays = useMemo(() => {
     const first = new Date(calYear, calMonth, 1);
-    const startDay = first.getDay() === 0 ? 6 : first.getDay() - 1; // Monday start
+    const startDay = first.getDay() === 0 ? 6 : first.getDay() - 1;
     const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
     const cells: (number | null)[] = [];
     for (let i = 0; i < startDay; i++) cells.push(null);
@@ -217,39 +234,46 @@ export default function AdminSocialPage() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 space-y-6 admin-page-scrollable">
-      <h1 className="text-2xl font-bold">Social Media Hub</h1>
-      <p className="text-gray-400 text-sm">Generez, planifiez et gerez vos publications sur les reseaux sociaux.</p>
+    <div style={{ minHeight: '100vh', background: '#0f0720', color: '#f3f4f6', padding: pad }} className="admin-page-scrollable">
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>Social Media Hub</h1>
+      <p style={{ color: '#9ca3af', fontSize: 14, marginBottom: 24 }}>Generez, planifiez et gerez vos publications sur les reseaux sociaux.</p>
 
       {/* Platform selector */}
-      <div className="flex gap-2">
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
         {PLATFORMS.map(p => (
           <button
             key={p.value}
             onClick={() => setPlatform(p.value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition ${
-              platform === p.value ? 'bg-purple-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }`}
+            style={{
+              ...btnBase, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', fontSize: 14,
+              background: platform === p.value ? '#7c3aed' : '#1a0e3a',
+              color: platform === p.value ? '#fff' : '#9ca3af',
+            }}
           >
-            <span className="w-6 h-6 rounded bg-gray-700 flex items-center justify-center text-[10px] font-bold">{p.icon}</span>
-            {p.label}
+            <span style={{
+              width: 24, height: 24, borderRadius: 4, background: 'rgba(255,255,255,0.08)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700,
+            }}>{p.icon}</span>
+            {!isMobile && p.label}
           </button>
         ))}
       </div>
 
       {/* Section tabs */}
-      <div className="flex gap-1 bg-gray-800 rounded-lg p-1 w-fit">
+      <div style={{ display: 'flex', gap: 4, background: '#1a0e3a', borderRadius: 8, padding: 4, marginBottom: 24, width: 'fit-content', maxWidth: '100%', flexWrap: 'wrap' }}>
         {([
           { value: 'generator' as const, label: 'Generateur' },
-          { value: 'saved' as const, label: `Sauvegardes (${savedPosts.length})` },
+          { value: 'saved' as const, label: `Sauv. (${savedPosts.length})` },
           { value: 'calendar' as const, label: 'Calendrier' },
         ]).map(t => (
           <button
             key={t.value}
             onClick={() => setTab(t.value)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
-              tab === t.value ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-gray-200'
-            }`}
+            style={{
+              ...btnBase, padding: '6px 16px', fontSize: 14,
+              background: tab === t.value ? 'rgba(255,255,255,0.08)' : 'transparent',
+              color: tab === t.value ? '#fff' : '#9ca3af',
+            }}
           >
             {t.label}
           </button>
@@ -258,50 +282,43 @@ export default function AdminSocialPage() {
 
       {/* ── Generator Tab ──────────────────────────────────────────────────── */}
       {tab === 'generator' && (
-        <div className="bg-gray-800 rounded-xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Generateur de posts</h2>
+        <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Generateur de posts</h2>
 
           <textarea
             value={brief}
             onChange={e => setBrief(e.target.value)}
             placeholder="De quoi parle votre publication ? Decrivez le sujet, le message cle..."
             rows={3}
-            className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
+            style={{ ...inputStyle, marginBottom: 16 }}
           />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Tone */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+            gap: 16, marginBottom: 16,
+          }}>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Ton</label>
-              <select value={tone} onChange={e => setTone(e.target.value as Tone)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm">
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Ton</label>
+              <select value={tone} onChange={e => setTone(e.target.value as Tone)} style={selectStyle}>
                 {TONES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
-
-            {/* Post type */}
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Type</label>
-              <select value={postType} onChange={e => setPostType(e.target.value as PostType)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm">
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Type</label>
+              <select value={postType} onChange={e => setPostType(e.target.value as PostType)} style={selectStyle}>
                 {POST_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </div>
-
-            {/* Language */}
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Langue</label>
-              <select value={language} onChange={e => setLanguage(e.target.value as Language)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm">
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Langue</label>
+              <select value={language} onChange={e => setLanguage(e.target.value as Language)} style={selectStyle}>
                 {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
               </select>
             </div>
-
-            {/* Goal */}
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Objectif</label>
-              <select value={goal} onChange={e => setGoal(e.target.value as Goal)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm">
+              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Objectif</label>
+              <select value={goal} onChange={e => setGoal(e.target.value as Goal)} style={selectStyle}>
                 {GOALS.map(g => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
@@ -310,29 +327,33 @@ export default function AdminSocialPage() {
           <button
             onClick={generatePost}
             disabled={generating || !brief.trim()}
-            className="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition"
+            style={{
+              ...btnBase, padding: '10px 24px',
+              background: (generating || !brief.trim()) ? 'rgba(255,255,255,0.08)' : '#7c3aed',
+              color: (generating || !brief.trim()) ? '#6b7280' : '#fff',
+            }}
           >
             {generating ? 'Generation en cours...' : 'Generer le post'}
           </button>
 
-          {genError && <p className="text-red-400 text-sm">{genError}</p>}
+          {genError && <p style={{ color: '#f87171', fontSize: 14, marginTop: 12 }}>{genError}</p>}
 
           {generatedContent && (
-            <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">Resultat — {platform} / {postType}</span>
-                <div className="flex gap-2">
+            <div style={{ background: '#0f0720', borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)', padding: 16, marginTop: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
+                <span style={{ fontSize: 12, color: '#9ca3af' }}>Resultat — {platform} / {postType}</span>
+                <div style={{ display: 'flex', gap: 8 }}>
                   <button onClick={copyContent}
-                    className="text-xs px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 transition">
+                    style={{ ...btnBase, padding: '6px 12px', fontSize: 12, background: 'rgba(255,255,255,0.08)', color: '#d1d5db' }}>
                     {copied ? 'Copie !' : 'Copier'}
                   </button>
                   <button onClick={savePost}
-                    className="text-xs px-3 py-1 rounded bg-purple-700 hover:bg-purple-600 text-white transition">
+                    style={{ ...btnBase, padding: '6px 12px', fontSize: 12, background: '#7c3aed', color: '#fff' }}>
                     Sauvegarder
                   </button>
                 </div>
               </div>
-              <pre className="whitespace-pre-wrap text-sm text-gray-200 leading-relaxed">{generatedContent}</pre>
+              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 14, color: '#e5e7eb', lineHeight: 1.6, margin: 0, wordBreak: 'break-word' }}>{generatedContent}</pre>
             </div>
           )}
         </div>
@@ -340,28 +361,28 @@ export default function AdminSocialPage() {
 
       {/* ── Saved Posts Tab ────────────────────────────────────────────────── */}
       {tab === 'saved' && (
-        <div className="space-y-3">
+        <div>
           {savedPosts.length === 0 && (
-            <div className="bg-gray-800 rounded-xl p-8 text-center">
-              <p className="text-gray-500">Aucun post sauvegarde. Generez et sauvegardez des posts depuis l&apos;onglet Generateur.</p>
+            <div style={{ ...cardStyle, textAlign: 'center', padding: 32 }}>
+              <p style={{ color: '#6b7280' }}>Aucun post sauvegarde. Generez et sauvegardez des posts depuis l&apos;onglet Generateur.</p>
             </div>
           )}
           {savedPosts.map(post => (
-            <div key={post.id} className="bg-gray-800 rounded-xl p-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] px-1.5 py-0.5 rounded font-medium bg-purple-900/50 text-purple-300">{post.platform}</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded font-medium bg-gray-700 text-gray-300">{post.type}</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded font-medium bg-gray-700 text-gray-300">{post.tone}</span>
-                  <span className="text-[10px] text-gray-500">{new Date(post.createdAt).toLocaleDateString('fr-FR')}</span>
+            <div key={post.id} style={{ ...cardStyle, marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 500, background: 'rgba(147,51,234,0.2)', color: '#c4b5fd' }}>{post.platform}</span>
+                  <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 500, background: 'rgba(255,255,255,0.08)', color: '#d1d5db' }}>{post.type}</span>
+                  <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 500, background: 'rgba(255,255,255,0.08)', color: '#d1d5db' }}>{post.tone}</span>
+                  <span style={{ fontSize: 10, color: '#6b7280' }}>{new Date(post.createdAt).toLocaleDateString('fr-FR')}</span>
                 </div>
-                <button onClick={() => deletePost(post.id)} className="text-xs text-red-400 hover:text-red-300">Supprimer</button>
+                <button onClick={() => deletePost(post.id)} style={{ fontSize: 12, color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', minHeight: 44, padding: '8px 12px' }}>Supprimer</button>
               </div>
-              <p className="text-xs text-gray-400">Brief : {post.brief}</p>
-              <pre className="whitespace-pre-wrap text-sm text-gray-200 bg-gray-900 rounded p-3 max-h-48 overflow-auto">{post.content}</pre>
+              <p style={{ fontSize: 12, color: '#9ca3af', marginBottom: 8 }}>Brief : {post.brief}</p>
+              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 14, color: '#e5e7eb', background: '#0f0720', borderRadius: 8, padding: 12, maxHeight: 192, overflow: 'auto', margin: 0, wordBreak: 'break-word' }}>{post.content}</pre>
               <button
                 onClick={() => { navigator.clipboard.writeText(post.content); }}
-                className="text-xs px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 transition"
+                style={{ ...btnBase, padding: '6px 12px', fontSize: 12, background: 'rgba(255,255,255,0.08)', color: '#d1d5db', marginTop: 8 }}
               >
                 Copier
               </button>
@@ -372,85 +393,102 @@ export default function AdminSocialPage() {
 
       {/* ── Calendar Tab ───────────────────────────────────────────────────── */}
       {tab === 'calendar' && (
-        <div className="bg-gray-800 rounded-xl p-6 space-y-4">
+        <div style={cardStyle}>
           {/* Month navigation */}
-          <div className="flex items-center justify-between">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <button onClick={() => {
               if (calMonth === 0) { setCalMonth(11); setCalYear(y => y - 1); }
               else setCalMonth(m => m - 1);
-            }} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm">&larr;</button>
-            <h2 className="text-lg font-semibold capitalize">{monthLabel}</h2>
+            }} style={{ ...btnBase, padding: '6px 12px', fontSize: 14, background: 'rgba(255,255,255,0.08)', color: '#d1d5db' }}>&larr;</button>
+            <h2 style={{ fontSize: 18, fontWeight: 600, textTransform: 'capitalize' }}>{monthLabel}</h2>
             <button onClick={() => {
               if (calMonth === 11) { setCalMonth(0); setCalYear(y => y + 1); }
               else setCalMonth(m => m + 1);
-            }} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-sm">&rarr;</button>
+            }} style={{ ...btnBase, padding: '6px 12px', fontSize: 14, background: 'rgba(255,255,255,0.08)', color: '#d1d5db' }}>&rarr;</button>
           </div>
 
-          {/* Day headers */}
-          <div className="grid grid-cols-7 gap-1">
-            {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(d => (
-              <div key={d} className="text-center text-xs text-gray-500 py-1">{d}</div>
-            ))}
-          </div>
+          {/* Calendar - scrollable on mobile */}
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: isMobile ? 560 : 'auto' }}>
+              {/* Day headers */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
+                {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(d => (
+                  <div key={d} style={{ textAlign: 'center', fontSize: 12, color: '#6b7280', padding: 4 }}>{d}</div>
+                ))}
+              </div>
 
-          {/* Calendar grid */}
-          <div className="grid grid-cols-7 gap-1">
-            {calendarDays.map((day, i) => {
-              if (day === null) return <div key={`empty-${i}`} className="h-20" />;
-              const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-              const posts = getPostsForDate(day);
-              const isToday = dateStr === new Date().toISOString().slice(0, 10);
-              return (
-                <div
-                  key={`day-${day}`}
-                  onClick={() => setAddingDate(dateStr)}
-                  className={`h-20 rounded-lg p-1 cursor-pointer border transition hover:border-purple-500 ${
-                    isToday ? 'border-purple-600 bg-gray-750' : 'border-gray-700 bg-gray-900'
-                  }`}
-                >
-                  <span className={`text-xs font-medium ${isToday ? 'text-purple-400' : 'text-gray-400'}`}>{day}</span>
-                  <div className="space-y-0.5 mt-0.5 overflow-hidden">
-                    {posts.slice(0, 2).map(p => (
-                      <div key={p.id} className={`text-[9px] px-1 py-0.5 rounded truncate ${STATUS_COLORS[p.status]}`}>
-                        {p.title}
+              {/* Calendar grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
+                {calendarDays.map((day, i) => {
+                  if (day === null) return <div key={`empty-${i}`} style={{ height: 80 }} />;
+                  const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                  const posts = getPostsForDate(day);
+                  const isToday = dateStr === new Date().toISOString().slice(0, 10);
+                  return (
+                    <div
+                      key={`day-${day}`}
+                      onClick={() => setAddingDate(dateStr)}
+                      style={{
+                        height: 80, borderRadius: 8, padding: 4, cursor: 'pointer',
+                        border: isToday ? '1px solid #7c3aed' : '1px solid rgba(255,255,255,0.08)',
+                        background: isToday ? '#1a0e3a' : '#0f0720',
+                      }}
+                    >
+                      <span style={{ fontSize: 12, fontWeight: 500, color: isToday ? '#c084fc' : '#9ca3af' }}>{day}</span>
+                      <div style={{ marginTop: 2, overflow: 'hidden' }}>
+                        {posts.slice(0, 2).map(p => (
+                          <div key={p.id} style={{
+                            fontSize: 9, padding: '1px 4px', borderRadius: 3, marginBottom: 2,
+                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                            background: STATUS_BG[p.status], color: STATUS_COLOR[p.status],
+                          }}>
+                            {p.title}
+                          </div>
+                        ))}
+                        {posts.length > 2 && <span style={{ fontSize: 9, color: '#6b7280' }}>+{posts.length - 2}</span>}
                       </div>
-                    ))}
-                    {posts.length > 2 && <span className="text-[9px] text-gray-500">+{posts.length - 2}</span>}
-                  </div>
-                </div>
-              );
-            })}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Add post modal */}
           {addingDate && (
-            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setAddingDate(null)}>
-              <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md space-y-4" onClick={e => e.stopPropagation()}>
-                <h3 className="text-lg font-semibold">Ajouter un post — {new Date(addingDate + 'T00:00:00').toLocaleDateString('fr-FR')}</h3>
+            <div
+              style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: isMobile ? 16 : 0 }}
+              onClick={() => setAddingDate(null)}
+            >
+              <div
+                style={{ background: '#1a0e3a', borderRadius: 12, padding: pad, width: '100%', maxWidth: 448, maxHeight: '90vh', overflowY: 'auto' }}
+                onClick={e => e.stopPropagation()}
+              >
+                <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Ajouter un post — {new Date(addingDate + 'T00:00:00').toLocaleDateString('fr-FR')}</h3>
 
                 {/* Existing posts for this date */}
                 {calendarPosts.filter(p => p.date === addingDate).length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-gray-400">Posts existants :</p>
+                  <div style={{ marginBottom: 16 }}>
+                    <p style={{ fontSize: 12, color: '#9ca3af', marginBottom: 8 }}>Posts existants :</p>
                     {calendarPosts.filter(p => p.date === addingDate).map(p => (
-                      <div key={p.id} className="flex items-center justify-between bg-gray-900 rounded p-2">
+                      <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#0f0720', borderRadius: 4, padding: 8, marginBottom: 4, flexWrap: 'wrap', gap: 4 }}>
                         <div>
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded ${STATUS_COLORS[p.status]}`}>{p.status}</span>
-                          <span className="text-xs text-gray-300 ml-2">{p.title}</span>
-                          {p.time && <span className="text-[10px] text-gray-500 ml-1">{p.time}</span>}
+                          <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 3, background: STATUS_BG[p.status], color: STATUS_COLOR[p.status] }}>{p.status}</span>
+                          <span style={{ fontSize: 12, color: '#d1d5db', marginLeft: 8 }}>{p.title}</span>
+                          {p.time && <span style={{ fontSize: 10, color: '#6b7280', marginLeft: 4 }}>{p.time}</span>}
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                           <select
                             value={p.status}
                             onChange={e => updateCalendarStatus(p.id, e.target.value as CalendarStatus)}
-                            className="text-[10px] bg-gray-800 border border-gray-700 rounded px-1 py-0.5"
+                            style={{ fontSize: 10, background: '#1a0e3a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 4, padding: '2px 4px', color: '#d1d5db' }}
                           >
                             <option value="brouillon">brouillon</option>
                             <option value="planifie">planifie</option>
                             <option value="publie">publie</option>
                             <option value="annule">annule</option>
                           </select>
-                          <button onClick={() => deleteCalendarPost(p.id)} className="text-red-400 hover:text-red-300 text-xs ml-1">x</button>
+                          <button onClick={() => deleteCalendarPost(p.id)} style={{ color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, marginLeft: 4, minWidth: 32, minHeight: 32 }}>x</button>
                         </div>
                       </div>
                     ))}
@@ -461,32 +499,36 @@ export default function AdminSocialPage() {
                   value={newCalTitle}
                   onChange={e => setNewCalTitle(e.target.value)}
                   placeholder="Titre du post"
-                  className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  style={{ ...inputStyle, marginBottom: 12 }}
                 />
                 <textarea
                   value={newCalContent}
                   onChange={e => setNewCalContent(e.target.value)}
                   placeholder="Contenu (optionnel)"
                   rows={3}
-                  className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
+                  style={{ ...inputStyle, marginBottom: 12 }}
                 />
-                <div className="grid grid-cols-3 gap-3">
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                  gap: 12, marginBottom: 16,
+                }}>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Heure</label>
+                    <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Heure</label>
                     <input type="time" value={newCalTime} onChange={e => setNewCalTime(e.target.value)}
-                      className="w-full bg-gray-900 border border-gray-700 rounded p-1.5 text-sm" />
+                      style={{ ...inputStyle, padding: 6 }} />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Plateforme</label>
+                    <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Plateforme</label>
                     <select value={platform} onChange={e => setPlatform(e.target.value as Platform)}
-                      className="w-full bg-gray-900 border border-gray-700 rounded p-1.5 text-sm">
+                      style={{ ...selectStyle }}>
                       {PLATFORMS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-400 mb-1 block">Statut</label>
+                    <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Statut</label>
                     <select value={newCalStatus} onChange={e => setNewCalStatus(e.target.value as CalendarStatus)}
-                      className="w-full bg-gray-900 border border-gray-700 rounded p-1.5 text-sm">
+                      style={{ ...selectStyle }}>
                       <option value="brouillon">Brouillon</option>
                       <option value="planifie">Planifie</option>
                       <option value="publie">Publie</option>
@@ -495,13 +537,17 @@ export default function AdminSocialPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 justify-end">
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                   <button onClick={() => setAddingDate(null)}
-                    className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm transition">Fermer</button>
+                    style={{ ...btnBase, padding: '8px 16px', background: 'rgba(255,255,255,0.08)', color: '#d1d5db' }}>Fermer</button>
                   <button
                     onClick={addCalendarPost}
                     disabled={!newCalTitle.trim()}
-                    className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:bg-gray-700 disabled:text-gray-500 text-sm font-medium transition"
+                    style={{
+                      ...btnBase, padding: '8px 16px',
+                      background: !newCalTitle.trim() ? 'rgba(255,255,255,0.08)' : '#7c3aed',
+                      color: !newCalTitle.trim() ? '#6b7280' : '#fff',
+                    }}
                   >
                     Ajouter
                   </button>

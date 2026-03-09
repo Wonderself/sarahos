@@ -141,7 +141,7 @@ export default function ModulesPage() {
       {modules.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {modules.map(mod => {
-            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, icon: 'inventory_2', color: '#5b6cf7' };
+            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, icon: 'inventory_2', color: '#7c3aed' };
             return (
               <div key={mod.id} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 20, border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
 

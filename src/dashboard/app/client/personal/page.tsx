@@ -285,7 +285,7 @@ export default function PersonalAgentsPage() {
       <section className="mb-32">
         <div className="flex items-center gap-12 mb-16">
           <div className="flex-center rounded-md" style={{
-            width: 36, height: 36, background: '#5b6cf715', fontSize: 18,
+            width: 36, height: 36, background: '#7c3aed15', fontSize: 18,
           }}>
             <span className="material-symbols-rounded" style={{ fontSize: 18 }}>business</span>
           </div>
@@ -324,7 +324,7 @@ export default function PersonalAgentsPage() {
       <section className="mb-32">
         <div className="flex items-center gap-12 mb-16">
           <div className="flex-center rounded-md" style={{
-            width: 36, height: 36, background: '#8b7cf815', fontSize: 18,
+            width: 36, height: 36, background: '#06b6d415', fontSize: 18,
           }}>
             <span className="material-symbols-rounded" style={{ fontSize: 18 }}>person</span>
           </div>
@@ -433,7 +433,7 @@ export default function PersonalAgentsPage() {
 
       {/* ─── Bottom CTA ─── */}
       <div className="card p-24" style={{
-        background: 'linear-gradient(135deg, #5b6cf708, #8b7cf808)',
+        background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)',
         border: '1px solid var(--border-secondary)',
       }}>
         <div className="flex-between flex-wrap" style={{ gap: 16 }}>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { loadHistory, ACTION_META, type ActionCategory, type ActionEvent, type TimelineFilter } from '../../../lib/action-history';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 const CATEGORIES: ActionCategory[] = ['message', 'document', 'meeting', 'game', 'reward', 'referral', 'login', 'agent', 'system'];
 
@@ -29,6 +30,7 @@ function formatTime(ts: string): string {
 }
 
 export default function TimelinePage() {
+  const isMobile = useIsMobile();
   const [filter, setFilter] = useState<TimelineFilter>({});
   const [activeCategories, setActiveCategories] = useState<ActionCategory[]>([]);
   const [search, setSearch] = useState('');
@@ -54,8 +56,8 @@ export default function TimelinePage() {
     <div style={{ padding: '24px 20px', maxWidth: 800, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#5b6cf7' }}>timeline</span>
+        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 26 : 32, color: '#7c3aed' }}>timeline</span>
           Timeline
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>
@@ -67,7 +69,7 @@ export default function TimelinePage() {
       <div style={{ marginBottom: 20 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 10, padding: '10px 14px',
         }}>
           <span className="material-symbols-rounded" style={{ fontSize: 20, color: 'rgba(255,255,255,0.35)' }}>search</span>
@@ -118,25 +120,28 @@ export default function TimelinePage() {
 
       {/* Stats */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 28,
+        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 8 : 12, marginBottom: 28,
       }}>
         <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
+          backdropFilter: 'blur(12px)',
         }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#5b6cf7' }}>{events.length}</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#7c3aed' }}>{events.length}</div>
           <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
+          backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#22c55e' }}>{dates.length}</div>
           <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
+          backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#f59e0b' }}>
             {new Set(events.filter(e => e.agentId).map(e => e.agentId)).size}
@@ -149,7 +154,7 @@ export default function TimelinePage() {
       {dates.length === 0 ? (
         <div style={{
           textAlign: 'center', padding: '60px 20px',
-          background: 'rgba(255,255,255,0.02)', borderRadius: 14,
+          background: 'rgba(255,255,255,0.03)', borderRadius: 14,
         }}>
           <span className="material-symbols-rounded" style={{ fontSize: 48, color: 'rgba(255,255,255,0.15)', marginBottom: 12, display: 'block' }}>history</span>
           <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>Aucune action enregistrée</div>
@@ -175,7 +180,7 @@ export default function TimelinePage() {
               }}>
                 <div style={{
                   position: 'absolute', left: -24, top: 2, width: 12, height: 12,
-                  borderRadius: '50%', background: '#5b6cf7', border: '2px solid #0a0a0f',
+                  borderRadius: '50%', background: '#7c3aed', border: '2px solid #0f0720',
                 }} />
                 {formatDate(date)}
               </div>
@@ -188,7 +193,7 @@ export default function TimelinePage() {
                     key={event.id}
                     style={{
                       position: 'relative', marginBottom: 8,
-                      background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+                      background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
                       borderRadius: 10, padding: '12px 14px',
                       display: 'flex', alignItems: 'center', gap: 12,
                     }}

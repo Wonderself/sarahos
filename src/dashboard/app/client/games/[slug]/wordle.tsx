@@ -1,28 +1,35 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { recordGameScore } from '@/lib/games-engine';
 
 const WORDS = [
-  'BATEAU','BALLON','BUREAU','BOUCHE','BOUTON','BRAISE','BRIQUE','BROUIL',
-  'CABANE','CAFARD','CALMER','CANARD','CARTON','CASINO','CASQUE','CAVERN',
-  'CHALON','CHAMPS','CHANCE','CHAQUE','CHARME','CHATON','CHEMIN','CHEVAL',
+  'BATEAU','BALLON','BUREAU','BOUCHE','BOUTON','BRAISE','BRIQUE','BROCHE',
+  'CABANE','CAFARD','CALMER','CANARD','CARTON','CASINO','CASQUE','CLAIRE',
+  'CLARTE','CHAMPS','CHANCE','CHAQUE','CHARME','CHATON','CHEMIN','CHEVAL',
   'CHOISI','CIRAGE','CLAQUE','CLOCHE','COFFRE','COMBAT','COMPTE','CONFIE',
   'CONNUE','CONSUL','COPAIN','CORDON','COUCHE','COUPLE','COURSE','COUSIN',
-  'CRAYON','CROIRE','CROUPE','DAEMON','DANGER','DANSER','DEFAUT','DEMAIN',
-  'DEPART','DESSIN','DEVISE','DINDON','DIRECT','DISQUE','DONNER','DOUBLE',
-  'DOUCHE','DRAGEE','DROITE','DURCIR','EFFORT','EMPLOI','ENIGME','ENTREE',
-  'ENVAHI','ERREUR','ESPION','ESPOIR','ESSAIM','ETABLE','ETOILE','EVITER',
-  'FACADE','FACTIR','FARINE','FAVEUR','FERMER','FICHER','FIGURE','FLACON',
-  'FLAMME','FLECHE','FLOTTE','FORCER','FORMAT','FOUDRE','FOULER','FOURMI',
-  'FRAISE','FRITES','FROIDE','FUMOIR','GALANT','GARAGE','GARDER','GATEAU',
-  'GAUCHE','GENIAL','GLOBAL','GOUTTE','GRADIN','GRANDE','GRAPPE','GRILLE',
-  'GROSSE','GUIDON','HABILE','HAMEAU','HASARD','HERBES','HOMARD','HUMAIN',
-  'HUMEUR','HURLER','IDOINE','IMPOSE','JARDIN','JAUNIR','JOUEUR','JUMEAU',
-  'JUNGLE','LACHER','LANCER','LANGUE','LETTRE','LEURRE','LIGNER','LISSER',
-  'LIVRER','LOGUER','LOUCHE','MAITRE','MARCHE','MASQUE','MAUDIT','MENACE',
-  'MESURE','METIER','MIROIR','MODELE','MOMENT','MOUCHE','MUSEAU','NUANCE',
-  'OBSCUR','OFFRIR','OISEAU','ORIENT','PARDON','PARLER',
+  'CRAYON','CROIRE','CROUPE','DANGER','DANSER','DEFAUT','DEMAIN','DEPART',
+  'DESSIN','DEVISE','DINDON','DIRECT','DISQUE','DONNER','DOUBLE','DOUCHE',
+  'DRAGEE','DROITE','DURCIR','EFFORT','EMPLOI','ENIGME','ENTREE','ENVAHI',
+  'ERREUR','ESPION','ESPOIR','ESSAIM','ETABLE','ETOILE','EVITER','FACADE',
+  'FACILE','FARINE','FAVEUR','FERMER','FICHER','FIGURE','FLACON','FLAMME',
+  'FLECHE','FLOTTE','FORCER','FORMAT','FOUDRE','FOULER','FOURMI','FRAISE',
+  'FRITES','FROIDE','FUMOIR','GALANT','GARAGE','GARDER','GATEAU','GAUCHE',
+  'GENIAL','GLOBAL','GOUTTE','GRADIN','GRANDE','GRAPPE','GRILLE','GROSSE',
+  'GUIDON','HABILE','HAMEAU','HASARD','HERBES','HOMARD','HUMAIN','HUMEUR',
+  'HURLER','IMPOSE','JARDIN','JAUNIR','JOUEUR','JUMEAU','JUNGLE','LACHER',
+  'LANCER','LANGUE','LETTRE','LEURRE','LISSER','LIVRER','LONGER','LOUCHE',
+  'MAITRE','MARCHE','MASQUE','MAUDIT','MENACE','MESURE','METIER','MIROIR',
+  'MODELE','MOMENT','MOUCHE','MUSEAU','NUANCE','OBSCUR','OFFRIR','OISEAU',
+  'ORIENT','PARDON','PARLER','PATRIE','PENSEE','PERCEE','PIGEON','PILOTE',
+  'PLAIRE','PLANTE','PLONGE','POINTE','POLICE','POMPER','POSTER','POURVU',
+  'PRIERE','PRINCE','PRISON','PROFIT','PROPRE','RAMPER','RAPIDE','RASOIR',
+  'RECULE','REFUGE','REGARD','REGIME','REMISE','RENARD','REPERE','RETOUR',
+  'REVEIL','RIDEAU','RIVAGE','ROULER','RUINER','SAUMON','SAVEUR','SENTIR',
+  'SERVIR','SIGNAL','SOMMET','SONDER','SORTIR','SOURCE','STATUE','SUIVRE',
+  'TORCHE','TOUCHE','TREMPE','TRIAGE','UTILES','VALEUR','VAPEUR','VERSER',
 ];
 
 const AZERTY_ROWS = [
@@ -78,6 +85,11 @@ export default function WordleGame() {
   const [shake, setShake] = useState(false);
   const [message, setMessage] = useState('');
   const [letterStates, setLetterStates] = useState<Record<string, CellState>>({});
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => { if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current); };
+  }, []);
 
   const reset = useCallback(() => {
     setTarget(pickWord());
@@ -135,7 +147,8 @@ export default function WordleGame() {
         if (current.length === 6) submit();
         else {
           setShake(true);
-          setTimeout(() => setShake(false), 300);
+          if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+          shakeTimerRef.current = setTimeout(() => { setShake(false); shakeTimerRef.current = null; }, 300);
         }
       } else if (/^[A-Za-z]$/.test(key) && current.length < 6) {
         setCurrent((c) => c + key.toUpperCase());
@@ -163,8 +176,12 @@ export default function WordleGame() {
     }
   }
 
+  // Responsive cell size: 6 cells + 5 gaps(6px) = need cells to fit in (screenWidth - 32px padding - 30px gaps)
+  // On 375px: available = 343px - 30px = 313px => 313/6 ≈ 52px — OK
+  // Keyboard: 10 keys * keyW + 9 * 4px gaps. We use percentage-based key widths.
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
       {message && (
         <div
           style={{
@@ -180,14 +197,15 @@ export default function WordleGame() {
         </div>
       )}
 
-      {/* Grid */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {/* Grid — responsive cells using clamp */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', maxWidth: 342, alignSelf: 'center' }}>
         {rows.map((row, ri) => (
           <div
             key={ri}
             style={{
               display: 'flex',
               gap: 6,
+              justifyContent: 'center',
               animation: shake && ri === guesses.length ? 'shake 0.3s' : undefined,
             }}
           >
@@ -195,18 +213,19 @@ export default function WordleGame() {
               <div
                 key={ci}
                 style={{
-                  width: 52,
-                  height: 52,
+                  width: 'calc(min((100vw - 62px) / 6, 52px))',
+                  height: 'calc(min((100vw - 62px) / 6, 52px))',
                   borderRadius: 8,
                   background: COLORS[row.states[ci]],
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 22,
+                  fontSize: 'clamp(16px, 4.5vw, 22px)',
                   fontWeight: 700,
                   color: '#fff',
                   border: row.states[ci] === 'empty' && letter !== ' ' ? '2px solid rgba(255,255,255,0.2)' : '2px solid transparent',
                   transition: 'background 0.3s',
+                  flexShrink: 0,
                 }}
               >
                 {letter.trim()}
@@ -216,10 +235,10 @@ export default function WordleGame() {
         ))}
       </div>
 
-      {/* Keyboard */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
+      {/* Keyboard — responsive width */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center', width: '100%', maxWidth: 420 }}>
         {AZERTY_ROWS.map((row, ri) => (
-          <div key={ri} style={{ display: 'flex', gap: 4 }}>
+          <div key={ri} style={{ display: 'flex', gap: 'clamp(2px, 0.8vw, 4px)', justifyContent: 'center', width: '100%' }}>
             {row.map((key) => {
               const ls = letterStates[key];
               const bg = ls ? COLORS[ls] : 'rgba(255,255,255,0.1)';
@@ -229,16 +248,18 @@ export default function WordleGame() {
                   key={key}
                   onClick={() => handleKey(key)}
                   style={{
-                    width: isSpecial ? 56 : 36,
+                    flex: isSpecial ? '1.4 1 0' : '1 1 0',
+                    minWidth: 0,
                     height: 44,
                     borderRadius: 6,
                     background: bg,
                     color: '#fff',
                     border: 'none',
                     cursor: 'pointer',
-                    fontSize: isSpecial ? 16 : 14,
+                    fontSize: isSpecial ? 16 : 'clamp(11px, 3vw, 14px)',
                     fontWeight: 600,
                     transition: 'background 0.2s',
+                    padding: '0 2px',
                   }}
                 >
                   {key}
@@ -250,22 +271,30 @@ export default function WordleGame() {
       </div>
 
       {gameOver && (
-        <button
-          onClick={reset}
-          style={{
-            background: '#8b5cf6',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 10,
-            padding: '10px 24px',
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: 'pointer',
-            marginTop: 8,
-          }}
-        >
-          Rejouer
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          <button
+            onClick={reset}
+            style={{
+              background: '#7c3aed',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 10,
+              padding: '12px 28px',
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Rejouer
+          </button>
+          <Link
+            href="/client/games"
+            style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
+          >
+            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+            Arcade
+          </Link>
+        </div>
       )}
 
       <style>{`

@@ -186,7 +186,7 @@ function VideoStudioContent() {
               padding: '4px 12px', borderRadius: 6, border: 'none', fontSize: 11, fontWeight: 600,
               cursor: 'pointer',
               background: mode === 'free' ? 'var(--bg-elevated)' : 'transparent',
-              color: mode === 'free' ? '#5b6cf7' : 'var(--text-secondary)',
+              color: mode === 'free' ? '#7c3aed' : 'var(--text-secondary)',
               boxShadow: mode === 'free' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
             }}
           >
@@ -198,7 +198,7 @@ function VideoStudioContent() {
               padding: '4px 12px', borderRadius: 6, border: 'none', fontSize: 11, fontWeight: 600,
               cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
               background: mode === 'request' ? 'var(--bg-elevated)' : 'transparent',
-              color: mode === 'request' ? '#5b6cf7' : 'var(--text-secondary)',
+              color: mode === 'request' ? '#7c3aed' : 'var(--text-secondary)',
               boxShadow: mode === 'request' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
             }}
           >

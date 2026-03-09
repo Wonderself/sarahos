@@ -726,8 +726,9 @@ export default function ChatPage() {
           {showActionsMenu && (
             <div style={{
               position: 'absolute', top: '100%', right: 0, marginTop: 4, zIndex: 20,
-              background: 'var(--bg-primary)', border: '1px solid var(--border-primary)',
-              borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)',
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 'var(--radius-md)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+              backdropFilter: 'blur(12px)',
               minWidth: 180, padding: 4,
             }}>
               <button onClick={() => { setSearchActive(s => !s); setSearchQuery(''); setShowActionsMenu(false); }}
@@ -764,7 +765,7 @@ export default function ChatPage() {
 
       {/* ═══ SEARCH BAR ═══ */}
       {searchActive && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span>
           <input
             autoFocus
@@ -785,7 +786,7 @@ export default function ChatPage() {
 
       {/* ═══ HISTORY PANEL ═══ */}
       {showHistory && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)', maxHeight: 280, overflowY: 'auto', background: 'var(--bg-secondary)' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', maxHeight: 280, overflowY: 'auto', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">Conversations récentes</span>
             <div className="flex gap-4">
@@ -850,7 +851,7 @@ export default function ChatPage() {
 
       {/* ═══ FAQ PANEL ═══ */}
       {showFaqPanel && selectedAgent && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)', maxHeight: 250, overflowY: 'auto', background: 'var(--bg-secondary)' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', maxHeight: 250, overflowY: 'auto', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> FAQ de {selectedAgent.name}</span>
             <button onClick={() => setShowFaqPanel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
@@ -1121,7 +1122,7 @@ export default function ChatPage() {
                 ] as const).map(tpl => (
                   <Link key={tpl.id} href={`/client/meeting?template=${tpl.id}`} style={{
                     display: 'block', padding: '10px 12px', borderRadius: 8,
-                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                    border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.05)',
                     textDecoration: 'none', color: 'inherit', transition: 'border-color 0.15s',
                   }}>
                     <div className="text-sm font-semibold"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{tpl.emoji}</span> {tpl.title}</div>
@@ -1244,7 +1245,7 @@ export default function ChatPage() {
 
       {/* Action Proposals */}
       {actionProposals.length > 0 && !loading && (
-        <div style={{ padding: '8px 16px', borderTop: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', maxHeight: 200, overflowY: 'auto' }}>
+        <div style={{ padding: '8px 16px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', maxHeight: 200, overflowY: 'auto' }}>
           <div className="flex flex-between items-center mb-4">
             <span className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
               Actions proposées ({actionProposals.length})

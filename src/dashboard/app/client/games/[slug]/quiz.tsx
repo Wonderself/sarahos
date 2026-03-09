@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { recordGameScore } from '@/lib/games-engine';
 
 interface Question {
@@ -60,8 +61,14 @@ export default function QuizGame() {
   const [gameOver, setGameOver] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
+  const correctRef = useRef(0);
+  const totalTimeRef = useRef(0);
+  const transitionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const reset = useCallback(() => {
+    if (transitionRef.current) clearTimeout(transitionRef.current);
+    if (timerRef.current) clearInterval(timerRef.current);
     setQuestions(shuffle(QUESTIONS).slice(0, 15));
     setCurrent(0);
     setSelected(null);
@@ -70,27 +77,25 @@ export default function QuizGame() {
     setGameOver(false);
     setShowResult(false);
     setTotalTime(0);
+    correctRef.current = 0;
+    totalTimeRef.current = 0;
   }, []);
 
   useEffect(() => { reset(); }, [reset]);
 
+  // Cleanup on unmount
   useEffect(() => {
-    if (gameOver || showResult) return;
-    if (timer <= 0) {
-      // Time's up for this question
-      setShowResult(true);
-      setTimeout(() => nextQuestion(), 1500);
-      return;
-    }
-    const iv = setInterval(() => setTimer((t) => t - 1), 1000);
-    return () => clearInterval(iv);
-  }, [timer, gameOver, showResult]);
+    return () => {
+      if (transitionRef.current) clearTimeout(transitionRef.current);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
   const nextQuestion = useCallback(() => {
     if (current + 1 >= questions.length) {
       setGameOver(true);
-      const speedBonus = Math.max(0, 150 - totalTime);
-      const score = correct * 100 + speedBonus;
+      const speedBonus = Math.max(0, 150 - totalTimeRef.current);
+      const score = correctRef.current * 100 + speedBonus;
       recordGameScore('quiz', score);
     } else {
       setCurrent((c) => c + 1);
@@ -98,17 +103,38 @@ export default function QuizGame() {
       setShowResult(false);
       setTimer(15);
     }
-  }, [current, questions.length, correct, totalTime]);
+    transitionRef.current = null;
+  }, [current, questions.length]);
+
+  useEffect(() => {
+    if (gameOver || showResult) return;
+    if (timer <= 0) {
+      // Time's up
+      setShowResult(true);
+      if (!transitionRef.current) {
+        transitionRef.current = setTimeout(() => nextQuestion(), 1500);
+      }
+      return;
+    }
+    timerRef.current = setInterval(() => setTimer((t) => t - 1), 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [timer, gameOver, showResult, nextQuestion]);
 
   const handleAnswer = (idx: number) => {
     if (showResult || gameOver) return;
     setSelected(idx);
     setShowResult(true);
-    setTotalTime((t) => t + (15 - timer));
+    const timeSpent = 15 - timer;
+    totalTimeRef.current += timeSpent;
+    setTotalTime(totalTimeRef.current);
     if (idx === questions[current]?.answer) {
-      setCorrect((c) => c + 1);
+      correctRef.current += 1;
+      setCorrect(correctRef.current);
     }
-    setTimeout(() => nextQuestion(), 1500);
+    // Schedule transition only if timer hasn't already scheduled one
+    if (!transitionRef.current) {
+      transitionRef.current = setTimeout(() => nextQuestion(), 1500);
+    }
   };
 
   if (questions.length === 0) return null;
@@ -116,10 +142,10 @@ export default function QuizGame() {
   const q = questions[current];
 
   if (gameOver) {
-    const speedBonus = Math.max(0, 150 - totalTime);
-    const score = correct * 100 + speedBonus;
+    const speedBonus = Math.max(0, 150 - totalTimeRef.current);
+    const score = correctRef.current * 100 + speedBonus;
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, padding: 20 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
         <span className="material-symbols-rounded" style={{ fontSize: 48, color: '#f59e0b' }}>emoji_events</span>
         <h2 style={{ color: '#fff', margin: 0 }}>Quiz terminé !</h2>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
@@ -132,24 +158,31 @@ export default function QuizGame() {
         <button
           onClick={reset}
           style={{
-            background: '#8b5cf6',
+            background: '#7c3aed',
             color: '#fff',
             border: 'none',
             borderRadius: 10,
-            padding: '10px 24px',
-            fontSize: 14,
+            padding: '12px 28px',
+            fontSize: 15,
             fontWeight: 600,
             cursor: 'pointer',
           }}
         >
           Rejouer
         </button>
+        <Link
+          href="/client/games"
+          style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
+        >
+          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+          Arcade
+        </Link>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto' }}>
+    <div style={{ width: '100%', maxWidth: 600, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
       {/* Progress */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>
@@ -170,7 +203,7 @@ export default function QuizGame() {
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginBottom: 24 }}>
+      <div style={{ height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 2, marginBottom: 24 }}>
         <div
           style={{
             height: '100%',
@@ -185,7 +218,7 @@ export default function QuizGame() {
       {/* Question */}
       <div
         style={{
-          background: 'rgba(255,255,255,0.04)',
+          background: 'rgba(255,255,255,0.05)',
           borderRadius: 14,
           padding: '24px 20px',
           marginBottom: 16,
@@ -199,8 +232,8 @@ export default function QuizGame() {
       {/* Choices */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {q?.choices.map((choice, idx) => {
-          let bg = 'rgba(255,255,255,0.04)';
-          let border = 'rgba(255,255,255,0.06)';
+          let bg = 'rgba(255,255,255,0.05)';
+          let border = 'rgba(255,255,255,0.08)';
           if (showResult) {
             if (idx === q.answer) { bg = 'rgba(34,197,94,0.15)'; border = '#22c55e'; }
             else if (idx === selected && idx !== q.answer) { bg = 'rgba(239,68,68,0.15)'; border = '#ef4444'; }
@@ -214,6 +247,7 @@ export default function QuizGame() {
                 border: `1px solid ${border}`,
                 borderRadius: 10,
                 padding: '14px 16px',
+                minHeight: 48,
                 color: '#fff',
                 fontSize: 14,
                 textAlign: 'left',

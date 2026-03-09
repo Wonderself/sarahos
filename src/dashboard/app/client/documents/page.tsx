@@ -79,7 +79,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Email professionnel',
     description: 'Rédigez un email professionnel adapté à votre contexte: prospection, relance, partenariat, etc.',
     category: 'Communication',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     prompt: 'Rédige un email professionnel. Destinataire: {recipient}. Objet: {subject}. Contexte: {context}. Ton: professionnel mais chaleureux. Format: objet, corps, signature.',
     fields: [
       { key: 'recipient', label: 'Destinataire', placeholder: 'Nom et relation (ex: "Jean Dupont, client potentiel")', type: 'input', required: true },
@@ -93,7 +93,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Proposition commerciale',
     description: 'Générez une proposition complète: contexte, solution, tarification, prochaines étapes.',
     category: 'Commercial',
-    color: '#8b7cf8',
+    color: '#06b6d4',
     prompt: 'Crée une proposition commerciale professionnelle. Client: {client}. Besoin: {need}. Notre solution: {solution}. Budget indicatif: {budget}. Structure: executive summary, contexte, solution proposée, planning, tarification, conditions.',
     fields: [
       { key: 'client', label: 'Client', placeholder: 'Nom de l\'entreprise et contact', type: 'input', required: true },
@@ -197,7 +197,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Rapport',
     description: 'Générez un rapport professionnel: analyse, résultats, recommandations.',
     category: 'Stratégie',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     prompt: 'Crée un rapport professionnel. Sujet: {subject}. Type: {reportType}. Données et observations: {data}. Public cible: {audience}. Structure: titre, résumé exécutif, contexte, analyse détaillée, résultats clés, recommandations, conclusion.',
     fields: [
       { key: 'subject', label: 'Sujet du rapport', placeholder: 'Analyse des ventes Q1, audit technique...', type: 'input', required: true },
@@ -212,7 +212,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Présentation',
     description: 'Structurez une présentation slide par slide avec notes speaker.',
     category: 'Communication',
-    color: '#8b7cf8',
+    color: '#06b6d4',
     prompt: 'Crée une présentation structurée slide par slide. Sujet: {subject}. Objectif: {goal}. Durée: {duration}. Public: {audience}. Pour chaque slide: titre, contenu principal (3-5 points max), notes speaker. Inclus: slide de titre, agenda, contenu, conclusion, slide de contact/CTA.',
     fields: [
       { key: 'subject', label: 'Sujet de la présentation', placeholder: 'Résultats trimestriels, pitch produit...', type: 'input', required: true },
@@ -243,7 +243,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Devis / Facture',
     description: 'Générez un devis ou une facture professionnelle avec toutes les mentions légales obligatoires.',
     category: 'Commercial',
-    color: '#8b7cf8',
+    color: '#06b6d4',
     prompt: 'Crée un {docType} professionnel conforme à la législation française. Client: {client}. Prestations détaillées: {prestations}. Conditions: {conditions}. Structure: en-tête avec coordonnées, numéro du document, date, coordonnées client, tableau détaillé des prestations (description, quantité, prix unitaire HT, montant HT), sous-total HT, TVA applicable, total TTC, conditions de paiement, mentions légales obligatoires (SIRET, TVA intracommunautaire, etc.).',
     fields: [
       { key: 'docType', label: 'Type de document', placeholder: 'Choisissez', type: 'select', options: ['Devis', 'Facture', 'Facture proforma', 'Avoir'], required: true },
@@ -288,7 +288,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Communiqué de presse',
     description: 'Rédigez un communiqué de presse professionnel pour vos annonces et événements.',
     category: 'Communication',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     prompt: 'Crée un communiqué de presse professionnel au format journalistique. Entreprise: {company}. Annonce: {announcement}. Contexte: {context}. Citation du porte-parole: {quote}. Structure: titre accrocheur (< 10 mots), sous-titre, chapô (résumé en 2-3 lignes), corps du texte en pyramide inversée (le plus important en premier), citation du dirigeant/porte-parole, boilerplate entreprise, contact presse. Respecte le style journalistique : phrases courtes, paragraphes concis, ton factuel.',
     fields: [
       { key: 'company', label: 'Entreprise', placeholder: 'Nom, secteur, taille...', type: 'input', required: true },
@@ -374,7 +374,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Script de vente',
     description: 'Créez un script de vente téléphonique ou en face-à-face avec gestion des objections.',
     category: 'Commercial',
-    color: '#8b7cf8',
+    color: '#06b6d4',
     prompt: 'Crée un script de vente complet et naturel. Produit/Service: {product}. Cible: {target}. Type d\'appel: {callType}. Structure: 1) Accroche et présentation (3 variantes), 2) Questions de découverte (10 questions ouvertes stratégiques), 3) Pitch produit adapté aux besoins découverts, 4) Argumentation par bénéfice (pas par fonctionnalité), 5) Gestion des 10 objections les plus courantes (prix, timing, concurrent, décideur absent, etc.) avec réponses naturelles, 6) Closing (3 techniques), 7) Relance si pas de décision. Le ton doit être naturel et conversationnel, pas robotique.',
     fields: [
       { key: 'product', label: 'Produit / Service vendu', placeholder: 'Décrivez ce que vous vendez et ses avantages clés...', type: 'textarea', required: true },
@@ -416,7 +416,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de communication',
     description: 'Élaborez un plan de communication complet avec messages clés, canaux et calendrier.',
     category: 'Communication',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     prompt: 'Crée un plan de communication stratégique complet. Entreprise/Projet: {project}. Objectif: {objective}. Cibles: {targets}. Budget: {budget}. Structure: 1) Diagnostic de communication actuel, 2) Objectifs de communication (notoriété, image, comportement), 3) Cibles prioritaires et secondaires avec personas, 4) Messages clés par cible, 5) Stratégie créative (concept, ton, univers visuel), 6) Plan d\'actions par canal (digital, print, événementiel, RP, interne), 7) Calendrier sur 6 mois, 8) Budget détaillé par action, 9) KPIs et mesure des résultats, 10) Plan de crise.',
     fields: [
       { key: 'project', label: 'Entreprise / Projet', placeholder: 'Nom et contexte...', type: 'input', required: true },
@@ -431,7 +431,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Pitch deck investisseur',
     description: 'Structurez un pitch deck percutant pour convaincre des investisseurs ou partenaires.',
     category: 'Commercial',
-    color: '#8b7cf8',
+    color: '#06b6d4',
     prompt: 'Crée un pitch deck investisseur percutant et structuré slide par slide. Startup/Projet: {startup}. Stade: {stage}. Montant recherché: {amount}. Métriques clés: {metrics}. Structure (12-15 slides): 1) Titre + baseline, 2) Le problème (douleur marché), 3) La solution, 4) Taille du marché (TAM/SAM/SOM), 5) Produit / Démo, 6) Business model, 7) Traction et métriques clés, 8) Concurrence (positionnement), 9) Avantage compétitif / Moat, 10) Équipe, 11) Roadmap produit, 12) Projections financières 3 ans, 13) Utilisation des fonds (camembert), 14) L\'ask (montant, valorisation, conditions), 15) Coordonnées. Pour chaque slide: titre accrocheur, 3-5 points clés, notes speaker.',
     fields: [
       { key: 'startup', label: 'Startup / Projet', placeholder: 'Nom, description en 1 phrase, stade de développement...', type: 'textarea', required: true },

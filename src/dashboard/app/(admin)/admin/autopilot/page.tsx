@@ -71,7 +71,7 @@ export default async function AutopilotPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {statCards.map(s => (
-          <div key={s.label} className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+          <div key={s.label} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08]">
             <p className="text-xs text-gray-400 uppercase">{s.label}</p>
             <p className={`text-2xl font-bold mt-1 ${s.color}`}>{String(s.value)}</p>
           </div>
@@ -84,13 +84,13 @@ export default async function AutopilotPage() {
           File d&apos;attente ({pendingProposals.length})
         </h2>
         {pendingProposals.length === 0 ? (
-          <div className="bg-gray-800/50 rounded-xl p-8 text-center text-gray-500 border border-gray-700/50">
+          <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
             Aucune proposition en attente
           </div>
         ) : (
           <div className="space-y-3">
             {pendingProposals.map((p) => (
-              <div key={String(p.id)} className="bg-gray-800 rounded-xl p-5 border border-gray-700 hover:border-gray-600 transition-colors">
+              <div key={String(p.id)} className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08] hover:border-white/[0.15] transition-colors">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -122,14 +122,14 @@ export default async function AutopilotPage() {
       <section>
         <h2 className="text-lg font-semibold text-white mb-4">Journal d&apos;exécution</h2>
         {recentProposals.length === 0 ? (
-          <div className="bg-gray-800/50 rounded-xl p-8 text-center text-gray-500 border border-gray-700/50">
+          <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
             Aucune exécution récente
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-500 text-xs uppercase border-b border-gray-700">
+                <tr className="text-gray-500 text-xs uppercase border-b border-white/[0.08]">
                   <th className="text-left py-3 px-4">Sévérité</th>
                   <th className="text-left py-3 px-4">Titre</th>
                   <th className="text-left py-3 px-4">Agent</th>
@@ -141,12 +141,12 @@ export default async function AutopilotPage() {
               </thead>
               <tbody>
                 {recentProposals.slice(0, 20).map((p) => (
-                  <tr key={String(p.id)} className="border-b border-gray-800 hover:bg-gray-800/50">
+                  <tr key={String(p.id)} className="border-b border-[#1a0e3a] hover:bg-[#1a0e3a]/50">
                     <td className="py-3 px-4"><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{SEVERITY_ICON[String(p.severity)] ?? 'circle'}</span></td>
                     <td className="py-3 px-4 text-white max-w-xs truncate">{String(p.title)}</td>
                     <td className="py-3 px-4 text-gray-400 text-xs">{String(p.agentName)}</td>
                     <td className="py-3 px-4">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLOR[String(p.status)] ?? 'bg-gray-700 text-gray-300'}`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLOR[String(p.status)] ?? 'bg-white/[0.08] text-gray-300'}`}>
                         {STATUS_LABEL[String(p.status)] ?? String(p.status)}
                       </span>
                     </td>
@@ -169,7 +169,7 @@ export default async function AutopilotPage() {
       <section>
         <h2 className="text-lg font-semibold text-white mb-4">Rapports d&apos;audit</h2>
         {reports.length === 0 ? (
-          <div className="bg-gray-800/50 rounded-xl p-8 text-center text-gray-500 border border-gray-700/50">
+          <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
             Aucun rapport — lancez un audit pour commencer
           </div>
         ) : (
@@ -177,8 +177,8 @@ export default async function AutopilotPage() {
             {reports.map((r) => {
               const findings = (r.findings as Array<Record<string, unknown>>) ?? [];
               return (
-                <details key={String(r.id)} className="bg-gray-800 rounded-xl border border-gray-700 group">
-                  <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-gray-700/30 rounded-xl">
+                <details key={String(r.id)} className="bg-[#1a0e3a] rounded-xl border border-white/[0.08] group">
+                  <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-white/[0.05] rounded-xl">
                     <div className="flex items-center gap-3">
                       <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full uppercase">
                         {String(r.reportType)}
@@ -202,11 +202,11 @@ export default async function AutopilotPage() {
                       </div>
                     ))}
                     {r.metrics && typeof r.metrics === 'object' && Object.keys(r.metrics as object).length > 0 ? (
-                      <div className="mt-3 pt-3 border-t border-gray-700">
+                      <div className="mt-3 pt-3 border-t border-white/[0.08]">
                         <p className="text-xs text-gray-500 uppercase mb-1">Métriques</p>
                         <div className="flex flex-wrap gap-3">
                           {Object.entries(r.metrics as Record<string, unknown>).map(([k, v]) => (
-                            <span key={k} className="text-xs bg-gray-700 px-2 py-1 rounded">
+                            <span key={k} className="text-xs bg-white/[0.08] px-2 py-1 rounded">
                               <span className="text-gray-400">{k}:</span> <span className="text-white">{String(v)}</span>
                             </span>
                           ))}

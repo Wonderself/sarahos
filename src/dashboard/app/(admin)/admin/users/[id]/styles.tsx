@@ -260,7 +260,7 @@ export const styles = {
     fontWeight: 500,
     color: '#fff',
     background: type === 'success' ? 'var(--success)' : 'var(--danger)',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.15), 0 0 40px rgba(124,58,237,0.1)',
     zIndex: 9999,
     animation: 'fadeIn 0.3s ease',
     maxWidth: 400,

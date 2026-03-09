@@ -9,15 +9,24 @@
   var script = document.currentScript || document.querySelector('script[data-agent]');
   if (!script) return;
 
+  // Inline escapeHtml for config sanitization (full function defined later)
+  function _esc(text) { var d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+  function _sanitizeColor(c) {
+    if (/^#[0-9a-fA-F]{3,8}$/.test(c)) return c;
+    if (/^[a-zA-Z]{1,20}$/.test(c)) return c;
+    if (/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(c)) return c;
+    return '#5b6cf7';
+  }
+
   var config = {
     agent: script.getAttribute('data-agent') || 'fz-repondeur',
-    color: script.getAttribute('data-color') || '#5b6cf7',
-    position: script.getAttribute('data-position') || 'bottom-right',
+    color: _sanitizeColor(script.getAttribute('data-color') || '#5b6cf7'),
+    position: (script.getAttribute('data-position') === 'bottom-left') ? 'bottom-left' : 'bottom-right',
     welcome: script.getAttribute('data-welcome') || 'Bonjour ! Comment puis-je vous aider ?',
     title: script.getAttribute('data-title') || 'Assistant Freenzy',
-    radius: parseInt(script.getAttribute('data-radius') || '16', 10),
-    width: parseInt(script.getAttribute('data-width') || '380', 10),
-    height: parseInt(script.getAttribute('data-height') || '520', 10),
+    radius: Math.min(Math.max(parseInt(script.getAttribute('data-radius') || '16', 10) || 16, 0), 32),
+    width: Math.min(Math.max(parseInt(script.getAttribute('data-width') || '380', 10) || 380, 280), 600),
+    height: Math.min(Math.max(parseInt(script.getAttribute('data-height') || '520', 10) || 520, 300), 800),
   };
 
   var isOpen = false;
@@ -58,7 +67,7 @@
     '<div id="fz-widget-header">',
     '  <svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7v1h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1H3a1 1 0 01-1-1v-3a1 1 0 011-1h1v-1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2zM9 14a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z"/></svg>',
     '  <div style="flex:1">',
-    '    <div style="font-size:13px;font-weight:700;color:#fff">' + config.title + '</div>',
+    '    <div style="font-size:13px;font-weight:700;color:#fff">' + _esc(config.title) + '</div>',
     '    <div style="font-size:10px;color:rgba(255,255,255,0.7)">En ligne</div>',
     '  </div>',
     '  <div style="cursor:pointer;padding:4px" onclick="document.getElementById(\'fz-widget-container\').classList.remove(\'open\');document.getElementById(\'fz-widget-bubble\').style.display=\'flex\'">',
@@ -86,6 +95,14 @@
     var div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  function sanitizeColor(color) {
+    // Only allow valid hex colors and named colors
+    if (/^#[0-9a-fA-F]{3,8}$/.test(color)) return color;
+    if (/^[a-zA-Z]{1,20}$/.test(color)) return color;
+    if (/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color)) return color;
+    return '#5b6cf7'; // fallback
   }
 
   // Toggle

@@ -152,7 +152,7 @@ export default function VideoProPage() {
           }}
           style={{
             padding: '10px 24px', fontSize: 14, fontWeight: 600, borderRadius: 10,
-            background: '#5b6cf7', color: '#fff', border: 'none', cursor: 'pointer',
+            background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
           }}
         >
           Retour aux services
@@ -166,7 +166,7 @@ export default function VideoProPage() {
 
       {/* Hero Section */}
       <div style={{
-        background: 'linear-gradient(135deg, #5b6cf7 0%, #8b5cf6 50%, #8b7cf8 100%)',
+        background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #06b6d4 100%)',
         borderRadius: 16, padding: '48px 36px', marginBottom: 36, position: 'relative', overflow: 'hidden',
       }}>
         <div style={{
@@ -206,8 +206,8 @@ export default function VideoProPage() {
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLDivElement).style.borderColor = '#5b6cf7';
-              (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 16px rgba(91,108,247,0.12)';
+              (e.currentTarget as HTMLDivElement).style.borderColor = '#7c3aed';
+              (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 16px rgba(124,58,237,0.12)';
               (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={e => {
@@ -220,7 +220,7 @@ export default function VideoProPage() {
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>
               {svc.title}
             </div>
-            <div style={{ fontSize: 12, color: '#5b6cf7', fontWeight: 600, marginBottom: 10 }}>
+            <div style={{ fontSize: 12, color: '#7c3aed', fontWeight: 600, marginBottom: 10 }}>
               {svc.subtitle}
             </div>
             <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
@@ -239,17 +239,17 @@ export default function VideoProPage() {
               onClick={() => handleOrder(svc.id)}
               style={{
                 width: '100%', padding: '10px 0', fontSize: 13, fontWeight: 600,
-                borderRadius: 10, border: '2px solid #5b6cf7', background: 'transparent',
-                color: '#5b6cf7', cursor: 'pointer', transition: 'all 0.15s',
+                borderRadius: 10, border: '2px solid #7c3aed', background: 'transparent',
+                color: '#7c3aed', cursor: 'pointer', transition: 'all 0.15s',
                 fontFamily: 'var(--font-sans)',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#5b6cf7';
+                (e.currentTarget as HTMLButtonElement).style.background = '#7c3aed';
                 (e.currentTarget as HTMLButtonElement).style.color = '#fff';
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                (e.currentTarget as HTMLButtonElement).style.color = '#5b6cf7';
+                (e.currentTarget as HTMLButtonElement).style.color = '#7c3aed';
               }}
             >
               Commander
@@ -277,11 +277,11 @@ export default function VideoProPage() {
           href="/client/studio"
           style={{
             padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 600,
-            background: '#5b6cf7', color: '#fff', textDecoration: 'none',
+            background: '#7c3aed', color: '#fff', textDecoration: 'none',
             transition: 'background 0.15s', whiteSpace: 'nowrap',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#4f46e5'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#5b6cf7'; }}
+          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#6d28d9'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#7c3aed'; }}
         >
           Ouvrir le Studio
         </Link>
@@ -316,7 +316,7 @@ export default function VideoProPage() {
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -337,7 +337,7 @@ export default function VideoProPage() {
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -359,7 +359,7 @@ export default function VideoProPage() {
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -378,7 +378,7 @@ export default function VideoProPage() {
                 background: 'var(--bg-elevated)', outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             >
               <option value="">Selectionnez un service</option>
@@ -405,7 +405,7 @@ export default function VideoProPage() {
               resize: 'vertical', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
             onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           />
         </div>
@@ -424,7 +424,7 @@ export default function VideoProPage() {
               background: 'var(--bg-elevated)', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#5b6cf7'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
             onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           >
             {BUDGET_OPTIONS.map(b => (
@@ -449,12 +449,12 @@ export default function VideoProPage() {
           disabled={submitting}
           style={{
             width: '100%', padding: '13px 0', fontSize: 14, fontWeight: 700,
-            borderRadius: 10, background: '#5b6cf7', color: '#fff', border: 'none',
+            borderRadius: 10, background: '#7c3aed', color: '#fff', border: 'none',
             cursor: submitting ? 'wait' : 'pointer', opacity: submitting ? 0.7 : 1,
             transition: 'background 0.15s', fontFamily: 'var(--font-sans)',
           }}
-          onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLButtonElement).style.background = '#4f46e5'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#5b6cf7'; }}
+          onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLButtonElement).style.background = '#6d28d9'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#7c3aed'; }}
         >
           {submitting ? 'Envoi en cours...' : 'Envoyer la demande de devis'}
         </button>

@@ -39,14 +39,14 @@ export default function MyAgentsPage() {
           placeholder="Rechercher un agent..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm w-64 focus:border-blue-500 focus:outline-none"
+          className="px-4 py-2 bg-[#1a0e3a] border border-white/[0.08] rounded-lg text-white text-sm w-64 focus:border-purple-500 focus:outline-none"
         />
         <div className="flex gap-2">
           {CATEGORIES.map(c => (
             <button
               key={c.id}
               onClick={() => setCategory(c.id)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${category === c.id ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${category === c.id ? 'bg-[#7c3aed] text-white' : 'bg-[#1a0e3a] text-gray-400 hover:text-white'}`}
             >
               {c.label}
             </button>
@@ -62,7 +62,7 @@ export default function MyAgentsPage() {
             <button
               key={agent.id}
               onClick={() => setSelected(agent.id)}
-              className={`p-4 rounded-xl border text-left transition-all hover:border-blue-500/50 ${selected === agent.id ? 'bg-blue-600/10 border-blue-500' : 'bg-gray-800 border-gray-700'}`}
+              className={`p-4 rounded-xl border text-left transition-all hover:border-purple-500/50 ${selected === agent.id ? 'bg-purple-600/10 border-purple-500' : 'bg-[#1a0e3a] border-white/[0.08]'}`}
             >
               <div className="mb-2"><span className="material-symbols-rounded" style={{ fontSize: 28, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
               <h3 className="text-white font-medium text-sm">{agent.name}</h3>
@@ -79,7 +79,7 @@ export default function MyAgentsPage() {
 
         {/* Detail panel */}
         {selectedAgent && (
-          <div className="w-80 bg-gray-800 rounded-xl border border-gray-700 p-6 sticky top-4 self-start">
+          <div className="w-80 bg-[#1a0e3a] rounded-xl border border-white/[0.08] p-6 sticky top-4 self-start">
             <div className="mb-3"><span className="material-symbols-rounded" style={{ fontSize: 40, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span></div>
             <h2 className="text-xl font-bold text-white">{selectedAgent.name}</h2>
             <p className="text-gray-400 text-sm mt-2">{selectedAgent.description}</p>
@@ -97,7 +97,7 @@ export default function MyAgentsPage() {
                   <p className="text-xs text-gray-500 uppercase mb-1">Capacités</p>
                   <div className="flex flex-wrap gap-1">
                     {selectedAgent.capabilities.map((cap: string) => (
-                      <span key={cap} className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded">{cap}</span>
+                      <span key={cap} className="text-xs bg-white/[0.08] text-gray-300 px-2 py-0.5 rounded">{cap}</span>
                     ))}
                   </div>
                 </div>
@@ -105,7 +105,7 @@ export default function MyAgentsPage() {
             </div>
             <a
               href={`/admin/chat?agent=${selectedAgent.id}`}
-              className="mt-6 block text-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+              className="mt-6 block text-center px-4 py-2 bg-[#7c3aed] text-white rounded-lg text-sm hover:bg-[#6d28d9] transition-colors"
             >
               Parler à cet agent
             </a>

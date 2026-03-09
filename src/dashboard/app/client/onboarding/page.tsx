@@ -446,7 +446,7 @@ export default function OnboardingPage() {
         {/* Compact mode toggle + prefilled badge + voice input */}
         <div className="flex flex-center items-center gap-12 mt-12">
           {prefilled && (
-            <span style={{ fontSize: 11, padding: '4px 10px', borderRadius: 12, background: '#5b6cf715', color: 'var(--accent)', fontWeight: 600 }}>
+            <span style={{ fontSize: 11, padding: '4px 10px', borderRadius: 12, background: '#7c3aed15', color: 'var(--accent)', fontWeight: 600 }}>
               Pré-rempli par IA — vérifiez et ajustez
             </span>
           )}

@@ -51,7 +51,7 @@ const FEATURE_ICONS: Record<string, string> = {
   chat: 'chat', repondeur: 'call', visio: 'mic',
   studio: 'palette', briefing: 'assignment', meeting: 'handshake', other: 'settings',
 };
-const PIE_COLORS = ['#5b6cf7', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#8b7cf8', '#14b8a6'];
+const PIE_COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#14b8a6'];
 const MODEL_PRICES: ModelPrice[] = [
   { model: 'Claude Haiku 4.5', inputPer1M: 0.80, outputPer1M: 4.00 },
   { model: 'Claude Sonnet 4.6', inputPer1M: 3.00, outputPer1M: 15.00 },

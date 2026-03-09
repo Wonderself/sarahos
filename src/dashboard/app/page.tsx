@@ -307,6 +307,65 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* ══ AVANT / APRÈS ════════════════════════════════════════ */}
+        <section style={{ background: '#0a0a0f', padding: 'clamp(40px, 5vw, 72px) 24px' }}>
+          <div style={{ maxWidth: 900, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Transformation</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 8 }}>
+                Avant Freenzy <span style={{ color: 'rgba(255,255,255,0.35)' }}>vs</span> Avec Freenzy
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, maxWidth: 520, margin: '0 auto' }}>
+                {`D\u00e9couvrez comment nos fonctionnalit\u00e9s transforment votre quotidien`}
+              </p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), 1fr))', gap: 16 }}>
+              {[
+                { before: 'Appels manqu\u00e9s pendant les r\u00e9unions', after: 'R\u00e9pondeur IA traite 100% des appels 24/7', icon: 'call' },
+                { before: '3 heures pour r\u00e9diger un contrat', after: 'Document g\u00e9n\u00e9r\u00e9 en 30 secondes par l\u2019IA', icon: 'description' },
+                { before: 'Posts sociaux irr\u00e9guliers et oubli\u00e9s', after: 'Calendrier \u00e9ditorial IA automatis\u00e9', icon: 'calendar_month' },
+                { before: 'R\u00e9veil chaotique, journ\u00e9e non planifi\u00e9e', after: 'Briefing matinal personnalis\u00e9 chaque jour', icon: 'alarm' },
+              ].map((item, i) => (
+                <div key={i} style={{
+                  display: 'flex', borderRadius: 14, overflow: 'hidden',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(255,255,255,0.03)',
+                }}>
+                  {/* Before */}
+                  <div style={{
+                    flex: 1, padding: '18px 16px',
+                    background: 'rgba(239,68,68,0.06)',
+                    borderRight: '1px solid rgba(255,255,255,0.06)',
+                    display: 'flex', flexDirection: 'column', gap: 8,
+                  }}>
+                    <span style={{ fontSize: 18 }}>{'\u274C'}</span>
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>{item.before}</span>
+                  </div>
+
+                  {/* Arrow */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '0 2px', background: 'rgba(255,255,255,0.03)', flexShrink: 0,
+                  }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#5b6cf7' }}>arrow_forward</span>
+                  </div>
+
+                  {/* After */}
+                  <div style={{
+                    flex: 1, padding: '18px 16px',
+                    background: 'rgba(34,197,94,0.06)',
+                    display: 'flex', flexDirection: 'column', gap: 8,
+                  }}>
+                    <span style={{ fontSize: 18 }}>{'\u2705'}</span>
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, fontWeight: 600 }}>{item.after}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
         <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>

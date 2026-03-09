@@ -91,7 +91,7 @@ export default function CommunityPage() {
     if (finished) {
       const alreadyRated = hasRated(playing.id);
       return (
-        <div style={{ minHeight: '100vh', background: '#0a0a0f', padding: '32px 24px' }}>
+        <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
           <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
             <span className="material-symbols-rounded" style={{ fontSize: 48, color: '#f59e0b', marginBottom: 12, display: 'block' }}>
               emoji_events
@@ -117,7 +117,7 @@ export default function CommunityPage() {
               <button
                 onClick={() => startGame(playing)}
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
+                  background: 'rgba(255,255,255,0.08)',
                   color: '#fff',
                   border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 10,
@@ -132,7 +132,7 @@ export default function CommunityPage() {
               <button
                 onClick={() => { setPlaying(null); loadGames(); }}
                 style={{
-                  background: '#8b5cf6',
+                  background: '#7c3aed',
                   color: '#fff',
                   border: 'none',
                   borderRadius: 10,
@@ -152,7 +152,7 @@ export default function CommunityPage() {
 
     const q = playing.questions[current];
     return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0f', padding: '32px 24px' }}>
+      <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
         <div style={{ maxWidth: 600, margin: '0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
             <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
@@ -163,12 +163,12 @@ export default function CommunityPage() {
             </span>
           </div>
 
-          <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginBottom: 24 }}>
+          <div style={{ height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 2, marginBottom: 24 }}>
             <div
               style={{
                 height: '100%',
                 width: `${((current + 1) / playing.questions.length) * 100}%`,
-                background: '#8b5cf6',
+                background: '#7c3aed',
                 borderRadius: 2,
                 transition: 'width 0.3s',
               }}
@@ -177,7 +177,7 @@ export default function CommunityPage() {
 
           <div
             style={{
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(255,255,255,0.05)',
               borderRadius: 14,
               padding: '24px 20px',
               marginBottom: 16,
@@ -190,8 +190,8 @@ export default function CommunityPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {q.choices.map((choice, idx) => {
-              let bg = 'rgba(255,255,255,0.04)';
-              let border = 'rgba(255,255,255,0.06)';
+              let bg = 'rgba(255,255,255,0.05)';
+              let border = 'rgba(255,255,255,0.08)';
               if (showResult) {
                 if (choice === q.answer) { bg = 'rgba(34,197,94,0.15)'; border = '#22c55e'; }
                 else if (idx === selected && choice !== q.answer) { bg = 'rgba(239,68,68,0.15)'; border = '#ef4444'; }
@@ -224,7 +224,7 @@ export default function CommunityPage() {
 
   // Games list
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f', padding: '32px 24px' }}>
+    <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
@@ -265,7 +265,7 @@ export default function CommunityPage() {
               key={opt.value}
               onClick={() => setSort(opt.value)}
               style={{
-                background: sort === opt.value ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.04)',
+                background: sort === opt.value ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.05)',
                 border: `1px solid ${sort === opt.value ? '#f59e0b' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 8,
                 padding: '6px 14px',
@@ -289,7 +289,7 @@ export default function CommunityPage() {
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
               Aucun jeu publié pour le moment.
             </p>
-            <Link href="/client/games/create" style={{ color: '#8b5cf6', textDecoration: 'none', fontSize: 13 }}>
+            <Link href="/client/games/create" style={{ color: '#7c3aed', textDecoration: 'none', fontSize: 13 }}>
               Créez le premier !
             </Link>
           </div>
@@ -306,8 +306,8 @@ export default function CommunityPage() {
                 key={game.id}
                 onClick={() => startGame(game)}
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 14,
                   padding: '18px 16px',
                   cursor: 'pointer',
@@ -318,7 +318,7 @@ export default function CommunityPage() {
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
                 }}
               >
@@ -331,8 +331,8 @@ export default function CommunityPage() {
                       fontSize: 10,
                       padding: '2px 8px',
                       borderRadius: 10,
-                      background: game.type === 'quiz' ? 'rgba(245,158,11,0.15)' : game.type === 'enigma' ? 'rgba(139,92,246,0.15)' : 'rgba(6,182,212,0.15)',
-                      color: game.type === 'quiz' ? '#f59e0b' : game.type === 'enigma' ? '#8b5cf6' : '#06b6d4',
+                      background: game.type === 'quiz' ? 'rgba(245,158,11,0.15)' : game.type === 'enigma' ? 'rgba(124,58,237,0.15)' : 'rgba(6,182,212,0.15)',
+                      color: game.type === 'quiz' ? '#f59e0b' : game.type === 'enigma' ? '#7c3aed' : '#06b6d4',
                       marginLeft: 8,
                       whiteSpace: 'nowrap',
                     }}

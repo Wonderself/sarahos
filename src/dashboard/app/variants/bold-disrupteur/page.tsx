@@ -821,7 +821,7 @@ export default function BoldDisrupteurPage() {
                 { icon: 'public', title: 'Réseau social next-gen', desc: 'Un vrai réseau social moderne, sans algorithme de manipulation, sans publicité cachée, sans influence artificielle.', color: '#ff3b30' },
                 { icon: 'flag', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
                 { icon: 'bolt', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#0066ff' },
-                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 50 templates prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark" style={{ borderLeft: `4px solid ${item.color}`, boxShadow: '0 4px 24px rgba(255,59,48,0.08)' }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 32, marginBottom: 12, display: 'block', color: item.color }}>{item.icon}</span>

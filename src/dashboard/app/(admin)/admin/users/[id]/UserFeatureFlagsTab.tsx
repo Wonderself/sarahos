@@ -14,7 +14,7 @@ const FEATURE_LIST = [
   { id: 'documents', label: 'Documents', desc: 'Upload & analyse de documents' },
   { id: 'repondeur', label: 'Répondeur IA', desc: 'Répondeur automatique WhatsApp/SMS' },
   { id: 'personal_agents', label: 'Agents Personnels', desc: '12 agents personnels (budget, coach…)' },
-  { id: 'marketplace', label: 'Marketplace', desc: 'Accès aux 48 templates d\'agents' },
+  { id: 'marketplace', label: 'Marketplace', desc: 'Accès aux 50 templates d\'agents' },
   { id: 'reveil', label: 'Réveil Intelligent', desc: '8 modes de réveil + briefing matinal' },
   { id: 'formations', label: 'Formations', desc: 'Accès aux formations en ligne' },
   { id: 'video_pro', label: 'Vidéo Pro', desc: 'Tournage & montage vidéo professionnel' },

@@ -811,7 +811,7 @@ export default function LandingPage() {
                 { icon: 'language', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#00f0ff' },
                 { icon: 'flag', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
                 { icon: 'bolt', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
-                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : social, gaming, business, créatif… Plus le marketplace avec 48 templates prêts à l\'emploi. Une seule app au lieu de 20.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : social, gaming, business, créatif… Plus le marketplace avec 50 templates prêts à l\'emploi. Une seule app au lieu de 20.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark" style={{ background: 'rgba(0,240,255,0.04)', border: '1px solid rgba(0,240,255,0.1)', boxShadow: '0 0 30px rgba(0,240,255,0.05)' }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block', color: item.color }}>{item.icon}</span>

@@ -271,7 +271,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
         label: 'Marketplace',
         icon: 'storefront',
         status: 'fonctionnel',
-        description: 'Marketplace de 48 templates d\'agents pré-configurés (23 gratuits + 25 premium).',
+        description: 'Marketplace de 50 templates d\'agents pré-configurés (23 gratuits + 25 premium).',
         testInstructions: [
           'Parcourir les templates par catégorie',
           'Filtrer gratuits vs premium',

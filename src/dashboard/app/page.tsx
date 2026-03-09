@@ -16,6 +16,11 @@ import {
   ACTIVITY, STATS_BADGES, DEMO_SCENARIOS, SCENARIOS, TECH_FEATURES,
   WA_MESSAGES, TOOL_CATEGORIES, CUSTOM_EXAMPLES, WHY_FREENZY, TRUST_BADGES,
   LANDING_AGENTS,
+  DISCUSSION_HIGHLIGHTS, DISCUSSION_CATEGORIES,
+  PERSONAL_AGENTS_LANDING,
+  STUDIO_FEATURES, STUDIO_CATEGORIES,
+  ARCADE_GAMES_PREVIEW, ARCADE_BADGES_PREVIEW, ARCADE_STATS,
+  REWARDS_CHIPS,
 } from '../lib/landing-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
@@ -95,22 +100,22 @@ function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
     <div>
       <div className="lp-scenario-steps" style={{ gap: 14 }}>
         {items.map((t, i) => (
-          <div key={i} className="lp-app-card" style={{
-            padding: '20px 22px',
+          <div key={i} style={{
+            padding: '20px 22px', borderRadius: 16,
+            background: 'rgba(255,255,255,0.04)', border: `1px solid ${i === idx ? `${t.color}33` : 'rgba(255,255,255,0.06)'}`,
             opacity: i === idx ? 1 : 0.6,
             transform: i === idx ? 'scale(1.02)' : 'scale(1)',
             transition: 'all 0.3s ease',
-            border: i === idx ? `1px solid ${t.color}33` : undefined,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{t.title}</h3>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#fff' }}>{t.title}</h3>
             </div>
-            <p style={{ fontSize: 12, color: '#555', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {t.points.map((p, j) => (
                 <span key={j} style={{
-                  fontSize: 11, color: '#4b5563', background: '#f0f0f0',
+                  fontSize: 11, color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.06)',
                   padding: '3px 10px', borderRadius: 20,
                 }}>
                   {p}
@@ -129,7 +134,7 @@ function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
             aria-label={`Technologie ${t.title}`}
             style={{
               width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
-              background: idx === i ? t.color : '#d1d5db', cursor: 'pointer',
+              background: idx === i ? t.color : 'rgba(255,255,255,0.15)', cursor: 'pointer',
               transition: 'all 0.3s', padding: 0,
             }}
           />
@@ -616,30 +621,123 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ══ DISCUSSIONS APPROFONDIES ═══════════════════════════════ */}
+        <section style={{ background: '#f7f7f7', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div className="lp-discussions-grid">
+              <div>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7c3aed', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                  Réflexion profonde
+                </p>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
+                  Explorez les <span className="fz-accent-word">grandes questions</span> avec l&apos;IA.
+                </h2>
+                <p style={{ fontSize: 14, color: '#555', lineHeight: 1.65, marginBottom: 24 }}>
+                  85+ templates de discussion guidée, 16 catégories, pensée étendue avec Claude Opus. L&apos;IA ne se contente pas de répondre — elle <span className="fz-accent-word">réfléchit profondément</span> avec vous.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                  {DISCUSSION_HIGHLIGHTS.map((h, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                      <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>{h.icon}</span>
+                      <span style={{ fontSize: 13, color: '#444' }}>{h.text}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+                  {DISCUSSION_CATEGORIES.map((cat, i) => (
+                    <span key={i} style={{
+                      fontSize: 11, padding: '4px 10px', borderRadius: 100,
+                      background: i < DISCUSSION_CATEGORIES.length - 1 ? 'rgba(124,58,237,0.08)' : 'transparent',
+                      color: '#7c3aed', fontWeight: 500,
+                    }}>{cat}</span>
+                  ))}
+                </div>
+                <Link href="/login?mode=register" className="lp-cta-primary" style={{
+                  display: 'inline-block', padding: '12px 28px',
+                  background: '#7c3aed', color: '#fff',
+                  borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                }}>
+                  Explorer les discussions
+                </Link>
+              </div>
+              {/* Discussion mockup card */}
+              <div style={{
+                background: '#0a0a0f', borderRadius: 16, padding: 0, overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}>
+                {/* macOS-style chrome */}
+                <div style={{ padding: '10px 14px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b' }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
+                </div>
+                <div style={{ padding: '18px 18px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                    <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, background: 'rgba(124,58,237,0.2)', color: '#a78bfa', fontWeight: 600 }}>Philosophie</span>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>Extended Thinking</span>
+                  </div>
+                  <p style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginBottom: 16 }}>Le bonheur est-il un choix ?</p>
+                  {/* User bubble */}
+                  <div style={{
+                    background: 'rgba(124,58,237,0.15)', borderRadius: '12px 12px 4px 12px',
+                    padding: '10px 14px', marginBottom: 10, maxWidth: '85%', marginLeft: 'auto',
+                  }}>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', lineHeight: 1.5, margin: 0 }}>
+                      Est-ce que le bonheur dépend de nos circonstances ou de notre attitude intérieure ?
+                    </p>
+                  </div>
+                  {/* AI bubble */}
+                  <div style={{
+                    background: 'rgba(255,255,255,0.05)', borderRadius: '12px 12px 12px 4px',
+                    padding: '10px 14px', maxWidth: '90%',
+                  }}>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5, margin: 0 }}>
+                      Cette question touche au cœur de la philosophie stoïcienne. Épictète distinguait les choses qui dépendent de nous de celles qui n&apos;en dépendent pas...
+                    </p>
+                  </div>
+                  {/* Depth bar */}
+                  <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ flex: 1, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
+                      <div style={{ width: '25%', height: '100%', borderRadius: 2, background: 'linear-gradient(90deg, #7c3aed, #a78bfa)' }} />
+                    </div>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Profondeur 3/20</span>
+                  </div>
+                </div>
+                <div style={{ padding: '8px 18px 12px', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>85+ sujets disponibles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ══ COMMENT ÇA MARCHE — scenarios + technologies ═════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section style={{ background: '#1d1d1f', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ça marche</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 6 }}>
                 <span className="fz-accent-word">Concret</span>. <span className="fz-accent-word">Automatisé</span>. <span className="fz-accent-word">Instantané</span>.
               </h2>
-              <p style={{ color: '#666', fontSize: 14 }}>Vos agents traitent tout, <span className="fz-accent-word">24h/24</span>. Voici ce que ça donne.</p>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>Vos agents traitent tout, <span className="fz-accent-word">24h/24</span>. Voici ce que ça donne.</p>
             </div>
 
             {/* Scenarios concrets */}
             <div className="lp-scenario-steps" style={{ gap: 16, marginBottom: 40 }}>
               {SCENARIOS.map((s, i) => (
-                <div key={i} className="lp-app-card">
+                <div key={i} style={{
+                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 16, padding: 'clamp(16px, 2.5vw, 24px)',
+                }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, marginBottom: 14 }} />
-                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</h3>
-                  <p style={{ fontSize: 13, color: '#555', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{s.title}</h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {s.steps.map((step, j) => (
-                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#444' }}>
+                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
                         <span style={{
                           width: 20, height: 20, borderRadius: '50%',
-                          background: `${s.color}14`, color: s.color,
+                          background: `${s.color}22`, color: s.color,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           fontSize: 10, fontWeight: 800, flexShrink: 0,
                         }}>{j + 1}</span>
@@ -647,14 +745,14 @@ export default function LandingPage() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 14, fontSize: 11, color: '#888' }}>{s.tech}</div>
+                  <div style={{ marginTop: 14, fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{s.tech}</div>
                 </div>
               ))}
             </div>
 
             {/* Technologies intégrées — carousel */}
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#888', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
             </div>
             <TechCarousel items={TECH_FEATURES} />
           </div>
@@ -702,6 +800,116 @@ export default function LandingPage() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ AGENTS PERSONNELS B2C ══════════════════════════════ */}
+        <section style={{ background: '#0e0e18', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#ec4899', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Votre vie personnelle
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 12 }}>
+                Des agents IA pour <span className="fz-accent-word" style={{ color: '#ec4899' }}>VOUS</span>, pas juste votre entreprise.
+              </h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
+                Budget, impôts, immobilier, coaching, écriture... <span style={{ color: '#ec4899', fontWeight: 600 }}>12 agents personnels</span>, inclus gratuitement dans chaque compte.
+              </p>
+            </div>
+            <div className="lp-personal-grid">
+              {PERSONAL_AGENTS_LANDING.map((agent, i) => (
+                <div key={i} style={{
+                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+                  borderRadius: 14, padding: '16px 18px',
+                  borderLeft: `3px solid ${agent.color}`,
+                  display: 'flex', gap: 14, alignItems: 'flex-start',
+                }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 24, color: agent.color, flexShrink: 0, marginTop: 2 }}>{agent.icon}</span>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 3 }}>{agent.name}</p>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.4, margin: 0 }}>{agent.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: 'center', marginTop: 28 }}>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>+ Coach, Contradicteur, Cinéaste, Déconnexion et bien d&apos;autres...</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ STUDIO CRÉATIF ══════════════════════════════════════ */}
+        <section style={{ background: '#fff', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9333ea', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Studio créatif
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
+                Photos, vidéos, avatars — <span className="fz-accent-word">générés par l&apos;IA</span>.
+              </h2>
+              <p style={{ fontSize: 14, color: '#555', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
+                Créez du contenu visuel professionnel en quelques secondes. Intégré directement dans votre dashboard.
+              </p>
+            </div>
+            <div className="lp-studio-bento">
+              {/* Main card — Photo */}
+              <div style={{
+                background: 'linear-gradient(145deg, #f5f0ff 0%, #ede9fe 100%)',
+                borderRadius: 18, padding: 'clamp(20px, 3vw, 32px)', position: 'relative', overflow: 'hidden',
+                border: '1px solid rgba(147,51,234,0.12)',
+                minHeight: 220,
+              }}>
+                <div style={{
+                  position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                  width: 120, height: 120, borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(147,51,234,0.15) 0%, transparent 70%)',
+                }} />
+                <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#9333ea', marginBottom: 14, display: 'block', position: 'relative' }}>photo_camera</span>
+                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', marginBottom: 6, position: 'relative' }}>{STUDIO_FEATURES[0].title}</h3>
+                <p style={{ fontSize: 13, color: '#555', lineHeight: 1.5, marginBottom: 14, position: 'relative' }}>{STUDIO_FEATURES[0].desc}</p>
+                <div style={{ display: 'flex', gap: 8, position: 'relative' }}>
+                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(147,51,234,0.1)', color: '#9333ea', fontWeight: 600 }}>{STUDIO_FEATURES[0].badge}</span>
+                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(147,51,234,0.06)', color: '#9333ea' }}>{STUDIO_FEATURES[0].credits}</span>
+                </div>
+                {/* Prompt mockup */}
+                <div style={{
+                  marginTop: 16, padding: '10px 14px', borderRadius: 10,
+                  background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.06)',
+                  fontSize: 11, color: '#888', fontStyle: 'italic', position: 'relative',
+                }}>
+                  &quot;Photo produit minimaliste pour e-commerce, fond blanc, éclairage studio&quot;
+                </div>
+              </div>
+              {/* Right stacked cards */}
+              <div className="lp-studio-bento-right">
+                {STUDIO_FEATURES.slice(1).map((f, i) => (
+                  <div key={i} style={{
+                    background: '#fafafa', borderRadius: 16, padding: 'clamp(16px, 2vw, 24px)',
+                    border: '1px solid rgba(0,0,0,0.06)', flex: 1,
+                  }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: 28, color: f.color, marginBottom: 10, display: 'block' }}>{f.icon}</span>
+                    <h4 style={{ fontSize: 16, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{f.title}</h4>
+                    <p style={{ fontSize: 12, color: '#666', lineHeight: 1.4, marginBottom: 10, margin: 0 }}>{f.desc}</p>
+                    <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+                      <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: `${f.color}12`, color: f.color, fontWeight: 600 }}>{f.badge}</span>
+                      <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: `${f.color}08`, color: f.color }}>{f.credits}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Category pills */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 24 }}>
+              {STUDIO_CATEGORIES.map((cat, i) => (
+                <span key={i} style={{
+                  fontSize: 12, padding: '6px 14px', borderRadius: 100,
+                  background: '#f5f0ff', color: '#7c3aed', fontWeight: 500,
+                  border: '1px solid rgba(124,58,237,0.1)',
+                }}>{cat}</span>
+              ))}
             </div>
           </div>
         </section>
@@ -792,6 +1000,71 @@ export default function LandingPage() {
                   </div>
                 )}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* ══ ARCADE & GAMIFICATION ══════════════════════════════ */}
+        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7c3aed', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Arcade Freenzy
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 12 }}>
+                <span className="fz-accent-word">Jouez</span>. Progressez. <span className="fz-accent-word">Gagnez des crédits</span>.
+              </h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, maxWidth: 520, margin: '0 auto' }}>
+                10 jeux intégrés, 50 niveaux, 20 badges à débloquer. Plus vous jouez, plus vous gagnez.
+              </p>
+            </div>
+
+            {/* Games strip */}
+            <div className="lp-arcade-strip" style={{ marginBottom: 28 }}>
+              {ARCADE_GAMES_PREVIEW.map((game, i) => (
+                <div key={i} style={{
+                  minWidth: 110, padding: '14px 16px', borderRadius: 14,
+                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+                  textAlign: 'center', flexShrink: 0,
+                }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: game.color, display: 'block', marginBottom: 6 }}>{game.icon}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{game.name}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Stats */}
+            <div className="lp-arcade-stats" style={{ marginBottom: 28 }}>
+              {ARCADE_STATS.map((stat, i) => (
+                <div key={i} style={{
+                  background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)',
+                  borderRadius: 14, padding: '20px 16px', textAlign: 'center',
+                }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#7c3aed', display: 'block', marginBottom: 6 }}>{stat.icon}</span>
+                  <div style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 2 }}>{stat.value}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Badges preview */}
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>Badges à débloquer</p>
+            </div>
+            <div className="lp-arcade-badges">
+              {ARCADE_BADGES_PREVIEW.map((badge, i) => (
+                <div key={i} style={{
+                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+                  borderRadius: 12, padding: '12px 14px',
+                  display: 'flex', gap: 10, alignItems: 'center',
+                }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#f59e0b', flexShrink: 0 }}>{badge.icon}</span>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0 }}>{badge.name}</p>
+                    <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', margin: 0 }}>{badge.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -979,9 +1252,22 @@ export default function LandingPage() {
               Votre équipe IA<br />
               <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>vous attend.</span>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 32 }}>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 24 }}>
               <span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents}+ agents IA</span>. Toutes les IA du marché. <span style={{ color: '#a5b4fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
             </p>
+            {/* Rewards chips */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 28 }}>
+              {REWARDS_CHIPS.map((chip, i) => (
+                <div key={i} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '6px 14px', borderRadius: 100,
+                  background: `${chip.color}14`, border: `1px solid ${chip.color}30`,
+                }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 15, color: chip.color }}>{chip.icon}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: chip.color }}>{chip.text}</span>
+                </div>
+              ))}
+            </div>
             <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
               display: 'inline-block', padding: '15px 40px',
               background: '#5b6cf7', color: '#fff',

@@ -2262,7 +2262,7 @@ export const SIGNUP_BONUS_CREDITS = 50;
 // 100 core agents = 22 business + 12 personal + 38 extended business + 28 extended personal
 export const TOTAL_AGENTS_DISPLAY = 100;
 // Marketplace templates (separate from core agents)
-export const MARKETPLACE_TEMPLATES_COUNT = 48;
+export const MARKETPLACE_TEMPLATES_COUNT = 50;
 
 // Legacy alias
 export type CreditPack = DepositOption;

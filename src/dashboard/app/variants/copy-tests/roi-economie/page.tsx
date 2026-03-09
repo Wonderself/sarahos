@@ -541,7 +541,7 @@ export default function LandingPageRoiEconomie() {
                 { icon: 'savings', title: '847\u20AC/an d\'economies', desc: 'Comptable, coach, negociateur, chasseur immo : tous remplaces par l\'IA pour une fraction du cout. Calculez vos economies.', color: '#f59e0b' },
                 { icon: 'speed', title: 'ROI en 48h', desc: 'Des votre premiere action, vous economisez. Le retour sur investissement est mesurable immediatement. Pas dans 6 mois.', color: '#3b82f6' },
                 { icon: 'lock_open', title: 'Credits sans expiration', desc: 'Vos credits n\'expirent jamais. Rechargez quand vous voulez, utilisez quand vous en avez besoin. Aucun abonnement.', color: '#f97316' },
-                { icon: 'smart_toy', title: '72+ agents specialises', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, creatif\u2026 Plus le marketplace avec 48 templates pr\u00eats \u00e0 l\'emploi.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '72+ agents specialises', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, creatif\u2026 Plus le marketplace avec 50 templates pr\u00eats \u00e0 l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark">
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block' }}>{item.icon}</span>

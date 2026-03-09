@@ -843,7 +843,7 @@ export default function LandingPage() {
                 { icon: 'language', title: 'Réseau social next-gen', desc: 'Un réseau social repensé depuis zéro : pas d\'algorithme de manipulation, pas de pub intrusive. Juste du contenu pertinent, des connexions vraies, et de l\'IA pour amplifier votre créativité.', color: '#7c3aed' },
                 { icon: 'flag', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#f43f5e' },
                 { icon: 'bolt', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
-                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif… Plus le marketplace avec 50 templates prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} style={{
                   ...glassCard,

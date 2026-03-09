@@ -212,7 +212,7 @@ export async function sendSuccessStoryEmail(email: string, name: string): Promis
       </a>
     </div>
     <p style="font-size:13px;color:#9ca3af;line-height:1.6;">
-      Vous avez aussi une histoire a raconter ? Repondez a cet email, on adore les retours de nos utilisateurs.
+      Vous avez aussi une histoire a raconter ? Contactez-nous sur <a href="${config.APP_URL}/demo" style="color:#7c3aed;">notre page d'aide</a>, on adore les retours de nos utilisateurs.
     </p>
   `;
 

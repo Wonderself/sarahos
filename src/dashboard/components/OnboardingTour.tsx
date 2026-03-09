@@ -66,7 +66,7 @@ const TOUR_STEPS: TourStep[] = [
   {
     emoji: 'storefront',
     title: 'Le Marketplace',
-    description: '48 templates d\'agents prêts à l\'emploi. Installez en 1 clic les agents adaptés à votre secteur d\'activité.',
+    description: '50 templates d\'agents prêts à l\'emploi. Installez en 1 clic les agents adaptés à votre secteur d\'activité.',
     href: '/client/marketplace',
     cta: 'Explorer le Marketplace',
   },

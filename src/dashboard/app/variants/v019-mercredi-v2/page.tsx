@@ -898,7 +898,7 @@ export default function LandingPageMercrediV2() {
                 { icon: '\u{1F310}', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral \u2014 et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#6366f1' },
                 { icon: '\u{1F1EB}\u{1F1F7}', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
                 { icon: '\u26A1', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
-                { icon: '\u{1F916}', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif\u2026 Plus le marketplace avec 48 templates prêts à l\'emploi.', color: '#9333ea' },
+                { icon: '\u{1F916}', title: '72+ agents spécialisés', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, créatif\u2026 Plus le marketplace avec 50 templates prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} style={{
                   background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',

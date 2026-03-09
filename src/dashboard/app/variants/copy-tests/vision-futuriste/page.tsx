@@ -513,7 +513,7 @@ export default function LandingPageVisionFuturiste() {
             <div className="lp-scenario-steps" style={{ gap: 16 }}>
               {[
                 { icon: 'psychology', title: 'Tous les modeles IA', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et chaque nouveau modele des sa sortie.' },
-                { icon: 'shopping_cart', title: 'Marketplace evolutif', desc: '48 templates d\'agents prets a l\'emploi. Nouveaux agents ajoutes chaque semaine.' },
+                { icon: 'shopping_cart', title: 'Marketplace evolutif', desc: '50 templates d\'agents prets a l\'emploi. Nouveaux agents ajoutes chaque semaine.' },
                 { icon: 'hub', title: 'Orchestration autonome', desc: 'Vos agents collaborent entre eux. Hierarchie L1/L2/L3 avec prise de decision autonome.' },
                 { icon: 'rocket_launch', title: 'Innovation continue', desc: 'Nouvelles fonctionnalites chaque semaine. Vous beneficiez des avancees IA en temps reel.' },
                 { icon: 'auto_awesome', title: 'Multi-modal', desc: 'Texte, voix, image, video — vos agents maitrisent tous les formats.' },

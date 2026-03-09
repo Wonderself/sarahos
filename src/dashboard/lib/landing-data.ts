@@ -76,7 +76,7 @@ export const STATS_BADGES = [
   { icon: 'dark_mode', value: '24/7', label: 'actifs' },
   { icon: 'language', value: '50+', label: 'langues' },
   { icon: 'quiz', value: '103', label: 'FAQ' },
-  { icon: 'shopping_cart', value: '48', label: 'templates' },
+  { icon: 'shopping_cart', value: '50', label: 'templates' },
   { icon: 'verified_user', value: 'RGPD', label: 'conforme' },
   { icon: 'lock', value: 'AES-256', label: 'chiffrement' },
   { icon: 'phone_iphone', value: '8', label: 'modes Réveil' },
@@ -283,4 +283,75 @@ export const TRUST_BADGES = [
   { icon: 'credit_card', text: 'Paiement Stripe PCI' },
   { icon: 'shield', text: '2FA · TOTP' },
   { icon: 'bar_chart', text: 'Audit logs complets' },
+];
+
+// ─── Deep Discussions section
+export const DISCUSSION_HIGHLIGHTS = [
+  { icon: 'auto_awesome', text: '85+ templates de discussion guidée' },
+  { icon: 'psychology', text: 'Extended Thinking — réflexion profonde avec Opus' },
+  { icon: 'swords', text: 'Mode Challenge — l\'IA joue l\'avocat du diable' },
+  { icon: 'share', text: 'Export Markdown, partage social, conclusions structurées' },
+];
+
+export const DISCUSSION_CATEGORIES = [
+  'Philosophie', 'Éthique', 'Science', 'Économie', 'Géopolitique',
+  'Psychologie', 'Art', 'Technologie', 'Spiritualité', 'Histoire',
+  'Société', 'Environnement', '+4 autres',
+];
+
+// ─── Personal Agents B2C section
+export const PERSONAL_AGENTS_LANDING = [
+  { icon: 'credit_card', name: 'Budget perso', desc: 'Suivi dépenses, alertes, conseils d\'épargne', color: '#22c55e' },
+  { icon: 'handshake', name: 'Négociateur', desc: 'Négociez salaire, loyer, contrats en confiance', color: '#f59e0b' },
+  { icon: 'bar_chart', name: 'Impôts', desc: 'Optimisation fiscale, simulations, déclarations', color: '#3b82f6' },
+  { icon: 'receipt_long', name: 'Comptable perso', desc: 'Suivi factures, rapprochement bancaire', color: '#8b5cf6' },
+  { icon: 'home', name: 'Chasseur immo', desc: 'Veille immobilière, analyse de marché', color: '#f97316' },
+  { icon: 'description', name: 'CV & carrière', desc: 'CV optimisé, lettre, prep entretien', color: '#06b6d4' },
+  { icon: 'self_improvement', name: 'Coach bien-être', desc: 'Méditation, équilibre, déconnexion', color: '#ec4899' },
+  { icon: 'edit', name: 'Atelier écriture', desc: 'Rédaction créative, correction, storytelling', color: '#a855f7' },
+];
+
+// ─── Studio Créatif section
+export const STUDIO_FEATURES = [
+  { icon: 'photo_camera', title: 'Photos IA', desc: 'Visuels pro, logos, bannières en quelques secondes', badge: 'fal.ai Flux', credits: '8 crédits', color: '#9333ea' },
+  { icon: 'movie', title: 'Vidéos IA', desc: 'Clips vidéo 30s, animations, présentations', badge: 'LTX Video', credits: '20 crédits', color: '#ec4899' },
+  { icon: 'face', title: 'Avatars parlants', desc: 'Votre avatar qui parle votre texte, tout naturel', badge: 'D-ID + ElevenLabs', credits: '15 crédits', color: '#f59e0b' },
+];
+
+export const STUDIO_CATEGORIES = ['Social Media', 'E-commerce', 'Branding', 'Présentation', 'Personnel', 'Marketing'];
+
+// ─── Arcade & Gamification section
+export const ARCADE_GAMES_PREVIEW = [
+  { name: 'Motus', icon: 'spellcheck', color: '#22c55e' },
+  { name: 'Sudoku', icon: 'grid_on', color: '#3b82f6' },
+  { name: 'Snake', icon: 'route', color: '#16a34a' },
+  { name: 'Tetris', icon: 'view_comfy_alt', color: '#8b5cf6' },
+  { name: 'Quiz IA', icon: 'quiz', color: '#f59e0b' },
+  { name: 'Memory', icon: 'psychology', color: '#ec4899' },
+  { name: '2048', icon: 'calculate', color: '#f97316' },
+  { name: 'Démineur', icon: 'crisis_alert', color: '#64748b' },
+  { name: 'Dactylo', icon: 'keyboard', color: '#06b6d4' },
+  { name: 'Défi du jour', icon: 'today', color: '#ef4444' },
+];
+
+export const ARCADE_BADGES_PREVIEW = [
+  { icon: 'emoji_events', name: 'Premier Pas', desc: 'Première partie jouée' },
+  { icon: 'speed', name: 'Doigts de fée', desc: 'Typing > 60 WPM' },
+  { icon: 'extension', name: 'Maître du puzzle', desc: 'Sudoku < 5 min' },
+  { icon: 'local_fire_department', name: 'Assidu', desc: '7 jours de streak' },
+  { icon: 'sports_esports', name: 'Touche-à-tout', desc: 'Joué aux 10 jeux' },
+  { icon: 'auto_awesome', name: 'Immortel', desc: 'Niveau max atteint' },
+];
+
+export const ARCADE_STATS = [
+  { icon: 'sports_esports', value: '10', label: 'jeux intégrés' },
+  { icon: 'military_tech', value: '50', label: 'niveaux' },
+  { icon: 'emoji_events', value: '20', label: 'badges' },
+];
+
+// ─── Rewards CTA chips
+export const REWARDS_CHIPS = [
+  { icon: 'redeem', text: '50 crédits offerts', color: '#22c55e' },
+  { icon: 'sports_esports', text: 'Gagnez en jouant', color: '#7c3aed' },
+  { icon: 'group_add', text: 'Parrainage récompensé', color: '#3b82f6' },
 ];

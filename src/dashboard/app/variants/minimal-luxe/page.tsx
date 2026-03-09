@@ -817,7 +817,7 @@ export default function MinimalLuxePage() {
                 { icon: 'language', title: 'Toutes les IA, unifiées', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — chaque modèle, accessible. Chaque agent sélectionne l\'intelligence la plus pertinente.', color: '#c8a97e' },
                 { icon: 'flag', title: 'Souveraineté européenne', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
                 { icon: 'bolt', title: 'Prêt en 5 minutes', desc: 'Aucune configuration complexe. Décrivez votre activité, vos agents s\'activent. L\'immédiateté au service de l\'efficacité.', color: '#3b82f6' },
-                { icon: 'smart_toy', title: '72+ agents d\'exception', desc: 'Chaque domaine a son expert dédié. Commercial, marketing, juridique, créatif — plus 48 templates raffinés, prêts à l\'emploi.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '72+ agents d\'exception', desc: 'Chaque domaine a son expert dédié. Commercial, marketing, juridique, créatif — plus 50 templates raffinés, prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark" style={{ border: '1px solid rgba(200,169,126,0.1)', borderRadius: 14 }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block', color: '#c8a97e' }}>{item.icon}</span>

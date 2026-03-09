@@ -345,7 +345,7 @@ export default function RoadmapPage() {
                 'Streaming SSE + Extended Thinking Opus',
                 'Multi-projets avec isolation complète',
                 'Réveil intelligent (appel IA matinal programmable)',
-                'Marketplace agents (48 templates)',
+                'Marketplace agents (50 templates)',
               ],
             },
             {

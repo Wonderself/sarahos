@@ -540,11 +540,7 @@ export default function ReveilPage() {
             </div>
           ))}
         </div>
-        <style>{`
-          @keyframes wave0 { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.5); } }
-          @keyframes wave1 { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.6); } }
-          @keyframes wave2 { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.3); } }
-        `}</style>
+        {/* wave keyframes in globals.css */}
       </section>
 
       {/* Final CTA */}

@@ -1718,6 +1718,22 @@ a { color: inherit; text-decoration: none; }
 /* ── Table scroll wrapper for comparison tables ── */
 .lp-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 18px; }
 
+/* ── Deep Discussions section ── */
+.lp-discussions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+
+/* ── Personal Agents B2C grid ── */
+.lp-personal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+/* ── Studio Créatif bento ── */
+.lp-studio-bento { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.lp-studio-bento-right { display: flex; flex-direction: column; gap: 16px; }
+
+/* ── Arcade games strip ── */
+.lp-arcade-strip { display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; -ms-overflow-style: none; }
+.lp-arcade-strip::-webkit-scrollbar { display: none; }
+.lp-arcade-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.lp-arcade-badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
 /* ═══════════════════════════════════════════════════════
    Public Pages — Responsive breakpoints
    ═══════════════════════════════════════════════════════ */
@@ -1762,6 +1778,13 @@ a { color: inherit; text-decoration: none; }
   .lp-whatsapp-grid > div:last-child { margin: 0 auto; }
   .lp-action-costs   { grid-template-columns: repeat(2, 1fr); }
 
+  /* New sections — Phase 3+ */
+  .lp-discussions-grid { grid-template-columns: 1fr; gap: 32px; }
+  .lp-personal-grid    { grid-template-columns: repeat(2, 1fr); }
+  .lp-studio-bento     { grid-template-columns: 1fr; }
+  .lp-arcade-stats     { grid-template-columns: repeat(3, 1fr); }
+  .lp-arcade-badges    { grid-template-columns: repeat(2, 1fr); }
+
   /* Plans */
   .lp-plans-value-props { grid-template-columns: repeat(2, 1fr); }
   .lp-plans-commission  { grid-template-columns: 1fr; gap: 28px; }
@@ -1787,6 +1810,10 @@ a { color: inherit; text-decoration: none; }
   .lp-plans-value-props { grid-template-columns: 1fr; }
   .lp-plans-deposits    { grid-template-columns: repeat(2, 1fr); }
   .lp-plans-credits     { grid-template-columns: repeat(2, 1fr); }
+
+  /* New sections — Phase 3+ phone */
+  .lp-personal-grid  { grid-template-columns: 1fr; }
+  .lp-arcade-badges  { grid-template-columns: 1fr; }
 
   /* FAQ tabs: icon-only on phone */
   .lp-faq-tab-label { display: none; }
@@ -5810,3 +5837,8 @@ img, video, canvas, svg { display: block; max-width: 100%; height: auto; }
   .setup-item-actions .btn { min-height: 44px; }
   .admin-page-scrollable { padding-bottom: 72px; }
 }
+
+/* Reveil page — audio wave animation */
+@keyframes wave0 { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.5); } }
+@keyframes wave1 { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.6); } }
+@keyframes wave2 { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.3); } }

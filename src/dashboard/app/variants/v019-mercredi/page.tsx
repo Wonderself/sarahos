@@ -261,10 +261,13 @@ export default function LandingPage() {
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 56 }}>
+      <main style={{ paddingTop: 0 }}>
+        <div className="lp-hero-viewport">
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section ref={heroRef} style={{
+          flex: 1,
+          display: 'flex', flexDirection: 'column' as const, justifyContent: 'center', alignItems: 'center',
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(40px, 5vw, 60px) 24px clamp(28px, 3vw, 40px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -342,7 +345,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ flexShrink: 0, background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -356,6 +359,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+        </div>{/* end lp-hero-viewport */}
 
         {/* ══ STATS ═════════════════════════════════════════════ */}
         <section style={{ background: '#0e0e18', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>

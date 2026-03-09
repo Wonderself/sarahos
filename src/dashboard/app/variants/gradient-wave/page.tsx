@@ -331,11 +331,14 @@ export default function LandingPage() {
   return (
     <>
       <PublicNav />
-      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
-      <main style={{ paddingTop: 108 }}>
+      <main style={{ paddingTop: 0 }}>
+        <div className="lp-hero-viewport">
+        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" accentColor="#7c3aed" />
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section ref={heroRef} style={{
+          flex: 1,
+          display: 'flex', flexDirection: 'column' as const, justifyContent: 'center', alignItems: 'center',
           background: 'linear-gradient(170deg, #0f0720 0%, #1a0e3a 100%)',
           padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -417,7 +420,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ flexShrink: 0, background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -433,7 +436,7 @@ export default function LandingPage() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ flexShrink: 0, background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -446,6 +449,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+        </div>{/* end lp-hero-viewport */}
 
         {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
         <section style={{ background: '#f0f0ff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>

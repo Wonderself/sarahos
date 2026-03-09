@@ -266,14 +266,17 @@ export default function LandingPageMercrediV2() {
   return (
     <>
       <PublicNav />
-      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
-      <main style={{ paddingTop: 108 }}>
+      <main style={{ paddingTop: 0 }}>
+        <div className="lp-hero-viewport">
+        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" accentColor="#6366f1" />
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section ref={heroRef} style={{
+          flex: 1,
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(40px, 5vw, 60px) 24px clamp(28px, 3vw, 40px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
+          display: 'flex', flexDirection: 'column' as const, justifyContent: 'center', alignItems: 'center',
         }}>
           <div className="lp-hero-glow-anim" style={{
             position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
@@ -348,7 +351,7 @@ export default function LandingPageMercrediV2() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -362,6 +365,7 @@ export default function LandingPageMercrediV2() {
             </div>
           </div>
         </div>
+        </div>{/* end lp-hero-viewport */}
 
         {/* ══ STATS ═════════════════════════════════════════════ */}
         <section style={{ background: '#0e0e18', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>

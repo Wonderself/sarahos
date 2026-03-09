@@ -78,15 +78,16 @@ export default function LandingPageRoiEconomie() {
   return (
     <>
       <PublicNav />
-      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
-      <main style={{ paddingTop: 108 }}>
+      <main style={{ paddingTop: 0 }}>
+        <div className="lp-hero-viewport">
+        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" accentColor="#7c3aed" />
 
         {/* ══ HERO (compact) ═══════════════════════════ */}
         <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(20px, 3vw, 32px) 24px clamp(16px, 2vw, 24px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
-          minHeight: 'calc(100vh - 188px)',
+          flex: 1,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <div className="lp-hero-glow-anim" style={{
@@ -163,7 +164,7 @@ export default function LandingPageRoiEconomie() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -179,7 +180,7 @@ export default function LandingPageRoiEconomie() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -192,6 +193,7 @@ export default function LandingPageRoiEconomie() {
             </div>
           </div>
         </div>
+        </div>{/* end lp-hero-viewport */}
 
         {/* ══ CREDITS / COSTS — ROI focus ═══════════════════════ */}
         <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>

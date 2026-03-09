@@ -304,14 +304,16 @@ export default function BoldDisrupteurPage() {
   return (
     <>
       <PublicNav />
-      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
-      <main style={{ paddingTop: 108 }}>
+      <main style={{ paddingTop: 0 }}>
+        <div className="lp-hero-viewport">
+        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" accentColor="#ff3b30" />
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #1a1a2e 0%, #16162a 100%)',
           padding: 'clamp(40px, 5vw, 64px) 24px clamp(32px, 4vw, 48px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
+          flex: 1, display: 'flex', flexDirection: 'column' as const, justifyContent: 'center', alignItems: 'center',
         }}>
           <div className="lp-hero-glow-anim" style={{
             position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
@@ -388,7 +390,7 @@ export default function BoldDisrupteurPage() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#12122a', borderBottom: '3px solid #ff3b30', padding: '10px 0' }}>
+        <div style={{ background: '#12122a', borderBottom: '3px solid #ff3b30', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -404,7 +406,7 @@ export default function BoldDisrupteurPage() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ background: '#12122a', borderBottom: '3px solid #ffe600', padding: '10px 0' }}>
+        <div style={{ background: '#12122a', borderBottom: '3px solid #ffe600', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -417,6 +419,7 @@ export default function BoldDisrupteurPage() {
             </div>
           </div>
         </div>
+        </div>{/* end lp-hero-viewport */}
 
         {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
         <section style={{ background: '#fff5f5', padding: 'clamp(40px, 5vw, 64px) 24px' }}>

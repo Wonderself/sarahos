@@ -76,7 +76,7 @@ export default function AudienceSwitcher({ audience, onChange, variant = 'dark' 
               transition: 'color 0.25s',
               color: isActive
                 ? '#fff'
-                : isDark ? 'rgba(255,255,255,0.45)' : '#6b7280',
+                : isDark ? '#c4b5fd' : '#6b7280',
               fontFamily: 'var(--font-display), -apple-system, BlinkMacSystemFont, sans-serif',
               fontSize: 13,
               fontWeight: 600,

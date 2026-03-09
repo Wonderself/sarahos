@@ -34,7 +34,7 @@ export default function PublicNav() {
   const isFeaturesActive = pathname.startsWith('/fonctionnalites');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -70,7 +70,8 @@ export default function PublicNav() {
       backdropFilter: 'blur(20px) saturate(180%)',
       WebkitBackdropFilter: 'blur(20px) saturate(180%)',
       borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
-      transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+      transition: 'background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease',
+      willChange: 'background, border-color',
     }}>
       <div style={{
         maxWidth: 1120, margin: '0 auto', padding: '0 24px',

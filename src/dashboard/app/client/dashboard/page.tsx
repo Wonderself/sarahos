@@ -7,6 +7,10 @@ import type { AgentTypeId } from '../../../lib/agent-config';
 import FreenzyWelcome from '../../../components/FreenzyWelcome';
 import { useToast } from '../../../components/Toast';
 import { useIsMobile } from '../../../lib/use-media-query';
+import HomeScreenIcon from '../../../components/HomeScreenIcon';
+import { KpiWidget, BriefingWidget, TasksWidget } from '../../../components/HomeScreenWidget';
+import { DEFAULT_APPS, loadLayout, saveLayout, getOrderedApps, getAppsBySection, getDockApps } from '../../../lib/home-screen-apps';
+import type { HomeScreenLayout } from '../../../lib/home-screen-apps';
 
 // ─── Types ───
 
@@ -264,448 +268,189 @@ export default function ClientDashboard() {
   const todosDone = todos.filter(t => t.done).length;
   const todosTotal = todos.length;
 
+  // ─── Home Screen state ───
+  const [layout, setLayout] = useState<HomeScreenLayout | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLayout(loadLayout());
+  }, []);
+
+  const orderedApps = layout ? getOrderedApps(layout) : DEFAULT_APPS;
+  const sections = getAppsBySection(orderedApps);
+  const dockApps = layout ? getDockApps(layout) : [];
+  const dockIds = new Set(layout?.dockApps ?? []);
+
+  // ─── Drag handlers ───
+
+  function handleDragStart(_e: React.DragEvent<HTMLDivElement>, id: string) {
+    setDraggedId(id);
+  }
+
+  function handleDragOver(_e: React.DragEvent<HTMLDivElement>, id: string) {
+    if (draggedId && draggedId !== id) setDragOverId(id);
+  }
+
+  function handleDrop(_e: React.DragEvent<HTMLDivElement>, targetId: string) {
+    if (!layout || !draggedId || draggedId === targetId) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+    const order = [...layout.appOrder];
+    const fromIdx = order.indexOf(draggedId);
+    const toIdx = order.indexOf(targetId);
+    if (fromIdx === -1 || toIdx === -1) return;
+    order.splice(fromIdx, 1);
+    order.splice(toIdx, 0, draggedId);
+    const updated = { ...layout, appOrder: order };
+    setLayout(updated);
+    saveLayout(updated);
+    setDraggedId(null);
+    setDragOverId(null);
+  }
+
+  function handleDragEnd() {
+    setDraggedId(null);
+    setDragOverId(null);
+  }
+
+  function handleLongPress() {
+    setIsEditing(true);
+  }
+
   return (
-    <div className="client-page-scrollable">
-      {showWelcome && (
-        <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
-      )}
+    <>
+      <div className={`client-page-scrollable hs-container${isEditing ? ' hs-editing' : ''}`}>
+        {showWelcome && (
+          <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
+        )}
 
-      {/* ── Header compact ── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
-            {greeting}, <span style={{ color: 'var(--accent)' }}>{userName || 'cher client'}</span>
+        {/* ── Status Bar ── */}
+        <div className="hs-status-bar">
+          <div className="hs-status-left">
+            {greeting}, {userName || 'cher client'}
           </div>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-            {todayStr}
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-          {activeAgents.slice(0, 3).map(a => a && (
-            <div key={a.id} title={a.name} style={{
-              width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: a.color + '22', border: `1px solid ${a.color}44`, fontSize: 14,
-            }}><span className="material-symbols-rounded" style={{ fontSize: 15, color: a.color }}>{a.materialIcon}</span></div>
-          ))}
-          {activeAgents.length > 3 && (
-            <div style={{
-              width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'var(--bg-tertiary)', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)',
-            }}>+{activeAgents.length - 3}</div>
-          )}
-        </div>
-      </div>
-
-      {/* ── Onboarding banner (new user only) ── */}
-      {!hasProfile && !isDismissed('onboarding') && (
-        <div style={{
-          padding: '14px 16px', marginBottom: 12,
-          background: 'linear-gradient(135deg, #6366f10d, #a855f708)',
-          border: '2px solid #6366f130', borderRadius: 12, position: 'relative',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-            <span className="material-symbols-rounded mi-lg" style={{ marginTop: 2 }}>domain</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Configurez votre profil entreprise</div>
-              <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 10 }}>
-                C&apos;est la que <span className="fz-logo-word">l&apos;IA montre sa vraie puissance</span>. Plus vos agents connaissent votre entreprise (secteur, equipe, objectifs), plus chaque reponse est precise, personnalisee et actionnable. <strong>5 minutes qui changent toute l&apos;experience.</strong>
-              </div>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                <Link href="/client/onboarding" className="btn btn-primary btn-sm" style={{ fontSize: 12, padding: '6px 14px' }}>
-                  <span className="material-symbols-rounded mi-sm mi-white">rocket_launch</span>
-                  Configurer maintenant
-                </Link>
-                <div style={{ position: 'relative' }}>
-                  <button
-                    onClick={() => setShowRemindMenu(showRemindMenu === 'onboarding' ? null : 'onboarding')}
-                    className="btn btn-ghost btn-sm"
-                    style={{ fontSize: 11, color: 'var(--text-muted)', padding: '6px 10px' }}
-                  >
-                    Me le rappeler plus tard
-                  </button>
-                  {showRemindMenu === 'onboarding' && (
-                    <div style={{
-                      position: 'absolute', top: '100%', left: 0, marginTop: 4, zIndex: 50,
-                      background: 'var(--bg-elevated)', border: '1px solid var(--border-primary)',
-                      borderRadius: 10, padding: 6, boxShadow: 'var(--shadow-lg)', minWidth: 160,
-                    }}>
-                      {[{ label: 'Dans 1 jour', days: 1 }, { label: 'Dans 3 jours', days: 3 }, { label: 'Dans 1 semaine', days: 7 }].map(opt => (
-                        <button key={opt.days} onClick={() => dismissFor('onboarding', opt.days)} style={{
-                          display: 'block', width: '100%', textAlign: 'left', padding: '8px 12px',
-                          background: 'none', border: 'none', borderRadius: 6, cursor: 'pointer',
-                          fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', fontFamily: 'var(--font-display)',
-                        }}>
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+          <div className="hs-status-right">
+            <div className="hs-credits-pill">
+              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>toll</span>
+              {credits.toFixed(1)}
             </div>
+            <Link href="/client/notifications" style={{ color: 'inherit', textDecoration: 'none', display: 'flex' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>notifications</span>
+            </Link>
           </div>
         </div>
-      )}
 
-      {/* ── 4 KPIs ── */}
-      <div className="dash-kpis" style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
-        {[
-          { label: 'Credits', value: credits.toFixed(1), color: credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444', sub: 'disponibles' },
-          { label: 'Messages', value: String(stats.totalMessages), color: '#6366f1', sub: 'echanges' },
-          { label: 'Agents IA', value: String(activeAgents.length), color: '#a855f7', sub: 'actifs' },
-          { label: 'Streak', value: `${stats.streak}j`, color: stats.streak > 0 ? '#f59e0b' : '#86868b', sub: stats.streak > 7 ? 'en feu !' : 'consecutifs' },
-        ].map(kpi => (
-          <div key={kpi.label} style={{
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 12, padding: '12px 10px', textAlign: 'center',
-            backdropFilter: 'blur(12px)',
+        {/* ── Edit mode bar ── */}
+        {isEditing && (
+          <div className="hs-edit-bar">
+            <span>Maintenez et deplacez pour reorganiser</span>
+            <button className="hs-done-btn" onClick={() => setIsEditing(false)}>Terminer</button>
+          </div>
+        )}
+
+        {/* ── Onboarding banner (new user only) ── */}
+        {!hasProfile && !isDismissed('onboarding') && (
+          <div style={{
+            padding: '12px 14px', marginBottom: 12,
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.05))',
+            border: '1px solid rgba(124,58,237,0.15)', borderRadius: 16,
           }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: kpi.color, letterSpacing: -0.5 }}>{kpi.value}</div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: 0.5 }}>{kpi.sub}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Credit Burn Rate ── */}
-      <div style={{
-        padding: '16px 20px',
-        background: 'rgba(255,255,255,0.04)',
-        borderRadius: 14,
-        border: '1px solid rgba(255,255,255,0.08)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-        marginBottom: 12,
-      }}>
-        <span className="material-symbols-rounded" style={{ color: '#06b6d4', fontSize: 20 }}>trending_down</span>
-        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
-          Consommation moyenne : <strong style={{ color: '#fff' }}>~{averageDaily} credits/jour</strong> —
-          a ce rythme, vos credits durent encore <strong style={{ color: credits > 20 ? '#10b981' : '#ef4444' }}>~{daysLeft} jours</strong>
-        </span>
-      </div>
-
-      {/* ── Briefing du jour (collapsible) ── */}
-      <div style={{
-        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 12, marginBottom: 12, overflow: 'hidden',
-        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
-      }}>
-        <button onClick={() => setShowBriefing(v => !v)} style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
-          padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>wb_sunny</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}><span className="fz-logo-word">Briefing</span> du jour</span>
-            {briefingTime && <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{briefingTime}</span>}
-          </div>
-          <span style={{ fontSize: 11, color: 'var(--text-muted)', transform: showBriefing ? 'rotate(0)' : 'rotate(-90deg)', transition: 'transform 0.2s', display: 'inline-block' }}>&#9660;</span>
-        </button>
-        {showBriefing && (
-          <div style={{ padding: '0 16px 14px', borderTop: '1px solid var(--border-primary)' }}>
-            {briefing ? (
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7, whiteSpace: 'pre-wrap', marginTop: 10 }}>{briefing}</div>
-            ) : briefingLoading ? (
-              <div style={{ fontSize: 13, color: 'var(--text-muted)', fontStyle: 'italic', marginTop: 10 }}>Briefing en cours de generation...</div>
-            ) : (
-              <div style={{ fontSize: 13, color: 'var(--text-muted)', fontStyle: 'italic', marginTop: 10 }}>Chargement...</div>
-            )}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
-              <button onClick={refreshBriefing} disabled={briefingLoading} className="btn btn-ghost btn-sm" style={{ fontSize: 11 }}>
-                {briefingLoading ? '...' : briefingLoaded ? (<><span className="material-symbols-rounded mi-sm">refresh</span> Rafraichir</>) : (<><span className="material-symbols-rounded mi-sm">auto_awesome</span> Generer</>)}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#a78bfa' }}>domain</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Configurez votre profil entreprise</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>5 minutes pour booster vos agents IA</div>
+              </div>
+              <Link href="/client/onboarding" style={{
+                background: '#7c3aed', border: 'none', borderRadius: 10, padding: '6px 12px',
+                color: '#fff', fontSize: 11, fontWeight: 600, textDecoration: 'none',
+              }}>
+                Configurer
+              </Link>
+              <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
+                <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'rgba(255,255,255,0.3)' }}>close</span>
               </button>
             </div>
           </div>
         )}
-      </div>
 
-      {/* ── Taches + Priorites ── */}
-      <div className="dash-tasks-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 12 }}>
+        {/* ── Widget Zone ── */}
+        <div className="hs-widget-zone">
+          <KpiWidget
+            credits={credits}
+            messages={stats.totalMessages}
+            activeAgents={activeAgents.length}
+            streak={stats.streak}
+          />
+          <BriefingWidget
+            briefing={briefing}
+            loading={briefingLoading}
+            onLoad={loadBriefing}
+          />
+          {todos.length > 0 && (
+            <TasksWidget tasks={todos} onToggle={toggleTodo} />
+          )}
+        </div>
 
-        {/* Taches du jour */}
-        <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 12, padding: '14px 16px',
-          backdropFilter: 'blur(12px)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>check_circle</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Taches du jour</span>
+        {/* ── App Grid by section ── */}
+        {sections.map(sec => (
+          <div key={sec.section}>
+            <div className="hs-section-title">{sec.title}</div>
+            <div className="hs-grid">
+              {sec.apps
+                .filter(app => !dockIds.has(app.id))
+                .map(app => (
+                  <HomeScreenIcon
+                    key={app.id}
+                    app={app}
+                    isEditing={isEditing}
+                    onLongPress={handleLongPress}
+                    draggable={isEditing}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    onDragEnd={handleDragEnd}
+                    isDragging={draggedId === app.id}
+                    isDragOver={dragOverId === app.id}
+                  />
+                ))}
             </div>
-            {todosTotal > 0 && (
-              <span style={{ fontSize: 11, color: todosDone === todosTotal && todosTotal > 0 ? '#22c55e' : 'var(--text-muted)', fontWeight: 600 }}>
-                {todosDone}/{todosTotal}
-              </span>
-            )}
           </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
-            {todos.map(t => (
-              <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button
-                  onClick={() => toggleTodo(t.id)}
-                  style={{
-                    width: 18, height: 18, borderRadius: 4, border: `2px solid ${t.done ? '#22c55e' : 'var(--border-secondary)'}`,
-                    background: t.done ? '#22c55e' : 'transparent', cursor: 'pointer', flexShrink: 0,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#fff',
-                  }}
-                >{t.done ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> : ''}</button>
-                <span style={{
-                  fontSize: 13, color: t.done ? 'var(--text-muted)' : 'var(--text-primary)',
-                  textDecoration: t.done ? 'line-through' : 'none', flex: 1,
-                }}>{t.text}</span>
-                <button onClick={() => removeTodo(t.id)} style={{
-                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--text-muted)',
-                  opacity: 0.5, padding: 2,
-                }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span></button>
-              </div>
-            ))}
-          </div>
-
-          <form onSubmit={e => { e.preventDefault(); addTodo(); }} style={{ display: 'flex', gap: 6 }}>
-            <input
-              type="text"
-              value={newTodo}
-              onChange={e => setNewTodo(e.target.value)}
-              placeholder="Ajouter une tache..."
-              style={{
-                flex: 1, padding: '6px 10px', borderRadius: 8, fontSize: 12,
-                border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
-                color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none',
-              }}
-            />
-            <button type="submit" style={{
-              padding: '6px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-              border: 'none', cursor: 'pointer', background: 'var(--accent)', color: '#fff',
-              fontFamily: 'inherit', opacity: newTodo.trim() ? 1 : 0.5,
-            }}>+</button>
-          </form>
-        </div>
-
-        {/* Priorites Top 3 */}
-        <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 12, padding: '14px 16px',
-          backdropFilter: 'blur(12px)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>target</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Priorites du jour</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {priorities.map((p, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{
-                  width: 20, height: 20, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 11, fontWeight: 800, flexShrink: 0,
-                  background: i === 0 ? '#f59e0b22' : i === 1 ? '#6366f122' : '#10b98122',
-                  color: i === 0 ? '#f59e0b' : i === 1 ? '#6366f1' : '#10b981',
-                }}>{i + 1}</span>
-                <input
-                  type="text"
-                  value={p}
-                  onChange={e => updatePriority(i, e.target.value)}
-                  placeholder={`Priorite ${i + 1}...`}
-                  style={{
-                    flex: 1, padding: '5px 8px', borderRadius: 6, fontSize: 12,
-                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
-                    color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none',
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Acces rapides ── */}
-      <div className="dash-quick-actions" style={{
-        display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 8, marginBottom: 12,
-      }}>
-        {[
-          { href: '/client/chat', icon: 'chat', label: 'Chat' },
-          { href: '/client/actions', icon: 'bolt', label: 'Actions' },
-          { href: '/client/documents', icon: 'description', label: 'Documents' },
-          { href: '/client/team', icon: 'group', label: 'Equipe' },
-          { href: '/client/studio', icon: 'movie', label: 'Studio' },
-          { href: '/client/strategy', icon: 'target', label: 'Strategie' },
-        ].map(item => (
-          <Link key={item.href} href={item.href} style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '10px 12px', borderRadius: 10, textDecoration: 'none', color: 'inherit',
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-            transition: 'border-color 0.15s',
-          }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{item.icon}</span>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
-          </Link>
         ))}
-      </div>
 
-      {/* ── Recommandations intelligentes ── */}
-      <div style={{ marginTop: 0, marginBottom: 12 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>auto_awesome</span>
-          Suggestions pour vous
-        </h3>
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {!briefingLoaded && (
-            <Link href="/client/reveil" style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '8px 14px', borderRadius: 20, textDecoration: 'none',
-              background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)',
-              color: '#c4b5fd', fontSize: 12, fontWeight: 600, transition: 'background 0.15s',
-            }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#7c3aed' }}>wb_sunny</span>
-              Lancez votre briefing matinal
-              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>arrow_forward</span>
-            </Link>
-          )}
-          {activeAgents.length < 5 && (
-            <Link href="/client/agents" style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '8px 14px', borderRadius: 20, textDecoration: 'none',
-              background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)',
-              color: '#67e8f9', fontSize: 12, fontWeight: 600, transition: 'background 0.15s',
-            }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#06b6d4' }}>smart_toy</span>
-              Activez plus d&apos;agents pour automatiser
-              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>arrow_forward</span>
-            </Link>
-          )}
-          {credits <= 20 && (
-            <Link href="/client/account" style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '8px 14px', borderRadius: 20, textDecoration: 'none',
-              background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
-              color: '#fca5a5', fontSize: 12, fontWeight: 600, transition: 'background 0.15s',
-            }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#ef4444' }}>account_balance_wallet</span>
-              Rechargez vos credits pour continuer
-              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>arrow_forward</span>
-            </Link>
-          )}
-        </div>
-      </div>
-
-      {/* ── Mon equipe IA (compact) ── */}
-      <div style={{
-        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 12, padding: '14px 16px', marginBottom: 12,
-        backdropFilter: 'blur(12px)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Mon equipe IA</span>
-          <Link href="/client/team" style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
-            Gerer &rarr;
-          </Link>
-        </div>
-        <div className="dash-team-scroll" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-          {activeAgents.map(a => a && (
-            <Link key={a.id} href="/client/chat" style={{
-              display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px',
-              borderRadius: 8, background: a.color + '0d', border: `1px solid ${a.color}30`,
-              textDecoration: 'none', color: 'inherit', flexShrink: 0, minWidth: 130,
-            }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16, color: a.color }}>{a.materialIcon}</span>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{a.role}</div>
-              </div>
-              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', flexShrink: 0, marginLeft: 'auto' }} />
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Credit detail (compact) ── */}
-      <div style={{
-        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 12, padding: '12px 16px', marginBottom: 12,
-        backdropFilter: 'blur(12px)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span className="material-symbols-rounded mi-sm">account_balance_wallet</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Solde credits</span>
-          </div>
-          <Link href="/client/account" style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
-            Recharger &rarr;
-          </Link>
-        </div>
-        {(() => {
-          const max = Math.max(credits, 50);
-          const pct = Math.min((credits / max) * 100, 100);
-          const barColor = credits > 30 ? '#22c55e' : credits > 10 ? '#f59e0b' : '#ef4444';
-          return (
-            <>
-              <div style={{
-                width: '100%', height: 6, background: 'var(--bg-tertiary)',
-                borderRadius: 4, overflow: 'hidden', marginBottom: 6,
-              }}>
-                <div style={{
-                  width: `${pct}%`, height: '100%',
-                  background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)`,
-                  borderRadius: 4, transition: 'width 0.6s ease',
-                }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#9ca3af' }}>
-                <span>{credits.toFixed(1)} credits &middot; ~{Math.round(credits / 0.69)} chats</span>
-                <span style={{ color: barColor, fontWeight: 700 }}>
-                  {credits > 30 ? 'Confortable' : credits > 10 ? 'Modere' : 'Faible'}
-                </span>
-              </div>
-            </>
-          );
-        })()}
-        {/* Low credit reminder with dismiss */}
-        {credits <= 10 && !isDismissed('low_credits') && (
+        {/* ── Referral banner ── */}
+        {!isDismissed('referral') && (
           <div style={{
-            marginTop: 8, padding: '8px 10px', borderRadius: 8,
-            background: credits <= 5 ? '#ef444410' : '#f59e0b10',
-            border: `1px solid ${credits <= 5 ? '#ef444425' : '#f59e0b25'}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+            display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', marginTop: 8,
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 14,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1 }}>
-              <span className="material-symbols-rounded mi-sm" style={{ color: credits <= 5 ? '#ef4444' : '#f59e0b' }}>warning</span>
-              <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
-                {credits <= 5 ? 'Credits presque epuises !' : 'Pensez a recharger bientot'}
-              </span>
-            </div>
-            <button
-              onClick={() => dismissFor('low_credits', 1)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}
-            >
-              <span className="material-symbols-rounded mi-sm mi-muted">close</span>
+            <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, textDecoration: 'none', color: 'inherit' }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#f97316' }}>redeem</span>
+              <div>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Invitez un ami</span>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginLeft: 8 }}>+20 EUR</span>
+              </div>
+            </Link>
+            <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
+              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>close</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* ── Parrainage (compact, dismissable) ── */}
-      {!isDismissed('referral') && (
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', marginBottom: 12,
-          background: 'linear-gradient(135deg, #6366f10a, #a855f708)',
-          border: '1px solid #6366f122', borderRadius: 12,
-        }}>
-          <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, textDecoration: 'none', color: 'inherit' }}>
-            <span className="material-symbols-rounded">redeem</span>
-            <div style={{ flex: 1 }}>
-              <span style={{ fontSize: 13, fontWeight: 700 }}>Invitez un ami</span>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)', marginLeft: 8 }}>+20 EUR de credits</span>
-            </div>
-            <span className="material-symbols-rounded mi-sm">arrow_forward</span>
-          </Link>
-          <button
-            onClick={() => dismissFor('referral', 7)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, flexShrink: 0 }}
-          >
-            <span className="material-symbols-rounded mi-sm mi-muted">close</span>
-          </button>
+      {/* ── Dock (fixed bottom) ── */}
+      {dockApps.length > 0 && (
+        <div className="hs-dock">
+          {dockApps.map(app => (
+            <HomeScreenIcon key={app.id} app={app} />
+          ))}
         </div>
       )}
-    </div>
+    </>
   );
 }

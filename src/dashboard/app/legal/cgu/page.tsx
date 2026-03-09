@@ -9,7 +9,7 @@ export default function CGUPage() {
   return (
     <article>
       <div style={{ marginBottom: 36, paddingBottom: 24, borderBottom: '1px solid #f0f0f0' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, color: '#1d1d1f', marginBottom: 8, letterSpacing: -0.5 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: '#1a0e3a', marginBottom: 8, letterSpacing: -0.5 }}>
           Conditions Générales d'Utilisation
         </h1>
         <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>
@@ -20,8 +20,8 @@ export default function CGUPage() {
       {CGU_SECTIONS.map((section, i) => (
         <section key={section.id} id={section.id} style={{ marginBottom: 36 }}>
           <h2 style={{
-            fontSize: 15, fontWeight: 700, color: '#1d1d1f', marginBottom: 12,
-            paddingLeft: 12, borderLeft: '3px solid #5b6cf7',
+            fontSize: 15, fontWeight: 700, color: '#1a0e3a', marginBottom: 12,
+            paddingLeft: 12, borderLeft: '3px solid #7c3aed',
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
             <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, minWidth: 24 }}>

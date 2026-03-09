@@ -10,7 +10,7 @@ import {
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 
-const PIE_COLORS = ['#5b6cf7', '#8b7cf8', '#10b981', '#f59e0b', '#dc2626'];
+const PIE_COLORS = ['#7c3aed', '#06b6d4', '#10b981', '#f59e0b', '#dc2626'];
 const CHART_STYLE = { fontSize: 11, borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)' };
 
 // ─── Date range selector ───────────────────────────────────────────────────────

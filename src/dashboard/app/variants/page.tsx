@@ -27,13 +27,13 @@ const VARIANTS: Variant[] = [
     category: 'production',
     route: '/',
     icon: 'rocket_launch',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     score: 71,
     summary: `Version en production. Audience switcher Particulier / Freelance / Entreprise qui adapte tout le contenu (hero, FAQ, sections). GA4 Consent Mode v2 avec bandeau RGPD. FAQ de 103 questions reordonnees dynamiquement selon le profil selectionne. URL params pour tracking campagnes (?audience=freelance&utm_source=...).
 
 Hero adaptatif avec titre, sous-titre et CTA qui changent selon l'audience. 13 sections completes : hero, ticker partenaires, demo interactive 4 onglets, ecosysteme IA, 24 agents, WhatsApp mockup, creation sur mesure, marketplace, tarifs, temoignages, FAQ, CTA final, footer.
 
-Design blue-violet #5b6cf7, Material Symbols Rounded, dark theme #0a0a0f. Section Enterprise conditionnelle (visible uniquement en mode Entreprise). ~1028 lignes, ~65KB. C'est la version la plus complete et la plus testee. Score 71/100 : solide mais perfectible sur le copywriting et les temoignages (encore fictifs).`,
+Design blue-violet #7c3aed, Material Symbols Rounded, dark theme #0f0720. Section Enterprise conditionnelle (visible uniquement en mode Entreprise). ~1028 lignes, ~65KB. C'est la version la plus complete et la plus testee. Score 71/100 : solide mais perfectible sur le copywriting et les temoignages (encore fictifs).`,
   },
   {
     id: 'original',
@@ -41,11 +41,11 @@ Design blue-violet #5b6cf7, Material Symbols Rounded, dark theme #0a0a0f. Sectio
     category: 'design',
     route: '/variants/original',
     icon: 'history',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     score: 55,
     summary: `Snapshot fige de la V8, avant l'ajout du switcher audience et de GA4. Meme structure que la production mais hero generique identique pour tous les visiteurs. Section Enterprise toujours visible (pas de filtre audience).
 
-Sert de reference A/B pour mesurer l'impact du switcher audience sur les conversions. Meme palette blue-violet #5b6cf7, Material Icons, dark theme. Pas de cookie consent RGPD, pas de tracking GA4.
+Sert de reference A/B pour mesurer l'impact du switcher audience sur les conversions. Meme palette blue-violet #7c3aed, Material Icons, dark theme. Pas de cookie consent RGPD, pas de tracking GA4.
 
 Utile pour comparer : est-ce que la personnalisation par audience ameliore vraiment le taux de conversion ? A garder comme temoin experimental. Score 55/100 : fonctionnel mais depasse par les evolutions V9-V11.`,
   },
@@ -55,7 +55,7 @@ Utile pour comparer : est-ce que la personnalisation par audience ameliore vraim
     category: 'design',
     route: '/variants/original-v2',
     icon: 'content_copy',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     score: 71,
     summary: `Copie quasi-identique de la production V11. Meme audience switcher, GA4 Consent Mode v2, FAQ reordonnees par audience. Hero adaptatif, 13 sections completes. Existe pour comparaison historique et comme base pour les copy-tests.
 
@@ -267,7 +267,7 @@ export default function VariantsRecapPage() {
   return (
     <>
       <PublicNav />
-      <main style={{ minHeight: '100vh', background: '#0a0a0f', color: '#fff', paddingTop: 56 }}>
+      <main style={{ minHeight: '100vh', background: '#0f0720', color: '#fff', paddingTop: 56 }}>
 
         {/* Header */}
         <section style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 20px 20px', textAlign: 'center' }}>
@@ -293,7 +293,7 @@ export default function VariantsRecapPage() {
                   cursor: 'pointer',
                   fontSize: 13,
                   fontWeight: 600,
-                  background: filter === f.key ? '#5b6cf7' : 'rgba(255,255,255,0.06)',
+                  background: filter === f.key ? '#7c3aed' : 'rgba(255,255,255,0.06)',
                   color: filter === f.key ? '#fff' : 'rgba(255,255,255,0.5)',
                   transition: 'all 0.2s',
                 }}

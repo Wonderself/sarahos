@@ -15,12 +15,12 @@
     if (/^#[0-9a-fA-F]{3,8}$/.test(c)) return c;
     if (/^[a-zA-Z]{1,20}$/.test(c)) return c;
     if (/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(c)) return c;
-    return '#5b6cf7';
+    return '#7c3aed';
   }
 
   var config = {
     agent: script.getAttribute('data-agent') || 'fz-repondeur',
-    color: _sanitizeColor(script.getAttribute('data-color') || '#5b6cf7'),
+    color: _sanitizeColor(script.getAttribute('data-color') || '#7c3aed'),
     position: (script.getAttribute('data-position') === 'bottom-left') ? 'bottom-left' : 'bottom-right',
     welcome: script.getAttribute('data-welcome') || 'Bonjour ! Comment puis-je vous aider ?',
     title: script.getAttribute('data-title') || 'Assistant Freenzy',
@@ -102,7 +102,7 @@
     if (/^#[0-9a-fA-F]{3,8}$/.test(color)) return color;
     if (/^[a-zA-Z]{1,20}$/.test(color)) return color;
     if (/^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$/.test(color)) return color;
-    return '#5b6cf7'; // fallback
+    return '#7c3aed'; // fallback
   }
 
   // Toggle

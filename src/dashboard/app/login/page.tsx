@@ -191,7 +191,7 @@ export default function LoginPage() {
               <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
                 Selectionnez les agents dont vous avez besoin. Vous pourrez en activer d&apos;autres plus tard.
                 <br />
-                <span style={{ color: '#5b6cf7', fontWeight: 600 }}>Camille (Répondeur Intelligent)</span> est pre-selectionnee par defaut.
+                <span style={{ color: '#7c3aed', fontWeight: 600 }}>Camille (Répondeur Intelligent)</span> est pre-selectionnee par defaut.
               </div>
             </div>
 
@@ -406,7 +406,7 @@ export default function LoginPage() {
                   <div style={{ textAlign: 'right', marginBottom: 16 }}>
                     <button type="button"
                       onClick={() => { setMode('forgot'); setError(''); setSuccess(''); }}
-                      style={{ background: 'none', border: 'none', color: '#5b6cf7', fontSize: 13, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+                      style={{ background: 'none', border: 'none', color: '#7c3aed', fontSize: 13, cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
                     >
                       Mot de passe oublie ?
                     </button>
@@ -443,13 +443,13 @@ export default function LoginPage() {
               {mode === 'register' && (
                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: '#6b7280', cursor: 'pointer', marginBottom: 4 }}>
                   <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
-                    style={{ marginTop: 2, accentColor: '#5b6cf7' }} />
+                    style={{ marginTop: 2, accentColor: '#7c3aed' }} />
                   <span>
                     J&apos;accepte les{' '}
-                    <a href="/legal/cgu" target="_blank" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
+                    <a href="/legal/cgu" target="_blank" style={{ color: '#7c3aed', textDecoration: 'underline' }}>
                       Conditions Generales d&apos;Utilisation
                     </a>{' '}et la{' '}
-                    <a href="/legal/confidentialite" target="_blank" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
+                    <a href="/legal/confidentialite" target="_blank" style={{ color: '#7c3aed', textDecoration: 'underline' }}>
                       Politique de Confidentialite
                     </a>.
                   </span>
@@ -462,7 +462,8 @@ export default function LoginPage() {
 
               <button type="submit" className="btn btn-primary w-full" style={{
                 height: 46, fontSize: 14, borderRadius: 10, fontWeight: 600,
-                background: '#1d1d1f', border: 'none',
+                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', border: 'none',
+                boxShadow: '0 0 30px rgba(124,58,237,0.3)',
               }} disabled={loading || (mode === 'register' && !termsAccepted)}>
                 {loading ? 'Chargement...'
                   : mode === 'register' ? 'Creer mon compte gratuitement'
@@ -487,7 +488,7 @@ export default function LoginPage() {
           </form>
 
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <a href="/plans" style={{ fontSize: 13, color: '#5b6cf7', textDecoration: 'none' }}>
+            <a href="/plans" style={{ fontSize: 13, color: '#7c3aed', textDecoration: 'none' }}>
               Voir les tarifs — Tout est gratuit
             </a>
           </div>

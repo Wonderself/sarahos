@@ -75,6 +75,8 @@ function Carousel({ items, renderItem, autoPlay = 4000 }: {
               width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
               background: idx === i ? '#8b5cf6' : '#d1d5db', cursor: 'pointer',
               transition: 'all 0.3s', padding: 0,
+              boxSizing: 'content-box' as const, paddingBlock: 18, paddingInline: 10,
+              margin: '-18px -4px', backgroundClip: 'content-box',
             }}
           />
         ))}
@@ -136,6 +138,8 @@ function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
               width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
               background: idx === i ? t.color : 'rgba(255,255,255,0.15)', cursor: 'pointer',
               transition: 'all 0.3s', padding: 0,
+              boxSizing: 'content-box' as const, paddingBlock: 18, paddingInline: 10,
+              margin: '-18px -4px', backgroundClip: 'content-box',
             }}
           />
         ))}
@@ -173,6 +177,33 @@ export default function LandingPage() {
   // Page view on mount
   useEffect(() => { trackPageView('/', 'main', audience); }, [audience]);
 
+  // Gradient text style helper
+  const gradientTextStyle: React.CSSProperties = {
+    background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+  };
+
+  // Glassmorphism card style helper
+  const glassCard: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.05)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 16,
+    boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+    transition: 'all 0.3s',
+  };
+
+  // Gradient dot helper
+  const gradientDot = (size = 8): React.CSSProperties => ({
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+    display: 'inline-block',
+    flexShrink: 0,
+  });
+
   const demo = DEMO_SCENARIOS[demoTab];
 
   // Audience-aware
@@ -186,30 +217,34 @@ export default function LandingPage() {
     <>
       <PublicNav />
       <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
-      <main style={{ paddingTop: 108 }}>
+      <main style={{ paddingTop: 0 }}>
+
+        {/* ══ HERO + TICKERS viewport wrapper ═══════════════ */}
+        <div className="lp-hero-viewport">
 
         {/* ══ HERO ═══════════════════════════════════════════ */}
         <section ref={heroRef} style={{
-          background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
-          padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
+          background: 'linear-gradient(170deg, #0f0720 0%, #1a0e3a 100%)',
+          padding: 'clamp(16px, 3vw, 48px) 24px clamp(12px, 2vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
+          flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         }}>
           <div className="lp-hero-glow-anim" style={{
             position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
             width: '100%', maxWidth: 600, height: 350,
-            background: 'radial-gradient(ellipse, rgba(91,108,247,0.14) 0%, transparent 68%)',
+            background: 'radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, rgba(6,182,212,0.08) 40%, transparent 68%)',
             pointerEvents: 'none',
           }} />
 
           <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <div style={{ marginBottom: 10, marginTop: -8 }}>
+            <div style={{ marginBottom: 'clamp(4px, 1vw, 10px)', marginTop: -8 }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
-                background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.22)',
-                color: '#86efac', padding: '5px 16px', borderRadius: 40,
+                background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.22)',
+                color: '#67e8f9', padding: '5px 16px', borderRadius: 40,
                 fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap',
               }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0 }} />
+                <span style={gradientDot(6)} />
                 <span className="lp-green-badge-full">{heroBadge || 'Pro & Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet'}</span>
                 <span className="lp-green-badge-mobile">{heroBadge || 'Pros & Particuliers · 0% frais · Personnalisable 100% · Simple et complet'}</span>
               </span>
@@ -219,7 +254,7 @@ export default function LandingPage() {
               fontFamily: 'var(--font-display)',
               fontSize: heroHeadline ? 'clamp(28px, 6vw, 72px)' : 'clamp(32px, 7.8vw, 94px)',
               fontWeight: 700, lineHeight: 0.92,
-              marginBottom: 14, letterSpacing: -4,
+              marginBottom: 'clamp(8px, 1.5vw, 14px)', letterSpacing: -4,
               textTransform: heroHeadline ? 'none' : 'uppercase',
             }}>
               {heroHeadline ? heroHeadline : <>Utilisez<br />vraiment l&apos;IA.</>}
@@ -227,22 +262,22 @@ export default function LandingPage() {
 
             <p style={{
               fontFamily: 'var(--font-display)', fontSize: 'clamp(13px, 1.6vw, 15px)',
-              color: '#5b6cf7', fontWeight: 600,
+              color: '#7c3aed', fontWeight: 600,
               letterSpacing: 2, textTransform: 'uppercase',
               marginBottom: 8,
             }}>
-              Free &amp; Easy
+              UNE APP POUR TOUT.
             </p>
 
             <p style={{
               fontSize: 'clamp(14px, 1.8vw, 17px)',
-              color: 'rgba(255,255,255,0.65)',
-              lineHeight: 1.6, maxWidth: 480, margin: '0 auto 24px',
+              color: 'rgba(255,255,255,0.44)',
+              lineHeight: 1.6, maxWidth: 480, margin: '0 auto', marginBottom: 'clamp(12px, 2vw, 24px)',
             }}>
               {heroSub ? (
                 <span style={{ color: 'rgba(255,255,255,0.75)' }}>{heroSub}</span>
               ) : (
-                <><span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.75)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
+                <><span style={{ color: '#c4b5fd', fontWeight: 700 }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.75)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
               )}
             </p>
 
@@ -261,7 +296,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
               <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('hero_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
-                padding: '12px 20px', background: '#5b6cf7', color: '#fff',
+                padding: '12px 20px', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', boxShadow: '0 0 30px rgba(124,58,237,0.3)', color: '#fff',
                 borderRadius: 10, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
               }}>
@@ -270,20 +305,21 @@ export default function LandingPage() {
               <Link href="/plans" style={{
                 padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
                 background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.11)',
-                color: 'rgba(255,255,255,0.78)', borderRadius: 10, fontWeight: 600,
+                backdropFilter: 'blur(8px)',
+                color: 'rgba(255,255,255,0.68)', borderRadius: 10, fontWeight: 600,
                 fontSize: 'clamp(11px, 3vw, 14px)', textDecoration: 'none',
               }}>
                 Voir les tarifs
               </Link>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 'clamp(8px, 1.5vw, 16px)' }}>
                 <div style={{ display: 'flex' }}>
                   {['👩‍💼', '👨‍🔧', '👩‍🍳'].map((e, i) => (
                     <span key={i} style={{ fontSize: 18, marginLeft: i > 0 ? -6 : 0, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}>{e}</span>
                   ))}
                 </div>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
-                  Rejoint par <strong style={{ color: 'rgba(255,255,255,0.8)' }}>500+ professionnels</strong> ce mois-ci
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+                  Rejoint par <strong style={{ color: 'rgba(255,255,255,0.62)' }}>500+ professionnels</strong> ce mois-ci
                 </span>
               </div>
             </div>
@@ -292,15 +328,15 @@ export default function LandingPage() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
                 <div key={i} className="lp-ticker-item lp-activity-chip" style={{ gap: 8, padding: '6px 14px' }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 13 }}>{item.icon}</span>
                   <span style={{ color: item.color, fontWeight: 700, fontSize: 11 }}>{item.agent}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: 11 }}>{item.text}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10 }}>· {item.ago}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11 }}>{item.text}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: 10 }}>· {item.ago}</span>
                 </div>
               ))}
             </div>
@@ -308,7 +344,7 @@ export default function LandingPage() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
+        <div style={{ background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -322,11 +358,13 @@ export default function LandingPage() {
           </div>
         </div>
 
+        </div>{/* end .lp-hero-viewport */}
+
         {/* ══ AVANT / APRÈS ════════════════════════════════════════ */}
-        <section style={{ background: '#0a0a0f', padding: 'clamp(40px, 5vw, 72px) 24px' }}>
+        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 72px) 24px' }}>
           <div style={{ maxWidth: 900, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Transformation</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#c4b5fd', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Transformation</p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 8 }}>
                 Avant Freenzy <span style={{ color: 'rgba(255,255,255,0.35)' }}>vs</span> Avec Freenzy
               </h2>
@@ -363,7 +401,7 @@ export default function LandingPage() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     padding: '0 2px', background: 'rgba(255,255,255,0.03)', flexShrink: 0,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#5b6cf7' }}>arrow_forward</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#7c3aed' }}>arrow_forward</span>
                   </div>
 
                   {/* After */}
@@ -382,7 +420,7 @@ export default function LandingPage() {
         </section>
 
         {/* RÉSULTATS CONCRETS */}
-        <section style={{ background: '#0a0a0f', padding: 'clamp(40px, 5vw, 80px) 24px' }}>
+        <section style={{ background: '#1a0e3a', padding: 'clamp(40px, 5vw, 80px) 24px' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{
             textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700,
@@ -393,7 +431,7 @@ export default function LandingPage() {
           <p style={{ textAlign: 'center', fontSize: 16, color: 'rgba(255,255,255,0.6)', marginBottom: 48, maxWidth: 600, margin: '0 auto 48px' }}>
             Ce que nos utilisateurs constatent dès la première semaine
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: 20 }}>
             {[
               { value: '15h', label: 'récupérées par semaine', sub: 'en moyenne par utilisateur', icon: 'schedule' },
               { value: '200+', label: 'messages gérés / mois', sub: 'par le Répondeur IA', icon: 'chat' },
@@ -401,10 +439,8 @@ export default function LandingPage() {
               { value: '0€', label: 'de commission sur vos revenus', sub: 'pour les 5000 premiers', icon: 'payments' },
             ].map((stat, i) => (
               <div key={i} style={{
+                ...glassCard,
                 padding: '28px 24px',
-                background: 'rgba(255,255,255,0.04)',
-                borderRadius: 16,
-                border: '1px solid rgba(255,255,255,0.08)',
                 textAlign: 'center',
               }}>
                 <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#7c3aed', marginBottom: 12, display: 'block' }}>{stat.icon}</span>
@@ -418,22 +454,20 @@ export default function LandingPage() {
         </section>
 
         {/* TÉMOIGNAGES */}
-        <section style={{ background: '#111118', padding: 'clamp(40px, 5vw, 60px) 24px' }}>
+        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 60px) 24px' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{ textAlign: 'center', fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, color: '#fff', marginBottom: 40 }}>
             Ils utilisent Freenzy au quotidien
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: 20 }}>
             {[
               { name: 'Marie D.', role: 'Restauratrice, Lyon', quote: "J'ai récupéré 15h par semaine. Le Répondeur gère les réservations, l'agent RH fait les plannings.", icon: 'restaurant', color: '#f97316' },
               { name: 'Thomas R.', role: 'Agent immobilier, Paris', quote: "Mes documents juridiques sont générés en 30 secondes. Avant, ça me prenait une demi-journée.", icon: 'home', color: '#3b82f6' },
               { name: 'Sophie L.', role: 'Expert-comptable, Bordeaux', quote: "Le briefing matinal me donne tout ce que je dois savoir avant même d'ouvrir mon cabinet.", icon: 'bar_chart', color: '#22c55e' },
             ].map((t, i) => (
               <div key={i} style={{
+                ...glassCard,
                 padding: '24px',
-                background: 'rgba(255,255,255,0.04)',
-                borderRadius: 16,
-                border: '1px solid rgba(255,255,255,0.08)',
               }}>
                 <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, fontStyle: 'italic', marginBottom: 16 }}>
                   &ldquo;{t.quote}&rdquo;
@@ -458,14 +492,14 @@ export default function LandingPage() {
         </section>
 
         {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section style={{ background: '#f0f0ff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 6 }}>
-                Vos <span className="fz-accent-word">outils</span>, prêts à l&apos;emploi.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7c3aed', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, ...gradientTextStyle }}>
+                Vos outils, prêts à l&apos;emploi.
               </h2>
-              <p style={{ color: '#666', fontSize: 14 }}>Tout ce dont vous avez besoin, activé en <span className="fz-accent-word">un clic</span>.</p>
+              <p style={{ color: '#86868b', fontSize: 14 }}>Tout ce dont vous avez besoin, activé en <span className="fz-accent-word">un clic</span>.</p>
             </div>
 
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -478,9 +512,9 @@ export default function LandingPage() {
                   style={{
                     padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
                     border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
-                    background: toolTab === i ? '#5b6cf7' : '#f0f0f0',
-                    color: toolTab === i ? '#fff' : '#555',
-                    boxShadow: toolTab === i ? '0 2px 12px rgba(91,108,247,0.25)' : 'none',
+                    background: toolTab === i ? 'linear-gradient(135deg, #7c3aed, #06b6d4)' : '#e8e0ff',
+                    color: toolTab === i ? '#fff' : '#6b7280',
+                    boxShadow: toolTab === i ? '0 2px 12px rgba(124,58,237,0.25)' : 'none',
                     transition: 'all 0.2s',
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}
@@ -507,19 +541,19 @@ export default function LandingPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                       <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{tool.name}</span>
                       <span style={{
-                        fontSize: 10, fontWeight: 700, color: '#22c55e',
-                        background: '#22c55e10', border: '1px solid #22c55e22',
+                        fontSize: 10, fontWeight: 700, color: '#06b6d4',
+                        background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)',
                         padding: '2px 8px', borderRadius: 20,
                       }}>Inclus</span>
                     </div>
-                    <p style={{ fontSize: 12, color: '#555', lineHeight: 1.55 }}>{tool.desc}</p>
+                    <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{tool.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div style={{ textAlign: 'center', marginTop: 24 }}>
-              <span style={{ fontSize: 12, color: '#888' }}>
+              <span style={{ fontSize: 12, color: '#9ca3af' }}>
                 {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils inclus dans tous les plans
               </span>
             </div>
@@ -527,12 +561,12 @@ export default function LandingPage() {
         </section>
 
         {/* ══ DEMO INTERACTIVE ══════════════════════════════════ */}
-        <section style={{ background: '#1d1d1f', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section style={{ background: '#1a0e3a', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 860, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En action</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5 }}>
-                Vos <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>agents</span> au travail.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#c4b5fd', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En action</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, ...gradientTextStyle }}>
+                Vos agents au travail.
               </h2>
             </div>
 
@@ -548,7 +582,7 @@ export default function LandingPage() {
                     padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
                     border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
                     background: demoTab === i ? s.color : 'rgba(255,255,255,0.06)',
-                    color: demoTab === i ? '#fff' : 'rgba(255,255,255,0.65)',
+                    color: demoTab === i ? '#fff' : 'rgba(255,255,255,0.5)',
                     boxShadow: demoTab === i ? `0 0 20px ${s.color}44` : 'none',
                     transition: 'all 0.2s',
                   }}
@@ -560,8 +594,7 @@ export default function LandingPage() {
             </div>
 
             <div style={{
-              background: '#0a0a0f', border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 16, overflow: 'hidden',
+              ...glassCard, overflow: 'hidden',
             }}>
               <div style={{
                 background: 'rgba(255,255,255,0.03)', padding: '9px 16px',
@@ -571,31 +604,31 @@ export default function LandingPage() {
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ffbe2e', display: 'inline-block' }} />
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginLeft: 6 }}>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.22)', marginLeft: 6 }}>
                   Flashboard · Agent {demo.tab}
                 </span>
               </div>
               <div style={{ padding: '20px' }}>
                 <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
                   <div style={{
-                    width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+                    width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
                     background: 'rgba(255,255,255,0.07)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}><span className="material-symbols-rounded" style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>person</span></div>
+                  }}><span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>person</span></div>
                   <div style={{
                     background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)',
                     borderRadius: '0 12px 12px 12px', padding: '9px 13px',
-                    fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 1.55, maxWidth: 520,
+                    fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55, maxWidth: 520,
                   }}>
                     {demo.prompt}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 10 }}>
                   <div style={{
-                    width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+                    width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
                     background: `${demo.color}1a`, border: `1px solid ${demo.color}44`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}><span className="material-symbols-rounded" style={{ fontSize: 11 }}>bolt</span></div>
+                  }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span></div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                       <span style={{ fontSize: 11, color: demo.color, fontWeight: 700, letterSpacing: 0.5 }}>
@@ -616,14 +649,14 @@ export default function LandingPage() {
                           borderRadius: '0 8px 8px 0', padding: '7px 11px',
                           display: 'flex', gap: 10, alignItems: 'baseline',
                         }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 0.4, flexShrink: 0, minWidth: 58 }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: 0.4, flexShrink: 0, minWidth: 58 }}>
                             {line.label}
                           </span>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)' }}>{line.text}</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.68)' }}>{line.text}</span>
                         </div>
                       ))}
                     </div>
-                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{demo.model}</div>
+                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>{demo.model}</div>
                   </div>
                 </div>
               </div>
@@ -632,7 +665,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ DISCUSSIONS APPROFONDIES ═══════════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+        <section style={{ background: '#f0f0ff', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div className="lp-discussions-grid">
               <div>
@@ -642,14 +675,14 @@ export default function LandingPage() {
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
                   Explorez les <span className="fz-accent-word">grandes questions</span> avec l&apos;IA.
                 </h2>
-                <p style={{ fontSize: 14, color: '#555', lineHeight: 1.65, marginBottom: 24 }}>
+                <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.65, marginBottom: 24 }}>
                   85+ templates de discussion guidée, 16 catégories, pensée étendue avec Claude Opus. L&apos;IA ne se contente pas de répondre — elle <span className="fz-accent-word">réfléchit profondément</span> avec vous.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
                   {DISCUSSION_HIGHLIGHTS.map((h, i) => (
                     <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                       <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>{h.icon}</span>
-                      <span style={{ fontSize: 13, color: '#444' }}>{h.text}</span>
+                      <span style={{ fontSize: 13, color: '#4b5563' }}>{h.text}</span>
                     </div>
                   ))}
                 </div>
@@ -664,7 +697,7 @@ export default function LandingPage() {
                 </div>
                 <Link href="/login?mode=register" className="lp-cta-primary" style={{
                   display: 'inline-block', padding: '12px 28px',
-                  background: '#7c3aed', color: '#fff',
+                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', boxShadow: '0 0 30px rgba(124,58,237,0.3)', color: '#fff',
                   borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none',
                 }}>
                   Explorer les discussions
@@ -672,7 +705,7 @@ export default function LandingPage() {
               </div>
               {/* Discussion mockup card */}
               <div style={{
-                background: '#0a0a0f', borderRadius: 16, padding: 0, overflow: 'hidden',
+                background: '#0f0720', borderRadius: 16, padding: 0, overflow: 'hidden',
                 border: '1px solid rgba(255,255,255,0.08)',
               }}>
                 {/* macOS-style chrome */}
@@ -722,12 +755,12 @@ export default function LandingPage() {
         </section>
 
         {/* ══ COMMENT ÇA MARCHE — scenarios + technologies ═════════ */}
-        <section style={{ background: '#1d1d1f', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section style={{ background: '#1a0e3a', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#5b6cf7', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ça marche</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 6 }}>
-                <span className="fz-accent-word">Concret</span>. <span className="fz-accent-word">Automatisé</span>. <span className="fz-accent-word">Instantané</span>.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#c4b5fd', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ça marche</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, ...gradientTextStyle }}>
+                Concret. Automatisé. Instantané.
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>Vos agents traitent tout, <span className="fz-accent-word">24h/24</span>. Voici ce que ça donne.</p>
             </div>
@@ -736,15 +769,14 @@ export default function LandingPage() {
             <div className="lp-scenario-steps" style={{ gap: 16, marginBottom: 40 }}>
               {SCENARIOS.map((s, i) => (
                 <div key={i} style={{
-                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: 16, padding: 'clamp(16px, 2.5vw, 24px)',
+                  ...glassCard, padding: 'clamp(16px, 2.5vw, 24px)',
                 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, marginBottom: 14 }} />
+                  <div style={{ ...gradientDot(8), marginBottom: 14 }} />
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{s.title}</h3>
                   <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {s.steps.map((step, j) => (
-                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
+                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
                         <span style={{
                           width: 20, height: 20, borderRadius: '50%',
                           background: `${s.color}22`, color: s.color,
@@ -755,14 +787,14 @@ export default function LandingPage() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 14, fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{s.tech}</div>
+                  <div style={{ marginTop: 14, fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>{s.tech}</div>
                 </div>
               ))}
             </div>
 
             {/* Technologies intégrées — carousel */}
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.22)', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
             </div>
             <TechCarousel items={TECH_FEATURES} />
           </div>
@@ -773,17 +805,17 @@ export default function LandingPage() {
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div className="lp-whatsapp-grid">
               <div>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#22c55e', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>WhatsApp</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#06b6d4', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>WhatsApp</p>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
-                  Vos agents sur <span className="fz-accent-word" style={{ color: '#22c55e' }}>WhatsApp</span>.
+                  Vos agents sur <span className="fz-accent-word" style={{ color: '#06b6d4' }}>WhatsApp</span>.
                 </h2>
-                <p style={{ fontSize: 14, color: '#555', lineHeight: 1.65, marginBottom: 20 }}>
-                  Recevez les résumés, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents répondent en <span className="fz-accent-word" style={{ color: '#22c55e' }}>temps réel</span>.
+                <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.65, marginBottom: 20 }}>
+                  Recevez les résumés, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents répondent en <span className="fz-accent-word" style={{ color: '#06b6d4' }}>temps réel</span>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#444' }}>
-                      <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 16 }}>check_circle</span> {f}
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#6b7280' }}>
+                      <span className="material-symbols-rounded" style={{ color: '#06b6d4', fontSize: 16 }}>check_circle</span> {f}
                     </div>
                   ))}
                 </div>
@@ -815,7 +847,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ AGENTS PERSONNELS B2C ══════════════════════════════ */}
-        <section style={{ background: '#0e0e18', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#ec4899', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
@@ -831,9 +863,11 @@ export default function LandingPage() {
             <div className="lp-personal-grid">
               {PERSONAL_AGENTS_LANDING.map((agent, i) => (
                 <div key={i} style={{
-                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+                  background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 14, padding: '16px 18px',
                   borderLeft: `3px solid ${agent.color}`,
+                  boxShadow: '0 0 40px rgba(124,58,237,0.15)', transition: 'all 0.3s',
                   display: 'flex', gap: 14, alignItems: 'flex-start',
                 }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 24, color: agent.color, flexShrink: 0, marginTop: 2 }}>{agent.icon}</span>
@@ -860,7 +894,7 @@ export default function LandingPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
                 Photos, vidéos, avatars — <span className="fz-accent-word">générés par l&apos;IA</span>.
               </h2>
-              <p style={{ fontSize: 14, color: '#555', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
+              <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
                 Créez du contenu visuel professionnel en quelques secondes. Intégré directement dans votre dashboard.
               </p>
             </div>
@@ -879,7 +913,7 @@ export default function LandingPage() {
                 }} />
                 <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#9333ea', marginBottom: 14, display: 'block', position: 'relative' }}>photo_camera</span>
                 <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', marginBottom: 6, position: 'relative' }}>{STUDIO_FEATURES[0].title}</h3>
-                <p style={{ fontSize: 13, color: '#555', lineHeight: 1.5, marginBottom: 14, position: 'relative' }}>{STUDIO_FEATURES[0].desc}</p>
+                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5, marginBottom: 14, position: 'relative' }}>{STUDIO_FEATURES[0].desc}</p>
                 <div style={{ display: 'flex', gap: 8, position: 'relative' }}>
                   <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(147,51,234,0.1)', color: '#9333ea', fontWeight: 600 }}>{STUDIO_FEATURES[0].badge}</span>
                   <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(147,51,234,0.06)', color: '#9333ea' }}>{STUDIO_FEATURES[0].credits}</span>
@@ -902,7 +936,7 @@ export default function LandingPage() {
                   }}>
                     <span className="material-symbols-rounded" style={{ fontSize: 28, color: f.color, marginBottom: 10, display: 'block' }}>{f.icon}</span>
                     <h4 style={{ fontSize: 16, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{f.title}</h4>
-                    <p style={{ fontSize: 12, color: '#666', lineHeight: 1.4, marginBottom: 10, margin: 0 }}>{f.desc}</p>
+                    <p style={{ fontSize: 12, color: '#86868b', lineHeight: 1.4, marginBottom: 10, margin: 0 }}>{f.desc}</p>
                     <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
                       <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: `${f.color}12`, color: f.color, fontWeight: 600 }}>{f.badge}</span>
                       <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: `${f.color}08`, color: f.color }}>{f.credits}</span>
@@ -925,16 +959,16 @@ export default function LandingPage() {
         </section>
 
         {/* ══ CRÉATION SUR MESURE ═════════════════════════════════ */}
-        <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section style={{ background: '#f0f0ff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#8b5cf6', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
                 Sur mesure
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
-                Créez vos propres <span className="fz-accent-word" style={{ color: '#8b5cf6' }}>modules</span>.
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 12, ...gradientTextStyle }}>
+                Créez vos propres modules.
               </h2>
-              <p style={{ fontSize: 15, color: '#555', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
+              <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
                 Chaque entreprise est <span className="fz-accent-word" style={{ color: '#8b5cf6' }}>unique</span>. Créez des modules IA adaptés à votre métier, ou confiez-nous leur conception.
               </p>
             </div>
@@ -949,7 +983,7 @@ export default function LandingPage() {
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
                   Vous créez
                 </h3>
-                <p style={{ fontSize: 13, color: '#555', lineHeight: 1.65, marginBottom: 18 }}>
+                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.65, marginBottom: 18 }}>
                   Depuis votre tableau de bord, définissez un agent personnalisé en quelques minutes : nom, rôle, instructions, ton, et outils connectés.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -959,7 +993,7 @@ export default function LandingPage() {
                     'Connectez vos outils (email, CRM, WhatsApp…)',
                     'Testez et déployez instantanément',
                   ].map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: '#444', display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <span className="material-symbols-rounded" style={{ color: '#8b5cf6', fontSize: 14 }}>check_circle</span> {p}
                     </div>
                   ))}
@@ -972,7 +1006,7 @@ export default function LandingPage() {
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
                   On crée pour vous
                 </h3>
-                <p style={{ fontSize: 13, color: '#555', lineHeight: 1.65, marginBottom: 18 }}>
+                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.65, marginBottom: 18 }}>
                   Besoin d&apos;un module complexe ou spécifique à votre secteur ? Notre équipe le conçoit, le configure et le déploie dans votre espace.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -982,7 +1016,7 @@ export default function LandingPage() {
                     'Intégrations personnalisées (API, bases de données)',
                     'Formation et accompagnement inclus',
                   ].map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: '#444', display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <span className="material-symbols-rounded" style={{ color: '#8b5cf6', fontSize: 14 }}>check_circle</span> {p}
                     </div>
                   ))}
@@ -992,7 +1026,7 @@ export default function LandingPage() {
 
             {/* Examples — CAROUSEL */}
             <div className="lp-app-card" style={{ padding: '24px 28px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
                 Exemples de modules créés par nos utilisateurs
               </p>
               <Carousel
@@ -1001,12 +1035,12 @@ export default function LandingPage() {
                 renderItem={(ex: typeof CUSTOM_EXAMPLES[0]) => (
                   <div style={{
                     padding: '16px 14px', borderRadius: 12,
-                    background: '#fafafa', border: '1px solid #f0f0f0',
+                    background: '#fafaff', border: '1px solid #e8e0ff',
                     minHeight: 120,
                   }}>
                     <span className="material-symbols-rounded" style={{ fontSize: 22, marginBottom: 8, display: 'block' }}>{ex.icon}</span>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{ex.name}</div>
-                    <div style={{ fontSize: 11, color: '#555', lineHeight: 1.55 }}>{ex.desc}</div>
+                    <div style={{ fontSize: 11, color: '#6b7280', lineHeight: 1.55 }}>{ex.desc}</div>
                   </div>
                 )}
               />
@@ -1080,25 +1114,25 @@ export default function LandingPage() {
         </section>
 
         {/* ══ POURQUOI FREENZY ═════════════════════════════════ */}
-        <section style={{ background: '#0e0e18', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section style={{ background: '#0f0720', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#a5b4fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#c4b5fd', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
                 Free &amp; Easy
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5 }}>
-                L&apos;IA <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>accessible</span> à tous.
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, ...gradientTextStyle }}>
+                L&apos;IA accessible à tous.
               </h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
-                Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>complète</span>, <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>gratuite</span>, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous.
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
+                Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <span className="fz-accent-word" style={{ color: '#c4b5fd' }}>complète</span>, <span className="fz-accent-word" style={{ color: '#c4b5fd' }}>gratuite</span>, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous.
               </p>
             </div>
             <div className="lp-scenario-steps" style={{ gap: 16 }}>
               {WHY_FREENZY.map((item, i) => (
-                <div key={i} className="lp-app-card-dark">
+                <div key={i} style={{ ...glassCard, padding: '24px 22px' }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block' }}>{item.icon}</span>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{item.title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65 }}>{item.desc}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -1112,7 +1146,7 @@ export default function LandingPage() {
               {TRUST_BADGES.map((badge, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'center', gap: 7,
-                  fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
+                  fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.28)',
                 }}>
                   <span className="material-symbols-rounded" style={{ fontSize: 15 }}>{badge.icon}</span>
                   {badge.text}
@@ -1130,14 +1164,14 @@ export default function LandingPage() {
         )}
 
         {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
-        <section ref={faqRef} id="faq" style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        <section ref={faqRef} id="faq" style={{ background: '#f0f0ff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#f97316', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>FAQ</p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1 }}>
                 <span className="fz-accent-word" style={{ color: '#f97316' }}>{TOTAL_FAQ_COUNT}</span> réponses à vos questions.
               </h2>
-              <p style={{ fontSize: 14, color: '#666', marginTop: 8 }}>
+              <p style={{ fontSize: 14, color: '#86868b', marginTop: 8 }}>
                 Tout ce que vous devez savoir sur Freenzy.io, classé par thème.
               </p>
             </div>
@@ -1158,7 +1192,7 @@ export default function LandingPage() {
                     padding: '10px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700, minHeight: 44,
                     border: 'none', cursor: 'pointer',
                     background: faqCat === ci ? cat.color : '#fff',
-                    color: faqCat === ci ? '#fff' : '#555',
+                    color: faqCat === ci ? '#fff' : '#6b7280',
                     boxShadow: faqCat === ci ? `0 2px 12px ${cat.color}33` : '0 1px 3px rgba(0,0,0,0.04)',
                     transition: 'all 0.2s',
                   }}
@@ -1186,7 +1220,7 @@ export default function LandingPage() {
               <span style={{ fontSize: 14, fontWeight: 800, color: orderedFaq[faqCat].color }}>
                 {orderedFaq[faqCat].label}
               </span>
-              <span style={{ fontSize: 12, color: '#888', marginLeft: 'auto' }}>
+              <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>
                 {orderedFaq[faqCat].questions.length} questions
               </span>
             </div>
@@ -1200,12 +1234,22 @@ export default function LandingPage() {
                   <div
                     key={`${faqCat}-${i}`}
                     className="lp-faq-item"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
                     onClick={() => {
                       if (!isOpen) trackFaqOpened(faq.q, orderedFaq[faqCat].label);
                       setOpenFaq(isOpen ? null : i);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (!isOpen) trackFaqOpened(faq.q, orderedFaq[faqCat].label);
+                        setOpenFaq(isOpen ? null : i);
+                      }
+                    }}
                     style={{
-                      background: isOpen ? '#fafaff' : '#fff',
+                      background: isOpen ? '#f8f5ff' : '#fff',
                       border: isOpen ? `1.5px solid ${catColor}40` : '1px solid #ebebeb',
                       borderLeft: `3px solid ${isOpen ? catColor : '#d1d5db'}`,
                       borderRadius: 11, padding: '16px 18px',
@@ -1216,9 +1260,9 @@ export default function LandingPage() {
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{faq.q}</div>
                       <div style={{
                         width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
-                        background: isOpen ? catColor : '#f0f0f0',
+                        background: isOpen ? 'linear-gradient(135deg, #7c3aed, #06b6d4)' : '#f0f0f0',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#888',
+                        fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
                         transition: 'all 0.2s',
                       }}>
                         {isOpen ? '−' : '+'}
@@ -1240,14 +1284,14 @@ export default function LandingPage() {
 
         {/* ══ CTA FINAL ════════════════════════════════════════ */}
         <section ref={ctaRef} style={{
-          background: 'linear-gradient(165deg, #0a0a0f 0%, #0f0f1a 50%, #0a0a0f 100%)',
+          background: 'linear-gradient(165deg, #0f0720 0%, #1a0e3a 50%, #0f0720 100%)',
           padding: 'clamp(56px, 8vw, 96px) 24px',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
         }}>
           <div style={{
             position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
             width: '100%', maxWidth: 500, height: 300,
-            background: 'radial-gradient(ellipse, rgba(91,108,247,0.08) 0%, transparent 68%)',
+            background: 'radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, rgba(6,182,212,0.06) 40%, transparent 68%)',
             pointerEvents: 'none',
           }} />
           <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -1256,14 +1300,15 @@ export default function LandingPage() {
             </p>
             <h2 style={{
               fontSize: 'clamp(28px, 5vw, 56px)',
-              fontFamily: 'var(--font-display)', fontWeight: 700, color: '#fff',
+              fontFamily: 'var(--font-display)', fontWeight: 700,
               letterSpacing: -2.5, lineHeight: 1.05, marginBottom: 14,
+              ...gradientTextStyle,
             }}>
               Votre équipe IA<br />
-              <span className="fz-accent-word" style={{ color: '#a5b4fc' }}>vous attend.</span>
+              vous attend.
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', marginBottom: 24 }}>
-              <span style={{ color: '#a5b4fc', fontWeight: 700 }}>{totalAgents}+ agents IA</span>. Toutes les IA du marché. <span style={{ color: '#a5b4fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 24 }}>
+              <span style={{ color: '#c4b5fd', fontWeight: 700 }}>{totalAgents}+ agents IA</span>. Toutes les IA du marché. <span style={{ color: '#c4b5fd', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
             </p>
             {/* Rewards chips */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 28 }}>
@@ -1280,14 +1325,14 @@ export default function LandingPage() {
             </div>
             <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
               display: 'inline-block', padding: '15px 40px',
-              background: '#5b6cf7', color: '#fff',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', boxShadow: '0 0 40px rgba(124,58,237,0.3)', color: '#fff',
               borderRadius: 12, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16,
               textDecoration: 'none',
             }}>
               {heroCta?.label || 'Commencer gratuitement'}
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
-              <Link href="/plans" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Tarifs détaillés →</Link>
+              <Link href="/plans" style={{ color: 'rgba(255,255,255,0.28)', textDecoration: 'none' }}>Tarifs détaillés →</Link>
             </div>
           </div>
         </section>

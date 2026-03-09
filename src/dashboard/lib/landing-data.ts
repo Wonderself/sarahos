@@ -55,9 +55,9 @@ export const LANDING_AGENTS = [
 // ─── Actions avec crédits
 export const ACTION_COSTS = [
   { icon: 'chat', action: 'Chat avec agent IA', model: 'Haiku', count: '100 chats', color: '#22c55e' },
-  { icon: 'mail', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#5b6cf7' },
+  { icon: 'mail', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#7c3aed' },
   { icon: 'phone_iphone', action: 'Post réseaux sociaux', model: 'Haiku', count: '62 posts', color: '#3b82f6' },
-  { icon: 'description', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#5b6cf7' },
+  { icon: 'description', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#7c3aed' },
   { icon: 'call', action: 'Appel répondeur IA', model: 'Twilio + Haiku', count: '10 appels', color: '#f97316' },
   { icon: 'call_made', action: 'Appel sortant IA', model: 'Twilio + Sonnet', count: '3 appels', color: '#f97316' },
   { icon: 'chat', action: 'WhatsApp Business IA', model: 'Haiku', count: '125 msgs', color: '#22c55e' },
@@ -86,12 +86,12 @@ export const STATS_BADGES = [
 // ─── Live activity feed
 export const ACTIVITY = [
   { icon: 'call', text: 'Appel traité · lead qualifié', agent: 'Répondeur', color: '#22c55e', ago: '2 min' },
-  { icon: 'mail', text: 'Proposition commerciale envoyée', agent: 'Commercial', color: '#5b6cf7', ago: '4 min' },
+  { icon: 'mail', text: 'Proposition commerciale envoyée', agent: 'Commercial', color: '#7c3aed', ago: '4 min' },
   { icon: 'phone_iphone', text: '3 posts LinkedIn programmés', agent: 'Marketing', color: '#3b82f6', ago: '8 min' },
   { icon: 'bar_chart', text: 'Rapport mensuel généré', agent: 'Finance', color: '#f59e0b', ago: '13 min' },
   { icon: 'alarm', text: 'Briefing matinal envoyé', agent: 'Réveil IA', color: '#f97316', ago: '19 min' },
   { icon: 'image', text: 'Visuel créé · campagne Été 2026', agent: 'Photo/Visuel', color: '#9333ea', ago: '24 min' },
-  { icon: 'description', text: 'NDA bilingue généré', agent: 'Juridique', color: '#5b6cf7', ago: '31 min' },
+  { icon: 'description', text: 'NDA bilingue généré', agent: 'Juridique', color: '#7c3aed', ago: '31 min' },
   { icon: 'chat', text: '12 messages WhatsApp traités', agent: 'Assistante', color: '#22c55e', ago: '39 min' },
   { icon: 'movie', text: 'Clip vidéo 30s créé', agent: 'Vidéo', color: '#ec4899', ago: '47 min' },
   { icon: 'handshake', text: 'Stratégie Q2 synthétisée', agent: 'DG', color: '#9333ea', ago: '1h' },
@@ -115,7 +115,7 @@ export const DEMO_SCENARIOS = [
   {
     tab: 'Email',
     tabIcon: 'mail',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     prompt: 'Rédige une proposition pour Acme Corp — intégration SaaS, budget 12 000€.',
     lines: [
       { label: 'Objet', text: 'Proposition · Intégration SaaS · Acme Corp' },
@@ -174,7 +174,7 @@ export const SCENARIOS = [
     desc: 'Générez contrats, devis, NDA, CGV en langage naturel. Export PDF signable, archivage auto.',
     steps: ['Prompt en langage naturel', 'Génération structurée IA', 'Export PDF + archivage'],
     tech: 'Claude Sonnet · 3.5 crédits/doc',
-    color: '#5b6cf7',
+    color: '#7c3aed',
   },
   {
     title: 'Social Media Autopilot',
@@ -270,7 +270,7 @@ export const CUSTOM_EXAMPLES = [
 export const WHY_FREENZY = [
   { icon: 'diamond', title: '0% de commission', desc: 'Vous payez le prix officiel des fournisseurs IA. Pas de markup, pas de marge cachée. Ce que ça coûte réellement, c\'est ce que vous payez.', color: '#22c55e' },
   { icon: 'lock_open', title: 'Aucun abonnement', desc: 'Pas de forfait mensuel, pas d\'engagement. Vous rechargez des crédits quand vous en avez besoin. Vos crédits n\'expirent jamais.', color: '#f59e0b' },
-  { icon: 'language', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#5b6cf7' },
+  { icon: 'language', title: 'Toutes les IA du marché', desc: 'Claude, GPT, Gemini, Llama, Grok, Mistral — et tous les prochains dès leur sortie. Chaque agent choisit le meilleur modèle pour chaque tâche.', color: '#7c3aed' },
   { icon: 'flag', title: 'Données en Europe', desc: 'Serveurs EU, conformité RGPD native. Vos données ne servent jamais à entraîner des modèles. Chiffrement de bout en bout.', color: '#dc2626' },
   { icon: 'bolt', title: 'Opérationnel en 5 min', desc: 'Pas de formation, pas de configuration complexe. Créez votre compte, décrivez votre activité, vos agents sont immédiatement prêts.', color: '#3b82f6' },
   { icon: 'smart_toy', title: '100+ agents & templates', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, dev, design, formation… Plus le marketplace avec des dizaines de templates prêts à l\'emploi.', color: '#9333ea' },

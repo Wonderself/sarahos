@@ -66,7 +66,7 @@ export default function PublicNav() {
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       background: scrolled
         ? 'rgba(255,255,255,0.92)'
-        : (isLanding ? 'rgba(10,10,15,0.65)' : 'rgba(255,255,255,0.92)'),
+        : (isLanding ? 'rgba(15,7,32,0.75)' : 'rgba(255,255,255,0.92)'),
       backdropFilter: 'blur(20px) saturate(180%)',
       WebkitBackdropFilter: 'blur(20px) saturate(180%)',
       borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
@@ -96,6 +96,8 @@ export default function PublicNav() {
           >
             <button
               onClick={() => setFeaturesOpen(o => !o)}
+              aria-haspopup="true"
+              aria-expanded={featuresOpen}
               style={{
                 ...linkStyle('/fonctionnalites'),
                 color: isDark
@@ -118,26 +120,36 @@ export default function PublicNav() {
 
             {featuresOpen && (
               <div
+                role="menu"
                 onMouseEnter={handleFeaturesEnter}
                 onMouseLeave={handleFeaturesLeave}
+                onKeyDown={(e) => {
+                  const items = e.currentTarget.querySelectorAll('[role="menuitem"]');
+                  const currentIdx = Array.from(items).indexOf(document.activeElement as Element);
+                  if (e.key === 'ArrowDown') { e.preventDefault(); (items[currentIdx < items.length - 1 ? currentIdx + 1 : 0] as HTMLElement)?.focus(); }
+                  else if (e.key === 'ArrowUp') { e.preventDefault(); (items[currentIdx > 0 ? currentIdx - 1 : items.length - 1] as HTMLElement)?.focus(); }
+                  else if (e.key === 'Escape') { setFeaturesOpen(false); }
+                }}
                 style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
                   marginTop: 8, minWidth: 300, maxHeight: 420, overflowY: 'auto',
-                  background: '#14141b', border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#1a0e3a', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 12, padding: '8px',
-                  boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+                  boxShadow: '0 16px 48px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.15)',
                 }}
               >
                 {FEATURE_LINKS.map(fl => (
                   <Link
                     key={fl.href}
                     href={fl.href}
+                    role="menuitem"
+                    tabIndex={0}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 10,
                       padding: '10px 14px', borderRadius: 8,
                       textDecoration: 'none',
                       color: pathname === fl.href ? '#fff' : 'rgba(255,255,255,0.7)',
-                      background: pathname === fl.href ? 'rgba(91,108,247,0.15)' : 'transparent',
+                      background: pathname === fl.href ? 'rgba(124,58,237,0.15)' : 'transparent',
                       fontSize: 13, fontWeight: 500, fontFamily: 'var(--font-display)',
                       transition: 'background 0.15s ease, color 0.15s ease',
                     }}
@@ -146,11 +158,11 @@ export default function PublicNav() {
                       (e.currentTarget as HTMLElement).style.color = '#fff';
                     }}
                     onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.background = pathname === fl.href ? 'rgba(91,108,247,0.15)' : 'transparent';
+                      (e.currentTarget as HTMLElement).style.background = pathname === fl.href ? 'rgba(124,58,237,0.15)' : 'transparent';
                       (e.currentTarget as HTMLElement).style.color = pathname === fl.href ? '#fff' : 'rgba(255,255,255,0.7)';
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#5b6cf7' }}>{fl.icon}</span>
+                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>{fl.icon}</span>
                     {fl.label}
                   </Link>
                 ))}
@@ -183,9 +195,9 @@ export default function PublicNav() {
             style={{
               fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em', textDecoration: 'none',
               padding: '8px 20px', borderRadius: 8,
-              background: isDark ? 'rgba(255,255,255,0.1)' : '#1d1d1f',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
               color: '#fff',
-              border: isDark ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+              border: '1px solid transparent',
               transition: 'all 0.3s ease',
             }}
           >
@@ -221,8 +233,8 @@ export default function PublicNav() {
             style={{
               fontSize: 15, fontWeight: 500, textDecoration: 'none',
               padding: '14px 16px', borderRadius: 8,
-              color: isFeaturesActive ? '#5b6cf7' : '#4b5563',
-              background: isFeaturesActive ? 'rgba(91,108,247,0.06)' : 'transparent',
+              color: isFeaturesActive ? '#7c3aed' : '#4b5563',
+              background: isFeaturesActive ? 'rgba(124,58,237,0.06)' : 'transparent',
               border: 'none', cursor: 'pointer', textAlign: 'left',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               width: '100%',
@@ -245,11 +257,11 @@ export default function PublicNav() {
                     display: 'flex', alignItems: 'center', gap: 8,
                     fontSize: 14, fontWeight: 500, textDecoration: 'none',
                     padding: '10px 16px', borderRadius: 8,
-                    color: pathname === fl.href ? '#5b6cf7' : '#6b7280',
-                    background: pathname === fl.href ? 'rgba(91,108,247,0.06)' : 'transparent',
+                    color: pathname === fl.href ? '#7c3aed' : '#6b7280',
+                    background: pathname === fl.href ? 'rgba(124,58,237,0.06)' : 'transparent',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#5b6cf7' }}>{fl.icon}</span>
+                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#7c3aed' }}>{fl.icon}</span>
                   {fl.label}
                 </Link>
               ))}
@@ -261,8 +273,8 @@ export default function PublicNav() {
             style={{
               fontSize: 15, fontWeight: 500, textDecoration: 'none',
               padding: '14px 16px', borderRadius: 8,
-              color: pathname.startsWith('/cas') ? '#5b6cf7' : '#4b5563',
-              background: pathname.startsWith('/cas') ? 'rgba(91,108,247,0.06)' : 'transparent',
+              color: pathname.startsWith('/cas') ? '#7c3aed' : '#4b5563',
+              background: pathname.startsWith('/cas') ? 'rgba(124,58,237,0.06)' : 'transparent',
             }}
           >
             Cas d&apos;usage
@@ -272,8 +284,8 @@ export default function PublicNav() {
             style={{
               fontSize: 15, fontWeight: 500, textDecoration: 'none',
               padding: '14px 16px', borderRadius: 8,
-              color: pathname === '/vs-alternatives' ? '#5b6cf7' : '#4b5563',
-              background: pathname === '/vs-alternatives' ? 'rgba(91,108,247,0.06)' : 'transparent',
+              color: pathname === '/vs-alternatives' ? '#7c3aed' : '#4b5563',
+              background: pathname === '/vs-alternatives' ? 'rgba(124,58,237,0.06)' : 'transparent',
             }}
           >
             Comparaison
@@ -286,8 +298,8 @@ export default function PublicNav() {
               style={{
                 fontSize: 15, fontWeight: 500, textDecoration: 'none',
                 padding: '14px 16px', borderRadius: 8,
-                color: pathname === link.href ? '#5b6cf7' : '#4b5563',
-                background: pathname === link.href ? 'rgba(91,108,247,0.06)' : 'transparent',
+                color: pathname === link.href ? '#7c3aed' : '#4b5563',
+                background: pathname === link.href ? 'rgba(124,58,237,0.06)' : 'transparent',
               }}
             >
               {link.label}
@@ -299,7 +311,7 @@ export default function PublicNav() {
             style={{
               fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
               padding: '12px 20px', borderRadius: 10,
-              background: '#1d1d1f', color: '#fff',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
             }}
           >
             Se connecter
@@ -309,7 +321,7 @@ export default function PublicNav() {
             style={{
               fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
               padding: '12px 20px', borderRadius: 10,
-              background: '#5b6cf7', color: '#fff',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
             }}
           >
             Créer un compte gratuit

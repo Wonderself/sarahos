@@ -193,7 +193,7 @@ export default function ResetPasswordPage() {
             <a
               href="/login"
               style={{
-                fontSize: 13, color: '#5b6cf7', textDecoration: 'none',
+                fontSize: 13, color: '#7c3aed', textDecoration: 'none',
                 fontWeight: 500,
               }}
             >

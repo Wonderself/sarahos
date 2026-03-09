@@ -116,7 +116,7 @@ export default function SocialPage() {
   const accentGradient = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
 
   return (
-    <div style={{ background: '#0a0a0f', color: '#fff', minHeight: '100vh' }}>
+    <div style={{ background: '#0f0720', color: '#fff', minHeight: '100vh' }}>
       <PublicNav />
 
       {/* Hero */}
@@ -172,7 +172,7 @@ export default function SocialPage() {
               <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', width: 36, height: 36, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16 }}>
                 {i + 1}
               </div>
-              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 15, lineHeight: 1.6 }}>{step.desc}</p>
             </div>
@@ -191,7 +191,7 @@ export default function SocialPage() {
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {FEATURES.map((feat, i) => (
             <div key={i} style={{ ...cardStyle, flex: '1 1 320px', maxWidth: 360 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#5b6cf7', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
               <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{feat.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14.5, lineHeight: 1.65 }}>{feat.desc}</p>
             </div>
@@ -211,7 +211,7 @@ export default function SocialPage() {
           {/* Calendar header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <div style={{ fontWeight: 700, fontSize: 16 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20, verticalAlign: 'middle', marginRight: 8, color: '#5b6cf7' }}>calendar_month</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 20, verticalAlign: 'middle', marginRight: 8, color: '#7c3aed' }}>calendar_month</span>
               Semaine du 9 mars 2026
             </div>
             <div style={{ display: 'flex', gap: 4 }}>
@@ -299,7 +299,7 @@ export default function SocialPage() {
             { day: 'Mar', type: 'Cas client', color: '#06b6d4' },
             { day: 'Mer', type: 'Coulisses', color: '#f59e0b' },
             { day: 'Jeu', type: 'Interactif', color: '#22c55e' },
-            { day: 'Ven', type: 'Récap semaine', color: '#5b6cf7' },
+            { day: 'Ven', type: 'Récap semaine', color: '#7c3aed' },
             { day: 'Sam', type: 'Détente', color: '#ec4899' },
             { day: 'Dim', type: 'Objectifs', color: '#ef4444' },
           ].map((item, i) => (
@@ -315,8 +315,8 @@ export default function SocialPage() {
 
       {/* Pricing */}
       <section style={sectionStyle}>
-        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.15)' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 12, display: 'block' }}>payments</span>
+        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 12, display: 'block' }}>payments</span>
           <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: 12 }}>
             Tarification simple
           </h2>
@@ -326,15 +326,15 @@ export default function SocialPage() {
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', marginBottom: 24 }}>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>~0.8</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>~0.8</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédit / post</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>50</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>50</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits offerts</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>0 €</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>0 €</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>pour commencer</div>
             </div>
           </div>
@@ -411,17 +411,17 @@ export default function SocialPage() {
         </p>
         <div style={{ maxWidth: 600, margin: '0 auto', ...cardStyle }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
-            <input type="range" min={1} max={20} value={roiHours} onChange={(e) => setRoiHours(Number(e.target.value))} style={{ flex: 1, accentColor: '#5b6cf7' }} />
-            <span style={{ fontWeight: 800, fontSize: 24, color: '#5b6cf7', minWidth: 50, textAlign: 'right' }}>{roiHours}h</span>
+            <input type="range" min={1} max={20} value={roiHours} onChange={(e) => setRoiHours(Number(e.target.value))} style={{ flex: 1, accentColor: '#7c3aed' }} />
+            <span style={{ fontWeight: 800, fontSize: 24, color: '#7c3aed', minWidth: 50, textAlign: 'right' }}>{roiHours}h</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
               <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>Coût manuel ({roiHours}h x 4 sem x 45€/h)</span>
               <span style={{ fontWeight: 800, fontSize: 18, color: '#ef4444' }}>{(roiHours * 4 * 45).toLocaleString('fr-FR')} €/mois</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.2)', borderRadius: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 10 }}>
               <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>Coût Freenzy (25 posts/sem x 0.8 cr x 0.05€)</span>
-              <span style={{ fontWeight: 800, fontSize: 18, color: '#5b6cf7' }}>{(25 * 4 * 0.8 * 0.05).toFixed(0)} €/mois</span>
+              <span style={{ fontWeight: 800, fontSize: 18, color: '#7c3aed' }}>{(25 * 4 * 0.8 * 0.05).toFixed(0)} €/mois</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10 }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: '#22c55e' }}>Économie mensuelle</span>

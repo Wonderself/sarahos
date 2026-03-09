@@ -73,7 +73,7 @@ export default function CookieConsent() {
         }}>
           {/* Icon + Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#5b6cf7' }}>cookie</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#7c3aed' }}>cookie</span>
             <h3 style={{
               margin: 0, fontSize: 16, fontWeight: 700,
               fontFamily: 'var(--font-display)',
@@ -91,7 +91,7 @@ export default function CookieConsent() {
           </p>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', margin: '0 0 22px' }}>
             Les cookies essentiels (session, préférences) fonctionnent toujours.{' '}
-            <Link href="/legal/cookies" style={{ color: '#5b6cf7', textDecoration: 'underline' }}>
+            <Link href="/legal/cookies" style={{ color: '#7c3aed', textDecoration: 'underline' }}>
               Politique de cookies
             </Link>
           </p>
@@ -120,7 +120,7 @@ export default function CookieConsent() {
               style={{
                 flex: 1,
                 padding: '11px 20px',
-                background: '#5b6cf7',
+                background: '#7c3aed',
                 border: 'none',
                 color: '#fff',
                 borderRadius: 10,
@@ -128,7 +128,7 @@ export default function CookieConsent() {
                 fontWeight: 600,
                 fontFamily: 'var(--font-display)',
                 cursor: 'pointer',
-                boxShadow: '0 0 20px rgba(91,108,247,0.3)',
+                boxShadow: '0 0 20px rgba(124,58,237,0.3)',
               }}
             >
               Accepter

@@ -108,14 +108,14 @@ export default function RepondeurPage() {
   const accentGradient = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
 
   return (
-    <div style={{ background: '#0a0a0f', color: '#fff', minHeight: '100vh' }}>
+    <div style={{ background: '#0f0720', color: '#fff', minHeight: '100vh' }}>
       <PublicNav />
 
       {/* Hero */}
       <section style={{ paddingTop: 140, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, background: 'radial-gradient(circle, rgba(91,108,247,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(91,108,247,0.12)', border: '1px solid rgba(91,108,247,0.3)', borderRadius: 100, padding: '8px 20px', marginBottom: 28, fontSize: 14, color: '#5b6cf7' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 100, padding: '8px 20px', marginBottom: 28, fontSize: 14, color: '#7c3aed' }}>
             <span className="material-symbols-rounded" style={{ fontSize: 18 }}>call</span>
             Répondeur IA
           </div>
@@ -152,7 +152,7 @@ export default function RepondeurPage() {
               <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', width: 36, height: 36, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16 }}>
                 {i + 1}
               </div>
-              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 15, lineHeight: 1.6 }}>{step.desc}</p>
             </div>
@@ -171,7 +171,7 @@ export default function RepondeurPage() {
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {FEATURES.map((feat, i) => (
             <div key={i} style={{ ...cardStyle, flex: '1 1 320px', maxWidth: 360 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#5b6cf7', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
               <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{feat.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14.5, lineHeight: 1.65 }}>{feat.desc}</p>
             </div>
@@ -259,8 +259,8 @@ export default function RepondeurPage() {
               <div key={i} style={{
                 alignSelf: msg.from === 'caller' ? 'flex-start' : 'flex-end',
                 maxWidth: '82%',
-                background: msg.from === 'caller' ? 'rgba(255,255,255,0.07)' : 'rgba(91,108,247,0.15)',
-                border: `1px solid ${msg.from === 'caller' ? 'rgba(255,255,255,0.08)' : 'rgba(91,108,247,0.25)'}`,
+                background: msg.from === 'caller' ? 'rgba(255,255,255,0.07)' : 'rgba(124,58,237,0.15)',
+                border: `1px solid ${msg.from === 'caller' ? 'rgba(255,255,255,0.08)' : 'rgba(124,58,237,0.25)'}`,
                 borderRadius: 14,
                 padding: '12px 16px',
                 fontSize: 14,
@@ -292,8 +292,8 @@ export default function RepondeurPage() {
 
       {/* Pricing */}
       <section style={sectionStyle}>
-        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.15)' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 12, display: 'block' }}>payments</span>
+        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 12, display: 'block' }}>payments</span>
           <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: 12 }}>
             Tarification simple
           </h2>
@@ -303,15 +303,15 @@ export default function RepondeurPage() {
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', marginBottom: 24 }}>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>~5</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>~5</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits / appel</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>50</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>50</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits offerts</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>0 €</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>0 €</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>pour commencer</div>
             </div>
           </div>
@@ -386,18 +386,18 @@ export default function RepondeurPage() {
               max={100}
               value={missedCalls}
               onChange={(e) => setMissedCalls(Number(e.target.value))}
-              style={{ flex: 1, accentColor: '#5b6cf7' }}
+              style={{ flex: 1, accentColor: '#7c3aed' }}
             />
-            <span style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7', minWidth: 50, textAlign: 'right' }}>{missedCalls}</span>
+            <span style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed', minWidth: 50, textAlign: 'right' }}>{missedCalls}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
               <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>Manque à gagner ({missedCalls} x 85€)</span>
               <span style={{ fontWeight: 700, fontSize: 18, color: '#ef4444' }}>{(missedCalls * 85).toLocaleString('fr-FR')} €</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.2)', borderRadius: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 10 }}>
               <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>Coût Freenzy ({missedCalls} x 5 cr x 0.05€)</span>
-              <span style={{ fontWeight: 700, fontSize: 18, color: '#5b6cf7' }}>{(missedCalls * 5 * 0.05).toFixed(2).replace('.', ',')} €</span>
+              <span style={{ fontWeight: 700, fontSize: 18, color: '#7c3aed' }}>{(missedCalls * 5 * 0.05).toFixed(2).replace('.', ',')} €</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10 }}>
               <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, fontWeight: 600 }}>Économie nette / mois</span>
@@ -445,7 +445,7 @@ export default function RepondeurPage() {
               <tr>
                 <th style={{ padding: '18px 20px', textAlign: 'left', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Critère</th>
                 <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Secrétaire</th>
-                <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#5b6cf7', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Freenzy Répondeur</th>
+                <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#7c3aed', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Freenzy Répondeur</th>
               </tr>
             </thead>
             <tbody>

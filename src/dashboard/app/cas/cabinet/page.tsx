@@ -9,7 +9,7 @@ const study = CASE_STUDIES.find((s) => s.slug === 'cabinet')!;
 
 export default function CasCabinetPage() {
   return (
-    <div style={{ background: '#0a0a0f', minHeight: '100vh', color: '#ffffff' }}>
+    <div style={{ background: '#0f0720', minHeight: '100vh', color: '#ffffff' }}>
       <PublicNav />
 
       {/* Hero */}
@@ -26,13 +26,13 @@ export default function CasCabinetPage() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            background: 'rgba(91,108,247,0.12)',
-            border: '1px solid rgba(91,108,247,0.3)',
+            background: 'rgba(124,58,237,0.12)',
+            border: '1px solid rgba(124,58,237,0.3)',
             borderRadius: 100,
             padding: '8px 20px',
             marginBottom: 32,
             fontSize: 14,
-            color: '#5b6cf7',
+            color: '#7c3aed',
             fontWeight: 500,
           }}
         >
@@ -75,7 +75,7 @@ export default function CasCabinetPage() {
             color: 'rgba(255,255,255,0.7)',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#5b6cf7' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#7c3aed' }}>
             person
           </span>
           {study.persona.name}, {study.persona.age} ans — {study.persona.role} à {study.persona.city}
@@ -185,7 +185,7 @@ export default function CasCabinetPage() {
           }}
         >
           La solution{' '}
-          <span style={{ color: '#5b6cf7' }}>Freenzy</span>
+          <span style={{ color: '#7c3aed' }}>Freenzy</span>
         </h2>
         <p
           style={{
@@ -245,7 +245,7 @@ export default function CasCabinetPage() {
                     width: 48,
                     height: 48,
                     borderRadius: 12,
-                    background: 'rgba(91,108,247,0.12)',
+                    background: 'rgba(124,58,237,0.12)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -253,7 +253,7 @@ export default function CasCabinetPage() {
                 >
                   <span
                     className="material-symbols-rounded"
-                    style={{ fontSize: 24, color: '#5b6cf7' }}
+                    style={{ fontSize: 24, color: '#7c3aed' }}
                   >
                     {sol.agentIcon}
                   </span>
@@ -262,7 +262,7 @@ export default function CasCabinetPage() {
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>
                     Agent
                   </div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: '#5b6cf7' }}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: '#7c3aed' }}>
                     {sol.agent}
                   </div>
                 </div>
@@ -397,7 +397,7 @@ export default function CasCabinetPage() {
             className="material-symbols-rounded"
             style={{
               fontSize: 40,
-              color: 'rgba(91,108,247,0.3)',
+              color: 'rgba(124,58,237,0.3)',
               marginBottom: 24,
               display: 'block',
             }}
@@ -417,7 +417,7 @@ export default function CasCabinetPage() {
           >
             &laquo; {study.testimonial.quote} &raquo;
           </blockquote>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#5b6cf7', marginBottom: 4 }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: '#7c3aed', marginBottom: 4 }}>
             {study.persona.name}, {study.persona.role}
           </div>
           <div

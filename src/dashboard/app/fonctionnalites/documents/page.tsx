@@ -57,7 +57,7 @@ const FEATURES = [
 ];
 
 const TEMPLATES = [
-  { icon: 'mail', name: 'Email pro', color: '#5b6cf7' },
+  { icon: 'mail', name: 'Email pro', color: '#7c3aed' },
   { icon: 'gavel', name: 'Contrat', color: '#7c3aed' },
   { icon: 'receipt_long', name: 'Facture', color: '#06b6d4' },
   { icon: 'person', name: 'CV', color: '#22c55e' },
@@ -110,7 +110,7 @@ export default function DocumentsPage() {
   const accentGradient = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
 
   return (
-    <div style={{ background: '#0a0a0f', color: '#fff', minHeight: '100vh' }}>
+    <div style={{ background: '#0f0720', color: '#fff', minHeight: '100vh' }}>
       <PublicNav />
 
       {/* Hero */}
@@ -154,7 +154,7 @@ export default function DocumentsPage() {
               <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', width: 36, height: 36, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16 }}>
                 {i + 1}
               </div>
-              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 15, lineHeight: 1.6 }}>{step.desc}</p>
             </div>
@@ -173,7 +173,7 @@ export default function DocumentsPage() {
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {FEATURES.map((feat, i) => (
             <div key={i} style={{ ...cardStyle, flex: '1 1 320px', maxWidth: 360 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#5b6cf7', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
               <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{feat.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14.5, lineHeight: 1.65 }}>{feat.desc}</p>
             </div>
@@ -195,8 +195,8 @@ export default function DocumentsPage() {
             {TEMPLATES.map((tpl, i) => (
               <button key={i} onClick={() => setActiveTemplate(i)} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                background: activeTemplate === i ? 'rgba(91,108,247,0.15)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${activeTemplate === i ? 'rgba(91,108,247,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                background: activeTemplate === i ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${activeTemplate === i ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 10, padding: '10px 18px', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 600,
                 transition: 'all 0.2s',
               }}>
@@ -215,7 +215,7 @@ export default function DocumentsPage() {
               </div>
               <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
                 <div style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 600 }}>PDF</div>
-                <div style={{ background: 'rgba(91,108,247,0.1)', color: '#5b6cf7', padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 600 }}>MD</div>
+                <div style={{ background: 'rgba(124,58,237,0.1)', color: '#7c3aed', padding: '4px 12px', borderRadius: 100, fontSize: 12, fontWeight: 600 }}>MD</div>
               </div>
             </div>
             {/* Mock document content */}
@@ -307,8 +307,8 @@ export default function DocumentsPage() {
 
       {/* Pricing */}
       <section style={sectionStyle}>
-        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.15)' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 12, display: 'block' }}>payments</span>
+        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 12, display: 'block' }}>payments</span>
           <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: 12 }}>
             Tarification simple
           </h2>
@@ -318,15 +318,15 @@ export default function DocumentsPage() {
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', marginBottom: 24 }}>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>~3.5</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>~3.5</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits / doc</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>50</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>50</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits offerts</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>0 €</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>0 €</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>pour commencer</div>
             </div>
           </div>

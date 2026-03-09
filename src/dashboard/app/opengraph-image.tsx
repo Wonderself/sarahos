@@ -16,7 +16,7 @@ export default function OgImage() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 60%, #0f0f1a 100%)',
+          background: 'linear-gradient(135deg, #0f0720 0%, #1a1a2e 60%, #0f0f1a 100%)',
           fontFamily: 'system-ui, -apple-system, sans-serif',
           position: 'relative',
         }}
@@ -30,7 +30,7 @@ export default function OgImage() {
             transform: 'translate(-50%, -50%)',
             width: '800px',
             height: '400px',
-            background: 'radial-gradient(ellipse at center, rgba(91,108,247,0.18) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.18) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
@@ -42,8 +42,8 @@ export default function OgImage() {
             alignItems: 'center',
             gap: '10px',
             marginBottom: '36px',
-            background: 'rgba(91,108,247,0.12)',
-            border: '1px solid rgba(91,108,247,0.35)',
+            background: 'rgba(124,58,237,0.12)',
+            border: '1px solid rgba(124,58,237,0.35)',
             borderRadius: '100px',
             padding: '10px 28px',
           }}
@@ -57,7 +57,7 @@ export default function OgImage() {
               display: 'flex',
             }}
           />
-          <span style={{ fontSize: '18px', color: '#a5b4fc', fontWeight: 600, letterSpacing: '1px' }}>
+          <span style={{ fontSize: '18px', color: '#c4b5fd', fontWeight: 600, letterSpacing: '1px' }}>
             freenzy.io — flashboard
           </span>
         </div>
@@ -163,7 +163,7 @@ export default function OgImage() {
               width: '6px',
               height: '6px',
               borderRadius: '50%',
-              background: '#5b6cf7',
+              background: '#7c3aed',
               display: 'flex',
             }}
           />

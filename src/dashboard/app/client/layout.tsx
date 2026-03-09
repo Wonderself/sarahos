@@ -491,6 +491,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Detect mobile keyboard open/close to hide bottom nav
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    const onResize = () => {
+      const keyboardOpen = vv.height < window.innerHeight * 0.75;
+      document.documentElement.classList.toggle('keyboard-open', keyboardOpen);
+    };
+    vv.addEventListener('resize', onResize);
+    return () => vv.removeEventListener('resize', onResize);
+  }, []);
+
   async function loadWallet(token: string) {
     try {
       const res = await fetch('/api/portal', {

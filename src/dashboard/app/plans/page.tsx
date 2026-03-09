@@ -15,13 +15,13 @@ const totalAgents = TOTAL_AGENTS_DISPLAY;
 
 // ── Data from tarifs-api (merged) ──────────────────────────
 const ACTION_COSTS = [
-  { icon: 'chat', action: 'Chat avec agent IA', model: 'Claude Haiku', credits: 0.5, per50: '100 chats', color: '#22c55e' },
-  { icon: 'mail', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#5b6cf7' },
+  { icon: 'chat', action: 'Chat avec agent IA', model: 'Claude Haiku', credits: 0.5, per50: '100 chats', color: '#06b6d4' },
+  { icon: 'mail', action: 'Email professionnel', model: 'Claude Sonnet', credits: 1.1, per50: '45 emails', color: '#7c3aed' },
   { icon: 'phone_iphone', action: 'Post reseaux sociaux', model: 'Claude Haiku', credits: 0.8, per50: '62 posts', color: '#3b82f6' },
-  { icon: 'description', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#5b6cf7' },
+  { icon: 'description', action: 'Document complet', model: 'Claude Sonnet', credits: 3.5, per50: '14 docs', color: '#7c3aed' },
   { icon: 'call', action: 'Appel repondeur IA', model: 'Twilio + Haiku', credits: 5, per50: '10 appels', color: '#f97316' },
   { icon: 'outbox', action: 'Appel sortant IA', model: 'Twilio + Sonnet', credits: 16, per50: '3 appels', color: '#f97316' },
-  { icon: 'chat', action: 'WhatsApp Business IA', model: 'Claude Haiku', credits: 0.4, per50: '125 msgs', color: '#22c55e' },
+  { icon: 'chat', action: 'WhatsApp Business IA', model: 'Claude Haiku', credits: 0.4, per50: '125 msgs', color: '#06b6d4' },
   { icon: 'record_voice_over', action: 'Message vocal TTS', model: 'ElevenLabs', credits: 4.5, per50: '11 msgs', color: '#f59e0b' },
   { icon: 'image', action: 'Image IA creee', model: 'DALL-E / Flux', credits: 7, per50: '7 images', color: '#9333ea' },
   { icon: 'movie', action: 'Clip video 30s', model: 'Runway ML', credits: 40, per50: '1 clip', color: '#ec4899' },
@@ -29,8 +29,8 @@ const ACTION_COSTS = [
 ];
 
 const MODEL_PRICES = [
-  { model: 'Claude Haiku', input: '$0.80', output: '$4.00', usage: 'FAQ, chat, posts réseaux, WhatsApp', color: '#22c55e' },
-  { model: 'Claude Sonnet', input: '$3.00', output: '$15.00', usage: 'Emails, documents, analyses', color: '#5b6cf7' },
+  { model: 'Claude Haiku', input: '$0.80', output: '$4.00', usage: 'FAQ, chat, posts réseaux, WhatsApp', color: '#06b6d4' },
+  { model: 'Claude Sonnet', input: '$3.00', output: '$15.00', usage: 'Emails, documents, analyses', color: '#7c3aed' },
   { model: 'Claude Opus', input: '$15.00', output: '$75.00', usage: 'Stratégie, DG, décisions critiques', color: '#9333ea' },
   { model: 'ElevenLabs TTS', input: '€0.18', output: '/ 1 000 chars', usage: 'Voix naturelle, messages vocaux', color: '#f59e0b' },
   { model: 'Twilio Voice', input: '$0.014', output: '/ min', usage: 'Appels entrants & sortants', color: '#f97316' },
@@ -98,7 +98,7 @@ export default function PlansPage() {
 
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section ref={heroRef} style={{
-        background: 'linear-gradient(160deg, #0a0a0f 0%, #12121a 55%, #0e0e18 100%)',
+        background: 'linear-gradient(160deg, #0f0720 0%, #150a30 55%, #0f0720 100%)',
         padding: 'clamp(90px, 11vw, 120px) 24px clamp(70px, 8vw, 96px)',
         paddingTop: 'clamp(142px, 14vw, 172px)',
         textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -106,15 +106,15 @@ export default function PlansPage() {
         <div style={{
           position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)',
           width: 560, height: 320,
-          background: 'radial-gradient(ellipse, rgba(91,108,247,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           {config?.hero.badge && (
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              background: 'rgba(91,108,247,0.12)', border: '1px solid rgba(91,108,247,0.25)',
-              color: '#a5b4fc', padding: '5px 16px', borderRadius: 40,
+              background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)',
+              color: '#c4b5fd', padding: '5px 16px', borderRadius: 40,
               fontSize: 11, fontWeight: 700, marginBottom: 20, letterSpacing: 0.5,
             }}>
               {config.hero.badge}
@@ -158,9 +158,9 @@ export default function PlansPage() {
           )}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: config ? 28 : 0 }}>
             <Link href={ctaHref} onClick={() => trackCtaClick('hero_cta', ctaHref, audience, '/plans')} style={{
-              padding: '14px 32px', background: '#5b6cf7', color: '#fff',
+              padding: '14px 32px', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
               borderRadius: 12, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 15, textDecoration: 'none',
-              boxShadow: '0 0 28px rgba(91,108,247,0.35)',
+              boxShadow: '0 0 28px rgba(124,58,237,0.35)',
             }}>
               {ctaLabel}
             </Link>
@@ -192,7 +192,7 @@ export default function PlansPage() {
                 padding: '28px 24px', textAlign: 'center',
                 borderRight: i < 3 ? '1px solid #f2f2f2' : 'none',
               }}>
-                <div style={{ width: 6, height: 6, background: '#5b6cf7', borderRadius: '50%', margin: '0 auto 14px' }} />
+                <div style={{ width: 6, height: 6, background: '#7c3aed', borderRadius: '50%', margin: '0 auto 14px' }} />
                 <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f', marginBottom: 5 }}>{p.label}</div>
                 <div style={{ fontSize: 11, color: '#86868b', lineHeight: 1.5 }}>{p.desc}</div>
               </div>
@@ -202,8 +202,8 @@ export default function PlansPage() {
 
         {/* COMMENT CA MARCHE — dark card from tarifs-api */}
         <section style={sectionPad}>
-          <div style={{ background: '#0a0a0f', borderRadius: 14, padding: '24px 28px', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, color: '#a5b4fc', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 14 }}>Comment ça marche</div>
+          <div style={{ background: '#0f0720', borderRadius: 14, padding: '24px 28px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 14 }}>Comment ça marche</div>
             <div className="lp-plans-howto">
               {[
                 { n: '1 crédit', sub: '≈ €0.01', desc: 'Unité de base' },
@@ -211,7 +211,7 @@ export default function PlansPage() {
                 { n: '∞', sub: 'validité', desc: 'Vos crédits n\'expirent jamais' },
               ].map((item, i) => (
                 <div key={i} style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', fontWeight: 700, color: '#a5b4fc', letterSpacing: -1 }}>{item.n}</div>
+                  <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', fontWeight: 700, color: '#c4b5fd', letterSpacing: -1 }}>{item.n}</div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{item.sub}</div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 4 }}>{item.desc}</div>
                 </div>
@@ -231,7 +231,7 @@ export default function PlansPage() {
               </p>
               <Link href={ctaHref} onClick={() => trackCtaClick('pricing_cta', ctaHref, audience, '/plans')} style={{
                 display: 'inline-block', marginTop: 28,
-                padding: '13px 28px', background: '#1d1d1f', color: '#fff',
+                padding: '13px 28px', background: '#1a0e3a', color: '#fff',
                 borderRadius: 10, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, textDecoration: 'none',
               }}>
                 {ctaLabel}
@@ -291,13 +291,13 @@ export default function PlansPage() {
               <div key={opt.amount} style={{
                 padding: '28px 20px', textAlign: 'center',
                 borderRadius: 16, position: 'relative',
-                background: opt.label === 'Populaire' ? '#1d1d1f' : '#fff',
-                border: `1px solid ${opt.label === 'Populaire' ? '#1d1d1f' : '#e5e7eb'}`,
+                background: opt.label === 'Populaire' ? '#1a0e3a' : '#fff',
+                border: `1px solid ${opt.label === 'Populaire' ? '#1a0e3a' : '#e5e7eb'}`,
               }}>
                 {opt.label && (
                   <div style={{
                     position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
-                    background: opt.label === 'Populaire' ? '#5b6cf7' : '#1d1d1f',
+                    background: opt.label === 'Populaire' ? '#7c3aed' : '#1a0e3a',
                     color: '#fff', fontSize: 10, fontWeight: 700,
                     padding: '3px 12px', borderRadius: 40, whiteSpace: 'nowrap', letterSpacing: 0.5,
                   }}>
@@ -520,7 +520,7 @@ export default function PlansPage() {
                     <th key={h} style={{
                       padding: '14px 20px', textAlign: i === 0 ? 'left' : 'center',
                       fontSize: 12, fontWeight: 700,
-                      color: i === 1 ? '#5b6cf7' : '#86868b',
+                      color: i === 1 ? '#7c3aed' : '#86868b',
                       borderBottom: '1px solid #e5e7eb',
                     }}>{h}</th>
                   ))}
@@ -537,7 +537,7 @@ export default function PlansPage() {
                 ].map(([label, freenzy, chatgpt, classic], i, arr) => (
                   <tr key={String(label)}>
                     <td style={{ padding: '13px 20px', fontWeight: 600, color: '#1d1d1f', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{label}</td>
-                    <td style={{ padding: '13px 20px', textAlign: 'center', fontWeight: 700, color: '#22c55e', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{freenzy}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', fontWeight: 700, color: '#06b6d4', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{freenzy}</td>
                     <td style={{ padding: '13px 20px', textAlign: 'center', color: '#9ca3af', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{chatgpt}</td>
                     <td style={{ padding: '13px 20px', textAlign: 'center', color: '#9ca3af', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{classic}</td>
                   </tr>
@@ -660,14 +660,14 @@ export default function PlansPage() {
 
       {/* FINAL CTA */}
       <section ref={ctaRef} style={{
-        background: 'linear-gradient(165deg, #0a0a0f 0%, #1a1a2e 100%)',
+        background: 'linear-gradient(165deg, #0f0720 0%, #1a0e3a 100%)',
         padding: 'clamp(70px, 9vw, 110px) 24px',
         textAlign: 'center', position: 'relative', overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)',
           width: 560, height: 280,
-          background: 'radial-gradient(ellipse, rgba(91,108,247,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -684,10 +684,10 @@ export default function PlansPage() {
           <Link href={ctaHref} onClick={() => trackCtaClick('final_cta', ctaHref, audience, '/plans')} style={{
             display: 'inline-block',
             padding: '15px 40px',
-            background: '#5b6cf7', color: '#fff',
+            background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
             borderRadius: 12, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 16,
             textDecoration: 'none',
-            boxShadow: '0 0 36px rgba(91,108,247,0.3)',
+            boxShadow: '0 0 36px rgba(124,58,237,0.3)',
           }}>
             {ctaLabel}
           </Link>

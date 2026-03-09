@@ -40,7 +40,7 @@ const footerLinkStyle: React.CSSProperties = {
 
 export default function PublicFooter() {
   return (
-    <footer style={{ background: '#0a0a0f', color: 'rgba(255,255,255,0.5)', borderTop: 'none' }}>
+    <footer role="contentinfo" style={{ background: '#0f0720', color: 'rgba(255,255,255,0.5)', borderTop: 'none' }}>
       {/* Band 0: Multi-column links */}
       <div style={{
         maxWidth: 1120, margin: '0 auto', padding: '48px 24px 32px',
@@ -122,7 +122,7 @@ export default function PublicFooter() {
           ))}
         </nav>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>
-          &copy; {new Date().getFullYear()} Freenzy.io &middot; <span style={{ color: '#5b6cf7', fontWeight: 600 }}>Claude AI</span>
+          &copy; {new Date().getFullYear()} Freenzy.io &middot; <span style={{ background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontWeight: 600 }}>Claude AI</span>
         </span>
       </div>
     </footer>

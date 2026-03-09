@@ -18,7 +18,7 @@ const STORAGE_KEY = 'fz_widget_config';
 
 export const DEFAULT_WIDGET_CONFIG: WidgetConfig = {
   agentId: 'fz-repondeur',
-  primaryColor: '#5b6cf7',
+  primaryColor: '#7c3aed',
   position: 'bottom-right',
   welcomeMessage: 'Bonjour ! Comment puis-je vous aider ?',
   headerTitle: 'Assistant Freenzy',

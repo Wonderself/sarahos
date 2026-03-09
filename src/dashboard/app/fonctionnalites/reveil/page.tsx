@@ -29,7 +29,7 @@ const MODES = [
   { name: 'Sympa', icon: 'sentiment_satisfied', color: '#22c55e', desc: 'Comme un ami bienveillant' },
   { name: 'Drôle', icon: 'mood', color: '#f59e0b', desc: 'Commencez par un sourire' },
   { name: 'Fou', icon: 'celebration', color: '#ec4899', desc: 'Énergie débordante garantie' },
-  { name: 'Motivant', icon: 'rocket_launch', color: '#5b6cf7', desc: 'Prêt à conquérir le monde' },
+  { name: 'Motivant', icon: 'rocket_launch', color: '#7c3aed', desc: 'Prêt à conquérir le monde' },
   { name: 'Zen', icon: 'self_improvement', color: '#06b6d4', desc: 'Calme et sérénité' },
   { name: 'Énergique', icon: 'bolt', color: '#ff6b35', desc: 'Plein d\'énergie dès le réveil' },
 ];
@@ -132,7 +132,7 @@ export default function ReveilPage() {
   const accentGradient = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
 
   return (
-    <div style={{ background: '#0a0a0f', color: '#fff', minHeight: '100vh' }}>
+    <div style={{ background: '#0f0720', color: '#fff', minHeight: '100vh' }}>
       <PublicNav />
 
       {/* Hero */}
@@ -176,7 +176,7 @@ export default function ReveilPage() {
               <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', width: 36, height: 36, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16 }}>
                 {i + 1}
               </div>
-              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 15, lineHeight: 1.6 }}>{step.desc}</p>
             </div>
@@ -229,7 +229,7 @@ export default function ReveilPage() {
               background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 10, padding: '10px 16px',
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#5b6cf7' }}>{rub.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#7c3aed' }}>{rub.icon}</span>
               <span style={{ fontSize: 14, fontWeight: 600 }}>{rub.name}</span>
             </div>
           ))}
@@ -247,7 +247,7 @@ export default function ReveilPage() {
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {FEATURES.map((feat, i) => (
             <div key={i} style={{ ...cardStyle, flex: '1 1 320px', maxWidth: 360 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#5b6cf7', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
               <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{feat.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14.5, lineHeight: 1.65 }}>{feat.desc}</p>
             </div>
@@ -284,21 +284,21 @@ export default function ReveilPage() {
               { icon: 'flag', label: 'Objectif', text: 'Cette semaine : finaliser la proposition commerciale et relancer 5 prospects.' },
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#5b6cf7', marginTop: 2, flexShrink: 0 }}>{item.icon}</span>
+                <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#7c3aed', marginTop: 2, flexShrink: 0 }}>{item.icon}</span>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 13, color: '#5b6cf7', marginBottom: 2 }}>{item.label}</div>
+                  <div style={{ fontWeight: 700, fontSize: 13, color: '#7c3aed', marginBottom: 2 }}>{item.label}</div>
                   <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.55 }}>{item.text}</div>
                 </div>
               </div>
             ))}
           </div>
           {/* Voice indicator */}
-          <div style={{ marginTop: 20, padding: '12px 16px', background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.2)', borderRadius: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#5b6cf7' }}>graphic_eq</span>
+          <div style={{ marginTop: 20, padding: '12px 16px', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#7c3aed' }}>graphic_eq</span>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', gap: 3, alignItems: 'end', height: 20 }}>
                 {[8, 14, 10, 18, 12, 16, 8, 20, 14, 10, 16, 12, 18, 8, 14, 20, 10, 16, 12, 8].map((h, i) => (
-                  <div key={i} style={{ width: 3, height: h, background: '#5b6cf7', borderRadius: 2, opacity: 0.6 + (i % 3) * 0.15 }} />
+                  <div key={i} style={{ width: 3, height: h, background: '#7c3aed', borderRadius: 2, opacity: 0.6 + (i % 3) * 0.15 }} />
                 ))}
               </div>
             </div>
@@ -334,9 +334,9 @@ export default function ReveilPage() {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 24, padding: '14px 18px', background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.15)', borderRadius: 10 }}>
+          <div style={{ marginTop: 24, padding: '14px 18px', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)', borderRadius: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#5b6cf7' }}>info</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>info</span>
               <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>Chaque section séparée. Ton adapté selon l&apos;heure et le mode choisi.</span>
             </div>
           </div>
@@ -391,8 +391,8 @@ export default function ReveilPage() {
 
       {/* Pricing */}
       <section style={sectionStyle}>
-        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(91,108,247,0.06)', border: '1px solid rgba(91,108,247,0.15)' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#5b6cf7', marginBottom: 12, display: 'block' }}>payments</span>
+        <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)' }}>
+          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 12, display: 'block' }}>payments</span>
           <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: 12 }}>
             Tarification simple
           </h2>
@@ -402,15 +402,15 @@ export default function ReveilPage() {
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', marginBottom: 24 }}>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>~4.5</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>~4.5</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits / briefing</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>50</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>50</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits offerts</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#5b6cf7' }}>0 €</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>0 €</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>pour commencer</div>
             </div>
           </div>
@@ -464,7 +464,7 @@ export default function ReveilPage() {
             { icon: 'call', title: 'Appel vocal', desc: 'Voix naturelle ElevenLabs' },
           ] as const).map((item, i) => (
             <div key={i} style={{ flex: '1 1 300px', maxWidth: 340, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 22px', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#5b6cf7', flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#7c3aed', flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
               <div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4 }}>{item.title}</h3>
                 <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13.5, lineHeight: 1.5, margin: 0 }}>{item.desc}</p>
@@ -484,17 +484,17 @@ export default function ReveilPage() {
         </p>
         <div style={{ maxWidth: 600, margin: '0 auto', ...cardStyle }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
-            <input type="range" min={5} max={60} value={roiMinutes} onChange={(e) => setRoiMinutes(Number(e.target.value))} style={{ flex: 1, accentColor: '#5b6cf7' }} />
-            <span style={{ fontWeight: 800, fontSize: 24, color: '#5b6cf7', minWidth: 60, textAlign: 'right' }}>{roiMinutes} min</span>
+            <input type="range" min={5} max={60} value={roiMinutes} onChange={(e) => setRoiMinutes(Number(e.target.value))} style={{ flex: 1, accentColor: '#7c3aed' }} />
+            <span style={{ fontWeight: 800, fontSize: 24, color: '#7c3aed', minWidth: 60, textAlign: 'right' }}>{roiMinutes} min</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
               <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>Temps perdu ({roiMinutes} min x 22 jours)</span>
               <span style={{ fontWeight: 800, fontSize: 18, color: '#ef4444' }}>{((roiMinutes * 22) / 60).toFixed(1)}h / mois</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.2)', borderRadius: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 10 }}>
               <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>Briefing Freenzy (2 min + ~4.5 crédits)</span>
-              <span style={{ fontWeight: 800, fontSize: 18, color: '#5b6cf7' }}>0.23 €/jour</span>
+              <span style={{ fontWeight: 800, fontSize: 18, color: '#7c3aed' }}>0.23 €/jour</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10 }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: '#22c55e' }}>Temps récupéré</span>
@@ -519,7 +519,7 @@ export default function ReveilPage() {
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {([
             { name: 'Sarah', desc: 'Voix féminine, naturelle et chaleureuse', color: '#a78bfa' },
-            { name: 'Emmanuel', desc: 'Voix masculine, posée et professionnelle', color: '#5b6cf7' },
+            { name: 'Emmanuel', desc: 'Voix masculine, posée et professionnelle', color: '#7c3aed' },
           ] as const).map((voice, i) => (
             <div key={i} style={{ flex: '1 1 280px', maxWidth: 360, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '28px 24px', backdropFilter: 'blur(12px)', textAlign: 'center' }}>
               <div style={{ width: 56, height: 56, borderRadius: '50%', background: `${voice.color}20`, border: `2px solid ${voice.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
@@ -533,7 +533,7 @@ export default function ReveilPage() {
                   <div key={j} style={{ width: 3, borderRadius: 2, background: voice.color, height: h, opacity: 0.5 + (j % 3) * 0.2, animation: `wave${j % 3} 1.2s ease-in-out infinite`, animationDelay: `${j * 0.08}s` }} />
                 ))}
               </div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(91,108,247,0.08)', border: '1px solid rgba(91,108,247,0.2)', borderRadius: 100, padding: '6px 14px', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 100, padding: '6px 14px', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
                 <span className="material-symbols-rounded" style={{ fontSize: 14 }}>graphic_eq</span>
                 Propulsé par ElevenLabs
               </div>

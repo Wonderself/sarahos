@@ -16,7 +16,7 @@ function WaIcon({ size = 24, color = '#25D366' }: { size?: number; color?: strin
 
 export default function WhatsAppPage() {
   return (
-    <div style={{ background: '#fff', color: '#1d1d1f', minHeight: '100vh' }}>
+    <div style={{ background: '#fff', color: '#1a0e3a', minHeight: '100vh' }}>
 
       <PublicNav />
 
@@ -36,7 +36,7 @@ export default function WhatsAppPage() {
 
         <h1 style={{
           fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 700, letterSpacing: '-0.03em',
-          lineHeight: 1.08, marginBottom: 20, color: '#1d1d1f',
+          lineHeight: 1.08, marginBottom: 20, color: '#1a0e3a',
         }}>
           Vos agents IA, directement
           <br />
@@ -54,14 +54,14 @@ export default function WhatsAppPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginBottom: 36 }}>
           <Link href="/login?mode=register" style={{
             padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
-            background: '#1d1d1f', color: '#fff', textDecoration: 'none',
+            background: '#1a0e3a', color: '#fff', textDecoration: 'none',
             display: 'inline-block', transition: 'opacity 0.2s',
           }}>
             Essayer gratuitement
           </Link>
           <Link href="/demo" style={{
             padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
-            background: '#f5f5f7', color: '#1d1d1f', textDecoration: 'none',
+            background: '#f5f5f7', color: '#1a0e3a', textDecoration: 'none',
             display: 'inline-block', transition: 'opacity 0.2s',
           }}>
             Voir la demo
@@ -73,7 +73,7 @@ export default function WhatsAppPage() {
             <span key={t} style={{
               fontSize: 13, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5,
             }}>
-              <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 11 }}>check</span> {t}
+              <span className="material-symbols-rounded" style={{ color: '#1a0e3a', fontSize: 11 }}>check</span> {t}
             </span>
           ))}
         </div>
@@ -86,7 +86,7 @@ export default function WhatsAppPage() {
         <section style={{ padding: '48px 0' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnement</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 8 }}>
               Comment ca marche
             </h2>
             <p style={{ fontSize: 15, color: '#86868b' }}>3 etapes, 2 minutes</p>
@@ -105,7 +105,7 @@ export default function WhatsAppPage() {
                 textAlign: 'center',
               }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 14 }}>{s.step}</div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: '#1d1d1f', marginBottom: 8 }}>{s.title}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: '#1a0e3a', marginBottom: 8 }}>{s.title}</div>
                 <div style={{ fontSize: 14, color: '#86868b', lineHeight: 1.65 }}>{s.desc}</div>
               </div>
             ))}
@@ -116,7 +116,7 @@ export default function WhatsAppPage() {
         <section style={{ padding: '48px 0' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnalites</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a' }}>
               Tout ce que vous pouvez faire
             </h2>
           </div>
@@ -137,7 +137,7 @@ export default function WhatsAppPage() {
                 textAlign: 'center',
               }}>
                 <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{f.icon}</span></div>
-                <div style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{f.title}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#1a0e3a', marginBottom: 6 }}>{f.title}</div>
                 <div style={{ fontSize: 14, color: '#86868b', lineHeight: 1.65 }}>{f.desc}</div>
               </div>
             ))}
@@ -148,7 +148,7 @@ export default function WhatsAppPage() {
         <section style={{ padding: '48px 0' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Agents</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 8 }}>
               {DEFAULT_AGENTS.length} agents disponibles sur WhatsApp
             </h2>
             <p style={{ fontSize: 15, color: '#86868b' }}>
@@ -174,7 +174,7 @@ export default function WhatsAppPage() {
                   <span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f' }}>{agent.name}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a' }}>{agent.name}</div>
                   <div style={{ fontSize: 13, color: '#86868b' }}>{agent.role}</div>
                 </div>
                 <div style={{ opacity: 0.3, flexShrink: 0 }}>
@@ -199,7 +199,7 @@ export default function WhatsAppPage() {
               }}>
                 <WaIcon size={14} color="#86868b" /> Notes vocales
               </div>
-              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 14 }}>
+              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 14 }}>
                 Parlez, vos agents comprennent
               </h2>
               <p style={{ fontSize: 15, color: '#86868b', lineHeight: 1.65, marginBottom: 24 }}>
@@ -216,10 +216,10 @@ export default function WhatsAppPage() {
                   <div key={item.label} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <div style={{
                       width: 6, height: 6, borderRadius: '50%', marginTop: 8, flexShrink: 0,
-                      background: '#1d1d1f',
+                      background: '#1a0e3a',
                     }} />
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f' }}>{item.label}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a' }}>{item.label}</div>
                       <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.5 }}>{item.desc}</div>
                     </div>
                   </div>
@@ -232,7 +232,7 @@ export default function WhatsAppPage() {
               minHeight: 320,
             }}>
               <div style={{ fontSize: 48, lineHeight: 1 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>mic</span></div>
-              <div style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', textAlign: 'center' }}>Pipeline vocal</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#1a0e3a', textAlign: 'center' }}>Pipeline vocal</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
                 {['Voix', 'Deepgram', 'Claude AI', 'Action'].map((step, i) => (
                   <div key={step} style={{
@@ -240,7 +240,7 @@ export default function WhatsAppPage() {
                     padding: '10px 14px', borderRadius: 8, background: '#fff',
                   }}>
                     <span style={{ fontSize: 12, fontWeight: 700, color: '#86868b', width: 20 }}>{i + 1}</span>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1d1d1f' }}>{step}</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1a0e3a' }}>{step}</span>
                   </div>
                 ))}
               </div>
@@ -261,7 +261,7 @@ export default function WhatsAppPage() {
               }}>
                 Nouveau : Repondeur IA
               </div>
-              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 10 }}>
+              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 10 }}>
                 Ne manquez plus aucun appel
               </h2>
               <p style={{ fontSize: 15, color: '#86868b', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
@@ -282,7 +282,7 @@ export default function WhatsAppPage() {
                   textAlign: 'center', padding: 20, borderRadius: 10, background: '#fff',
                 }}>
                   <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 4 }}>{s.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a', marginBottom: 4 }}>{s.title}</div>
                   <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.5 }}>{s.desc}</div>
                 </div>
               ))}
@@ -294,7 +294,7 @@ export default function WhatsAppPage() {
         <section style={{ padding: '48px 0', maxWidth: 700, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Confiance</div>
-            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
+            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a' }}>
               Securite et confidentialite
             </h2>
           </div>
@@ -312,7 +312,7 @@ export default function WhatsAppPage() {
                 textAlign: 'center',
               }}>
                 <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{s.title}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a', marginBottom: 6 }}>{s.title}</div>
                 <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.65 }}>{s.desc}</div>
               </div>
             ))}
@@ -327,7 +327,7 @@ export default function WhatsAppPage() {
           <WaIcon size={36} color="#86868b" />
           <h2 style={{
             fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, letterSpacing: '-0.03em',
-            color: '#1d1d1f', marginTop: 16, marginBottom: 12,
+            color: '#1a0e3a', marginTop: 16, marginBottom: 12,
           }}>
             Pret a parler a vos agents sur WhatsApp ?
           </h2>
@@ -336,7 +336,7 @@ export default function WhatsAppPage() {
           </p>
           <Link href="/login?mode=register" style={{
             display: 'inline-block', padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
-            background: '#1d1d1f', color: '#fff', textDecoration: 'none',
+            background: '#1a0e3a', color: '#fff', textDecoration: 'none',
             transition: 'opacity 0.2s',
           }}>
             Essayer gratuitement
@@ -344,7 +344,7 @@ export default function WhatsAppPage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, marginTop: 18 }}>
             {['WhatsApp inclus', 'Notes vocales', 'Repondeur IA', `${DEFAULT_AGENTS.length} agents`].map(t => (
               <span key={t} style={{ fontSize: 13, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 11 }}>check</span> {t}
+                <span className="material-symbols-rounded" style={{ color: '#1a0e3a', fontSize: 11 }}>check</span> {t}
               </span>
             ))}
           </div>

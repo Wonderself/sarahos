@@ -56,9 +56,9 @@ export const ALL_AGENTS = [
 // ─── Actions avec credits
 export const ACTION_COSTS = [
   { icon: 'chat', action: 'Chat avec agent IA', model: 'Haiku', count: '100 chats', color: '#22c55e' },
-  { icon: 'mail', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#5b6cf7' },
+  { icon: 'mail', action: 'Email professionnel', model: 'Sonnet', count: '45 emails', color: '#7c3aed' },
   { icon: 'phone_iphone', action: 'Post reseaux sociaux', model: 'Haiku', count: '62 posts', color: '#3b82f6' },
-  { icon: 'description', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#5b6cf7' },
+  { icon: 'description', action: 'Document complet', model: 'Sonnet', count: '14 docs', color: '#7c3aed' },
   { icon: 'call', action: 'Appel repondeur IA', model: 'Twilio + Haiku', count: '10 appels', color: '#f97316' },
   { icon: 'call_made', action: 'Appel sortant IA', model: 'Twilio + Sonnet', count: '3 appels', color: '#f97316' },
   { icon: 'chat', action: 'WhatsApp Business IA', model: 'Haiku', count: '125 msgs', color: '#22c55e' },
@@ -89,12 +89,12 @@ export const STATS_BADGES = [
 // ─── Live activity feed
 export const ACTIVITY = [
   { icon: 'call', text: 'Appel traite · lead qualifie', agent: 'Repondeur', color: '#22c55e', ago: '2 min' },
-  { icon: 'mail', text: 'Proposition commerciale envoyee', agent: 'Commercial', color: '#5b6cf7', ago: '4 min' },
+  { icon: 'mail', text: 'Proposition commerciale envoyee', agent: 'Commercial', color: '#7c3aed', ago: '4 min' },
   { icon: 'phone_iphone', text: '3 posts LinkedIn programmes', agent: 'Marketing', color: '#3b82f6', ago: '8 min' },
   { icon: 'bar_chart', text: 'Rapport mensuel genere', agent: 'Finance', color: '#f59e0b', ago: '13 min' },
   { icon: 'alarm', text: 'Briefing matinal envoye', agent: 'Reveil IA', color: '#f97316', ago: '19 min' },
   { icon: 'image', text: 'Visuel cree · campagne Ete 2026', agent: 'Photo/Visuel', color: '#9333ea', ago: '24 min' },
-  { icon: 'description', text: 'NDA bilingue genere', agent: 'Juridique', color: '#5b6cf7', ago: '31 min' },
+  { icon: 'description', text: 'NDA bilingue genere', agent: 'Juridique', color: '#7c3aed', ago: '31 min' },
   { icon: 'chat', text: '12 messages WhatsApp traites', agent: 'Assistante', color: '#22c55e', ago: '39 min' },
   { icon: 'movie', text: 'Clip video 30s cree', agent: 'Video', color: '#ec4899', ago: '47 min' },
   { icon: 'handshake', text: 'Strategie Q2 synthetisee', agent: 'DG', color: '#9333ea', ago: '1h' },
@@ -118,7 +118,7 @@ export const DEMO_SCENARIOS = [
   {
     tab: 'Email',
     tabIcon: 'mail',
-    color: '#5b6cf7',
+    color: '#7c3aed',
     prompt: 'Redige une proposition pour Acme Corp — integration SaaS, budget 12 000\u20AC.',
     lines: [
       { label: 'Objet', text: 'Proposition · Integration SaaS · Acme Corp' },
@@ -177,7 +177,7 @@ export const SCENARIOS = [
     desc: 'Generez contrats, devis, NDA, CGV en langage naturel. Export PDF signable, archivage auto.',
     steps: ['Prompt en langage naturel', 'Generation structuree IA', 'Export PDF + archivage'],
     tech: 'Claude Sonnet · 3.5 credits/doc',
-    color: '#5b6cf7',
+    color: '#7c3aed',
   },
   {
     title: 'Social Media Autopilot',

@@ -24,7 +24,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
 
       {/* Branded mini-hero */}
       <div style={{
-        background: 'linear-gradient(160deg, #0a0a0f 0%, #12121a 100%)',
+        background: 'linear-gradient(160deg, #0f0720 0%, #12121a 100%)',
         padding: '60px 24px 44px',
         marginTop: 52,
         position: 'relative', overflow: 'hidden',
@@ -32,7 +32,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         <div style={{
           position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
           width: 500, height: 200,
-          background: 'radial-gradient(ellipse, rgba(91,108,247,0.1) 0%, transparent 68%)',
+          background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 68%)',
           pointerEvents: 'none',
         }} />
         <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -48,7 +48,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
             {currentPage && (
               <>
                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>/</span>
-                <span style={{ fontSize: 12, color: '#a5b4fc', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                <span style={{ fontSize: 12, color: '#c4b5fd', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                   {currentPage.label}
                 </span>
               </>
@@ -83,16 +83,16 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
                   fontSize: 13, textDecoration: 'none',
                   padding: '9px 12px',
                   borderRadius: 8,
-                  background: isActive ? 'rgba(91,108,247,0.08)' : 'transparent',
-                  borderLeft: isActive ? '3px solid #5b6cf7' : '3px solid transparent',
-                  color: isActive ? '#5b6cf7' : '#4b5563',
+                  background: isActive ? 'rgba(124,58,237,0.08)' : 'transparent',
+                  borderLeft: isActive ? '3px solid #7c3aed' : '3px solid transparent',
+                  color: isActive ? '#7c3aed' : '#4b5563',
                   fontWeight: isActive ? 700 : 400,
                   transition: 'all 0.15s ease',
                   display: 'block',
                 }}
               >
                 <div style={{ fontWeight: isActive ? 700 : 500 }}>{p.label}</div>
-                <div style={{ fontSize: 11, color: isActive ? 'rgba(91,108,247,0.7)' : '#9ca3af', marginTop: 1 }}>{p.sub}</div>
+                <div style={{ fontSize: 11, color: isActive ? 'rgba(124,58,237,0.7)' : '#9ca3af', marginTop: 1 }}>{p.sub}</div>
               </Link>
             );
           })}

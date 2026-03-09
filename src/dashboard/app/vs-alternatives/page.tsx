@@ -110,7 +110,7 @@ const UNIQUE_FEATURES = [
 
 export default function VsAlternativesPage() {
   return (
-    <div style={{ background: '#0a0a0f', minHeight: '100vh', color: '#ffffff' }}>
+    <div style={{ background: '#0f0720', minHeight: '100vh', color: '#ffffff' }}>
       <PublicNav />
 
       {/* Hero */}
@@ -127,13 +127,13 @@ export default function VsAlternativesPage() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            background: 'rgba(91,108,247,0.12)',
-            border: '1px solid rgba(91,108,247,0.3)',
+            background: 'rgba(124,58,237,0.12)',
+            border: '1px solid rgba(124,58,237,0.3)',
             borderRadius: 100,
             padding: '8px 20px',
             marginBottom: 32,
             fontSize: 14,
-            color: '#5b6cf7',
+            color: '#7c3aed',
             fontWeight: 500,
           }}
         >
@@ -209,12 +209,12 @@ export default function VsAlternativesPage() {
                       textAlign: 'center',
                       padding: '16px 16px',
                       borderBottom: c.highlight
-                        ? '2px solid #5b6cf7'
+                        ? '2px solid #7c3aed'
                         : '1px solid rgba(255,255,255,0.08)',
-                      color: c.highlight ? '#5b6cf7' : 'rgba(255,255,255,0.7)',
+                      color: c.highlight ? '#7c3aed' : 'rgba(255,255,255,0.7)',
                       fontSize: 14,
                       fontWeight: c.highlight ? 700 : 500,
-                      background: c.highlight ? 'rgba(91,108,247,0.06)' : 'transparent',
+                      background: c.highlight ? 'rgba(124,58,237,0.06)' : 'transparent',
                       borderRadius: c.highlight ? '12px 12px 0 0' : 0,
                     }}
                   >
@@ -222,7 +222,7 @@ export default function VsAlternativesPage() {
                     <div
                       style={{
                         fontSize: 12,
-                        color: c.highlight ? '#5b6cf7' : 'rgba(255,255,255,0.4)',
+                        color: c.highlight ? '#7c3aed' : 'rgba(255,255,255,0.4)',
                         fontWeight: 400,
                         marginTop: 4,
                       }}
@@ -250,7 +250,7 @@ export default function VsAlternativesPage() {
                   >
                     <span
                       className="material-symbols-rounded"
-                      style={{ fontSize: 20, color: '#5b6cf7' }}
+                      style={{ fontSize: 20, color: '#7c3aed' }}
                     >
                       {row.icon}
                     </span>
@@ -270,14 +270,14 @@ export default function VsAlternativesPage() {
                             : 'rgba(255,255,255,0.5)',
                         fontWeight: j === 0 ? 600 : 400,
                         background:
-                          j === 0 ? 'rgba(91,108,247,0.06)' : 'transparent',
+                          j === 0 ? 'rgba(124,58,237,0.06)' : 'transparent',
                         borderLeft:
                           j === 0
-                            ? '1px solid rgba(91,108,247,0.15)'
+                            ? '1px solid rgba(124,58,237,0.15)'
                             : 'none',
                         borderRight:
                           j === 0
-                            ? '1px solid rgba(91,108,247,0.15)'
+                            ? '1px solid rgba(124,58,237,0.15)'
                             : 'none',
                         borderRadius:
                           i === COMPARISON_ROWS.length - 1 && j === 0
@@ -317,7 +317,7 @@ export default function VsAlternativesPage() {
           }}
         >
           5 choses que{' '}
-          <span style={{ color: '#5b6cf7' }}>seul Freenzy</span> fait
+          <span style={{ color: '#7c3aed' }}>seul Freenzy</span> fait
         </h2>
         <p
           style={{
@@ -379,18 +379,18 @@ export default function VsAlternativesPage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'rgba(91,108,247,0.12)',
+                    background: 'rgba(124,58,237,0.12)',
                     borderRadius: 8,
                     fontSize: 14,
                     fontWeight: 700,
-                    color: '#5b6cf7',
+                    color: '#7c3aed',
                   }}
                 >
                   {i + 1}
                 </div>
                 <span
                   className="material-symbols-rounded"
-                  style={{ fontSize: 24, color: '#5b6cf7' }}
+                  style={{ fontSize: 24, color: '#7c3aed' }}
                 >
                   {feat.icon}
                 </span>
@@ -436,7 +436,7 @@ export default function VsAlternativesPage() {
             className="material-symbols-rounded"
             style={{
               fontSize: 48,
-              color: '#5b6cf7',
+              color: '#7c3aed',
               marginBottom: 24,
               display: 'block',
             }}

@@ -9,7 +9,7 @@ import { getToken, API_BASE } from '@/lib/client-fetch';
 
 const API = API_BASE;
 
-const COLORS = ['#5b6cf7', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+const COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 const TOOLTIP_STYLE = { fontSize: 11, borderRadius: 8, border: '1px solid var(--border-primary)', background: '#fff' };
 
 type RevenuePoint = { date: string; revenue: number; cost: number; margin: number };

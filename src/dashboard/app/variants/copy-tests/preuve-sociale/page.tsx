@@ -105,16 +105,15 @@ export default function LandingPagePreuveSociale() {
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 0 }}>
-        <div className="lp-hero-viewport">
-        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" accentColor="#7c3aed" />
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO ═══════════════════════════════════════════════ */}
         <section ref={heroRef} style={{
           background: 'linear-gradient(170deg, #0a0a0f 0%, #13131f 100%)',
           padding: 'clamp(20px, 3vw, 32px) 24px clamp(16px, 2vw, 24px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
-          flex: 1,
+          minHeight: 'calc(100vh - 188px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <div className="lp-hero-glow-anim" style={{
@@ -209,7 +208,7 @@ export default function LandingPagePreuveSociale() {
         </div>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
+        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -225,7 +224,7 @@ export default function LandingPagePreuveSociale() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
+        <div style={{ background: '#0c0c14', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -238,7 +237,6 @@ export default function LandingPagePreuveSociale() {
             </div>
           </div>
         </div>
-        </div>{/* end lp-hero-viewport */}
 
         {/* ══ TESTIMONIALS ══════════════════════════════════════ */}
         <section style={{ background: '#f7f7f7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>

@@ -302,14 +302,11 @@ export default function LandingPage() {
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 0 }}>
-        <div className="lp-hero-viewport">
-        <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" accentColor="#00f0ff" />
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section ref={heroRef} style={{
-          flex: 1,
-          display: 'flex', flexDirection: 'column' as const, justifyContent: 'center', alignItems: 'center',
           background: 'linear-gradient(170deg, #0a001a 0%, #120028 100%)',
           padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -387,7 +384,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ flexShrink: 0, background: '#0a001a', borderBottom: '1px solid rgba(0,240,255,0.08)', padding: '10px 0' }}>
+        <div style={{ background: '#0a001a', borderBottom: '1px solid rgba(0,240,255,0.08)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -403,7 +400,7 @@ export default function LandingPage() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ flexShrink: 0, background: '#0a001a', borderBottom: '1px solid rgba(0,240,255,0.08)', padding: '10px 0' }}>
+        <div style={{ background: '#0a001a', borderBottom: '1px solid rgba(0,240,255,0.08)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -416,7 +413,6 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        </div>{/* end lp-hero-viewport */}
 
         {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
         <section style={{ background: '#0d0024', padding: 'clamp(32px, 4vw, 56px) 24px' }}>

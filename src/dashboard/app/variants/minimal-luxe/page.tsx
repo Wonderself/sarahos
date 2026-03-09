@@ -303,14 +303,11 @@ export default function MinimalLuxePage() {
   return (
     <>
       <PublicNav />
-      <main style={{ paddingTop: 0 }}>
-        <div className="lp-hero-viewport">
-        <AudienceStickyBar audience={audience} onChange={setAudience} variant="light" accentColor="#c8a97e" />
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="light" />
+      <main style={{ paddingTop: 108 }}>
 
         {/* ══ HERO (condensé pour 14") ═══════════════════════════ */}
         <section ref={heroRef} style={{
-          flex: 1,
-          display: 'flex', flexDirection: 'column' as const, justifyContent: 'center', alignItems: 'center',
           background: 'linear-gradient(170deg, #1a1715 0%, #211e1a 100%)',
           padding: 'clamp(32px, 4vw, 48px) 24px clamp(24px, 3vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
@@ -395,7 +392,7 @@ export default function MinimalLuxePage() {
         </section>
 
         {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ flexShrink: 0, background: '#17140f', borderBottom: '1px solid rgba(200,169,126,0.08)', padding: '10px 0' }}>
+        <div style={{ background: '#17140f', borderBottom: '1px solid rgba(200,169,126,0.08)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
@@ -411,7 +408,7 @@ export default function MinimalLuxePage() {
         </div>
 
         {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ flexShrink: 0, background: '#17140f', borderBottom: '1px solid rgba(200,169,126,0.08)', padding: '10px 0' }}>
+        <div style={{ background: '#17140f', borderBottom: '1px solid rgba(200,169,126,0.08)', padding: '10px 0' }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
@@ -424,7 +421,6 @@ export default function MinimalLuxePage() {
             </div>
           </div>
         </div>
-        </div>{/* end lp-hero-viewport */}
 
         {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
         <section style={{ background: '#faf8f5', padding: 'clamp(32px, 4vw, 56px) 24px' }}>

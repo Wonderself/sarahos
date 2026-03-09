@@ -295,7 +295,7 @@ export function canClaim(actionId: string): boolean {
 
 export function getTotalPossibleCredits(): number {
   return REWARD_ACTIONS.reduce((sum, a) => {
-    const max = a.oneTime ? 1 : (a.maxClaims ?? 1);
+    const max = a.oneTime ? 1 : (a.maxClaims ?? 100);
     return sum + a.credits * max;
   }, 0);
 }

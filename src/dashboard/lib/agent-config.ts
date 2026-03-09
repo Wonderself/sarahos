@@ -5,9 +5,29 @@
 
 // ─── Types ───
 
-export type BusinessAgentTypeId = 'fz-repondeur' | 'fz-assistante' | 'fz-commercial' | 'fz-marketing' | 'fz-rh' | 'fz-communication' | 'fz-finance' | 'fz-dev' | 'fz-juridique' | 'fz-dg' | 'fz-video' | 'fz-photo' | 'fz-qualite' | 'fz-data' | 'fz-product' | 'fz-csm' | 'fz-rse' | 'fz-operations' | 'fz-design' | 'fz-formation' | 'fz-innovation' | 'fz-international';
+export type BusinessAgentTypeId =
+  | 'fz-repondeur' | 'fz-assistante' | 'fz-commercial' | 'fz-marketing' | 'fz-rh' | 'fz-communication'
+  | 'fz-finance' | 'fz-dev' | 'fz-juridique' | 'fz-dg' | 'fz-video' | 'fz-photo'
+  | 'fz-qualite' | 'fz-data' | 'fz-product' | 'fz-csm' | 'fz-rse' | 'fz-operations'
+  | 'fz-design' | 'fz-formation' | 'fz-innovation' | 'fz-international'
+  // Extended business agents (business1 + business2)
+  | 'fz-recrutement' | 'fz-logistique' | 'fz-achats' | 'fz-sav' | 'fz-crm' | 'fz-seo'
+  | 'fz-ads' | 'fz-community' | 'fz-copywriter' | 'fz-traducteur' | 'fz-comptabilite'
+  | 'fz-tresorerie' | 'fz-audit' | 'fz-conformite' | 'fz-rgpd' | 'fz-securite'
+  | 'fz-sysadmin' | 'fz-devops' | 'fz-frontend' | 'fz-backend' | 'fz-mobile' | 'fz-qa'
+  | 'fz-scrum' | 'fz-architect' | 'fz-bi' | 'fz-pricing' | 'fz-partenariat' | 'fz-evenement'
+  | 'fz-presse' | 'fz-branding' | 'fz-ux-research' | 'fz-redacteur' | 'fz-podcast'
+  | 'fz-influence' | 'fz-ecommerce' | 'fz-growth' | 'fz-strategie' | 'fz-mentor';
 
-export type PersonalAgentTypeId = 'fz-budget' | 'fz-negociateur' | 'fz-impots' | 'fz-comptable' | 'fz-chasseur' | 'fz-portfolio' | 'fz-cv' | 'fz-contradicteur' | 'fz-ecrivain' | 'fz-cineaste' | 'fz-coach' | 'fz-deconnexion';
+export type PersonalAgentTypeId =
+  | 'fz-budget' | 'fz-negociateur' | 'fz-impots' | 'fz-comptable' | 'fz-chasseur'
+  | 'fz-portfolio' | 'fz-cv' | 'fz-contradicteur' | 'fz-ecrivain' | 'fz-cineaste' | 'fz-coach' | 'fz-deconnexion'
+  // Extended personal agents
+  | 'fz-nutrition' | 'fz-fitness' | 'fz-meditation' | 'fz-sommeil' | 'fz-voyage' | 'fz-cuisine'
+  | 'fz-jardin' | 'fz-bricolage' | 'fz-deco' | 'fz-mode' | 'fz-musique' | 'fz-lecture'
+  | 'fz-langues' | 'fz-parent' | 'fz-relation' | 'fz-productivite' | 'fz-investissement'
+  | 'fz-immobilier' | 'fz-assurance' | 'fz-succession' | 'fz-retraite' | 'fz-droit-conso'
+  | 'fz-demenagement' | 'fz-animaux' | 'fz-auto' | 'fz-tech-perso' | 'fz-organisation' | 'fz-gratitude';
 
 export type AgentTypeId = BusinessAgentTypeId | PersonalAgentTypeId;
 

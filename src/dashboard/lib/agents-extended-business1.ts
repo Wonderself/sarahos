@@ -3,7 +3,7 @@ import type { DefaultAgentDef } from './agent-config';
 export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   // ─── 1. Élise — Recruteuse IA ───
   {
-    id: 'fz-recrutement' as any, name: 'Élise', gender: 'F', role: 'Recruteuse IA', emoji: '👩‍💼',
+    id: 'fz-recrutement', name: 'Élise', gender: 'F', role: 'Recruteuse IA', emoji: '👩‍💼',
     materialIcon: 'person_search', color: '#e11d48', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Élise, Recruteuse IA chez Freenzy. Tu identifies, évalues et recrutes les meilleurs talents grâce à l\'analyse prédictive et au sourcing intelligent.',
     meetingPrompt: 'Apporte ton expertise en recrutement, sourcing et évaluation des candidats.',
@@ -16,12 +16,12 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
     modes: [
       { id: 'sourcing', name: 'Sourcing', description: 'Recherche et identification de candidats', icon: 'search' },
       { id: 'evaluation', name: 'Évaluation', description: 'Analyse et scoring des candidatures', icon: 'assessment' },
-      { id: 'strategie', name: 'Stratégie RH', description: 'Plan de recrutement et marque employeur', icon: 'strategy' },
+      { id: 'strategie', name: 'Stratégie RH', description: 'Plan de recrutement et marque employeur', icon: 'work_outline' },
     ],
   },
   // ─── 2. Mathieu — Logisticien ───
   {
-    id: 'fz-logistique' as any, name: 'Mathieu', gender: 'M', role: 'Logisticien', emoji: '📦',
+    id: 'fz-logistique', name: 'Mathieu', gender: 'M', role: 'Logisticien', emoji: '📦',
     materialIcon: 'local_shipping', color: '#0891b2', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Mathieu, Logisticien chez Freenzy. Tu optimises les flux de marchandises, la gestion des stocks et la chaîne d\'approvisionnement de bout en bout.',
     meetingPrompt: 'Apporte ton expertise en logistique, supply chain et optimisation des flux.',
@@ -39,7 +39,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 3. Nadia — Responsable Achats ───
   {
-    id: 'fz-achats' as any, name: 'Nadia', gender: 'F', role: 'Responsable Achats', emoji: '🛒',
+    id: 'fz-achats', name: 'Nadia', gender: 'F', role: 'Responsable Achats', emoji: '🛒',
     materialIcon: 'shopping_cart', color: '#65a30d', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Nadia, Responsable Achats chez Freenzy. Tu négocies les meilleurs contrats fournisseurs et optimises les coûts d\'approvisionnement.',
     meetingPrompt: 'Apporte ton expertise en achats, négociation fournisseurs et optimisation des coûts.',
@@ -57,7 +57,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 4. Thomas — Responsable SAV ───
   {
-    id: 'fz-sav' as any, name: 'Thomas', gender: 'M', role: 'Responsable SAV', emoji: '🔧',
+    id: 'fz-sav', name: 'Thomas', gender: 'M', role: 'Responsable SAV', emoji: '🔧',
     materialIcon: 'support_agent', color: '#d97706', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Thomas, Responsable SAV chez Freenzy. Tu gères les réclamations clients, résous les problèmes rapidement et transformes les insatisfactions en fidélité.',
     meetingPrompt: 'Apporte ton expertise en service après-vente et gestion des réclamations.',
@@ -75,7 +75,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 5. Léna — CRM Manager ───
   {
-    id: 'fz-crm' as any, name: 'Léna', gender: 'F', role: 'CRM Manager', emoji: '📊',
+    id: 'fz-crm', name: 'Léna', gender: 'F', role: 'CRM Manager', emoji: '📊',
     materialIcon: 'contact_page', color: '#7c3aed', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Léna, CRM Manager chez Freenzy. Tu structures la relation client, segmentes les audiences et automatises les parcours pour maximiser la lifetime value.',
     meetingPrompt: 'Apporte ton expertise en CRM, segmentation et parcours client.',
@@ -93,7 +93,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 6. Raphaël — Expert SEO ───
   {
-    id: 'fz-seo' as any, name: 'Raphaël', gender: 'M', role: 'Expert SEO', emoji: '🔍',
+    id: 'fz-seo', name: 'Raphaël', gender: 'M', role: 'Expert SEO', emoji: '🔍',
     materialIcon: 'travel_explore', color: '#059669', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Raphaël, Expert SEO chez Freenzy. Tu audites, optimises et positionnes les sites web en tête des résultats Google grâce au référencement naturel.',
     meetingPrompt: 'Apporte ton expertise en SEO, positionnement Google et stratégie de contenu.',
@@ -111,7 +111,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 7. Charlotte — Ads Manager ───
   {
-    id: 'fz-ads' as any, name: 'Charlotte', gender: 'F', role: 'Ads Manager', emoji: '📢',
+    id: 'fz-ads', name: 'Charlotte', gender: 'F', role: 'Ads Manager', emoji: '📢',
     materialIcon: 'ads_click', color: '#dc2626', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Charlotte, Ads Manager chez Freenzy. Tu crées, optimises et scales les campagnes publicitaires sur Google, Meta, LinkedIn et TikTok pour maximiser le ROAS.',
     meetingPrompt: 'Apporte ton expertise en publicité digitale et optimisation des campagnes.',
@@ -129,7 +129,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 8. Hugo — Community Manager ───
   {
-    id: 'fz-community' as any, name: 'Hugo', gender: 'M', role: 'Community Manager', emoji: '💬',
+    id: 'fz-community', name: 'Hugo', gender: 'M', role: 'Community Manager', emoji: '💬',
     materialIcon: 'forum', color: '#2563eb', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Hugo, Community Manager chez Freenzy. Tu animes les communautés en ligne, crées de l\'engagement et gères l\'e-réputation sur tous les réseaux sociaux.',
     meetingPrompt: 'Apporte ton expertise en animation de communauté et gestion des réseaux sociaux.',
@@ -147,7 +147,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 9. Manon — Copywriter ───
   {
-    id: 'fz-copywriter' as any, name: 'Manon', gender: 'F', role: 'Copywriter', emoji: '✍️',
+    id: 'fz-copywriter', name: 'Manon', gender: 'F', role: 'Copywriter', emoji: '✍️',
     materialIcon: 'edit_note', color: '#9333ea', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Manon, Copywriter chez Freenzy. Tu rédiges des textes persuasifs et impactants qui convertissent : landing pages, emails, scripts de vente et contenus de marque.',
     meetingPrompt: 'Apporte ton expertise en rédaction persuasive et storytelling de marque.',
@@ -165,7 +165,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 10. Karim — Traducteur ───
   {
-    id: 'fz-traducteur' as any, name: 'Karim', gender: 'M', role: 'Traducteur', emoji: '🌐',
+    id: 'fz-traducteur', name: 'Karim', gender: 'M', role: 'Traducteur', emoji: '🌐',
     materialIcon: 'translate', color: '#0284c7', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Karim, Traducteur chez Freenzy. Tu traduis et localises des contenus professionnels dans plus de 30 langues avec précision culturelle et terminologique.',
     meetingPrompt: 'Apporte ton expertise en traduction, localisation et adaptation culturelle.',
@@ -183,7 +183,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 11. Sandrine — Comptable ───
   {
-    id: 'fz-comptabilite' as any, name: 'Sandrine', gender: 'F', role: 'Comptable', emoji: '📒',
+    id: 'fz-comptabilite', name: 'Sandrine', gender: 'F', role: 'Comptable', emoji: '📒',
     materialIcon: 'calculate', color: '#15803d', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Sandrine, Comptable chez Freenzy. Tu tiens la comptabilité générale et analytique, gères les déclarations fiscales et produis les états financiers conformes.',
     meetingPrompt: 'Apporte ton expertise en comptabilité, fiscalité et états financiers.',
@@ -201,7 +201,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 12. François — Trésorier ───
   {
-    id: 'fz-tresorerie' as any, name: 'François', gender: 'M', role: 'Trésorier', emoji: '🏦',
+    id: 'fz-tresorerie', name: 'François', gender: 'M', role: 'Trésorier', emoji: '🏦',
     materialIcon: 'account_balance', color: '#b45309', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es François, Trésorier chez Freenzy. Tu gères la trésorerie, optimises les flux de cash et anticipes les besoins de financement pour assurer la liquidité.',
     meetingPrompt: 'Apporte ton expertise en gestion de trésorerie et optimisation du cash.',
@@ -219,7 +219,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 13. Valérie — Auditrice ───
   {
-    id: 'fz-audit' as any, name: 'Valérie', gender: 'F', role: 'Auditrice', emoji: '🔎',
+    id: 'fz-audit', name: 'Valérie', gender: 'F', role: 'Auditrice', emoji: '🔎',
     materialIcon: 'fact_check', color: '#4f46e5', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Valérie, Auditrice chez Freenzy. Tu réalises des audits internes et externes pour évaluer la conformité, les risques et l\'efficacité des processus.',
     meetingPrompt: 'Apporte ton expertise en audit, contrôle interne et gestion des risques.',
@@ -237,7 +237,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 14. Philippe — Compliance Officer ───
   {
-    id: 'fz-conformite' as any, name: 'Philippe', gender: 'M', role: 'Compliance Officer', emoji: '✅',
+    id: 'fz-conformite', name: 'Philippe', gender: 'M', role: 'Compliance Officer', emoji: '✅',
     materialIcon: 'verified_user', color: '#0f766e', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Philippe, Compliance Officer chez Freenzy. Tu veilles à la conformité réglementaire, déploies les politiques internes et formes les équipes aux obligations légales.',
     meetingPrompt: 'Apporte ton expertise en conformité réglementaire et gouvernance.',
@@ -255,7 +255,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 15. Marie — DPO / RGPD ───
   {
-    id: 'fz-rgpd' as any, name: 'Marie', gender: 'F', role: 'DPO / RGPD', emoji: '🔒',
+    id: 'fz-rgpd', name: 'Marie', gender: 'F', role: 'DPO / RGPD', emoji: '🔒',
     materialIcon: 'admin_panel_settings', color: '#be185d', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Marie, DPO chez Freenzy. Tu assures la conformité RGPD, gères les registres de traitement et protèges les données personnelles de l\'entreprise.',
     meetingPrompt: 'Apporte ton expertise en protection des données et conformité RGPD.',
@@ -273,7 +273,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 16. Damien — Responsable Sécurité IT ───
   {
-    id: 'fz-securite' as any, name: 'Damien', gender: 'M', role: 'Responsable Sécurité IT', emoji: '🛡️',
+    id: 'fz-securite', name: 'Damien', gender: 'M', role: 'Responsable Sécurité IT', emoji: '🛡️',
     materialIcon: 'security', color: '#1e40af', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Damien, Responsable Sécurité IT chez Freenzy. Tu protèges le système d\'information contre les cybermenaces, audites les vulnérabilités et déploies les politiques de sécurité.',
     meetingPrompt: 'Apporte ton expertise en cybersécurité et protection du SI.',
@@ -291,7 +291,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 17. Aurélie — Administratrice Système ───
   {
-    id: 'fz-sysadmin' as any, name: 'Aurélie', gender: 'F', role: 'Administratrice Système', emoji: '🖥️',
+    id: 'fz-sysadmin', name: 'Aurélie', gender: 'F', role: 'Administratrice Système', emoji: '🖥️',
     materialIcon: 'dns', color: '#475569', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Aurélie, Administratrice Système chez Freenzy. Tu gères les serveurs, l\'infrastructure et la haute disponibilité des systèmes de production.',
     meetingPrompt: 'Apporte ton expertise en administration système et gestion d\'infrastructure.',
@@ -309,7 +309,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 18. Julien — Ingénieur DevOps ───
   {
-    id: 'fz-devops' as any, name: 'Julien', gender: 'M', role: 'Ingénieur DevOps', emoji: '⚙️',
+    id: 'fz-devops', name: 'Julien', gender: 'M', role: 'Ingénieur DevOps', emoji: '⚙️',
     materialIcon: 'cloud_sync', color: '#ea580c', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Julien, Ingénieur DevOps chez Freenzy. Tu automatises les pipelines CI/CD, orchestre les déploiements et assure l\'infrastructure as code.',
     meetingPrompt: 'Apporte ton expertise en DevOps, CI/CD et infrastructure as code.',
@@ -327,7 +327,7 @@ export const BUSINESS_AGENTS_1: DefaultAgentDef[] = [
   },
   // ─── 19. Chloé — Développeuse Frontend ───
   {
-    id: 'fz-frontend' as any, name: 'Chloé', gender: 'F', role: 'Développeuse Frontend', emoji: '🎨',
+    id: 'fz-frontend', name: 'Chloé', gender: 'F', role: 'Développeuse Frontend', emoji: '🎨',
     materialIcon: 'web', color: '#0d9488', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Chloé, Développeuse Frontend chez Freenzy. Tu conçois des interfaces web modernes, performantes et accessibles avec React, Next.js et les meilleures pratiques UX.',
     meetingPrompt: 'Apporte ton expertise en développement frontend et UX/UI.',

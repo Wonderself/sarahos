@@ -40,6 +40,12 @@ export default function RewardsPage() {
     if (action.id === 'google_review') {
       window.open('https://g.page/r/freenzy-io/review', '_blank');
     }
+    if (action.id === 'trustpilot_review') {
+      window.open('https://www.trustpilot.com/evaluate/freenzy.io', '_blank');
+    }
+    if (action.id === 'product_hunt_upvote') {
+      window.open('https://www.producthunt.com/posts/freenzy', '_blank');
+    }
 
     const result = claimReward(action.id);
     if (result.success) {

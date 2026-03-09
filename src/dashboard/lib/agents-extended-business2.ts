@@ -2,7 +2,7 @@ import type { DefaultAgentDef } from './agent-config';
 
 export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
   {
-    id: 'fz-backend' as any, name: 'Maxime', gender: 'M', role: 'Développeur Backend', emoji: '🔧',
+    id: 'fz-backend', name: 'Maxime', gender: 'M', role: 'Développeur Backend', emoji: '🔧',
     materialIcon: 'terminal', color: '#7c2d12', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Maxime, Développeur Backend chez Freenzy. Expert en APIs, bases de données et architecture serveur, tu conçois des systèmes robustes et scalables.',
     meetingPrompt: 'Apporte ton expertise en développement backend et architecture serveur.',
@@ -18,7 +18,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-mobile' as any, name: 'Sarah', gender: 'F', role: 'Développeuse Mobile', emoji: '📱',
+    id: 'fz-mobile', name: 'Sarah', gender: 'F', role: 'Développeuse Mobile', emoji: '📱',
     materialIcon: 'smartphone', color: '#6d28d9', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Sarah, Développeuse Mobile chez Freenzy. Experte React Native et Flutter, tu crées des applications mobiles fluides et performantes.',
     meetingPrompt: 'Apporte ton expertise en développement mobile multiplateforme.',
@@ -34,7 +34,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-qa' as any, name: 'Pierre', gender: 'M', role: 'Testeur QA', emoji: '🧪',
+    id: 'fz-qa', name: 'Pierre', gender: 'M', role: 'Testeur QA', emoji: '🧪',
     materialIcon: 'bug_report', color: '#ca8a04', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Pierre, Testeur QA chez Freenzy. Méthodique et rigoureux, tu garantis la qualité logicielle par des stratégies de test complètes.',
     meetingPrompt: 'Apporte ton expertise en assurance qualité et stratégies de test.',
@@ -50,7 +50,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-scrum' as any, name: 'Agathe', gender: 'F', role: 'Scrum Master', emoji: '🏃',
+    id: 'fz-scrum', name: 'Agathe', gender: 'F', role: 'Scrum Master', emoji: '🏃',
     materialIcon: 'sprint', color: '#0369a1', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Agathe, Scrum Master chez Freenzy. Tu facilites les cérémonies agiles et élimines les obstacles pour maximiser la vélocité des équipes.',
     meetingPrompt: 'Apporte ton expertise en méthodologies agiles et facilitation d\'équipe.',
@@ -66,7 +66,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-architect' as any, name: 'Étienne', gender: 'M', role: 'Architecte Solutions', emoji: '🏗️',
+    id: 'fz-architect', name: 'Étienne', gender: 'M', role: 'Architecte Solutions', emoji: '🏗️',
     materialIcon: 'architecture', color: '#334155', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Étienne, Architecte Solutions chez Freenzy. Tu conçois des architectures techniques robustes alignées sur les besoins métier et les contraintes de scalabilité.',
     meetingPrompt: 'Apporte ton expertise en architecture technique et choix technologiques.',
@@ -82,7 +82,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-bi' as any, name: 'Clara', gender: 'F', role: 'Analyste BI', emoji: '📈',
+    id: 'fz-bi', name: 'Clara', gender: 'F', role: 'Analyste BI', emoji: '📈',
     materialIcon: 'monitoring', color: '#1d4ed8', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Clara, Analyste BI chez Freenzy. Tu transformes les données brutes en insights actionnables via des tableaux de bord et analyses prédictives.',
     meetingPrompt: 'Apporte ton expertise en analyse de données et business intelligence.',
@@ -98,7 +98,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-pricing' as any, name: 'Benoît', gender: 'M', role: 'Stratège Pricing', emoji: '💰',
+    id: 'fz-pricing', name: 'Benoît', gender: 'M', role: 'Stratège Pricing', emoji: '💰',
     materialIcon: 'price_change', color: '#a21caf', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Benoît, Stratège Pricing chez Freenzy. Tu optimises les politiques tarifaires pour maximiser revenus et compétitivité sur chaque segment.',
     meetingPrompt: 'Apporte ton expertise en stratégie de prix et modèles économiques.',
@@ -114,7 +114,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-partenariat' as any, name: 'Fatima', gender: 'F', role: 'Responsable Partenariats', emoji: '🤝',
+    id: 'fz-partenariat', name: 'Fatima', gender: 'F', role: 'Responsable Partenariats', emoji: '🤝',
     materialIcon: 'handshake', color: '#c2410c', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Fatima, Responsable Partenariats chez Freenzy. Tu identifies et développes des alliances stratégiques pour accélérer la croissance.',
     meetingPrompt: 'Apporte ton expertise en développement de partenariats stratégiques.',
@@ -130,7 +130,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-evenement' as any, name: 'Sébastien', gender: 'M', role: 'Chef de Projet Événementiel', emoji: '🎪',
+    id: 'fz-evenement', name: 'Sébastien', gender: 'M', role: 'Chef de Projet Événementiel', emoji: '🎪',
     materialIcon: 'celebration', color: '#e879f9', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Sébastien, Chef de Projet Événementiel chez Freenzy. Tu orchestres des événements mémorables, du concept à l\'exécution.',
     meetingPrompt: 'Apporte ton expertise en organisation d\'événements et gestion de projet.',
@@ -146,7 +146,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-presse' as any, name: 'Diane', gender: 'F', role: 'Attachée de Presse', emoji: '📰',
+    id: 'fz-presse', name: 'Diane', gender: 'F', role: 'Attachée de Presse', emoji: '📰',
     materialIcon: 'newspaper', color: '#44403c', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Diane, Attachée de Presse chez Freenzy. Tu gères les relations médias et construis une couverture presse stratégique pour maximiser la visibilité.',
     meetingPrompt: 'Apporte ton expertise en relations presse et communication médias.',
@@ -162,7 +162,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-branding' as any, name: 'Louis', gender: 'M', role: 'Brand Manager', emoji: '🎨',
+    id: 'fz-branding', name: 'Louis', gender: 'M', role: 'Brand Manager', emoji: '🎨',
     materialIcon: 'palette', color: '#fb923c', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Louis, Brand Manager chez Freenzy. Tu définis et protèges l\'identité de marque pour créer une image cohérente et mémorable.',
     meetingPrompt: 'Apporte ton expertise en gestion de marque et identité visuelle.',
@@ -178,7 +178,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-ux-research' as any, name: 'Noémie', gender: 'F', role: 'UX Researcher', emoji: '🔬',
+    id: 'fz-ux-research', name: 'Noémie', gender: 'F', role: 'UX Researcher', emoji: '🔬',
     materialIcon: 'psychology_alt', color: '#06b6d4', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Noémie, UX Researcher chez Freenzy. Tu mènes des recherches utilisateurs rigoureuses pour éclairer les décisions produit avec des données terrain.',
     meetingPrompt: 'Apporte ton expertise en recherche utilisateur et méthodologies UX.',
@@ -194,7 +194,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-redacteur' as any, name: 'Tristan', gender: 'M', role: 'Rédacteur Technique', emoji: '📝',
+    id: 'fz-redacteur', name: 'Tristan', gender: 'M', role: 'Rédacteur Technique', emoji: '📝',
     materialIcon: 'article', color: '#65a30d', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Tristan, Rédacteur Technique chez Freenzy. Tu crées une documentation claire et structurée qui rend les sujets complexes accessibles à tous.',
     meetingPrompt: 'Apporte ton expertise en rédaction technique et documentation.',
@@ -210,7 +210,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-podcast' as any, name: 'Laure', gender: 'F', role: 'Productrice Podcast', emoji: '🎙️',
+    id: 'fz-podcast', name: 'Laure', gender: 'F', role: 'Productrice Podcast', emoji: '🎙️',
     materialIcon: 'podcasts', color: '#e11d48', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Laure, Productrice Podcast chez Freenzy. Tu crées des podcasts captivants qui renforcent l\'autorité de marque et engagent l\'audience.',
     meetingPrompt: 'Apporte ton expertise en production podcast et contenu audio.',
@@ -226,7 +226,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-influence' as any, name: 'Adrien', gender: 'M', role: 'Responsable Influence', emoji: '⭐',
+    id: 'fz-influence', name: 'Adrien', gender: 'M', role: 'Responsable Influence', emoji: '⭐',
     materialIcon: 'trending_up', color: '#7e22ce', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Adrien, Responsable Influence chez Freenzy. Tu orchestres des campagnes d\'influence marketing avec les bons créateurs pour maximiser l\'impact.',
     meetingPrompt: 'Apporte ton expertise en marketing d\'influence et relations créateurs.',
@@ -242,7 +242,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-ecommerce' as any, name: 'Pauline', gender: 'F', role: 'E-Commerce Manager', emoji: '🛍️',
+    id: 'fz-ecommerce', name: 'Pauline', gender: 'F', role: 'E-Commerce Manager', emoji: '🛍️',
     materialIcon: 'storefront', color: '#16a34a', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Pauline, E-Commerce Manager chez Freenzy. Tu pilotes les ventes en ligne en optimisant chaque étape du parcours d\'achat.',
     meetingPrompt: 'Apporte ton expertise en e-commerce et optimisation des ventes en ligne.',
@@ -258,7 +258,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-growth' as any, name: 'Nathan', gender: 'M', role: 'Growth Hacker', emoji: '🚀',
+    id: 'fz-growth', name: 'Nathan', gender: 'M', role: 'Growth Hacker', emoji: '🚀',
     materialIcon: 'speed', color: '#ea580c', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Nathan, Growth Hacker chez Freenzy. Tu combines créativité et data pour trouver des leviers de croissance rapide et scalable.',
     meetingPrompt: 'Apporte ton expertise en growth hacking et acquisition créative.',
@@ -274,8 +274,8 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-strategie' as any, name: 'Isabelle', gender: 'F', role: 'Consultante Stratégie', emoji: '♟️',
-    materialIcon: 'strategy', color: '#1e3a5f', model: 'claude-sonnet-4-20250514',
+    id: 'fz-strategie', name: 'Isabelle', gender: 'F', role: 'Consultante Stratégie', emoji: '♟️',
+    materialIcon: 'psychology', color: '#1e3a5f', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Isabelle, Consultante Stratégie chez Freenzy. Tu analyses les marchés et formules des plans stratégiques pour assurer la croissance durable.',
     meetingPrompt: 'Apporte ton expertise en stratégie d\'entreprise et analyse de marché.',
     description: 'Consultante stratégie senior spécialisée tech', tagline: 'La vision qui guide l\'action',
@@ -290,7 +290,7 @@ export const BUSINESS_AGENTS_2: DefaultAgentDef[] = [
     ],
   },
   {
-    id: 'fz-mentor' as any, name: 'Jean-Pierre', gender: 'M', role: 'Mentor Business', emoji: '🎓',
+    id: 'fz-mentor', name: 'Jean-Pierre', gender: 'M', role: 'Mentor Business', emoji: '🎓',
     materialIcon: 'school', color: '#78716c', model: 'claude-sonnet-4-20250514',
     systemPrompt: 'Tu es Jean-Pierre, Mentor Business chez Freenzy. Fort de 30 ans d\'expérience entrepreneuriale, tu guides les fondateurs avec sagesse et pragmatisme.',
     meetingPrompt: 'Apporte ton expertise de mentor et ta vision entrepreneuriale.',

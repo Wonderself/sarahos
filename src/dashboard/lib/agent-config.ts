@@ -1711,7 +1711,14 @@ REGLES D'OR :
   },
 ];
 
-export const ALL_AGENTS: DefaultAgentDef[] = [...DEFAULT_AGENTS, ...PERSONAL_AGENTS];
+import { BUSINESS_AGENTS_1 } from './agents-extended-business1';
+import { BUSINESS_AGENTS_2 } from './agents-extended-business2';
+import { EXTENDED_PERSONAL_AGENTS } from './agents-extended-personal';
+
+export const ALL_AGENTS: DefaultAgentDef[] = [
+  ...DEFAULT_AGENTS, ...PERSONAL_AGENTS,
+  ...BUSINESS_AGENTS_1, ...BUSINESS_AGENTS_2, ...EXTENDED_PERSONAL_AGENTS,
+];
 
 // ─── Options ───
 

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -219,6 +220,7 @@ export default function ComptablePage() {
           <Link href="/client/chat?agent=fz-comptable" className="btn btn-primary btn-sm">💬 fz-comptable</Link>
         </div>
       </div>
+      <PageExplanation pageId="comptable" text={PAGE_META.comptable?.helpText} />
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
 

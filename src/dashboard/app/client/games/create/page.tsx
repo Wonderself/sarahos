@@ -131,7 +131,7 @@ export default function CreateGamePage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-          <span style={{ fontSize: 28, color: '#7c3aed' }}>
+          <span style={{ fontSize: 28, color: 'var(--fz-accent, #0EA5E9)' }}>
             ✨</span>
           <div>
             <h1 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 22, fontWeight: 700, margin: 0 }}>Créer un jeu avec l&apos;IA</h1>
@@ -153,12 +153,12 @@ export default function CreateGamePage() {
                 onClick={() => setType(opt.value)}
                 style={{
                   flex: 1,
-                  background: type === opt.value ? 'rgba(124,58,237,0.15)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                  border: `1px solid ${type === opt.value ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
+                  background: type === opt.value ? 'rgba(14,165,233,0.15)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                  border: `1px solid ${type === opt.value ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
                   borderRadius: 10,
                   padding: '12px 16px',
                   cursor: 'pointer',
-                  color: type === opt.value ? '#7c3aed' : 'var(--fz-text-muted, #94A3B8)',
+                  color: type === opt.value ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-muted, #94A3B8)',
                   fontSize: 13,
                   fontWeight: 600,
                   display: 'flex',
@@ -205,7 +205,7 @@ export default function CreateGamePage() {
           onClick={handleGenerate}
           disabled={!prompt.trim() || generating}
           style={{
-            background: generating ? 'rgba(124,58,237,0.3)' : 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+            background: generating ? 'rgba(14,165,233,0.3)' : 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
             color: 'var(--fz-text, #1E293B)',
             border: 'none',
             borderRadius: 10,
@@ -230,8 +230,8 @@ export default function CreateGamePage() {
         {message && (
           <div
             style={{
-              background: published ? 'rgba(34,197,94,0.1)' : 'rgba(124,58,237,0.1)',
-              color: published ? '#22c55e' : '#7c3aed',
+              background: published ? 'rgba(34,197,94,0.1)' : 'rgba(14,165,233,0.1)',
+              color: published ? '#22c55e' : 'var(--fz-accent, #0EA5E9)',
               padding: '10px 16px',
               borderRadius: 10,
               fontSize: 13,

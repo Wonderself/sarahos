@@ -30,6 +30,7 @@ import type {
 import { SlideOver } from '../../../components/SlideOver';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Material Icon → Emoji Mapping ──────────────────────────────────────────
 
@@ -776,15 +777,15 @@ export default function DiscussionsPage() {
         style={{
           padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
           background: highlight ? 'linear-gradient(135deg, #f3f0ff, #eef2ff)' : 'var(--fz-bg-secondary, #F8FAFC)',
-          border: `1px solid ${highlight ? '#7c3aed33' : 'var(--fz-border, #E2E8F0)'}`,
+          border: `1px solid ${highlight ? 'rgba(14,165,233,0.2)' : 'var(--fz-border, #E2E8F0)'}`,
           transition: 'border-color 0.2s, transform 0.15s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? '#7c3aed33' : 'var(--fz-border, #E2E8F0)'; e.currentTarget.style.transform = 'none'; }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? 'rgba(14,165,233,0.2)' : 'var(--fz-border, #E2E8F0)'; e.currentTarget.style.transform = 'none'; }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
           <span style={{ fontSize: 20 }}>{iconEmoji(t.materialIcon)}</span>
-          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#7c3aed22', color: '#7c3aed' }}>
+          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: 'rgba(14,165,233,0.13)', color: 'var(--fz-accent, #0EA5E9)' }}>
             {catInfo?.label}
           </span>
         </div>
@@ -801,7 +802,7 @@ export default function DiscussionsPage() {
               return tagInfo ? (
                 <span key={tagId} style={{
                   fontSize: 9, padding: '1px 6px', borderRadius: 8,
-                  background: '#7c3aed11', color: '#7c3aed', whiteSpace: 'nowrap',
+                  background: 'rgba(14,165,233,0.07)', color: 'var(--fz-accent, #0EA5E9)', whiteSpace: 'nowrap',
                 }}>
                   {tagInfo.label}
                 </span>
@@ -841,6 +842,7 @@ export default function DiscussionsPage() {
         </div>
         <HelpBubble text={PAGE_META.discussions.helpText} />
       </div>
+      <PageExplanation pageId="discussions" text={PAGE_META.discussions?.helpText} />
 
       <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', flex: 1, overflow: 'hidden' }}>
 
@@ -859,7 +861,7 @@ export default function DiscussionsPage() {
             onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
             style={{
               width: '100%', padding: '10px 16px', borderRadius: 8,
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
               color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14,
             }}
           >
@@ -903,7 +905,7 @@ export default function DiscussionsPage() {
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                 style={{
                   padding: '8px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-                  background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
+                  background: 'var(--fz-accent, #0EA5E9)', color: '#fff', border: 'none', cursor: 'pointer',
                 }}
               >
                 Nouvelle discussion
@@ -918,8 +920,8 @@ export default function DiscussionsPage() {
                 onClick={() => { setActiveId(d.id); setFollowUps([]); }}
                 style={{
                   padding: '12px 12px', marginBottom: 4, borderRadius: 8, cursor: 'pointer',
-                  background: activeId === d.id ? '#7c3aed0a' : 'transparent',
-                  border: activeId === d.id ? '1px solid #7c3aed33' : '1px solid transparent',
+                  background: activeId === d.id ? 'rgba(14,165,233,0.04)' : 'transparent',
+                  border: activeId === d.id ? '1px solid rgba(14,165,233,0.2)' : '1px solid transparent',
                   transition: 'all 0.15s',
                 }}
               >
@@ -1040,7 +1042,7 @@ export default function DiscussionsPage() {
                 style={{
                   padding: '10px 16px', borderRadius: 10, cursor: 'pointer',
                   background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
-                  color: '#7c3aed', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
+                  color: 'var(--fz-accent, #0EA5E9)', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
                 }}
               >
                 🎲 Sujet aléatoire
@@ -1049,7 +1051,7 @@ export default function DiscussionsPage() {
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                 style={{
                   padding: '10px 16px', borderRadius: 10, cursor: 'pointer',
-                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                  background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
                   border: 'none', color: '#fff', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
                 }}
               >
@@ -1077,9 +1079,9 @@ export default function DiscussionsPage() {
                     style={{
                       padding: '5px 12px', borderRadius: 16, fontSize: 12, cursor: 'pointer',
                       whiteSpace: 'nowrap', fontWeight: isActive ? 600 : 400,
-                      background: isActive ? '#7c3aed22' : 'var(--fz-bg-secondary, #F8FAFC)',
-                      border: `1px solid ${isActive ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
-                      color: isActive ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
+                      background: isActive ? 'rgba(14,165,233,0.13)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                      border: `1px solid ${isActive ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                      color: isActive ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
                       transition: 'all 0.15s',
                     }}
                   >
@@ -1123,7 +1125,7 @@ export default function DiscussionsPage() {
                       onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(templateSearch || ''); setWizardResult(null); }}
                       style={{
                         marginTop: 8, padding: '10px 20px', borderRadius: 8,
-                        background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
+                        background: 'var(--fz-accent, #0EA5E9)', color: '#fff', border: 'none', cursor: 'pointer',
                         fontWeight: 600, fontSize: 14,
                       }}
                     >
@@ -1141,7 +1143,7 @@ export default function DiscussionsPage() {
                   display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20,
                   padding: '16px 20px', borderRadius: 12,
                   background: 'linear-gradient(135deg, #f3f0ff, #eef2ff)',
-                  border: '1px solid #7c3aed33',
+                  border: '1px solid rgba(14,165,233,0.2)',
                 }}>
                   <span style={{ fontSize: 36 }}>⚖️</span>
                   <div style={{ flex: 1 }}>
@@ -1154,7 +1156,7 @@ export default function DiscussionsPage() {
                     onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
                     style={{
                       padding: '8px 16px', borderRadius: 8, whiteSpace: 'nowrap',
-                      background: '#7c3aed', color: '#fff', border: 'none', cursor: 'pointer',
+                      background: 'var(--fz-accent, #0EA5E9)', color: '#fff', border: 'none', cursor: 'pointer',
                       fontWeight: 600, fontSize: 13,
                     }}
                   >
@@ -1193,7 +1195,7 @@ export default function DiscussionsPage() {
                               border: '1px solid var(--fz-border, #E2E8F0)',
                               transition: 'border-color 0.2s',
                             }}
-                            onMouseEnter={e => (e.currentTarget.style.borderColor = '#7c3aed')}
+                            onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)')}
                             onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)')}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
@@ -1262,7 +1264,7 @@ export default function DiscussionsPage() {
                       autoFocus
                       style={{
                         margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)',
-                        background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #7c3aed',
+                        background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-accent, #0EA5E9)',
                         borderRadius: 6, padding: '2px 8px', outline: 'none', minWidth: 200,
                       }}
                     />
@@ -1277,7 +1279,7 @@ export default function DiscussionsPage() {
                   )}
                   <span style={{
                     fontSize: 10, padding: '2px 8px', borderRadius: 10,
-                    background: '#7c3aed22', color: '#7c3aed',
+                    background: 'rgba(14,165,233,0.13)', color: 'var(--fz-accent, #0EA5E9)',
                   }}>
                     {DISCUSSION_CATEGORIES.find(c => c.id === active.category)?.label}
                   </span>
@@ -1350,9 +1352,9 @@ export default function DiscussionsPage() {
                   onClick={() => { setMessageSearchOpen(!messageSearchOpen); setMessageSearch(''); }}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: messageSearchOpen ? '#7c3aed22' : 'var(--fz-bg-secondary, #F8FAFC)',
-                    border: `1px solid ${messageSearchOpen ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
-                    color: messageSearchOpen ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
+                    background: messageSearchOpen ? 'rgba(14,165,233,0.13)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: `1px solid ${messageSearchOpen ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                    color: messageSearchOpen ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
                   🔍
@@ -1463,14 +1465,14 @@ export default function DiscussionsPage() {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
                   <span style={{ fontSize: 10, color: 'var(--fz-text-secondary, #64748B)' }}>Profondeur</span>
-                  <span style={{ fontSize: 10, color: '#7c3aed', fontWeight: 600 }}>
+                  <span style={{ fontSize: 10, color: 'var(--fz-accent, #0EA5E9)', fontWeight: 600 }}>
                     {getDepthMilestone(active.depth).label}
                   </span>
                 </div>
                 <div style={{ height: 3, borderRadius: 2, background: 'var(--fz-border, #E2E8F0)', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', borderRadius: 2,
-                    background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
+                    background: 'linear-gradient(90deg, var(--fz-accent, #0EA5E9), #06b6d4)',
                     width: `${getDepthMilestone(active.depth).progress}%`,
                     transition: 'width 0.6s ease',
                   }} />
@@ -1492,7 +1494,7 @@ export default function DiscussionsPage() {
                     key={kp.id}
                     style={{
                       fontSize: 11, padding: '4px 10px', borderRadius: 12,
-                      background: '#7c3aed22', color: '#A78BFA', whiteSpace: 'nowrap',
+                      background: 'rgba(14,165,233,0.13)', color: '#A78BFA', whiteSpace: 'nowrap',
                       maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis',
                     }}
                     title={kp.text}
@@ -1553,7 +1555,7 @@ export default function DiscussionsPage() {
                       <div style={{
                         maxWidth: '80%', padding: '12px 16px', borderRadius: 12, position: 'relative',
                         background: msg.role === 'user'
-                          ? 'linear-gradient(135deg, #7c3aed, #06b6d4)'
+                          ? 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)'
                           : 'var(--fz-bg-secondary, #F8FAFC)',
                         border: msg.role === 'assistant'
                           ? `1px solid ${isHighlighted ? '#FBBF24' : 'var(--fz-border, #E2E8F0)'}`
@@ -1588,7 +1590,7 @@ export default function DiscussionsPage() {
                           </div>
                         )}
                         {msg.role === 'assistant' && (
-                          <div style={{ fontSize: 11, color: '#7c3aed', marginBottom: 4 }}>
+                          <div style={{ fontSize: 11, color: 'var(--fz-accent, #0EA5E9)', marginBottom: 4 }}>
                             {iconEmoji(active.agentEmoji)} {active.agentName}
                           </div>
                         )}
@@ -1614,7 +1616,7 @@ export default function DiscussionsPage() {
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
                               padding: '4px 12px', marginRight: 6, marginBottom: 4, borderRadius: 8,
-                              background: '#7c3aed11', border: '1px solid #7c3aed33',
+                              background: 'rgba(14,165,233,0.07)', border: '1px solid rgba(14,165,233,0.2)',
                               fontSize: 12, color: '#A78BFA',
                             }}
                           >
@@ -1705,12 +1707,12 @@ export default function DiscussionsPage() {
                     style={{
                       padding: '10px 14px', borderRadius: 10, fontSize: 12, cursor: 'pointer',
                       background: 'var(--fz-bg-secondary, #F8FAFC)',
-                      border: '1px solid #7c3aed33', textAlign: 'left',
+                      border: '1px solid rgba(14,165,233,0.2)', textAlign: 'left',
                       color: 'var(--fz-text, #1E293B)', transition: 'border-color 0.2s, transform 0.15s',
                       display: 'flex', alignItems: 'flex-start', gap: 8,
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#7c3aed33'; e.currentTarget.style.transform = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(14,165,233,0.2)'; e.currentTarget.style.transform = 'none'; }}
                   >
                     <span style={{ color: '#a78bfa', fontWeight: 700, fontSize: 11, flexShrink: 0 }}>Q{i + 1}</span>
                     <span style={{ lineHeight: 1.4 }}>{q}</span>
@@ -1774,7 +1776,7 @@ export default function DiscussionsPage() {
                   disabled={loading || !input.trim() || active.status === 'paused' || active.status === 'completed'}
                   style={{
                     padding: '10px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    background: input.trim() ? '#7c3aed' : '#333', color: '#fff',
+                    background: input.trim() ? 'var(--fz-accent, #0EA5E9)' : '#333', color: '#fff',
                     fontWeight: 600, fontSize: 13, opacity: loading ? 0.5 : 1,
                   }}
                 >
@@ -1791,7 +1793,7 @@ export default function DiscussionsPage() {
                   style={{
                     padding: '8px 12px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
                     background: 'var(--fz-bg-secondary, #F8FAFC)',
-                    border: '1px solid #7c3aed33',
+                    border: '1px solid rgba(14,165,233,0.2)',
                     color: '#A78BFA', fontWeight: 600,
                     opacity: active.messages.length === 0 ? 0.3 : 1,
                   }}
@@ -1861,7 +1863,7 @@ export default function DiscussionsPage() {
                     disabled={!wizardInput.trim()}
                     style={{
                       padding: '10px 20px', borderRadius: 8, cursor: 'pointer',
-                      background: wizardInput.trim() ? '#7c3aed' : '#333',
+                      background: wizardInput.trim() ? 'var(--fz-accent, #0EA5E9)' : '#333',
                       border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
                     }}
                   >
@@ -1892,7 +1894,7 @@ export default function DiscussionsPage() {
                 {/* Agent card */}
                 <div style={{
                   padding: '16px', borderRadius: 10, marginBottom: 16,
-                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid #7c3aed33',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid rgba(14,165,233,0.2)',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span style={{ fontSize: 36 }}>{iconEmoji(wizardResult.agentEmoji)}</span>
@@ -1962,7 +1964,7 @@ export default function DiscussionsPage() {
                     onClick={startDiscussion}
                     style={{
                       padding: '10px 24px', borderRadius: 8, cursor: 'pointer',
-                      background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                      background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
                       border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
                     }}
                   >
@@ -1998,7 +2000,7 @@ export default function DiscussionsPage() {
               onClick={handleCopyShare}
               style={{
                 flex: 1, padding: '10px', borderRadius: 8, cursor: 'pointer',
-                background: '#7c3aed', border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
+                background: 'var(--fz-accent, #0EA5E9)', border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
               }}
             >
               📋 Copier le texte
@@ -2026,7 +2028,7 @@ export default function DiscussionsPage() {
             onClick={handleNativeShare}
             style={{
               width: '100%', padding: '12px', borderRadius: 10, marginBottom: 12, cursor: 'pointer',
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
               border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
             }}
           >

@@ -152,7 +152,7 @@ const FIELD_TYPES: { type: FieldType; label: string }[] = [
 ];
 
 const EMOJIS = ['assignment', 'bar_chart', 'smart_toy', 'trending_up', 'target', 'work', 'trophy', 'bolt', 'star', 'local_fire_department', 'lightbulb', 'storefront', 'call', 'mail', 'edit_note', 'palette', 'home', 'group', 'build', 'inventory_2', 'language', 'savings', 'calendar_month', 'notifications'];
-const COLORS = ['#7c3aed', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#14b8a6', '#8b7cf8'];
+const COLORS = ['var(--fz-accent, #0EA5E9)', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#14b8a6', '#8b7cf8'];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -259,7 +259,7 @@ function BuilderContent() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [emoji, setEmoji] = useState('assignment');
-  const [color, setColor] = useState('#7c3aed');
+  const [color, setColor] = useState('var(--fz-accent, #0EA5E9)');
   const [slug, setSlug] = useState('');
   const [slugEdited, setSlugEdited] = useState(false);
 
@@ -306,7 +306,7 @@ function BuilderContent() {
         setName(m.name ?? '');
         setDescription(m.description ?? '');
         setEmoji(m.emoji ?? 'assignment');
-        setColor(m.color ?? '#7c3aed');
+        setColor(m.color ?? 'var(--fz-accent, #0EA5E9)');
         setSlug(m.slug ?? '');
         setSlugEdited(true);
         setIsPublished(m.is_published ?? true);
@@ -676,7 +676,7 @@ function BuilderContent() {
           {/* Custom — full agent + form + brief */}
           {moduleType === 'custom' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ background: 'linear-gradient(135deg, #8b5cf610, #7c3aed10)', border: '1px solid #8b5cf640', borderRadius: 14, padding: 18 }}>
+              <div style={{ background: 'linear-gradient(135deg, #8b5cf610, rgba(14,165,233,0.06))', border: '1px solid #8b5cf640', borderRadius: 14, padding: 18 }}>
                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6, color: '#8b5cf6' }}>Module sur mesure avec IA</div>
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
                   Votre module combine un agent IA dedie + des formulaires configurables. L&apos;agent comprend votre metier,

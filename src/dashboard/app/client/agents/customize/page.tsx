@@ -942,7 +942,7 @@ export default function AgentCustomizePage() {
       <div style={{ marginTop: 40 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
-          borderBottom: '2px solid #7c3aed', paddingBottom: 12,
+          borderBottom: '2px solid var(--fz-accent, #0EA5E9)', paddingBottom: 12,
         }}>
           🎤
           <div>
@@ -995,8 +995,8 @@ export default function AgentCustomizePage() {
                   onClick={() => { setSelectedVoiceId(v.id); saveVoiceSettings({ selectedVoiceId: v.id }); }}
                   style={{
                     padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
-                    border: `2px solid ${isSelected ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: isSelected ? '#7c3aed15' : 'var(--bg-secondary)',
+                    border: `2px solid ${isSelected ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                    background: isSelected ? 'rgba(14,165,233,0.08)' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
@@ -1004,7 +1004,7 @@ export default function AgentCustomizePage() {
                     <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{v.name}</span>
                     {isSelected && (
                       <span style={{
-                        width: 20, height: 20, borderRadius: '50%', background: '#7c3aed',
+                        width: 20, height: 20, borderRadius: '50%', background: 'var(--fz-accent, #0EA5E9)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white',
                       }}>✓</span>
@@ -1018,16 +1018,16 @@ export default function AgentCustomizePage() {
                     }}>{v.gender}</span>
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: '#7c3aed20', color: '#7c3aed',
+                      background: 'rgba(14,165,233,0.13)', color: 'var(--fz-accent, #0EA5E9)',
                     }}>{v.lang}</span>
                   </div>
                   <button
                     onClick={e => { e.stopPropagation(); previewVoice(v.id, v.name); }}
                     disabled={isLoading}
                     style={{
-                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid #7c3aed40',
-                      background: isLoading ? '#7c3aed20' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
-                      fontSize: 12, fontWeight: 600, color: '#7c3aed',
+                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid rgba(14,165,233,0.25)',
+                      background: isLoading ? 'rgba(14,165,233,0.13)' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
+                      fontSize: 12, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)',
                       fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                     }}
                   >
@@ -1052,14 +1052,14 @@ export default function AgentCustomizePage() {
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Stabilit&eacute;</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>{voiceStability.toFixed(2)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)' }}>{voiceStability.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceStability}
                   onChange={e => { const v = Number(e.target.value); setVoiceStability(v); saveVoiceSettings({ stability: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #7c3aed ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
+                    background: `linear-gradient(to right, var(--fz-accent, #0EA5E9) ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
@@ -1072,14 +1072,14 @@ export default function AgentCustomizePage() {
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Similarit&eacute;</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>{voiceSimilarity.toFixed(2)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)' }}>{voiceSimilarity.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceSimilarity}
                   onChange={e => { const v = Number(e.target.value); setVoiceSimilarity(v); saveVoiceSettings({ similarity: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #7c3aed ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
+                    background: `linear-gradient(to right, var(--fz-accent, #0EA5E9) ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
@@ -1092,14 +1092,14 @@ export default function AgentCustomizePage() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Style</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>{voiceStyle.toFixed(2)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)' }}>{voiceStyle.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceStyle}
                   onChange={e => { const v = Number(e.target.value); setVoiceStyle(v); saveVoiceSettings({ style: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, #7c3aed ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
+                    background: `linear-gradient(to right, var(--fz-accent, #0EA5E9) ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
@@ -1121,14 +1121,14 @@ export default function AgentCustomizePage() {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                     padding: '8px 16px', borderRadius: 10,
-                    border: `1px solid ${voiceSpeakerBoost ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: voiceSpeakerBoost ? '#7c3aed15' : 'var(--bg-secondary)',
+                    border: `1px solid ${voiceSpeakerBoost ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                    background: voiceSpeakerBoost ? 'rgba(14,165,233,0.08)' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{
                     width: 40, height: 22, borderRadius: 11, position: 'relative',
-                    background: voiceSpeakerBoost ? '#7c3aed' : 'var(--bg-tertiary)',
+                    background: voiceSpeakerBoost ? 'var(--fz-accent, #0EA5E9)' : 'var(--bg-tertiary)',
                     transition: 'background 0.2s',
                   }}>
                     <div style={{
@@ -1139,7 +1139,7 @@ export default function AgentCustomizePage() {
                       boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }} />
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? '#7c3aed' : 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? 'var(--fz-accent, #0EA5E9)' : 'var(--text-muted)' }}>
                     {voiceSpeakerBoost ? 'Activ\u00e9' : 'D\u00e9sactiv\u00e9'}
                   </span>
                 </div>
@@ -1163,19 +1163,19 @@ export default function AgentCustomizePage() {
                       onClick={() => { setVoiceModel(m.id); saveVoiceSettings({ model: m.id }); }}
                       style={{
                         padding: '10px 14px', borderRadius: 10, cursor: 'pointer',
-                        border: `2px solid ${voiceModel === m.id ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
-                        background: voiceModel === m.id ? '#7c3aed15' : 'var(--bg-secondary)',
+                        border: `2px solid ${voiceModel === m.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                        background: voiceModel === m.id ? 'rgba(14,165,233,0.08)' : 'var(--bg-secondary)',
                         transition: 'all 0.15s',
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{
                           width: 16, height: 16, borderRadius: '50%',
-                          border: `2px solid ${voiceModel === m.id ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
+                          border: `2px solid ${voiceModel === m.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                           {voiceModel === m.id && (
-                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#7c3aed' }} />
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--fz-accent, #0EA5E9)' }} />
                           )}
                         </div>
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{m.label}</span>
@@ -1213,7 +1213,7 @@ export default function AgentCustomizePage() {
                 padding: 16, borderRadius: 10, border: '1px dashed var(--fz-border, #E2E8F0)',
                 background: 'var(--bg-secondary)', marginBottom: 16,
               }}>
-                <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 12px 0', lineHeight: 1.6 }}>
+                <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '0 0 12px 0', lineHeight: 1.6 }}>
                   Uploadez 1-5 minutes d&apos;audio de votre voix pour cr&eacute;er un clone vocal personnalis&eacute;.
                   La qualit&eacute; du clone d&eacute;pend de la clart&eacute; de l&apos;enregistrement.
                 </p>
@@ -1259,8 +1259,8 @@ export default function AgentCustomizePage() {
                 key={cap.title}
                 style={{
                   padding: '14px 16px', borderRadius: 10,
-                  border: `1px solid ${cap.available ? '#7c3aed40' : 'var(--fz-border, #E2E8F0)'}`,
-                  background: cap.available ? '#7c3aed08' : 'var(--bg-secondary)',
+                  border: `1px solid ${cap.available ? 'rgba(14,165,233,0.25)' : 'var(--fz-border, #E2E8F0)'}`,
+                  background: cap.available ? 'rgba(14,165,233,0.03)' : 'var(--bg-secondary)',
                   opacity: cap.available ? 1 : 0.6,
                 }}
               >

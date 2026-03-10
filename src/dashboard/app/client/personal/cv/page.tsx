@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -239,6 +240,7 @@ export default function CVPage() {
           <Link href="/client/chat?agent=fz-cv" className="btn btn-primary btn-sm">🤖 fz-cv</Link>
         </div>
       </div>
+      <PageExplanation pageId="cv" text={PAGE_META.cv?.helpText} />
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
 

@@ -6,6 +6,7 @@ import { loadHistory, ACTION_META, type ActionCategory, type ActionEvent, type T
 import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 const CATEGORIES: ActionCategory[] = ['message', 'document', 'meeting', 'game', 'reward', 'referral', 'login', 'agent', 'system'];
 
@@ -84,6 +85,7 @@ export default function TimelinePage() {
           {meta.subtitle}
         </p>
       </div>
+      <PageExplanation pageId="timeline" text={PAGE_META.timeline?.helpText} />
 
       {/* Search */}
       <div style={{ marginBottom: 20 }}>
@@ -146,7 +148,7 @@ export default function TimelinePage() {
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#7c3aed' }}>{events.length}</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--fz-accent, #0EA5E9)' }}>{events.length}</div>
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
         </div>
         <div style={{
@@ -200,7 +202,7 @@ export default function TimelinePage() {
               }}>
                 <div style={{
                   position: 'absolute', left: -24, top: 2, width: 12, height: 12,
-                  borderRadius: '50%', background: '#7c3aed', border: '2px solid var(--fz-bg, #FFFFFF)',
+                  borderRadius: '50%', background: 'var(--fz-accent, #0EA5E9)', border: '2px solid var(--fz-bg, #FFFFFF)',
                 }} />
                 {formatDate(date)}
               </div>

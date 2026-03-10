@@ -6,6 +6,7 @@ import { ALL_AGENTS } from '../../../lib/agent-config';
 import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 export default function WidgetPage() {
   const isMobile = useIsMobile();
@@ -47,6 +48,7 @@ export default function WidgetPage() {
           {meta.subtitle}
         </p>
       </div>
+      <PageExplanation pageId="widget" text={PAGE_META.widget?.helpText} />
 
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20 }}>
         {/* Left: Configuration */}
@@ -107,7 +109,7 @@ export default function WidgetPage() {
                   onClick={() => updateConfig({ position: pos })}
                   style={{
                     flex: 1, padding: '10px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    background: config.position === pos ? '#7c3aed' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    background: config.position === pos ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
                     color: config.position === pos ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
                     fontSize: 12, fontWeight: 700,
                   }}
@@ -311,7 +313,7 @@ export default function WidgetPage() {
             style={{
               position: 'absolute', top: 12, right: 12,
               padding: '6px 14px', borderRadius: 6, border: 'none',
-              background: copied ? '#22c55e' : '#7c3aed', color: '#fff',
+              background: copied ? '#22c55e' : 'var(--fz-accent, #0EA5E9)', color: '#fff',
               fontSize: 12, fontWeight: 700, cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: 4,
             }}
@@ -325,7 +327,7 @@ export default function WidgetPage() {
       {/* Instructions */}
       <div style={{
         marginTop: 20, padding: '16px 20px', borderRadius: 14,
-        background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.12)',
+        background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.12)',
       }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 10 }}>
           <span style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6 }}>❓</span>

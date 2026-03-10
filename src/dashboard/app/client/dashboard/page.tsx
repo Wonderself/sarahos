@@ -8,7 +8,8 @@ import FreenzyWelcome from '../../../components/FreenzyWelcome';
 import { useToast } from '../../../components/Toast';
 import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
-import { QUICK_ACTIONS, FEATURE_SECTIONS } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
+import { QUICK_ACTIONS, FEATURE_SECTIONS, PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ───
 
@@ -273,82 +274,75 @@ export default function ClientDashboard() {
       )}
 
       {/* ── Greeting Header ── */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>
+      <div style={{ marginBottom: 16 }}>
+        <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: 0 }}>
           {greeting}, {userName || 'cher client'} 👋
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', margin: '4px 0 0' }}>
-          {todayStr} — Votre tableau de bord personnel
+        <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', margin: '2px 0 0' }}>
+          {todayStr}
         </p>
       </div>
+      <PageExplanation pageId="dashboard" text={PAGE_META.dashboard?.helpText} />
 
       {/* ── Onboarding banner ── */}
       {!hasProfile && !isDismissed('onboarding') && (
-        <div className="fz-card" style={{
-          padding: '14px 18px', marginBottom: 16,
-          background: 'linear-gradient(135deg, rgba(124,58,237,0.06), rgba(6,182,212,0.04))',
-          border: '1px solid rgba(124,58,237,0.15)',
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 12,
+          background: 'rgba(14,165,233,0.04)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 8,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 24 }}>🏗️</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Configurez votre profil entreprise</div>
-              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>5 minutes pour booster vos assistants IA</div>
-            </div>
-            <Link href="/client/onboarding" className="fz-btn-primary fz-btn-sm" style={{ textDecoration: 'none' }}>
-              Configurer →
-            </Link>
-            <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: 'var(--fz-text-muted)' }}>
-              ×
-            </button>
-          </div>
+          <span style={{ fontSize: 16 }}>🏗️</span>
+          <span style={{ flex: 1, fontSize: 12, color: 'var(--fz-text-secondary)' }}>Complétez votre profil pour des résultats optimaux</span>
+          <Link href="/client/onboarding" style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-accent)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            Configurer →
+          </Link>
+          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: 'var(--fz-text-muted)' }}>×</button>
         </div>
       )}
 
       {/* ── KPI Cards ── */}
-      <div className="fz-kpi-grid" style={{ marginBottom: 24 }}>
-        <Link href="/client/account" className="fz-card-hover" style={{ textDecoration: 'none', padding: '16px 18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 22 }}>💰</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Crédits</span>
+      <div className="fz-kpi-grid" style={{ marginBottom: 16 }}>
+        <Link href="/client/account" className="fz-card-hover" style={{ textDecoration: 'none', padding: '10px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <span style={{ fontSize: 14 }}>💰</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Crédits</span>
           </div>
-          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{credits.toFixed(1)}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
-            {daysLeft > 0 ? `~${daysLeft}j restants · ${averageDaily}/j` : 'Rechargez vos crédits'}
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{credits.toFixed(1)}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>
+            {daysLeft > 0 ? `~${daysLeft}j · ${averageDaily}/j` : 'Rechargez'}
           </div>
         </Link>
-        <div className="fz-card" style={{ padding: '16px 18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 22 }}>💬</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Messages</span>
+        <div className="fz-card" style={{ padding: '10px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <span style={{ fontSize: 14 }}>💬</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Messages</span>
           </div>
-          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{stats.totalMessages}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Conversations avec vos assistants</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{stats.totalMessages}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>Conversations</div>
         </div>
-        <Link href="/client/agents" className="fz-card-hover" style={{ textDecoration: 'none', padding: '16px 18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 22 }}>🤖</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Assistants</span>
+        <Link href="/client/agents" className="fz-card-hover" style={{ textDecoration: 'none', padding: '10px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <span style={{ fontSize: 14 }}>🤖</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Assistants</span>
           </div>
-          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{activeAgents.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Assistants actifs sur {DEFAULT_AGENTS.length}</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{activeAgents.length}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>sur {DEFAULT_AGENTS.length}</div>
         </Link>
-        <div className="fz-card" style={{ padding: '16px 18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 22 }}>🔥</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Streak</span>
+        <div className="fz-card" style={{ padding: '10px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <span style={{ fontSize: 14 }}>🔥</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Streak</span>
           </div>
-          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{stats.streak}j</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Jours consecutifs d&apos;utilisation</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{stats.streak}j</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>Jours consécutifs</div>
         </div>
       </div>
 
       {/* ── AI Briefing ── */}
-      <div className="fz-card" style={{ padding: '18px 20px', marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 20 }}>🧠</span>
-            <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Briefing IA du jour</span>
+      <div className="fz-card" style={{ padding: '12px 14px', marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 16 }}>🧠</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text)' }}>Briefing IA du jour</span>
             <HelpBubble text="Chaque matin, votre IA analyse votre activité et vous propose un résumé actionnable." />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -378,10 +372,10 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Quick Actions ── */}
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-          <span style={{ fontSize: 18 }}>⚡</span>
-          <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Actions rapides</span>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+          <span style={{ fontSize: 14 }}>⚡</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text)' }}>Actions rapides</span>
           <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
         </div>
         <div className="fz-quick-actions">
@@ -488,21 +482,21 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Feature Sections Grid ── */}
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <span style={{ fontSize: 18 }}>🧭</span>
-          <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Toutes vos fonctionnalités</span>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+          <span style={{ fontSize: 14 }}>🧭</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text)' }}>Toutes vos fonctionnalités</span>
           <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {FEATURE_SECTIONS.map(section => (
             <div key={section.id} className="fz-section-card">
               <div className="fz-section-header">
-                <span style={{ fontSize: 20 }}>{section.emoji}</span>
+                <span style={{ fontSize: 16 }}>{section.emoji}</span>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
                     {section.title}
-                    {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: '#7c3aed', marginLeft: 8, padding: '1px 6px', background: 'rgba(124,58,237,0.08)', borderRadius: 4 }}>PRO</span>}
+                    {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', marginLeft: 8, padding: '1px 6px', background: 'rgba(14,165,233,0.08)', borderRadius: 4 }}>PRO</span>}
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{section.subtitle}</div>
                 </div>

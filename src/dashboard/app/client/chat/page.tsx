@@ -9,6 +9,7 @@ import { recordAgentInteraction, recordFeedback, getBond, LEVEL_NAMES, LEVEL_ICO
 import { parseActionProposals, ACTION_TYPE_ICONS, ACTION_TYPE_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDueDate, type ParsedActionProposal } from '../../../lib/action-parser';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 type CommMode = 'chat' | 'visio' | 'whatsapp' | 'repondeur';
 const COMM_TABS: { id: CommMode; label: string; icon: string }[] = [
@@ -694,13 +695,14 @@ export default function ChatPage() {
     <div className="chat-page">
       {/* ═══ PAGE HEADER ═══ */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid var(--fz-border, #E2E8F0)`, background: 'var(--fz-bg, #FFFFFF)' }}>
-        <span style={{ fontSize: 28 }}>{PAGE_META.chat.emoji}</span>
+        <span style={{ fontSize: 18 }}>{PAGE_META.chat.emoji}</span>
         <div style={{ flex: 1 }}>
           <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.chat.title}</h1>
           <p style={{ fontSize: 13, margin: 0, color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.chat.subtitle}</p>
         </div>
         <HelpBubble text={PAGE_META.chat.helpText} />
       </div>
+      <PageExplanation pageId="chat" text={PAGE_META.chat?.helpText} />
 
       {/* ═══ COMPACT HEADER ═══ */}
       <div className="chat-header-compact">

@@ -335,7 +335,7 @@ export default function VisioCallPage() {
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
         <div style={{ fontSize: 15, color: 'var(--fz-text-secondary, #64748B)' }}>Agent non trouve</div>
-        <a href="/client/visio" style={{ fontSize: 13, color: '#7c3aed', marginTop: 12, display: 'inline-block' }}>Retour a la liste</a>
+        <a href="/client/visio" style={{ fontSize: 13, color: 'var(--fz-accent, #0EA5E9)', marginTop: 12, display: 'inline-block' }}>Retour a la liste</a>
       </div>
     );
   }
@@ -364,7 +364,7 @@ export default function VisioCallPage() {
             </span>
           )}
           {listeningStatus === 'processing' && <span style={{ color: '#f59e0b' }}>Transcription...</span>}
-          {listeningStatus === 'speaking' && <span style={{ color: '#7c3aed' }}>Parle...</span>}
+          {listeningStatus === 'speaking' && <span style={{ color: 'var(--fz-accent, #0EA5E9)' }}>Parle...</span>}
         </div>
       </div>
 
@@ -435,7 +435,7 @@ export default function VisioCallPage() {
             <button
               onClick={sendTextMessage}
               disabled={processing || !textInput.trim()}
-              style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#7c3aed', color: 'white', fontSize: 12, fontWeight: 700, cursor: processing ? 'wait' : 'pointer', opacity: processing ? 0.6 : 1 }}
+              style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'var(--fz-accent, #0EA5E9)', color: 'white', fontSize: 12, fontWeight: 700, cursor: processing ? 'wait' : 'pointer', opacity: processing ? 0.6 : 1 }}
             >
               ↵
             </button>

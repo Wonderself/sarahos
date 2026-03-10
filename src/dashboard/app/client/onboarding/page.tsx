@@ -5,6 +5,7 @@ import VoiceInput from '../../../components/VoiceInput';
 import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface CompanyProfile {
   // Step 1 — Identité
@@ -346,14 +347,15 @@ export default function OnboardingPage() {
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 28 }}>{PAGE_META.onboarding.emoji}</span>
+            <span style={{ fontSize: 18 }}>{PAGE_META.onboarding.emoji}</span>
             <div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.onboarding.title}</h1>
-              <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.onboarding.subtitle}</p>
+              <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.onboarding.title}</h1>
+              <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.onboarding.subtitle}</p>
             </div>
             <HelpBubble text={PAGE_META.onboarding.helpText} />
           </div>
         </div>
+        <PageExplanation pageId="onboarding" text={PAGE_META.onboarding?.helpText} />
 
         <div className="text-center mb-24" style={{ marginBottom: 40 }}>
           <h2 className="text-2xl font-bold" style={{ letterSpacing: '-0.03em', color: 'var(--fz-text, #1E293B)' }}>
@@ -458,10 +460,10 @@ export default function OnboardingPage() {
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.onboarding.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.onboarding.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.onboarding.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.onboarding.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.onboarding.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.onboarding.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.onboarding.helpText} />
         </div>
@@ -480,7 +482,7 @@ export default function OnboardingPage() {
         {/* Compact mode toggle + prefilled badge + voice input */}
         <div className="flex flex-center items-center gap-12 mt-12">
           {prefilled && (
-            <span style={{ fontSize: 11, padding: '4px 10px', borderRadius: 12, background: '#7c3aed15', color: 'var(--accent)', fontWeight: 600 }}>
+            <span style={{ fontSize: 11, padding: '4px 10px', borderRadius: 12, background: 'rgba(14,165,233,0.08)', color: 'var(--accent)', fontWeight: 600 }}>
               Pré-rempli par IA — vérifiez et ajustez
             </span>
           )}

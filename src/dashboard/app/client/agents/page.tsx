@@ -6,6 +6,7 @@ import { DEFAULT_AGENTS, PERSONAL_AGENTS } from '../../../lib/agent-config';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import HelpBubble from '../../../components/HelpBubble';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface CustomAgent {
   id: string;
@@ -73,26 +74,21 @@ export default function AgentsPage() {
   return (
     <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1100 }}>
       {/* Page Header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.agents.emoji}</span>
-          <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.agents.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.agents.subtitle}</p>
-          </div>
-          <HelpBubble text={PAGE_META.agents.helpText} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <span style={{ fontSize: 18 }}>{PAGE_META.agents.emoji}</span>
+        <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.agents.title}</h1>
+        <span style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{PAGE_META.agents.subtitle}</span>
+        <HelpBubble text={PAGE_META.agents.helpText} />
+        <div style={{ marginLeft: 'auto' }}>
+          <Link href="/client/agents/create" style={{
+            padding: '4px 10px', borderRadius: 6, background: 'var(--fz-accent, #0EA5E9)', color: 'white',
+            fontSize: 12, fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4,
+          }}>
+            ➕ Créer
+          </Link>
         </div>
       </div>
-
-      {/* Create button */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-        <Link href="/client/agents/create" style={{
-          padding: '10px 20px', borderRadius: 10, background: '#7c3aed', color: 'white',
-          fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
-        }}>
-          ➕ Créer un assistant
-        </Link>
-      </div>
+      <PageExplanation pageId="agents" text={PAGE_META.agents?.helpText} />
 
       {error && (
         <div style={{ padding: '10px 14px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8, fontSize: 12, color: '#ef4444', marginBottom: 16 }}>
@@ -104,7 +100,7 @@ export default function AgentsPage() {
       <section style={{ marginBottom: 32 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>✨ Mes assistants personnalisés</h2>
-          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--accent-muted)', color: '#7c3aed', padding: '2px 8px', borderRadius: 10 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--accent-muted)', color: 'var(--fz-accent, #0EA5E9)', padding: '2px 8px', borderRadius: 10 }}>
             {customAgents.length}
           </span>
         </div>
@@ -122,7 +118,7 @@ export default function AgentsPage() {
               Créez votre premier <span className="fz-logo-word">assistant IA</span> sur mesure en quelques minutes
             </div>
             <Link href="/client/agents/create" style={{
-              padding: '10px 24px', borderRadius: 10, background: '#7c3aed', color: 'white',
+              padding: '10px 24px', borderRadius: 10, background: 'var(--fz-accent, #0EA5E9)', color: 'white',
               fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6,
             }}>
               ✨ Créer mon premier assistant
@@ -134,12 +130,12 @@ export default function AgentsPage() {
               <div key={agent.id} style={{
                 background: 'var(--fz-bg, #FFFFFF)', borderRadius: 14, border: '1px solid var(--fz-border, #E2E8F0)',
                 padding: 16, display: 'flex', flexDirection: 'column', gap: 10,
-                borderTop: `3px solid ${agent.color ?? '#7c3aed'}`,
+                borderTop: `3px solid ${agent.color ?? 'var(--fz-accent, #0EA5E9)'}`,
                 boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{
-                    width: 40, height: 40, borderRadius: 10, background: `${agent.color ?? '#7c3aed'}18`,
+                    width: 40, height: 40, borderRadius: 10, background: `${agent.color ?? 'var(--fz-accent, #0EA5E9)'}18`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0,
                   }}>
                     🤖

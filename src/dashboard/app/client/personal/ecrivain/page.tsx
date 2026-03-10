@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -357,7 +358,7 @@ export default function EcrivainPage() {
             </div>
           )}
           {selectedProject.synopsis && (
-            <div style={{ marginTop: 12, fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, fontStyle: 'italic' }}>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.6, fontStyle: 'italic' }}>
               &ldquo;{selectedProject.synopsis}&rdquo;
             </div>
           )}
@@ -452,6 +453,7 @@ export default function EcrivainPage() {
           <button onClick={() => setShowProjectModal(true)} className="btn btn-primary">+ Nouveau projet</button>
         </div>
       </div>
+      <PageExplanation pageId="ecrivain" text={PAGE_META.ecrivain?.helpText} />
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
 

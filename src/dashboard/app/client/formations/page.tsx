@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 const DONE_KEY = 'fz_formations_done';
 
@@ -170,7 +171,7 @@ export default function FormationsPage() {
   };
 
   /* ─── Styles ─── */
-  const accent = '#7c3aed';
+  const accent = 'var(--fz-accent, #0EA5E9)';
 
   const sectionStyle: React.CSSProperties = {
     maxWidth: 1100,
@@ -217,14 +218,15 @@ export default function FormationsPage() {
       {/* ── Page Header ── */}
       <div style={{ marginBottom: 24, padding: '24px 24px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.formations.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.formations.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.formations.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.formations.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.formations.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.formations.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.formations.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="formations" text={PAGE_META.formations?.helpText} />
 
       {/* ── Benefits Bar ── */}
       <section style={{ ...sectionStyle, marginBottom: 48 }}>
@@ -312,7 +314,7 @@ export default function FormationsPage() {
                 opacity: f.available ? 1 : 0.85,
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(124,58,237,0.12)';
+                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(14,165,233,0.12)';
                 (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={e => {

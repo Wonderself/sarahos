@@ -6,8 +6,9 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import { useToast } from '../../../components/Toast';
-import { HelpBubble } from '../../../components/HelpBubble';
+import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -53,7 +54,7 @@ const FEATURE_ICONS: Record<string, string> = {
   chat: '💬', repondeur: '📞', visio: '🎤',
   studio: '🎨', briefing: '📋', meeting: '🤝', other: '⚙️',
 };
-const PIE_COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#14b8a6'];
+const PIE_COLORS = ['var(--fz-accent, #0EA5E9)', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#14b8a6'];
 const MODEL_PRICES: ModelPrice[] = [
   { model: 'Claude Haiku 4.5', inputPer1M: 0.80, outputPer1M: 4.00 },
   { model: 'Claude Sonnet 4.6', inputPer1M: 3.00, outputPer1M: 15.00 },
@@ -212,14 +213,15 @@ export default function FinancesPage() {
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.finances.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.finances.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.finances.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.finances.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.finances.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.finances.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.finances.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="finances" text={PAGE_META.finances?.helpText} />
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>

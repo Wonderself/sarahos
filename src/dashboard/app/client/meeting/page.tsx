@@ -6,6 +6,7 @@ import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface MeetingMessage {
   speaker: string;
@@ -249,6 +250,7 @@ export default function MeetingPage() {
             <HelpBubble text={meta.helpText} />
           </div>
         </div>
+        <PageExplanation pageId="meeting" text={PAGE_META.meeting?.helpText} />
 
         {/* Agent Selection */}
         <div className="card section">

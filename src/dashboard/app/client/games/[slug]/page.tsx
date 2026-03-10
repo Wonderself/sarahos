@@ -62,7 +62,7 @@ export default function GamePage() {
     return (
       <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '40px 24px', textAlign: 'center' }}>
         <p style={{ color: 'var(--fz-text, #1E293B)', fontSize: 18, marginBottom: 16 }}>Jeu introuvable</p>
-        <Link href="/client/games" style={{ color: '#7c3aed', textDecoration: 'none', fontSize: 14 }}>
+        <Link href="/client/games" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontSize: 14 }}>
           <span style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>
             ←
           </span>
@@ -111,8 +111,8 @@ export default function GamePage() {
           <div
             style={{
               marginTop: 20,
-              background: 'rgba(124,58,237,0.08)',
-              border: '1px solid rgba(124,58,237,0.2)',
+              background: 'rgba(14,165,233,0.08)',
+              border: '1px solid rgba(14,165,233,0.2)',
               borderRadius: 12,
               padding: '16px 20px',
               display: 'flex',

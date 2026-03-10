@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 import {
   DEFAULT_AGENTS,
   loadAgentConfigs,
@@ -223,14 +224,15 @@ export default function TeamPage() {
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.team.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.team.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.team.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.team.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.team.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.team.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.team.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="team" text={PAGE_META.team?.helpText} />
 
       {/* Tabs */}
       <div className="flex gap-4 mb-8" style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>

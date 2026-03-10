@@ -825,12 +825,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               onClick={toggleDarkMode}
               title={darkMode ? 'Mode clair' : 'Mode sombre'}
               style={{
-                width: 36, height: 36, borderRadius: '50%', border: '1px solid var(--border-secondary)',
-                background: 'var(--bg-elevated)', cursor: 'pointer', display: 'flex',
-                alignItems: 'center', justifyContent: 'center', fontSize: 16,
+                width: 28, height: 28, borderRadius: '50%', border: '1px solid var(--fz-border, #E2E8F0)',
+                background: 'var(--fz-bg, #fff)', cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0,
               }}
             >
-              <span style={{ fontSize: 16 }}>{darkMode ? '☀️' : '🌙'}</span>
+              <span style={{ fontSize: 13, lineHeight: 1 }}>{darkMode ? '☀️' : '🌙'}</span>
             </button>
           </div>
         </div>
@@ -1167,7 +1167,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
                   alignItems: 'center', justifyContent: 'center',
-                  background: 'linear-gradient(135deg, var(--fz-accent, #7c3aed), #06b6d4)',
+                  background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
                   color: 'white', fontSize: 9, fontWeight: 700,
                 }}>{gamLevel}</span>
               </span>
@@ -1228,30 +1228,27 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div className="flex-between p-8" style={{ background: 'rgba(124,58,237,0.06)', borderBottom: '1px solid rgba(124,58,237,0.2)' }}>
-            <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>
-              Présentez votre entreprise à vos assistants pour des réponses personnalisées
-            </span>
-            <a href="/client/onboarding" className="text-sm font-semibold" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-              Configurer →
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'rgba(14,165,233,0.04)', borderBottom: '1px solid rgba(14,165,233,0.1)', fontSize: 12 }}>
+            <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
+            <a href="/client/onboarding" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12 }}>
+              Compléter →
             </a>
           </div>
         )}
         {!lowCreditDismissed && walletBalance !== null && walletBalance < 50_000_000 && (
-          <div className="flex-between p-8" style={{
-            background: walletBalance < 10_000_000 ? '#ef444415' : '#f59e0b15',
-            borderBottom: `1px solid ${walletBalance < 10_000_000 ? '#ef444444' : '#f59e0b44'}`,
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', fontSize: 12,
+            background: walletBalance < 10_000_000 ? 'rgba(239,68,68,0.04)' : 'rgba(245,158,11,0.04)',
+            borderBottom: `1px solid ${walletBalance < 10_000_000 ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)'}`,
           }}>
-            <span className={`text-sm font-semibold ${walletBalance < 10_000_000 ? 'text-danger' : 'text-warning'}`}>
-              {walletBalance < 10_000_000
-                ? <>⚠️ Crédits presque épuisés — Rechargez pour continuer à utiliser vos assistants</>
-                : <>💡 Solde de crédits bas — Pensez à recharger</>}
+            <span style={{ color: walletBalance < 10_000_000 ? '#DC2626' : '#D97706' }}>
+              {walletBalance < 10_000_000 ? '⚠️' : '⚡'} {Math.round(walletBalance / 1_000_000)} crédits restants
             </span>
-            <div className="flex items-center gap-8">
-              <Link href="/client/account" className="text-sm text-accent font-semibold" style={{ textDecoration: 'none' }}>
-                Recharger
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Link href="/client/account" style={{ color: walletBalance < 10_000_000 ? '#DC2626' : '#D97706', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                Recharger →
               </Link>
-              <button onClick={dismissLowCredit} style={{ fontSize: 16, background: 'none', border: 'none', padding: '0 4px', cursor: 'pointer' }}>×</button>
+              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer', color: 'var(--fz-text-muted)' }}>×</button>
             </div>
           </div>
         )}

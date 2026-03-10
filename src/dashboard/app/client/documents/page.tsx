@@ -8,6 +8,7 @@ import VoiceInput from '../../../components/VoiceInput';
 import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 function escapeHtml(text: string): string {
   return text
@@ -81,7 +82,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Email professionnel',
     description: 'Rédigez un email professionnel adapté à votre contexte: prospection, relance, partenariat, etc.',
     category: 'Communication',
-    color: '#7c3aed',
+    color: 'var(--fz-accent, #0EA5E9)',
     prompt: 'Rédige un email professionnel. Destinataire: {recipient}. Objet: {subject}. Contexte: {context}. Ton: professionnel mais chaleureux. Format: objet, corps, signature.',
     fields: [
       { key: 'recipient', label: 'Destinataire', placeholder: 'Nom et relation (ex: "Jean Dupont, client potentiel")', type: 'input', required: true },
@@ -199,7 +200,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Rapport',
     description: 'Générez un rapport professionnel: analyse, résultats, recommandations.',
     category: 'Stratégie',
-    color: '#7c3aed',
+    color: 'var(--fz-accent, #0EA5E9)',
     prompt: 'Crée un rapport professionnel. Sujet: {subject}. Type: {reportType}. Données et observations: {data}. Public cible: {audience}. Structure: titre, résumé exécutif, contexte, analyse détaillée, résultats clés, recommandations, conclusion.',
     fields: [
       { key: 'subject', label: 'Sujet du rapport', placeholder: 'Analyse des ventes Q1, audit technique...', type: 'input', required: true },
@@ -290,7 +291,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Communiqué de presse',
     description: 'Rédigez un communiqué de presse professionnel pour vos annonces et événements.',
     category: 'Communication',
-    color: '#7c3aed',
+    color: 'var(--fz-accent, #0EA5E9)',
     prompt: 'Crée un communiqué de presse professionnel au format journalistique. Entreprise: {company}. Annonce: {announcement}. Contexte: {context}. Citation du porte-parole: {quote}. Structure: titre accrocheur (< 10 mots), sous-titre, chapô (résumé en 2-3 lignes), corps du texte en pyramide inversée (le plus important en premier), citation du dirigeant/porte-parole, boilerplate entreprise, contact presse. Respecte le style journalistique : phrases courtes, paragraphes concis, ton factuel.',
     fields: [
       { key: 'company', label: 'Entreprise', placeholder: 'Nom, secteur, taille...', type: 'input', required: true },
@@ -418,7 +419,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de communication',
     description: 'Élaborez un plan de communication complet avec messages clés, canaux et calendrier.',
     category: 'Communication',
-    color: '#7c3aed',
+    color: 'var(--fz-accent, #0EA5E9)',
     prompt: 'Crée un plan de communication stratégique complet. Entreprise/Projet: {project}. Objectif: {objective}. Cibles: {targets}. Budget: {budget}. Structure: 1) Diagnostic de communication actuel, 2) Objectifs de communication (notoriété, image, comportement), 3) Cibles prioritaires et secondaires avec personas, 4) Messages clés par cible, 5) Stratégie créative (concept, ton, univers visuel), 6) Plan d\'actions par canal (digital, print, événementiel, RP, interne), 7) Calendrier sur 6 mois, 8) Budget détaillé par action, 9) KPIs et mesure des résultats, 10) Plan de crise.',
     fields: [
       { key: 'project', label: 'Entreprise / Projet', placeholder: 'Nom et contexte...', type: 'input', required: true },
@@ -1095,28 +1096,29 @@ export default function DocumentsPage() {
     <div className="client-page-scrollable">
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.documents.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.documents.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.documents.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.documents.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.documents.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="documents" text={PAGE_META.documents?.helpText} />
 
       {/* Profile Completion Banner */}
       {!bannerDismissed && (
         <div
           className="fz-card"
           style={{
-            borderLeft: `4px solid ${hasProfile ? '#22c55e' : 'var(--fz-accent, #7c3aed)'}`,
+            borderLeft: `4px solid ${hasProfile ? '#22c55e' : 'var(--fz-accent, #0EA5E9)'}`,
             padding: 16,
             marginBottom: 20,
             background: 'var(--fz-bg, #fff)',
             border: '1px solid var(--fz-border, #E2E8F0)',
             borderLeftWidth: 4,
             borderLeftStyle: 'solid',
-            borderLeftColor: hasProfile ? '#22c55e' : 'var(--fz-accent, #7c3aed)',
+            borderLeftColor: hasProfile ? '#22c55e' : 'var(--fz-accent, #0EA5E9)',
             borderRadius: 8,
             display: 'flex',
             alignItems: 'flex-start',
@@ -1147,7 +1149,7 @@ export default function DocumentsPage() {
                     fontWeight: 600,
                     borderRadius: 6,
                     textDecoration: 'none',
-                    background: 'var(--fz-accent, #7c3aed)',
+                    background: 'var(--fz-accent, #0EA5E9)',
                     color: '#fff',
                     cursor: 'pointer',
                   }}

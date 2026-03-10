@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -207,10 +208,10 @@ export default function CampaignsPage() {
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.campaigns.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.campaigns.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.campaigns.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.campaigns.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.campaigns.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.campaigns.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.campaigns.helpText} />
           <div style={{ marginLeft: 'auto' }}>
@@ -224,6 +225,7 @@ export default function CampaignsPage() {
           </div>
         </div>
       </div>
+      <PageExplanation pageId="campaigns" text={PAGE_META.campaigns?.helpText} />
 
       {/* Stats */}
       {total > 0 && (

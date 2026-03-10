@@ -132,7 +132,7 @@ export default function CommunityPage() {
               <button
                 onClick={() => { setPlaying(null); loadGames(); }}
                 style={{
-                  background: '#7c3aed',
+                  background: 'var(--fz-accent, #0EA5E9)',
                   color: 'var(--fz-text, #1E293B)',
                   border: 'none',
                   borderRadius: 10,
@@ -168,7 +168,7 @@ export default function CommunityPage() {
               style={{
                 height: '100%',
                 width: `${((current + 1) / playing.questions.length) * 100}%`,
-                background: '#7c3aed',
+                background: 'var(--fz-accent, #0EA5E9)',
                 borderRadius: 2,
                 transition: 'width 0.3s',
               }}
@@ -289,7 +289,7 @@ export default function CommunityPage() {
             <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>
               Aucun jeu publié pour le moment.
             </p>
-            <Link href="/client/games/create" style={{ color: '#7c3aed', textDecoration: 'none', fontSize: 13 }}>
+            <Link href="/client/games/create" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontSize: 13 }}>
               Créez le premier !
             </Link>
           </div>
@@ -331,8 +331,8 @@ export default function CommunityPage() {
                       fontSize: 10,
                       padding: '2px 8px',
                       borderRadius: 10,
-                      background: game.type === 'quiz' ? 'rgba(245,158,11,0.15)' : game.type === 'enigma' ? 'rgba(124,58,237,0.15)' : 'rgba(6,182,212,0.15)',
-                      color: game.type === 'quiz' ? '#f59e0b' : game.type === 'enigma' ? '#7c3aed' : '#06b6d4',
+                      background: game.type === 'quiz' ? 'rgba(245,158,11,0.15)' : game.type === 'enigma' ? 'rgba(14,165,233,0.15)' : 'rgba(6,182,212,0.15)',
+                      color: game.type === 'quiz' ? '#f59e0b' : game.type === 'enigma' ? 'var(--fz-accent, #0EA5E9)' : '#06b6d4',
                       marginLeft: 8,
                       whiteSpace: 'nowrap',
                     }}

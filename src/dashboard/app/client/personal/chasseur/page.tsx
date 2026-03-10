@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -201,7 +202,7 @@ export default function ChasseurPage() {
       )}
 
       {m.notes && (
-        <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 12, lineHeight: 1.6 }}>{m.notes}</div>
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginBottom: 12, lineHeight: 1.6 }}>{m.notes}</div>
       )}
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -242,6 +243,7 @@ export default function ChasseurPage() {
           <button onClick={() => setShowModal(true)} className="btn btn-primary btn-sm">+ Ajouter</button>
         </div>
       </div>
+      <PageExplanation pageId="chasseur" text={PAGE_META.chasseur?.helpText} />
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
 

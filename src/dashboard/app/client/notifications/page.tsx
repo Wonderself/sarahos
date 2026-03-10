@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 const NOTIF_READ_KEY = 'fz_notif_read';
 
@@ -217,7 +218,7 @@ export default function NotificationsPage() {
 
   const typeColor: Record<NotifType, string> = {
     alert: '#ef4444',
-    session: '#7c3aed',
+    session: 'var(--fz-accent, #0EA5E9)',
     update: '#22c55e',
     info: '#3b82f6',
   };
@@ -255,6 +256,7 @@ export default function NotificationsPage() {
           </button>
         )}
       </div>
+      <PageExplanation pageId="notifications" text={PAGE_META.notifications?.helpText} />
 
       {/* Filter chips */}
       <div className="flex flex-wrap gap-6 mb-16">

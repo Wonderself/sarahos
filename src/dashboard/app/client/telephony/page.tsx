@@ -7,6 +7,7 @@ import {
 import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -214,6 +215,7 @@ export default function TelephonyPage() {
           <HelpBubble text={meta.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="telephony" text={PAGE_META.telephony?.helpText} />
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>

@@ -108,7 +108,7 @@ export default function MarketplaceCreatePage() {
   // ─── Styles
   const cardBg = 'var(--fz-bg-secondary, #F8FAFC)';
   const borderColor = 'var(--fz-border, #E2E8F0)';
-  const accent = '#7c3aed';
+  const accent = 'var(--fz-accent, #0EA5E9)';
   const catColor = CATEGORY_COLORS[category] || accent;
 
   return (
@@ -158,7 +158,7 @@ export default function MarketplaceCreatePage() {
 
               {/* Name */}
               <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
                   Nom du template *
                 </span>
                 <input
@@ -183,7 +183,7 @@ export default function MarketplaceCreatePage() {
 
               {/* Description */}
               <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
                   Description *
                 </span>
                 <textarea
@@ -215,7 +215,7 @@ export default function MarketplaceCreatePage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 {/* Category */}
                 <label>
-                  <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
                     Categorie
                   </span>
                   <select
@@ -244,7 +244,7 @@ export default function MarketplaceCreatePage() {
 
                 {/* Agent base */}
                 <label>
-                  <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
                     Agent de base
                   </span>
                   <select
@@ -282,7 +282,7 @@ export default function MarketplaceCreatePage() {
 
               {/* System prompt */}
               <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
                   Prompt systeme personnalise
                 </span>
                 <textarea
@@ -308,7 +308,7 @@ export default function MarketplaceCreatePage() {
 
               {/* Welcome message */}
               <label style={{ display: 'block', marginBottom: 18 }}>
-                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
                   Message d&apos;accueil
                 </span>
                 <input
@@ -332,7 +332,7 @@ export default function MarketplaceCreatePage() {
 
               {/* Personality sliders */}
               <div style={{ marginTop: 4 }}>
-                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 12 }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 12 }}>
                   Personnalite
                 </span>
                 {PERSONALITY_SLIDERS.map(({ key, label, low, high }) => (
@@ -455,7 +455,7 @@ export default function MarketplaceCreatePage() {
               </div>
 
               {/* Description */}
-              <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5, margin: '0 0 16px' }}>
+              <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.5, margin: '0 0 16px' }}>
                 {description || 'La description de votre template apparaitra ici...'}
               </p>
 
@@ -473,7 +473,7 @@ export default function MarketplaceCreatePage() {
                   <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>
                     Message d&apos;accueil
                   </div>
-                  <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', fontStyle: 'italic' }}>
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', fontStyle: 'italic' }}>
                     &ldquo;{welcomeMessage}&rdquo;
                   </div>
                 </div>

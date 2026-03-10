@@ -250,7 +250,7 @@ export default function WhatsAppPage() {
                   fontSize: 13, fontWeight: 600, color: '#25D366',
                   background: 'rgba(37,211,102,0.08)', padding: '2px 8px', borderRadius: 6,
                 }}>{c.cmd}</code>
-                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>{c.desc}</span>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{c.desc}</span>
               </div>
             ))}
           </div>
@@ -364,7 +364,7 @@ export default function WhatsAppPage() {
                     {bond && bond.relationshipLevel > 1 && (
                       <div style={{
                         fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
-                        background: 'rgba(91,108,247,0.1)', color: '#7c3aed',
+                        background: 'rgba(91,108,247,0.1)', color: 'var(--fz-accent, #0EA5E9)',
                       }}>
                         {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
                       </div>
@@ -403,7 +403,7 @@ export default function WhatsAppPage() {
                           {agent.role.length > 20 ? agent.role.slice(0, 18) + '...' : agent.role}
                         </span>
                         {bond.relationshipLevel > 1 && (
-                          <span style={{ fontSize: 10, color: '#7c3aed' }}>
+                          <span style={{ fontSize: 10, color: 'var(--fz-accent, #0EA5E9)' }}>
                             {LEVEL_ICONS[bond.relationshipLevel]} Niv.{bond.relationshipLevel}
                           </span>
                         )}

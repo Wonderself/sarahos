@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // Pre-built marketplace modules
 const MARKETPLACE_MODULES = [
@@ -140,6 +141,7 @@ export default function ModulesSurMesurePage() {
           <HelpBubble text={meta.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="custom-creation" text={PAGE_META['custom-creation']?.helpText} />
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '2px solid var(--fz-border, #E2E8F0)' }}>
@@ -297,7 +299,7 @@ export default function ModulesSurMesurePage() {
           {/* AI advantage banner */}
           <div className="card mb-20" style={{
             padding: 20,
-            background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)',
+            background: 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)',
             border: '1px solid var(--accent)',
           }}>
             <div className="flex items-center gap-8 mb-8">

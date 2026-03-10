@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
-import { HelpBubble } from '../../../components/HelpBubble';
+import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ───────────────────────────────────────────────
 interface SavedPost {
@@ -178,7 +179,7 @@ function dateToKey(d: Date): string {
 }
 
 function platformColor(platformId: string): string {
-  return PLATFORMS.find(p => p.id === platformId)?.color ?? '#7c3aed';
+  return PLATFORMS.find(p => p.id === platformId)?.color ?? 'var(--fz-accent, #0EA5E9)';
 }
 
 function platformEmoji(platformId: string): string {
@@ -792,6 +793,7 @@ export default function SocialMediaPage() {
           <HelpBubble text={PAGE_META.social.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="social" text={PAGE_META.social?.helpText} />
 
       {/* Tab Navigation */}
       <div className="fz-tabs">
@@ -982,7 +984,7 @@ export default function SocialMediaPage() {
                       <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{formatDate(post.createdAt)}</span>
                     </div>
                     <div style={{
-                      fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5,
+                      fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.5,
                       overflow: 'hidden', textOverflow: 'ellipsis',
                       display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                     }}>
@@ -1081,7 +1083,7 @@ export default function SocialMediaPage() {
 
                         {/* Content preview */}
                         <div style={{
-                          fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6,
+                          fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.6,
                           overflow: 'hidden', textOverflow: 'ellipsis',
                           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
                           marginBottom: 12,
@@ -1805,7 +1807,7 @@ export default function SocialMediaPage() {
                         </span>
                       </div>
                       <div style={{
-                        fontSize: 13, color: 'var(--fz-text-secondary, #64748B)',
+                        fontSize: 12, color: 'var(--fz-text-muted)',
                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       }}>
                         {post.content.slice(0, 80)}...

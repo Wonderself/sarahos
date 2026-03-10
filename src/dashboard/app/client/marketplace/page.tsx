@@ -8,6 +8,7 @@ import {
 } from '../../../lib/marketplace-data';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 import HelpBubble from '../../../components/HelpBubble';
 
 // ── Component ──
@@ -100,14 +101,15 @@ export default function MarketplacePage() {
       {/* ── Page Header ── */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.marketplace.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.marketplace.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.marketplace.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.marketplace.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.marketplace.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.marketplace.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.marketplace.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="marketplace" text={PAGE_META.marketplace?.helpText} />
 
       {/* ── Featured Section ── */}
       <div style={{ marginBottom: 40 }}>

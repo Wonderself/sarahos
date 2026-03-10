@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META, REVEIL_MODE_EMOJIS } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ═══════════════════════════════════════════════════════
 //  Freenzy.io — Reveil Intelligent (Smart Alarm)
@@ -55,7 +56,7 @@ const ALARM_MODES = [
   { id: 'dur',        emoji: '🔥', label: 'Dur',        color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
   { id: 'sympa',      emoji: '😊', label: 'Sympa',      color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
   { id: 'drole',      emoji: '😂', label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
-  { id: 'fou',        emoji: '🤪', label: 'Fou',        color: '#7c3aed', desc: 'Un reveil completement delirant et imprevisible' },
+  { id: 'fou',        emoji: '🤪', label: 'Fou',        color: 'var(--fz-accent, #0EA5E9)', desc: 'Un reveil completement delirant et imprevisible' },
   { id: 'motivant',   emoji: '💪', label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
   { id: 'zen',        emoji: '🧘', label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
   { id: 'energique',  emoji: '⚡', label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },
@@ -493,6 +494,7 @@ export default function ReveilPage() {
         </div>
         <HelpBubble text={pageMeta.helpText} />
       </div>
+      <PageExplanation pageId="reveil" text={PAGE_META.reveil?.helpText} />
 
       {/* ─── STATUS BAR ─── */}
       {(error || success || saving) && (
@@ -1425,7 +1427,7 @@ export default function ReveilPage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '14px 20px', borderRadius: 12,
-              background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)',
+              background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.15)',
               marginBottom: 20,
             }}>
               <span style={{ fontSize: 22 }}>💰</span>
@@ -1445,7 +1447,7 @@ export default function ReveilPage() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 24px', borderRadius: 12,
-                  background: '#7c3aed', color: '#fff',
+                  background: 'var(--fz-accent, #0EA5E9)', color: '#fff',
                   fontWeight: 700, fontSize: 14,
                   textDecoration: 'none', transition: 'opacity 0.2s',
                   minHeight: 44,

@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { generateQR } from '../../../lib/qr-generator';
 import { claimReward } from '../../../lib/rewards';
-import { HelpBubble } from '../../../components/HelpBubble';
+import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface Referral {
   id: string;
@@ -93,7 +94,7 @@ export default function ReferralsPage() {
   useEffect(() => {
     if (!referralCode || !qrCanvasRef.current) return;
     const url = `${window.location.origin}/login?ref=${referralCode}`;
-    generateQR(url, qrCanvasRef.current, { size: 200, foreground: '#7c3aed', background: '#0f0720' });
+    generateQR(url, qrCanvasRef.current, { size: 200, foreground: 'var(--fz-accent, #0EA5E9)', background: '#0f0720' });
   }, [referralCode]);
 
   const downloadQR = useCallback(() => {
@@ -152,12 +153,13 @@ export default function ReferralsPage() {
           </p>
         </div>
       </div>
+      <PageExplanation pageId="referrals" text={PAGE_META.referrals?.helpText} />
 
       {/* Hero */}
       <div className="card section" style={{
-        background: 'linear-gradient(135deg, rgba(124,58,237,0.05), rgba(6,182,212,0.03))',
-        border: '2px solid rgba(124,58,237,0.19)', padding: '24px 20px',
-        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+        background: 'linear-gradient(135deg, rgba(14,165,233,0.05), rgba(6,182,212,0.03))',
+        border: '2px solid rgba(14,165,233,0.19)', padding: '24px 20px',
+        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(14,165,233,0.15)',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
           <span style={{ fontSize: 48 }}>{'\uD83C\uDF81'}</span>
@@ -181,7 +183,7 @@ export default function ReferralsPage() {
           <div className="flex-1" style={{
             background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
             borderRadius: 10, padding: '10px 14px', fontFamily: 'var(--font-mono, monospace)',
-            fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', minWidth: 200, wordBreak: 'break-all',
+            fontSize: 12, color: 'var(--fz-text-muted)', minWidth: 200, wordBreak: 'break-all',
           }}>
             {referralCode ? getReferralLink() : 'Chargement...'}
           </div>

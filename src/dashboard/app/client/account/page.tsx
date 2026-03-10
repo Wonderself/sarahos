@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DEPOSIT_OPTIONS, COMMISSION_TIERS, DEFAULT_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
-import { HelpBubble } from '../../../components/HelpBubble';
+import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface WalletData {
   balance: number;
@@ -292,20 +293,21 @@ export default function AccountPage() {
   // Determine tier badge
   const tierBadge = COMMISSION_TIERS.find(t => userNumber <= t.maxUsers);
   const badgeLabel = tierBadge?.badge ?? 'Standard+';
-  const badgeColor = commissionRate === 0 ? '#22c55e' : commissionRate <= 0.05 ? '#7c3aed' : '#9333ea';
+  const badgeColor = commissionRate === 0 ? '#22c55e' : commissionRate <= 0.05 ? 'var(--fz-accent, #0EA5E9)' : '#9333ea';
 
   return (
     <div className="client-page-scrollable">
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.account.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.account.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.account.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.account.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.account.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.account.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.account.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="account" text={PAGE_META.account?.helpText} />
 
       {/* Commission & Status */}
       <div className="section">
@@ -439,13 +441,13 @@ export default function AccountPage() {
             {DEPOSIT_OPTIONS.map(opt => (
               <div key={opt.id} className="card card-lift text-center" style={{
                 padding: 16, position: 'relative',
-                borderColor: opt.popular ? '#7c3aed' : 'var(--fz-border, #E2E8F0)',
+                borderColor: opt.popular ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)',
                 borderWidth: opt.popular ? 2 : 1,
               }}>
                 {opt.popular && (
                   <div className="text-xs font-bold" style={{
                     position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)',
-                    background: '#7c3aed', color: 'white',
+                    background: 'var(--fz-accent, #0EA5E9)', color: 'white',
                     padding: '2px 10px', borderRadius: '0 0 6px 6px', fontSize: 9,
                   }}>
                     POPULAIRE
@@ -659,7 +661,7 @@ export default function AccountPage() {
       </div>
 
       {/* Coming Soon + Active integrations */}
-      <div className="card mt-16 p-16" style={{ background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)' }}>
+      <div className="card mt-16 p-16" style={{ background: 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)' }}>
         <h3 className="font-bold text-lg mb-12">Integrations</h3>
         <div className="grid-auto gap-12" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
           {[

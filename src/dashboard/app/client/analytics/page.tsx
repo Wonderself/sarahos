@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,7 +33,7 @@ const PERIOD_OPTIONS = [
   { label: '90 jours', days: 90 },
 ];
 
-const PIE_COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#ec4899', '#14b8a6'];
+const PIE_COLORS = ['var(--fz-accent, #0EA5E9)', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#ec4899', '#14b8a6'];
 
 // Agent names mapping (models → agent names)
 const MODEL_LABELS: Record<string, { icon: string; label: string }> = {
@@ -135,14 +136,15 @@ export default function AnalyticsPage() {
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.analytics.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.analytics.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.analytics.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.analytics.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.analytics.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.analytics.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.analytics.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="analytics" text={PAGE_META.analytics?.helpText} />
 
       {/* Period selector */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>

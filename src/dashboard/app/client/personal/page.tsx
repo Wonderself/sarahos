@@ -14,6 +14,7 @@ import {
   type AgentTemplate, type Category, type SortMode,
 } from '../../../lib/marketplace-data';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 import HelpBubble from '../../../components/HelpBubble';
 
 // ═══════════════════════════════════════════════════
@@ -22,6 +23,26 @@ import HelpBubble from '../../../components/HelpBubble';
 //  Section 2: Mes assistants personnalises (personal by category)
 //  Section 3: Recruter de nouveaux assistants
 // ═══════════════════════════════════════════════════
+
+// ─── Person emoji overrides (replace generic object emojis with person emojis) ───
+const PERSON_EMOJIS: Record<string, string> = {
+  // Business agents
+  'fz-repondeur': '👩‍💼', 'fz-assistante': '👩‍💼', 'fz-commercial': '🤵',
+  'fz-marketing': '👩‍💻', 'fz-rh': '👩‍💼', 'fz-communication': '🗣️',
+  'fz-finance': '🧑‍💼', 'fz-dev': '👨‍💻', 'fz-juridique': '👨‍⚖️',
+  'fz-dg': '👔', 'fz-video': '🎬', 'fz-photo': '📸',
+  'fz-quality': '👷', 'fz-operations': '🧑‍🔧', 'fz-strategy': '🧙',
+  'fz-formation': '👨‍🏫', 'fz-innovation': '🧑‍🔬', 'fz-international': '🌍',
+  // Personal agents
+  'fz-budget': '👩‍🏫', 'fz-negociateur': '🤵', 'fz-impots': '🧑‍💼',
+  'fz-comptable': '🧑‍💼', 'fz-chasseur': '🕵️', 'fz-portfolio': '👨‍🎨',
+  'fz-cv': '👨‍🎓', 'fz-contradicteur': '🧑‍⚖️', 'fz-coach': '🧑‍🦱',
+  'fz-ecrivain': '👨‍🎓', 'fz-cineaste': '🎬', 'fz-deconnexion': '🧘',
+};
+
+function getPersonEmoji(agentId: string, fallback: string): string {
+  return PERSON_EMOJIS[agentId] || fallback;
+}
 
 // ─── Personal agent categories ───
 
@@ -213,20 +234,16 @@ export default function PersonalAgentsPage() {
   return (
     <div className="client-page-scrollable">
       {/* ─── Header ─── */}
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
-        <div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.personal.emoji} {PAGE_META.personal.title}</h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
-            {PAGE_META.personal.subtitle} — {totalActive} assistant{totalActive > 1 ? 's' : ''} actif{totalActive > 1 ? 's' : ''}
-          </p>
-        </div>
-        <div className="page-actions flex gap-8 items-center">
-          <HelpBubble text={PAGE_META.personal.helpText} />
-          <div className="badge badge-primary" style={{ padding: '6px 14px', fontSize: 13 }}>
-            {activeBusinessIds.length} business + {activePersonalIds.length} perso
-          </div>
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'nowrap' }}>
+        <span style={{ fontSize: 18 }}>{PAGE_META.personal.emoji}</span>
+        <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.personal.title}</h1>
+        <span style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>— {totalActive} actifs</span>
+        <HelpBubble text={PAGE_META.personal.helpText} />
+        <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--fz-text-muted)', whiteSpace: 'nowrap' }}>
+          {activeBusinessIds.length} business + {activePersonalIds.length} perso
+        </span>
       </div>
+      <PageExplanation pageId="personal" text={PAGE_META.personal?.helpText} />
 
       {/* ─── Tabs ─── */}
       <div style={{
@@ -244,7 +261,7 @@ export default function PersonalAgentsPage() {
             boxShadow: activeTab === 'equipe' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          👤 Mon équipe
+          👥 Mon équipe
         </button>
         <button
           onClick={() => setActiveTab('marketplace')}
@@ -288,7 +305,7 @@ export default function PersonalAgentsPage() {
       <section className="mb-32">
         <div className="flex items-center gap-12 mb-16">
           <div className="flex-center rounded-md" style={{
-            width: 36, height: 36, background: '#7c3aed15', fontSize: 18,
+            width: 36, height: 36, background: 'rgba(14,165,233,0.08)', fontSize: 18,
           }}>
             🏢
           </div>
@@ -329,7 +346,7 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#06b6d415', fontSize: 18,
           }}>
-            👤
+            👥
           </div>
           <div>
             <h2 className="text-xl font-bold">Mes assistants personnalises</h2>
@@ -436,7 +453,7 @@ export default function PersonalAgentsPage() {
 
       {/* ─── Bottom CTA ─── */}
       <div className="card p-24" style={{
-        background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)',
+        background: 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)',
         border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
         <div className="flex-between flex-wrap" style={{ gap: 16 }}>
@@ -575,7 +592,7 @@ export default function PersonalAgentsPage() {
                       {agent.tier === 'free' ? 'Gratuit' : 'Premium'}
                     </span>
                   </div>
-                  <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5, marginBottom: 16, flex: 1 }}>
+                  <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.5, marginBottom: 16, flex: 1 }}>
                     {agent.description}
                   </p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -674,10 +691,10 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
 
       <div className="flex items-center gap-12 mb-8">
         <div className="flex-center rounded-md" style={{
-          width: 42, height: 42, fontSize: 22,
+          width: 36, height: 36, fontSize: 18,
           background: `${agent.color}15`,
         }}>
-          {agent.emoji}
+          {getPersonEmoji(agent.id, agent.emoji)}
         </div>
         <div style={{ flex: 1 }}>
           <div className="font-bold text-base">{agent.name}</div>
@@ -756,10 +773,10 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
     >
       <div className="flex items-center gap-12 mb-8">
         <div className="flex-center rounded-md" style={{
-          width: 42, height: 42, fontSize: 22,
+          width: 36, height: 36, fontSize: 18,
           background: `${agent.color}10`,
         }}>
-          {agent.emoji}
+          {getPersonEmoji(agent.id, agent.emoji)}
         </div>
         <div style={{ flex: 1 }}>
           <div className="font-semibold text-base">{agent.name}</div>
@@ -824,11 +841,11 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
           <div
             className="flex-center rounded-md"
             style={{
-              width: 40, height: 40, fontSize: 22,
+              width: 36, height: 36, fontSize: 18,
               background: `${agent.color}15`,
             }}
           >
-            {agent.emoji}
+            {getPersonEmoji(agent.id, agent.emoji)}
           </div>
           <div>
             <div className="font-bold text-base">{agent.name}</div>
@@ -909,7 +926,7 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.6'; }}
     >
       <div className="flex items-center gap-12">
-        {agent.emoji}
+        {getPersonEmoji(agent.id, agent.emoji)}
         <div>
           <span className="text-sm font-semibold">{agent.name}</span>
           <span className="text-xs text-muted" style={{ marginLeft: 8 }}>{agent.role}</span>

@@ -5,6 +5,7 @@ import { useUserData } from '../../../lib/use-user-data';
 import BriefingTab from './BriefingTab';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ═══════════════════════════════════════════════════════
 //  Freenzy.io — Ma Journée (My Day Dashboard)
@@ -300,7 +301,7 @@ const MOOD_OPTIONS = [
   { emoji: '😕', label: 'Pas top', color: '#f97316' },
   { emoji: '😐', label: 'Neutre', color: '#eab308' },
   { emoji: '😊', label: 'Bien', color: '#22c55e' },
-  { emoji: '🤩', label: 'Super !', color: '#7c3aed' },
+  { emoji: '🤩', label: 'Super !', color: 'var(--fz-accent, #0EA5E9)' },
 ];
 
 const NEWS_TABS = [
@@ -1061,7 +1062,7 @@ export default function JourneePage() {
           <div style={{ fontSize: 28 }}>{sign.emoji}</div>
           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{sign.label}</div>
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{sign.dates}</div>
-          <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginTop: 8, lineHeight: 1.5 }}>{ZODIAC_MESSAGES[signIdx >= 0 ? signIdx : 0]}</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginTop: 8, lineHeight: 1.5 }}>{ZODIAC_MESSAGES[signIdx >= 0 ? signIdx : 0]}</div>
         </div>}
       </W>
     );
@@ -1426,14 +1427,15 @@ export default function JourneePage() {
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.journee.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.journee.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.journee.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.journee.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.journee.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.journee.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.journee.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="journee" text={PAGE_META.journee?.helpText} />
       {/* Clock & Greeting */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
         <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text-muted, #94A3B8)', letterSpacing: '-0.03em', fontFamily: 'monospace' }}>

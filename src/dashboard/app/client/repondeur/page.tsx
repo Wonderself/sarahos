@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META, REPONDEUR_MODE_EMOJIS, REPONDEUR_SCENARIO_EMOJIS } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -117,7 +118,7 @@ const SCENARIO_TEMPLATES = [
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 const CLASSIF_COLORS: Record<string, string> = {
-  urgent: '#ef4444', vip: '#f59e0b', order: '#7c3aed', complaint: '#f97316',
+  urgent: '#ef4444', vip: '#f59e0b', order: 'var(--fz-accent, #0EA5E9)', complaint: '#f97316',
   appointment: '#0ea5e9', faq: '#10b981', family: '#ec4899', spam: '#94a3b8',
   general: '#64748b', blocked: '#dc2626',
 };
@@ -150,7 +151,7 @@ function timeAgo(iso: string): string {
 }
 
 // ── Shared sub-components ─────────────────────────────────────────────────────
-function StatCard({ emoji, value, label, color = '#7c3aed' }: { emoji: string; value: number | string; label: string; color?: string }) {
+function StatCard({ emoji, value, label, color = 'var(--fz-accent, #0EA5E9)' }: { emoji: string; value: number | string; label: string; color?: string }) {
   return (
     <div style={{
       background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: '16px 20px',
@@ -175,7 +176,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
         disabled={saving}
         style={{
           padding: '8px 20px', borderRadius: 8, border: 'none',
-          background: saving ? '#c4b5fd' : '#7c3aed', color: 'white',
+          background: saving ? '#c4b5fd' : 'var(--fz-accent, #0EA5E9)', color: 'white',
           fontSize: 13, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
         }}
       >
@@ -263,7 +264,7 @@ export default function RepondeurPage() {
   if (loading) {
     return (
       <div style={{ padding: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #7c3aed', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid var(--fz-accent, #0EA5E9)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
         <span style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)' }}>Chargement du répondeur...</span>
       </div>
     );
@@ -302,10 +303,10 @@ export default function RepondeurPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 700,
-                  background: wizardStep >= s ? '#7c3aed' : 'var(--fz-bg-secondary, #F8FAFC)',
+                  background: wizardStep >= s ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
                   color: wizardStep >= s ? 'white' : 'var(--fz-text-muted, #94A3B8)',
                 }}>{s}</div>
-                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#7c3aed' : 'var(--fz-border, #E2E8F0)' }} />}
+                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)' }} />}
               </div>
             ))}
           </div>
@@ -324,7 +325,7 @@ export default function RepondeurPage() {
                   onClick={() => setWizardScenario(s.id)}
                   style={{
                     padding: 16, borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    border: `2px solid ${wizardScenario === s.id ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
+                    border: `2px solid ${wizardScenario === s.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
                     background: wizardScenario === s.id ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)',
                     transition: 'all 0.15s',
                   }}
@@ -341,7 +342,7 @@ export default function RepondeurPage() {
                 disabled={!wizardScenario}
                 style={{
                   padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: wizardScenario ? '#7c3aed' : 'var(--fz-border, #E2E8F0)',
+                  background: wizardScenario ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)',
                   color: wizardScenario ? 'white' : 'var(--fz-text-muted, #94A3B8)',
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
                 }}
@@ -358,7 +359,7 @@ export default function RepondeurPage() {
             <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
               2 — Numéro d'alerte patron
             </h2>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', textAlign: 'center', marginBottom: 20 }}>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', textAlign: 'center', marginBottom: 20 }}>
               Pour les messages urgents, le répondeur vous envoie immédiatement une alerte WhatsApp.
             </p>
             <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 20, border: '1px solid var(--fz-border, #E2E8F0)' }}>
@@ -383,7 +384,7 @@ export default function RepondeurPage() {
               <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
-              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: '#7c3aed', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: 'var(--fz-accent, #0EA5E9)', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                 Continuer →
               </button>
             </div>
@@ -402,14 +403,14 @@ export default function RepondeurPage() {
                   <span style={{ fontSize: 20 }}>{REPONDEUR_SCENARIO_EMOJIS[wizardScenario] ?? '📞'}</span>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Scénario</div>
-                    <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                   <span style={{ fontSize: 20 }}>📞</span>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Numéro d'alerte</div>
-                    <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
                   </div>
                 </div>
               </div>
@@ -457,7 +458,7 @@ export default function RepondeurPage() {
       {/* Page header */}
       <div style={{ padding: '16px 20px 0', background: 'var(--fz-bg, #FFFFFF)', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.repondeur.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.repondeur.emoji}</span>
           <div>
             <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: 'var(--fz-text, #1E293B)' }}>
               {PAGE_META.repondeur.title}
@@ -484,6 +485,7 @@ export default function RepondeurPage() {
             </button>
           </div>
         </div>
+        <PageExplanation pageId="repondeur" text={PAGE_META.repondeur?.helpText} />
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 2 }}>
@@ -494,9 +496,9 @@ export default function RepondeurPage() {
               style={{
                 padding: '8px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
                 background: tab === t.id ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-                color: tab === t.id ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
+                color: tab === t.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
                 borderRadius: '8px 8px 0 0',
-                borderBottom: tab === t.id ? '2px solid #7c3aed' : '2px solid transparent',
+                borderBottom: tab === t.id ? '2px solid var(--fz-accent, #0EA5E9)' : '2px solid transparent',
               }}
             >
               {t.emoji} {t.label}
@@ -569,7 +571,7 @@ function OverviewTab({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 800 }}>
       {/* Stat cards */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <StatCard emoji="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#7c3aed" />
+        <StatCard emoji="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="var(--fz-accent, #0EA5E9)" />
         <StatCard emoji="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#f59e0b" />
         <StatCard emoji="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#ef4444" />
         <StatCard emoji="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#10b981" />
@@ -594,7 +596,7 @@ function OverviewTab({
           </div>
         </div>
         {config.greetingMessage && (
-          <div style={{ marginTop: 10, padding: '8px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', borderLeft: '3px solid #7c3aed' }}>
+          <div style={{ marginTop: 10, padding: '8px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', borderLeft: '3px solid var(--fz-accent, #0EA5E9)' }}>
             "{config.greetingMessage}"
           </div>
         )}
@@ -622,7 +624,7 @@ function OverviewTab({
               disabled={!testMessage.trim()}
               style={{
                 padding: '8px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600,
-                background: testMessage.trim() ? '#7c3aed' : 'var(--fz-border, #E2E8F0)',
+                background: testMessage.trim() ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)',
                 color: testMessage.trim() ? 'white' : 'var(--fz-text-muted, #94A3B8)',
                 cursor: testMessage.trim() ? 'pointer' : 'not-allowed',
               }}
@@ -713,7 +715,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               style={{
                 padding: '6px 14px', borderRadius: 20, border: '1px solid var(--fz-border, #E2E8F0)',
                 background: mode === p.mode ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)',
-                color: mode === p.mode ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
+                color: mode === p.mode ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}
             >
@@ -733,7 +735,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onClick={() => { setMode(m.value); markChanged(); }}
               style={{
                 padding: '12px 10px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
-                border: `2px solid ${mode === m.value ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
+                border: `2px solid ${mode === m.value ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
                 background: mode === m.value ? '#f3eeff' : 'var(--fz-bg-secondary, #F8FAFC)',
               }}
             >
@@ -753,7 +755,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {STYLES.map(s => (
               <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? '#f3eeff' : 'transparent' }}>
-                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#7c3aed' }} />
+                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: 'var(--fz-accent, #0EA5E9)' }} />
                 <span style={{ fontSize: 12, fontWeight: style === s.value ? 600 : 400 }}>{s.label}</span>
               </label>
             ))}
@@ -921,7 +923,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
             style={{
               padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
               background: subTab === id ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-              color: subTab === id ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
+              color: subTab === id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
               boxShadow: subTab === id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
@@ -942,7 +944,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
               <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, outline: 'none' }} />
               <div style={{ display: 'flex', gap: 8 }}>
                 <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
-                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#7c3aed' : 'var(--fz-border, #E2E8F0)', color: newQ && newA ? 'white' : 'var(--fz-text-muted, #94A3B8)', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
+                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)', color: newQ && newA ? 'white' : 'var(--fz-text-muted, #94A3B8)', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
               </div>
             </div>
           </div>
@@ -1080,7 +1082,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
         {([['messages', '💬', 'Messages', messages.length], ['orders', '🛒', 'Commandes', orders.length], ['summaries', '📋', 'Résumés', summaries.length]] as [string, string, string, number][]).map(([id, icon, label, count]) => (
-          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`, background: inboxTab === id ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: inboxTab === id ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
+          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`, background: inboxTab === id ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: inboxTab === id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
             {icon} {label} <span style={{ background: 'var(--fz-border, #E2E8F0)', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
@@ -1091,11 +1093,11 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Filter chips */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`, background: msgFilter === 'all' ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: msgFilter === 'all' ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`, background: msgFilter === 'all' ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: msgFilter === 'all' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
               Tous ({messages.length})
             </button>
             {Object.entries(classifCounts).map(([c, n]) => (
-              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#7c3aed'}12` : 'var(--fz-bg, #FFFFFF)', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#7c3aed') : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? 'var(--fz-accent, #0EA5E9)'}12` : 'var(--fz-bg, #FFFFFF)', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? 'var(--fz-accent, #0EA5E9)') : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                 {c} ({n})
               </button>
             ))}
@@ -1149,7 +1151,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'summaries' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#7c3aed', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'var(--fz-accent, #0EA5E9)', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
               {generatingSummary ? 'Génération...' : 'Générer un résumé maintenant'}
             </button>
           </div>
@@ -1159,7 +1161,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
             summaries.map(s => (
               <div key={s.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10, padding: '12px 14px', border: '1px solid var(--fz-border, #E2E8F0)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
                   <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{timeAgo(s.createdAt)}</span>
                 </div>
                 <pre style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
@@ -1230,7 +1232,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               onClick={() => { setAlwaysOn(!alwaysOn); mark(); }}
               style={{
                 width: 36, height: 20, borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s',
-                background: alwaysOn ? '#7c3aed' : 'var(--fz-border, #E2E8F0)', position: 'relative',
+                background: alwaysOn ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)', position: 'relative',
               }}
             >
               <div style={{
@@ -1249,8 +1251,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
                 const active = rule?.isActive ?? false;
                 return (
                   <button key={i} onClick={() => toggleDay(i + 1)} style={{
-                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: active ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: active ? '#7c3aed' : 'var(--fz-text-muted, #94A3B8)',
+                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                    background: active ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: active ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-muted, #94A3B8)',
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                   }}>{day}</button>
                 );
@@ -1307,8 +1309,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             <div>
               <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#7c3aed' }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: '#7c3aed', minWidth: 50 }}>{maxLen} car.</span>
+                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: 'var(--fz-accent, #0EA5E9)' }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)', minWidth: 50 }}>{maxLen} car.</span>
               </div>
             </div>
           </div>
@@ -1327,16 +1329,16 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             <div key={opt.id} style={{ padding: 14, borderRadius: 10, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 700 }}>Option {opt.id}</span>
-                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#f3eeff', color: '#7c3aed', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
+                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#f3eeff', color: 'var(--fz-accent, #0EA5E9)', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
               </div>
               <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{opt.label}</div>
-              <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
+              <div style={{ fontSize: 11, color: 'var(--fz-accent, #0EA5E9)', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
               <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{opt.desc}</div>
             </div>
           ))}
         </div>
         <div style={{ marginTop: 10, fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
-          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#7c3aed' }}>support@freenzy.io</a>
+          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: 'var(--fz-accent, #0EA5E9)' }}>support@freenzy.io</a>
         </div>
       </div>
 
@@ -1347,8 +1349,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Rétention des données</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#7c3aed' }} />
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#7c3aed', minWidth: 55 }}>{retention} jours</span>
+              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: 'var(--fz-accent, #0EA5E9)' }} />
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)', minWidth: 55 }}>{retention} jours</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>

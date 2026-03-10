@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ALL_AGENTS } from '../../../lib/agent-config';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 const VISIO_AGENTS = ALL_AGENTS.map(a => ({
   id: a.id,
@@ -85,6 +86,7 @@ export default function VisioPage() {
           \u26a1 Consomme ~3x plus de cr\u00e9dits qu&apos;un chat texte (<span className="fz-logo-word">STT + LLM + TTS</span>)
         </div>
       </div>
+      <PageExplanation pageId="visio" text={PAGE_META.visio?.helpText} />
 
       {/* Stats */}
       {totalCalls > 0 && (
@@ -195,7 +197,7 @@ export default function VisioPage() {
                   <div style={{
                     width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: (agent?.color ?? '#7c3aed') + '15', fontSize: 18,
+                    background: (agent?.color ?? 'var(--fz-accent, #0EA5E9)') + '15', fontSize: 18,
                   }}>
                     \ud83e\udd16
                   </div>

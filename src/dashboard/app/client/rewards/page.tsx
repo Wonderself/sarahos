@@ -7,8 +7,9 @@ import {
 } from '../../../lib/rewards';
 import type { RewardsState, RewardAction } from '../../../lib/rewards';
 import { useIsMobile } from '../../../lib/use-media-query';
-import { HelpBubble } from '../../../components/HelpBubble';
+import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 type Category = keyof typeof REWARD_CATEGORIES;
 
@@ -171,6 +172,7 @@ export default function RewardsPage() {
           </p>
         </div>
       </div>
+      <PageExplanation pageId="rewards" text={PAGE_META.rewards?.helpText} />
 
       {/* Stats strip */}
       <div style={{
@@ -197,7 +199,7 @@ export default function RewardsPage() {
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
-          <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>{progress}%</div>
+          <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--fz-accent, #0EA5E9)' }}>{progress}%</div>
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>PROGRESSION</div>
         </div>
       </div>
@@ -252,7 +254,7 @@ export default function RewardsPage() {
           style={{
             padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
             fontSize: 12, fontWeight: 700,
-            background: activeCategory === 'all' ? '#7c3aed' : 'var(--fz-bg-secondary, #F8FAFC)',
+            background: activeCategory === 'all' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
             color: activeCategory === 'all' ? '#fff' : 'var(--fz-text-secondary, #64748B)',
           }}
         >
@@ -362,14 +364,14 @@ export default function RewardsPage() {
       {/* Bottom summary */}
       <div style={{
         marginTop: 32, padding: '20px 24px', borderRadius: 14,
-        background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)',
-        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+        background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.15)',
+        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(14,165,233,0.15)',
         textAlign: 'center',
       }}>
         <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
           Total possible
         </div>
-        <div style={{ fontSize: 32, fontWeight: 800, color: '#7c3aed' }}>
+        <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--fz-accent, #0EA5E9)' }}>
           {totalPossible} cr\u00e9dits
         </div>
         <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>

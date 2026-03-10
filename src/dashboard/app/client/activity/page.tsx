@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface Activity {
   id: string;
@@ -220,6 +221,7 @@ export default function ActivityPage() {
             {meta.subtitle}
           </p>
         </div>
+        <PageExplanation pageId="activity" text={PAGE_META.activity?.helpText} />
         {activities.length > 0 && (
           <button
             onClick={() => {
@@ -298,7 +300,7 @@ export default function ActivityPage() {
                   position: 'absolute', left: -16, top: 14,
                   width: 10, height: 10, borderRadius: '50%',
                   background: 'var(--fz-bg, #FFFFFF)',
-                  border: '2px solid var(--accent, #7c3aed)',
+                  border: '2px solid var(--accent, var(--fz-accent, #0EA5E9))',
                   zIndex: 1,
                 }} />
 
@@ -336,7 +338,7 @@ export default function ActivityPage() {
 
                       {/* Description or resource info */}
                       {(activity.description || activity.resource_type) && (
-                        <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginTop: 4, lineHeight: 1.5 }}>
+                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginTop: 4, lineHeight: 1.5 }}>
                           {activity.description ?? (
                             <span>
                               {activity.resource_type}

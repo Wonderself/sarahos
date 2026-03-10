@@ -8,6 +8,7 @@ import {
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -216,6 +217,7 @@ export default function BudgetPage() {
           </Link>
         </div>
       </div>
+      <PageExplanation pageId="budget" text={PAGE_META.budget?.helpText} />
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
 

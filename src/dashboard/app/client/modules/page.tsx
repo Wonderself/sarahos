@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -115,10 +116,10 @@ export default function ModulesPage() {
       {/* ── Page Header ── */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.modules.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.modules.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.modules.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.modules.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.modules.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.modules.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.modules.helpText} />
           <div style={{ marginLeft: 'auto' }}>
@@ -128,6 +129,7 @@ export default function ModulesPage() {
           </div>
         </div>
       </div>
+      <PageExplanation pageId="modules" text={PAGE_META.modules?.helpText} />
 
       {/* ── Empty state ── */}
       {modules.length === 0 && (
@@ -147,7 +149,7 @@ export default function ModulesPage() {
       {modules.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {modules.map(mod => {
-            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: '#7c3aed' };
+            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: 'var(--fz-accent, #0EA5E9)' };
             return (
               <div key={mod.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, padding: 20, border: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
 

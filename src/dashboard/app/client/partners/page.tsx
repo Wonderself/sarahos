@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 interface Partner {
   name: string;
@@ -62,7 +63,7 @@ const PARTNER_CATEGORIES = [
         category: 'B2B2C Ultra-innovant',
         description: 'Solution marketing B2B2C de nouvelle generation. Automatisation, acquisition, fidélisation et analytics avances. Connectez-vous directement a la plateforme EYO.',
         emoji: 'rocket_launch',
-        color: '#7c3aed',
+        color: 'var(--fz-accent, #0EA5E9)',
         url: 'https://eyo-app.com',
       },
     ] as Partner[],
@@ -120,10 +121,10 @@ export default function PartnersPage() {
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.partners.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.partners.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.partners.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.partners.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.partners.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.partners.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.partners.helpText} />
         </div>
@@ -131,6 +132,7 @@ export default function PartnersPage() {
           Decouvrez notre ecosysteme de partenaires de confiance. Des experts dans leur domaine pour completer les services de <span className="fz-logo-word">Freenzy.io</span>.
         </p>
       </div>
+      <PageExplanation pageId="partners" text={PAGE_META.partners?.helpText} />
 
       {PARTNER_CATEGORIES.map((cat, catIdx) => (
         <div key={cat.title} style={{ marginBottom: 20 }}>

@@ -6,6 +6,7 @@ import { VIDEO_WORKFLOWS, PHOTO_WORKFLOWS } from '../../../lib/studio-workflows'
 import RoadmapBadge from '../../../components/studio/RoadmapBadge';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 const ICON_TO_EMOJI: Record<string, string> = {
   auto_awesome: '✨',
@@ -72,6 +73,7 @@ export default function StudioPage() {
           </p>
         </div>
       </div>
+      <PageExplanation pageId="studio" text={PAGE_META.studio?.helpText} />
 
       {/* ─── Tab Switcher ─── */}
       <div style={{

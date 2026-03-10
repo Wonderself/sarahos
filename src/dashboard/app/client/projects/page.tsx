@@ -5,6 +5,7 @@ import EmptyState from '../../../components/EmptyState';
 import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -172,6 +173,7 @@ export default function ProjectsPage() {
           </button>
         </div>
       </div>
+      <PageExplanation pageId="projects" text={PAGE_META.projects?.helpText} />
 
       {/* Stats */}
       {projects.length > 0 && (
@@ -226,7 +228,7 @@ export default function ProjectsPage() {
                 {/* Name & description */}
                 <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, paddingRight: isActive ? 60 : 16, color: 'var(--fz-text, #1E293B)' }}>{project.name}</div>
                 {project.description && (
-                  <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {project.description}
                   </div>
                 )}

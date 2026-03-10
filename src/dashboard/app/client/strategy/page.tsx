@@ -6,6 +6,7 @@ import { DEFAULT_AGENTS, type AgentTypeId } from '../../../lib/agent-config';
 import VoiceInput from '../../../components/VoiceInput';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Helper: get agent def by ID ───
 const agent = (id: AgentTypeId) => DEFAULT_AGENTS.find(a => a.id === id)!;
@@ -142,7 +143,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-assistante',
     icon: 'assignment',
-    color: '#7c3aed',
+    color: 'var(--fz-accent, #0EA5E9)',
     shortLabel: 'Organisation',
     title: 'Stratégie Organisation',
     subtitle: 'Optimisez votre quotidien et gagnez du temps',
@@ -821,7 +822,7 @@ Sois créative, centrée utilisateur et rigoureuse sur l'accessibilité.`,
   {
     agentId: 'fz-formation',
     icon: '🎓',
-    color: '#7c3aed',
+    color: 'var(--fz-accent, #0EA5E9)',
     shortLabel: 'Formation',
     title: 'Plan Formation & Développement',
     subtitle: 'Développez les compétences de vos équipes',
@@ -1062,7 +1063,7 @@ const DEFAULT_FOLDERS: ActionFolder[] = [
   { id: 'f-rh', name: 'RH & Recrutement', icon: 'group', color: '#14b8a6', items: [] },
   { id: 'f-juridique', name: 'Juridique & Admin', icon: 'balance', color: '#64748b', items: [] },
   { id: 'f-operations', name: 'Opérations', icon: 'settings', color: '#8b5cf6', items: [] },
-  { id: 'f-other', name: 'Divers', icon: 'folder', color: '#7c3aed', items: [] },
+  { id: 'f-other', name: 'Divers', icon: 'folder', color: 'var(--fz-accent, #0EA5E9)', items: [] },
 ];
 
 /* ═══════════════════════════════════════════
@@ -1454,19 +1455,20 @@ export default function StrategyPage() {
       {/* ─── Header ─── */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{PAGE_META.strategy.emoji}</span>
+          <span style={{ fontSize: 18 }}>{PAGE_META.strategy.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.strategy.title}</h1>
-            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.strategy.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.strategy.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.strategy.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.strategy.helpText} />
         </div>
       </div>
+      <PageExplanation pageId="strategy" text={PAGE_META.strategy?.helpText} />
 
       {/* ─── Objective Banner ─── */}
       <div className="card mb-20" style={{
         padding: 20,
-        background: objective.title ? 'linear-gradient(135deg, #7c3aed08, #06b6d408)' : 'var(--fz-bg-secondary, #F8FAFC)',
+        background: objective.title ? 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)' : 'var(--fz-bg-secondary, #F8FAFC)',
         border: objective.title ? '1px solid var(--accent)' : '1px dashed var(--fz-border, #E2E8F0)',
       }}>
         {!objective.title && !editingObjective ? (

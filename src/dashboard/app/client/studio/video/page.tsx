@@ -229,7 +229,7 @@ function VideoStudioContent() {
             setVideoUrl(null);
           }}
           style={{
-            padding: '4px 8px', borderRadius: 6, border: '1px solid var(--fz-border, #E2E8F0)',
+            padding: '4px 8px', borderRadius: 6, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             fontSize: 12, background: 'var(--fz-bg, #FFFFFF)', outline: 'none',
           }}
         >
@@ -337,7 +337,7 @@ function VideoStudioContent() {
               <div style={{
                 display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10,
                 padding: 14, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10,
-                border: '1px solid var(--fz-border, #E2E8F0)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               }}>
                 {/* Public cible */}
                 <div>
@@ -345,7 +345,7 @@ function VideoStudioContent() {
                     Public cible
                   </label>
                   <input type="text" value={advPublicCible} onChange={e => setAdvPublicCible(e.target.value)}
-                    placeholder="Entrepreneurs, mamans..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
+                    placeholder="Entrepreneurs, mamans..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
                 </div>
 
                 {/* Objectif */}
@@ -354,7 +354,7 @@ function VideoStudioContent() {
                     Objectif
                   </label>
                   <select value={advObjectif} onChange={e => setAdvObjectif(e.target.value)}
-                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
+                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
                     <option value="">— Choisir —</option>
                     <option value="Informer">Informer</option>
                     <option value="Vendre">Vendre</option>
@@ -370,7 +370,7 @@ function VideoStudioContent() {
                     Ton
                   </label>
                   <select value={advTon} onChange={e => setAdvTon(e.target.value)}
-                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
+                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
                     <option value="">— Choisir —</option>
                     <option value="Professionnel">Professionnel</option>
                     <option value="Décontracté">Décontracté</option>
@@ -386,7 +386,7 @@ function VideoStudioContent() {
                     Durée
                   </label>
                   <select value={advDuree} onChange={e => setAdvDuree(e.target.value)}
-                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
+                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
                     <option value="">— Choisir —</option>
                     <option value="< 30s">{'< 30s'}</option>
                     <option value="30s-1min">30s–1min</option>
@@ -402,7 +402,7 @@ function VideoStudioContent() {
                     Musique / ambiance
                   </label>
                   <input type="text" value={advMusique} onChange={e => setAdvMusique(e.target.value)}
-                    placeholder="Corporate, énergique..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
+                    placeholder="Corporate, énergique..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
                 </div>
 
                 {/* Contraintes */}
@@ -411,7 +411,7 @@ function VideoStudioContent() {
                     Contraintes
                   </label>
                   <input type="text" value={advContraintes} onChange={e => setAdvContraintes(e.target.value)}
-                    placeholder="Texte obligatoire, logo..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
+                    placeholder="Texte obligatoire, logo..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
                 </div>
               </div>
             )}

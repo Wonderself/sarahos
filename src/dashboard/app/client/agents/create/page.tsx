@@ -224,7 +224,7 @@ function CreateAgentContent() {
 
       {/* ── STEP 1: Identity ── */}
       {step === 1 && (
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)', padding: 24 }}>
+        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 24 }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, marginTop: 0, marginBottom: 20 }}>🎭 Identité de l'assistant</h2>
 
           <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
@@ -253,7 +253,7 @@ function CreateAgentContent() {
                 <input
                   type="text" value={name} onChange={e => setName(e.target.value)}
                   placeholder="Ex: Sophia — Assistante commerciale"
-                  style={{ width: '100%', padding: '10px 12px', borderRadius: 9, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 9, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
               <div>
@@ -262,7 +262,7 @@ function CreateAgentContent() {
                   value={role} onChange={e => setRole(e.target.value)}
                   placeholder="Ex: Gère les devis entrants, qualifie les prospects et organise les RDV commerciaux"
                   rows={2}
-                  style={{ width: '100%', padding: '10px 12px', borderRadius: 9, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: 9, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
@@ -287,7 +287,7 @@ function CreateAgentContent() {
 
       {/* ── STEP 2: Domain & Capabilities ── */}
       {step === 2 && (
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)', padding: 24 }}>
+        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 24 }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, marginTop: 0, marginBottom: 20 }}>🎯 Domaine & Capacités</h2>
 
           <div style={{ marginBottom: 20 }}>
@@ -340,7 +340,7 @@ function CreateAgentContent() {
 
       {/* ── STEP 3: Behavior ── */}
       {step === 3 && (
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)', padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, marginTop: 0, marginBottom: 0 }}>🧠 Comportement</h2>
 
           {/* Tone */}
@@ -364,13 +364,13 @@ function CreateAgentContent() {
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.3 }}>✅ Toujours faire</label>
             <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-              <input type="text" value={newAlways} onChange={e => setNewAlways(e.target.value)} placeholder="Ex: Mentionner le délai de livraison de 48h" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 12, outline: 'none' }} onKeyDown={e => { if (e.key === 'Enter' && newAlways.trim()) { setAlwaysDo(p => [...p, newAlways.trim()]); setNewAlways(''); } }} />
+              <input type="text" value={newAlways} onChange={e => setNewAlways(e.target.value)} placeholder="Ex: Mentionner le délai de livraison de 48h" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none' }} onKeyDown={e => { if (e.key === 'Enter' && newAlways.trim()) { setAlwaysDo(p => [...p, newAlways.trim()]); setNewAlways(''); } }} />
               <button onClick={() => { if (newAlways.trim()) { setAlwaysDo(p => [...p, newAlways.trim()]); setNewAlways(''); } }} style={{ padding: '8px 12px', borderRadius: 8, border: 'none', background: '#10b981', color: 'white', fontSize: 12, cursor: 'pointer' }}>+</button>
             </div>
             {alwaysDo.map((r, i) => (
               <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 4, alignItems: 'center' }}>
                 <span style={{ fontSize: 11, flex: 1, color: 'var(--fz-text-secondary, #64748B)' }}>✅ {r}</span>
-                <button onClick={() => setAlwaysDo(p => p.filter((_, j) => j !== i))} style={{ fontSize: 10, padding: '2px 6px', borderRadius: 5, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+                <button onClick={() => setAlwaysDo(p => p.filter((_, j) => j !== i))} style={{ fontSize: 10, padding: '2px 6px', borderRadius: 5, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
               </div>
             ))}
           </div>
@@ -379,13 +379,13 @@ function CreateAgentContent() {
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.3 }}>🚫 Ne jamais faire</label>
             <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-              <input type="text" value={newNever} onChange={e => setNewNever(e.target.value)} placeholder="Ex: Promettre des remises sans autorisation" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 12, outline: 'none' }} onKeyDown={e => { if (e.key === 'Enter' && newNever.trim()) { setNeverDo(p => [...p, newNever.trim()]); setNewNever(''); } }} />
+              <input type="text" value={newNever} onChange={e => setNewNever(e.target.value)} placeholder="Ex: Promettre des remises sans autorisation" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none' }} onKeyDown={e => { if (e.key === 'Enter' && newNever.trim()) { setNeverDo(p => [...p, newNever.trim()]); setNewNever(''); } }} />
               <button onClick={() => { if (newNever.trim()) { setNeverDo(p => [...p, newNever.trim()]); setNewNever(''); } }} style={{ padding: '8px 12px', borderRadius: 8, border: 'none', background: '#ef4444', color: 'white', fontSize: 12, cursor: 'pointer' }}>+</button>
             </div>
             {neverDo.map((r, i) => (
               <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 4, alignItems: 'center' }}>
                 <span style={{ fontSize: 11, flex: 1, color: 'var(--fz-text-secondary, #64748B)' }}>🚫 {r}</span>
-                <button onClick={() => setNeverDo(p => p.filter((_, j) => j !== i))} style={{ fontSize: 10, padding: '2px 6px', borderRadius: 5, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+                <button onClick={() => setNeverDo(p => p.filter((_, j) => j !== i))} style={{ fontSize: 10, padding: '2px 6px', borderRadius: 5, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
               </div>
             ))}
           </div>
@@ -397,7 +397,7 @@ function CreateAgentContent() {
               value={companyContext} onChange={e => setCompanyContext(e.target.value)}
               placeholder="Ce que l'assistant doit savoir sur votre entreprise, produits, offres..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 9, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 9, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
             />
           </div>
         </div>
@@ -407,10 +407,10 @@ function CreateAgentContent() {
       {step === 4 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Prompt généré */}
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)', padding: 20 }}>
+          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
               <h2 style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>📝 Prompt système généré</h2>
-              <button onClick={() => setSystemPrompt(buildPrompt())} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 7, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-secondary, #64748B)', fontWeight: 600 }}>
+              <button onClick={() => setSystemPrompt(buildPrompt())} style={{ fontSize: 11, height: 36, padding: '0 12px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-secondary, #64748B)', fontWeight: 600 }}>
                 🔄 Régénérer
               </button>
             </div>
@@ -418,7 +418,7 @@ function CreateAgentContent() {
               value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)}
               rows={8}
               style={{
-                width: '100%', padding: '10px 12px', borderRadius: 9, border: '1px solid var(--fz-border, #E2E8F0)',
+                width: '100%', padding: '10px 12px', borderRadius: 9, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 fontSize: 11, outline: 'none', fontFamily: 'monospace', resize: 'vertical', boxSizing: 'border-box',
                 background: 'var(--fz-bg-secondary, #F8FAFC)', lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)',
               }}
@@ -426,14 +426,14 @@ function CreateAgentContent() {
           </div>
 
           {/* Chat test */}
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)', padding: 20 }}>
+          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 20 }}>
             <h2 style={{ fontSize: 14, fontWeight: 700, marginTop: 0, marginBottom: 12 }}>🧪 Tester l&apos;assistant</h2>
             <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
               <input
                 type="text" value={testMessage} onChange={e => setTestMessage(e.target.value)}
                 placeholder="Envoyez un message test à votre assistant..."
                 onKeyDown={e => e.key === 'Enter' && sendTest()}
-                style={{ flex: 1, padding: '10px 12px', borderRadius: 9, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, outline: 'none' }}
+                style={{ flex: 1, padding: '10px 12px', borderRadius: 9, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none' }}
               />
               <button onClick={sendTest} disabled={testing || !testMessage.trim()} style={{
                 padding: '10px 18px', borderRadius: 9, border: 'none',
@@ -446,7 +446,7 @@ function CreateAgentContent() {
             {testResponse && (
               <div style={{
                 padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10,
-                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.6,
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.6,
               }}>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 6, alignItems: 'center' }}>
                   <span style={{ fontSize: 18 }}>{emoji}</span>
@@ -461,11 +461,11 @@ function CreateAgentContent() {
 
       {/* ── STEP 5: Deploy ── */}
       {step === 5 && (
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)', padding: 24 }}>
+        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 24 }}>
           <h2 style={{ fontSize: 15, fontWeight: 700, marginTop: 0, marginBottom: 20 }}>🚀 Déploiement</h2>
 
           {/* Recap card */}
-          <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 16, border: '1px solid var(--fz-border, #E2E8F0)', marginBottom: 20 }}>
+          <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', marginBottom: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 52, height: 52, borderRadius: 14, background: `${color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
                 {emoji}
@@ -510,7 +510,7 @@ function CreateAgentContent() {
       {/* Navigation */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
         {step > 1 ? (
-          <button onClick={() => setStep(s => s - 1)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+          <button onClick={() => setStep(s => s - 1)} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
             ← Précédent
           </button>
         ) : <div />}

@@ -181,7 +181,7 @@ export default function ReferralsPage() {
         <div className="section-title" style={{ marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Votre lien de parrainage</div>
         <div className="flex items-center gap-8 flex-wrap">
           <div className="flex-1" style={{
-            background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             borderRadius: 10, padding: '10px 14px', fontFamily: 'var(--font-mono, monospace)',
             fontSize: 12, color: 'var(--fz-text-muted)', minWidth: 200, wordBreak: 'break-all',
           }}>
@@ -208,7 +208,7 @@ export default function ReferralsPage() {
           <div style={{ textAlign: 'center' }}>
             <canvas
               ref={qrCanvasRef}
-              style={{ borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)' }}
+              style={{ borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}
               width={200}
               height={200}
             />
@@ -297,7 +297,7 @@ export default function ReferralsPage() {
         </div>
         <div style={{
           background: 'var(--fz-bg-secondary, #F8FAFC)',
-          border: '1px solid var(--fz-border, #E2E8F0)',
+          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 8, marginTop: 16, padding: '10px 14px',
         }}>
           <div className="text-xs" style={{ lineHeight: 1.6, color: 'var(--fz-text-muted, #94A3B8)' }}>

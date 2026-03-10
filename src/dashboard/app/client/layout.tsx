@@ -12,7 +12,7 @@ import OfflineBanner from '../../components/OfflineBanner';
 import PushPermissionBanner from '../../components/PushPermissionBanner';
 import { getFavorites } from '../../lib/favorite-agents';
 import { registerServiceWorker } from '../../lib/push-notifications';
-import { NAV_EMOJIS, SECTION_EMOJIS } from '../../lib/emoji-map';
+import { NAV_EMOJIS, SECTION_EMOJIS, PAGE_META } from '../../lib/emoji-map';
 import OnboardingCopilot from '../../components/OnboardingCopilot';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -793,44 +793,62 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     )}
     <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
       {/* Mobile Top Bar */}
-      <div className="mobile-topbar">
-        <div className="flex items-center gap-8">
-          <span className="fz-logo-text" style={{ fontSize: 16, color: 'var(--text-primary)' }}>freenzy.io</span>
-        </div>
-        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu">
-          <span style={{ fontSize: 20 }}>{sidebarOpen ? '✕' : '☰'}</span>
+      <div className="mobile-topbar" style={{ height: 48, background: 'var(--fz-bg, #fff)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
+        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--text-primary)', padding: 4 }}>
+          {sidebarOpen ? '✕' : '☰'}
         </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+          {(() => {
+            const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
+            const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
+            return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <span>freenzy.io</span>;
+          })()}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Link href="/client/notifications" style={{ fontSize: 18, textDecoration: 'none', position: 'relative' }} onClick={() => setNotifUnreadCount(0)}>
+            🔔
+            {notifUnreadCount > 0 && (
+              <span style={{ position: 'absolute', top: -4, right: -6, minWidth: 14, height: 14, borderRadius: 7, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
+            )}
+          </Link>
+          <div style={{
+            width: 24, height: 24, borderRadius: '50%',
+            background: 'var(--fz-accent-light, rgba(14,165,233,0.1))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 10, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)',
+          }}>
+            {(session?.displayName || session?.email || '?').slice(0, 2).toUpperCase()}
+          </div>
+        </div>
       </div>
 
       {/* Sidebar Overlay */}
       <div className={`sidebar-overlay${sidebarOpen ? ' active' : ''}`} onClick={() => setSidebarOpen(false)} />
 
       {/* Client Sidebar */}
-      <nav className={`client-sidebar${sidebarOpen ? ' sidebar-open' : ''}`}>
-        <div className="sidebar-header">
-          <div className="sidebar-logo">
-            <div>
-              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>freenzy.io</div>
-              <div className="sidebar-logo-version">Votre équipe IA</div>
-            </div>
-          </div>
-          <div className="flex-between items-center mt-4">
-            <div className="badge badge-success flex items-center gap-4" style={{ padding: '3px 8px' }}>
-              <span style={{ fontSize: 13 }}>✅</span>
-              <span className="text-xs font-bold" style={{ color: '#16a34a' }}>
-                {activeAgentCount} assistant{activeAgentCount > 1 ? 's' : ''} actif{activeAgentCount > 1 ? 's' : ''} / {ALL_AGENTS.length}
-              </span>
-            </div>
+      <nav className={`client-sidebar${sidebarOpen ? ' sidebar-open' : ''}`} style={{ background: 'var(--fz-bg-sidebar, var(--bg-primary))', width: 240, borderRight: '1px solid var(--fz-border, #E2E8F0)' }}>
+        <div className="sidebar-header" style={{ padding: '8px 12px 4px' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 10, height: 44,
+          }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: '50%',
+              background: 'var(--fz-accent-light, rgba(14,165,233,0.1))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 16, flexShrink: 0,
+            }}>🚀</div>
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>Mon espace</span>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', marginRight: 4 }}>▾</span>
             <button
               onClick={toggleDarkMode}
               title={darkMode ? 'Mode clair' : 'Mode sombre'}
               style={{
-                width: 28, height: 28, borderRadius: '50%', border: '1px solid var(--fz-border, #E2E8F0)',
+                width: 24, height: 24, borderRadius: '50%', border: '1px solid var(--fz-border, #E2E8F0)',
                 background: 'var(--fz-bg, #fff)', cursor: 'pointer', display: 'flex',
-                alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0,
+                alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
               }}
             >
-              <span style={{ fontSize: 13, lineHeight: 1 }}>{darkMode ? '☀️' : '🌙'}</span>
+              <span style={{ fontSize: 12, lineHeight: 1 }}>{darkMode ? '☀️' : '🌙'}</span>
             </button>
           </div>
         </div>
@@ -1071,13 +1089,23 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             const hiddenItems = sortedItems.filter(item => !item.visible);
             return (
               <div key={section.id} className="nav-section">
-                <div className="nav-section-title">{SECTION_EMOJIS[section.id] || '📌'} {section.title}</div>
+                <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+                  <span style={{ fontSize: 12 }}>{SECTION_EMOJIS[section.id] || '📌'}</span> {section.title}
+                </div>
                 {visibleItems.map(item => {
                   const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
                   const isNotifications = item.href === '/client/notifications';
                   return (
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
                       onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
+                      style={{
+                        height: 32, fontSize: 13, fontWeight: 400,
+                        ...(isActive ? {
+                          borderLeft: '3px solid var(--fz-accent, #0EA5E9)',
+                          background: 'var(--fz-bg-sidebar-active, rgba(14,165,233,0.08))',
+                          color: 'var(--fz-accent-text, #0EA5E9)',
+                        } : {}),
+                      }}
                     >
                       <span className="nav-icon"><span style={{ fontSize: 16 }}>{getNavEmoji(item.href)}</span></span>
                       <span style={{ flex: 1 }}>{item.label}</span>
@@ -1112,7 +1140,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Dynamic — Mes assistants personnalisés */}
           {customAgents.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title">Mes assistants IA</div>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+                <span style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
+              </div>
               {customAgents.map(agent => (
                   <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>🤖</span></span>
@@ -1129,7 +1159,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Dynamic — Mes modules publiés */}
           {publishedModules.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title">Mes modules</div>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+                <span style={{ fontSize: 12 }}>📦</span> Mes modules
+              </div>
               {publishedModules.map(mod => {
                 const href = `/client/modules/${mod.slug}`;
                 const isActive = pathname === href;
@@ -1149,7 +1181,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
           {/* Statut — hardcoded, always visible */}
           <div className="nav-section">
-            <div className="nav-section-title">Statut</div>
+            <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+              <span style={{ fontSize: 12 }}>📊</span> Statut
+            </div>
             <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
               <span className="nav-icon"><span style={{ fontSize: 16 }}>💳</span></span>
               <span style={{ flex: 1 }}>Crédits</span>
@@ -1181,7 +1215,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Hidden sections — at the very bottom, greyed out */}
           {hiddenSections.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ opacity: 0.5 }}>Sections masquées</div>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal', opacity: 0.5 }}>
+                <span style={{ fontSize: 12 }}>👁️</span> Sections masquées
+              </div>
               {hiddenSections.map(section => (
                 <div key={section.id} className="nav-link nav-link-hidden">
                   <span style={{ flex: 1, fontSize: 11 }}>{section.title}</span>
@@ -1212,12 +1248,21 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
 
-        {/* Footer compact — 1 ligne : Nom · Dossier */}
-        <div className="sidebar-footer-compact">
-          <span className="sidebar-footer-text">
-            {session.displayName}{activeProject ? ` · ${activeProject.name}` : ''}
+        {/* Footer compact — avatar + name + settings + logout */}
+        <div className="sidebar-footer-compact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+            background: 'var(--fz-accent-light, rgba(14,165,233,0.1))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 11, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)',
+          }}>
+            {(session.displayName || session.email || '?').slice(0, 2).toUpperCase()}
+          </div>
+          <span className="sidebar-footer-text" style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {session.displayName}
           </span>
-          <button onClick={logout} className="sidebar-footer-logout" title="Déconnexion">
+          <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }}>⚙️</Link>
+          <button onClick={logout} className="sidebar-footer-logout" title="Déconnexion" style={{ flexShrink: 0 }}>
             ⏻
           </button>
         </div>
@@ -1228,7 +1273,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'rgba(14,165,233,0.04)', borderBottom: '1px solid rgba(14,165,233,0.1)', fontSize: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'rgba(14,165,233,0.04)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', fontSize: 12 }}>
             <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
             <a href="/client/onboarding" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12 }}>
               Compléter →
@@ -1239,7 +1284,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', fontSize: 12,
             background: walletBalance < 10_000_000 ? 'rgba(239,68,68,0.04)' : 'rgba(245,158,11,0.04)',
-            borderBottom: `1px solid ${walletBalance < 10_000_000 ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)'}`,
+            borderBottom: '1px solid var(--fz-border, #E2E8F0)',
           }}>
             <span style={{ color: walletBalance < 10_000_000 ? '#DC2626' : '#D97706' }}>
               {walletBalance < 10_000_000 ? '⚠️' : '⚡'} {Math.round(walletBalance / 1_000_000)} crédits restants
@@ -1252,29 +1297,40 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
           </div>
         )}
+        <div style={{ padding: '8px 16px 0', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Link href="/client/dashboard" style={{ textDecoration: 'none', color: 'var(--fz-text-muted, #94A3B8)' }}>🏠 Accueil</Link>
+          {pathname !== '/client/dashboard' && (() => {
+            const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
+            const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
+            return meta ? <><span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>›</span><span>{meta.title}</span></> : null;
+          })()}
+        </div>
         <div className="page-container">{children}</div>
       </div>
 
       {/* Bottom Tab Bar (mobile) */}
       <div className="fz-bottom-tabs">
         <div className="fz-bottom-tabs-inner">
-          <Link href="/client/dashboard" className={`fz-tab-item${pathname === '/client/dashboard' ? ' active' : ''}`}>
-            <span className="fz-tab-emoji">🏠</span>
-            <span>Accueil</span>
-          </Link>
-          <Link href="/client/chat" className={`fz-tab-item${pathname.startsWith('/client/chat') ? ' active' : ''}`}>
-            <span className="fz-tab-emoji">💬</span>
-            <span>Chat</span>
-          </Link>
-          <Link href="/client/studio" className={`fz-tab-item${pathname.startsWith('/client/studio') ? ' active' : ''}`}>
-            <span className="fz-tab-emoji">🎬</span>
-            <span>Studio</span>
-          </Link>
-          <Link href="/client/agents" className={`fz-tab-item${pathname.startsWith('/client/agents') ? ' active' : ''}`}>
-            <span className="fz-tab-emoji">🤖</span>
-            <span>Assistants</span>
-          </Link>
-          <button className="fz-tab-item" onClick={() => setSidebarOpen(o => !o)}>
+          {[
+            { href: '/client/dashboard', emoji: '🏠', label: 'Accueil', match: (p: string) => p === '/client/dashboard' },
+            { href: '/client/chat', emoji: '💬', label: 'Chat', match: (p: string) => p.startsWith('/client/chat') },
+            { href: '/client/team', emoji: '👥', label: 'Equipe', match: (p: string) => p.startsWith('/client/team') },
+            { href: '/client/notifications', emoji: '🔔', label: 'Notifs', match: (p: string) => p.startsWith('/client/notifications') },
+          ].map(tab => {
+            const active = tab.match(pathname);
+            return (
+              <Link key={tab.href} href={tab.href} className={`fz-tab-item${active ? ' active' : ''}`}
+                style={active ? { color: 'var(--fz-accent-text, #0EA5E9)', background: 'var(--fz-accent-subtle, rgba(14,165,233,0.06))' } : { color: 'var(--text-muted, #94A3B8)' }}
+                onClick={tab.href === '/client/notifications' ? () => setNotifUnreadCount(0) : undefined}
+              >
+                <span className="fz-tab-emoji">{tab.emoji}</span>
+                <span>{tab.label}</span>
+              </Link>
+            );
+          })}
+          <button className="fz-tab-item" onClick={() => setSidebarOpen(o => !o)}
+            style={{ color: 'var(--text-muted, #94A3B8)' }}
+          >
             <span className="fz-tab-emoji">☰</span>
             <span>Menu</span>
           </button>

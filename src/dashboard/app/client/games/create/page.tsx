@@ -187,7 +187,7 @@ export default function CreateGamePage() {
             style={{
               width: '100%',
               background: 'var(--fz-bg-secondary, #F8FAFC)',
-              border: '1px solid var(--fz-border, #E2E8F0)',
+              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               borderRadius: 10,
               padding: '14px 16px',
               color: 'var(--fz-text, #1E293B)',
@@ -257,7 +257,7 @@ export default function CreateGamePage() {
                     background: 'var(--fz-bg-secondary, #F8FAFC)',
                     borderRadius: 10,
                     padding: '14px 16px',
-                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>

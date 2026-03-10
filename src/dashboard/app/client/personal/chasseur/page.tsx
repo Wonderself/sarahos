@@ -339,7 +339,7 @@ export default function ChasseurPage() {
                     </span>
                     <div style={{ display: 'flex', gap: 4 }}>
                       {STATUSES.indexOf(m.status) > 0 && (
-                        <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'back'); }} style={{ background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 4, cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: 'var(--fz-text-muted, #94A3B8)' }}>←</button>
+                        <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'back'); }} style={{ background: 'none', border: 'none', borderRadius: 8, boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: 'var(--fz-text-muted, #94A3B8)' }}>←</button>
                       )}
                       {STATUSES.indexOf(m.status) < STATUSES.length - 1 && (
                         <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'forward'); }} style={{ background: 'var(--accent)', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: '#fff' }}>→</button>

@@ -356,6 +356,30 @@ export const PAGE_META: Record<string, PageMeta> = {
     subtitle: 'Votre planning complet',
     helpText: 'Tous vos widgets, tâches, bien-être et objectifs du jour en un coup d\'oeil.',
   },
+  'team-members': {
+    emoji: '👤',
+    title: 'Membres',
+    subtitle: 'Gérez votre équipe',
+    helpText: 'Invitez des collaborateurs, gérez les rôles et suivez qui est en ligne.',
+  },
+  'team-groups': {
+    emoji: '🏘️',
+    title: 'Groupes',
+    subtitle: 'Organisez par équipe',
+    helpText: 'Créez des groupes thématiques pour organiser votre équipe par projet ou département.',
+  },
+  'team-communities': {
+    emoji: '🌐',
+    title: 'Communautés',
+    subtitle: 'Rejoignez et créez',
+    helpText: 'Découvrez des communautés, échangez avec d\'autres utilisateurs et créez la vôtre.',
+  },
+  'team-chat': {
+    emoji: '💬',
+    title: 'Chat d\'équipe',
+    subtitle: 'Messagerie collaborative',
+    helpText: 'Échangez avec votre équipe dans des channels, DMs et fils de discussion.',
+  },
 };
 
 // ─── Repondeur Mode Emojis ───────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
 import Link from 'next/link';
 import { recordEvent } from '../../../lib/gamification';
@@ -10,6 +10,8 @@ import { parseActionProposals, ACTION_TYPE_ICONS, ACTION_TYPE_LABELS, PRIORITY_L
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { Channel, TeamMessage, getChannels, getMessages as getTeamMessages, sendMessage as sendTeamMessage, editMessage, deleteMessage, addReaction, pinMessage, createChannel, deleteChannel, getUnreadCounts, markAsRead, searchMessages as searchTeamMessages, getThreadReplies, replyToThread, seedDefaultChannels } from '../../../lib/messaging';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 type CommMode = 'chat' | 'visio' | 'whatsapp' | 'repondeur';
 const COMM_TABS: { id: CommMode; label: string; icon: string }[] = [
@@ -134,7 +136,537 @@ function trackQuestion(question: string, faqEntriesList: FaqEntry[], agentId: st
   return false;
 }
 
+// ─── Get current user from session ───
+function getCurrentUser(): { id: string; name: string; emoji: string } {
+  try {
+    const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+    return { id: session.userId || 'me', name: session.displayName || 'Moi', emoji: '\u{1F464}' };
+  } catch { return { id: 'me', name: 'Moi', emoji: '\u{1F464}' }; }
+}
+
+// ─── MessageBubble sub-component ───
+interface MessageBubbleProps {
+  message: TeamMessage;
+  onReply?: () => void;
+  onReact?: (emoji: string) => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onPin?: () => void;
+}
+
+function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: MessageBubbleProps) {
+  const [showActions, setShowActions] = useState(false);
+  const QUICK_EMOJIS = ['\u{1F44D}', '\u2764\uFE0F', '\u{1F604}', '\u{1F389}', '\u{1F914}', '\u{1F44F}'];
+
+  return (
+    <div
+      className="cu-message"
+      style={{ position: 'relative' }}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
+    >
+      <div className="cu-message-avatar">
+        <div className="cu-avatar" style={{ width: 28, height: 28, fontSize: 14 }}>
+          {message.authorEmoji || '\u{1F464}'}
+        </div>
+      </div>
+      <div className="cu-message-content">
+        <div className="cu-message-header">
+          <span className="cu-message-author">{message.authorName}</span>
+          <span className="cu-message-time">
+            {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+          </span>
+          {message.isEdited && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>(modifi\u00e9)</span>}
+          {message.isPinned && <span style={{ fontSize: 12 }}>{'\u{1F4CC}'}</span>}
+        </div>
+        <div className="cu-message-text">{message.content}</div>
+        {message.reactions.length > 0 && (
+          <div className="cu-reactions">
+            {message.reactions.map((r, i) => (
+              <button
+                key={i}
+                className={`cu-reaction ${r.users.includes('me') ? 'cu-reaction-active' : ''}`}
+                onClick={() => onReact?.(r.emoji)}
+              >
+                <span>{r.emoji}</span>
+                <span className="cu-reaction-count">{r.users.length}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {showActions && (onReply || onReact || onPin || onEdit || onDelete) && (
+        <div style={{
+          position: 'absolute', top: -4, right: 8, display: 'flex', gap: 2,
+          background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border)', borderRadius: 6,
+          padding: '2px 4px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        }}>
+          {onReply && (
+            <button onClick={onReply} title="R\u00e9pondre" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4AC}'}</button>
+          )}
+          {onReact && (
+            <>
+              {QUICK_EMOJIS.map(e => (
+                <button key={e} onClick={() => onReact(e)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 2px', borderRadius: 4 }}>{e}</button>
+              ))}
+            </>
+          )}
+          {onPin && (
+            <button onClick={onPin} title="\u00c9pingler" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4CC}'}</button>
+          )}
+          {onEdit && (
+            <button onClick={onEdit} title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u270F\uFE0F'}</button>
+          )}
+          {onDelete && (
+            <button onClick={onDelete} title="Supprimer" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F5D1}\uFE0F'}</button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── TeamChat component ───
+function TeamChat() {
+  const isMobile = useIsMobile();
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [activeChannelId, setActiveChannelId] = useState<string>('');
+  const [teamMessages, setTeamMessagesState] = useState<TeamMessage[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+  const [threadMessageId, setThreadMessageId] = useState<string | null>(null);
+  const [threadReplies, setThreadReplies] = useState<TeamMessage[]>([]);
+  const [threadReply, setThreadReply] = useState('');
+  const [showCreateChannel, setShowCreateChannel] = useState(false);
+  const [newChannelName, setNewChannelName] = useState('');
+  const [newChannelEmoji, setNewChannelEmoji] = useState('\u{1F4AC}');
+  const [newChannelDesc, setNewChannelDesc] = useState('');
+  const [teamSearchQuery, setTeamSearchQuery] = useState('');
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState('');
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const teamMessagesEndRef = useRef<HTMLDivElement>(null);
+
+  const activeChannel = channels.find(c => c.id === activeChannelId);
+
+  const refreshChannels = useCallback(() => {
+    const ch = getChannels();
+    setChannels(ch);
+    return ch;
+  }, []);
+
+  const refreshMessages = useCallback((channelId: string) => {
+    const msgs = getTeamMessages(channelId);
+    setTeamMessagesState(msgs);
+  }, []);
+
+  const refreshUnread = useCallback(() => {
+    setUnreadCounts(getUnreadCounts());
+  }, []);
+
+  // Mount: seed + load
+  useEffect(() => {
+    seedDefaultChannels();
+    const ch = refreshChannels();
+    refreshUnread();
+    if (ch.length > 0) {
+      setActiveChannelId(ch[0].id);
+    }
+  }, [refreshChannels, refreshUnread]);
+
+  // On active channel change: load messages + mark as read
+  useEffect(() => {
+    if (!activeChannelId) return;
+    refreshMessages(activeChannelId);
+    markAsRead(activeChannelId);
+    refreshUnread();
+  }, [activeChannelId, refreshMessages, refreshUnread]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    teamMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [teamMessages]);
+
+  // Refresh thread replies when thread opens or messages change
+  useEffect(() => {
+    if (threadMessageId && activeChannelId) {
+      setThreadReplies(getThreadReplies(activeChannelId, threadMessageId));
+    }
+  }, [threadMessageId, activeChannelId, teamMessages]);
+
+  function handleSend() {
+    if (!newMessage.trim() || !activeChannelId) return;
+    const user = getCurrentUser();
+    if (editingMessageId) {
+      editMessage(activeChannelId, editingMessageId, newMessage.trim());
+      setEditingMessageId(null);
+      setEditContent('');
+    } else {
+      sendTeamMessage(activeChannelId, newMessage.trim(), user);
+    }
+    setNewMessage('');
+    refreshMessages(activeChannelId);
+    refreshUnread();
+    markAsRead(activeChannelId);
+  }
+
+  function handleThreadSend() {
+    if (!threadReply.trim() || !threadMessageId || !activeChannelId) return;
+    const user = getCurrentUser();
+    replyToThread(activeChannelId, threadMessageId, threadReply.trim(), user);
+    setThreadReply('');
+    refreshMessages(activeChannelId);
+    setThreadReplies(getThreadReplies(activeChannelId, threadMessageId));
+  }
+
+  function handleReaction(messageId: string, emoji: string) {
+    if (!activeChannelId) return;
+    const user = getCurrentUser();
+    addReaction(activeChannelId, messageId, emoji, user.id);
+    refreshMessages(activeChannelId);
+  }
+
+  function handleEdit(messageId: string, content: string) {
+    setEditingMessageId(messageId);
+    setEditContent(content);
+    setNewMessage(content);
+  }
+
+  function handleDeleteMsg(messageId: string) {
+    if (!activeChannelId) return;
+    deleteMessage(activeChannelId, messageId);
+    refreshMessages(activeChannelId);
+  }
+
+  function handlePin(messageId: string) {
+    if (!activeChannelId) return;
+    pinMessage(activeChannelId, messageId);
+    refreshMessages(activeChannelId);
+  }
+
+  function handleCreateChannel() {
+    if (!newChannelName.trim()) return;
+    createChannel(newChannelName.trim(), 'channel', newChannelEmoji, newChannelDesc.trim());
+    setNewChannelName('');
+    setNewChannelEmoji('\u{1F4AC}');
+    setNewChannelDesc('');
+    setShowCreateChannel(false);
+    const ch = refreshChannels();
+    if (ch.length > 0) setActiveChannelId(ch[ch.length - 1].id);
+  }
+
+  function handleDeleteChannel(channelId: string) {
+    deleteChannel(channelId);
+    const ch = refreshChannels();
+    if (activeChannelId === channelId && ch.length > 0) {
+      setActiveChannelId(ch[0].id);
+    }
+  }
+
+  function handleThreadKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleThreadSend();
+    }
+  }
+
+  function handleChannelSelect(channelId: string) {
+    setActiveChannelId(channelId);
+    if (isMobile) setShowMobileSidebar(false);
+  }
+
+  // Filter channels by search
+  const filteredChannels = teamSearchQuery.trim()
+    ? channels.filter(c => c.name.toLowerCase().includes(teamSearchQuery.toLowerCase()) || c.description.toLowerCase().includes(teamSearchQuery.toLowerCase()))
+    : channels;
+
+  const pinnedChannels = filteredChannels.filter(c => c.isPinned);
+  const regularChannels = filteredChannels.filter(c => c.type === 'channel' && !c.isPinned);
+  const groupChannels = filteredChannels.filter(c => c.type === 'group');
+
+  // Channel sidebar content (shared between mobile and desktop)
+  const sidebarContent = (
+    <>
+      <div style={{ padding: '8px', borderBottom: '1px solid var(--fz-border-light, var(--fz-border, #E2E8F0))' }}>
+        <input
+          placeholder="Rechercher..."
+          value={teamSearchQuery}
+          onChange={e => setTeamSearchQuery(e.target.value)}
+          style={{ width: '100%', height: 28, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '0 8px', fontSize: 12, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+        />
+      </div>
+      {pinnedChannels.length > 0 && (
+        <>
+          <div className="cu-channel-section-title">{'\u{1F4CC}'} \u00c9pingl\u00e9s</div>
+          {pinnedChannels.map(channel => (
+            <div
+              key={channel.id}
+              className={`cu-channel-item ${activeChannelId === channel.id ? 'cu-channel-item-active' : ''}`}
+              onClick={() => handleChannelSelect(channel.id)}
+            >
+              <span className="cu-channel-emoji">{channel.emoji}</span>
+              <span className="cu-channel-name">{channel.name}</span>
+              {(unreadCounts[channel.id] ?? 0) > 0 && (
+                <span className="cu-channel-unread">{unreadCounts[channel.id]}</span>
+              )}
+            </div>
+          ))}
+        </>
+      )}
+      <div className="cu-channel-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>{'\u{1F4AC}'} Channels</span>
+        <button onClick={() => setShowCreateChannel(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>+</button>
+      </div>
+      {regularChannels.map(channel => (
+        <div
+          key={channel.id}
+          className={`cu-channel-item ${activeChannelId === channel.id ? 'cu-channel-item-active' : ''}`}
+          onClick={() => handleChannelSelect(channel.id)}
+        >
+          <span className="cu-channel-emoji">{channel.emoji}</span>
+          <span className="cu-channel-name">{channel.name}</span>
+          {(unreadCounts[channel.id] ?? 0) > 0 && (
+            <span className="cu-channel-unread">{unreadCounts[channel.id]}</span>
+          )}
+        </div>
+      ))}
+      {groupChannels.length > 0 && (
+        <>
+          <div className="cu-channel-section-title">{'\u{1F465}'} Groupes</div>
+          {groupChannels.map(channel => (
+            <div
+              key={channel.id}
+              className={`cu-channel-item ${activeChannelId === channel.id ? 'cu-channel-item-active' : ''}`}
+              onClick={() => handleChannelSelect(channel.id)}
+            >
+              <span className="cu-channel-emoji">{channel.emoji}</span>
+              <span className="cu-channel-name">{channel.name}</span>
+              {(unreadCounts[channel.id] ?? 0) > 0 && (
+                <span className="cu-channel-unread">{unreadCounts[channel.id]}</span>
+              )}
+            </div>
+          ))}
+        </>
+      )}
+    </>
+  );
+
+  return (
+    <div style={{ display: 'flex', height: 'calc(100vh - 140px)', borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
+      {/* Mobile sidebar toggle */}
+      {isMobile && (
+        <button
+          onClick={() => setShowMobileSidebar(true)}
+          style={{
+            position: 'absolute', top: 8, left: 8, zIndex: 10, background: 'var(--fz-bg, #FFFFFF)',
+            border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '4px 8px',
+            cursor: 'pointer', fontSize: 14,
+          }}
+        >
+          {'\u2630'}
+        </button>
+      )}
+
+      {/* Mobile sidebar overlay */}
+      {isMobile && showMobileSidebar && (
+        <>
+          <div onClick={() => setShowMobileSidebar(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 40 }} />
+          <div className="cu-channel-sidebar" style={{ position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 50, width: 260 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+              <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>Channels</span>
+              <button onClick={() => setShowMobileSidebar(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2715'}</button>
+            </div>
+            {sidebarContent}
+          </div>
+        </>
+      )}
+
+      {/* Desktop sidebar */}
+      {!isMobile && (
+        <div className="cu-channel-sidebar" style={{ width: 220, flexShrink: 0 }}>
+          {sidebarContent}
+        </div>
+      )}
+
+      {/* Message Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Channel Header */}
+        <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          {isMobile && <div style={{ width: 28 }} />}
+          <span style={{ fontSize: 20 }}>{activeChannel?.emoji}</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{activeChannel?.name}</div>
+            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{activeChannel?.description}</div>
+          </div>
+          {activeChannel && !activeChannel.isPinned && (
+            <button
+              onClick={() => handleDeleteChannel(activeChannel.id)}
+              title="Supprimer le channel"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}
+            >
+              {'\u{1F5D1}\uFE0F'}
+            </button>
+          )}
+        </div>
+
+        {/* Messages */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }} className="fz-scroll">
+          {teamMessages.length === 0 && (
+            <div className="cu-empty-state">
+              <div className="cu-empty-emoji">{activeChannel?.emoji || '\u{1F4AC}'}</div>
+              <div className="cu-empty-title">Bienvenue dans #{activeChannel?.name || 'channel'}</div>
+              <div className="cu-empty-desc">Commencez la conversation en envoyant un message.</div>
+            </div>
+          )}
+          {teamMessages.filter(m => !m.threadId).map(msg => {
+            const user = getCurrentUser();
+            const isOwn = msg.authorId === user.id;
+            return (
+              <div key={msg.id}>
+                {editingMessageId === msg.id ? (
+                  <div style={{ padding: '8px 16px', display: 'flex', gap: 8 }}>
+                    <input
+                      value={newMessage}
+                      onChange={e => setNewMessage(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') { handleSend(); }
+                        if (e.key === 'Escape') { setEditingMessageId(null); setNewMessage(''); }
+                      }}
+                      style={{ flex: 1, padding: '6px 10px', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, fontSize: 13, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+                      autoFocus
+                    />
+                    <button onClick={handleSend} style={{ background: 'var(--accent, #7c3aed)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 }}>OK</button>
+                    <button onClick={() => { setEditingMessageId(null); setNewMessage(''); }} style={{ background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2715'}</button>
+                  </div>
+                ) : (
+                  <MessageBubble
+                    message={msg}
+                    onReply={() => setThreadMessageId(msg.id)}
+                    onReact={(emoji) => handleReaction(msg.id, emoji)}
+                    onEdit={isOwn ? () => handleEdit(msg.id, msg.content) : undefined}
+                    onDelete={isOwn ? () => handleDeleteMsg(msg.id) : undefined}
+                    onPin={() => handlePin(msg.id)}
+                  />
+                )}
+                {/* Thread indicator */}
+                {(() => {
+                  const replyCount = teamMessages.filter(m => m.threadId === msg.id).length;
+                  if (replyCount === 0) return null;
+                  return (
+                    <button
+                      onClick={() => setThreadMessageId(msg.id)}
+                      style={{ marginLeft: 44, marginBottom: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--accent, #7c3aed)', fontFamily: 'inherit' }}
+                    >
+                      {'\u{1F4AC}'} {replyCount} r\u00e9ponse{replyCount !== 1 ? 's' : ''}
+                    </button>
+                  );
+                })()}
+              </div>
+            );
+          })}
+          <div ref={teamMessagesEndRef} />
+        </div>
+
+        {/* Composer */}
+        <div className="cu-composer">
+          <textarea
+            className="cu-composer-input"
+            value={newMessage}
+            onChange={e => setNewMessage(e.target.value)}
+            placeholder={editingMessageId ? 'Modifier le message...' : '\u00c9crire un message...'}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+            rows={1}
+          />
+          <button className="cu-composer-send" onClick={handleSend} disabled={!newMessage.trim()}>{'\u27A4'}</button>
+        </div>
+      </div>
+
+      {/* Thread Panel */}
+      {threadMessageId && (
+        <div className="cu-thread-panel" style={isMobile ? { position: 'fixed', inset: 0, zIndex: 50, width: '100%' } : undefined}>
+          <div className="cu-thread-header">
+            <span>Fil de discussion</span>
+            <button className="cu-thread-close" onClick={() => setThreadMessageId(null)}>{'\u2715'}</button>
+          </div>
+          <div className="cu-thread-messages fz-scroll">
+            {(() => {
+              const parentMsg = teamMessages.find(m => m.id === threadMessageId);
+              if (!parentMsg) return null;
+              return <MessageBubble message={parentMsg} onReact={(emoji) => handleReaction(parentMsg.id, emoji)} />;
+            })()}
+            <div style={{ borderTop: '1px solid var(--fz-border-light, var(--fz-border, #E2E8F0))', margin: '8px 0', padding: '4px 12px', fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              {threadReplies.length} r\u00e9ponse{threadReplies.length !== 1 ? 's' : ''}
+            </div>
+            {threadReplies.map(reply => (
+              <MessageBubble key={reply.id} message={reply} onReact={(emoji) => handleReaction(reply.id, emoji)} />
+            ))}
+          </div>
+          <div className="cu-composer" style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <textarea
+              className="cu-composer-input"
+              value={threadReply}
+              onChange={e => setThreadReply(e.target.value)}
+              placeholder="R\u00e9pondre..."
+              onKeyDown={handleThreadKeyDown}
+              rows={1}
+            />
+            <button className="cu-composer-send" onClick={handleThreadSend} disabled={!threadReply.trim()}>{'\u27A4'}</button>
+          </div>
+        </div>
+      )}
+
+      {/* Create Channel Modal */}
+      {showCreateChannel && (
+        <>
+          <div className="cu-modal-overlay" onClick={() => setShowCreateChannel(false)} />
+          <div className="cu-modal">
+            <div className="cu-modal-header">
+              <span className="cu-modal-title">Cr\u00e9er un channel</span>
+              <button onClick={() => setShowCreateChannel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2715'}</button>
+            </div>
+            <div className="cu-modal-body">
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Emoji</label>
+                <input
+                  value={newChannelEmoji}
+                  onChange={e => setNewChannelEmoji(e.target.value)}
+                  style={{ width: 60, height: 36, textAlign: 'center', fontSize: 20, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, background: 'var(--fz-bg, #FFFFFF)', outline: 'none' }}
+                />
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Nom du channel</label>
+                <input
+                  value={newChannelName}
+                  onChange={e => setNewChannelName(e.target.value)}
+                  placeholder="ex: marketing"
+                  style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '0 10px', fontSize: 13, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+                  onKeyDown={e => { if (e.key === 'Enter') handleCreateChannel(); }}
+                  autoFocus
+                />
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Description</label>
+                <input
+                  value={newChannelDesc}
+                  onChange={e => setNewChannelDesc(e.target.value)}
+                  placeholder="De quoi parle ce channel ?"
+                  style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '0 10px', fontSize: 13, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+                />
+              </div>
+            </div>
+            <div className="cu-modal-footer">
+              <button onClick={() => setShowCreateChannel(false)} style={{ padding: '8px 16px', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', fontFamily: 'inherit' }}>Annuler</button>
+              <button onClick={handleCreateChannel} disabled={!newChannelName.trim()} style={{ padding: '8px 16px', border: 'none', borderRadius: 6, background: 'var(--accent, #7c3aed)', color: 'white', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', opacity: newChannelName.trim() ? 1 : 0.5 }}>Cr\u00e9er</button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function ChatPage() {
+  const [chatMode, setChatMode] = useState<'ai' | 'team'>('ai');
   const [agents, setAgents] = useState<ResolvedAgent[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -704,6 +1236,19 @@ export default function ChatPage() {
       </div>
       <PageExplanation pageId="chat" text={PAGE_META.chat?.helpText} />
 
+      {/* ═══ MODE SWITCHER TABS ═══ */}
+      <div className="cu-tabs" style={{ padding: '0 16px' }}>
+        <button className={`cu-tab ${chatMode === 'ai' ? 'cu-tab-active' : ''}`} onClick={() => setChatMode('ai')}>
+          <span style={{ fontSize: 16 }}>{'\u{1F916}'}</span> Assistants IA
+        </button>
+        <button className={`cu-tab ${chatMode === 'team' ? 'cu-tab-active' : ''}`} onClick={() => setChatMode('team')}>
+          <span style={{ fontSize: 16 }}>{'\u{1F465}'}</span> \u00c9quipe
+        </button>
+      </div>
+
+      {chatMode === 'team' && <TeamChat />}
+
+      {chatMode === 'ai' && <>
       {/* ═══ COMPACT HEADER ═══ */}
       <div className="chat-header-compact">
         {/* Agent info — clickable to open agent selector */}
@@ -1475,6 +2020,7 @@ export default function ChatPage() {
             </div>
           ))}
         </div>
+      </>}
       </>}
     </div>
   );

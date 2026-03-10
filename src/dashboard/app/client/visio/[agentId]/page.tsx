@@ -430,7 +430,7 @@ export default function VisioCallPage() {
               onKeyDown={e => { if (e.key === 'Enter') sendTextMessage(); }}
               placeholder={isTextMode ? 'Tapez votre message...' : 'Ou tapez ici...'}
               disabled={processing}
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 14, outline: 'none' }}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 14, outline: 'none' }}
             />
             <button
               onClick={sendTextMessage}

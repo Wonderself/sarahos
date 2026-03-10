@@ -151,7 +151,7 @@ export default function ModulesPage() {
           {modules.map(mod => {
             const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: 'var(--fz-accent, #0EA5E9)' };
             return (
-              <div key={mod.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, padding: 20, border: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
+              <div key={mod.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, padding: 20, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
 
                 {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -207,7 +207,7 @@ export default function ModulesPage() {
                     {mod.public_access && (
                       <button
                         onClick={() => copyPublicUrl(mod)}
-                        style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
+                        style={{ padding: '5px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'transparent', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
                         title="Copier l'URL publique"
                       >
                         {copyDone === mod.id ? '✅' : '🔗'}
@@ -216,7 +216,7 @@ export default function ModulesPage() {
                     {/* Edit */}
                     <Link
                       href={`/client/modules/builder?edit=${mod.id}`}
-                      style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', background: 'transparent', textDecoration: 'none', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
+                      style={{ padding: '5px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'transparent', textDecoration: 'none', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
                       title="Modifier"
                     >
                       ✏️
@@ -225,7 +225,7 @@ export default function ModulesPage() {
                     <button
                       onClick={() => setConfirmDelete(mod)}
                       disabled={deleting === mod.id}
-                      style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
+                      style={{ padding: '5px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
                       title="Supprimer"
                     >
                       🗑️
@@ -241,7 +241,7 @@ export default function ModulesPage() {
       {/* ── Confirm delete modal ── */}
       {confirmDelete && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20, padding: 32, width: 400, maxWidth: '90vw', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20, padding: 32, width: 400, maxWidth: '90vw', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Supprimer le module ?</h3>
             <p style={{ color: 'var(--fz-text-secondary, #64748B)', marginBottom: 24 }}>
               Le module <strong>{confirmDelete.name}</strong> et tous ses enregistrements ({confirmDelete.record_count}) seront définitivement supprimés.

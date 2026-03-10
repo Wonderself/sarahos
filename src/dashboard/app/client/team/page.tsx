@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
@@ -17,6 +17,15 @@ import {
   type AgentTypeId,
   type ResolvedAgent,
 } from '../../../lib/agent-config';
+import {
+  Team, TeamMember, Group, Community,
+  getTeams, createTeam, updateTeam, deleteTeam, getTeamById,
+  addMember, removeMember, updateMemberRole, updateMemberStatus,
+  getOnlineMembers, searchMembers, getMemberStats, inviteMember,
+  getGroups, createGroup, updateGroup, deleteGroup, addGroupMember, removeGroupMember,
+  getCommunities, createCommunity, joinCommunity, leaveCommunity, getJoinedCommunities, isJoined,
+  seedDefaults, getCurrentUser
+} from '../../../lib/team-management';
 
 interface TeamAgent {
   id: string;
@@ -54,7 +63,7 @@ function buildTeamAgents(tier: string): TeamAgent[] {
       name: resolved.name,
       role: resolved.role,
       emoji: resolved.emoji,
-      materialIcon: (resolved as any).materialIcon ?? 'smart_toy',
+      materialIcon: (resolved as unknown as Record<string, unknown>).materialIcon as string ?? 'smart_toy',
       level: def.level,
       description: def.description,
       tagline: def.tagline,
@@ -68,25 +77,78 @@ function buildTeamAgents(tier: string): TeamAgent[] {
   });
 }
 
+type TabId = 'agents' | 'members' | 'groups' | 'communities' | 'activity';
+
+const GROUP_COLORS = ['#0EA5E9', '#7C3AED', '#16A34A', '#D97706', '#DC2626', '#E11D48'];
+
+function roleColor(role: string): string {
+  switch (role) {
+    case 'owner': return 'warning';
+    case 'admin': return 'accent';
+    case 'member': return 'success';
+    case 'viewer': return 'neutral';
+    default: return 'neutral';
+  }
+}
+
+function roleLabelFr(role: string): string {
+  switch (role) {
+    case 'owner': return 'Propriétaire';
+    case 'admin': return 'Admin';
+    case 'member': return 'Membre';
+    case 'viewer': return 'Lecteur';
+    default: return role;
+  }
+}
+
 export default function TeamPage() {
   const [agents, setAgents] = useState<TeamAgent[]>([]);
   const [tier, setTier] = useState('guest');
   const [activeIds, setActiveIds] = useState<AgentTypeId[]>(['fz-repondeur']);
-  const [activeTab, setActiveTab] = useState<'agents' | 'workspace' | 'activity'>('agents');
-  // Workspace state
+  const [activeTab, setActiveTab] = useState<TabId>('agents');
+
+  // Workspace state (kept for activity tab)
   const [workspaces, setWorkspaces] = useState<Array<{ id: string; name: string; slug: string; plan: string; maxMembers: number }>>([]);
   const [activeWorkspace, setActiveWorkspace] = useState<string | null>(null);
-  const [members, setMembers] = useState<Array<{ id: string; userId: string; role: string; email?: string; displayName?: string }>>([]);
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState('viewer');
-  const [inviting, setInviting] = useState(false);
-  const [pendingInvites, setPendingInvites] = useState<Array<{ id: string; email: string; role: string }>>([]);
   const [wsActivity, setWsActivity] = useState<Array<{ id: string; action: string; userName?: string; createdAt: string }>>([]);
-  const [wsName, setWsName] = useState('');
-  const [creatingWs, setCreatingWs] = useState(false);
   const [error, setError] = useState('');
 
+  // Members tab state
+  const [teams, setTeamsState] = useState<Team[]>([]);
+  const [membersLocal, setMembersLocal] = useState<TeamMember[]>([]);
+  const [memberSearch, setMemberSearch] = useState('');
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState<'admin' | 'member' | 'viewer'>('member');
+  const [memberSort, setMemberSort] = useState<'name' | 'role' | 'status'>('status');
+  const [memberActionId, setMemberActionId] = useState<string | null>(null);
+  const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
+
+  // Groups tab state
+  const [groups, setGroupsLocal] = useState<Group[]>([]);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupEmoji, setNewGroupEmoji] = useState('👥');
+  const [newGroupColor, setNewGroupColor] = useState('#0EA5E9');
+  const [newGroupDesc, setNewGroupDesc] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [editingGroup, setEditingGroup] = useState<Group | null>(null);
+  const [confirmDeleteGroupId, setConfirmDeleteGroupId] = useState<string | null>(null);
+
+  // Communities tab state
+  const [communities, setCommunitiesLocal] = useState<Community[]>([]);
+  const [joinedIds, setJoinedIds] = useState<string[]>([]);
+  const [showCreateCommunity, setShowCreateCommunity] = useState(false);
+  const [communitySearch, setCommunitySearch] = useState('');
+  const [newCommunityName, setNewCommunityName] = useState('');
+  const [newCommunityEmoji, setNewCommunityEmoji] = useState('🌐');
+  const [newCommunityDesc, setNewCommunityDesc] = useState('');
+  const [newCommunityTags, setNewCommunityTags] = useState('');
+  const [newCommunityPublic, setNewCommunityPublic] = useState(true);
+  const [newCommunityRules, setNewCommunityRules] = useState('');
+
   useEffect(() => {
+    // Agents init
     try {
       const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
       const t = session.tier || 'guest';
@@ -96,7 +158,19 @@ export default function TeamPage() {
       setAgents(buildTeamAgents('guest'));
     }
     setActiveIds(getActiveAgentIds());
-    // Load workspaces
+
+    // Seed and load team management data
+    seedDefaults();
+    const loadedTeams = getTeams();
+    setTeamsState(loadedTeams);
+    if (loadedTeams.length > 0) {
+      setMembersLocal(loadedTeams[0].members);
+    }
+    setGroupsLocal(getGroups());
+    setCommunitiesLocal(getCommunities());
+    setJoinedIds(getJoinedCommunities());
+
+    // Load workspaces for activity tab
     loadWorkspaces();
   }, []);
 
@@ -118,7 +192,7 @@ export default function TeamPage() {
         }
       }
     } catch {
-      setError('Impossible de charger les espaces de travail');
+      // silently fail
     }
   }
 
@@ -126,70 +200,16 @@ export default function TeamPage() {
     const token = getToken();
     const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
     try {
-      const [membersRes, activityRes] = await Promise.all([
-        fetch(`/api/portal/workspaces/${wsId}/members`, { headers }),
-        fetch(`/api/portal/workspaces/${wsId}/activity`, { headers }),
-      ]);
-      if (membersRes.ok) { const d = await membersRes.json(); setMembers(d.members ?? []); }
+      const activityRes = await fetch(`/api/portal/workspaces/${wsId}/activity`, { headers });
       if (activityRes.ok) { const d = await activityRes.json(); setWsActivity(d.activity ?? []); }
     } catch {
-      setError('Impossible de charger les données de l\'espace');
+      // silently fail
     }
-  }
-
-  async function createWorkspace() {
-    if (!wsName.trim()) return;
-    setCreatingWs(true);
-    setError('');
-    try {
-      const token = getToken();
-      const res = await fetch('/api/portal/workspaces', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ name: wsName.trim() }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setWorkspaces(prev => [...prev, data.workspace]);
-        setActiveWorkspace(data.workspace.id);
-        setWsName('');
-        loadWorkspaceData(data.workspace.id);
-      } else {
-        setError('Erreur lors de la création de l\'espace');
-      }
-    } catch {
-      setError('Erreur de connexion');
-    }
-    setCreatingWs(false);
-  }
-
-  async function sendInvite() {
-    if (!inviteEmail.trim() || !activeWorkspace) return;
-    setInviting(true);
-    setError('');
-    try {
-      const token = getToken();
-      const res = await fetch(`/api/portal/workspaces/${activeWorkspace}/invite`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({ email: inviteEmail.trim(), role: inviteRole }),
-      });
-      if (res.ok) {
-        setInviteEmail('');
-        loadWorkspaceData(activeWorkspace);
-      } else {
-        setError('Erreur lors de l\'envoi de l\'invitation');
-      }
-    } catch {
-      setError('Erreur de connexion');
-    }
-    setInviting(false);
   }
 
   function handleToggleAgent(agentId: AgentTypeId) {
     const updated = toggleAgent(agentId);
     setActiveIds([...updated]);
-    // Persist to backend
     try {
       const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
       if (session.token) {
@@ -202,15 +222,162 @@ export default function TeamPage() {
     } catch { /* */ }
   }
 
+  // ── Members helpers ──
+  function refreshMembers() {
+    const loadedTeams = getTeams();
+    setTeamsState(loadedTeams);
+    if (loadedTeams.length > 0) {
+      setMembersLocal(loadedTeams[0].members);
+    }
+  }
+
+  function handleInviteMember() {
+    if (!inviteEmail.trim() || teams.length === 0) return;
+    inviteMember(teams[0].id, inviteEmail.trim(), inviteRole);
+    setInviteEmail('');
+    setInviteRole('member');
+    setShowInviteModal(false);
+    refreshMembers();
+  }
+
+  function handleChangeRole(memberId: string, newRole: TeamMember['role']) {
+    if (teams.length === 0) return;
+    updateMemberRole(teams[0].id, memberId, newRole);
+    setMemberActionId(null);
+    refreshMembers();
+  }
+
+  function handleRemoveMember(memberId: string) {
+    if (teams.length === 0) return;
+    removeMember(teams[0].id, memberId);
+    setConfirmRemoveId(null);
+    setMemberActionId(null);
+    refreshMembers();
+  }
+
+  const filteredMembers = memberSearch
+    ? membersLocal.filter(m =>
+        m.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
+        m.email.toLowerCase().includes(memberSearch.toLowerCase())
+      )
+    : membersLocal;
+
+  const onlineMembers = filteredMembers.filter(m => m.status !== 'offline');
+  const offlineMembers = filteredMembers.filter(m => m.status === 'offline');
+  const memberStats = teams.length > 0 ? getMemberStats(teams[0].id) : { total: 0, online: 0, admins: 0 };
+
+  // ── Groups helpers ──
+  function refreshGroups() {
+    setGroupsLocal(getGroups());
+  }
+
+  function handleCreateGroup() {
+    if (!newGroupName.trim() || teams.length === 0) return;
+    createGroup(newGroupName.trim(), teams[0].id, newGroupEmoji, newGroupColor, newGroupDesc.trim());
+    setNewGroupName('');
+    setNewGroupEmoji('👥');
+    setNewGroupColor('#0EA5E9');
+    setNewGroupDesc('');
+    setShowCreateGroup(false);
+    refreshGroups();
+  }
+
+  function handleDeleteGroup(groupId: string) {
+    deleteGroup(groupId);
+    setConfirmDeleteGroupId(null);
+    if (selectedGroup?.id === groupId) setSelectedGroup(null);
+    refreshGroups();
+  }
+
+  function handleUpdateGroup() {
+    if (!editingGroup) return;
+    updateGroup(editingGroup.id, {
+      name: editingGroup.name,
+      emoji: editingGroup.emoji,
+      color: editingGroup.color,
+      description: editingGroup.description,
+    });
+    setEditingGroup(null);
+    refreshGroups();
+    // Refresh selectedGroup if it was edited
+    if (selectedGroup?.id === editingGroup.id) {
+      const updated = getGroups().find(g => g.id === editingGroup.id);
+      if (updated) setSelectedGroup(updated);
+    }
+  }
+
+  function handleAddGroupMember(groupId: string, memberId: string) {
+    addGroupMember(groupId, memberId);
+    refreshGroups();
+    const updated = getGroups().find(g => g.id === groupId);
+    if (updated) setSelectedGroup(updated);
+  }
+
+  function handleRemoveGroupMember(groupId: string, memberId: string) {
+    removeGroupMember(groupId, memberId);
+    refreshGroups();
+    const updated = getGroups().find(g => g.id === groupId);
+    if (updated) setSelectedGroup(updated);
+  }
+
+  // ── Communities helpers ──
+  function refreshCommunities() {
+    setCommunitiesLocal(getCommunities());
+    setJoinedIds(getJoinedCommunities());
+  }
+
+  function handleJoinCommunity(communityId: string) {
+    joinCommunity(communityId);
+    refreshCommunities();
+  }
+
+  function handleLeaveCommunity(communityId: string) {
+    leaveCommunity(communityId);
+    refreshCommunities();
+  }
+
+  function handleCreateCommunity() {
+    if (!newCommunityName.trim()) return;
+    const user = getCurrentUser();
+    const tags = newCommunityTags.split(',').map(t => t.trim()).filter(Boolean);
+    createCommunity(
+      newCommunityName.trim(),
+      newCommunityDesc.trim(),
+      newCommunityEmoji,
+      '#7C3AED',
+      tags,
+      newCommunityPublic,
+      newCommunityRules.trim(),
+      user.id
+    );
+    // Auto-join
+    const allC = getCommunities();
+    const created = allC[allC.length - 1];
+    if (created) joinCommunity(created.id);
+    setNewCommunityName('');
+    setNewCommunityEmoji('🌐');
+    setNewCommunityDesc('');
+    setNewCommunityTags('');
+    setNewCommunityPublic(true);
+    setNewCommunityRules('');
+    setShowCreateCommunity(false);
+    refreshCommunities();
+  }
+
+  const filteredCommunities = communitySearch
+    ? communities.filter(c =>
+        c.name.toLowerCase().includes(communitySearch.toLowerCase()) ||
+        c.tags.some(t => t.toLowerCase().includes(communitySearch.toLowerCase()))
+      )
+    : communities;
+
+  const joinedCommunities = filteredCommunities.filter(c => joinedIds.includes(c.id));
+  const discoverCommunities = filteredCommunities.filter(c => !joinedIds.includes(c.id) && c.isPublic);
+
+  // ── Agents computed ──
   const activeAgents = agents.filter(a => a.isAvailable && activeIds.includes(a.id as AgentTypeId));
   const inactiveAgents = agents.filter(a => a.isAvailable && !activeIds.includes(a.id as AgentTypeId));
   const lockedAgents = agents.filter(a => !a.isAvailable);
-
-  const TAB_EMOJIS: Record<string, string> = {
-    smart_toy: '🤖',
-    group: '👥',
-    bar_chart: '📊',
-  };
 
   return (
     <div className="client-page-scrollable">
@@ -235,34 +402,28 @@ export default function TeamPage() {
       <PageExplanation pageId="team" text={PAGE_META.team?.helpText} />
 
       {/* Tabs */}
-      <div className="flex gap-4 mb-8" style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
-        {([
-          { id: 'agents' as const, label: 'Mon équipe IA', icon: 'smart_toy' },
-          { id: 'workspace' as const, label: 'Espace collaboratif', icon: 'group' },
-          { id: 'activity' as const, label: 'Activité', icon: 'bar_chart' },
-        ]).map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => {
-              setActiveTab(tab.id);
-              if (tab.id === 'workspace' && activeWorkspace) loadWorkspaceData(activeWorkspace);
-            }}
-            className="btn btn-ghost"
-            style={{
-              borderRadius: 0,
-              borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
-              color: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
-              fontWeight: activeTab === tab.id ? 600 : 400,
-              fontSize: 13,
-              padding: '8px 16px',
-            }}
-          >
-            <span style={{ fontSize: 16 }}>{TAB_EMOJIS[tab.icon] ?? tab.icon}</span> {tab.label}
-          </button>
-        ))}
+      <div className="cu-tabs">
+        <button className={`cu-tab ${activeTab === 'agents' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('agents')}>
+          <span style={{ fontSize: 14 }}>🤖</span> Équipe IA
+        </button>
+        <button className={`cu-tab ${activeTab === 'members' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('members')}>
+          <span style={{ fontSize: 14 }}>👤</span> Membres
+        </button>
+        <button className={`cu-tab ${activeTab === 'groups' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('groups')}>
+          <span style={{ fontSize: 14 }}>🏘️</span> Groupes
+        </button>
+        <button className={`cu-tab ${activeTab === 'communities' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('communities')}>
+          <span style={{ fontSize: 14 }}>🌐</span> Communautés
+        </button>
+        <button className={`cu-tab ${activeTab === 'activity' ? 'cu-tab-active' : ''}`} onClick={() => {
+          setActiveTab('activity');
+          if (activeWorkspace) loadWorkspaceData(activeWorkspace);
+        }}>
+          <span style={{ fontSize: 14 }}>📋</span> Activité
+        </button>
       </div>
 
-      {/* Tab: Agents */}
+      {/* ═══════════════════════════════════════════ Tab: Agents ═══════════════════════════════════════════ */}
       {activeTab === 'agents' && <>
 
       <p className="text-sm mb-8" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
@@ -421,145 +582,276 @@ export default function TeamPage() {
 
       </>}
 
-      {/* Tab: Workspace */}
-      {activeTab === 'workspace' && (
+      {/* ═══════════════════════════════════════════ Tab: Members ═══════════════════════════════════════════ */}
+      {activeTab === 'members' && (
         <div>
-          {workspaces.length === 0 ? (
-            <div className="text-center rounded-lg" style={{ padding: '60px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
-              <div style={{ marginBottom: 16 }}><span style={{ fontSize: 48 }}>👥</span></div>
-              <h3 className="text-lg font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>Créez votre premier espace collaboratif</h3>
-              <p className="text-sm mb-16" style={{ maxWidth: 400, margin: '0 auto 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
-                Invitez votre équipe pour travailler ensemble : données partagées, agents communs, actions assignées.
-              </p>
-              <div className="flex flex-center gap-6">
-                <input
-                  value={wsName}
-                  onChange={e => setWsName(e.target.value)}
-                  placeholder="Nom de l'espace (ex: Mon entreprise)"
-                  className="input"
-                  style={{ maxWidth: 300, fontSize: 13 }}
-                />
-                <button
-                  onClick={createWorkspace}
-                  disabled={!wsName.trim() || creatingWs}
-                  className="btn btn-primary"
-                >
-                  {creatingWs ? 'Création...' : 'Créer'}
-                </button>
+          {/* Header */}
+          <div className="cu-section-header">
+            <div className="cu-section-header-title">
+              <span style={{ fontSize: 16 }}>👤</span> Membres ({membersLocal.length})
+            </div>
+            <div className="cu-section-header-spacer" />
+            <input
+              value={memberSearch}
+              onChange={e => setMemberSearch(e.target.value)}
+              placeholder="Rechercher..."
+              style={{
+                padding: '6px 12px', fontSize: 13, borderRadius: 8,
+                border: '1px solid var(--fz-border, #E2E8F0)',
+                background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                width: 180,
+              }}
+            />
+            <button
+              className="cu-section-header-action"
+              onClick={() => setShowInviteModal(true)}
+              style={{ marginLeft: 8 }}
+            >
+              Inviter +
+            </button>
+          </div>
+
+          {/* Stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
+            <div className="cu-stat-card">
+              <span className="cu-stat-emoji">👥</span>
+              <div className="cu-stat-value">{memberStats.total}</div>
+              <div className="cu-stat-label">Total membres</div>
+            </div>
+            <div className="cu-stat-card">
+              <span className="cu-stat-emoji">🟢</span>
+              <div className="cu-stat-value">{memberStats.online}</div>
+              <div className="cu-stat-label">En ligne</div>
+            </div>
+            <div className="cu-stat-card">
+              <span className="cu-stat-emoji">🛡️</span>
+              <div className="cu-stat-value">{memberStats.admins}</div>
+              <div className="cu-stat-label">Admins</div>
+            </div>
+          </div>
+
+          {/* Online members */}
+          {onlineMembers.length > 0 && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
+                🟢 En ligne ({onlineMembers.length})
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {onlineMembers.map(member => (
+                  <div key={member.id} className="cu-member-card">
+                    <div className="cu-avatar" style={{ width: 32, height: 32, position: 'relative' }}>
+                      <span>{member.emoji}</span>
+                      <div className={`cu-status-dot cu-status-${member.status}`} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="cu-member-name">{member.name}</div>
+                      <div className="cu-member-email">{member.email}</div>
+                    </div>
+                    <span className={`cu-badge cu-badge-${roleColor(member.role)}`}>{roleLabelFr(member.role)}</span>
+                    <div style={{ position: 'relative' }}>
+                      <button
+                        onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 4 }}
+                      >⚙️</button>
+                      {memberActionId === member.id && (
+                        <div style={{
+                          position: 'absolute', right: 0, top: '100%', zIndex: 50,
+                          background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E2E8F0)',
+                          borderRadius: 8, padding: 8, minWidth: 160, boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        }}>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
+                          {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
+                            <button
+                              key={r}
+                              onClick={() => handleChangeRole(member.id, r)}
+                              style={{
+                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
+                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
+                                background: member.role === r ? 'var(--accent-light, #EDE9FE)' : 'transparent',
+                                color: member.role === r ? 'var(--accent, #7c3aed)' : 'var(--fz-text)',
+                                fontWeight: member.role === r ? 600 : 400,
+                              }}
+                            >
+                              {roleLabelFr(r)}
+                            </button>
+                          ))}
+                          <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', margin: '6px 0' }} />
+                          {confirmRemoveId === member.id ? (
+                            <div style={{ display: 'flex', gap: 4 }}>
+                              <button
+                                onClick={() => handleRemoveMember(member.id)}
+                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: '#DC262622', color: '#DC2626', fontWeight: 600 }}
+                              >Confirmer</button>
+                              <button
+                                onClick={() => setConfirmRemoveId(null)}
+                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: 'var(--fz-bg-secondary)', color: 'var(--fz-text-muted)' }}
+                              >Annuler</button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmRemoveId(member.id)}
+                              style={{
+                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
+                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
+                                background: 'transparent', color: '#DC2626',
+                              }}
+                            >
+                              Retirer du groupe
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ) : (
-            <div>
-              {/* Workspace selector if multiple */}
-              {workspaces.length > 1 && (
-                <select
-                  value={activeWorkspace ?? ''}
-                  onChange={e => { setActiveWorkspace(e.target.value); loadWorkspaceData(e.target.value); }}
-                  className="input mb-8"
-                  style={{ fontSize: 13, width: 'auto' }}
-                >
-                  {workspaces.map(ws => (
-                    <option key={ws.id} value={ws.id}>{ws.name}</option>
-                  ))}
-                </select>
-              )}
+          )}
 
-              {/* Workspace info */}
-              <div className="card mb-8" style={{ padding: 16 }}>
-                <div className="flex flex-between items-center mb-8">
-                  <h3 className="text-base font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>
-                    {workspaces.find(w => w.id === activeWorkspace)?.name ?? 'Espace'}
-                  </h3>
-                  <span className="text-xs font-medium" style={{
-                    padding: '2px 8px', borderRadius: 4,
-                    background: 'var(--accent)11', color: 'var(--accent)',
-                  }}>
-                    {workspaces.find(w => w.id === activeWorkspace)?.plan ?? 'team'}
-                  </span>
-                </div>
-                <p className="text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
-                  {members.length} membre{members.length > 1 ? 's' : ''} ·
-                  Max {workspaces.find(w => w.id === activeWorkspace)?.maxMembers ?? 5}
-                </p>
+          {/* Offline members */}
+          {offlineMembers.length > 0 && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
+                ⚪ Hors ligne ({offlineMembers.length})
               </div>
-
-              {/* Members list */}
-              <div className="section">
-                <div className="section-title">Membres</div>
-                <div className="flex flex-col gap-4">
-                  {members.map(m => (
-                    <div key={m.id} className="flex items-center gap-8 card" style={{ padding: '10px 14px' }}>
-                      <div className="flex-center rounded-full" style={{
-                        width: 36, height: 36, background: 'var(--accent)22', color: 'var(--accent)',
-                        fontSize: 14, fontWeight: 700,
-                      }}>
-                        {(m.displayName ?? m.email ?? '?')[0].toUpperCase()}
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium" style={{ color: 'var(--fz-text, #1E293B)' }}>{m.displayName ?? m.email ?? 'Utilisateur'}</div>
-                        {m.email && <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{m.email}</div>}
-                      </div>
-                      <span className="text-xs font-medium" style={{
-                        padding: '2px 8px', borderRadius: 4,
-                        background: m.role === 'owner' ? '#F59E0B22' : m.role === 'editor' ? '#3B82F622' : '#6B728022',
-                        color: m.role === 'owner' ? '#F59E0B' : m.role === 'editor' ? '#3B82F6' : '#6B7280',
-                      }}>
-                        {m.role === 'owner' ? 'Propriétaire' : m.role === 'editor' ? 'Éditeur' : 'Lecteur'}
-                      </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {offlineMembers.map(member => (
+                  <div key={member.id} className="cu-member-card">
+                    <div className="cu-avatar" style={{ width: 32, height: 32, position: 'relative' }}>
+                      <span>{member.emoji}</span>
+                      <div className={`cu-status-dot cu-status-${member.status}`} />
                     </div>
-                  ))}
-                </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="cu-member-name">{member.name}</div>
+                      <div className="cu-member-email">{member.email}</div>
+                    </div>
+                    <span className={`cu-badge cu-badge-${roleColor(member.role)}`}>{roleLabelFr(member.role)}</span>
+                    <div style={{ position: 'relative' }}>
+                      <button
+                        onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 4 }}
+                      >⚙️</button>
+                      {memberActionId === member.id && (
+                        <div style={{
+                          position: 'absolute', right: 0, top: '100%', zIndex: 50,
+                          background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E2E8F0)',
+                          borderRadius: 8, padding: 8, minWidth: 160, boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        }}>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
+                          {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
+                            <button
+                              key={r}
+                              onClick={() => handleChangeRole(member.id, r)}
+                              style={{
+                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
+                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
+                                background: member.role === r ? 'var(--accent-light, #EDE9FE)' : 'transparent',
+                                color: member.role === r ? 'var(--accent, #7c3aed)' : 'var(--fz-text)',
+                                fontWeight: member.role === r ? 600 : 400,
+                              }}
+                            >
+                              {roleLabelFr(r)}
+                            </button>
+                          ))}
+                          <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', margin: '6px 0' }} />
+                          {confirmRemoveId === member.id ? (
+                            <div style={{ display: 'flex', gap: 4 }}>
+                              <button
+                                onClick={() => handleRemoveMember(member.id)}
+                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: '#DC262622', color: '#DC2626', fontWeight: 600 }}
+                              >Confirmer</button>
+                              <button
+                                onClick={() => setConfirmRemoveId(null)}
+                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: 'var(--fz-bg-secondary)', color: 'var(--fz-text-muted)' }}
+                              >Annuler</button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmRemoveId(member.id)}
+                              style={{
+                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
+                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
+                                background: 'transparent', color: '#DC2626',
+                              }}
+                            >
+                              Retirer du groupe
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+          )}
 
-              {/* Invite section */}
-              <div className="section">
-                <div className="section-title">Inviter un membre</div>
-                <div className="flex gap-6 items-center flex-wrap">
-                  <input
-                    value={inviteEmail}
-                    onChange={e => setInviteEmail(e.target.value)}
-                    placeholder="Email du collaborateur"
-                    type="email"
-                    className="input"
-                    style={{ flex: 1, minWidth: 200, fontSize: 13 }}
-                  />
-                  <select
-                    value={inviteRole}
-                    onChange={e => setInviteRole(e.target.value)}
-                    className="input"
-                    style={{ width: 'auto', fontSize: 13 }}
-                  >
-                    <option value="viewer">Lecteur</option>
-                    <option value="editor">Éditeur</option>
-                  </select>
-                  <button
-                    onClick={sendInvite}
-                    disabled={!inviteEmail.trim() || inviting}
-                    className="btn btn-primary btn-sm"
-                  >
-                    {inviting ? 'Envoi...' : 'Inviter'}
-                  </button>
+          {/* Empty state */}
+          {filteredMembers.length === 0 && (
+            <div className="cu-empty-state">
+              <div className="cu-empty-emoji">👤</div>
+              <div className="cu-empty-title">Aucun membre trouvé</div>
+              <div className="cu-empty-desc">{memberSearch ? 'Essayez un autre terme de recherche.' : 'Invitez des collaborateurs pour commencer.'}</div>
+              <button className="cu-empty-action" onClick={() => setShowInviteModal(true)}>Inviter un membre</button>
+            </div>
+          )}
+
+          {/* Invite Modal */}
+          {showInviteModal && (
+            <div className="cu-modal-overlay" onClick={() => setShowInviteModal(false)}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+                <div className="cu-modal-header">
+                  <div className="cu-modal-title">Inviter un membre</div>
                 </div>
-              </div>
-
-              {/* Create another workspace */}
-              <div className="section">
-                <div className="section-title">Créer un autre espace</div>
-                <div className="flex gap-6 items-center">
-                  <input
-                    value={wsName}
-                    onChange={e => setWsName(e.target.value)}
-                    placeholder="Nom du nouvel espace"
-                    className="input"
-                    style={{ flex: 1, maxWidth: 300, fontSize: 13 }}
-                  />
+                <div className="cu-modal-body">
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Email</label>
+                    <input
+                      type="email"
+                      value={inviteEmail}
+                      onChange={e => setInviteEmail(e.target.value)}
+                      placeholder="collaborateur@entreprise.com"
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Rôle</label>
+                    <select
+                      value={inviteRole}
+                      onChange={e => setInviteRole(e.target.value as 'admin' | 'member' | 'viewer')}
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    >
+                      <option value="admin">Admin</option>
+                      <option value="member">Membre</option>
+                      <option value="viewer">Lecteur</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="cu-modal-footer">
                   <button
-                    onClick={createWorkspace}
-                    disabled={!wsName.trim() || creatingWs}
-                    className="btn btn-secondary btn-sm"
-                  >
-                    {creatingWs ? 'Création...' : '+ Créer'}
-                  </button>
+                    onClick={() => setShowInviteModal(false)}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
+                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
+                    }}
+                  >Annuler</button>
+                  <button
+                    onClick={handleInviteMember}
+                    disabled={!inviteEmail.trim()}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
+                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      opacity: inviteEmail.trim() ? 1 : 0.5,
+                    }}
+                  >Envoyer l&apos;invitation</button>
                 </div>
               </div>
             </div>
@@ -567,12 +859,548 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* Tab: Activity */}
+      {/* ═══════════════════════════════════════════ Tab: Groups ═══════════════════════════════════════════ */}
+      {activeTab === 'groups' && (
+        <div>
+          {/* Header */}
+          <div className="cu-section-header">
+            <div className="cu-section-header-title">
+              <span style={{ fontSize: 16 }}>🏘️</span> Groupes ({groups.length})
+            </div>
+            <div className="cu-section-header-spacer" />
+            <button
+              className="cu-section-header-action"
+              onClick={() => setShowCreateGroup(true)}
+            >
+              Nouveau +
+            </button>
+          </div>
+
+          {/* Selected group detail view */}
+          {selectedGroup && !editingGroup && (
+            <div style={{
+              marginBottom: 20, padding: 16, borderRadius: 12,
+              border: `1px solid ${selectedGroup.color}44`,
+              background: selectedGroup.color + '08',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                <span style={{ fontSize: 24 }}>{selectedGroup.emoji}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--fz-text)' }}>{selectedGroup.name}</div>
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{selectedGroup.description}</div>
+                </div>
+                <button
+                  onClick={() => setSelectedGroup(null)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted)' }}
+                >✕</button>
+              </div>
+
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 8 }}>
+                Membres du groupe ({selectedGroup.members.length})
+              </div>
+
+              {/* Current group members */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }}>
+                {selectedGroup.members.map(mId => {
+                  const member = membersLocal.find(m => m.id === mId);
+                  return (
+                    <div key={mId} style={{
+                      display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
+                      borderRadius: 8, background: 'var(--fz-bg, #fff)',
+                      border: '1px solid var(--fz-border, #E2E8F0)',
+                    }}>
+                      <span style={{ fontSize: 16 }}>{member?.emoji ?? '👤'}</span>
+                      <div style={{ flex: 1, fontSize: 13, color: 'var(--fz-text)' }}>{member?.name ?? mId}</div>
+                      <button
+                        onClick={() => handleRemoveGroupMember(selectedGroup.id, mId)}
+                        style={{
+                          padding: '2px 8px', fontSize: 11, borderRadius: 4,
+                          border: 'none', background: '#DC262615', color: '#DC2626', cursor: 'pointer',
+                        }}
+                      >Retirer</button>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Add members */}
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6 }}>
+                Ajouter un membre
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {membersLocal.filter(m => !selectedGroup.members.includes(m.id)).map(m => (
+                  <button
+                    key={m.id}
+                    onClick={() => handleAddGroupMember(selectedGroup.id, m.id)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px',
+                      borderRadius: 6, fontSize: 12, border: '1px solid var(--fz-border, #E2E8F0)',
+                      background: 'var(--fz-bg, #fff)', color: 'var(--fz-text)', cursor: 'pointer',
+                    }}
+                  >
+                    <span>{m.emoji}</span> {m.name} <span style={{ color: 'var(--accent)' }}>+</span>
+                  </button>
+                ))}
+                {membersLocal.filter(m => !selectedGroup.members.includes(m.id)).length === 0 && (
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', fontStyle: 'italic' }}>Tous les membres sont dans ce groupe.</div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Edit group modal */}
+          {editingGroup && (
+            <div className="cu-modal-overlay" onClick={() => setEditingGroup(null)}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+                <div className="cu-modal-header">
+                  <div className="cu-modal-title">Modifier le groupe</div>
+                </div>
+                <div className="cu-modal-body">
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Nom</label>
+                    <input
+                      value={editingGroup.name}
+                      onChange={e => setEditingGroup({ ...editingGroup, name: e.target.value })}
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
+                      <input
+                        value={editingGroup.emoji}
+                        onChange={e => setEditingGroup({ ...editingGroup, emoji: e.target.value })}
+                        style={{
+                          width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                          border: '1px solid var(--fz-border, #E2E8F0)',
+                          background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                        }}
+                      />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Couleur</label>
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        {GROUP_COLORS.map(c => (
+                          <button
+                            key={c}
+                            onClick={() => setEditingGroup({ ...editingGroup, color: c })}
+                            style={{
+                              width: 28, height: 28, borderRadius: '50%', border: editingGroup.color === c ? '2px solid var(--fz-text)' : '2px solid transparent',
+                              background: c, cursor: 'pointer',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Description</label>
+                    <input
+                      value={editingGroup.description}
+                      onChange={e => setEditingGroup({ ...editingGroup, description: e.target.value })}
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="cu-modal-footer">
+                  <button
+                    onClick={() => setEditingGroup(null)}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
+                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
+                    }}
+                  >Annuler</button>
+                  <button
+                    onClick={handleUpdateGroup}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
+                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                    }}
+                  >Enregistrer</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Groups grid */}
+          {groups.length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+              {groups.map(group => (
+                <div key={group.id} className="cu-group-card">
+                  <div className="cu-group-header">
+                    <span className="cu-group-emoji" style={{ background: group.color + '22' }}>{group.emoji}</span>
+                    <div>
+                      <div className="cu-group-name">{group.name}</div>
+                      <div className="cu-group-meta">{group.members.length} membre{group.members.length > 1 ? 's' : ''}</div>
+                    </div>
+                  </div>
+                  <div className="cu-group-desc">{group.description}</div>
+                  <div className="cu-group-actions">
+                    <button
+                      className="fz-btn fz-btn-primary fz-btn-sm"
+                      onClick={() => { setSelectedGroup(group); setEditingGroup(null); }}
+                      style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none', background: group.color, color: '#fff', cursor: 'pointer' }}
+                    >Voir</button>
+                    <button
+                      className="fz-btn fz-btn-secondary fz-btn-sm"
+                      onClick={() => setEditingGroup(group)}
+                      style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: '1px solid var(--fz-border)', background: 'transparent', color: 'var(--fz-text)', cursor: 'pointer' }}
+                    >Modifier</button>
+                    {confirmDeleteGroupId === group.id ? (
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        <button
+                          onClick={() => handleDeleteGroup(group.id)}
+                          style={{ fontSize: 11, padding: '4px 8px', borderRadius: 4, border: 'none', background: '#DC262622', color: '#DC2626', cursor: 'pointer', fontWeight: 600 }}
+                        >Confirmer</button>
+                        <button
+                          onClick={() => setConfirmDeleteGroupId(null)}
+                          style={{ fontSize: 11, padding: '4px 8px', borderRadius: 4, border: 'none', background: 'var(--fz-bg-secondary)', color: 'var(--fz-text-muted)', cursor: 'pointer' }}
+                        >Annuler</button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDeleteGroupId(group.id)}
+                        style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none', background: '#DC262615', color: '#DC2626', cursor: 'pointer' }}
+                      >Supprimer</button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="cu-empty-state">
+              <div className="cu-empty-emoji">🏘️</div>
+              <div className="cu-empty-title">Aucun groupe</div>
+              <div className="cu-empty-desc">Créez des groupes pour organiser vos collaborateurs par projet ou département.</div>
+              <button className="cu-empty-action" onClick={() => setShowCreateGroup(true)}>Créer un groupe</button>
+            </div>
+          )}
+
+          {/* Create group modal */}
+          {showCreateGroup && (
+            <div className="cu-modal-overlay" onClick={() => setShowCreateGroup(false)}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+                <div className="cu-modal-header">
+                  <div className="cu-modal-title">Nouveau groupe</div>
+                </div>
+                <div className="cu-modal-body">
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Nom du groupe</label>
+                    <input
+                      value={newGroupName}
+                      onChange={e => setNewGroupName(e.target.value)}
+                      placeholder="ex: Marketing, Développement..."
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
+                      <input
+                        value={newGroupEmoji}
+                        onChange={e => setNewGroupEmoji(e.target.value)}
+                        style={{
+                          width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                          border: '1px solid var(--fz-border, #E2E8F0)',
+                          background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                        }}
+                      />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Couleur</label>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {GROUP_COLORS.map(c => (
+                          <button
+                            key={c}
+                            onClick={() => setNewGroupColor(c)}
+                            style={{
+                              width: 28, height: 28, borderRadius: '50%', border: newGroupColor === c ? '2px solid var(--fz-text)' : '2px solid transparent',
+                              background: c, cursor: 'pointer',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Description</label>
+                    <input
+                      value={newGroupDesc}
+                      onChange={e => setNewGroupDesc(e.target.value)}
+                      placeholder="Description courte du groupe"
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="cu-modal-footer">
+                  <button
+                    onClick={() => setShowCreateGroup(false)}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
+                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
+                    }}
+                  >Annuler</button>
+                  <button
+                    onClick={handleCreateGroup}
+                    disabled={!newGroupName.trim()}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
+                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      opacity: newGroupName.trim() ? 1 : 0.5,
+                    }}
+                  >Créer le groupe</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════ Tab: Communities ═══════════════════════════════════════════ */}
+      {activeTab === 'communities' && (
+        <div>
+          {/* Header */}
+          <div className="cu-section-header">
+            <div className="cu-section-header-title">
+              <span style={{ fontSize: 16 }}>🌐</span> Communautés
+            </div>
+            <div className="cu-section-header-spacer" />
+            <input
+              value={communitySearch}
+              onChange={e => setCommunitySearch(e.target.value)}
+              placeholder="Rechercher..."
+              style={{
+                padding: '6px 12px', fontSize: 13, borderRadius: 8,
+                border: '1px solid var(--fz-border, #E2E8F0)',
+                background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                width: 180,
+              }}
+            />
+            <button
+              className="cu-section-header-action"
+              onClick={() => setShowCreateCommunity(true)}
+              style={{ marginLeft: 8 }}
+            >
+              Créer +
+            </button>
+          </div>
+
+          {/* Joined communities */}
+          {joinedCommunities.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
+                Mes communautés ({joinedCommunities.length})
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {joinedCommunities.map(community => (
+                  <div key={community.id} className="cu-group-card" style={{ cursor: 'default' }}>
+                    <div className="cu-group-header">
+                      <span className="cu-group-emoji" style={{ background: community.color + '22' }}>{community.emoji}</span>
+                      <div>
+                        <div className="cu-group-name">{community.name}</div>
+                        <div className="cu-group-meta">{community.memberCount} membres</div>
+                      </div>
+                    </div>
+                    <div className="cu-group-desc">{community.description}</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
+                      {community.tags.map(tag => <span key={tag} className="cu-tag">#{tag}</span>)}
+                    </div>
+                    <div className="cu-group-actions">
+                      <button
+                        onClick={() => handleLeaveCommunity(community.id)}
+                        style={{
+                          fontSize: 12, padding: '4px 12px', borderRadius: 6,
+                          border: '1px solid var(--fz-border)', background: 'transparent',
+                          color: 'var(--fz-text-muted)', cursor: 'pointer',
+                        }}
+                      >Quitter</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Discover communities */}
+          {discoverCommunities.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
+                Découvrir ({discoverCommunities.length})
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                {discoverCommunities.map(community => (
+                  <div key={community.id} className="cu-group-card" style={{ cursor: 'pointer' }}>
+                    <div className="cu-group-header">
+                      <span className="cu-group-emoji" style={{ background: community.color + '22' }}>{community.emoji}</span>
+                      <div>
+                        <div className="cu-group-name">{community.name}</div>
+                        <div className="cu-group-meta">{community.memberCount} membres</div>
+                      </div>
+                    </div>
+                    <div className="cu-group-desc">{community.description}</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
+                      {community.tags.map(tag => <span key={tag} className="cu-tag">#{tag}</span>)}
+                    </div>
+                    <div className="cu-group-actions">
+                      <button
+                        onClick={() => handleJoinCommunity(community.id)}
+                        style={{
+                          fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none',
+                          background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                        }}
+                      >Rejoindre</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {filteredCommunities.length === 0 && (
+            <div className="cu-empty-state">
+              <div className="cu-empty-emoji">🌐</div>
+              <div className="cu-empty-title">Aucune communauté trouvée</div>
+              <div className="cu-empty-desc">{communitySearch ? 'Essayez un autre terme de recherche.' : 'Créez ou rejoignez une communauté.'}</div>
+              <button className="cu-empty-action" onClick={() => setShowCreateCommunity(true)}>Créer une communauté</button>
+            </div>
+          )}
+
+          {/* Create community modal */}
+          {showCreateCommunity && (
+            <div className="cu-modal-overlay" onClick={() => setShowCreateCommunity(false)}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+                <div className="cu-modal-header">
+                  <div className="cu-modal-title">Nouvelle communauté</div>
+                </div>
+                <div className="cu-modal-body">
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Nom</label>
+                    <input
+                      value={newCommunityName}
+                      onChange={e => setNewCommunityName(e.target.value)}
+                      placeholder="ex: Développeurs React, Marketing B2B..."
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
+                      <input
+                        value={newCommunityEmoji}
+                        onChange={e => setNewCommunityEmoji(e.target.value)}
+                        style={{
+                          width: 60, padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                          border: '1px solid var(--fz-border, #E2E8F0)',
+                          background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                          textAlign: 'center',
+                        }}
+                      />
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--fz-text)', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={newCommunityPublic}
+                          onChange={e => setNewCommunityPublic(e.target.checked)}
+                          style={{ width: 16, height: 16, accentColor: 'var(--accent)' }}
+                        />
+                        Communauté publique
+                      </label>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Description</label>
+                    <input
+                      value={newCommunityDesc}
+                      onChange={e => setNewCommunityDesc(e.target.value)}
+                      placeholder="Décrivez votre communauté..."
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Tags (séparés par des virgules)</label>
+                    <input
+                      value={newCommunityTags}
+                      onChange={e => setNewCommunityTags(e.target.value)}
+                      placeholder="ex: tech, startup, marketing"
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                      }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: 14 }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Règles de la communauté</label>
+                    <textarea
+                      value={newCommunityRules}
+                      onChange={e => setNewCommunityRules(e.target.value)}
+                      placeholder="Décrivez les règles de votre communauté..."
+                      rows={3}
+                      style={{
+                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
+                        resize: 'vertical',
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="cu-modal-footer">
+                  <button
+                    onClick={() => setShowCreateCommunity(false)}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
+                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
+                    }}
+                  >Annuler</button>
+                  <button
+                    onClick={handleCreateCommunity}
+                    disabled={!newCommunityName.trim()}
+                    style={{
+                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
+                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      opacity: newCommunityName.trim() ? 1 : 0.5,
+                    }}
+                  >Créer la communauté</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════ Tab: Activity ═══════════════════════════════════════════ */}
       {activeTab === 'activity' && (
         <div>
           {wsActivity.length === 0 ? (
             <div className="text-center" style={{ padding: '60px 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
-              <div style={{ marginBottom: 12 }}><span style={{ fontSize: 48 }}>📊</span></div>
+              <div style={{ marginBottom: 12 }}><span style={{ fontSize: 48 }}>📋</span></div>
               <p className="text-sm">Aucune activité pour le moment.</p>
               {workspaces.length === 0 && (
                 <p className="text-xs mt-4">Créez un espace collaboratif pour voir l&apos;activité de votre équipe.</p>

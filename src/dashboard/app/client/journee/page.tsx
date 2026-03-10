@@ -392,7 +392,7 @@ function getDefaultData(): JourneeData {
 // ─── Shared styles ───
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)',
+  background: 'var(--fz-bg, #FFFFFF)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
   borderRadius: 12, overflow: 'hidden', transition: 'box-shadow 0.2s',
 };
 const cardHeaderStyle: React.CSSProperties = {
@@ -405,7 +405,7 @@ const cardBodyStyle: React.CSSProperties = {
 };
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 13,
-  border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
+  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg-secondary, #F8FAFC)',
   color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none',
 };
 const btnSmStyle: React.CSSProperties = {
@@ -1288,7 +1288,7 @@ export default function JourneePage() {
             <button onClick={() => {
               const next = data.habits.map(x => x.id === h.id ? { ...x, doneToday: !x.doneToday, streak: !x.doneToday ? x.streak + 1 : Math.max(0, x.streak - 1) } : x);
               updateData({ habits: next });
-            }} style={{ padding: '4px 10px', borderRadius: 8, fontSize: 12, border: 'none', cursor: 'pointer', background: h.doneToday ? '#22c55e' : 'var(--fz-bg-hover, #F1F5F9)', color: h.doneToday ? '#fff' : 'var(--fz-text, #1E293B)', fontWeight: 600 }}>
+            }} style={{ height: 36, padding: '0 12px', borderRadius: 8, fontSize: 12, border: 'none', cursor: 'pointer', background: h.doneToday ? '#22c55e' : 'var(--fz-bg-hover, #F1F5F9)', color: h.doneToday ? '#fff' : 'var(--fz-text, #1E293B)', fontWeight: 600 }}>
               {h.doneToday ? '✅' : 'Fait'}
             </button>
             <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 12 }}>✕</button>
@@ -1364,7 +1364,7 @@ export default function JourneePage() {
     if (!showConfig) return null;
     const filtered = configFilter === 'all' ? WIDGETS : WIDGETS.filter(w => w.category === configFilter);
     return (
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 12, padding: 16, marginBottom: 20 }}>
+      <div style={{ background: 'var(--fz-bg, #FFFFFF)', border: 'none', borderRadius: 8, boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Configurer mes widgets</span>
           <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)' }}>✕</button>

@@ -41,7 +41,7 @@ function TagInput({ tags, onChange, placeholder }: { tags: string[]; onChange: (
       <div className="flex flex-wrap gap-6 mb-8">
         {tags.map((t, i) => (
           <span key={i} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px',
+            display: 'inline-flex', alignItems: 'center', gap: 4, height: 36, padding: '0 12px',
             borderRadius: 20, background: 'var(--accent-muted)', color: 'var(--accent)', fontSize: 12, fontWeight: 600,
           }}>
             {t}

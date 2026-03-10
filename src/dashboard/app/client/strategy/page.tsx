@@ -2061,7 +2061,7 @@ export default function StrategyPage() {
                     setShowUpload(true);
                   }}
                   className="card"
-                  style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', fontFamily: 'var(--font-sans)' }}
+                  style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg-secondary, #F8FAFC)', fontFamily: 'var(--font-sans)' }}
                 >
                   <span style={{ fontSize: 20 }}>{({'assignment':'📋','bar_chart':'📊','calendar_month':'📅','savings':'💰','target':'🎯','edit_note':'✏️'} as Record<string,string>)[tpl.icon] || tpl.icon}</span>
                   <div className="text-sm font-bold mt-4">{tpl.name}</div>

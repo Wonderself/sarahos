@@ -91,7 +91,7 @@ export default function TimelinePage() {
       <div style={{ marginBottom: 20 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 10, padding: '10px 14px',
         }}>
           <span style={{ fontSize: 18 }}>🔍</span>
@@ -144,7 +144,7 @@ export default function TimelinePage() {
         display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 8 : 12, marginBottom: 28,
       }}>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
@@ -152,7 +152,7 @@ export default function TimelinePage() {
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
@@ -160,7 +160,7 @@ export default function TimelinePage() {
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
@@ -176,7 +176,7 @@ export default function TimelinePage() {
         <div style={{
           textAlign: 'center', padding: '60px 20px',
           background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 14,
-          border: '1px solid var(--fz-border, #E2E8F0)',
+          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
         }}>
           <span style={{ fontSize: 48, marginBottom: 12, display: 'block' }}>🕐</span>
           <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 6 }}>Aucune action enregistrée</div>
@@ -215,7 +215,7 @@ export default function TimelinePage() {
                     key={event.id}
                     style={{
                       position: 'relative', marginBottom: 8,
-                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                       borderRadius: 10, padding: '12px 14px',
                       display: 'flex', alignItems: 'center', gap: 12,
                     }}

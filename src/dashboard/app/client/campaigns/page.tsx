@@ -236,7 +236,7 @@ export default function CampaignsPage() {
             { label: 'En attente', value: String(pending), emoji: '⏳', color: '#f59e0b' },
             { label: 'Posts planifiés', value: String(totalPosts), emoji: '📅', color: '#3b82f6' },
           ].map(s => (
-            <div key={s.label} style={{ padding: '14px 18px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <div key={s.label} style={{ padding: '14px 18px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
               <div style={{ fontSize: 20, marginBottom: 4 }}>{s.emoji}</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
               <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
@@ -270,7 +270,7 @@ export default function CampaignsPage() {
         {/* Campaign list */}
         <div>
           {campaigns.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 40px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>📢</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune campagne</div>
               <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 20 }}>
@@ -290,7 +290,8 @@ export default function CampaignsPage() {
                     padding: '14px 16px', cursor: 'pointer',
                     background: 'var(--fz-bg, #FFFFFF)',
                     borderRadius: 12,
-                    border: `1px solid ${selectedCampaign?.id === c.id ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                    border: selectedCampaign?.id === c.id ? '1px solid var(--accent)' : 'none',
+                    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                     transition: 'all 0.15s',
                   }}
                 >
@@ -356,7 +357,7 @@ export default function CampaignsPage() {
 
         {/* Detail panel */}
         {selectedCampaign && (
-          <div style={{ padding: 20, alignSelf: 'start', position: 'sticky', top: 16, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div style={{ padding: 20, alignSelf: 'start', position: 'sticky', top: 16, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ fontWeight: 700, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, color: 'var(--fz-text, #1E293B)' }}>
                 {selectedCampaign.name}
@@ -415,7 +416,7 @@ export default function CampaignsPage() {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {posts.map(post => (
-                    <div key={post.id} style={{ padding: '10px 12px', borderRadius: 8, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+                    <div key={post.id} style={{ padding: '10px 12px', borderRadius: 8, background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
                       <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}>
                         <span style={{ fontSize: 13 }}>{PLATFORM_EMOJIS[post.platform]}</span> {PLATFORM_LABELS[post.platform]}
                         {post.scheduled_at && <span style={{ color: 'var(--fz-text-muted, #94A3B8)', marginLeft: 6 }}>· {new Date(post.scheduled_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>}
@@ -436,7 +437,7 @@ export default function CampaignsPage() {
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
-          <div style={{ width: '100%', maxWidth: 520, padding: 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div style={{ width: '100%', maxWidth: 520, padding: 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>Nouvelle campagne</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -512,7 +513,7 @@ export default function CampaignsPage() {
       {showPostModal && selectedCampaign && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowPostModal(false); }}>
-          <div style={{ width: '100%', maxWidth: 460, padding: 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div style={{ width: '100%', maxWidth: 460, padding: 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>Ajouter un post</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

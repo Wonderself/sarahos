@@ -307,7 +307,7 @@ export default function MeetingPage() {
                 style={{
                   padding: '6px 14px',
                   borderRadius: 20,
-                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   background: 'var(--fz-bg-secondary, #F8FAFC)',
                   cursor: 'pointer',
                   fontSize: 12,
@@ -409,7 +409,7 @@ export default function MeetingPage() {
                 </div>
                 <div style={{
                   padding: '10px 14px', borderRadius: '4px 12px 12px 12px',
-                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap', color: 'var(--fz-text, #1E293B)',
                 }}>
                   {msg.content}

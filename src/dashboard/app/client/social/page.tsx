@@ -869,7 +869,7 @@ export default function SocialMediaPage() {
             </button>
 
             {showAdvanced && (
-              <div className="fz-grid-2" style={{ marginTop: 12, padding: 16, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)', gap: 16 }}>
+              <div className="fz-grid-2" style={{ marginTop: 12, padding: 16, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', gap: 16 }}>
                 <div>
                   <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Ton</label>
                   <select value={tone} onChange={e => setTone(e.target.value)} className="fz-select">
@@ -972,7 +972,7 @@ export default function SocialMediaPage() {
                 {savedPosts.slice(0, 5).map(post => (
                   <div key={post.id} style={{
                     padding: 14, borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg-secondary, #F8FAFC)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -1944,7 +1944,7 @@ export default function SocialMediaPage() {
                     <div key={idx} style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)',
-                      border: '1px solid var(--fz-border, #E2E8F0)',
+                      border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ fontSize: 18 }}>{platformEmoji(result.platform)}</span>

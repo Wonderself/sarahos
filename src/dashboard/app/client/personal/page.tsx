@@ -24,6 +24,24 @@ import HelpBubble from '../../../components/HelpBubble';
 //  Section 3: Recruter de nouveaux assistants
 // ═══════════════════════════════════════════════════
 
+// ─── ClickUp-style design tokens ─────────────────────────────────────────────
+
+const CU = {
+  card: {
+    background: 'var(--fz-bg, #FFFFFF)',
+    border: 'none' as const,
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    borderRadius: 8,
+  },
+  text: 'var(--fz-text, #1A1D23)',
+  textSecondary: 'var(--fz-text-secondary, #6B6F76)',
+  textMuted: 'var(--fz-text-muted, #A1A5AC)',
+  accent: 'var(--fz-accent, #0EA5E9)',
+  border: 'var(--fz-border, #E8EAED)',
+  bg: 'var(--fz-bg, #FFFFFF)',
+  bgSecondary: 'var(--fz-bg-secondary, #F8FAFC)',
+};
+
 // ─── Person emoji overrides (replace generic object emojis with person emojis) ───
 const PERSON_EMOJIS: Record<string, string> = {
   // Business agents
@@ -234,31 +252,30 @@ export default function PersonalAgentsPage() {
   return (
     <div className="client-page-scrollable">
       {/* ─── Header ─── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'nowrap' }}>
-        <span style={{ fontSize: 18 }}>{PAGE_META.personal.emoji}</span>
-        <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.personal.title}</h1>
-        <span style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>— {totalActive} actifs</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'nowrap' }}>
+        <span style={{ fontSize: 20 }}>{PAGE_META.personal.emoji}</span>
+        <div>
+          <h1 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>{PAGE_META.personal.title}</h1>
+          <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>— {totalActive} actifs · {activeBusinessIds.length} business + {activePersonalIds.length} perso</p>
+        </div>
         <HelpBubble text={PAGE_META.personal.helpText} />
-        <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--fz-text-muted)', whiteSpace: 'nowrap' }}>
-          {activeBusinessIds.length} business + {activePersonalIds.length} perso
-        </span>
       </div>
       <PageExplanation pageId="personal" text={PAGE_META.personal?.helpText} />
 
       {/* ─── Tabs ─── */}
       <div style={{
-        display: 'flex', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10,
+        display: 'flex', background: CU.bgSecondary, borderRadius: 8,
         padding: 3, gap: 2, marginBottom: 24,
       }}>
         <button
           onClick={() => setActiveTab('equipe')}
           style={{
-            flex: 1, textAlign: 'center', padding: '10px 16px', borderRadius: 8,
-            fontSize: 14, fontWeight: activeTab === 'equipe' ? 600 : 400,
+            flex: 1, textAlign: 'center', height: 36, padding: '0 16px', borderRadius: 6,
+            fontSize: 13, fontWeight: activeTab === 'equipe' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-            background: activeTab === 'equipe' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-            color: activeTab === 'equipe' ? 'var(--fz-text, #1E293B)' : 'var(--fz-text-muted, #94A3B8)',
-            boxShadow: activeTab === 'equipe' ? 'var(--shadow-sm)' : 'none',
+            background: activeTab === 'equipe' ? CU.bg : 'transparent',
+            color: activeTab === 'equipe' ? CU.text : CU.textMuted,
+            boxShadow: activeTab === 'equipe' ? 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' : 'none',
           }}
         >
           👥 Mon équipe
@@ -266,19 +283,19 @@ export default function PersonalAgentsPage() {
         <button
           onClick={() => setActiveTab('marketplace')}
           style={{
-            flex: 1, textAlign: 'center', padding: '10px 16px', borderRadius: 8,
-            fontSize: 14, fontWeight: activeTab === 'marketplace' ? 600 : 400,
+            flex: 1, textAlign: 'center', height: 36, padding: '0 16px', borderRadius: 6,
+            fontSize: 13, fontWeight: activeTab === 'marketplace' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-            background: activeTab === 'marketplace' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-            color: activeTab === 'marketplace' ? 'var(--fz-text, #1E293B)' : 'var(--fz-text-muted, #94A3B8)',
-            boxShadow: activeTab === 'marketplace' ? 'var(--shadow-sm)' : 'none',
+            background: activeTab === 'marketplace' ? CU.bg : 'transparent',
+            color: activeTab === 'marketplace' ? CU.text : CU.textMuted,
+            boxShadow: activeTab === 'marketplace' ? 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' : 'none',
           }}
         >
           🏪 Marketplace
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
-            background: activeTab === 'marketplace' ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-            color: activeTab === 'marketplace' ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
+            background: activeTab === 'marketplace' ? CU.accent : CU.bgSecondary,
+            color: activeTab === 'marketplace' ? '#fff' : CU.textMuted,
           }}>
             {MARKETPLACE_TEMPLATES.length}
           </span>
@@ -289,38 +306,39 @@ export default function PersonalAgentsPage() {
       {activeTab === 'equipe' && (<>
 
       {/* ─── Search ─── */}
-      <div className="mb-24">
+      <div style={{ marginBottom: 24 }}>
         <input
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="input"
-          placeholder="Rechercher un assistant par nom ou role..."
-          style={{ width: '100%', maxWidth: 400 }}
+          placeholder="🔍 Rechercher un assistant par nom ou role..."
+          style={{ width: '100%', maxWidth: 400, borderRadius: 6, fontSize: 13, height: 36 }}
         />
       </div>
 
       {/* ═══════════════════════════════════════════════════ */}
       {/*  SECTION 1: Mon equipe (active enterprise agents)  */}
       {/* ═══════════════════════════════════════════════════ */}
-      <section className="mb-32">
-        <div className="flex items-center gap-12 mb-16">
-          <div className="flex-center rounded-md" style={{
-            width: 36, height: 36, background: 'rgba(14,165,233,0.08)', fontSize: 18,
+      <section style={{ marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <div style={{
+            width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 8, background: 'rgba(14,165,233,0.08)', fontSize: 18,
           }}>
             🏢
           </div>
           <div>
-            <h2 className="text-xl font-bold">Mon équipe</h2>
-            <p className="text-sm text-muted">
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>Mon équipe</h2>
+            <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
               {activeBusinessAgents.length} assistant{activeBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise actif{activeBusinessAgents.length > 1 ? 's' : ''} sur {teamAgents.length}
             </p>
           </div>
         </div>
 
         {activeBusinessAgents.length === 0 && (
-          <div className="card p-24" style={{ textAlign: 'center' }}>
-            <p className="text-md text-muted mb-8">Aucun assistant d&apos;entreprise actif</p>
-            <p className="text-sm text-tertiary">Recrutez des assistants dans la section ci-dessous</p>
+          <div style={{ ...CU.card, padding: 24, textAlign: 'center' as const }}>
+            <p style={{ fontSize: 14, color: CU.textMuted, marginBottom: 8 }}>Aucun assistant d&apos;entreprise actif</p>
+            <p style={{ fontSize: 12, color: CU.textMuted }}>Recrutez des assistants dans la section ci-dessous</p>
           </div>
         )}
 
@@ -341,16 +359,17 @@ export default function PersonalAgentsPage() {
       {/* ═══════════════════════════════════════════════════ */}
       {/*  SECTION 2: Mes agents personnalises               */}
       {/* ═══════════════════════════════════════════════════ */}
-      <section className="mb-32">
-        <div className="flex items-center gap-12 mb-16">
-          <div className="flex-center rounded-md" style={{
-            width: 36, height: 36, background: '#06b6d415', fontSize: 18,
+      <section style={{ marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <div style={{
+            width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 8, background: '#06b6d415', fontSize: 18,
           }}>
             👥
           </div>
           <div>
-            <h2 className="text-xl font-bold">Mes assistants personnalises</h2>
-            <p className="text-sm text-muted">
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>Mes assistants personnalises</h2>
+            <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
               {activePersonalIds.length} assistant{activePersonalIds.length > 1 ? 's' : ''} perso actif{activePersonalIds.length > 1 ? 's' : ''} sur {PERSONAL_AGENTS.length}
             </p>
           </div>
@@ -366,25 +385,26 @@ export default function PersonalAgentsPage() {
           const activeInCat = agents.filter(a => activePersonalIds.includes(a.id)).length;
 
           return (
-            <div key={cat.title} className="mb-16">
+            <div key={cat.title} style={{ marginBottom: 16 }}>
               {/* Category header (clickable) */}
               <button
                 onClick={() => toggleCategory(cat.title)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                  padding: '8px 12px', borderRadius: 'var(--radius-md)',
-                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  padding: '8px 12px', borderRadius: 8,
+                  background: CU.bgSecondary, border: 'none',
+                  boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   cursor: 'pointer', fontFamily: 'var(--font-sans)', marginBottom: 8,
                   transition: 'background 0.15s',
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-bg-hover, #F1F5F9)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-bg-secondary, #F8FAFC)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = CU.bgSecondary; }}
               >
                 {cat.icon}
-                <span className="text-md font-semibold text-primary" style={{ flex: 1, textAlign: 'left' }}>{cat.title}</span>
-                <span className="text-xs text-muted">{activeInCat}/{agents.length} actifs</span>
+                <span style={{ flex: 1, textAlign: 'left', fontSize: 14, fontWeight: 600, color: CU.text }}>{cat.title}</span>
+                <span style={{ fontSize: 12, color: CU.textMuted }}>{activeInCat}/{agents.length} actifs</span>
                 <span style={{
-                  fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)',
+                  fontSize: 12, color: CU.textMuted,
                   transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.2s',
                 }}>
@@ -413,26 +433,27 @@ export default function PersonalAgentsPage() {
       {/* ═══════════════════════════════════════════════════ */}
       {/*  SECTION 3: Recruter de nouveaux agents             */}
       {/* ═══════════════════════════════════════════════════ */}
-      <section className="mb-32">
-        <div className="flex items-center gap-12 mb-16">
-          <div className="flex-center rounded-md" style={{
-            width: 36, height: 36, background: '#22c55e15', fontSize: 18,
+      <section style={{ marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <div style={{
+            width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 8, background: '#22c55e15', fontSize: 18,
           }}>
             🚀
           </div>
           <div>
-            <h2 className="text-xl font-bold">Recruter de nouveaux assistants</h2>
-            <p className="text-sm text-muted">
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>Recruter de nouveaux assistants</h2>
+            <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
               {inactiveBusinessAgents.length} assistant{inactiveBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise disponible{inactiveBusinessAgents.length > 1 ? 's' : ''}
             </p>
           </div>
         </div>
 
         {inactiveBusinessAgents.length === 0 && (
-          <div className="card p-24" style={{ textAlign: 'center' }}>
+          <div style={{ ...CU.card, padding: 24, textAlign: 'center' as const }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <p className="text-md font-semibold mb-4">Équipe au complet !</p>
-            <p className="text-sm text-muted">
+            <p style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>Équipe au complet !</p>
+            <p style={{ fontSize: 12, color: CU.textMuted }}>
               Tous les assistants d&apos;entreprise sont actifs dans votre équipe.
             </p>
           </div>
@@ -452,22 +473,32 @@ export default function PersonalAgentsPage() {
       </section>
 
       {/* ─── Bottom CTA ─── */}
-      <div className="card p-24" style={{
+      <div style={{
+        ...CU.card,
+        padding: 24,
         background: 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)',
-        border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
-        <div className="flex-between flex-wrap" style={{ gap: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <h3 className="text-lg font-bold mb-4">Vos assistants sont prêts</h3>
-            <p className="text-sm text-secondary">
+            <h3 style={{ fontSize: 16, fontWeight: 600, color: CU.text, marginBottom: 4 }}>Vos assistants sont prêts</h3>
+            <p style={{ fontSize: 13, color: CU.textSecondary }}>
               Discutez avec votre équipe IA ou personnalisez leurs comportements en profondeur.
             </p>
           </div>
-          <div className="flex gap-12 flex-wrap">
-            <Link href="/client/chat" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <Link href="/client/chat" style={{
+              textDecoration: 'none', height: 36, padding: '0 16px', borderRadius: 6,
+              fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center',
+              background: CU.accent, color: '#fff', border: 'none',
+            }}>
               💬 Discuter avec mes assistants
             </Link>
-            <Link href="/client/agents/customize" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+            <Link href="/client/agents/customize" style={{
+              textDecoration: 'none', height: 36, padding: '0 16px', borderRadius: 6,
+              fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center',
+              background: CU.bgSecondary, color: CU.text,
+              border: `1px solid ${CU.border}`,
+            }}>
               🎨 Personnaliser mes assistants
             </Link>
           </div>
@@ -481,7 +512,7 @@ export default function PersonalAgentsPage() {
         <div>
           {/* Search bar */}
           <div style={{ position: 'relative', marginBottom: 16 }}>
-            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: CU.textMuted }}>
               🔍
             </span>
             <input
@@ -490,28 +521,29 @@ export default function PersonalAgentsPage() {
               value={mpSearch}
               onChange={e => setMpSearch(e.target.value)}
               style={{
-                width: '100%', padding: '12px 16px 12px 42px', borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
-                color: 'var(--fz-text, #1E293B)', fontSize: 14, outline: 'none', transition: 'border-color 0.2s',
+                width: '100%', height: 40, padding: '0 16px 0 42px', borderRadius: 8,
+                border: `1px solid ${CU.border}`, background: CU.bg,
+                color: CU.text, fontSize: 13, outline: 'none', transition: 'border-color 0.2s',
+                boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               }}
-              onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
-              onBlur={e => (e.target.style.borderColor = 'var(--fz-border, #E2E8F0)')}
+              onFocus={e => (e.target.style.borderColor = CU.accent)}
+              onBlur={e => (e.target.style.borderColor = CU.border)}
             />
           </div>
 
           {/* Category chips */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
             {MARKETPLACE_CATEGORIES.map(cat => (
               <button
                 key={cat}
                 onClick={() => setMpCategory(cat)}
                 style={{
-                  padding: '6px 16px', borderRadius: 20,
-                  border: mpCategory === cat ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
-                  background: mpCategory === cat ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
-                  color: mpCategory === cat ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
+                  height: 32, padding: '0 14px', borderRadius: 6,
+                  border: mpCategory === cat ? `1.5px solid ${CU.accent}` : `1px solid ${CU.border}`,
+                  background: mpCategory === cat ? CU.accent + '10' : CU.bg,
+                  color: mpCategory === cat ? CU.accent : CU.textSecondary,
                   fontSize: 13, fontWeight: mpCategory === cat ? 600 : 400,
-                  cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap',
+                  cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
                 }}
               >
                 {cat}
@@ -521,7 +553,7 @@ export default function PersonalAgentsPage() {
 
           {/* Sort + count */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <span style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <span style={{ fontSize: 13, color: CU.textMuted }}>
               {mpFiltered.length} assistant{mpFiltered.length > 1 ? 's' : ''} trouve{mpFiltered.length > 1 ? 's' : ''}
             </span>
             <div style={{ display: 'flex', gap: 4 }}>
@@ -534,10 +566,10 @@ export default function PersonalAgentsPage() {
                   key={s.key}
                   onClick={() => setMpSort(s.key)}
                   style={{
-                    padding: '5px 12px', borderRadius: 'var(--radius-sm)', border: 'none',
-                    background: mpSort === s.key ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                    color: mpSort === s.key ? '#fff' : 'var(--fz-text-secondary, #64748B)',
-                    fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s',
+                    height: 30, padding: '0 12px', borderRadius: 6, border: 'none',
+                    background: mpSort === s.key ? CU.accent : CU.bgSecondary,
+                    color: mpSort === s.key ? '#fff' : CU.textSecondary,
+                    fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
                   }}
                 >
                   {s.label}
@@ -547,44 +579,44 @@ export default function PersonalAgentsPage() {
           </div>
 
           {/* Agent grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 12 }}>
             {mpFiltered.map(agent => {
-              const catColor = CATEGORY_COLORS[agent.category] || 'var(--accent)';
+              const catColor = CATEGORY_COLORS[agent.category] || CU.accent;
               const isInstalled = mpInstalled.has(agent.id);
               const isInstallingThis = mpInstalling === agent.id;
               return (
                 <div
                   key={agent.id}
                   style={{
-                    background: 'var(--fz-bg, #FFFFFF)', borderRadius: 'var(--radius-lg)',
-                    border: '1px solid var(--fz-border, #E2E8F0)', padding: 20,
-                    transition: 'transform 0.2s, box-shadow 0.2s', display: 'flex', flexDirection: 'column',
+                    ...CU.card,
+                    padding: 20, transition: 'transform 0.2s, box-shadow 0.2s',
+                    display: 'flex', flexDirection: 'column',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))'; }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                     <span style={{ fontSize: 32 }}>{agent.icon}</span>
                     <div style={{ display: 'flex', gap: 6 }}>
                       {agent.badge === 'populaire' && (
-                        <span style={{ padding: '2px 8px', borderRadius: 10, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600 }}>
+                        <span style={{ padding: '2px 8px', borderRadius: 6, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600 }}>
                           🔥 Populaire
                         </span>
                       )}
                       {agent.badge === 'nouveau' && (
-                        <span style={{ padding: '2px 8px', borderRadius: 10, background: '#dbeafe', color: '#1e40af', fontSize: 11, fontWeight: 600 }}>
+                        <span style={{ padding: '2px 8px', borderRadius: 6, background: '#dbeafe', color: '#1e40af', fontSize: 11, fontWeight: 600 }}>
                           ✨ Nouveau
                         </span>
                       )}
                     </div>
                   </div>
-                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>{agent.name}</h3>
+                  <h3 style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>{agent.name}</h3>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-                    <span style={{ padding: '2px 10px', borderRadius: 10, background: catColor + '18', color: catColor, fontSize: 11, fontWeight: 600 }}>
+                    <span style={{ padding: '2px 10px', borderRadius: 6, background: catColor + '18', color: catColor, fontSize: 11, fontWeight: 600 }}>
                       {agent.category}
                     </span>
                     <span style={{
-                      padding: '2px 10px', borderRadius: 10,
+                      padding: '2px 10px', borderRadius: 6,
                       background: agent.tier === 'free' ? 'rgba(22,163,74,0.1)' : 'rgba(147,51,234,0.1)',
                       color: agent.tier === 'free' ? 'var(--success)' : 'var(--purple)',
                       fontSize: 11, fontWeight: 600,
@@ -592,21 +624,21 @@ export default function PersonalAgentsPage() {
                       {agent.tier === 'free' ? 'Gratuit' : 'Premium'}
                     </span>
                   </div>
-                  <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.5, marginBottom: 16, flex: 1 }}>
+                  <p style={{ fontSize: 12, color: CU.textMuted, lineHeight: 1.5, marginBottom: 16, flex: 1 }}>
                     {agent.description}
                   </p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{agent.installs.toLocaleString('fr-FR')} installs</span>
+                    <span style={{ fontSize: 12, color: CU.textMuted }}>{agent.installs.toLocaleString('fr-FR')} installs</span>
                     <button
                       onClick={() => handleMpToggleInstall(agent.id)}
                       disabled={isInstallingThis}
                       style={{
-                        padding: '7px 18px', borderRadius: 'var(--radius-md)',
-                        border: isInstalled ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
-                        background: isInstalled ? 'var(--fz-bg, #FFFFFF)' : 'var(--accent)',
-                        color: isInstalled ? 'var(--fz-text-secondary, #64748B)' : '#fff',
-                        fontSize: 13, fontWeight: 600, cursor: isInstallingThis ? 'wait' : 'pointer',
-                        transition: 'all 0.2s',
+                        height: 36, padding: '0 16px', borderRadius: 6,
+                        border: isInstalled ? `1px solid ${CU.border}` : 'none',
+                        background: isInstalled ? CU.bg : CU.accent,
+                        color: isInstalled ? CU.textSecondary : '#fff',
+                        fontSize: 13, fontWeight: 500, cursor: isInstallingThis ? 'wait' : 'pointer',
+                        transition: 'all 0.15s',
                       }}
                     >
                       {isInstallingThis ? '...' : isInstalled ? <>✅ Installe</> : 'Installer'}
@@ -618,15 +650,15 @@ export default function PersonalAgentsPage() {
           </div>
 
           {mpFiltered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: CU.textMuted }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
-              <p style={{ fontSize: 15 }}>Aucun assistant ne correspond a votre recherche.</p>
+              <p style={{ fontSize: 14 }}>Aucun assistant ne correspond a votre recherche.</p>
               <button
                 onClick={() => { setMpSearch(''); setMpCategory('Tous'); }}
                 style={{
-                  marginTop: 12, padding: '8px 20px', borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
-                  color: 'var(--accent)', fontSize: 13, cursor: 'pointer',
+                  marginTop: 12, height: 36, padding: '0 20px', borderRadius: 6,
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                  background: CU.bg, color: CU.accent, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                 }}
               >
                 Reinitialiser les filtres
@@ -636,19 +668,21 @@ export default function PersonalAgentsPage() {
 
           {/* Stats bar */}
           <div style={{
-            marginTop: 40, padding: '16px 24px', borderRadius: 'var(--radius-md)',
-            background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+            marginTop: 40, padding: '16px 24px', borderRadius: 8,
+            background: CU.bgSecondary, border: 'none',
+            boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16,
           }}>
             {[
-              { label: 'Assistants disponibles', value: MARKETPLACE_TEMPLATES.length },
-              { label: 'Assistants installes', value: mpInstalled.size },
-              { label: 'Categories', value: MARKETPLACE_CATEGORIES.length - 1 },
-              { label: 'Gratuits', value: MARKETPLACE_TEMPLATES.filter(t => t.tier === 'free').length },
+              { label: 'Assistants disponibles', value: MARKETPLACE_TEMPLATES.length, icon: '📦' },
+              { label: 'Assistants installes', value: mpInstalled.size, icon: '✅' },
+              { label: 'Categories', value: MARKETPLACE_CATEGORIES.length - 1, icon: '📂' },
+              { label: 'Gratuits', value: MARKETPLACE_TEMPLATES.filter(t => t.tier === 'free').length, icon: '🎁' },
             ].map(stat => (
               <div key={stat.label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>{stat.value}</div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{stat.label}</div>
+                <div style={{ fontSize: 14, marginBottom: 2 }}>{stat.icon}</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: CU.accent }}>{stat.value}</div>
+                <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -669,8 +703,8 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
 }) {
   return (
     <div
-      className="bg-elevated border rounded-lg"
       style={{
+        ...CU.card,
         padding: '16px 20px',
         borderLeft: `4px solid ${agent.color}`,
         transition: 'all 0.2s ease',
@@ -681,37 +715,36 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
       {agent.isCustomized && (
         <span style={{
           position: 'absolute', top: 8, right: 10,
-          fontSize: 10, fontWeight: 700, color: 'var(--accent)',
-          background: 'var(--accent-muted)', padding: '2px 8px',
-          borderRadius: 10,
+          fontSize: 10, fontWeight: 600, color: CU.accent,
+          background: CU.accent + '15', padding: '2px 8px',
+          borderRadius: 6,
         }}>
           Personnalise
         </span>
       )}
 
-      <div className="flex items-center gap-12 mb-8">
-        <div className="flex-center rounded-md" style={{
-          width: 36, height: 36, fontSize: 18,
-          background: `${agent.color}15`,
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+        <div style={{
+          width: 36, height: 36, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          borderRadius: 8, background: `${agent.color}15`,
         }}>
           {getPersonEmoji(agent.id, agent.emoji)}
         </div>
         <div style={{ flex: 1 }}>
-          <div className="font-bold text-base">{agent.name}</div>
-          <div className="text-sm" style={{ color: agent.color }}>{agent.role}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{agent.name}</div>
+          <div style={{ fontSize: 12, color: agent.color }}>{agent.role}</div>
         </div>
       </div>
 
-      <p className="text-sm text-secondary mb-8" style={{ lineHeight: 1.5 }}>{agent.description}</p>
+      <p style={{ fontSize: 13, color: CU.textSecondary, marginBottom: 8, lineHeight: 1.5 }}>{agent.description}</p>
 
       {/* Capabilities badges */}
-      <div className="flex flex-wrap gap-4 mb-12">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 12 }}>
         {agent.capabilities.slice(0, 5).map(cap => (
           <span
             key={cap}
-            className="text-xs rounded-sm"
             style={{
-              padding: '2px 8px',
+              padding: '2px 8px', borderRadius: 6, fontSize: 11,
               background: `${agent.color}12`,
               color: agent.color,
               border: `1px solid ${agent.color}30`,
@@ -721,16 +754,16 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
           </span>
         ))}
         {agent.capabilities.length > 5 && (
-          <span className="text-xs text-muted">+{agent.capabilities.length - 5}</span>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>+{agent.capabilities.length - 5}</span>
         )}
       </div>
 
       {/* Footer: level + price + toggle */}
-      <div className="flex-between items-center">
-        <div className="flex items-center gap-8">
-          <span className="text-xs text-muted">{agent.level}</span>
-          <span className="text-xs text-muted">·</span>
-          <span className="text-xs text-muted">{agent.priceCredits} cr/appel</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>{agent.level}</span>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>·</span>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>{agent.priceCredits} cr/appel</span>
         </div>
 
         {/* Toggle switch */}
@@ -738,7 +771,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
           onClick={onToggle}
           style={{
             position: 'relative', width: 40, height: 22, borderRadius: 11,
-            background: isActive ? agent.color : 'var(--fz-bg-secondary, #F8FAFC)',
+            background: isActive ? agent.color : CU.bgSecondary,
             border: 'none', cursor: 'pointer', transition: 'background 0.2s',
             flexShrink: 0,
           }}
@@ -761,8 +794,8 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
 function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => void }) {
   return (
     <div
-      className="bg-secondary border rounded-lg"
       style={{
+        ...CU.card,
         padding: '16px 20px',
         borderLeft: `4px solid ${agent.color}44`,
         opacity: 0.75,
@@ -771,34 +804,34 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
       onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.opacity = '1'; }}
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.75'; }}
     >
-      <div className="flex items-center gap-12 mb-8">
-        <div className="flex-center rounded-md" style={{
-          width: 36, height: 36, fontSize: 18,
-          background: `${agent.color}10`,
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+        <div style={{
+          width: 36, height: 36, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          borderRadius: 8, background: `${agent.color}10`,
         }}>
           {getPersonEmoji(agent.id, agent.emoji)}
         </div>
         <div style={{ flex: 1 }}>
-          <div className="font-semibold text-base">{agent.name}</div>
-          <div className="text-sm text-muted">{agent.role}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{agent.name}</div>
+          <div style={{ fontSize: 12, color: CU.textMuted }}>{agent.role}</div>
         </div>
       </div>
 
-      <p className="text-sm text-muted mb-10" style={{ lineHeight: 1.5, fontStyle: 'italic' }}>
+      <p style={{ fontSize: 13, color: CU.textMuted, marginBottom: 10, lineHeight: 1.5, fontStyle: 'italic' }}>
         &laquo; {agent.hiringPitch} &raquo;
       </p>
 
       {/* Capabilities preview */}
-      <div className="flex flex-wrap gap-4 mb-12">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 12 }}>
         {agent.capabilities.slice(0, 4).map(cap => (
           <span
             key={cap}
-            className="text-xs rounded-sm"
             style={{
-              padding: '2px 8px',
-              background: 'var(--fz-bg-secondary, #F8FAFC)',
-              color: 'var(--fz-text-muted, #94A3B8)',
-              border: '1px solid var(--fz-border, #E2E8F0)',
+              padding: '2px 8px', borderRadius: 6, fontSize: 11,
+              background: CU.bgSecondary,
+              color: CU.textMuted,
+              border: 'none',
+              boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             }}
           >
             {cap}
@@ -806,16 +839,20 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
         ))}
       </div>
 
-      <div className="flex-between items-center">
-        <div className="flex items-center gap-8">
-          <span className="text-xs text-muted">{agent.level}</span>
-          <span className="text-xs text-muted">·</span>
-          <span className="text-xs text-muted">{agent.priceCredits} cr/appel</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>{agent.level}</span>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>·</span>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>{agent.priceCredits} cr/appel</span>
         </div>
         <button
           onClick={onRecruit}
-          className="btn btn-primary btn-sm"
-          style={{ fontSize: 12, padding: '5px 14px' }}
+          style={{
+            height: 36, padding: '0 14px', borderRadius: 6,
+            fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer',
+            background: CU.accent, color: '#fff',
+            transition: 'opacity 0.15s',
+          }}
         >
           + Recruter
         </button>
@@ -829,31 +866,30 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
 function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onToggle: () => void }) {
   return (
     <div
-      className="bg-elevated border rounded-lg"
       style={{
+        ...CU.card,
         padding: '16px 20px',
         borderLeft: `4px solid ${agent.color}`,
         transition: 'all 0.2s ease',
       }}
     >
-      <div className="flex-between mb-8">
-        <div className="flex items-center gap-12">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div
-            className="flex-center rounded-md"
             style={{
-              width: 36, height: 36, fontSize: 18,
-              background: `${agent.color}15`,
+              width: 36, height: 36, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              borderRadius: 8, background: `${agent.color}15`,
             }}
           >
             {getPersonEmoji(agent.id, agent.emoji)}
           </div>
           <div>
-            <div className="font-bold text-base">{agent.name}</div>
-            <div className="text-sm" style={{ color: agent.color }}>{agent.role}</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{agent.name}</div>
+            <div style={{ fontSize: 12, color: agent.color }}>{agent.role}</div>
           </div>
         </div>
-        <div className="flex items-center gap-8">
-          <span className="text-xs text-muted">{agent.priceCredits} cr/appel</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 11, color: CU.textMuted }}>{agent.priceCredits} cr/appel</span>
           <button
             onClick={onToggle}
             style={{
@@ -873,16 +909,15 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
         </div>
       </div>
 
-      <p className="text-sm text-secondary mb-8">{agent.description}</p>
+      <p style={{ fontSize: 13, color: CU.textSecondary, marginBottom: 8 }}>{agent.description}</p>
 
       {/* Capabilities */}
-      <div className="flex flex-wrap gap-4 mb-12">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 12 }}>
         {agent.capabilities.map(cap => (
           <span
             key={cap}
-            className="text-xs rounded-sm"
             style={{
-              padding: '2px 8px',
+              padding: '2px 8px', borderRadius: 6, fontSize: 11,
               background: `${agent.color}12`,
               color: agent.color,
               border: `1px solid ${agent.color}30`,
@@ -894,15 +929,19 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
       </div>
 
       {/* Modes */}
-      <div className="flex gap-8 flex-wrap">
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {agent.modes.map(mode => (
           <button
             key={mode.id}
-            className="btn btn-ghost btn-xs"
-            style={{ fontSize: 11, padding: '4px 10px' }}
+            style={{
+              height: 36, padding: '0 12px', borderRadius: 6, fontSize: 11, fontWeight: 500,
+              background: CU.bgSecondary, color: CU.textSecondary,
+              border: `1px solid ${CU.border}`, cursor: 'pointer',
+              transition: 'background 0.12s',
+            }}
             title={mode.description}
           >
-            {mode.icon} 
+            {mode.icon}
             {mode.name}
           </button>
         ))}
@@ -916,29 +955,30 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
 function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onToggle: () => void }) {
   return (
     <div
-      className="bg-secondary border rounded-md flex-between"
       style={{
+        ...CU.card,
         padding: '10px 16px',
         opacity: 0.6,
         transition: 'all 0.2s ease',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}
       onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.85'; }}
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.6'; }}
     >
-      <div className="flex items-center gap-12">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {getPersonEmoji(agent.id, agent.emoji)}
         <div>
-          <span className="text-sm font-semibold">{agent.name}</span>
-          <span className="text-xs text-muted" style={{ marginLeft: 8 }}>{agent.role}</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{agent.name}</span>
+          <span style={{ fontSize: 12, color: CU.textMuted, marginLeft: 8 }}>{agent.role}</span>
         </div>
       </div>
-      <div className="flex items-center gap-8">
-        <span className="text-xs text-muted">{agent.priceCredits} cr</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 11, color: CU.textMuted }}>{agent.priceCredits} cr</span>
         <button
           onClick={onToggle}
           style={{
             position: 'relative', width: 40, height: 22, borderRadius: 11,
-            background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', cursor: 'pointer',
+            background: CU.bgSecondary, border: 'none', cursor: 'pointer',
             transition: 'background 0.2s', flexShrink: 0,
           }}
           title="Activer"

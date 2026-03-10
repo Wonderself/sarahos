@@ -260,7 +260,7 @@ export default function GamesHubPage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
-                border: '1px solid var(--fz-border, #E2E8F0)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               }}
             >
               <span style={{ fontSize: 26 }}>
@@ -301,7 +301,7 @@ export default function GamesHubPage() {
               style={{
                 background: 'var(--fz-bg, #FFFFFF)',
                 color: 'var(--fz-text, #1E293B)',
-                border: '1px solid var(--fz-border, #E2E8F0)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 borderRadius: 10,
                 padding: '10px 20px',
                 fontSize: 14,
@@ -351,7 +351,7 @@ export default function GamesHubPage() {
               style={{
                 background: 'var(--fz-bg, #FFFFFF)',
                 borderRadius: 12,
-                border: '1px solid var(--fz-border, #E2E8F0)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 overflow: 'hidden',
               }}
             >
@@ -438,7 +438,7 @@ export default function GamesHubPage() {
                 <div
                   style={{
                     background: 'var(--fz-bg, #FFFFFF)',
-                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                     borderRadius: 14,
                     padding: '20px 18px',
                     cursor: 'pointer',
@@ -525,7 +525,7 @@ export default function GamesHubPage() {
                         color: game.color,
                         fontSize: 11,
                         fontWeight: 600,
-                        padding: '4px 10px',
+                        height: 36, padding: '0 12px',
                         borderRadius: 20,
                       }}
                     >

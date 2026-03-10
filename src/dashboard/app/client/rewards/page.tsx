@@ -179,7 +179,7 @@ export default function RewardsPage() {
         display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 10 : 14, marginBottom: 28,
       }}>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
@@ -187,7 +187,7 @@ export default function RewardsPage() {
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>CR\u00c9DITS GAGN\u00c9S</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
@@ -195,7 +195,7 @@ export default function RewardsPage() {
           <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPL\u00c9T\u00c9ES</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
@@ -207,7 +207,7 @@ export default function RewardsPage() {
       {/* Progress bar */}
       <div style={{
         background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
-        border: '1px solid var(--fz-border, #E2E8F0)',
+        border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
       }}>
         <div style={{
           width: `${progress}%`, height: '100%', borderRadius: 6,

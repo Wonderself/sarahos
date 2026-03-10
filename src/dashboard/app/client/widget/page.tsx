@@ -66,7 +66,7 @@ export default function WidgetPage() {
               onChange={e => updateConfig({ agentId: e.target.value })}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 color: 'var(--fz-text, #1E293B)', fontSize: 13, outline: 'none',
               }}
             >
@@ -92,7 +92,7 @@ export default function WidgetPage() {
                 onChange={e => updateConfig({ primaryColor: e.target.value })}
                 style={{
                   flex: 1, padding: '8px 12px', borderRadius: 8,
-                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   color: 'var(--fz-text, #1E293B)', fontSize: 13, fontFamily: 'monospace', outline: 'none',
                 }}
               />
@@ -129,7 +129,7 @@ export default function WidgetPage() {
               onChange={e => updateConfig({ headerTitle: e.target.value })}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 color: 'var(--fz-text, #1E293B)', fontSize: 13, outline: 'none',
               }}
             />
@@ -144,7 +144,7 @@ export default function WidgetPage() {
               rows={3}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8, resize: 'vertical',
-                background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 color: 'var(--fz-text, #1E293B)', fontSize: 13, outline: 'none',
               }}
             />
@@ -161,7 +161,7 @@ export default function WidgetPage() {
                 min={300} max={500}
                 style={{
                   width: '100%', padding: '10px 12px', borderRadius: 8,
-                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   color: 'var(--fz-text, #1E293B)', fontSize: 13, outline: 'none',
                 }}
               />
@@ -175,7 +175,7 @@ export default function WidgetPage() {
                 min={400} max={700}
                 style={{
                   width: '100%', padding: '10px 12px', borderRadius: 8,
-                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   color: 'var(--fz-text, #1E293B)', fontSize: 13, outline: 'none',
                 }}
               />
@@ -193,7 +193,7 @@ export default function WidgetPage() {
           {/* Widget preview */}
           <div style={{
             position: 'relative', height: 500,
-            background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             borderRadius: 14, overflow: 'hidden',
           }}>
             {/* Fake website background */}
@@ -299,7 +299,7 @@ export default function WidgetPage() {
 
         <div style={{
           position: 'relative',
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           borderRadius: 12, padding: '16px 20px',
         }}>
           <pre style={{

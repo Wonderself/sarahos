@@ -29,6 +29,117 @@ function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
 }
 
+// ─── ClickUp-style shared styles ───
+
+const CU = {
+  card: {
+    background: 'var(--fz-bg, #fff)',
+    border: 'none',
+    borderRadius: 'var(--fz-radius-md, 8px)',
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    transition: 'all 0.15s ease',
+  } as React.CSSProperties,
+  cardHover: {
+    background: 'var(--fz-bg, #fff)',
+    border: 'none',
+    borderRadius: 'var(--fz-radius-md, 8px)',
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    transition: 'all 0.15s ease',
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  sectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  } as React.CSSProperties,
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: 'var(--fz-text, #1E293B)',
+    lineHeight: 1.3,
+  } as React.CSSProperties,
+  sectionSub: {
+    fontSize: 12,
+    color: 'var(--fz-text-muted, #94A3B8)',
+    lineHeight: 1.3,
+  } as React.CSSProperties,
+  kpiLabel: {
+    fontSize: 11,
+    fontWeight: 600,
+    color: 'var(--fz-text-muted, #94A3B8)',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.04em',
+  },
+  kpiValue: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: 'var(--fz-text, #1E293B)',
+    lineHeight: 1.2,
+  } as React.CSSProperties,
+  kpiMeta: {
+    fontSize: 11,
+    color: 'var(--fz-text-muted, #94A3B8)',
+    marginTop: 2,
+  } as React.CSSProperties,
+  btn: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500,
+    fontSize: 13,
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    transition: 'all 0.15s ease',
+  } as React.CSSProperties,
+  btnGhost: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500,
+    fontSize: 13,
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    transition: 'all 0.15s ease',
+    background: 'transparent',
+    color: 'var(--fz-text-secondary, #64748B)',
+  } as React.CSSProperties,
+  btnPrimary: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500,
+    fontSize: 13,
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    transition: 'all 0.15s ease',
+    background: 'var(--fz-accent, #0EA5E9)',
+    color: '#fff',
+    minWidth: 36,
+  } as React.CSSProperties,
+  input: {
+    height: 36,
+    padding: '0 10px',
+    borderRadius: 6,
+    border: '1px solid var(--fz-border, #E2E8F0)',
+    background: 'var(--fz-bg, #fff)',
+    color: 'var(--fz-text, #1E293B)',
+    fontSize: 13,
+    outline: 'none',
+    transition: 'border-color 0.15s ease',
+  } as React.CSSProperties,
+};
+
 // ─── Component ───
 
 export default function ClientDashboard() {
@@ -273,14 +384,17 @@ export default function ClientDashboard() {
         <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
       )}
 
-      {/* ── Greeting Header ── */}
-      <div style={{ marginBottom: 16 }}>
-        <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: 0 }}>
-          {greeting}, {userName || 'cher client'} 👋
-        </h1>
-        <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', margin: '2px 0 0' }}>
-          {todayStr}
-        </p>
+      {/* ── Greeting Header — compact single row ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+        <span style={{ fontSize: 20, lineHeight: 1 }}>👋</span>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', lineHeight: 1.3 }}>
+            {greeting}, {userName || 'cher client'}
+          </span>
+          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.3 }}>
+            {todayStr}
+          </span>
+        </div>
       </div>
       <PageExplanation pageId="dashboard" text={PAGE_META.dashboard?.helpText} />
 
@@ -288,105 +402,133 @@ export default function ClientDashboard() {
       {!hasProfile && !isDismissed('onboarding') && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 12,
-          background: 'rgba(14,165,233,0.04)', border: '1px solid rgba(14,165,233,0.1)', borderRadius: 8,
+          background: 'rgba(14,165,233,0.04)', borderRadius: 'var(--fz-radius-md, 8px)',
+          boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          border: 'none',
         }}>
           <span style={{ fontSize: 16 }}>🏗️</span>
-          <span style={{ flex: 1, fontSize: 12, color: 'var(--fz-text-secondary)' }}>Complétez votre profil pour des résultats optimaux</span>
-          <Link href="/client/onboarding" style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-accent)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          <span style={{ flex: 1, fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>Complétez votre profil pour des résultats optimaux</span>
+          <Link href="/client/onboarding" style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
             Configurer →
           </Link>
-          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: 'var(--fz-text-muted)' }}>×</button>
+          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
         </div>
       )}
 
       {/* ── KPI Cards ── */}
-      <div className="fz-kpi-grid" style={{ marginBottom: 16 }}>
-        <Link href="/client/account" className="fz-card-hover" style={{ textDecoration: 'none', padding: '10px 12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <span style={{ fontSize: 14 }}>💰</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Crédits</span>
-          </div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{credits.toFixed(1)}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>
-            {daysLeft > 0 ? `~${daysLeft}j · ${averageDaily}/j` : 'Rechargez'}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+        gap: 12,
+        marginBottom: 16,
+      }}>
+        <Link href="/client/account" style={{
+          ...CU.cardHover, textDecoration: 'none', padding: '12px 14px',
+          display: 'flex', alignItems: 'flex-start', gap: 10,
+        }}>
+          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>💰</span>
+          <div>
+            <div style={CU.kpiLabel}>Crédits</div>
+            <div style={CU.kpiValue}>{credits.toFixed(1)}</div>
+            <div style={CU.kpiMeta}>
+              {daysLeft > 0 ? `~${daysLeft}j · ${averageDaily}/j` : 'Rechargez'}
+            </div>
           </div>
         </Link>
-        <div className="fz-card" style={{ padding: '10px 12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <span style={{ fontSize: 14 }}>💬</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Messages</span>
+        <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>💬</span>
+          <div>
+            <div style={CU.kpiLabel}>Messages</div>
+            <div style={CU.kpiValue}>{stats.totalMessages}</div>
+            <div style={CU.kpiMeta}>Conversations</div>
           </div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{stats.totalMessages}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>Conversations</div>
         </div>
-        <Link href="/client/agents" className="fz-card-hover" style={{ textDecoration: 'none', padding: '10px 12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <span style={{ fontSize: 14 }}>🤖</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Assistants</span>
+        <Link href="/client/agents" style={{
+          ...CU.cardHover, textDecoration: 'none', padding: '12px 14px',
+          display: 'flex', alignItems: 'flex-start', gap: 10,
+        }}>
+          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>🤖</span>
+          <div>
+            <div style={CU.kpiLabel}>Assistants</div>
+            <div style={CU.kpiValue}>{activeAgents.length}</div>
+            <div style={CU.kpiMeta}>sur {DEFAULT_AGENTS.length}</div>
           </div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{activeAgents.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>sur {DEFAULT_AGENTS.length}</div>
         </Link>
-        <div className="fz-card" style={{ padding: '10px 12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <span style={{ fontSize: 14 }}>🔥</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Streak</span>
+        <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>🔥</span>
+          <div>
+            <div style={CU.kpiLabel}>Streak</div>
+            <div style={CU.kpiValue}>{stats.streak}j</div>
+            <div style={CU.kpiMeta}>Jours consécutifs</div>
           </div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text)' }}>{stats.streak}j</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted)', marginTop: 2 }}>Jours consécutifs</div>
         </div>
       </div>
 
       {/* ── AI Briefing ── */}
-      <div className="fz-card" style={{ padding: '12px 14px', marginBottom: 16 }}>
+      <div style={{ ...CU.card, padding: '12px 16px', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 16 }}>🧠</span>
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text)' }}>Briefing IA du jour</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Briefing IA du jour</span>
             <HelpBubble text="Chaque matin, votre IA analyse votre activité et vous propose un résumé actionnable." />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {briefingTime && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>Mis à jour à {briefingTime}</span>}
-            <button onClick={refreshBriefing} className="fz-btn-ghost fz-btn-sm" disabled={briefingLoading}>
+            {briefingTime && <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Mis à jour à {briefingTime}</span>}
+            <button
+              onClick={refreshBriefing}
+              disabled={briefingLoading}
+              style={{
+                ...CU.btnGhost,
+                opacity: briefingLoading ? 0.6 : 1,
+              }}
+            >
               {briefingLoading ? '⏳' : '🔄'} {briefingLoading ? 'Génération...' : 'Actualiser'}
             </button>
           </div>
         </div>
         {briefingLoading && !briefingLoaded ? (
-          <div style={{ padding: '12px 0', color: 'var(--fz-text-muted)', fontSize: 13, fontStyle: 'italic' }}>
+          <div style={{ padding: '12px 0', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, fontStyle: 'italic' }}>
             ⏳ Votre briefing IA est en cours de génération...
           </div>
         ) : briefing ? (
           <div style={{
             fontSize: 13, lineHeight: 1.7, color: 'var(--fz-text-secondary, #64748B)',
-            background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10, padding: '12px 16px',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 'var(--fz-radius-md, 8px)', padding: '12px 16px',
             whiteSpace: 'pre-wrap',
           }}>
             {briefing}
           </div>
         ) : (
-          <div style={{ fontSize: 13, color: 'var(--fz-text-muted)', fontStyle: 'italic' }}>
-            Connectez-vous pour recevoir votre briefing quotidien.
+          <div style={{ textAlign: 'center', padding: '24px 0' }}>
+            <div style={{ fontSize: 40, marginBottom: 8 }}>🧠</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>Briefing IA</div>
+            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              Connectez-vous pour recevoir votre briefing quotidien.
+            </div>
           </div>
         )}
       </div>
 
       {/* ── Quick Actions ── */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-          <span style={{ fontSize: 14 }}>⚡</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text)' }}>Actions rapides</span>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <span style={{ fontSize: 16 }}>⚡</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>Actions rapides</span>
           <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
         </div>
-        <div className="fz-quick-actions">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: 12,
+        }}>
           {QUICK_ACTIONS.map(action => (
-            <Link key={action.href} href={action.href} className="fz-card-hover" style={{
-              textDecoration: 'none', padding: '14px 16px',
+            <Link key={action.href} href={action.href} style={{
+              ...CU.cardHover, textDecoration: 'none', padding: '14px 16px',
               display: 'flex', alignItems: 'center', gap: 12,
             }}>
-              <span style={{ fontSize: 28 }}>{action.emoji}</span>
+              <span style={{ fontSize: 28, flexShrink: 0 }}>{action.emoji}</span>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{action.label}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{action.label}</div>
                 <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{action.desc}</div>
               </div>
             </Link>
@@ -395,38 +537,39 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Todos & Priorities ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, marginBottom: 28 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, marginBottom: 24 }}>
         {/* Todos */}
-        <div className="fz-card" style={{ padding: '16px 20px' }}>
+        <div style={{ ...CU.card, padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 18 }}>✅</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
-              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: 'var(--fz-text-muted)' }}>({todosDone}/{todosTotal})</span>}
+            <span style={{ fontSize: 16 }}>✅</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>
+              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: 'var(--fz-text-muted, #94A3B8)' }}>({todosDone}/{todosTotal})</span>}
             </span>
             <HelpBubble text="Ajoutez vos tâches pour la journée. Elles sont sauvegardées automatiquement." />
           </div>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
             <input
-              className="fz-input"
               type="text"
               value={newTodo}
               onChange={e => setNewTodo(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && addTodo()}
               placeholder="Ajouter une tâche..."
-              style={{ flex: 1, fontSize: 13, padding: '8px 12px' }}
+              style={{ ...CU.input, flex: 1 }}
             />
-            <button onClick={addTodo} className="fz-btn-primary fz-btn-sm">+</button>
+            <button onClick={addTodo} style={CU.btnPrimary}>+</button>
           </div>
           <div style={{ maxHeight: 200, overflowY: 'auto' }}>
             {todos.length === 0 && (
-              <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', padding: '8px 0', textAlign: 'center', fontStyle: 'italic' }}>
-                Aucune tâche — ajoutez-en une ci-dessus
+              <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                <div style={{ fontSize: 40, marginBottom: 4 }}>✅</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>Aucune tâche</div>
+                <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Ajoutez-en une ci-dessus</div>
               </div>
             )}
             {todos.map(todo => (
               <div key={todo.id} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
-                borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+                borderBottom: '1px solid var(--fz-border-light, #F1F5F9)',
               }}>
                 <button onClick={() => toggleTodo(todo.id)} style={{
                   background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, padding: 0,
@@ -441,7 +584,7 @@ export default function ClientDashboard() {
                   {todo.text}
                 </span>
                 <button onClick={() => removeTodo(todo.id)} style={{
-                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted)',
+                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)',
                   padding: '0 4px',
                 }}>
                   ×
@@ -452,10 +595,10 @@ export default function ClientDashboard() {
         </div>
 
         {/* Priorities */}
-        <div className="fz-card" style={{ padding: '16px 20px' }}>
+        <div style={{ ...CU.card, padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 18 }}>🎯</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>3 priorités du jour</span>
+            <span style={{ fontSize: 16 }}>🎯</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>3 priorités du jour</span>
             <HelpBubble text="Définissez vos 3 objectifs principaux. Restez concentré sur l'essentiel." />
           </div>
           {[0, 1, 2].map(idx => (
@@ -465,16 +608,16 @@ export default function ClientDashboard() {
                 background: idx === 0 ? '#ef4444' : idx === 1 ? '#f59e0b' : '#22c55e',
                 color: '#fff', fontSize: 12, fontWeight: 800,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
               }}>
                 {idx + 1}
               </span>
               <input
-                className="fz-input"
                 type="text"
                 value={priorities[idx] || ''}
                 onChange={e => updatePriority(idx, e.target.value)}
                 placeholder={`Priorité n°${idx + 1}...`}
-                style={{ flex: 1, fontSize: 13, padding: '8px 12px' }}
+                style={{ ...CU.input, flex: 1 }}
               />
             </div>
           ))}
@@ -482,19 +625,28 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Feature Sections Grid ── */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-          <span style={{ fontSize: 14 }}>🧭</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text)' }}>Toutes vos fonctionnalités</span>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <span style={{ fontSize: 16 }}>🧭</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>Toutes vos fonctionnalités</span>
           <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {FEATURE_SECTIONS.map(section => (
-            <div key={section.id} className="fz-section-card">
-              <div className="fz-section-header">
+            <div key={section.id} style={{
+              ...CU.card,
+              padding: 0,
+              overflow: 'hidden',
+            }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '12px 16px',
+                borderBottom: '1px solid var(--fz-border-light, #F1F5F9)',
+                background: 'var(--fz-bg-secondary, #F8FAFC)',
+              }}>
                 <span style={{ fontSize: 16 }}>{section.emoji}</span>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
                     {section.title}
                     {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', marginLeft: 8, padding: '1px 6px', background: 'rgba(14,165,233,0.08)', borderRadius: 4 }}>PRO</span>}
                   </div>
@@ -504,11 +656,18 @@ export default function ClientDashboard() {
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))',
-                gap: 8,
+                gap: 0,
               }}>
                 {section.items.map(item => (
-                  <Link key={item.id} href={item.href} className="fz-feature-item" style={{ textDecoration: 'none' }}>
-                    <span style={{ fontSize: 22 }}>{item.emoji}</span>
+                  <Link key={item.id} href={item.href} style={{
+                    textDecoration: 'none',
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '12px 16px',
+                    borderBottom: '1px solid var(--fz-border-light, #F1F5F9)',
+                    transition: 'background 0.15s ease',
+                    color: 'inherit',
+                  }}>
+                    <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{item.label}</div>
                       <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>{item.desc}</div>
@@ -523,19 +682,19 @@ export default function ClientDashboard() {
 
       {/* ── Referral banner ── */}
       {!isDismissed('referral') && (
-        <div className="fz-card" style={{
+        <div style={{
+          ...CU.card,
           display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', marginBottom: 16,
           background: 'linear-gradient(135deg, rgba(249,115,22,0.06), rgba(234,179,8,0.04))',
-          border: '1px solid rgba(249,115,22,0.15)',
         }}>
           <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, textDecoration: 'none', color: 'inherit' }}>
             <span style={{ fontSize: 28 }}>🎁</span>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Invitez un ami, gagnez 20€</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Invitez un ami, gagnez 20€</div>
               <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
             </div>
           </Link>
-          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: 'var(--fz-text-muted)' }}>
+          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>
             ×
           </button>
         </div>

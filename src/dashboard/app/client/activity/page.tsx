@@ -257,7 +257,7 @@ export default function ActivityPage() {
         <div style={{
           textAlign: 'center', padding: '60px 20px',
           background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 16,
-          border: '1px solid var(--fz-border, #E2E8F0)',
+          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
         }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>📭</div>
           <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
@@ -307,7 +307,7 @@ export default function ActivityPage() {
                 {/* Card */}
                 <div style={{
                   background: 'var(--fz-bg, #FFFFFF)',
-                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   borderRadius: 12, padding: '14px 18px',
                   transition: 'border-color 0.15s ease',
                 }}
@@ -374,7 +374,7 @@ export default function ActivityPage() {
             className="btn btn-ghost"
             style={{
               fontSize: 13, fontWeight: 500, padding: '10px 28px',
-              borderRadius: 10, border: '1px solid var(--fz-border, #E2E8F0)',
+              borderRadius: 10, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             }}
           >
             {loadingMore ? 'Chargement...' : 'Charger plus d\'activites'}

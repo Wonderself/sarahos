@@ -119,7 +119,7 @@ export default function CommunityPage() {
                 style={{
                   background: 'var(--fz-border, #E2E8F0)',
                   color: 'var(--fz-text, #1E293B)',
-                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   borderRadius: 10,
                   padding: '10px 20px',
                   fontSize: 13,
@@ -307,7 +307,7 @@ export default function CommunityPage() {
                 onClick={() => startGame(game)}
                 style={{
                   background: 'var(--fz-bg-secondary, #F8FAFC)',
-                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   borderRadius: 14,
                   padding: '18px 16px',
                   cursor: 'pointer',

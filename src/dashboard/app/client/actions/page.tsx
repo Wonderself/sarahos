@@ -218,7 +218,7 @@ export default function ActionsPage() {
             { label: 'En retard', value: overdueCount, color: '#EF4444' },
           ].map(s => (
             <div key={s.label} className="rounded-sm" style={{
-              padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+              padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               borderRadius: 8,
             }}>
               <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{s.label}</div>
@@ -278,7 +278,7 @@ export default function ActionsPage() {
       {!loading && actions.length === 0 && (
         <div className="text-center" style={{
           padding: '60px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)',
-          borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)',
+          borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
         }}>
           <div style={{ marginBottom: 12, fontSize: 48 }}>⚡</div>
           <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>Aucune action pour le moment</h3>
@@ -326,7 +326,7 @@ export default function ActionsPage() {
               onClick={() => setSelectedAction(action)}
               style={{
                 padding: '10px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)',
-                border: '1px solid var(--fz-border, #E2E8F0)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               }}
             >
               <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>

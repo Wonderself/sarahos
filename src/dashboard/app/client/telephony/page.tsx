@@ -225,7 +225,7 @@ export default function TelephonyPage() {
           { label: 'Dur\u00e9e moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '\u2014', icon: '\u23f1\ufe0f', color: '#f59e0b' },
           { label: 'Co\u00fbt total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '\u2014', icon: '\ud83d\udcb0', color: '#3b82f6' },
         ].map(s => (
-          <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+          <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
             <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
@@ -271,7 +271,7 @@ export default function TelephonyPage() {
           {callsLoading ? (
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement...</div>
           ) : displayedCalls.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
               <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel{filterStatus !== 'all' ? ' ' + STATUS_LABELS[filterStatus as CallStatus].toLowerCase() : ''}</div>
               <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les appels <span className="fz-logo-word">Twilio</span> appara\u00eetront ici.</div>
@@ -279,7 +279,7 @@ export default function TelephonyPage() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {displayedCalls.map(call => (
-                <div key={call.id} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={call.id} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <div style={{ flexShrink: 0, fontSize: 24 }}>📞</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
@@ -311,7 +311,7 @@ export default function TelephonyPage() {
           {personasLoading ? (
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des personas...</div>
           ) : personas.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
               <div style={{ marginBottom: 16, fontSize: 48 }}>\ud83c\udfad</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune persona disponible</div>
               <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les personas vocales appara\u00eetront ici.</div>
@@ -319,7 +319,7 @@ export default function TelephonyPage() {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
               {personas.map(p => (
-                <div key={p.id} style={{ padding: 20, position: 'relative', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={p.id} style={{ padding: 20, position: 'relative', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   {p.active && (
                     <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: '#22c55e20', color: '#22c55e' }}>
                       Active
@@ -363,7 +363,7 @@ export default function TelephonyPage() {
           ) : (
             <>
               {/* Health status */}
-              <div style={{ padding: 20, borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <div style={{ padding: 20, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>\u00c9tat du pipeline</h3>
                   <span style={{ fontSize: 13, fontWeight: 700, padding: '4px 12px', borderRadius: 8, background: healthColor + '20', color: healthColor }}>
@@ -389,7 +389,7 @@ export default function TelephonyPage() {
 
               {/* Latency metrics */}
               {metrics && (
-                <div style={{ padding: 20, borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div style={{ padding: 20, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Latences moyennes</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 20 }}>
                     {[
@@ -398,7 +398,7 @@ export default function TelephonyPage() {
                       { label: 'TTS', value: metrics.ttsLatency, icon: '\ud83d\udd0a' },
                       { label: 'Total', value: metrics.totalLatency, icon: '\u26a1', highlight: true },
                     ].map(m => (
-                      <div key={m.label} style={{ padding: '12px', textAlign: 'center', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: m.highlight ? 'var(--accent)10' : 'var(--fz-bg, #FFFFFF)' }}>
+                      <div key={m.label} style={{ padding: '12px', textAlign: 'center', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: m.highlight ? 'var(--accent)10' : 'var(--fz-bg, #FFFFFF)' }}>
                         <div style={{ marginBottom: 4, fontSize: 18 }}>{m.icon}</div>
                         <div style={{ fontSize: 18, fontWeight: 700, color: m.highlight ? 'var(--accent)' : 'var(--fz-text, #1E293B)' }}>
                           {m.value != null ? `${m.value}ms` : '\u2014'}

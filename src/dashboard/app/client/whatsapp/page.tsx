@@ -241,7 +241,7 @@ export default function WhatsAppPage() {
 
       {/* Guide WhatsApp */}
       {showGuide && (
-        <div className="card section" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+        <div className="card section" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
           <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Commandes <span className="fz-logo-word">WhatsApp</span></h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {WA_COMMANDS.map(c => (
@@ -354,7 +354,7 @@ export default function WhatsAppPage() {
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 12,
                     padding: '10px 14px', borderRadius: 10,
-                    background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   }}>
                     <span style={{ fontSize: 24 }}>\ud83e\udd16</span>
                     <div style={{ flex: 1 }}>
@@ -444,7 +444,7 @@ export default function WhatsAppPage() {
                     <div key={bond.agentId} style={{
                       display: 'flex', alignItems: 'center', gap: 8,
                       padding: '8px 14px', borderRadius: 10,
-                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                       flex: '1 1 140px', minWidth: 140,
                     }}>
                       <span style={{ fontSize: 20 }}>\ud83e\udd16</span>

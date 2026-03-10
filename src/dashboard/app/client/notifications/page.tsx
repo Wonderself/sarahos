@@ -45,6 +45,47 @@ const FILTER_LABELS: { id: FilterType; label: string }[] = [
   { id: 'info', label: 'Infos' },
 ];
 
+// ── ClickUp-style tokens ──────────────────────────────────────────────────────
+const CU = {
+  card: {
+    border: 'none' as const,
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    borderRadius: 8,
+    background: 'var(--fz-bg, #FFFFFF)',
+  },
+  btn: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500 as const,
+    fontSize: 13,
+    cursor: 'pointer' as const,
+    border: 'none' as const,
+  },
+  btnPrimary: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500 as const,
+    fontSize: 13,
+    cursor: 'pointer' as const,
+    border: 'none' as const,
+    background: 'var(--fz-accent, #0EA5E9)',
+    color: '#fff',
+  },
+  btnGhost: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500 as const,
+    fontSize: 13,
+    cursor: 'pointer' as const,
+    border: '1px solid var(--fz-border, #E8EAED)',
+    background: 'transparent',
+    color: 'var(--fz-text-secondary, #64748B)',
+  },
+};
+
 function getReadIds(): string[] {
   try { return JSON.parse(localStorage.getItem(NOTIF_READ_KEY) ?? '[]'); } catch { return []; }
 }
@@ -82,6 +123,7 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [readIds, setReadIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   useEffect(() => {
     const ids = getReadIds();
@@ -228,30 +270,34 @@ export default function NotificationsPage() {
   return (
     <div className="client-page-scrollable">
       {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 24 }}>{pageMeta.emoji}</span>
-            <span className="fz-logo-word">{pageMeta.title}</span>
-            {unreadCount > 0 && (
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                marginLeft: 10, minWidth: 22, height: 22, borderRadius: 11,
-                background: '#ef4444', color: '#fff', fontSize: 11, fontWeight: 700, padding: '0 6px',
-              }}>
-                {unreadCount}
-              </span>
-            )}
-            <HelpBubble text={pageMeta.helpText} />
-          </h1>
-          <p className="page-subtitle">
-            {unreadCount > 0
-              ? <>{unreadCount} notification{unreadCount > 1 ? 's' : ''} non lue{unreadCount > 1 ? 's' : ''}</>
-              : <><span className="fz-logo-word">Tout est à jour</span></>}
-          </p>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 22 }}>{pageMeta.emoji}</span>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>
+                <span className="fz-logo-word">{pageMeta.title}</span>
+              </h1>
+              {unreadCount > 0 && (
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  minWidth: 20, height: 20, borderRadius: 10,
+                  background: '#ef4444', color: '#fff', fontSize: 11, fontWeight: 700, padding: '0 6px',
+                }}>
+                  {unreadCount}
+                </span>
+              )}
+              <HelpBubble text={pageMeta.helpText} />
+            </div>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>
+              {unreadCount > 0
+                ? <>{unreadCount} notification{unreadCount > 1 ? 's' : ''} non lue{unreadCount > 1 ? 's' : ''}</>
+                : <><span className="fz-logo-word">Tout est à jour</span></>}
+            </p>
+          </div>
         </div>
         {unreadCount > 0 && (
-          <button onClick={handleMarkAllRead} className="btn btn-ghost btn-sm">
+          <button onClick={handleMarkAllRead} style={CU.btnGhost}>
             ✅ Tout marquer comme lu
           </button>
         )}
@@ -259,13 +305,19 @@ export default function NotificationsPage() {
       <PageExplanation pageId="notifications" text={PAGE_META.notifications?.helpText} />
 
       {/* Filter chips */}
-      <div className="flex flex-wrap gap-6 mb-16">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
         {FILTER_LABELS.map(f => (
           <button
             key={f.id}
             onClick={() => setFilter(f.id)}
-            className={filter === f.id ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
-            style={{ fontSize: 12 }}
+            style={{
+              ...CU.btn,
+              background: filter === f.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              color: filter === f.id ? '#fff' : 'var(--fz-text-secondary, #64748B)',
+              border: filter === f.id ? 'none' : '1px solid var(--fz-border, #E8EAED)',
+              height: 32,
+              fontSize: 12,
+            }}
           >
             {f.label}
             {f.id !== 'all' && (
@@ -279,99 +331,113 @@ export default function NotificationsPage() {
 
       {/* Content */}
       {loading ? (
-        <div className="text-center text-muted" style={{ padding: 60 }}>
-          <div className="animate-pulse" style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
+        <div style={{ textAlign: 'center', color: 'var(--fz-text-muted, #94A3B8)', padding: 60 }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
           <div>Chargement des notifications...</div>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="card text-center" style={{ padding: '60px 24px' }}>
+        <div style={{ ...CU.card, textAlign: 'center', padding: '60px 24px' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-          <div className="text-xl font-bold mb-8">Tout est parfait !</div>
-          <div className="text-md text-secondary">Aucune notification dans cette catégorie.</div>
+          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Tout est parfait !</div>
+          <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>Aucune notification dans cette catégorie.</div>
         </div>
       ) : (
-        <div className="flex flex-col gap-8">
-          {filtered.map(notif => (
-            <div
-              key={notif.id}
-              className="card"
-              style={{
-                borderLeft: `3px solid ${typeColor[notif.type]}`,
-                opacity: notif.read ? 0.65 : 1,
-                transition: 'opacity 0.2s',
-              }}
-            >
-              <div className="flex gap-12" style={{ alignItems: 'flex-start' }}>
-                {/* Icon */}
-                <div style={{
-                  width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: typeColor[notif.type] + '15', fontSize: 20,
-                }}>
-                  {TYPE_EMOJIS[notif.type]}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1" style={{ minWidth: 0 }}>
-                  <div className="flex flex-between items-start gap-8" style={{ flexWrap: 'wrap' }}>
-                    <div>
-                      <span className="text-xs font-semibold rounded-sm" style={{
-                        padding: '2px 6px', marginRight: 8,
-                        background: typeColor[notif.type] + '15', color: typeColor[notif.type],
-                      }}>
-                        {TYPE_LABELS[notif.type]}
-                      </span>
-                      <span className="text-base font-bold">{notif.title}</span>
-                      {!notif.read && (
-                        <span style={{
-                          display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
-                          background: typeColor[notif.type], marginLeft: 8, verticalAlign: 'middle',
-                        }} />
-                      )}
-                    </div>
-                    <span className="text-xs text-muted" style={{ flexShrink: 0 }}>
-                      {relativeDate(notif.date)}
-                    </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {filtered.map(notif => {
+            const isHovered = hoveredId === notif.id;
+            return (
+              <div
+                key={notif.id}
+                onMouseEnter={() => setHoveredId(notif.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                style={{
+                  ...CU.card,
+                  padding: '14px 16px',
+                  borderLeft: `3px solid ${typeColor[notif.type]}`,
+                  opacity: notif.read ? 0.6 : 1,
+                  background: isHovered ? 'var(--fz-bg-secondary, #F8FAFC)' : 'var(--fz-bg, #FFFFFF)',
+                  transition: 'opacity 0.15s, background 0.15s',
+                  minHeight: 56,
+                }}
+              >
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  {/* Icon */}
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 8, flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: typeColor[notif.type] + '12', fontSize: 20,
+                  }}>
+                    {TYPE_EMOJIS[notif.type]}
                   </div>
 
-                  <p className="text-sm text-secondary mt-6" style={{ lineHeight: 1.6, margin: '6px 0 10px' }}>
-                    {notif.body}
-                  </p>
+                  {/* Content */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <span style={{
+                          padding: '2px 6px', borderRadius: 4,
+                          background: typeColor[notif.type] + '12', color: typeColor[notif.type],
+                          fontSize: 11, fontWeight: 600,
+                        }}>
+                          {TYPE_LABELS[notif.type]}
+                        </span>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{notif.title}</span>
+                        {!notif.read && (
+                          <span style={{
+                            display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+                            background: typeColor[notif.type],
+                          }} />
+                        )}
+                      </div>
+                      <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                        {relativeDate(notif.date)}
+                      </span>
+                    </div>
 
-                  <div className="flex gap-8 items-center flex-wrap">
-                    {notif.actionLabel && notif.actionHref && (
-                      <Link href={notif.actionHref} className="btn btn-primary btn-sm" style={{ fontSize: 12 }}>
-                        {notif.actionLabel}
-                      </Link>
-                    )}
-                    {!notif.read && (
-                      <button
-                        onClick={() => handleDismiss(notif.id)}
-                        className="btn btn-ghost btn-sm"
-                        style={{ fontSize: 12 }}
-                      >
-                        Ignorer
-                      </button>
-                    )}
+                    <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, margin: '6px 0 10px' }}>
+                      {notif.body}
+                    </p>
+
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                      {notif.actionLabel && notif.actionHref && (
+                        <Link href={notif.actionHref} style={{ ...CU.btnPrimary, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', height: 30, fontSize: 12 }}>
+                          {notif.actionLabel}
+                        </Link>
+                      )}
+                      {!notif.read && (
+                        <button
+                          onClick={() => handleDismiss(notif.id)}
+                          style={{ ...CU.btnGhost, height: 30, fontSize: 12 }}
+                        >
+                          Ignorer
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Bottom CTA if no alerts */}
       {!loading && notifications.filter(n => n.type === 'alert').length === 0 && (
-        <div className="card text-center mt-16" style={{ padding: '24px 20px', background: 'var(--success-muted)', borderColor: 'var(--success)' }}>
+        <div style={{
+          ...CU.card, textAlign: 'center', marginTop: 16, padding: '24px 20px',
+          borderLeft: '3px solid #22c55e', background: '#22c55e06',
+        }}>
           <span style={{ fontSize: 24 }}>✅</span>
-          <div className="text-base font-semibold mt-6" style={{ color: 'var(--success)' }}>
+          <div style={{ fontSize: 14, fontWeight: 600, marginTop: 6, color: '#22c55e' }}>
             Aucune alerte active — Votre compte est en bonne santé
           </div>
-          <div className="text-sm text-secondary mt-4">
+          <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginTop: 4 }}>
             Vos crédits sont suffisants et vos assistants sont opérationnels.
           </div>
-          <Link href="/client/dashboard" className="btn btn-sm mt-12" style={{ background: 'var(--success)', color: '#fff', border: 'none' }}>
+          <Link href="/client/dashboard" style={{
+            ...CU.btnPrimary, display: 'inline-flex', alignItems: 'center',
+            marginTop: 12, background: '#22c55e', textDecoration: 'none',
+          }}>
             Voir mon dashboard →
           </Link>
         </div>

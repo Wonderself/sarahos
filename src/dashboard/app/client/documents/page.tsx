@@ -809,6 +809,28 @@ const TEMPLATES: DocTemplate[] = [
 
 const CATEGORIES = ['Communication', 'Commercial', 'Stratégie', 'Marketing', 'Organisation', 'RH', 'Juridique', 'Finance', 'Personnel', 'Bien-être', 'Développement personnel', 'Loisirs', 'Organisation perso', 'Finance perso', 'Juridique perso'];
 
+/* ClickUp design tokens */
+const CU = {
+  card: {
+    background: 'var(--fz-bg, #FFFFFF)',
+    border: 'none' as const,
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    borderRadius: 8,
+    transition: 'all 0.15s',
+  },
+  heading: { fontSize: 16, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
+  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
+  subtitle: { fontSize: 13, color: 'var(--fz-text-muted, #A1A5AC)' },
+  btn: { height: 36, padding: '0 12px', borderRadius: 6, fontWeight: 500 as const, fontSize: 13, border: 'none' as const, cursor: 'pointer' as const, transition: 'all 0.15s' },
+  btnPrimary: { background: 'var(--fz-accent, #0EA5E9)', color: '#fff' },
+  btnGhost: { background: 'transparent', color: 'var(--fz-text-secondary, #6B6F76)' },
+  text: 'var(--fz-text, #1A1D23)',
+  textSec: 'var(--fz-text-secondary, #6B6F76)',
+  textMuted: 'var(--fz-text-muted, #A1A5AC)',
+  accent: 'var(--fz-accent, #0EA5E9)',
+  border: 'var(--fz-border, #E8EAED)',
+};
+
 export default function DocumentsPage() {
   const { showError, showSuccess } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<DocTemplate | null>(null);
@@ -951,18 +973,21 @@ export default function DocumentsPage() {
 
   // Viewing a document
   if (viewingDoc) {
-    const tpl = TEMPLATES.find(t => t.id === viewingDoc.templateId);
     return (
-      <div>
-        <div className="flex items-center gap-12 mb-24">
-          <button onClick={() => setViewingDoc(null)} className="btn btn-ghost btn-sm">← Retour</button>
-          <div className="flex-1">
-            <h2 className="font-bold" style={{ fontSize: 18 }}>📄 {viewingDoc.title}</h2>
-            <div className="text-sm text-muted">
+      <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+          <button onClick={() => setViewingDoc(null)} style={{
+            ...CU.btn, ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
+          }}>← Retour</button>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <h2 style={{ ...CU.heading, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>📄 {viewingDoc.title}</h2>
+            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>
               {new Date(viewingDoc.createdAt).toLocaleString('fr-FR')} | {viewingDoc.tokens} tokens | {(viewingDoc.cost / 1_000_000).toFixed(4)} cr
             </div>
           </div>
-          <button onClick={() => copyToClipboard(viewingDoc.content)} className="btn btn-primary btn-sm">
+          <button onClick={() => copyToClipboard(viewingDoc.content)} style={{
+            ...CU.btn, ...CU.btnPrimary, height: 32, fontSize: 12, fontFamily: 'inherit',
+          }}>
             {copied ? <>✅ Copié !</> : '📋 Copier'}
           </button>
           <button onClick={() => {
@@ -973,12 +998,17 @@ export default function DocumentsPage() {
             a.download = `${viewingDoc.title.replace(/[^a-zA-Z0-9\-_ ]/g, '')}.txt`;
             a.click();
             URL.revokeObjectURL(url);
-          }} className="btn btn-secondary btn-sm">
+          }} style={{
+            ...CU.btn, height: 32, fontSize: 12, fontFamily: 'inherit',
+            background: 'var(--fz-bg, #FFFFFF)', color: CU.textSec,
+            boxShadow: CU.card.boxShadow, borderRadius: 6,
+          }}>
             Exporter .txt
           </button>
         </div>
-        <div className="card p-24 text-base max-w-lg" style={{
-          lineHeight: 1.8, margin: '0 auto',
+        <div style={{
+          ...CU.card, padding: 24, lineHeight: 1.8, fontSize: 14,
+          maxWidth: 720, margin: '0 auto', color: CU.text,
         }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderMarkdown(viewingDoc.content)) }} />
       </div>
     );
@@ -987,12 +1017,14 @@ export default function DocumentsPage() {
   // Template form
   if (selectedTemplate) {
     return (
-      <div>
-        <div className="flex items-center gap-12 mb-24">
-          <button onClick={() => { setSelectedTemplate(null); setFieldValues({}); }} className="btn btn-ghost btn-sm">← Retour</button>
-          <div className="flex-1">
-            <h2 className="font-bold" style={{ fontSize: 18 }}>📄 {selectedTemplate.title}</h2>
-            <div className="text-md text-secondary">{selectedTemplate.description}</div>
+      <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+          <button onClick={() => { setSelectedTemplate(null); setFieldValues({}); }} style={{
+            ...CU.btn, ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
+          }}>← Retour</button>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <h2 style={{ ...CU.heading, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>📄 {selectedTemplate.title}</h2>
+            <div style={{ fontSize: 13, color: CU.textSec, marginTop: 2 }}>{selectedTemplate.description}</div>
           </div>
           <VoiceInput
             onTranscript={(t) => {
@@ -1003,15 +1035,15 @@ export default function DocumentsPage() {
           />
         </div>
 
-        <div className="card" style={{ maxWidth: 700 }}>
+        <div style={{ ...CU.card, padding: 24, maxWidth: 700 }}>
           {selectedTemplate.fields.map(field => (
-            <div key={field.key} className="mb-16">
-              <label className="text-md font-semibold" style={{ display: 'block', marginBottom: 6 }}>
+            <div key={field.key} style={{ marginBottom: 16 }}>
+              <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: CU.text }}>
                 {field.label}
-                {field.required && <span className="text-danger" style={{ marginLeft: 4 }}>*</span>}
+                {field.required && <span style={{ marginLeft: 4, color: '#ef4444' }}>*</span>}
               </label>
               {field.helpText && (
-                <div className="text-xs text-muted mb-4">{field.helpText}</div>
+                <div style={{ fontSize: 11, color: CU.textMuted, marginBottom: 4 }}>{field.helpText}</div>
               )}
               {field.type === 'textarea' ? (
                 <textarea
@@ -1021,13 +1053,14 @@ export default function DocumentsPage() {
                   className="input w-full"
                   rows={3}
                   placeholder={field.placeholder}
-                  style={{ resize: 'vertical' }}
+                  style={{ resize: 'vertical', borderRadius: 6, fontSize: 13 }}
                 />
               ) : field.type === 'select' ? (
                 <select
                   value={fieldValues[field.key] ?? ''}
                   onChange={e => setFieldValues(prev => ({ ...prev, [field.key]: e.target.value }))}
                   className="select w-full"
+                  style={{ borderRadius: 6, fontSize: 13 }}
                 >
                   <option value="">{field.placeholder || 'Choisissez...'}</option>
                   {field.options?.map(opt => (
@@ -1035,7 +1068,7 @@ export default function DocumentsPage() {
                   ))}
                 </select>
               ) : field.type === 'chips' ? (
-                <div className="flex flex-wrap gap-6 mt-4">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
                   {field.options?.map(opt => {
                     const selected = (fieldValues[field.key] ?? '').split(',').filter(Boolean);
                     const isSelected = selected.includes(opt);
@@ -1049,10 +1082,10 @@ export default function DocumentsPage() {
                           setFieldValues(prev => ({ ...prev, [field.key]: next.join(',') }));
                         }}
                         style={{
-                          padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                          background: isSelected ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                          color: isSelected ? 'white' : 'var(--text-tertiary)',
-                          border: `1px solid ${isSelected ? 'var(--accent)' : 'var(--border-secondary)'}`,
+                          height: 30, padding: '0 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                          background: isSelected ? CU.accent : 'var(--fz-bg, #FFFFFF)',
+                          color: isSelected ? '#fff' : CU.textMuted,
+                          border: `1px solid ${isSelected ? CU.accent : CU.border}`,
                           cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
                         }}
                       >
@@ -1067,6 +1100,7 @@ export default function DocumentsPage() {
                   onChange={e => setFieldValues(prev => ({ ...prev, [field.key]: e.target.value }))}
                   className="input w-full"
                   placeholder={field.placeholder}
+                  style={{ borderRadius: 6, fontSize: 13 }}
                 />
               )}
             </div>
@@ -1075,11 +1109,13 @@ export default function DocumentsPage() {
           <button
             onClick={generateDocument}
             disabled={generating}
-            className="btn btn-primary w-full"
-            style={{ padding: '12px 0', fontSize: 15 }}
+            style={{
+              ...CU.btn, ...CU.btnPrimary,
+              width: '100%', height: 42, fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
+            }}
           >
             {generating ? (
-              <span className="animate-pulse">{DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name} rédige votre document...</span>
+              <span style={{ opacity: 0.8 }}>{DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name} rédige votre document...</span>
             ) : (
               <>✨ Générer le document</>
             )}
@@ -1093,65 +1129,70 @@ export default function DocumentsPage() {
   const filteredTemplates = filterCategory ? TEMPLATES.filter(t => t.category === filterCategory) : TEMPLATES;
 
   return (
-    <div className="client-page-scrollable">
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.documents.emoji}</span>
-          <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.documents.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
-          </div>
-          <HelpBubble text={PAGE_META.documents.helpText} />
+    <div className="client-page-scrollable" style={{ padding: '24px 20px', maxWidth: 1100 }}>
+      {/* ─── Page Header ─── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+        <span style={{ fontSize: 20 }}>{PAGE_META.documents.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{ ...CU.heading }}>{PAGE_META.documents.title}</h1>
+          <p style={{ ...CU.subtitle, margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
         </div>
+        <HelpBubble text={PAGE_META.documents.helpText} />
       </div>
       <PageExplanation pageId="documents" text={PAGE_META.documents?.helpText} />
 
-      {/* Profile Completion Banner */}
+      {/* ─── Stat cards ─── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
+        <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 22 }}>📄</span>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: CU.text, lineHeight: 1 }}>{TEMPLATES.length}</div>
+            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Modèles</div>
+          </div>
+        </div>
+        <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 22 }}>✨</span>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: CU.text, lineHeight: 1 }}>{generatedDocs.length}</div>
+            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Générés</div>
+          </div>
+        </div>
+        <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 22 }}>🧠</span>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: CU.text, lineHeight: 1 }}>{kbDocs.length}</div>
+            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Base connaissance</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Profile Completion Banner ─── */}
       {!bannerDismissed && (
-        <div
-          className="fz-card"
-          style={{
-            borderLeft: `4px solid ${hasProfile ? '#22c55e' : 'var(--fz-accent, #0EA5E9)'}`,
-            padding: 16,
-            marginBottom: 20,
-            background: 'var(--fz-bg, #fff)',
-            border: '1px solid var(--fz-border, #E2E8F0)',
-            borderLeftWidth: 4,
-            borderLeftStyle: 'solid',
-            borderLeftColor: hasProfile ? '#22c55e' : 'var(--fz-accent, #0EA5E9)',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            gap: 12,
-          }}
-        >
+        <div style={{
+          ...CU.card,
+          borderLeft: `3px solid ${hasProfile ? '#22c55e' : CU.accent}`,
+          padding: 16, marginBottom: 20,
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
+        }}>
           <div style={{ flex: 1 }}>
             {hasProfile ? (
-              <p style={{ margin: 0, fontSize: 14, color: 'var(--fz-text, #1E293B)', lineHeight: 1.6 }}>
+              <p style={{ margin: 0, fontSize: 13, color: CU.text, lineHeight: 1.6 }}>
                 ✅ <strong>Vos documents sont prêts !</strong> Vos informations sont automatiquement intégrées dans chaque génération. Choisissez un modèle ci-dessous.
               </p>
             ) : (
               <>
-                <p style={{ margin: '0 0 6px', fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+                <p style={{ margin: '0 0 6px', fontSize: 14, fontWeight: 600, color: CU.text }}>
                   📋 Complétez votre profil pour des documents parfaits
                 </p>
-                <p style={{ margin: '0 0 10px', fontSize: 13, color: 'var(--fz-text, #1E293B)', lineHeight: 1.6, opacity: 0.85 }}>
+                <p style={{ margin: '0 0 10px', fontSize: 13, color: CU.textSec, lineHeight: 1.6 }}>
                   Vos informations (entreprise, secteur, objectifs) sont utilisées automatiquement dans chaque document généré. Plus votre profil est complet, plus vos documents seront pertinents et prêts à l&apos;emploi.
                 </p>
                 <a
                   href="/client/onboarding"
-                  className="fz-btn-primary"
                   style={{
-                    display: 'inline-block',
-                    padding: '8px 16px',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    borderRadius: 6,
-                    textDecoration: 'none',
-                    background: 'var(--fz-accent, #0EA5E9)',
-                    color: '#fff',
-                    cursor: 'pointer',
+                    ...CU.btn, ...CU.btnPrimary,
+                    display: 'inline-flex', alignItems: 'center',
+                    textDecoration: 'none', fontSize: 12,
                   }}
                 >
                   Compléter mon profil →
@@ -1165,15 +1206,8 @@ export default function DocumentsPage() {
               try { localStorage.setItem('fz_dismiss_docs_profile', 'true'); } catch { /* ignore */ }
             }}
             style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: 18,
-              color: 'var(--fz-text, #1E293B)',
-              opacity: 0.5,
-              padding: '0 4px',
-              lineHeight: 1,
-              flexShrink: 0,
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontSize: 18, color: CU.textMuted, padding: '0 4px', lineHeight: 1, flexShrink: 0,
             }}
             title="Fermer"
           >
@@ -1182,11 +1216,16 @@ export default function DocumentsPage() {
         </div>
       )}
 
-      {/* Category Filter */}
-      <div className="flex gap-6 flex-wrap mb-16">
+      {/* ─── Category Filter (ClickUp tab style) ─── */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 16 }}>
         <button
           onClick={() => setFilterCategory('')}
-          className={!filterCategory ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
+          style={{
+            height: 30, padding: '0 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+            border: 'none', cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
+            background: !filterCategory ? `${CU.accent}` : 'transparent',
+            color: !filterCategory ? '#fff' : CU.textMuted,
+          }}
         >
           Tous
         </button>
@@ -1194,66 +1233,71 @@ export default function DocumentsPage() {
           <button
             key={cat}
             onClick={() => setFilterCategory(cat)}
-            className={filterCategory === cat ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
+            style={{
+              height: 30, padding: '0 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+              border: 'none', cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
+              background: filterCategory === cat ? `${CU.accent}` : 'transparent',
+              color: filterCategory === cat ? '#fff' : CU.textMuted,
+            }}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Templates Grid */}
-      <div className="grid-2 gap-12 mb-24">
+      {/* ─── Templates Grid ─── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, marginBottom: 24 }}>
         {filteredTemplates.map(tpl => (
           <button
             key={tpl.id}
             onClick={() => setSelectedTemplate(tpl)}
-            className="card pointer w-full"
             style={{
-              textAlign: 'left',
-              transition: 'border-color 0.2s, transform 0.1s',
+              ...CU.card, padding: 16, textAlign: 'left' as const,
+              cursor: 'pointer', fontFamily: 'inherit', width: '100%',
+              display: 'flex', gap: 12, alignItems: 'flex-start',
             }}
           >
-            <div className="flex gap-12" style={{ alignItems: 'flex-start' }}>
-              <div className="flex-center rounded-md" style={{
-                width: 48, height: 48,
-                fontSize: 24, background: tpl.color + '22', flexShrink: 0,
+            <div style={{
+              width: 44, height: 44, borderRadius: 8,
+              fontSize: 22, background: tpl.color + '18', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              📄
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>{tpl.title}</div>
+              <div style={{ fontSize: 12, color: CU.textSec, lineHeight: 1.5 }}>{tpl.description}</div>
+              <span style={{
+                display: 'inline-block', marginTop: 8, padding: '2px 8px', borderRadius: 6,
+                fontSize: 11, fontWeight: 600, background: tpl.color + '12', color: tpl.color,
               }}>
-                📄
-              </div>
-              <div>
-                <div className="font-bold mb-4" style={{ fontSize: 15 }}>{tpl.title}</div>
-                <div className="text-sm text-secondary" style={{ lineHeight: 1.5 }}>{tpl.description}</div>
-                <span className="text-xs font-semibold rounded-sm" style={{
-                  display: 'inline-block', marginTop: 8, padding: '2px 8px',
-                  background: tpl.color + '15', color: tpl.color,
-                }}>
-                  {tpl.category}
-                </span>
-              </div>
+                {tpl.category}
+              </span>
             </div>
           </button>
         ))}
       </div>
 
       {/* ─── Knowledge Base Manager ─── */}
-      <div className="section">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
-          <div>
-            <div className="section-title" style={{ marginBottom: 4 }}>🧠 Base de connaissance</div>
-            <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+      <section style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 16 }}>🧠</span>
+          <div style={{ flex: 1 }}>
+            <h2 style={{ ...CU.sectionTitle }}>Base de connaissance</h2>
+            <div style={{ fontSize: 12, color: CU.textMuted }}>
               Documents uploadés et injectés <span className="fz-logo-word">automatiquement</span> dans vos agents
             </div>
           </div>
           {kbStorage && (
-            <div style={{ textAlign: 'right', minWidth: 180 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
+            <div style={{ textAlign: 'right' as const, minWidth: 180 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, color: CU.text }}>
                 Stockage : {(kbStorage.totalBytes / (1024 * 1024)).toFixed(1)} Mo / {(kbStorage.maxBytes / (1024 * 1024)).toFixed(0)} Mo
               </div>
-              <div style={{ height: 6, borderRadius: 3, background: 'var(--bg-tertiary)', overflow: 'hidden' }}>
+              <div style={{ height: 4, borderRadius: 2, background: CU.border, overflow: 'hidden' }}>
                 <div style={{
-                  height: '100%', borderRadius: 3,
+                  height: '100%', borderRadius: 2,
                   width: `${Math.min(100, (kbStorage.totalBytes / kbStorage.maxBytes) * 100)}%`,
-                  background: (kbStorage.totalBytes / kbStorage.maxBytes) > 0.8 ? '#ef4444' : 'var(--accent)',
+                  background: (kbStorage.totalBytes / kbStorage.maxBytes) > 0.8 ? '#ef4444' : CU.accent,
                   transition: 'width 0.6s',
                 }} />
               </div>
@@ -1262,42 +1306,46 @@ export default function DocumentsPage() {
         </div>
 
         {kbLoading ? (
-          <div className="text-center text-tertiary" style={{ padding: 24 }}>Chargement...</div>
+          <div style={{ padding: 24, textAlign: 'center' as const, color: CU.textMuted, fontSize: 13 }}>Chargement...</div>
         ) : kbDocs.length === 0 ? (
-          <div className="card text-center" style={{ padding: '32px 20px' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>📁</div>
-            <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 6 }}>Aucun document uploadé</div>
-            <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+          <div style={{
+            ...CU.card, padding: '32px 20px', textAlign: 'center' as const,
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 8 }}>📁</div>
+            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 6, color: CU.text }}>Aucun document uploadé</div>
+            <div style={{ fontSize: 13, color: CU.textMuted }}>
               Utilisez le composant d&apos;upload ci-dessus pour enrichir la base de connaissance de vos agents
             </div>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
             {kbDocs.map(doc => {
               const sizeKb = Math.round(doc.file_size / 1024);
               const contextLabel: Record<string, string> = { general: 'Général', repondeur: 'Répondeur', personal: 'Perso', 'studio-video': 'Studio Vidéo', 'studio-photo': 'Studio Photo' };
               return (
-                <div key={doc.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ fontSize: 22, flexShrink: 0 }}>
+                <div key={doc.id} style={{
+                  ...CU.card, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12,
+                }}>
+                  <div style={{ fontSize: 20, flexShrink: 0 }}>
                     {doc.filename.endsWith('.pdf') ? '📑' : doc.filename.endsWith('.docx') ? '📄' : doc.filename.endsWith('.xlsx') ? '📊' : '📄'}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.filename}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: CU.text }}>{doc.filename}</div>
+                    <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2, display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
                       <span>{sizeKb} Ko</span>
                       {doc.token_count && <span>· {doc.token_count.toLocaleString('fr-FR')} tokens</span>}
                       <span>· {new Date(doc.created_at).toLocaleDateString('fr-FR')}</span>
                     </div>
                   </div>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, flexShrink: 0,
-                    background: 'var(--accent)15', color: 'var(--accent)',
+                    fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, flexShrink: 0,
+                    background: `${CU.accent}12`, color: CU.accent,
                   }}>
                     {contextLabel[doc.context] ?? doc.context}
                   </span>
                   <button
                     onClick={() => deleteKBDoc(doc.id)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 16, flexShrink: 0 }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 16, flexShrink: 0 }}
                     title="Supprimer"
                   >
                     ×
@@ -1307,32 +1355,40 @@ export default function DocumentsPage() {
             })}
           </div>
         )}
-      </div>
+      </section>
 
-      {/* Generated Documents History */}
+      {/* ─── Generated Documents History ─── */}
       {generatedDocs.length > 0 && (
-        <div className="section">
-          <div className="section-title">Mes documents ({generatedDocs.length})</div>
-          <div className="flex flex-col gap-6">
-            {generatedDocs.map(doc => {
-              const tpl = TEMPLATES.find(t => t.id === doc.templateId);
-              return (
-                <div key={doc.id} className="flex items-center gap-12 bg-secondary rounded-md" style={{
-                  padding: '8px 12px',
-                }}>
-                  📄
-                  <div className="flex-1" style={{ minWidth: 0 }}>
-                    <div className="text-md font-semibold truncate">{doc.title}</div>
-                    <div className="text-xs text-muted">{new Date(doc.createdAt).toLocaleString('fr-FR')}</div>
-                  </div>
-                  <button onClick={() => setViewingDoc(doc)} className="btn btn-ghost btn-sm">Voir</button>
-                  <button onClick={() => copyToClipboard(doc.content)} className="btn btn-ghost btn-sm">Copier</button>
-                  <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} className="btn btn-ghost btn-sm text-danger" aria-label="Supprimer le document">🗑️</button>
-                </div>
-              );
-            })}
+        <section>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <span style={{ fontSize: 16 }}>📋</span>
+            <h2 style={{ ...CU.sectionTitle }}>Mes documents ({generatedDocs.length})</h2>
+            <div style={{ flex: 1 }} />
           </div>
-        </div>
+          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
+            {generatedDocs.map(doc => (
+              <div key={doc.id} style={{
+                ...CU.card, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12,
+              }}>
+                <span style={{ fontSize: 18 }}>📄</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: CU.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{doc.title}</div>
+                  <div style={{ fontSize: 11, color: CU.textMuted }}>{new Date(doc.createdAt).toLocaleString('fr-FR')}</div>
+                </div>
+                <button onClick={() => setViewingDoc(doc)} style={{
+                  ...CU.btn, ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
+                }}>Voir</button>
+                <button onClick={() => copyToClipboard(doc.content)} style={{
+                  ...CU.btn, ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
+                }}>Copier</button>
+                <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} style={{
+                  ...CU.btn, height: 28, fontSize: 12, fontFamily: 'inherit',
+                  background: 'transparent', color: '#ef4444',
+                }} aria-label="Supprimer le document">🗑️</button>
+              </div>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

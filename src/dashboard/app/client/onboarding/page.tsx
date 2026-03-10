@@ -482,7 +482,7 @@ export default function OnboardingPage() {
         {/* Compact mode toggle + prefilled badge + voice input */}
         <div className="flex flex-center items-center gap-12 mt-12">
           {prefilled && (
-            <span style={{ fontSize: 11, padding: '4px 10px', borderRadius: 12, background: 'rgba(14,165,233,0.08)', color: 'var(--accent)', fontWeight: 600 }}>
+            <span style={{ fontSize: 11, height: 36, padding: '0 12px', borderRadius: 12, background: 'rgba(14,165,233,0.08)', color: 'var(--accent)', fontWeight: 600 }}>
               Pré-rempli par IA — vérifiez et ajustez
             </span>
           )}
@@ -501,7 +501,7 @@ export default function OnboardingPage() {
           <button
             onClick={toggleCompactMode}
             style={{
-              fontSize: 11, padding: '4px 10px', borderRadius: 12, cursor: 'pointer',
+              fontSize: 11, height: 36, padding: '0 12px', borderRadius: 12, cursor: 'pointer',
               background: compactMode ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
               color: compactMode ? 'var(--accent)' : 'var(--fz-text-muted, #94A3B8)',
               border: `1px solid ${compactMode ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,

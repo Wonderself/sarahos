@@ -97,7 +97,7 @@ export default function VisioPage() {
             { label: 'Dur\u00e9e ce mois', value: formatDuration(totalDurationMonth), icon: '\u23f1\ufe0f', color: '#f59e0b' },
             { label: 'Assistant favori', value: topAgent?.name ?? '\u2014', icon: '\ud83e\udd16', color: '#22c55e' },
           ].map(s => (
-            <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
               <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
               <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
@@ -134,7 +134,7 @@ export default function VisioPage() {
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <div
-                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}
+                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = agent.color;
                   e.currentTarget.style.boxShadow = `0 4px 12px ${agent.color}20`;
@@ -164,7 +164,7 @@ export default function VisioPage() {
                   )}
                   <div style={{
                     marginTop: 10, fontSize: 11, fontWeight: 600, color: agent.color,
-                    padding: '4px 10px', borderRadius: 6, background: `${agent.color}10`,
+                    height: 36, padding: '0 12px', borderRadius: 6, background: `${agent.color}10`,
                     display: 'inline-block',
                   }}>
                     Appeler \ud83d\udcde
@@ -179,7 +179,7 @@ export default function VisioPage() {
       {/* Call history */}
       {activeSection === 'history' && (
         callHistory.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+          <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
             <div style={{ marginBottom: 16, fontSize: 48 }}>\ud83d\udcde</div>
             <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel pour le moment</div>
             <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
@@ -193,7 +193,7 @@ export default function VisioPage() {
               const statusColor = call.status === 'completed' ? '#22c55e' : call.status === 'missed' ? '#f59e0b' : '#ef4444';
               const statusLabel = call.status === 'completed' ? 'Termin\u00e9' : call.status === 'missed' ? 'Manqu\u00e9' : 'Erreur';
               return (
-                <div key={i} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={i} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <div style={{
                     width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -225,7 +225,7 @@ export default function VisioPage() {
       )}
 
       {/* Audio diagnostic */}
-      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Probl\u00e8mes audio ?</div>
         <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 8 }}>
           Testez votre micro et vos haut-parleurs pour v\u00e9rifier que tout fonctionne.

@@ -1361,7 +1361,7 @@ export default function ReveilPage() {
         <div style={{
           background: 'var(--fz-bg-secondary, #F8FAFC)',
           borderRadius: 16, padding: 'clamp(20px, 4vw, 32px)',
-          border: '1px solid var(--fz-border, #E2E8F0)',
+          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           position: 'relative', overflow: 'hidden',
         }}>
           <div style={{
@@ -1413,7 +1413,7 @@ export default function ReveilPage() {
                   display: 'flex', alignItems: 'flex-start', gap: 12,
                   padding: '14px 16px', borderRadius: 12,
                   background: 'var(--fz-bg-hover, #F1F5F9)',
-                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                 }}>
                   <span style={{ fontSize: 22, flexShrink: 0 }}>{feature.emoji}</span>
                   <div>
@@ -1460,7 +1460,7 @@ export default function ReveilPage() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 24px', borderRadius: 12,
-                  background: 'var(--fz-bg-hover, #F1F5F9)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg-hover, #F1F5F9)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   color: 'var(--fz-text-secondary, #64748B)',
                   fontWeight: 600, fontSize: 14,
                   textDecoration: 'none', transition: 'opacity 0.2s',

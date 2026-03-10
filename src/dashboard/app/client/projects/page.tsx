@@ -183,7 +183,7 @@ export default function ProjectsPage() {
             { label: 'Projet actif', value: activeProject?.name ?? '—', emoji: '✅', color: '#22c55e' },
             { label: 'Credits cumules', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', emoji: '💳', color: '#f59e0b' },
           ].map(s => (
-            <div key={s.label} className="card" style={{ padding: '14px 18px', background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <div key={s.label} className="card" style={{ padding: '14px 18px', background: 'var(--fz-bg, #FFFFFF)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
               <div style={{ fontSize: 20, marginBottom: 4 }}>{s.emoji}</div>
               <div style={{ fontSize: 14, fontWeight: 700, color: s.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.value}</div>
               <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
@@ -211,7 +211,7 @@ export default function ProjectsPage() {
               <div
                 key={project.id}
                 className="card"
-                style={{ padding: 20, position: 'relative', borderColor: isActive ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)', borderWidth: isActive ? 2 : 1, background: 'var(--fz-bg, #FFFFFF)' }}
+                style={{ padding: 20, position: 'relative', border: isActive ? '2px solid var(--accent)' : 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}
               >
                 {/* Active badge */}
                 {isActive && (
@@ -277,7 +277,7 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 440, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div className="card" style={{ width: '100%', maxWidth: 440, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>📁 Nouveau projet</h3>
 
             <div style={{ marginBottom: 14 }}>
@@ -323,7 +323,7 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setRenameProject(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>✏️ Renommer le projet</h3>
             <input
               className="input"
@@ -353,7 +353,7 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setDeleteProject(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🗑️ Supprimer le projet</h3>
             <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 20 }}>
               Êtes-vous sûr de vouloir supprimer <strong>"{deleteProject.name}"</strong> ? Cette action est irréversible.

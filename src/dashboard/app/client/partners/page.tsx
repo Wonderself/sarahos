@@ -158,7 +158,7 @@ export default function PartnersPage() {
               {cat.partners.map(partner => (
                 <div key={partner.name} style={{
                   padding: '20px', borderRadius: 12,
-                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   background: 'var(--fz-bg, #FFFFFF)',
                   position: 'relative',
                 }}>
@@ -214,7 +214,7 @@ export default function PartnersPage() {
       {/* Info box */}
       <div style={{
         marginTop: 32, padding: '20px 24px', borderRadius: 12,
-        background: 'var(--accent-muted)', border: '1px solid var(--fz-border, #E2E8F0)',
+        background: 'var(--accent-muted)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
       }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 6 }}>
           Devenir partenaire

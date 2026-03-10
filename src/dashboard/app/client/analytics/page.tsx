@@ -52,6 +52,44 @@ function getModelIcon(model: string) {
   return entry ? entry.icon : '🤖';
 }
 
+// ── ClickUp-style tokens ──────────────────────────────────────────────────────
+const CU = {
+  card: {
+    border: 'none' as const,
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    borderRadius: 8,
+    background: 'var(--fz-bg, #FFFFFF)',
+  },
+  sectionCard: {
+    border: 'none' as const,
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    borderRadius: 8,
+    padding: '16px 24px',
+    background: 'var(--fz-bg, #FFFFFF)',
+  },
+  statCard: {
+    border: 'none' as const,
+    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    borderRadius: 8,
+    padding: '16px 20px',
+    background: 'var(--fz-bg, #FFFFFF)',
+    display: 'flex' as const,
+    flexDirection: 'column' as const,
+    gap: 4,
+  },
+  statValue: { fontSize: 20, fontWeight: 700 as const },
+  statLabel: { fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' },
+  btn: {
+    height: 36,
+    padding: '0 12px',
+    borderRadius: 6,
+    fontWeight: 500 as const,
+    fontSize: 13,
+    cursor: 'pointer' as const,
+    border: 'none' as const,
+  },
+};
+
 // ─── API helper ───────────────────────────────────────────────────────────────
 
 async function portalCall<T>(path: string, token: string): Promise<T> {
@@ -126,7 +164,7 @@ export default function AnalyticsPage() {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
         <div style={{ fontSize: 40 }}>📊</div>
-        <div className="text-md text-tertiary animate-pulse">Chargement des analytics...</div>
+        <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement des analytics...</div>
       </div>
     );
   }
@@ -136,8 +174,8 @@ export default function AnalyticsPage() {
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.analytics.emoji}</span>
-          <div>
+          <span style={{ fontSize: 22 }}>{PAGE_META.analytics.emoji}</span>
+          <div style={{ flex: 1 }}>
             <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.analytics.title}</h1>
             <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.analytics.subtitle}</p>
           </div>
@@ -153,10 +191,13 @@ export default function AnalyticsPage() {
             key={p.days}
             onClick={() => setPeriod(p.days)}
             style={{
-              padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              border: period === p.days ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
-              background: period === p.days ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              ...CU.btn,
+              height: 32,
+              fontSize: 12,
+              fontWeight: 600,
+              background: period === p.days ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
               color: period === p.days ? '#fff' : 'var(--fz-text, #1E293B)',
+              border: period === p.days ? 'none' : '1px solid var(--fz-border, #E8EAED)',
             }}
           >
             {p.label}
@@ -164,26 +205,33 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
+      {error && (
+        <div style={{
+          ...CU.card, marginBottom: 20, padding: '12px 16px',
+          borderLeft: '3px solid #ef4444', color: '#ef4444', fontSize: 13,
+        }}>
+          {error}
+        </div>
+      )}
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤', color: 'var(--accent)' },
+          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤', color: 'var(--fz-accent, #0EA5E9)' },
           { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: '📨', color: '#3b82f6' },
           { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: '💰', color: '#f59e0b' },
           { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: '🤖', color: '#22c55e' },
         ].map(s => (
-          <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{s.label}</div>
+          <div key={s.label} style={CU.statCard}>
+            <span style={{ fontSize: 20 }}>{s.icon}</span>
+            <span style={{ ...CU.statValue, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</span>
+            <span style={CU.statLabel}>{s.label}</span>
           </div>
         ))}
       </div>
 
       {totalRequests === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
+        <div style={{ ...CU.card, textAlign: 'center', padding: '60px 40px' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
           <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune donnée sur cette période</div>
           <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
@@ -194,28 +242,28 @@ export default function AnalyticsPage() {
         <>
           {/* Daily chart */}
           {last30Days.length > 0 && (
-            <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Activité quotidienne</h3>
+            <div style={{ ...CU.sectionCard, padding: 24, marginBottom: 20 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)', margin: '0 0 16px' }}>Activité quotidienne</h3>
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={last30Days} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E8EAED)" />
                   <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
                   <YAxis tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
                   <Tooltip />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="Tokens" fill="var(--accent)" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Requêtes" fill="#22c55e" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="Tokens" fill="var(--fz-accent, #0EA5E9)" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="Requêtes" fill="#22c55e" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
               <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 8, textAlign: 'center' }}>Tokens en milliers (k)</div>
             </div>
           )}
 
-          <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 ? '1fr 1fr' : '1fr', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 ? '1fr 1fr' : '1fr', gap: 16 }}>
             {/* Pie chart */}
             {pieData.length > 0 && (
-              <div className="card" style={{ padding: 24 }}>
-                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Répartition par modèle</h3>
+              <div style={{ ...CU.sectionCard, padding: 24 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)', margin: '0 0 16px' }}>Répartition par modèle</h3>
                 <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ percent }: { percent?: number }) => `${((percent ?? 0) * 100).toFixed(0)}%`} labelLine={false}>
@@ -229,11 +277,16 @@ export default function AnalyticsPage() {
             )}
 
             {/* Table by model */}
-            <div className="card" style={{ padding: 24 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Détail par modèle</h3>
+            <div style={{ ...CU.sectionCard, padding: 24 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)', margin: '0 0 16px' }}>Détail par modèle</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {usageByModel.map((m, i) => (
-                  <div key={m.model} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div key={m.model} style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '8px 10px', borderRadius: 6,
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    transition: 'background 0.15s',
+                  }}>
                     <div style={{
                       width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
                       background: PIE_COLORS[i % PIE_COLORS.length],
@@ -246,7 +299,7 @@ export default function AnalyticsPage() {
                         {m.totalRequests} req · {(m.totalTokens / 1000).toFixed(0)}k tokens
                       </div>
                     </div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', flexShrink: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', flexShrink: 0 }}>
                       {(m.totalCost / 1_000_000).toFixed(3)} cr
                     </div>
                   </div>

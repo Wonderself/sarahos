@@ -183,7 +183,7 @@ export default function FormationsPage() {
     background: 'var(--fz-bg, #FFFFFF)',
     borderRadius: 16,
     padding: '28px 24px',
-    border: '1px solid var(--fz-border, #E2E8F0)',
+    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
     transition: 'box-shadow 0.25s, transform 0.25s',
     cursor: 'default',
     display: 'flex',
@@ -195,7 +195,7 @@ export default function FormationsPage() {
     width: '100%',
     padding: '12px 16px',
     fontSize: 14,
-    border: '1px solid var(--fz-border, #E2E8F0)',
+    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
     borderRadius: 10,
     outline: 'none',
     fontFamily: 'inherit',
@@ -240,7 +240,7 @@ export default function FormationsPage() {
               background: 'var(--fz-bg, #FFFFFF)',
               borderRadius: 14,
               padding: '20px 18px',
-              border: '1px solid var(--fz-border, #E2E8F0)',
+              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               textAlign: 'center',
             }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>{b.icon}</div>
@@ -279,7 +279,7 @@ export default function FormationsPage() {
               onChange={e => setSearch(e.target.value)}
               style={{
                 width: '100%', padding: '10px 12px 10px 36px', fontSize: 14,
-                border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 10, outline: 'none',
+                border: 'none', borderRadius: 8, boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', outline: 'none',
                 fontFamily: 'inherit', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box',
               }}
               onFocus={e => (e.currentTarget.style.borderColor = accent)}
@@ -328,7 +328,7 @@ export default function FormationsPage() {
                   position: 'absolute',
                   top: 14,
                   right: 14,
-                  padding: '4px 10px',
+                  height: 36, padding: '0 12px',
                   borderRadius: 8,
                   fontSize: 10,
                   fontWeight: 700,
@@ -464,7 +464,7 @@ export default function FormationsPage() {
           background: 'var(--fz-bg, #FFFFFF)',
           borderRadius: 20,
           padding: 'clamp(24px, 4vw, 48px)',
-          border: '1px solid var(--fz-border, #E2E8F0)',
+          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           maxWidth: 680,
           margin: '0 auto',
         }}>

@@ -310,7 +310,7 @@ export default function CVPage() {
       <AccordionSection id="skills" title={`Compétences (${profile.skills?.length ?? 0})`} icon="💡">
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
           {(profile.skills ?? []).map((s, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, height: 36, padding: '0 12px', borderRadius: 20, background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
               <span style={{ fontSize: 13 }}>{s.name}</span>
               <select
                 value={s.level}

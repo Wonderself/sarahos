@@ -218,10 +218,10 @@ export default function VideoProPage() {
           <div
             key={svc.id}
             style={{
-              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 14, border: '1px solid var(--fz-border, #E2E8F0)',
+              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 14, border: 'none',
               padding: '24px 20px', display: 'flex', flexDirection: 'column',
               transition: 'all 0.2s ease',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+              boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--fz-accent, #0EA5E9)';
@@ -281,7 +281,7 @@ export default function VideoProPage() {
         background: 'var(--accent-muted)', borderRadius: 14, padding: '20px 24px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 12, marginBottom: 40,
-        border: '1px solid var(--fz-border, #E2E8F0)',
+        border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
       }}>
         <div>
           <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
@@ -307,9 +307,9 @@ export default function VideoProPage() {
 
       {/* Devis Section */}
       <div id="devis-section" style={{
-        background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)',
+        background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none',
         padding: '32px 28px', marginBottom: 40,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+        boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
       }}>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
           Demander un devis
@@ -330,7 +330,7 @@ export default function VideoProPage() {
               placeholder="Votre nom"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -351,7 +351,7 @@ export default function VideoProPage() {
               placeholder="votre@email.com"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -373,7 +373,7 @@ export default function VideoProPage() {
               placeholder="+33 6 12 34 56 78"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -392,7 +392,7 @@ export default function VideoProPage() {
               onChange={e => setForm(prev => ({ ...prev, service: e.target.value }))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
                 background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -419,7 +419,7 @@ export default function VideoProPage() {
             rows={4}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
               resize: 'vertical', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
@@ -438,7 +438,7 @@ export default function VideoProPage() {
             onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
               background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}

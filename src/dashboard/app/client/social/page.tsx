@@ -5,6 +5,7 @@ import { useUserData } from '../../../lib/use-user-data';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ───────────────────────────────────────────────
 interface SavedPost {
@@ -245,6 +246,7 @@ function mockCompetitorAnalysis(name: string, platform: string): Omit<Competitor
 
 // ─── Main Component ──────────────────────────────────────
 export default function SocialMediaPage() {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<TabId>('generator');
 
   // Generator state

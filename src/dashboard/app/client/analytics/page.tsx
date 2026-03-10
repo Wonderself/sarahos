@@ -5,6 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
+import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
@@ -105,6 +106,7 @@ async function portalCall<T>(path: string, token: string): Promise<T> {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function AnalyticsPage() {
+  const isMobile = useIsMobile();
   const [period, setPeriod] = useState(30);
   const [usageByModel, setUsageByModel] = useState<UsageByModel[]>([]);
   const [dailyUsage, setDailyUsage] = useState<DailyUsage[]>([]);
@@ -215,7 +217,7 @@ export default function AnalyticsPage() {
       )}
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '130px' : '180px'}, 1fr))`, gap: 12, marginBottom: 24 }}>
         {[
           { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤', color: 'var(--fz-accent, #0EA5E9)' },
           { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: '📨', color: '#3b82f6' },
@@ -224,7 +226,7 @@ export default function AnalyticsPage() {
         ].map(s => (
           <div key={s.label} style={CU.statCard}>
             <span style={{ fontSize: 20 }}>{s.icon}</span>
-            <span style={{ ...CU.statValue, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</span>
+            <span style={{ ...CU.statValue, fontSize: isMobile ? 16 : 20, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</span>
             <span style={CU.statLabel}>{s.label}</span>
           </div>
         ))}
@@ -259,7 +261,7 @@ export default function AnalyticsPage() {
             </div>
           )}
 
-          <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 ? '1fr 1fr' : '1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 && !isMobile ? '1fr 1fr' : '1fr', gap: 16 }}>
             {/* Pie chart */}
             {pieData.length > 0 && (
               <div style={{ ...CU.sectionCard, padding: 24 }}>

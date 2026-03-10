@@ -8,6 +8,7 @@ import { SlideOver } from '../../../components/SlideOver';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ───
 
@@ -68,6 +69,7 @@ function getAgentMaterialIcon(agentId: string): string {
 // ─── Page Component ───
 
 export default function ActionsPage() {
+  const isMobile = useIsMobile();
   const [actions, setActions] = useState<Action[]>([]);
   const [stats, setStats] = useState<ActionStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -193,13 +195,14 @@ export default function ActionsPage() {
           <button
             onClick={() => setViewMode(viewMode === 'kanban' ? 'list' : 'kanban')}
             className="btn btn-secondary btn-sm"
+            style={isMobile ? { minHeight: 44 } : undefined}
           >
             {viewMode === 'kanban' ? '📋' : '📊'} {viewMode === 'kanban' ? 'Liste' : 'Kanban'}
           </button>
           <button
             onClick={() => setShowAddModal(true)}
             className="btn btn-sm"
-            style={{ background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}
+            style={{ background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', ...(isMobile ? { minHeight: 44 } : {}) }}
           >
             + Nouvelle action
           </button>
@@ -208,7 +211,7 @@ export default function ActionsPage() {
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))' }}>
+        <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(140px, 1fr))' }}>
           {[
             { label: 'Total', value: stats.total, color: 'var(--fz-text, #1E293B)' },
             { label: 'Proposées', value: stats.proposed, color: '#8B5CF6' },
@@ -229,12 +232,12 @@ export default function ActionsPage() {
       )}
 
       {/* Filters */}
-      <div className="flex gap-6 flex-wrap mb-8">
+      <div className="flex gap-6 flex-wrap mb-8" style={isMobile ? { flexDirection: 'column' } : undefined}>
         <select
           value={filterType}
           onChange={e => setFilterType(e.target.value)}
           className="input"
-          style={{ fontSize: 12, padding: '4px 8px', width: 'auto' }}
+          style={{ fontSize: 12, padding: '4px 8px', width: isMobile ? '100%' : 'auto', minHeight: isMobile ? 44 : undefined }}
         >
           <option value="">Tous les types</option>
           {ALL_TYPES.map(t => (
@@ -245,7 +248,7 @@ export default function ActionsPage() {
           value={filterPriority}
           onChange={e => setFilterPriority(e.target.value)}
           className="input"
-          style={{ fontSize: 12, padding: '4px 8px', width: 'auto' }}
+          style={{ fontSize: 12, padding: '4px 8px', width: isMobile ? '100%' : 'auto', minHeight: isMobile ? 44 : undefined }}
         >
           <option value="">Toutes priorités</option>
           {ALL_PRIORITIES.map(p => (
@@ -257,7 +260,7 @@ export default function ActionsPage() {
             value={filterAgent}
             onChange={e => setFilterAgent(e.target.value)}
             className="input"
-            style={{ fontSize: 12, padding: '4px 8px', width: 'auto' }}
+            style={{ fontSize: 12, padding: '4px 8px', width: isMobile ? '100%' : 'auto', minHeight: isMobile ? 44 : undefined }}
           >
             <option value="">Tous les assistants</option>
             {usedAgents.map(a => (
@@ -291,7 +294,7 @@ export default function ActionsPage() {
 
       {/* Kanban View */}
       {!loading && actions.length > 0 && viewMode === 'kanban' && (
-        <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', minHeight: 400 }}>
+        <div className="grid gap-6" style={{ gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))', minHeight: 400 }}>
           {COLUMNS.map(col => (
             <div key={col.id}>
               <div className="flex items-center gap-6 mb-6" style={{ padding: '0 4px' }}>

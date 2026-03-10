@@ -6,6 +6,7 @@ import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,7 @@ async function portalCall<T>(path: string, method = 'GET', data?: unknown): Prom
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ProjectsPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -152,7 +154,7 @@ export default function ProjectsPage() {
   const meta = PAGE_META.projects;
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto', padding: '0 0 48px' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto', padding: isMobile ? '0 12px 48px' : '0 0 48px' }}>
 
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
@@ -177,7 +179,7 @@ export default function ProjectsPage() {
 
       {/* Stats */}
       {projects.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(100px, 1fr))' : 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
             { label: 'Total projets', value: String(projects.length), emoji: '📁', color: 'var(--accent)' },
             { label: 'Projet actif', value: activeProject?.name ?? '—', emoji: '✅', color: '#22c55e' },

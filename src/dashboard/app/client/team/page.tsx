@@ -5,6 +5,7 @@ import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 import {
   DEFAULT_AGENTS,
   loadAgentConfigs,
@@ -102,6 +103,7 @@ function roleLabelFr(role: string): string {
 }
 
 export default function TeamPage() {
+  const isMobile = useIsMobile();
   const [agents, setAgents] = useState<TeamAgent[]>([]);
   const [tier, setTier] = useState('guest');
   const [activeIds, setActiveIds] = useState<AgentTypeId[]>(['fz-repondeur']);
@@ -612,7 +614,7 @@ export default function TeamPage() {
           </div>
 
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
             <div className="cu-stat-card">
               <span className="cu-stat-emoji">👥</span>
               <div className="cu-stat-value">{memberStats.total}</div>
@@ -1032,7 +1034,7 @@ export default function TeamPage() {
 
           {/* Groups grid */}
           {groups.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
               {groups.map(group => (
                 <div key={group.id} className="cu-group-card">
                   <div className="cu-group-header">
@@ -1243,7 +1245,7 @@ export default function TeamPage() {
               <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
                 Découvrir ({discoverCommunities.length})
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
                 {discoverCommunities.map(community => (
                   <div key={community.id} className="cu-group-card" style={{ cursor: 'pointer' }}>
                     <div className="cu-group-header">

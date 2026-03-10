@@ -83,7 +83,8 @@ const CU = {
     marginTop: 2,
   } as React.CSSProperties,
   btn: {
-    height: 36,
+    height: 44,
+    minHeight: 44,
     padding: '0 12px',
     borderRadius: 6,
     fontWeight: 500,
@@ -96,7 +97,8 @@ const CU = {
     transition: 'all 0.15s ease',
   } as React.CSSProperties,
   btnGhost: {
-    height: 36,
+    height: 44,
+    minHeight: 44,
     padding: '0 12px',
     borderRadius: 6,
     fontWeight: 500,
@@ -111,7 +113,8 @@ const CU = {
     color: 'var(--fz-text-secondary, #64748B)',
   } as React.CSSProperties,
   btnPrimary: {
-    height: 36,
+    height: 44,
+    minHeight: 44,
     padding: '0 12px',
     borderRadius: 6,
     fontWeight: 500,

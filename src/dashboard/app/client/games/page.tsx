@@ -25,6 +25,7 @@ import BadgeUnlockPopup from '@/components/BadgeUnlockPopup';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Icon-to-Emoji mapping for dynamic game/badge icons ─────────────────────
 
@@ -50,6 +51,7 @@ function iconToEmoji(icon: string): string {
 }
 
 export default function GamesHubPage() {
+  const isMobile = useIsMobile();
   const [scores, setScores] = useState<Record<string, GameScore>>({});
   const [totalPlayed, setTotalPlayed] = useState(0);
   const [totalCredits, setTotalCredits] = useState(0);
@@ -93,7 +95,7 @@ export default function GamesHubPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--fz-bg-secondary, #F8FAFC)', padding: '32px 24px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fz-bg-secondary, #F8FAFC)', padding: isMobile ? '16px 12px' : '32px 24px' }}>
       <BadgeUnlockPopup />
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         {/* Page Header */}
@@ -213,7 +215,7 @@ export default function GamesHubPage() {
                     title={`${badge.name} — ${badge.condition}`}
                     style={{
                       flexShrink: 0,
-                      width: 72,
+                      width: isMobile ? 56 : 72,
                       textAlign: 'center',
                       padding: '10px 6px',
                       borderRadius: 10,
@@ -253,7 +255,7 @@ export default function GamesHubPage() {
             <div
               key={stat.label}
               style={{
-                flex: '1 1 160px',
+                flex: isMobile ? '1 1 100px' : '1 1 160px',
                 background: 'var(--fz-bg, #FFFFFF)',
                 borderRadius: 12,
                 padding: '14px 18px',
@@ -423,7 +425,7 @@ export default function GamesHubPage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(260px, 1fr))',
             gap: 16,
           }}
         >

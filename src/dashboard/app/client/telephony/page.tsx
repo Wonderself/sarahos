@@ -8,6 +8,7 @@ import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -83,6 +84,7 @@ const meta = PAGE_META.telephony;
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function TelephonyPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [tab, setTab] = useState<Tab>('Historique');
 
@@ -202,7 +204,7 @@ export default function TelephonyPage() {
   const healthLabel = health?.status === 'ok' ? 'Op\u00e9rationnel' : health?.status === 'degraded' ? 'D\u00e9grad\u00e9' : 'En panne';
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
 
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
@@ -317,7 +319,7 @@ export default function TelephonyPage() {
               <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les personas vocales appara\u00eetront ici.</div>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
               {personas.map(p => (
                 <div key={p.id} style={{ padding: 20, position: 'relative', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   {p.active && (

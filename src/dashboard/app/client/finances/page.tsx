@@ -6,6 +6,7 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import { useToast } from '../../../components/Toast';
+import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
@@ -97,6 +98,7 @@ async function portalCall<T>(path: string, method = 'GET', data?: unknown): Prom
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function FinancesPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [tab, setTab] = useState<Tab>('Vue mensuelle');
   const [loading, setLoading] = useState(true);
@@ -242,7 +244,7 @@ export default function FinancesPage() {
       <PageExplanation pageId="finances" text={PAGE_META.finances?.helpText} />
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '130px' : '180px'}, 1fr))`, gap: 12, marginBottom: 24 }}>
         {[
           { label: 'Solde actuel', value: `${currentBalance} cr`, icon: '💰', color: CU.accent },
           { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: '📉', color: '#ef4444' },
@@ -309,7 +311,7 @@ export default function FinancesPage() {
               <div style={{ fontSize: 13, color: CU.textMuted }}>Les données s&apos;afficheront après utilisation.</div>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 ? '1fr 1fr' : '1fr', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 && !isMobile ? '1fr 1fr' : '1fr', gap: 16 }}>
               {pieData.length > 0 && (
                 <div style={{ ...CU.card, padding: 24 }}>
                   <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: CU.text }}>📊 Répartition par feature</h3>
@@ -394,7 +396,7 @@ export default function FinancesPage() {
               </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 20 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 500, color: CU.textSecondary, display: 'block', marginBottom: 6 }}>
                   Seuil de déclenchement (crédits)
@@ -523,7 +525,7 @@ export default function FinancesPage() {
               />
               <span style={{ fontSize: 12, color: CU.textMuted }}>≈ {(msgsPerDay * 30).toFixed(0)} messages/mois · {(monthlyTokens / 1000).toFixed(0)}k tokens/mois</span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '140px' : '200px'}, 1fr))`, gap: 12 }}>
               {[
                 { model: 'Claude Haiku (rapide)', cost: haikuCredits, color: '#22c55e', desc: 'Tâches simples et rapides', icon: '⚡' },
                 { model: 'Claude Sonnet (standard)', cost: sonnetCredits, color: CU.accent, desc: 'Agents L1/L2, usage courant', icon: '🎯' },

@@ -244,6 +244,26 @@ function getNavEmoji(href: string): string {
   return NAV_EMOJIS[slug] || NAV_EMOJIS[slug.split('-')[0]] || '📎';
 }
 
+// ─── Nav context for emoji rail breadcrumb ───────────────────────────────────
+
+function getCurrentNavContext(
+  pathname: string,
+  sections: SectionConfig[],
+): { sectionId: string; sectionEmoji: string; pageEmoji: string } | null {
+  for (const section of sections) {
+    for (const item of section.items) {
+      if (item.visible && (pathname === item.href || (item.href !== '/client/dashboard' && pathname.startsWith(item.href)))) {
+        return {
+          sectionId: section.id,
+          sectionEmoji: SECTION_EMOJIS[section.id] || '📌',
+          pageEmoji: getNavEmoji(item.href),
+        };
+      }
+    }
+  }
+  return null;
+}
+
 // ─── Level titles ─────────────────────────────────────────────────────────────
 
 const LEVEL_TITLES: Record<number, string> = {
@@ -284,7 +304,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [gamXPNext, setGamXPNext] = useState(100);
   const [gamStreak, setGamStreak] = useState(0);
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [lowCreditDismissed, setLowCreditDismissed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -461,7 +481,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('storage', onFavChange);
   }, []);
 
-  useEffect(() => { setSidebarOpen(false); }, [pathname]);
+  useEffect(() => { setSidebarExpanded(false); }, [pathname]);
 
   // SSE — real-time notifications
   useEffect(() => {
@@ -792,11 +812,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
     )}
     <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
-      {/* Mobile Top Bar */}
-      <div className="mobile-topbar" style={{ height: 48, background: 'var(--fz-bg, #fff)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
-        <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--text-primary)', padding: 4 }}>
-          {sidebarOpen ? '✕' : '☰'}
-        </button>
+      {/* Mobile Top Bar — no hamburger, starts after emoji rail */}
+      <div className="mobile-topbar" style={{ height: 48, background: 'var(--fz-bg, #fff)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
           {(() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
@@ -804,29 +821,68 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <span>freenzy.io</span>;
           })()}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Link href="/client/notifications" style={{ fontSize: 18, textDecoration: 'none', position: 'relative' }} onClick={() => setNotifUnreadCount(0)}>
-            🔔
-            {notifUnreadCount > 0 && (
-              <span style={{ position: 'absolute', top: -4, right: -6, minWidth: 14, height: 14, borderRadius: 7, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
-            )}
-          </Link>
-          <div style={{
-            width: 24, height: 24, borderRadius: '50%',
-            background: 'var(--fz-accent-light, rgba(14,165,233,0.1))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 10, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)',
-          }}>
-            {(session?.displayName || session?.email || '?').slice(0, 2).toUpperCase()}
-          </div>
-        </div>
       </div>
 
-      {/* Sidebar Overlay */}
-      <div className={`sidebar-overlay${sidebarOpen ? ' active' : ''}`} onClick={() => setSidebarOpen(false)} />
+      {/* Sidebar Overlay (mobile only when expanded) */}
+      <div className={`sidebar-overlay${sidebarExpanded ? ' active' : ''}`} onClick={() => setSidebarExpanded(false)} />
 
-      {/* Client Sidebar */}
-      <nav className={`client-sidebar${sidebarOpen ? ' sidebar-open' : ''}`} style={{ background: 'var(--fz-bg-sidebar, var(--bg-primary))', width: 240, borderRight: '1px solid var(--fz-border, #E2E8F0)' }}>
+      {/* Emoji Rail — always visible */}
+      {(() => {
+        const navCtx = getCurrentNavContext(pathname, visibleSections);
+        return (
+          <nav className="emoji-rail">
+            <div className="emoji-rail-top">
+              <button className="emoji-rail-btn" onClick={() => setSidebarExpanded(e => !e)} title="Menu">
+                🚀
+              </button>
+            </div>
+            <div className="emoji-rail-sections">
+              {visibleSections.map(section => {
+                const sEmoji = SECTION_EMOJIS[section.id] || '📌';
+                const isCurrent = navCtx?.sectionId === section.id;
+                return (
+                  <div className="emoji-rail-section" key={section.id}>
+                    <button
+                      className={`emoji-rail-btn${isCurrent ? ' active' : ''}`}
+                      onClick={() => setSidebarExpanded(e => !e)}
+                      title={section.title}
+                    >
+                      {sEmoji}
+                    </button>
+                    {isCurrent && navCtx?.pageEmoji && (
+                      <div className="emoji-rail-child" title={(() => {
+                        const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
+                        const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
+                        return meta?.title || '';
+                      })()}>
+                        {navCtx.pageEmoji}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="emoji-rail-bottom">
+              <button className="emoji-rail-btn" onClick={() => setSearchOpen(true)} title="Rechercher (Ctrl+K)">🔍</button>
+              <button className="emoji-rail-btn" onClick={toggleDarkMode} title={darkMode ? 'Mode clair' : 'Mode sombre'}>
+                {darkMode ? '☀️' : '🌙'}
+              </button>
+              <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => setNotifUnreadCount(0)}>
+                🔔
+                {notifUnreadCount > 0 && (
+                  <span style={{ position: 'absolute', top: 2, right: 2, minWidth: 12, height: 12, borderRadius: 6, background: '#ef4444', color: '#fff', fontSize: 8, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 2px' }}>{notifUnreadCount}</span>
+                )}
+              </Link>
+              <Link href="/client/account" className="emoji-rail-avatar" title={session?.displayName || 'Mon compte'} style={{ textDecoration: 'none' }}>
+                {(session?.displayName || session?.email || '?').slice(0, 2).toUpperCase()}
+              </Link>
+            </div>
+          </nav>
+        );
+      })()}
+
+      {/* Client Sidebar (expanded) */}
+      <nav className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`} style={{ background: 'var(--fz-bg-sidebar, var(--bg-primary))', width: 240, borderRight: '1px solid var(--fz-border, #E2E8F0)' }}>
         <div className="sidebar-header" style={{ padding: '8px 12px 4px' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,
@@ -1269,7 +1325,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </nav>
 
       {/* Client Content */}
-      <div className="client-main-content">
+      <div className={`client-main-content${sidebarExpanded && isDesktop ? ' content-shifted' : ''}`} onClick={() => { if (sidebarExpanded && isDesktop) setSidebarExpanded(false); }}>
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
@@ -1308,34 +1364,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div className="page-container">{children}</div>
       </div>
 
-      {/* Bottom Tab Bar (mobile) */}
-      <div className="fz-bottom-tabs">
-        <div className="fz-bottom-tabs-inner">
-          {[
-            { href: '/client/dashboard', emoji: '🏠', label: 'Accueil', match: (p: string) => p === '/client/dashboard' },
-            { href: '/client/chat', emoji: '💬', label: 'Chat', match: (p: string) => p.startsWith('/client/chat') },
-            { href: '/client/team', emoji: '👥', label: 'Equipe', match: (p: string) => p.startsWith('/client/team') },
-            { href: '/client/notifications', emoji: '🔔', label: 'Notifs', match: (p: string) => p.startsWith('/client/notifications') },
-          ].map(tab => {
-            const active = tab.match(pathname);
-            return (
-              <Link key={tab.href} href={tab.href} className={`fz-tab-item${active ? ' active' : ''}`}
-                style={active ? { color: 'var(--fz-accent-text, #0EA5E9)', background: 'var(--fz-accent-subtle, rgba(14,165,233,0.06))' } : { color: 'var(--text-muted, #94A3B8)' }}
-                onClick={tab.href === '/client/notifications' ? () => setNotifUnreadCount(0) : undefined}
-              >
-                <span className="fz-tab-emoji">{tab.emoji}</span>
-                <span>{tab.label}</span>
-              </Link>
-            );
-          })}
-          <button className="fz-tab-item" onClick={() => setSidebarOpen(o => !o)}
-            style={{ color: 'var(--text-muted, #94A3B8)' }}
-          >
-            <span className="fz-tab-emoji">☰</span>
-            <span>Menu</span>
-          </button>
-        </div>
-      </div>
+      {/* Bottom Tab Bar removed — emoji rail replaces it */}
 
       {/* Ctrl+K Search Modal */}
       {searchOpen && (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
@@ -119,6 +120,7 @@ function relativeDate(dateStr: string): string {
 }
 
 export default function NotificationsPage() {
+  const isMobile = useIsMobile();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [filter, setFilter] = useState<FilterType>('all');
   const [readIds, setReadIds] = useState<string[]>([]);
@@ -270,7 +272,7 @@ export default function NotificationsPage() {
   return (
     <div className="client-page-scrollable">
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: isMobile ? 8 : 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 22 }}>{pageMeta.emoji}</span>
           <div>
@@ -315,8 +317,9 @@ export default function NotificationsPage() {
               background: filter === f.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
               color: filter === f.id ? '#fff' : 'var(--fz-text-secondary, #64748B)',
               border: filter === f.id ? 'none' : '1px solid var(--fz-border, #E8EAED)',
-              height: 32,
-              fontSize: 12,
+              height: isMobile ? 28 : 32,
+              fontSize: isMobile ? 11 : 12,
+              padding: isMobile ? '0 8px' : '0 12px',
             }}
           >
             {f.label}

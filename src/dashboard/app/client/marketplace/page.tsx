@@ -140,8 +140,8 @@ export default function MarketplacePage() {
               }}
             >
               <div style={{ fontSize: 40, marginBottom: 12 }}>{agent.icon}</div>
-              <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>{agent.name}</h3>
-              <p style={{ fontSize: 13, opacity: 0.9, marginBottom: 16, lineHeight: 1.5 }}>{agent.description}</p>
+              <h3 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 6 }}>{agent.name}</h3>
+              <p style={{ fontSize: isMobile ? 12 : 13, opacity: 0.9, marginBottom: 16, lineHeight: 1.5 }}>{agent.description}</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 12, opacity: 0.8 }}>
                   {agent.installs.toLocaleString('fr-FR')} installations

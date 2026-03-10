@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DEPOSIT_OPTIONS, COMMISSION_TIERS, DEFAULT_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
+import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
@@ -103,6 +104,7 @@ const CU = {
 };
 
 export default function AccountPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [session, setSession] = useState<Record<string, unknown>>({});
   const [wallet, setWallet] = useState<WalletData | null>(null);
@@ -449,7 +451,7 @@ export default function AccountPage() {
       <div style={{ marginBottom: 20 }}>
         <h2 style={CU.sectionTitle}>Profil</h2>
         <div style={CU.sectionCard}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
             <div>
               <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Nom</div>
               <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{(session.displayName as string) ?? '—'}</div>
@@ -481,7 +483,7 @@ export default function AccountPage() {
         {loading ? (
           <div style={CU.sectionCard}><div style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div></div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
             <div style={CU.statCard}>
               <span style={{ fontSize: 20 }}>💳</span>
               <span style={{ ...CU.statValue, color: balance > 0 ? '#22c55e' : '#ef4444' }}>
@@ -511,7 +513,7 @@ export default function AccountPage() {
               <span style={{ color: '#22c55e', fontWeight: 600 }}> 0% de commission — Early Adopter !</span>
             )}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '120px' : '140px'}, 1fr))`, gap: 12 }}>
             {DEPOSIT_OPTIONS.map(opt => (
               <div key={opt.id} style={{
                 ...CU.card, padding: 16, position: 'relative', textAlign: 'center',
@@ -565,7 +567,7 @@ export default function AccountPage() {
         </div>
 
         {autoTopup.enabled && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, alignItems: 'start' }}>
             <div>
               <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
                 Seuil minimum (crédits)
@@ -666,7 +668,7 @@ export default function AccountPage() {
           Choisissez comment vous souhaitez etre notifie.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10 }}>
           {NOTIFICATION_CHANNELS.map(channel => (
             <label
               key={channel.key}
@@ -776,7 +778,7 @@ export default function AccountPage() {
       {usage && (
         <div style={{ marginBottom: 20 }}>
           <h2 style={CU.sectionTitle}>Utilisation</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
             <div style={CU.statCard}>
               <span style={{ fontSize: 20 }}>🔤</span>
               <span style={CU.statValue}>{Number(usage.totalTokens ?? 0).toLocaleString()}</span>

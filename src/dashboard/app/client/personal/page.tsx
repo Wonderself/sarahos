@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
+import { useIsMobile } from '../../../lib/use-media-query';
 import Link from 'next/link';
 import {
   DEFAULT_AGENTS, PERSONAL_AGENTS, loadAgentConfigs, getEffectiveAgent,
@@ -156,6 +157,7 @@ function getUserTier(): string {
 // ═══════════════════════════════════════════════════
 
 export default function PersonalAgentsPage() {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<'equipe' | 'marketplace'>('equipe');
   const [activeBusinessIds, setActiveBusinessIds] = useState<AgentTypeId[]>([]);
   const { data: activePersonalIds, setData: setActivePersonalIds } = useUserData<string[]>('personal_agents_active', [], PERSONAL_STORAGE_KEY);
@@ -270,8 +272,8 @@ export default function PersonalAgentsPage() {
         <button
           onClick={() => setActiveTab('equipe')}
           style={{
-            flex: 1, textAlign: 'center', height: 36, padding: '0 16px', borderRadius: 6,
-            fontSize: 13, fontWeight: activeTab === 'equipe' ? 600 : 400,
+            flex: 1, textAlign: 'center', height: 36, padding: isMobile ? '0 8px' : '0 16px', borderRadius: 6,
+            fontSize: isMobile ? 12 : 13, fontWeight: activeTab === 'equipe' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
             background: activeTab === 'equipe' ? CU.bg : 'transparent',
             color: activeTab === 'equipe' ? CU.text : CU.textMuted,
@@ -283,8 +285,8 @@ export default function PersonalAgentsPage() {
         <button
           onClick={() => setActiveTab('marketplace')}
           style={{
-            flex: 1, textAlign: 'center', height: 36, padding: '0 16px', borderRadius: 6,
-            fontSize: 13, fontWeight: activeTab === 'marketplace' ? 600 : 400,
+            flex: 1, textAlign: 'center', height: 36, padding: isMobile ? '0 8px' : '0 16px', borderRadius: 6,
+            fontSize: isMobile ? 12 : 13, fontWeight: activeTab === 'marketplace' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
             background: activeTab === 'marketplace' ? CU.bg : 'transparent',
             color: activeTab === 'marketplace' ? CU.text : CU.textMuted,
@@ -312,7 +314,7 @@ export default function PersonalAgentsPage() {
           onChange={e => setSearchQuery(e.target.value)}
           className="input"
           placeholder="🔍 Rechercher un assistant par nom ou role..."
-          style={{ width: '100%', maxWidth: 400, borderRadius: 6, fontSize: 13, height: 36 }}
+          style={{ width: '100%', maxWidth: isMobile ? '100%' : 400, borderRadius: 6, fontSize: 13, height: 36 }}
         />
       </div>
 
@@ -342,7 +344,7 @@ export default function PersonalAgentsPage() {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '260px' : '340px'}, 1fr))`, gap: 12 }}>
           {activeBusinessAgents
             .filter(a => filterMatch(a.name, a.role))
             .map(agent => (
@@ -459,7 +461,7 @@ export default function PersonalAgentsPage() {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '260px' : '320px'}, 1fr))`, gap: 12 }}>
           {inactiveBusinessAgents
             .filter(a => filterMatch(a.name, a.role))
             .map(agent => (
@@ -579,7 +581,7 @@ export default function PersonalAgentsPage() {
           </div>
 
           {/* Agent grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '260px' : '320px'}, 1fr))`, gap: 12 }}>
             {mpFiltered.map(agent => {
               const catColor = CATEGORY_COLORS[agent.category] || CU.accent;
               const isInstalled = mpInstalled.has(agent.id);

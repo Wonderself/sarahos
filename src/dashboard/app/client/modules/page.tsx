@@ -6,6 +6,7 @@ import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -62,6 +63,7 @@ function timeAgo(date: string) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ModulesPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [modules, setModules] = useState<UserModule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +113,7 @@ export default function ModulesPage() {
   );
 
   return (
-    <div className="client-page-scrollable" style={{ padding: '24px 32px', maxWidth: 1100, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: isMobile ? 12 : '24px 32px', maxWidth: 1100, margin: '0 auto' }}>
 
       {/* ── Page Header ── */}
       <div style={{ marginBottom: 24 }}>
@@ -147,7 +149,7 @@ export default function ModulesPage() {
 
       {/* ── Grid ── */}
       {modules.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {modules.map(mod => {
             const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: 'var(--fz-accent, #0EA5E9)' };
             return (
@@ -241,7 +243,7 @@ export default function ModulesPage() {
       {/* ── Confirm delete modal ── */}
       {confirmDelete && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20, padding: 32, width: 400, maxWidth: '90vw', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20, padding: isMobile ? 20 : 32, width: isMobile ? '90vw' : 400, maxWidth: '90vw', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Supprimer le module ?</h3>
             <p style={{ color: 'var(--fz-text-secondary, #64748B)', marginBottom: 24 }}>
               Le module <strong>{confirmDelete.name}</strong> et tous ses enregistrements ({confirmDelete.record_count}) seront définitivement supprimés.

@@ -1113,7 +1113,7 @@ export default function DiscussionsPage() {
                 <h2 style={{ fontSize: 15, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 12 }}>
                   {matchingTemplates.length} sujet{matchingTemplates.length !== 1 ? 's' : ''} — {filterLabel}
                 </h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
                   {matchingTemplates.map(t => (
                     <TemplateCard key={t.id} template={t} onClick={() => startFromTemplate(t)} />
                   ))}
@@ -1169,7 +1169,7 @@ export default function DiscussionsPage() {
                   <h2 style={{ fontSize: 15, color: 'var(--fz-text, #1E293B)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                     🎯 Discussions du jour
                   </h2>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
                     {getDailyTemplates().map(t => (
                       <TemplateCard key={t.id} template={t} onClick={() => startFromTemplate(t)} highlight />
                     ))}
@@ -1224,7 +1224,7 @@ export default function DiscussionsPage() {
                     <p style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 10px' }}>
                       {section.description}
                     </p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 8 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))', gap: 8 }}>
                       {section.templates.map(t => (
                         <TemplateCard key={t.id} template={t} onClick={() => startFromTemplate(t)} />
                       ))}
@@ -1697,7 +1697,7 @@ export default function DiscussionsPage() {
             {followUps.length > 0 && !loading && (
               <div style={{
                 padding: '10px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
-                display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: 8, flexShrink: 0,
               }}>
                 {followUps.map((q, i) => (
@@ -2037,7 +2037,7 @@ export default function DiscussionsPage() {
         )}
 
         {/* Platform buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 8, marginBottom: 16 }}>
           {SHARE_PLATFORMS.map(p => (
             <button
               key={p.id}

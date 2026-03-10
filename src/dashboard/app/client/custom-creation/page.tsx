@@ -4,6 +4,7 @@ import { useState } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // Pre-built marketplace modules
 const MARKETPLACE_MODULES = [
@@ -35,6 +36,7 @@ const CUSTOM_SERVICES = [
 const meta = PAGE_META['custom-creation'];
 
 export default function ModulesSurMesurePage() {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<'marketplace' | 'custom'>('marketplace');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tous');
@@ -126,7 +128,7 @@ export default function ModulesSurMesurePage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
       {/* Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -153,7 +155,7 @@ export default function ModulesSurMesurePage() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             style={{
-              padding: '12px 24px', fontSize: 14, fontWeight: activeTab === tab.id ? 700 : 500,
+              padding: isMobile ? '10px 14px' : '12px 24px', fontSize: isMobile ? 13 : 14, fontWeight: activeTab === tab.id ? 700 : 500,
               color: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
               background: 'none', border: 'none', cursor: 'pointer',
               borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
@@ -370,7 +372,7 @@ export default function ModulesSurMesurePage() {
           </div>
 
           {/* Trust section */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14 }}>
             <div className="card" style={{ padding: 20 }}>
               <div className="text-md font-bold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>\ud83d\udd12 Processus transparent</div>
               <ul className="text-sm" style={{ lineHeight: 2, margin: 0, paddingLeft: 16, color: 'var(--fz-text-secondary, #64748B)' }}>

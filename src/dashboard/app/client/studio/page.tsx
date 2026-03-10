@@ -7,6 +7,7 @@ import RoadmapBadge from '../../../components/studio/RoadmapBadge';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 const ICON_TO_EMOJI: Record<string, string> = {
   auto_awesome: '✨',
@@ -65,6 +66,7 @@ const CU = {
 };
 
 export default function StudioPage() {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<'photo' | 'video'>('photo');
   const [photoCategory, setPhotoCategory] = useState<string>('all');
 
@@ -78,7 +80,7 @@ export default function StudioPage() {
   const meta = PAGE_META.studio;
 
   return (
-    <div className="client-page-scrollable" style={{ padding: 24, maxWidth: 960, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : 24, maxWidth: 960, margin: '0 auto' }}>
       {/* ─── Page Header ─── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
         <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.emoji}</span>
@@ -122,7 +124,7 @@ export default function StudioPage() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{
-              height: 36, padding: '0 16px', fontSize: 13, fontWeight: 500,
+              height: isMobile ? 44 : 36, minHeight: isMobile ? 44 : 36, padding: '0 16px', fontSize: 13, fontWeight: 500,
               border: 'none', cursor: 'pointer', transition: 'all 0.15s',
               background: 'transparent',
               color: activeTab === tab ? CU.accent : CU.textMuted,
@@ -184,7 +186,7 @@ export default function StudioPage() {
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
             {filteredPhotos.map(wf => (
               <Link
                 key={wf.id}
@@ -246,7 +248,7 @@ export default function StudioPage() {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
             {VIDEO_WORKFLOWS.map(wf => (
               <Link
                 key={wf.id}

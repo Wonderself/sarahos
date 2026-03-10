@@ -5,6 +5,7 @@ import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 const SERVICES = [
   {
@@ -80,6 +81,7 @@ const BUDGET_OPTIONS = [
 const meta = PAGE_META['video-pro'];
 
 export default function VideoProPage() {
+  const isMobile = useIsMobile();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -167,7 +169,7 @@ export default function VideoProPage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
 
       {/* Page Header */}
       <div className="page-header" style={{ marginBottom: 24 }}>
@@ -185,7 +187,7 @@ export default function VideoProPage() {
       {/* Hero Section */}
       <div style={{
         background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9) 0%, #6d28d9 50%, #06b6d4 100%)',
-        borderRadius: 16, padding: '48px 36px', marginBottom: 36, position: 'relative', overflow: 'hidden',
+        borderRadius: 16, padding: isMobile ? '28px 18px' : '48px 36px', marginBottom: 36, position: 'relative', overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: -40, right: -40, width: 200, height: 200,
@@ -318,7 +320,7 @@ export default function VideoProPage() {
           Decrivez votre projet et recevez une proposition personnalisee sous 48h.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Name */}
           <div>
             <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
@@ -361,7 +363,7 @@ export default function VideoProPage() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Phone */}
           <div>
             <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>

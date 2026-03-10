@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META, REPONDEUR_MODE_EMOJIS, REPONDEUR_SCENARIO_EMOJIS } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -190,6 +191,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
 // MAIN PAGE
 // ══════════════════════════════════════════════════════════════════════════════
 export default function RepondeurPage() {
+  const isMobile = useIsMobile();
   const [config, setConfig] = useState<RepondeurConfig | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -287,7 +289,7 @@ export default function RepondeurPage() {
   // ── Wizard ────────────────────────────────────────────────────────────────
   if (!config) {
     return (
-      <div style={{ padding: '32px 24px', maxWidth: 700, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '16px 12px' : '32px 24px', maxWidth: 700, margin: '0 auto' }}>
         {toast}
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -318,7 +320,7 @@ export default function RepondeurPage() {
             <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>
               1 — Quel est votre cas d'usage ?
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
               {SCENARIO_TEMPLATES.map(s => (
                 <button
                   key={s.id}
@@ -508,7 +510,7 @@ export default function RepondeurPage() {
       </div>
 
       {/* Tab content */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px' : '20px' }}>
 
         {/* ── TAB: Vue d'ensemble ── */}
         {tab === 'overview' && (
@@ -671,6 +673,7 @@ function OverviewTab({
 // TAB: Configuration
 // ══════════════════════════════════════════════════════════════════════════════
 function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUpdate: (u: Partial<RepondeurConfig>) => void; saving: boolean }) {
+  const isMobile = useIsMobile();
   const [mode, setMode] = useState(config.activeMode);
   const [style, setStyle] = useState(config.activeStyle);
   const [skills, setSkills] = useState<string[]>(config.activeSkills);
@@ -728,7 +731,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       {/* Mode selector */}
       <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🎭 Mode de réponse</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
           {MODES.map(m => (
             <button
               key={m.value}
@@ -748,7 +751,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       </div>
 
       {/* Style + Skills */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         {/* Style */}
         <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🎨 Style de réponse</div>
@@ -799,7 +802,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       {/* Messages */}
       <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>💬 Messages</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
               Message d'accueil
@@ -1178,6 +1181,7 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
 // TAB: Paramètres avancés
 // ══════════════════════════════════════════════════════════════════════════════
 function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUpdate: (u: Partial<RepondeurConfig>) => void; saving: boolean }) {
+  const isMobile = useIsMobile();
   const [summaryFreq, setSummaryFreq] = useState(config.summaryFrequency);
   const [summaryChannel, setSummaryChannel] = useState(config.summaryDeliveryChannel);
   const [maxLen, setMaxLen] = useState(config.maxResponseLength);
@@ -1268,7 +1272,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       </div>
 
       {/* Résumés + Langue */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📋 Résumés</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -1320,7 +1324,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       {/* Téléphonie */}
       <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📞 Intégration téléphonie</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 10 }}>
           {[
             { id: 'A', label: 'Numéro IA perso', price: '~1-2€/mois', desc: 'Numéro dédié, renvoi conditionnel depuis votre tel', badge: 'Recommandé' },
             { id: 'B', label: 'Numéro IA dédié', price: 'Dès 5€/mois', desc: 'Numéro professionnel séparé pour votre business' },
@@ -1343,7 +1347,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       </div>
 
       {/* GDPR + Webhooks */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔒 RGPD</div>
           <div>

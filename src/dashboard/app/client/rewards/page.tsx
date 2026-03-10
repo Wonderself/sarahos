@@ -303,11 +303,11 @@ export default function RewardsPage() {
             >
               {/* Icon */}
               <div style={{
-                width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                width: isMobile ? 36 : 44, height: isMobile ? 36 : 44, borderRadius: isMobile ? 10 : 12, flexShrink: 0,
                 background: `${catMeta.color}15`, border: `1px solid ${catMeta.color}30`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <span style={{ fontSize: 22 }}>
+                <span style={{ fontSize: isMobile ? 18 : 22 }}>
                   {getIconEmoji(action.icon)}
                 </span>
               </div>
@@ -332,10 +332,10 @@ export default function RewardsPage() {
 
               {/* Credits badge */}
               <div style={{
-                padding: '6px 14px', borderRadius: 8,
+                padding: isMobile ? '4px 10px' : '6px 14px', borderRadius: 8,
                 background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : `${catMeta.color}15`,
                 color: claimed ? 'var(--fz-text-muted, #94A3B8)' : catMeta.color,
-                fontSize: 14, fontWeight: 800, flexShrink: 0,
+                fontSize: isMobile ? 12 : 14, fontWeight: 800, flexShrink: 0,
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
                 <span style={{ fontSize: 16 }}>{'\uD83E\uDE99'}</span>
@@ -351,7 +351,7 @@ export default function RewardsPage() {
                   background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : catMeta.color,
                   color: claimed ? 'var(--fz-text-muted, #94A3B8)' : '#fff',
                   fontWeight: 700, fontSize: 12, cursor: claimed ? 'default' : 'pointer',
-                  flexShrink: 0, minWidth: 80, textAlign: 'center',
+                  flexShrink: 0, minWidth: isMobile ? 60 : 80, textAlign: 'center',
                 }}
               >
                 {claimed ? 'Fait' : 'R\u00e9clamer'}

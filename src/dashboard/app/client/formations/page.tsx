@@ -5,6 +5,7 @@ import { useUserData } from '../../../lib/use-user-data';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 const DONE_KEY = 'fz_formations_done';
 
@@ -107,6 +108,7 @@ interface FormationRequest extends FormData {
 }
 
 export default function FormationsPage() {
+  const isMobile = useIsMobile();
   const [form, setForm] = useState<FormData>({ ...emptyForm });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -176,7 +178,7 @@ export default function FormationsPage() {
   const sectionStyle: React.CSSProperties = {
     maxWidth: 1100,
     margin: '0 auto',
-    padding: '0 24px',
+    padding: isMobile ? '0 12px' : '0 24px',
   };
 
   const cardStyle: React.CSSProperties = {
@@ -232,7 +234,7 @@ export default function FormationsPage() {
       <section style={{ ...sectionStyle, marginBottom: 48 }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: 16,
         }}>
           {BENEFITS.map(b => (
@@ -270,7 +272,7 @@ export default function FormationsPage() {
 
         {/* Search + progress */}
         <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
-          <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
+          <div style={{ position: 'relative', flex: 1, minWidth: isMobile ? 0 : 200 }}>
             <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>🔍</span>
             <input
               type="text"
@@ -295,7 +297,7 @@ export default function FormationsPage() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: 20,
         }}>
           {filteredFormations.length === 0 && (

@@ -6,6 +6,7 @@ import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 interface CompanyProfile {
   // Step 1 — Identité
@@ -126,6 +127,7 @@ function OLabel({ text, hint, compactMode }: { text: string; hint?: string; comp
 }
 
 export default function OnboardingPage() {
+  const isMobile = useIsMobile();
   const { showError } = useToast();
   const [step, setStep] = useState(0); // 0 = quick analysis step
   const [profile, setProfile] = useState<CompanyProfile>(defaultProfile);
@@ -302,7 +304,7 @@ export default function OnboardingPage() {
           <h1 className="page-title" style={{ marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Bienvenue sur <span className="fz-logo-word">Freenzy.io</span></h1>
           <p className="page-subtitle" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Vous utilisez <span className="fz-logo-word">Freenzy.io</span> pour :</p>
         </div>
-        <div className="grid grid-2" style={{ gap: 16, marginBottom: 32 }}>
+        <div className={isMobile ? 'grid' : 'grid grid-2'} style={{ gap: 16, marginBottom: 32 }}>
           <button
             onClick={() => selectAccountType(false)}
             className="card"
@@ -344,7 +346,7 @@ export default function OnboardingPage() {
   // Step 0: Quick analysis screen
   if (step === 0) {
     return (
-      <div style={{ maxWidth: 700, margin: '0 auto' }}>
+      <div style={{ maxWidth: 700, margin: '0 auto', padding: isMobile ? '0 12px' : undefined }}>
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 18 }}>{PAGE_META.onboarding.emoji}</span>

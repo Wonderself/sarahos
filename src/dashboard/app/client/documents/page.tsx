@@ -9,6 +9,7 @@ import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 function escapeHtml(text: string): string {
   return text
@@ -832,6 +833,7 @@ const CU = {
 };
 
 export default function DocumentsPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<DocTemplate | null>(null);
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
@@ -974,7 +976,7 @@ export default function DocumentsPage() {
   // Viewing a document
   if (viewingDoc) {
     return (
-      <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <button onClick={() => setViewingDoc(null)} style={{
             ...CU.btn, ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
@@ -1017,7 +1019,7 @@ export default function DocumentsPage() {
   // Template form
   if (selectedTemplate) {
     return (
-      <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <button onClick={() => { setSelectedTemplate(null); setFieldValues({}); }} style={{
             ...CU.btn, ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
@@ -1129,7 +1131,7 @@ export default function DocumentsPage() {
   const filteredTemplates = filterCategory ? TEMPLATES.filter(t => t.category === filterCategory) : TEMPLATES;
 
   return (
-    <div className="client-page-scrollable" style={{ padding: '24px 20px', maxWidth: 1100 }}>
+    <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1100 }}>
       {/* ─── Page Header ─── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
         <span style={{ fontSize: 20 }}>{PAGE_META.documents.emoji}</span>
@@ -1142,7 +1144,7 @@ export default function DocumentsPage() {
       <PageExplanation pageId="documents" text={PAGE_META.documents?.helpText} />
 
       {/* ─── Stat cards ─── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
         <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ fontSize: 22 }}>📄</span>
           <div>
@@ -1246,7 +1248,7 @@ export default function DocumentsPage() {
       </div>
 
       {/* ─── Templates Grid ─── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, marginBottom: 24 }}>
         {filteredTemplates.map(tpl => (
           <button
             key={tpl.id}

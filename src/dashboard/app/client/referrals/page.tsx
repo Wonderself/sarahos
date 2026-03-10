@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { generateQR } from '../../../lib/qr-generator';
 import { claimReward } from '../../../lib/rewards';
+import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
@@ -27,6 +28,7 @@ const STATUS_LABELS: Record<string, { label: string; color: string; emoji: strin
 };
 
 export default function ReferralsPage() {
+  const isMobile = useIsMobile();
   const [referralCode, setReferralCode] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [loading, setLoading] = useState(true);
@@ -183,7 +185,8 @@ export default function ReferralsPage() {
           <div className="flex-1" style={{
             background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             borderRadius: 10, padding: '10px 14px', fontFamily: 'var(--font-mono, monospace)',
-            fontSize: 12, color: 'var(--fz-text-muted)', minWidth: 200, wordBreak: 'break-all',
+            fontSize: 12, color: 'var(--fz-text-muted)', minWidth: isMobile ? 0 : 200, wordBreak: 'break-all',
+            width: isMobile ? '100%' : undefined,
           }}>
             {referralCode ? getReferralLink() : 'Chargement...'}
           </div>
@@ -204,7 +207,7 @@ export default function ReferralsPage() {
       {/* QR Code & Social Share */}
       <div className="card section">
         <div className="section-title" style={{ marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>QR Code & Partage</div>
-        <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: isMobile ? 12 : 24, alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ textAlign: 'center' }}>
             <canvas
               ref={qrCanvasRef}
@@ -221,7 +224,7 @@ export default function ReferralsPage() {
               {'\u2B07\uFE0F'} T\u00e9l\u00e9charger PNG
             </button>
           </div>
-          <div style={{ flex: 1, minWidth: 200 }}>
+          <div style={{ flex: 1, minWidth: isMobile ? 0 : 200 }}>
             <div className="text-sm font-bold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>Partagez sur les r\u00e9seaux</div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {[
@@ -275,7 +278,7 @@ export default function ReferralsPage() {
       {/* How it works */}
       <div className="card section">
         <div className="section-title" style={{ marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Comment \u00e7a marche</div>
-        <div className="grid-4" style={{ gap: 12 }}>
+        <div className="grid-4" style={{ gap: 12, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : undefined }}>
           {[
             { step: '1', emoji: '\uD83D\uDD17', title: 'Partagez', desc: 'Envoyez votre lien \u00e0 vos amis et coll\u00e8gues' },
             { step: '2', emoji: '\u270D\uFE0F', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },

@@ -6,6 +6,7 @@ import { useToast } from '../../../components/Toast';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -72,6 +73,7 @@ async function portalCall<T>(path: string, method = 'GET', data?: unknown): Prom
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function CampaignsPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
@@ -203,7 +205,7 @@ export default function CampaignsPage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
 
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
@@ -252,7 +254,7 @@ export default function CampaignsPage() {
             const count = campaigns.filter(c => c.status === status).length;
             return (
               <div key={status} style={{
-                flex: 1, minWidth: 90, padding: '8px 10px', borderRadius: 10,
+                flex: 1, minWidth: isMobile ? 60 : 90, padding: '8px 10px', borderRadius: 10,
                 background: count > 0 ? STATUS_COLORS[status] + '15' : 'var(--fz-bg-secondary, #F8FAFC)',
                 border: `1px solid ${count > 0 ? STATUS_COLORS[status] + '40' : 'var(--fz-border, #E2E8F0)'}`,
                 textAlign: 'center',
@@ -265,7 +267,7 @@ export default function CampaignsPage() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: selectedCampaign ? '1fr 360px' : '1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: selectedCampaign ? (isMobile ? '1fr' : '1fr 360px') : '1fr', gap: 16 }}>
 
         {/* Campaign list */}
         <div>
@@ -437,7 +439,7 @@ export default function CampaignsPage() {
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
-          <div style={{ width: '100%', maxWidth: 520, padding: 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+          <div style={{ width: '100%', maxWidth: isMobile ? '95vw' : 520, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>Nouvelle campagne</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -472,7 +474,7 @@ export default function CampaignsPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Objectif</label>
                   <select className="input" value={form.objective} onChange={e => setForm(p => ({ ...p, objective: e.target.value as CampaignObjective }))} style={{ width: '100%' }}>
@@ -487,7 +489,7 @@ export default function CampaignsPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Date début</label>
                   <input className="input" type="date" value={form.start_date} onChange={e => setForm(p => ({ ...p, start_date: e.target.value }))} style={{ width: '100%' }} />
@@ -513,7 +515,7 @@ export default function CampaignsPage() {
       {showPostModal && selectedCampaign && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowPostModal(false); }}>
-          <div style={{ width: '100%', maxWidth: 460, padding: 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+          <div style={{ width: '100%', maxWidth: isMobile ? '95vw' : 460, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>Ajouter un post</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

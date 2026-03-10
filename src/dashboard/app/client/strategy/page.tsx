@@ -7,6 +7,7 @@ import VoiceInput from '../../../components/VoiceInput';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 // ─── Helper: get agent def by ID ───
 const agent = (id: AgentTypeId) => DEFAULT_AGENTS.find(a => a.id === id)!;
@@ -1071,6 +1072,7 @@ const DEFAULT_FOLDERS: ActionFolder[] = [
    ═══════════════════════════════════════════ */
 
 export default function StrategyPage() {
+  const isMobile = useIsMobile();
   // ─── Tab state ───
   const [activeTab, setActiveTab] = useState<'dashboard' | 'strategies' | 'folders' | 'documents' | 'history'>('dashboard');
 
@@ -1601,7 +1603,7 @@ export default function StrategyPage() {
       {activeTab === 'dashboard' && (
         <div>
           {/* KPI Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
               <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--accent)' }}>{progressPct}%</div>
               <div className="text-xs text-muted">Progression globale</div>
@@ -2044,7 +2046,7 @@ export default function StrategyPage() {
           {/* Templates section */}
           <div className="card mt-20" style={{ padding: 20 }}>
             <div className="text-md font-bold mb-12">Modèles à télécharger</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
               {[
                 { icon: 'assignment', name: 'Brief projet', desc: 'Template de brief structuré' },
                 { icon: 'bar_chart', name: 'Business plan', desc: 'Structure de business plan' },

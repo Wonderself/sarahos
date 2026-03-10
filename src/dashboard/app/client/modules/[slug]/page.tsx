@@ -118,7 +118,7 @@ function FormRenderer({ mod, onSubmit }: { mod: UserModule; onSubmit: () => void
   if (submitted) {
     return (
       <div style={{ textAlign: 'center', padding: '48px 32px' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
         <h2 style={{ fontWeight: 700, fontSize: 20, marginBottom: 8 }}>{schema.confirmation_message ?? 'Merci !'}</h2>
         <button onClick={() => { setSubmitted(false); setValues({}); }} style={{ marginTop: 16, padding: '8px 20px', borderRadius: 10, background: 'var(--accent)', color: 'white', border: 'none', cursor: 'pointer' }}>
           Nouveau formulaire
@@ -331,7 +331,7 @@ function CRMRenderer({ mod }: { mod: UserModule }) {
                       disabled={deleting === rec.id}
                       style={{ padding: '3px 8px', borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
                     >
-                      {deleting === rec.id ? '...' : <span className="material-symbols-rounded" style={{ fontSize: 12 }}>delete</span>}
+                      {deleting === rec.id ? '...' : '🗑️'}
                     </button>
                   </td>
                 </tr>
@@ -474,7 +474,7 @@ function DashboardRenderer({ mod }: { mod: UserModule }) {
           { label: 'Cette semaine', value: stats.thisWeek, icon: 'trending_up' },
         ].map(s => (
           <div key={s.label} style={{ background: 'var(--bg-secondary)', borderRadius: 16, padding: '20px 16px', textAlign: 'center' }}>
-            <div style={{ fontSize: 28, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{s.icon}</span></div>
+            <div style={{ fontSize: 28, marginBottom: 6 }}><span style={{ fontSize: 24 }}>{s.icon === 'bar_chart' ? '📊' : s.icon === 'calendar_month' ? '📅' : s.icon === 'trending_up' ? '📈' : s.icon}</span></div>
             <div style={{ fontSize: 28, fontWeight: 800, color: mod.color }}>{s.value}</div>
             <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 2 }}>{s.label}</div>
           </div>
@@ -482,7 +482,7 @@ function DashboardRenderer({ mod }: { mod: UserModule }) {
       </div>
       <div style={{ background: 'var(--bg-secondary)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>trending_up</span> Les graphiques détaillés et l&apos;analyse des tendances seront disponibles dans une prochaine mise à jour.
+          📈 Les graphiques détaillés et l&apos;analyse des tendances seront disponibles dans une prochaine mise à jour.
         </p>
       </div>
     </div>
@@ -530,7 +530,7 @@ export default function ModuleRuntimePage() {
 
   if (!mod) return (
     <div style={{ padding: 32, textAlign: 'center' }}>
-      <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>search</span></div>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
       <h2 style={{ fontWeight: 700 }}>Module introuvable</h2>
       <p style={{ color: 'var(--text-secondary)', marginBottom: 20 }}>Ce module n&apos;existe pas ou vous n&apos;y avez pas accès.</p>
       <Link href="/client/modules" className="btn btn-primary" style={{ textDecoration: 'none' }}>← Retour aux modules</Link>
@@ -557,7 +557,7 @@ export default function ModuleRuntimePage() {
             <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{mod.name}</h1>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <span style={{ background: `${mod.color}20`, color: mod.color, borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{typeInfo.icon}</span> {typeInfo.label}
+                <span style={{ fontSize: 12 }}>{typeInfo.icon === 'assignment' ? '📋' : typeInfo.icon === 'bar_chart' ? '📊' : typeInfo.icon === 'smart_toy' ? '🤖' : typeInfo.icon === 'trending_up' ? '📈' : typeInfo.icon === 'inventory_2' ? '📦' : typeInfo.icon}</span> {typeInfo.label}
               </span>
               {mod.type !== 'agent' && (
                 <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
@@ -578,7 +578,7 @@ export default function ModuleRuntimePage() {
             ← Retour
           </Link>
           <Link href={`/client/modules/builder?edit=${mod.id}`} style={{ padding: '7px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'transparent', textDecoration: 'none', fontSize: 13, color: 'var(--text-secondary)' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 13 }}>edit</span> Modifier
+            ✏️ Modifier
           </Link>
         </div>
       </div>
@@ -602,7 +602,7 @@ export default function ModuleRuntimePage() {
       {/* ── Public URL info ── */}
       {mod.public_access && (
         <div style={{ marginTop: 16, padding: '12px 16px', background: 'var(--bg-secondary)', borderRadius: 12, fontSize: 13, color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span><span className="material-symbols-rounded" style={{ fontSize: 13 }}>link</span> Ce module a une URL publique : <code>/m/{mod.slug}</code></span>
+          <span>🔗 Ce module a une URL publique : <code>/m/{mod.slug}</code></span>
           <button
             onClick={() => navigator.clipboard.writeText(`${window.location.origin}/m/${mod.slug}`)}
             style={{ padding: '4px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12 }}

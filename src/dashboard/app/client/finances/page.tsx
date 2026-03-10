@@ -6,6 +6,8 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import { useToast } from '../../../components/Toast';
+import { HelpBubble } from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -48,8 +50,8 @@ const FEATURE_LABELS: Record<string, string> = {
   studio: 'Studio', briefing: 'Briefing', meeting: 'Réunion', other: 'Autre',
 };
 const FEATURE_ICONS: Record<string, string> = {
-  chat: 'chat', repondeur: 'call', visio: 'mic',
-  studio: 'palette', briefing: 'assignment', meeting: 'handshake', other: 'settings',
+  chat: '💬', repondeur: '📞', visio: '🎤',
+  studio: '🎨', briefing: '📋', meeting: '🤝', other: '⚙️',
 };
 const PIE_COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b6d4', '#14b8a6'];
 const MODEL_PRICES: ModelPrice[] = [
@@ -198,8 +200,8 @@ export default function FinancesPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>credit_card</span></div>
-        <div className="text-md text-tertiary animate-pulse">Chargement des finances...</div>
+        <div style={{ fontSize: 40 }}>💳</div>
+        <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des finances...</div>
       </div>
     );
   }
@@ -208,25 +210,29 @@ export default function FinancesPage() {
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
 
       {/* Header */}
-      <div className="page-header" style={{ marginBottom: 24 }}>
-        <div>
-          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>credit_card</span> Finances</h1>
-          <p className="page-subtitle">Suivi des dépenses, auto-recharge et tarification des modèles <span className="fz-logo-word">IA</span>.</p>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.finances.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.finances.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.finances.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.finances.helpText} />
         </div>
       </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Solde actuel', value: `${currentBalance} cr`, icon: 'savings', color: 'var(--accent)' },
-          { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: 'trending_down', color: '#ef4444' },
-          { label: 'Coût moyen/session', value: monthlyCosts.length > 0 ? `${((monthlyCosts.slice(-1)[0]?.cost ?? 0) / 30).toFixed(2)} cr/j` : '—', icon: 'bar_chart', color: '#f59e0b' },
-          { label: 'Auto-recharge', value: autoTopup.autoTopupEnabled ? 'Activée' : 'Désactivée', icon: 'refresh', color: autoTopup.autoTopupEnabled ? '#22c55e' : '#6b7280' },
+          { label: 'Solde actuel', value: `${currentBalance} cr`, icon: '💰', color: 'var(--accent)' },
+          { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: '📉', color: '#ef4444' },
+          { label: 'Coût moyen/session', value: monthlyCosts.length > 0 ? `${((monthlyCosts.slice(-1)[0]?.cost ?? 0) / 30).toFixed(2)} cr/j` : '—', icon: '📊', color: '#f59e0b' },
+          { label: 'Auto-recharge', value: autoTopup.autoTopupEnabled ? 'Activée' : 'Désactivée', icon: '🔄', color: autoTopup.autoTopupEnabled ? '#22c55e' : '#6b7280' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-            <div style={{ fontSize: 20, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
+            <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
+            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -236,9 +242,9 @@ export default function FinancesPage() {
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
             padding: '8px 16px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-            border: tab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--border-primary)',
-            background: tab === t ? 'var(--accent)' : 'var(--bg-secondary)',
-            color: tab === t ? '#fff' : 'var(--text-primary)',
+            border: tab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
+            background: tab === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+            color: tab === t ? '#fff' : 'var(--fz-text, #1E293B)',
           }}>{t}</button>
         ))}
       </div>
@@ -248,18 +254,18 @@ export default function FinancesPage() {
         <div>
           {monthlyCosts.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>bar_chart</span></div>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucune donnée disponible</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Utilisez vos agents pour voir apparaître les données ici.</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📊</div>
+              <div style={{ fontWeight: 600, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune donnée disponible</div>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Utilisez vos agents pour voir apparaître les données ici.</div>
             </div>
           ) : (
             <div className="card" style={{ padding: 24 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Dépenses mensuelles (12 derniers mois)</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={monthlyCosts} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: 'var(--text-tertiary)' }} />
-                  <YAxis tick={{ fontSize: 10, fill: 'var(--text-tertiary)' }} unit=" cr" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
+                  <YAxis tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} unit=" cr" />
                   <Tooltip formatter={(v: number | undefined) => [`${v ?? 0} crédits`, 'Dépense']} />
                   <Bar dataKey="cost" fill="var(--accent)" radius={[3, 3, 0, 0]} name="Crédits" />
                 </BarChart>
@@ -274,9 +280,9 @@ export default function FinancesPage() {
         <div>
           {featureCosts.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>trending_up</span></div>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucune donnée de répartition disponible</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Les données s&apos;afficheront après utilisation.</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📈</div>
+              <div style={{ fontWeight: 600, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune donnée de répartition disponible</div>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les données s&apos;afficheront après utilisation.</div>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 ? '1fr 1fr' : '1fr', gap: 16 }}>
@@ -302,19 +308,19 @@ export default function FinancesPage() {
                     <div key={f.feature} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <div style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, background: PIE_COLORS[i % PIE_COLORS.length] }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>{FEATURE_ICONS[f.feature] && <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{FEATURE_ICONS[f.feature]}</span>}{FEATURE_LABELS[f.feature] ?? f.feature}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 1 }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4, color: 'var(--fz-text, #1E293B)' }}>{FEATURE_ICONS[f.feature] && <span style={{ fontSize: 14 }}>{FEATURE_ICONS[f.feature]}</span>}{FEATURE_LABELS[f.feature] ?? f.feature}</div>
+                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>
                           {f.requests} req · {(f.tokens / 1000).toFixed(0)}k tokens
                         </div>
                       </div>
                       <div style={{ flexShrink: 0, textAlign: 'right' }}>
                         <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)' }}>{(f.cost / 1_000_000).toFixed(3)} cr</div>
-                        <div style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>{(f.pct ?? 0).toFixed(1)}%</div>
+                        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{(f.pct ?? 0).toFixed(1)}%</div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--border-primary)', display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
                   <span style={{ fontWeight: 600 }}>Total</span>
                   <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{(totalFeatureCost / 1_000_000).toFixed(3)} cr</span>
                 </div>
@@ -330,10 +336,10 @@ export default function FinancesPage() {
           <div className="card" style={{ padding: 24 }}>
             <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Recharge <span className="fz-logo-word">automatique</span></h3>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: 'var(--bg-secondary)', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: 'var(--fz-bg-secondary, #F8FAFC)', marginBottom: 20 }}>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>Auto-recharge</div>
-                <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Auto-recharge</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                   Recharge automatiquement quand le solde est bas
                 </div>
               </div>
@@ -347,7 +353,7 @@ export default function FinancesPage() {
               >
                 <span style={{
                   position: 'absolute', top: 2, left: autoTopup.autoTopupEnabled ? 22 : 2,
-                  width: 20, height: 20, borderRadius: '50%', background: 'var(--bg-elevated)',
+                  width: 20, height: 20, borderRadius: '50%', background: 'var(--fz-bg, #FFFFFF)',
                   transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
                 }} />
               </button>
@@ -355,7 +361,7 @@ export default function FinancesPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>
                   Seuil de déclenchement (crédits)
                 </label>
                 <input
@@ -366,10 +372,10 @@ export default function FinancesPage() {
                   onChange={e => setThresholdInput(e.target.value)}
                   style={{ width: '100%' }}
                 />
-                <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>Recharge quand le solde descend sous ce seuil</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 3 }}>Recharge quand le solde descend sous ce seuil</div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>
                   Montant à recharger (crédits)
                 </label>
                 <input
@@ -380,7 +386,7 @@ export default function FinancesPage() {
                   onChange={e => setAmountInput(e.target.value)}
                   style={{ width: '100%' }}
                 />
-                <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>Montant ajouté à chaque recharge</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 3 }}>Montant ajouté à chaque recharge</div>
               </div>
             </div>
 
@@ -390,7 +396,7 @@ export default function FinancesPage() {
               className="btn btn-primary"
               style={{ fontSize: 13 }}
             >
-              {topupSaving ? 'Sauvegarde...' : topupSaved ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Sauvegardé</> : 'Sauvegarder les paramètres'}
+              {topupSaving ? 'Sauvegarde...' : topupSaved ? <>✅ Sauvegardé</> : 'Sauvegarder les paramètres'}
             </button>
           </div>
 
@@ -400,14 +406,14 @@ export default function FinancesPage() {
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14 }}>Historique des recharges automatiques</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {topupHistory.map(h => (
-                  <div key={h.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border-primary)' }}>
+                  <div key={h.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>{Math.round(h.amount / 1_000_000)} crédits rechargés</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{Math.round(h.amount / 1_000_000)} crédits rechargés</div>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                         {new Date(h.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: '#22c55e' }}><span className="material-symbols-rounded" style={{ fontSize: 11 }}>refresh</span> Auto</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#22c55e' }}>🔄 Auto</span>
                   </div>
                 ))}
               </div>
@@ -424,9 +430,9 @@ export default function FinancesPage() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
-                  <tr style={{ borderBottom: '2px solid var(--border-primary)' }}>
+                  <tr style={{ borderBottom: '2px solid var(--fz-border, #E2E8F0)' }}>
                     {['Modèle', 'Input / 1M tokens', 'Output / 1M tokens', 'Coût moyen / 1M', 'Equivalent crédits'].map(h => (
-                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>{h}</th>
+                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)', whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -435,11 +441,11 @@ export default function FinancesPage() {
                     const avg = (m.inputPer1M + m.outputPer1M) / 2;
                     const credits = Math.ceil(avg * 1.25);
                     return (
-                      <tr key={m.model} style={{ borderBottom: '1px solid var(--border-primary)' }}>
-                        <td style={{ padding: '10px 12px', fontWeight: 600 }}>{m.model}</td>
-                        <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>${m.inputPer1M.toFixed(2)}</td>
-                        <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>${m.outputPer1M.toFixed(2)}</td>
-                        <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>${avg.toFixed(2)}</td>
+                      <tr key={m.model} style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+                        <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{m.model}</td>
+                        <td style={{ padding: '10px 12px', color: 'var(--fz-text-secondary, #64748B)' }}>${m.inputPer1M.toFixed(2)}</td>
+                        <td style={{ padding: '10px 12px', color: 'var(--fz-text-secondary, #64748B)' }}>${m.outputPer1M.toFixed(2)}</td>
+                        <td style={{ padding: '10px 12px', color: 'var(--fz-text-secondary, #64748B)' }}>${avg.toFixed(2)}</td>
                         <td style={{ padding: '10px 12px', fontWeight: 700, color: 'var(--accent)' }}>{credits} cr / 1M tokens</td>
                       </tr>
                     );
@@ -447,7 +453,7 @@ export default function FinancesPage() {
                 </tbody>
               </table>
             </div>
-            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 12 }}>
+            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 12 }}>
               * Tarifs <span className="fz-logo-word">Anthropic</span> + 25% de marge Freenzy. 1 crédit = 1M micro-crédits (unité interne).
             </div>
           </div>
@@ -456,7 +462,7 @@ export default function FinancesPage() {
           <div className="card" style={{ padding: 24 }}>
             <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Calculateur de budget</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-              <label style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' }}>Messages par jour :</label>
+              <label style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', color: 'var(--fz-text, #1E293B)' }}>Messages par jour :</label>
               <input
                 className="input"
                 type="number"
@@ -465,7 +471,7 @@ export default function FinancesPage() {
                 style={{ width: 100 }}
                 min="1"
               />
-              <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>≈ {(msgsPerDay * 30).toFixed(0)} messages/mois · {(monthlyTokens / 1000).toFixed(0)}k tokens/mois</span>
+              <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>≈ {(msgsPerDay * 30).toFixed(0)} messages/mois · {(monthlyTokens / 1000).toFixed(0)}k tokens/mois</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
               {[
@@ -475,7 +481,7 @@ export default function FinancesPage() {
                 <div key={c.model} className="card" style={{ padding: '16px', background: c.color + '08', borderColor: c.color + '30' }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: c.color, marginBottom: 4 }}>{c.model}</div>
                   <div style={{ fontSize: 22, fontWeight: 800, color: c.color, marginBottom: 2 }}>~{c.cost} cr/mois</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{c.desc}</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{c.desc}</div>
                 </div>
               ))}
             </div>

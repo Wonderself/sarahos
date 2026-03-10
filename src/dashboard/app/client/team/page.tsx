@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 import {
   DEFAULT_AGENTS,
   loadAgentConfigs,
@@ -203,6 +205,12 @@ export default function TeamPage() {
   const inactiveAgents = agents.filter(a => a.isAvailable && !activeIds.includes(a.id as AgentTypeId));
   const lockedAgents = agents.filter(a => !a.isAvailable);
 
+  const TAB_EMOJIS: Record<string, string> = {
+    smart_toy: '🤖',
+    group: '👥',
+    bar_chart: '📊',
+  };
+
   return (
     <div className="client-page-scrollable">
       {/* Error banner */}
@@ -213,20 +221,19 @@ export default function TeamPage() {
       )}
 
       {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Mon <span className="fz-logo-word">équipe</span></h1>
-          <p className="page-subtitle">
-            <span className="fz-logo-word">Agents IA</span>, espace collaboratif et activité
-          </p>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.team.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.team.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.team.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.team.helpText} />
         </div>
-        <Link href="/client/chat" className="btn btn-primary">
-          Discuter &rarr;
-        </Link>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 mb-8" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="flex gap-4 mb-8" style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
         {([
           { id: 'agents' as const, label: 'Mon équipe IA', icon: 'smart_toy' },
           { id: 'workspace' as const, label: 'Espace collaboratif', icon: 'group' },
@@ -242,13 +249,13 @@ export default function TeamPage() {
             style={{
               borderRadius: 0,
               borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
-              color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-secondary)',
+              color: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
               fontWeight: activeTab === tab.id ? 600 : 400,
               fontSize: 13,
               padding: '8px 16px',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{tab.icon}</span> {tab.label}
+            <span style={{ fontSize: 16 }}>{TAB_EMOJIS[tab.icon] ?? tab.icon}</span> {tab.label}
           </button>
         ))}
       </div>
@@ -256,7 +263,7 @@ export default function TeamPage() {
       {/* Tab: Agents */}
       {activeTab === 'agents' && <>
 
-      <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+      <p className="text-sm mb-8" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
         {activeAgents.length} agent{activeAgents.length > 1 ? 's' : ''} actif{activeAgents.length > 1 ? 's' : ''} sur {DEFAULT_AGENTS.length} disponibles
       </p>
 
@@ -276,12 +283,12 @@ export default function TeamPage() {
                     background: agent.color + '22', border: `1px solid ${agent.color}44`,
                     flexShrink: 0,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 26, color: agent.color }}>{agent.materialIcon}</span>
+                    <span style={{ fontSize: 26 }}>{agent.emoji}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex flex-between" style={{ alignItems: 'flex-start' }}>
                       <div>
-                        <div className="text-lg font-bold">{agent.role}</div>
+                        <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>{agent.role}</div>
                         <div className="text-sm font-semibold mt-4" style={{ color: agent.color, fontStyle: 'italic' }}>
                           {agent.tagline}
                         </div>
@@ -300,7 +307,7 @@ export default function TeamPage() {
                   </div>
                 </div>
 
-                <p className="text-sm text-secondary mb-12" style={{ lineHeight: 1.5 }}>
+                <p className="text-sm mb-12" style={{ lineHeight: 1.5, color: 'var(--fz-text-secondary, #64748B)' }}>
                   {agent.hiringPitch}
                 </p>
 
@@ -320,17 +327,17 @@ export default function TeamPage() {
                     Discuter &rarr;
                   </Link>
                   <Link href="/client/agents/customize" className="btn btn-ghost btn-sm" title="Personnaliser">
-                    <span className="material-symbols-rounded" style={{ fontSize: 16 }}>palette</span>
+                    <span style={{ fontSize: 16 }}>🎨</span>
                   </Link>
                 </div>
 
                 {agent.isCustomized && (
                   <div className="mt-8 text-xs text-accent font-semibold text-center">
-                    <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>auto_awesome</span> Personnalisé via Agent Studio
+                    ✨ Personnalisé via Agent Studio
                   </div>
                 )}
 
-                <div className="mt-8 text-center text-xs text-muted">
+                <div className="mt-8 text-center text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                   Inclus gratuitement
                 </div>
               </div>
@@ -343,41 +350,42 @@ export default function TeamPage() {
       {inactiveAgents.length > 0 && (
         <div className="section">
           <div className="section-title">Agents disponibles</div>
-          <p className="text-md text-muted mb-16">
+          <p className="text-md mb-16" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
             Cliquez sur &quot;Activer&quot; pour ajouter un agent à votre équipe.
           </p>
           <div className="grid-2" style={{ gap: 12 }}>
             {inactiveAgents.map(agent => (
               <div key={agent.id} className="card" style={{
-                borderColor: 'var(--border-primary)', opacity: 0.7,
+                borderColor: 'var(--fz-border, #E2E8F0)', opacity: 0.7,
               }}>
                 <div className="flex gap-12 mb-12" style={{ alignItems: 'flex-start' }}>
-                  <div className="flex-center rounded-lg bg-tertiary" style={{
+                  <div className="flex-center rounded-lg" style={{
                     width: 52, height: 52,
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     flexShrink: 0, filter: 'grayscale(0.3)',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 26, color: agent.color }}>{agent.materialIcon}</span>
+                    <span style={{ fontSize: 26 }}>{agent.emoji}</span>
                   </div>
                   <div className="flex-1">
-                    <div className="text-lg font-bold text-secondary">{agent.role}</div>
-                    <div className="text-sm text-muted mt-4" style={{ fontStyle: 'italic' }}>
+                    <div className="text-lg font-bold" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{agent.role}</div>
+                    <div className="text-sm mt-4" style={{ fontStyle: 'italic', color: 'var(--fz-text-muted, #94A3B8)' }}>
                       {agent.tagline}
                     </div>
                   </div>
                 </div>
 
-                <p className="text-sm text-muted mb-12" style={{ lineHeight: 1.5 }}>
+                <p className="text-sm mb-12" style={{ lineHeight: 1.5, color: 'var(--fz-text-muted, #94A3B8)' }}>
                   {agent.description}
                 </p>
 
                 <div className="flex flex-wrap gap-4" style={{ marginBottom: 14 }}>
                   {agent.capabilities.slice(0, 3).map(cap => (
-                    <span key={cap} className="text-xs rounded-sm bg-tertiary text-muted" style={{ padding: '2px 8px' }}>
+                    <span key={cap} className="text-xs rounded-sm" style={{ padding: '2px 8px', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-muted, #94A3B8)' }}>
                       {cap}
                     </span>
                   ))}
                   {agent.capabilities.length > 3 && (
-                    <span className="text-xs text-muted">+{agent.capabilities.length - 3}</span>
+                    <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>+{agent.capabilities.length - 3}</span>
                   )}
                 </div>
 
@@ -395,12 +403,12 @@ export default function TeamPage() {
       )}
 
       {/* Bottom CTA */}
-      <div className="text-center rounded-lg bg-secondary border mt-16" style={{ padding: '40px 20px' }}>
-        <div className="mb-12"><span className="material-symbols-rounded" style={{ fontSize: 36 }}>business</span></div>
-        <div className="text-xl font-bold mb-8">
+      <div className="text-center rounded-lg mt-16" style={{ padding: '40px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+        <div className="mb-12"><span style={{ fontSize: 36 }}>💼</span></div>
+        <div className="text-xl font-bold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>
           Votre équipe IA travaille ensemble
         </div>
-        <p className="text-md text-secondary max-w-md" style={{ lineHeight: 1.6, margin: '0 auto 20px' }}>
+        <p className="text-md max-w-md" style={{ lineHeight: 1.6, margin: '0 auto 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
           Tous les agents collaborent, partagent le contexte, et s&apos;améliorent avec chaque interaction.
         </p>
         <div className="flex flex-center flex-wrap" style={{ gap: 10 }}>
@@ -415,10 +423,10 @@ export default function TeamPage() {
       {activeTab === 'workspace' && (
         <div>
           {workspaces.length === 0 ? (
-            <div className="text-center rounded-lg bg-secondary border" style={{ padding: '60px 20px' }}>
-              <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>group</span></div>
-              <h3 className="text-lg font-bold mb-4">Créez votre premier espace collaboratif</h3>
-              <p className="text-sm text-secondary mb-16" style={{ maxWidth: 400, margin: '0 auto 20px' }}>
+            <div className="text-center rounded-lg" style={{ padding: '60px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+              <div style={{ marginBottom: 16 }}><span style={{ fontSize: 48 }}>👥</span></div>
+              <h3 className="text-lg font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>Créez votre premier espace collaboratif</h3>
+              <p className="text-sm mb-16" style={{ maxWidth: 400, margin: '0 auto 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
                 Invitez votre équipe pour travailler ensemble : données partagées, agents communs, actions assignées.
               </p>
               <div className="flex flex-center gap-6">
@@ -457,7 +465,7 @@ export default function TeamPage() {
               {/* Workspace info */}
               <div className="card mb-8" style={{ padding: 16 }}>
                 <div className="flex flex-between items-center mb-8">
-                  <h3 className="text-base font-bold">
+                  <h3 className="text-base font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>
                     {workspaces.find(w => w.id === activeWorkspace)?.name ?? 'Espace'}
                   </h3>
                   <span className="text-xs font-medium" style={{
@@ -467,7 +475,7 @@ export default function TeamPage() {
                     {workspaces.find(w => w.id === activeWorkspace)?.plan ?? 'team'}
                   </span>
                 </div>
-                <p className="text-sm text-secondary">
+                <p className="text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
                   {members.length} membre{members.length > 1 ? 's' : ''} ·
                   Max {workspaces.find(w => w.id === activeWorkspace)?.maxMembers ?? 5}
                 </p>
@@ -486,8 +494,8 @@ export default function TeamPage() {
                         {(m.displayName ?? m.email ?? '?')[0].toUpperCase()}
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-medium">{m.displayName ?? m.email ?? 'Utilisateur'}</div>
-                        {m.email && <div className="text-xs text-secondary">{m.email}</div>}
+                        <div className="text-sm font-medium" style={{ color: 'var(--fz-text, #1E293B)' }}>{m.displayName ?? m.email ?? 'Utilisateur'}</div>
+                        {m.email && <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{m.email}</div>}
                       </div>
                       <span className="text-xs font-medium" style={{
                         padding: '2px 8px', borderRadius: 4,
@@ -561,8 +569,8 @@ export default function TeamPage() {
       {activeTab === 'activity' && (
         <div>
           {wsActivity.length === 0 ? (
-            <div className="text-center" style={{ padding: '60px 20px', color: 'var(--text-secondary)' }}>
-              <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bar_chart</span></div>
+            <div className="text-center" style={{ padding: '60px 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
+              <div style={{ marginBottom: 12 }}><span style={{ fontSize: 48 }}>📊</span></div>
               <p className="text-sm">Aucune activité pour le moment.</p>
               {workspaces.length === 0 && (
                 <p className="text-xs mt-4">Créez un espace collaboratif pour voir l&apos;activité de votre équipe.</p>
@@ -573,17 +581,17 @@ export default function TeamPage() {
               {wsActivity.map(entry => (
                 <div key={entry.id} className="flex items-center gap-8 card" style={{ padding: '10px 14px' }}>
                   <div className="flex-center rounded-full" style={{
-                    width: 32, height: 32, background: 'var(--bg-tertiary)',
-                    fontSize: 12, fontWeight: 600,
+                    width: 32, height: 32, background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)',
                   }}>
                     {(entry.userName ?? '?')[0].toUpperCase()}
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm">
+                    <div className="text-sm" style={{ color: 'var(--fz-text, #1E293B)' }}>
                       <strong>{entry.userName ?? 'Utilisateur'}</strong>{' '}
                       {entry.action.replace(/_/g, ' ')}
                     </div>
-                    <div className="text-xs text-secondary">
+                    <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
                       {new Date(entry.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>

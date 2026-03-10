@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import EmptyState from '../../../components/EmptyState';
 import { useToast } from '../../../components/Toast';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -146,6 +148,7 @@ export default function ProjectsPage() {
 
   const activeProject = projects.find(p => p.id === activeProjectId);
   const totalCredits = projects.reduce((s, p) => s + (p.creditsUsed ?? 0), 0);
+  const meta = PAGE_META.projects;
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto', padding: '0 0 48px' }}>
@@ -154,14 +157,18 @@ export default function ProjectsPage() {
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>folder</span> <span className="fz-logo-word">Projets</span></h1>
-            <p className="page-subtitle">Organisez votre travail par projet pour isoler les <span className="fz-logo-word">agents</span>, données et dépenses.</p>
+            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>
+              <span style={{ fontSize: 18 }}>{meta.emoji}</span>{' '}
+              <span className="fz-logo-word">{meta.title}</span>
+              <HelpBubble text={meta.helpText} />
+            </h1>
+            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{meta.subtitle}</p>
           </div>
           <button
             onClick={() => { setForm({ name: '', description: '' }); setShowModal(true); }}
             className="btn btn-primary"
           >
-            + Nouveau projet
+            ➕ Nouveau projet
           </button>
         </div>
       </div>
@@ -170,14 +177,14 @@ export default function ProjectsPage() {
       {projects.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
-            { label: 'Total projets', value: String(projects.length), icon: 'folder', color: 'var(--accent)' },
-            { label: 'Projet actif', value: activeProject?.name ?? '—', icon: 'check_circle', color: '#22c55e' },
-            { label: 'Crédits cumulés', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', icon: 'credit_card', color: '#f59e0b' },
+            { label: 'Total projets', value: String(projects.length), emoji: '📁', color: 'var(--accent)' },
+            { label: 'Projet actif', value: activeProject?.name ?? '—', emoji: '✅', color: '#22c55e' },
+            { label: 'Credits cumules', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', emoji: '💳', color: '#f59e0b' },
           ].map(s => (
-            <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-              <div style={{ fontSize: 20, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
+            <div key={s.label} className="card" style={{ padding: '14px 18px', background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+              <div style={{ fontSize: 20, marginBottom: 4 }}>{s.emoji}</div>
               <div style={{ fontSize: 14, fontWeight: 700, color: s.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -185,12 +192,12 @@ export default function ProjectsPage() {
 
       {/* Content */}
       {loading ? (
-        <div className="text-tertiary animate-pulse" style={{ textAlign: 'center', padding: '60px 0' }}>Chargement...</div>
+        <div className="animate-pulse" style={{ textAlign: 'center', padding: '60px 0', color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div>
       ) : projects.length === 0 ? (
         <EmptyState
           icon="folder"
           title="Aucun projet pour l'instant"
-          description="Créez un projet pour organiser votre travail entre clients, produits ou services. Chaque projet dispose de ses propres agents IA et données."
+          description="Créez un projet pour organiser votre travail entre clients, produits ou services. Chaque projet dispose de ses propres assistants IA et données."
           actionLabel="+ Créer mon premier projet"
           onAction={() => setShowModal(true)}
         />
@@ -202,28 +209,28 @@ export default function ProjectsPage() {
               <div
                 key={project.id}
                 className="card"
-                style={{ padding: 20, position: 'relative', borderColor: isActive ? 'var(--accent)' : undefined, borderWidth: isActive ? 2 : 1 }}
+                style={{ padding: 20, position: 'relative', borderColor: isActive ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)', borderWidth: isActive ? 2 : 1, background: 'var(--fz-bg, #FFFFFF)' }}
               >
                 {/* Active badge */}
                 {isActive && (
                   <div style={{ position: 'absolute', top: 12, right: 12, background: 'var(--accent)', color: '#fff', borderRadius: 99, fontSize: 10, fontWeight: 700, padding: '2px 8px' }}>
-                    ● ACTIF
+                    ✅ ACTIF
                   </div>
                 )}
                 {project.isDefault && !isActive && (
-                  <div style={{ position: 'absolute', top: 12, right: 12, background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', borderRadius: 99, fontSize: 10, fontWeight: 600, padding: '2px 8px' }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 10 }}>star</span> défaut
+                  <div style={{ position: 'absolute', top: 12, right: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', borderRadius: 99, fontSize: 10, fontWeight: 600, padding: '2px 8px' }}>
+                    ⭐ défaut
                   </div>
                 )}
 
                 {/* Name & description */}
-                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, paddingRight: isActive ? 60 : 16 }}>{project.name}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, paddingRight: isActive ? 60 : 16, color: 'var(--fz-text, #1E293B)' }}>{project.name}</div>
                 {project.description && (
-                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {project.description}
                   </div>
                 )}
-                <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 16 }}>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
                   Créé le {new Date(project.createdAt).toLocaleDateString('fr-FR')}
                 </div>
 
@@ -236,7 +243,7 @@ export default function ProjectsPage() {
                       className="btn btn-primary btn-sm"
                       style={{ fontSize: 12 }}
                     >
-                      {activating === project.id ? 'Activation...' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Activer</>}
+                      {activating === project.id ? 'Activation...' : <>✅ Activer</>}
                     </button>
                   )}
                   <button
@@ -244,7 +251,7 @@ export default function ProjectsPage() {
                     className="btn btn-ghost btn-sm"
                     style={{ fontSize: 12 }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>edit</span> Renommer
+                    ✏️ Renommer
                   </button>
                   {!project.isDefault && (
                     <button
@@ -252,7 +259,7 @@ export default function ProjectsPage() {
                       className="btn btn-ghost btn-sm"
                       style={{ fontSize: 12, color: '#ef4444' }}
                     >
-                      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>delete</span> Supprimer
+                      🗑️ Supprimer
                     </button>
                   )}
                 </div>
@@ -268,11 +275,11 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 440, padding: 28 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>folder</span> Nouveau projet</h3>
+          <div className="card" style={{ width: '100%', maxWidth: 440, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>📁 Nouveau projet</h3>
 
             <div style={{ marginBottom: 14 }}>
-              <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Nom du projet *</label>
+              <label style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>Nom du projet *</label>
               <input
                 className="input"
                 style={{ width: '100%' }}
@@ -284,7 +291,7 @@ export default function ProjectsPage() {
               />
             </div>
             <div style={{ marginBottom: 20 }}>
-              <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Description (optionnel)</label>
+              <label style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>Description (optionnel)</label>
               <textarea
                 className="input"
                 style={{ width: '100%', minHeight: 80, resize: 'vertical' }}
@@ -314,8 +321,8 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setRenameProject(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>edit</span> Renommer le projet</h3>
+          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>✏️ Renommer le projet</h3>
             <input
               className="input"
               style={{ width: '100%', marginBottom: 20 }}
@@ -344,9 +351,9 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setDeleteProject(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>delete</span> Supprimer le projet</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20 }}>
+          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🗑️ Supprimer le projet</h3>
+            <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 20 }}>
               Êtes-vous sûr de vouloir supprimer <strong>"{deleteProject.name}"</strong> ? Cette action est irréversible.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>

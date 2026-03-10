@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { generateQR } from '../../../lib/qr-generator';
 import { claimReward } from '../../../lib/rewards';
+import { HelpBubble } from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 interface Referral {
   id: string;
@@ -15,12 +17,12 @@ interface Referral {
   createdAt: string;
 }
 
-const STATUS_LABELS: Record<string, { label: string; color: string; icon: string }> = {
-  pending: { label: 'En attente', color: '#f59e0b', icon: 'hourglass_empty' },
-  month1_ok: { label: 'Mois 1 valide', color: '#3b82f6', icon: 'check_circle' },
-  qualified: { label: 'Qualifie', color: '#22c55e', icon: 'celebration' },
-  rewarded: { label: 'Recompense', color: '#22c55e', icon: 'savings' },
-  failed: { label: 'Non qualifie', color: '#ef4444', icon: 'cancel' },
+const STATUS_LABELS: Record<string, { label: string; color: string; emoji: string }> = {
+  pending: { label: 'En attente', color: '#f59e0b', emoji: '\u23F3' },
+  month1_ok: { label: 'Mois 1 valide', color: '#3b82f6', emoji: '\u2705' },
+  qualified: { label: 'Qualifie', color: '#22c55e', emoji: '\uD83C\uDF89' },
+  rewarded: { label: 'Recompense', color: '#22c55e', emoji: '\uD83D\uDCB0' },
+  failed: { label: 'Non qualifie', color: '#ef4444', emoji: '\u274C' },
 };
 
 export default function ReferralsPage() {
@@ -80,8 +82,8 @@ export default function ReferralsPage() {
   function shareLink() {
     if (navigator.share) {
       navigator.share({
-        title: 'Freenzy.io — Votre équipe IA gratuite',
-        text: 'Rejoignez Freenzy.io — votre équipe IA complète, 0% de commission !',
+        title: 'Freenzy.io \u2014 Votre \u00e9quipe IA gratuite',
+        text: 'Rejoignez Freenzy.io \u2014 votre \u00e9quipe IA compl\u00e8te, 0% de commission !',
         url: getReferralLink(),
       }).catch(() => {});
     }
@@ -108,7 +110,7 @@ export default function ReferralsPage() {
 
   const shareToSocial = useCallback((platform: string) => {
     const url = encodeURIComponent(getReferralLink());
-    const text = encodeURIComponent('Rejoignez Freenzy.io — votre équipe IA complète, 0% de commission !');
+    const text = encodeURIComponent('Rejoignez Freenzy.io \u2014 votre \u00e9quipe IA compl\u00e8te, 0% de commission !');
     const urls: Record<string, string> = {
       twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
@@ -122,12 +124,32 @@ export default function ReferralsPage() {
   const qualifiedReferrals = referrals.filter(r => r.status === 'qualified' || r.status === 'rewarded').length;
   const totalRewards = referrals.reduce((sum, r) => sum + (r.rewardAmount || 0), 0);
 
+  const meta = PAGE_META.referrals;
+
   return (
     <div className="client-page-scrollable">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Parrainage</h1>
-          <p className="page-subtitle">Invitez vos amis, gagnez des <span className="fz-logo-word">crédits</span></p>
+      {/* Page Header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        marginBottom: 24, padding: '0 0 16px 0',
+        borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+      }}>
+        <span style={{ fontSize: 32 }}>{meta.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{
+            fontSize: 22, fontWeight: 800, margin: 0,
+            color: 'var(--fz-text, #1E293B)',
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            {meta.title}
+            <HelpBubble text={meta.helpText} />
+          </h1>
+          <p style={{
+            margin: '4px 0 0', fontSize: 14,
+            color: 'var(--fz-text-secondary, #64748B)',
+          }}>
+            {meta.subtitle}
+          </p>
         </div>
       </div>
 
@@ -138,14 +160,14 @@ export default function ReferralsPage() {
         backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
-          <span style={{ fontSize: 48 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>redeem</span></span>
+          <span style={{ fontSize: 48 }}>{'\uD83C\uDF81'}</span>
           <div className="flex-1" style={{ minWidth: 0 }}>
-            <div className="font-bold" style={{ fontSize: 20, marginBottom: 6 }}>
-              Gagnez 20 EUR de crédits <span className="fz-logo-word">gratuits</span> !
+            <div className="font-bold" style={{ fontSize: 20, marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>
+              Gagnez 20 EUR de cr\u00e9dits <span className="fz-logo-word">gratuits</span> !
             </div>
-            <div className="text-md text-secondary" style={{ lineHeight: 1.6 }}>
-              Partagez votre lien d&apos;invitation. Pour chaque filleul qualifié, vous recevez
-              <strong style={{ color: 'var(--accent)' }}> 20 EUR de crédits </strong>
+            <div className="text-md" style={{ lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
+              Partagez votre lien d&apos;invitation. Pour chaque filleul qualifi\u00e9, vous recevez
+              <strong style={{ color: 'var(--accent)' }}> 20 EUR de cr\u00e9dits </strong>
               (10 EUR/mois sur 2 mois).
             </div>
           </div>
@@ -154,17 +176,17 @@ export default function ReferralsPage() {
 
       {/* Referral Code & Link */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 12 }}>Votre lien de parrainage</div>
+        <div className="section-title" style={{ marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Votre lien de parrainage</div>
         <div className="flex items-center gap-8 flex-wrap">
           <div className="flex-1" style={{
-            background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
             borderRadius: 10, padding: '10px 14px', fontFamily: 'var(--font-mono, monospace)',
-            fontSize: 13, color: 'var(--text-secondary)', minWidth: 200, wordBreak: 'break-all',
+            fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', minWidth: 200, wordBreak: 'break-all',
           }}>
             {referralCode ? getReferralLink() : 'Chargement...'}
           </div>
           <button onClick={copyLink} className="btn btn-primary btn-sm" disabled={!referralCode}>
-            {copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Copié !</> : 'Copier'}
+            {copied ? <>{'\u2705'} Copi\u00e9 !</> : 'Copier'}
           </button>
           {shareSupported && (
             <button onClick={shareLink} className="btn btn-secondary btn-sm" disabled={!referralCode}>
@@ -172,19 +194,19 @@ export default function ReferralsPage() {
             </button>
           )}
         </div>
-        <div className="text-xs text-muted" style={{ marginTop: 8 }}>
+        <div className="text-xs" style={{ marginTop: 8, color: 'var(--fz-text-muted, #94A3B8)' }}>
           Code : <strong style={{ color: 'var(--accent)' }}>{referralCode || '...'}</strong>
         </div>
       </div>
 
       {/* QR Code & Social Share */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 16 }}>QR Code & Partage</div>
+        <div className="section-title" style={{ marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>QR Code & Partage</div>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ textAlign: 'center' }}>
             <canvas
               ref={qrCanvasRef}
-              style={{ borderRadius: 12, border: '1px solid var(--border-primary)' }}
+              style={{ borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)' }}
               width={200}
               height={200}
             />
@@ -194,17 +216,17 @@ export default function ReferralsPage() {
               style={{ marginTop: 12, width: '100%' }}
               disabled={!referralCode}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Télécharger PNG
+              {'\u2B07\uFE0F'} T\u00e9l\u00e9charger PNG
             </button>
           </div>
           <div style={{ flex: 1, minWidth: 200 }}>
-            <div className="text-sm font-bold mb-8">Partagez sur les réseaux</div>
+            <div className="text-sm font-bold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>Partagez sur les r\u00e9seaux</div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {[
-                { id: 'twitter', icon: 'tag', label: 'Twitter / X', color: '#1da1f2' },
-                { id: 'linkedin', icon: 'work', label: 'LinkedIn', color: '#0077b5' },
-                { id: 'whatsapp', icon: 'chat', label: 'WhatsApp', color: '#25d366' },
-                { id: 'email', icon: 'mail', label: 'Email', color: '#8b5cf6' },
+                { id: 'twitter', emoji: '\uD83D\uDCAC', label: 'Twitter / X', color: '#1da1f2' },
+                { id: 'linkedin', emoji: '\uD83D\uDCBC', label: 'LinkedIn', color: '#0077b5' },
+                { id: 'whatsapp', emoji: '\uD83D\uDCF1', label: 'WhatsApp', color: '#25d366' },
+                { id: 'email', emoji: '\u2709\uFE0F', label: 'Email', color: '#8b5cf6' },
               ].map(p => (
                 <button
                   key={p.id}
@@ -217,12 +239,12 @@ export default function ReferralsPage() {
                   }}
                   disabled={!referralCode}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{p.icon}</span>
+                  <span style={{ fontSize: 16 }}>{p.emoji}</span>
                   {p.label}
                 </button>
               ))}
             </div>
-            <div className="text-xs text-muted" style={{ marginTop: 12, lineHeight: 1.6 }}>
+            <div className="text-xs" style={{ marginTop: 12, lineHeight: 1.6, color: 'var(--fz-text-muted, #94A3B8)' }}>
               Scannez le QR code ou utilisez les boutons pour partager votre lien de parrainage.
             </div>
           </div>
@@ -232,65 +254,70 @@ export default function ReferralsPage() {
       {/* Stats */}
       <div className="grid-3 section" style={{ gap: 10 }}>
         <div className="stat-card">
-          <span className="stat-label">Filleuls inscrits</span>
-          <span className="stat-value">{totalReferrals}</span>
+          <span className="stat-label" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Filleuls inscrits</span>
+          <span className="stat-value" style={{ color: 'var(--fz-text, #1E293B)' }}>{totalReferrals}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Filleuls qualifies</span>
+          <span className="stat-label" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Filleuls qualifies</span>
           <span className="stat-value" style={{ color: '#22c55e' }}>{qualifiedReferrals}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Crédits gagnés</span>
+          <span className="stat-label" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Cr\u00e9dits gagn\u00e9s</span>
           <span className="stat-value" style={{ color: 'var(--accent)' }}>
             {totalRewards > 0 ? (totalRewards / 1_000_000).toFixed(0) : '0'}
           </span>
-          <span className="text-xs text-muted">crédits</span>
+          <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>cr\u00e9dits</span>
         </div>
       </div>
 
       {/* How it works */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 16 }}>Comment ça marche</div>
+        <div className="section-title" style={{ marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Comment \u00e7a marche</div>
         <div className="grid-4" style={{ gap: 12 }}>
           {[
-            { step: '1', icon: 'link', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
-            { step: '2', icon: 'draw', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
-            { step: '3', icon: 'bar_chart', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
-            { step: '4', icon: 'savings', title: 'Récompense', desc: '20 EUR de crédits pour vous (10 EUR/mois)' },
+            { step: '1', emoji: '\uD83D\uDD17', title: 'Partagez', desc: 'Envoyez votre lien \u00e0 vos amis et coll\u00e8gues' },
+            { step: '2', emoji: '\u270D\uFE0F', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
+            { step: '3', emoji: '\uD83D\uDCCA', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
+            { step: '4', emoji: '\uD83D\uDCB0', title: 'R\u00e9compense', desc: '20 EUR de cr\u00e9dits pour vous (10 EUR/mois)' },
           ].map(s => (
             <div key={s.step} className="text-center" style={{ padding: '12px 8px' }}>
               <div className="flex-center" style={{
                 width: 40, height: 40, borderRadius: '50%', margin: '0 auto 8px',
                 background: 'var(--accent-muted)', fontSize: 20,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{s.icon}</span>
+                <span style={{ fontSize: 20 }}>{s.emoji}</span>
               </div>
-              <div className="text-sm font-bold mb-4">{s.title}</div>
-              <div className="text-xs text-muted" style={{ lineHeight: 1.5 }}>{s.desc}</div>
+              <div className="text-sm font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>{s.title}</div>
+              <div className="text-xs" style={{ lineHeight: 1.5, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.desc}</div>
             </div>
           ))}
         </div>
-        <div className="bg-secondary border rounded-md mt-16" style={{ padding: '10px 14px' }}>
-          <div className="text-xs text-muted" style={{ lineHeight: 1.6 }}>
-            <strong className="text-secondary">Condition :</strong> Votre filleul doit dépenser au moins 9 EUR
-            de tokens pendant 2 mois consécutifs pour que la récompense soit validée.
+        <div style={{
+          background: 'var(--fz-bg-secondary, #F8FAFC)',
+          border: '1px solid var(--fz-border, #E2E8F0)',
+          borderRadius: 8, marginTop: 16, padding: '10px 14px',
+        }}>
+          <div className="text-xs" style={{ lineHeight: 1.6, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <strong style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Condition :</strong> Votre filleul doit d\u00e9penser au moins 9 EUR
+            de tokens pendant 2 mois cons\u00e9cutifs pour que la r\u00e9compense soit valid\u00e9e.
           </div>
         </div>
       </div>
 
       {/* Referral List */}
       <div className="section">
-        <div className="section-title">Mes filleuls</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Mes filleuls</div>
         {loading ? (
-          <div className="card"><div className="animate-pulse text-muted">Chargement...</div></div>
+          <div className="card"><div className="animate-pulse" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div></div>
         ) : referrals.length === 0 ? (
           <div className="card text-center" style={{ padding: '32px 20px' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>group</span></div>
-            <div className="text-md text-secondary" style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>{'\uD83D\uDC65'}</div>
+            <div className="text-md" style={{ marginBottom: 16, color: 'var(--fz-text-secondary, #64748B)' }}>
               Vous n&apos;avez pas encore de filleul.
             </div>
-            <div className="text-sm text-muted">
-              Partagez votre lien pour commencer à gagner des crédits !
+            <div className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
+              Partagez votre lien pour commencer \u00e0 gagner des cr\u00e9dits !
             </div>
           </div>
         ) : (
@@ -312,22 +339,22 @@ export default function ReferralsPage() {
                   const st = STATUS_LABELS[ref.status] ?? STATUS_LABELS.pending;
                   return (
                     <tr key={ref.id}>
-                      <td className="font-semibold">{ref.referredEmail}</td>
+                      <td className="font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>{ref.referredEmail}</td>
                       <td className="text-center">
                         <span style={{ color: st.color, fontWeight: 600, fontSize: 12 }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{st.icon}</span> {st.label}
+                          <span style={{ fontSize: 16, marginRight: 4, verticalAlign: 'middle' }}>{st.emoji}</span> {st.label}
                         </span>
                       </td>
-                      <td className="text-center text-sm">
-                        {ref.month1Spend > 0 ? `${(ref.month1Spend / 1_000_000).toFixed(0)} cr` : '—'}
+                      <td className="text-center text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                        {ref.month1Spend > 0 ? `${(ref.month1Spend / 1_000_000).toFixed(0)} cr` : '\u2014'}
                       </td>
-                      <td className="text-center text-sm">
-                        {ref.month2Spend > 0 ? `${(ref.month2Spend / 1_000_000).toFixed(0)} cr` : '—'}
+                      <td className="text-center text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                        {ref.month2Spend > 0 ? `${(ref.month2Spend / 1_000_000).toFixed(0)} cr` : '\u2014'}
                       </td>
-                      <td className="text-center text-sm font-bold" style={{ color: ref.rewardCredited ? '#22c55e' : 'var(--text-muted)' }}>
-                        {ref.rewardCredited ? `${(ref.rewardAmount / 1_000_000).toFixed(0)} cr` : '—'}
+                      <td className="text-center text-sm font-bold" style={{ color: ref.rewardCredited ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)' }}>
+                        {ref.rewardCredited ? `${(ref.rewardAmount / 1_000_000).toFixed(0)} cr` : '\u2014'}
                       </td>
-                      <td className="text-center text-xs text-muted">
+                      <td className="text-center text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                         {new Date(ref.createdAt).toLocaleDateString('fr-FR')}
                       </td>
                     </tr>

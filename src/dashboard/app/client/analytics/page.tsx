@@ -5,6 +5,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -34,9 +36,9 @@ const PIE_COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#06b
 
 // Agent names mapping (models → agent names)
 const MODEL_LABELS: Record<string, { icon: string; label: string }> = {
-  'claude-sonnet-4-6': { icon: 'smart_toy', label: 'Claude Sonnet (agents L1/L2)' },
-  'claude-opus-4-6': { icon: 'psychology', label: 'Claude Opus (DG / L3)' },
-  'claude-haiku-4-5-20251001': { icon: 'bolt', label: 'Claude Haiku (tâches rapides)' },
+  'claude-sonnet-4-6': { icon: '🤖', label: 'Claude Sonnet (agents L1/L2)' },
+  'claude-opus-4-6': { icon: '🧠', label: 'Claude Opus (DG / L3)' },
+  'claude-haiku-4-5-20251001': { icon: '⚡', label: 'Claude Haiku (tâches rapides)' },
 };
 
 function getModelLabel(model: string) {
@@ -46,7 +48,7 @@ function getModelLabel(model: string) {
 
 function getModelIcon(model: string) {
   const entry = MODEL_LABELS[model];
-  return entry ? entry.icon : 'smart_toy';
+  return entry ? entry.icon : '🤖';
 }
 
 // ─── API helper ───────────────────────────────────────────────────────────────
@@ -122,7 +124,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>bar_chart</span></div>
+        <div style={{ fontSize: 40 }}>📊</div>
         <div className="text-md text-tertiary animate-pulse">Chargement des analytics...</div>
       </div>
     );
@@ -130,28 +132,34 @@ export default function AnalyticsPage() {
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
-      {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bar_chart</span> Analytics</h1>
-          <p className="page-subtitle">Utilisation de vos <span className="fz-logo-word">agents IA</span> — tokens, requêtes et coûts</p>
+      {/* Page Header */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.analytics.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.analytics.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.analytics.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.analytics.helpText} />
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          {PERIOD_OPTIONS.map(p => (
-            <button
-              key={p.days}
-              onClick={() => setPeriod(p.days)}
-              style={{
-                padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                border: period === p.days ? '1.5px solid var(--accent)' : '1.5px solid var(--border-primary)',
-                background: period === p.days ? 'var(--accent)' : 'var(--bg-secondary)',
-                color: period === p.days ? '#fff' : 'var(--text-primary)',
-              }}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
+      </div>
+
+      {/* Period selector */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
+        {PERIOD_OPTIONS.map(p => (
+          <button
+            key={p.days}
+            onClick={() => setPeriod(p.days)}
+            style={{
+              padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              border: period === p.days ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
+              background: period === p.days ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              color: period === p.days ? '#fff' : 'var(--fz-text, #1E293B)',
+            }}
+          >
+            {p.label}
+          </button>
+        ))}
       </div>
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
@@ -159,24 +167,24 @@ export default function AnalyticsPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: 'text_fields', color: 'var(--accent)' },
-          { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: 'forward_to_inbox', color: '#3b82f6' },
-          { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: 'savings', color: '#f59e0b' },
-          { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: 'smart_toy', color: '#22c55e' },
+          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤', color: 'var(--accent)' },
+          { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: '📨', color: '#3b82f6' },
+          { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: '💰', color: '#f59e0b' },
+          { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: '🤖', color: '#22c55e' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 22, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{s.icon}</span></div>
+            <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{s.label}</div>
+            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {totalRequests === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bar_chart</span></div>
-          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucune donnée sur cette période</div>
-          <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
+          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune donnée sur cette période</div>
+          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
             Utilisez vos agents pour voir apparaître les <span className="fz-logo-word">analytics</span> ici
           </div>
         </div>
@@ -185,19 +193,19 @@ export default function AnalyticsPage() {
           {/* Daily chart */}
           {last30Days.length > 0 && (
             <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Activité quotidienne</h3>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Activité quotidienne</h3>
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={last30Days} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--text-tertiary)' }} />
-                  <YAxis tick={{ fontSize: 10, fill: 'var(--text-tertiary)' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
+                  <YAxis tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
                   <Tooltip />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="Tokens" fill="var(--accent)" radius={[2, 2, 0, 0]} />
                   <Bar dataKey="Requêtes" fill="#22c55e" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 8, textAlign: 'center' }}>Tokens en milliers (k)</div>
+              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 8, textAlign: 'center' }}>Tokens en milliers (k)</div>
             </div>
           )}
 
@@ -205,7 +213,7 @@ export default function AnalyticsPage() {
             {/* Pie chart */}
             {pieData.length > 0 && (
               <div className="card" style={{ padding: 24 }}>
-                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Répartition par modèle</h3>
+                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Répartition par modèle</h3>
                 <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ percent }: { percent?: number }) => `${((percent ?? 0) * 100).toFixed(0)}%`} labelLine={false}>
@@ -220,7 +228,7 @@ export default function AnalyticsPage() {
 
             {/* Table by model */}
             <div className="card" style={{ padding: 24 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>Détail par modèle</h3>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Détail par modèle</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {usageByModel.map((m, i) => (
                   <div key={m.model} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -229,10 +237,10 @@ export default function AnalyticsPage() {
                       background: PIE_COLORS[i % PIE_COLORS.length],
                     }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{getModelIcon(m.model)}</span> {getModelLabel(m.model)}
+                      <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4, color: 'var(--fz-text, #1E293B)' }}>
+                        <span style={{ fontSize: 14 }}>{getModelIcon(m.model)}</span> {getModelLabel(m.model)}
                       </div>
-                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 1 }}>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>
                         {m.totalRequests} req · {(m.totalTokens / 1000).toFixed(0)}k tokens
                       </div>
                     </div>

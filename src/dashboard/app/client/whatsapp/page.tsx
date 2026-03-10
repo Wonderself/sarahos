@@ -73,11 +73,11 @@ async function apiFetch(path: string, options: RequestInit = {}) {
 
 // WhatsApp commands guide
 const WA_COMMANDS = [
-  { cmd: '@ines', desc: 'Parler à Inès (Assistante)' },
-  { cmd: '@sacha', desc: 'Parler à Sacha (Commercial)' },
-  { cmd: '@jade', desc: 'Parler à Jade (Marketing)' },
-  { cmd: 'détaille', desc: 'Obtenir une réponse longue' },
-  { cmd: 'résume', desc: 'Revenir en mode court' },
+  { cmd: '@ines', desc: 'Parler \u00e0 In\u00e8s (Assistante)' },
+  { cmd: '@sacha', desc: 'Parler \u00e0 Sacha (Commercial)' },
+  { cmd: '@jade', desc: 'Parler \u00e0 Jade (Marketing)' },
+  { cmd: 'd\u00e9taille', desc: 'Obtenir une r\u00e9ponse longue' },
+  { cmd: 'r\u00e9sume', desc: 'Revenir en mode court' },
 ];
 
 export default function WhatsAppPage() {
@@ -104,7 +104,7 @@ export default function WhatsAppPage() {
         setConversations(convData.conversations || []);
       }
     } catch {
-      setError('Impossible de charger les données. Vérifiez votre connexion.');
+      setError('Impossible de charger les donn\u00e9es. V\u00e9rifiez votre connexion.');
     } finally {
       setLoading(false);
     }
@@ -200,22 +200,22 @@ export default function WhatsAppPage() {
       <div className="p-24 text-center">
         {loadingTimedOut ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>power</span></div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
-              Impossible de charger les données
+            <div style={{ fontSize: 48, marginBottom: 16 }}>\ud83d\udd0c</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
+              Impossible de charger les donn\u00e9es
             </div>
-            <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 16 }}>
-              Vérifiez votre connexion ou réessayez.
+            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
+              V\u00e9rifiez votre connexion ou r\u00e9essayez.
             </div>
             <button
               onClick={() => { setLoadingTimedOut(false); setLoading(true); loadStatus(); }}
               className="btn btn-primary btn-sm"
             >
-              Réessayer
+              R\u00e9essayer
             </button>
           </>
         ) : (
-          <div className="animate-pulse text-md text-tertiary">Chargement...</div>
+          <div className="animate-pulse text-md" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div>
         )}
       </div>
     );
@@ -225,9 +225,9 @@ export default function WhatsAppPage() {
     <div className="page-container max-w-lg client-page-scrollable">
       <div className="page-header">
         <div>
-          <h1 className="page-title">WhatsApp</h1>
-          <p className="page-subtitle">
-            Conversez avec vos <span className="fz-logo-word">agents IA</span> directement sur WhatsApp. Changez d&apos;agent avec @nom.
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>\ud83d\udcac WhatsApp</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+            Conversez avec vos <span className="fz-logo-word">assistants IA</span> directement sur WhatsApp. Changez d&apos;assistant avec @nom.
           </p>
         </div>
         <button
@@ -235,14 +235,14 @@ export default function WhatsAppPage() {
           className="btn btn-ghost btn-sm"
           style={{ fontSize: 13, gap: 6 }}
         >
-          {showGuide ? 'Fermer' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>menu_book</span> Guide</>}
+          {showGuide ? 'Fermer' : <>\ud83d\udcda Guide</>}
         </button>
       </div>
 
       {/* Guide WhatsApp */}
       {showGuide && (
-        <div className="card section" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Commandes <span className="fz-logo-word">WhatsApp</span></h3>
+        <div className="card section" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Commandes <span className="fz-logo-word">WhatsApp</span></h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {WA_COMMANDS.map(c => (
               <div key={c.cmd} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -250,12 +250,12 @@ export default function WhatsAppPage() {
                   fontSize: 13, fontWeight: 600, color: '#25D366',
                   background: 'rgba(37,211,102,0.08)', padding: '2px 8px', borderRadius: 6,
                 }}>{c.cmd}</code>
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{c.desc}</span>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>{c.desc}</span>
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 12 }}>
-            Par défaut, les réponses sont courtes (300 car.). Dites &quot;détaille&quot; pour une réponse complète.
+          <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 12 }}>
+            Par d\u00e9faut, les r\u00e9ponses sont courtes (300 car.). Dites &quot;d\u00e9taille&quot; pour une r\u00e9ponse compl\u00e8te.
           </p>
         </div>
       )}
@@ -272,7 +272,7 @@ export default function WhatsAppPage() {
       {/* Link phone */}
       {(!status?.linked || step === 'link') && step !== 'verify' && (
         <div className="card section">
-          <h2 className="section-title">Lier votre numero WhatsApp</h2>
+          <h2 className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Lier votre numero WhatsApp</h2>
           <div className="flex gap-12 items-center">
             <input
               type="tel"
@@ -282,10 +282,10 @@ export default function WhatsAppPage() {
               className="input flex-1 text-lg"
             />
             <button onClick={handleLinkPhone} className="btn wa-btn font-semibold">
-              Envoyer le code
+              \ud83d\udce4 Envoyer le code
             </button>
           </div>
-          <p className="text-muted text-md mt-8">
+          <p style={{ color: 'var(--fz-text-muted, #94A3B8)' }} className="text-md mt-8">
             Format international requis (ex: +33612345678). Un code de verification sera envoye sur WhatsApp.
           </p>
         </div>
@@ -294,8 +294,8 @@ export default function WhatsAppPage() {
       {/* Verify code */}
       {step === 'verify' && (
         <div className="card section wa-bg">
-          <h2 className="section-title">Verification</h2>
-          <p className="mb-12">Entrez le code a 6 chiffres recu sur WhatsApp :</p>
+          <h2 className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Verification</h2>
+          <p className="mb-12" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Entrez le code a 6 chiffres recu sur WhatsApp :</p>
           <div className="flex gap-12 items-center">
             <input
               type="text"
@@ -317,18 +317,18 @@ export default function WhatsAppPage() {
         <>
           <div className="card info-card info-card-success section">
             <div className="flex-between mb-16">
-              <h2 className="section-title mb-0">WhatsApp connecte</h2>
+              <h2 className="section-title mb-0" style={{ color: 'var(--fz-text, #1E293B)' }}>WhatsApp connecte</h2>
               <span className="wa-badge-active">Actif</span>
             </div>
 
             <div className="grid-2 mb-16">
               <div>
-                <div className="text-muted text-md">Numero</div>
-                <div className="font-semibold text-lg">{status.phoneNumber}</div>
+                <div style={{ color: 'var(--fz-text-muted, #94A3B8)' }} className="text-md">\ud83d\udcde Numero</div>
+                <div className="font-semibold text-lg" style={{ color: 'var(--fz-text, #1E293B)' }}>{status.phoneNumber}</div>
               </div>
               <div>
-                <div className="text-muted text-md">Dernier message</div>
-                <div className="font-semibold">{status.lastMessageAt ? new Date(status.lastMessageAt).toLocaleString('fr-FR') : 'Aucun'}</div>
+                <div style={{ color: 'var(--fz-text-muted, #94A3B8)' }} className="text-md">Dernier message</div>
+                <div className="font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>{status.lastMessageAt ? new Date(status.lastMessageAt).toLocaleString('fr-FR') : 'Aucun'}</div>
               </div>
             </div>
 
@@ -336,7 +336,7 @@ export default function WhatsAppPage() {
             <div className="separator"></div>
             <div>
               <div className="flex-between items-center mb-12">
-                <h3 className="text-lg">Agent principal</h3>
+                <h3 className="text-lg" style={{ color: 'var(--fz-text, #1E293B)' }}>\ud83e\udd16 Assistant principal</h3>
                 <button
                   onClick={() => setShowAgentPicker(!showAgentPicker)}
                   className="btn btn-ghost btn-sm"
@@ -354,12 +354,12 @@ export default function WhatsAppPage() {
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 12,
                     padding: '10px 14px', borderRadius: 10,
-                    background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 24, color: (current as any).color ?? 'var(--accent)' }}>{(current as any).materialIcon ?? 'smart_toy'}</span>
+                    <span style={{ fontSize: 24 }}>\ud83e\udd16</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14, fontWeight: 600 }}>{current.name}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{current.role}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{current.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{current.role}</div>
                     </div>
                     {bond && bond.relationshipLevel > 1 && (
                       <div style={{
@@ -392,14 +392,14 @@ export default function WhatsAppPage() {
                         style={{
                           display: 'flex', flexDirection: 'column', alignItems: 'center',
                           gap: 4, padding: '10px 6px', borderRadius: 10, cursor: 'pointer',
-                          border: isSelected ? '2px solid #25D366' : '1px solid var(--border-color)',
-                          background: isSelected ? 'rgba(37,211,102,0.06)' : 'var(--bg-secondary)',
+                          border: isSelected ? '2px solid #25D366' : '1px solid var(--fz-border, #E2E8F0)',
+                          background: isSelected ? 'rgba(37,211,102,0.06)' : 'var(--fz-bg-secondary, #F8FAFC)',
                           transition: 'all 0.15s',
                         }}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 22, color: (agent as any).color ?? 'var(--accent)' }}>{(agent as any).materialIcon ?? 'smart_toy'}</span>
-                        <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center' }}>{agent.name}</span>
-                        <span style={{ fontSize: 10, color: 'var(--text-tertiary)', textAlign: 'center', lineHeight: 1.2 }}>
+                        <span style={{ fontSize: 22 }}>\ud83e\udd16</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', color: 'var(--fz-text, #1E293B)' }}>{agent.name}</span>
+                        <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', lineHeight: 1.2 }}>
                           {agent.role.length > 20 ? agent.role.slice(0, 18) + '...' : agent.role}
                         </span>
                         {bond.relationshipLevel > 1 && (
@@ -435,7 +435,7 @@ export default function WhatsAppPage() {
           {/* Top Agents — Bonding */}
           {topAgents.length > 0 && (
             <div className="card section">
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Mes agents preferes</h3>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Mes assistants preferes</h3>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {topAgents.map(bond => {
                   const agentDef = DEFAULT_AGENTS.find(a => a.id === bond.agentId);
@@ -444,14 +444,14 @@ export default function WhatsAppPage() {
                     <div key={bond.agentId} style={{
                       display: 'flex', alignItems: 'center', gap: 8,
                       padding: '8px 14px', borderRadius: 10,
-                      background: 'var(--bg-secondary)', border: '1px solid var(--border-color)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
                       flex: '1 1 140px', minWidth: 140,
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 20, color: (agentDef as any).color ?? 'var(--accent)' }}>{(agentDef as any).materialIcon ?? 'smart_toy'}</span>
+                      <span style={{ fontSize: 20 }}>\ud83e\udd16</span>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 600 }}>{agentDef.name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
-                          {bond.totalInteractions} echanges · {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{agentDef.name}</div>
+                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+                          {bond.totalInteractions} echanges \u00b7 {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
                         </div>
                         {bond.satisfactionScore !== 50 && (
                           <div style={{ fontSize: 10, color: bond.satisfactionScore >= 60 ? '#22c55e' : '#ef4444' }}>
@@ -468,9 +468,9 @@ export default function WhatsAppPage() {
 
           {/* Conversations */}
           <div className="section">
-            <h2 className="section-title">Conversations</h2>
+            <h2 className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>\ud83d\udcac Conversations</h2>
             {conversations.length === 0 ? (
-              <p className="text-muted">Aucune conversation. Envoyez un message WhatsApp au numero Freenzy.io pour commencer !</p>
+              <p style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Aucune conversation. Envoyez un message WhatsApp au numero Freenzy.io pour commencer !</p>
             ) : (
               <div className="flex-col gap-8">
                 {conversations.map((conv) => (
@@ -480,16 +480,16 @@ export default function WhatsAppPage() {
                     className={`card-compact rounded-md border pointer ${selectedConv === conv.id ? 'wa-conv-active' : ''}`}
                   >
                     <div className="flex-between">
-                      <span className="font-semibold">
+                      <span className="font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>
                         {(() => {
                           const agent = DEFAULT_AGENTS.find(a => a.id === conv.agentName || a.name.toLowerCase() === conv.agentName);
                           return agent ? agent.name : conv.agentName;
                         })()}
                       </span>
-                      <span className="text-muted text-md">{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
+                      <span className="text-md" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
                     </div>
-                    <div className="text-secondary text-md mt-4">
-                      {conv.messageCount} messages · {conv.totalTokens} tokens · {conv.status}
+                    <div className="text-md mt-4" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                      {conv.messageCount} messages \u00b7 {conv.totalTokens} tokens \u00b7 {conv.status}
                     </div>
                   </div>
                 ))}
@@ -500,7 +500,7 @@ export default function WhatsAppPage() {
           {/* Messages */}
           {selectedConv && (
             <div className="card section">
-              <h3 className="text-lg mb-12">Messages</h3>
+              <h3 className="text-lg mb-12" style={{ color: 'var(--fz-text, #1E293B)' }}>Messages</h3>
               <div className="flex-col gap-8 wa-messages-scroll">
                 {messages.map((msg) => {
                   const agent = msg.direction === 'outbound' ? getAgentForMessage(msg) : null;
@@ -509,24 +509,24 @@ export default function WhatsAppPage() {
                       {/* Agent indicator for outbound messages */}
                       {agent && (
                         <div style={{
-                          fontSize: 11, color: 'var(--text-tertiary)',
+                          fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)',
                           marginBottom: 2, textAlign: 'right',
                         }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>{(agent as any).materialIcon ?? 'smart_toy'}</span> {agent.name}
+                          \ud83e\udd16 {agent.name}
                         </div>
                       )}
                       <div className={`wa-bubble ${msg.direction === 'inbound' ? 'wa-bubble-inbound' : 'wa-bubble-outbound'}`}>
                         <div className="text-base">{msg.content || msg.transcription || `[${msg.messageType}]`}</div>
-                        <div className="text-xs text-muted mt-4 text-right">
+                        <div className="text-xs mt-4 text-right" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                           {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                          {msg.tokensUsed > 0 && ` · ${msg.tokensUsed}t`}
+                          {msg.tokensUsed > 0 && ` \u00b7 ${msg.tokensUsed}t`}
                         </div>
                       </div>
                     </div>
                   );
                 })}
                 {messages.length === 0 && (
-                  <p className="text-muted text-center">Aucun message</p>
+                  <p className="text-center" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Aucun message</p>
                 )}
               </div>
             </div>

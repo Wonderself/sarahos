@@ -22,6 +22,31 @@ import {
   Badge,
 } from '@/lib/arcade-profile';
 import BadgeUnlockPopup from '@/components/BadgeUnlockPopup';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
+
+// ─── Icon-to-Emoji mapping for dynamic game/badge icons ─────────────────────
+
+const ICON_EMOJI_MAP: Record<string, string> = {
+  // Game icons
+  sports_esports: '🎮', spellcheck: '🔤', grid_on: '🔢', route: '🐍',
+  view_comfy_alt: '🧱', quiz: '❓', psychology: '🧠', calculate: '🔢',
+  crisis_alert: '💣', keyboard: '⌨️', today: '📅',
+  // Badge icons
+  emoji_events: '🏆', speed: '⚡', extension: '🧩', auto_stories: '📖',
+  pest_control: '🐍', view_in_ar: '🧱', neurology: '🧠', bomb: '💣',
+  local_fire_department: '🔥', whatshot: '🔥', paid: '💰', diamond: '💎',
+  military_tech: '🎖️', workspace_premium: '🥇', auto_awesome: '✨',
+  grid_view: '🔲', bolt: '⚡', refresh: '🔄', stars: '⭐',
+  // Stats icons
+  videogame_asset: '🎮', toll: '💰', favorite: '❤️',
+  // Other
+  leaderboard: '🏆', add: '➕', groups: '👥',
+};
+
+function iconToEmoji(icon: string): string {
+  return ICON_EMOJI_MAP[icon] ?? '🎯';
+}
 
 export default function GamesHubPage() {
   const [scores, setScores] = useState<Record<string, GameScore>>({});
@@ -67,36 +92,36 @@ export default function GamesHubPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fz-bg-secondary, #F8FAFC)', padding: '32px 24px' }}>
       <BadgeUnlockPopup />
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#7c3aed' }}>
-            sports_esports
-          </span>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#fff', margin: 0 }}>Arcade</h1>
+        {/* Page Header */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 28 }}>{PAGE_META.games.emoji}</span>
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.games.title}</h1>
+              <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.games.subtitle}</p>
+            </div>
+            <HelpBubble text={PAGE_META.games.helpText} />
+          </div>
         </div>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, margin: '0 0 28px 0' }}>
-          Jouez, gagnez des points et grimpez dans le classement
-        </p>
 
-        {/* ═══ Arcade Profile Card ═══ */}
+        {/* Arcade Profile Card */}
         <div
           style={{
-            background: 'rgba(255,255,255,0.05)',
+            background: 'var(--fz-bg, #FFFFFF)',
             borderRadius: 14,
             padding: '24px',
             marginBottom: 24,
-            backdropFilter: 'blur(12px)',
-            boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
             border: borderColor
               ? isGradient
                 ? '2px solid transparent'
                 : `2px solid ${borderColor}`
-              : '1px solid rgba(255,255,255,0.08)',
+              : '1px solid var(--fz-border, #E2E8F0)',
             ...(isGradient ? {
-              backgroundImage: `${borderColor}, linear-gradient(#0f0720, #0f0720)`,
+              backgroundImage: `${borderColor}, linear-gradient(var(--fz-bg, #FFFFFF), var(--fz-bg, #FFFFFF))`,
               backgroundOrigin: 'border-box',
               backgroundClip: 'padding-box, border-box',
             } as React.CSSProperties : {}),
@@ -121,11 +146,11 @@ export default function GamesHubPage() {
 
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
-                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>{levelInfo.title}</span>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Niv. {profile.level}</span>
+                <span style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{levelInfo.title}</span>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Niv. {profile.level}</span>
               </div>
 
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 10 }}>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 10 }}>
                 {profile.totalPoints.toLocaleString()} points
                 {levelInfo.level < 50 && (
                   <span> — {levelInfo.nextLevelPoints.toLocaleString()} pour le prochain niveau</span>
@@ -133,7 +158,7 @@ export default function GamesHubPage() {
               </div>
 
               {/* Progress bar */}
-              <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+              <div style={{ height: 6, borderRadius: 3, background: 'var(--fz-border, #E2E8F0)', overflow: 'hidden' }}>
                 <div
                   style={{
                     height: '100%',
@@ -149,25 +174,21 @@ export default function GamesHubPage() {
             {/* Streak */}
             <div style={{ textAlign: 'center', flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#ef4444' }}>
-                  local_fire_department
-                </span>
-                <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>{profile.streak}</span>
+                <span style={{ fontSize: 22 }}>🔥</span>
+                <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{profile.streak}</span>
               </div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
                 Série{profile.bestStreak > 0 ? ` (record : ${profile.bestStreak})` : ''}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ═══ Badge Showcase ═══ */}
+        {/* Badge Showcase */}
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#f59e0b' }}>
-              emoji_events
-            </span>
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>
+            <span style={{ fontSize: 20 }}>🏆</span>
+            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
               Badges ({profile.badges.length}/{badges.filter(b => !b.secret).length})
             </span>
           </div>
@@ -194,24 +215,23 @@ export default function GamesHubPage() {
                       textAlign: 'center',
                       padding: '10px 6px',
                       borderRadius: 10,
-                      background: earned ? 'rgba(139,92,246,0.1)' : 'rgba(255,255,255,0.02)',
-                      border: earned ? '1px solid rgba(139,92,246,0.2)' : '1px solid rgba(255,255,255,0.04)',
-                      opacity: earned ? 1 : 0.35,
+                      background: earned ? 'rgba(139,92,246,0.08)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                      border: earned ? '1px solid rgba(139,92,246,0.2)' : '1px solid var(--fz-border, #E2E8F0)',
+                      opacity: earned ? 1 : 0.45,
                       cursor: 'default',
                     }}
                   >
                     <span
-                      className="material-symbols-rounded"
                       style={{
                         fontSize: 28,
-                        color: earned ? '#f59e0b' : 'rgba(255,255,255,0.3)',
                         display: 'block',
                         marginBottom: 4,
+                        filter: earned ? 'none' : 'grayscale(0.5)',
                       }}
                     >
-                      {badge.icon}
+                      {iconToEmoji(badge.icon)}
                     </span>
-                    <div style={{ fontSize: 9, color: earned ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)', lineHeight: 1.2 }}>
+                    <div style={{ fontSize: 9, color: earned ? 'var(--fz-text-secondary, #64748B)' : 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.2 }}>
                       {badge.name}
                     </div>
                   </div>
@@ -220,32 +240,33 @@ export default function GamesHubPage() {
           </div>
         </div>
 
-        {/* ═══ Stats Strip ═══ */}
+        {/* Stats Strip */}
         <div style={{ display: 'flex', gap: 16, marginBottom: 32, flexWrap: 'wrap' }}>
           {[
-            { icon: 'videogame_asset', label: 'Parties jouées', value: totalPlayed, color: '#7c3aed' },
-            { icon: 'toll', label: 'Crédits gagnés', value: totalCredits, color: '#22c55e' },
-            { icon: 'stars', label: 'Points Arcade', value: profile.totalPoints.toLocaleString(), color: '#f59e0b' },
-            { icon: 'favorite', label: 'Jeu préféré', value: favoriteGame, color: '#ec4899' },
+            { emoji: '🎮', label: 'Parties jouées', value: totalPlayed, color: '#7c3aed' },
+            { emoji: '💰', label: 'Crédits gagnés', value: totalCredits, color: '#22c55e' },
+            { emoji: '⭐', label: 'Points Arcade', value: profile.totalPoints.toLocaleString(), color: '#f59e0b' },
+            { emoji: '❤️', label: 'Jeu préféré', value: favoriteGame, color: '#ec4899' },
           ].map((stat) => (
             <div
               key={stat.label}
               style={{
                 flex: '1 1 160px',
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--fz-bg, #FFFFFF)',
                 borderRadius: 12,
                 padding: '14px 18px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
+                border: '1px solid var(--fz-border, #E2E8F0)',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 26, color: stat.color }}>
-                {stat.icon}
+              <span style={{ fontSize: 26 }}>
+                {stat.emoji}
               </span>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>{stat.value}</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{stat.label}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{stat.value}</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{stat.label}</div>
               </div>
             </div>
           ))}
@@ -269,16 +290,16 @@ export default function GamesHubPage() {
                 gap: 8,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>add</span>
+              <span style={{ fontSize: 18 }}>➕</span>
               Créer un jeu
             </button>
           </Link>
           <Link href="/client/games/community" style={{ textDecoration: 'none' }}>
             <button
               style={{
-                background: 'rgba(255,255,255,0.07)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--fz-bg, #FFFFFF)',
+                color: 'var(--fz-text, #1E293B)',
+                border: '1px solid var(--fz-border, #E2E8F0)',
                 borderRadius: 10,
                 padding: '10px 20px',
                 fontSize: 14,
@@ -289,21 +310,19 @@ export default function GamesHubPage() {
                 gap: 8,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>groups</span>
+              <span style={{ fontSize: 18 }}>👥</span>
               Communauté
             </button>
           </Link>
         </div>
 
-        {/* ═══ Leaderboard ═══ */}
+        {/* Leaderboard */}
         {leaderboard.length > 0 && (
           <div style={{ marginBottom: 32 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#f59e0b' }}>
-                  leaderboard
-                </span>
-                <span style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>Classement</span>
+                <span style={{ fontSize: 20 }}>🏆</span>
+                <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Classement</span>
               </div>
               <div style={{ display: 'flex', gap: 4 }}>
                 {(['all', 'weekly'] as const).map((mode) => (
@@ -311,9 +330,9 @@ export default function GamesHubPage() {
                     key={mode}
                     onClick={() => setLbMode(mode)}
                     style={{
-                      background: lbMode === mode ? 'rgba(139,92,246,0.2)' : 'transparent',
-                      color: lbMode === mode ? '#a78bfa' : 'rgba(255,255,255,0.4)',
-                      border: lbMode === mode ? '1px solid rgba(139,92,246,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                      background: lbMode === mode ? 'rgba(139,92,246,0.1)' : 'transparent',
+                      color: lbMode === mode ? '#7c3aed' : 'var(--fz-text-muted, #94A3B8)',
+                      border: lbMode === mode ? '1px solid rgba(139,92,246,0.2)' : '1px solid var(--fz-border, #E2E8F0)',
                       borderRadius: 8,
                       padding: '5px 12px',
                       fontSize: 12,
@@ -328,10 +347,9 @@ export default function GamesHubPage() {
             </div>
             <div
               style={{
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--fz-bg, #FFFFFF)',
                 borderRadius: 12,
-                border: '1px solid rgba(255,255,255,0.08)',
-                backdropFilter: 'blur(12px)',
+                border: '1px solid var(--fz-border, #E2E8F0)',
                 overflow: 'hidden',
               }}
             >
@@ -343,7 +361,7 @@ export default function GamesHubPage() {
                     alignItems: 'center',
                     gap: 14,
                     padding: '12px 18px',
-                    borderBottom: i < 9 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                    borderBottom: i < 9 ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
                   }}
                 >
                   <span
@@ -360,16 +378,16 @@ export default function GamesHubPage() {
                         i === 0 ? 'linear-gradient(135deg, #f59e0b, #d97706)'
                         : i === 1 ? 'linear-gradient(135deg, #94a3b8, #64748b)'
                         : i === 2 ? 'linear-gradient(135deg, #b45309, #92400e)'
-                        : 'rgba(255,255,255,0.06)',
-                      color: i < 3 ? '#fff' : 'rgba(255,255,255,0.4)',
+                        : 'var(--fz-bg-secondary, #F8FAFC)',
+                      color: i < 3 ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
                       flexShrink: 0,
                     }}
                   >
                     {i + 1}
                   </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{entry.name}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{entry.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       Niv. {entry.level} — {entry.title}
                     </div>
                   </div>
@@ -381,11 +399,10 @@ export default function GamesHubPage() {
                         return (
                           <span
                             key={bId}
-                            className="material-symbols-rounded"
                             title={bd.name}
-                            style={{ fontSize: 16, color: '#f59e0b' }}
+                            style={{ fontSize: 16 }}
                           >
-                            {bd.icon}
+                            {iconToEmoji(bd.icon)}
                           </span>
                         );
                       })}
@@ -400,7 +417,7 @@ export default function GamesHubPage() {
           </div>
         )}
 
-        {/* ═══ Game Cards Grid ═══ */}
+        {/* Game Cards Grid */}
         <div
           style={{
             display: 'grid',
@@ -418,11 +435,10 @@ export default function GamesHubPage() {
               >
                 <div
                   style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'var(--fz-bg, #FFFFFF)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
                     borderRadius: 14,
                     padding: '20px 18px',
-                    backdropFilter: 'blur(12px)',
                     cursor: 'pointer',
                     transition: 'transform 0.15s, border-color 0.2s',
                     position: 'relative',
@@ -434,7 +450,7 @@ export default function GamesHubPage() {
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--fz-border, #E2E8F0)';
                   }}
                 >
                   {/* Color accent top */}
@@ -462,18 +478,15 @@ export default function GamesHubPage() {
                         justifyContent: 'center',
                       }}
                     >
-                      <span
-                        className="material-symbols-rounded"
-                        style={{ fontSize: 24, color: game.color }}
-                      >
-                        {game.icon}
+                      <span style={{ fontSize: 24 }}>
+                        {iconToEmoji(game.icon)}
                       </span>
                     </div>
                     <div>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
                         {game.name}
                       </div>
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
                         {game.category === 'classic'
                           ? 'Classique'
                           : game.category === 'puzzle'
@@ -485,23 +498,23 @@ export default function GamesHubPage() {
                     </div>
                   </div>
 
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: '0 0 14px 0', lineHeight: 1.4 }}>
+                  <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 14px 0', lineHeight: 1.4 }}>
                     {game.description}
                   </p>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', gap: 14 }}>
                       <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
                           {s?.bestScore ?? '—'}
                         </div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Meilleur</div>
+                        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>Meilleur</div>
                       </div>
                       <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
                           {s?.gamesPlayed ?? 0}
                         </div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Parties</div>
+                        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>Parties</div>
                       </div>
                     </div>
                     <div

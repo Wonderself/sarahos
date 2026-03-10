@@ -58,20 +58,20 @@ function parseSections(text: string): { title: string; body: string }[] {
 }
 
 const SECTION_ICONS: Record<string, string> = {
-  'Salutation': 'waving_hand',
-  'Priorités du jour': 'target',
-  'Insight': 'lightbulb',
-  'Conseil': 'auto_awesome',
-  'Tâches': 'assignment',
-  'Alertes': 'warning',
-  'Opportunités': 'rocket_launch',
+  'Salutation': '\ud83d\udc4b',
+  'Priorit\u00e9s du jour': '\ud83c\udfaf',
+  'Insight': '\ud83d\udca1',
+  'Conseil': '\u2728',
+  'T\u00e2ches': '\ud83d\udccb',
+  'Alertes': '\u26a0\ufe0f',
+  'Opportunit\u00e9s': '\ud83d\ude80',
 };
 
 function sectionIcon(title: string): string {
   for (const [key, icon] of Object.entries(SECTION_ICONS)) {
     if (title.toLowerCase().includes(key.toLowerCase())) return icon;
   }
-  return 'push_pin';
+  return '\ud83d\udccc';
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -107,11 +107,11 @@ export default function BriefingPage() {
 
   async function generateBriefing(showToast = true) {
     const session = getSession();
-    if (!session.token) { showError('Session expirée'); return; }
+    if (!session.token) { showError('Session expir\u00e9e'); return; }
     setGenerating(true);
     try {
       const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      const companyProfile = localStorage.getItem('fz_company_profile') ?? 'Non renseigné';
+      const companyProfile = localStorage.getItem('fz_company_profile') ?? 'Non renseign\u00e9';
       const gam = JSON.parse(localStorage.getItem('fz_gamification') ?? '{}');
 
       const res = await fetch('/api/chat', {
@@ -122,7 +122,7 @@ export default function BriefingPage() {
           model: 'claude-haiku-4-5-20251001',
           messages: [{
             role: 'user',
-            content: `Tu es Maëva, directrice générale IA de Freenzy. Nous sommes le ${today}. Génère un briefing du jour concis et actionnable. Contexte entreprise: ${companyProfile}. Stats: ${gam.totalMessages ?? 0} messages, ${gam.streak ?? 0} jours consécutifs. Structure ainsi:\n**Salutation personnalisée** (1 ligne bienveillante)\n**Priorités du jour** (3 actions concrètes numérotées)\n**Insight business** (1 observation basée sur l'activité)\n**Conseil du jour** (1 astuce productivité)\nSois concise et percutante. En français.`,
+            content: `Tu es Ma\u00ebva, directrice g\u00e9n\u00e9rale IA de Freenzy. Nous sommes le ${today}. G\u00e9n\u00e8re un briefing du jour concis et actionnable. Contexte entreprise: ${companyProfile}. Stats: ${gam.totalMessages ?? 0} messages, ${gam.streak ?? 0} jours cons\u00e9cutifs. Structure ainsi:\n**Salutation personnalis\u00e9e** (1 ligne bienveillante)\n**Priorit\u00e9s du jour** (3 actions concr\u00e8tes num\u00e9rot\u00e9es)\n**Insight business** (1 observation bas\u00e9e sur l'activit\u00e9)\n**Conseil du jour** (1 astuce productivit\u00e9)\nSois concise et percutante. En fran\u00e7ais.`,
           }],
           maxTokens: 400,
           agentName: 'fz-dg',
@@ -143,9 +143,9 @@ export default function BriefingPage() {
       await portalCall('/portal/user-data/briefing', 'POST', newBriefing).catch(() => {});
 
       setBriefing(newBriefing);
-      if (showToast) showSuccess('Briefing généré !');
+      if (showToast) showSuccess('Briefing g\u00e9n\u00e9r\u00e9 !');
     } catch (e) {
-      showError(e instanceof Error ? e.message : 'Erreur de génération');
+      showError(e instanceof Error ? e.message : 'Erreur de g\u00e9n\u00e9ration');
     } finally {
       setGenerating(false);
     }
@@ -161,12 +161,12 @@ export default function BriefingPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 24 }}>wb_sunny</span> <span className="fz-logo-word">Briefing</span> du jour
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>
+            \u2600\ufe0f <span className="fz-logo-word">Briefing</span> du jour
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
+          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-            {briefing?.generated_at ? ` · Généré à ${briefing.generated_at}` : ''}
+            {briefing?.generated_at ? ` \u00b7 G\u00e9n\u00e9r\u00e9 \u00e0 ${briefing.generated_at}` : ''}
           </p>
         </div>
         <button
@@ -174,7 +174,7 @@ export default function BriefingPage() {
           disabled={generating || loading}
           className="btn btn-primary btn-sm"
         >
-          {generating ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Génération...</> : briefing ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>refresh</span> Rafraîchir</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>auto_awesome</span> Générer</>}
+          {generating ? <>\u231b G\u00e9n\u00e9ration...</> : briefing ? <>\ud83d\udd04 Rafra\u00eechir</> : <>\u2728 G\u00e9n\u00e9rer</>}
         </button>
       </div>
 
@@ -196,20 +196,20 @@ export default function BriefingPage() {
       {!loading && !briefing && !generating && (
         <div style={{
           textAlign: 'center', padding: '60px 40px',
-          background: 'var(--bg-card)', borderRadius: 20,
-          border: '2px dashed var(--border)',
+          background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20,
+          border: '2px dashed var(--fz-border, #E2E8F0)',
         }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 56 }}>wb_sunny</span></div>
-          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Pas encore de briefing</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-            Générez votre briefing <span className="fz-logo-word">IA</span> quotidien — priorités du jour, insights business et conseils personnalisés.
+          <div style={{ fontSize: 56, marginBottom: 16 }}>\u2600\ufe0f</div>
+          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Pas encore de briefing</h2>
+          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+            G\u00e9n\u00e9rez votre briefing <span className="fz-logo-word">IA</span> quotidien \u2014 priorit\u00e9s du jour, insights business et conseils personnalis\u00e9s.
           </p>
           <button
             onClick={() => generateBriefing(true)}
             disabled={generating}
             className="btn btn-primary"
           >
-            {generating ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Génération en cours...</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>auto_awesome</span> Générer mon briefing</>}
+            {generating ? <>\u231b G\u00e9n\u00e9ration en cours...</> : <>\u2728 G\u00e9n\u00e9rer mon briefing</>}
           </button>
         </div>
       )}
@@ -217,9 +217,9 @@ export default function BriefingPage() {
       {/* Generating state */}
       {generating && !briefing && (
         <div style={{ textAlign: 'center', padding: '60px 40px' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse"><span className="material-symbols-rounded" style={{ fontSize: 40 }}>auto_awesome</span></div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-            Maëva analyse votre contexte et prépare votre briefing...
+          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">\u2728</div>
+          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14 }}>
+            Ma\u00ebva analyse votre contexte et pr\u00e9pare votre briefing...
           </p>
         </div>
       )}
@@ -234,19 +234,19 @@ export default function BriefingPage() {
               style={{
                 background: i === 0
                   ? 'linear-gradient(135deg, #7c3aed08, #06b6d405)'
-                  : 'var(--bg-card)',
-                borderColor: i === 0 ? '#7c3aed22' : 'var(--border)',
+                  : 'var(--fz-bg, #FFFFFF)',
+                borderColor: i === 0 ? '#7c3aed22' : 'var(--fz-border, #E2E8F0)',
               }}
             >
               {section.title && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
-                  <span style={{ fontWeight: 700, fontSize: 15 }}>{section.title}</span>
+                  <span style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
+                  <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--fz-text, #1E293B)' }}>{section.title}</span>
                 </div>
               )}
               <div style={{
                 fontSize: 14,
-                color: 'var(--text-secondary)',
+                color: 'var(--fz-text-secondary, #64748B)',
                 lineHeight: 1.7,
                 whiteSpace: 'pre-wrap',
               }}>
@@ -260,7 +260,7 @@ export default function BriefingPage() {
       {/* Raw fallback if no sections parsed */}
       {!loading && briefing && sections.length === 0 && (
         <div className="card">
-          <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
+          <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
             {briefing.content}
           </div>
         </div>

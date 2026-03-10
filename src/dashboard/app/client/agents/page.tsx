@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DEFAULT_AGENTS, PERSONAL_AGENTS } from '../../../lib/agent-config';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { PAGE_META } from '../../../lib/emoji-map';
+import HelpBubble from '../../../components/HelpBubble';
 
 interface CustomAgent {
   id: string;
@@ -55,7 +57,7 @@ export default function AgentsPage() {
   }, []);
 
   const deleteAgent = async (id: string, name: string) => {
-    if (!confirm(`Supprimer l'agent "${name}" ? Cette action est irréversible.`)) return;
+    if (!confirm(`Supprimer l'assistant "${name}" ? Cette action est irréversible.`)) return;
     setDeleting(id);
     try {
       await fetchPortal(`/portal/agents/custom/${id}`, { method: 'DELETE' });
@@ -70,19 +72,25 @@ export default function AgentsPage() {
 
   return (
     <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1100 }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <h1 style={{ fontSize: isMobile ? 20 : 22, fontWeight: 800, margin: 0 }}><span className="fz-logo-word">Agents IA</span></h1>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '4px 0 0' }}>
-            Gérez vos agents <span className="fz-logo-word">Freenzy</span> et créez vos propres assistants personnalisés
-          </p>
+      {/* Page Header */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.agents.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.agents.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.agents.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.agents.helpText} />
         </div>
+      </div>
+
+      {/* Create button */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
         <Link href="/client/agents/create" style={{
           padding: '10px 20px', borderRadius: 10, background: '#7c3aed', color: 'white',
           fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
         }}>
-          + Créer un agent
+          ➕ Créer un assistant
         </Link>
       </div>
 
@@ -95,86 +103,86 @@ export default function AgentsPage() {
       {/* Mes agents personnalisés */}
       <section style={{ marginBottom: 32 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 15 }}>auto_awesome</span> Mes agents personnalisés</h2>
+          <h2 style={{ fontSize: 15, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>✨ Mes assistants personnalisés</h2>
           <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--accent-muted)', color: '#7c3aed', padding: '2px 8px', borderRadius: 10 }}>
             {customAgents.length}
           </span>
         </div>
 
         {loading ? (
-          <div style={{ padding: 24, color: 'var(--text-muted)', fontSize: 13 }}>Chargement...</div>
+          <div style={{ padding: 24, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Chargement...</div>
         ) : customAgents.length === 0 ? (
           <div style={{
-            background: 'var(--bg-secondary)', borderRadius: 14, border: '2px dashed var(--border-primary)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 14, border: '2px dashed var(--fz-border, #E2E8F0)',
             padding: '40px 32px', textAlign: 'center',
           }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>smart_toy</span></div>
-            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>Aucun agent personnalisé</div>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>
-              Créez votre premier <span className="fz-logo-word">agent IA</span> sur mesure en quelques minutes
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🤖</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 6 }}>Aucun assistant personnalisé</div>
+            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 20 }}>
+              Créez votre premier <span className="fz-logo-word">assistant IA</span> sur mesure en quelques minutes
             </div>
             <Link href="/client/agents/create" style={{
               padding: '10px 24px', borderRadius: 10, background: '#7c3aed', color: 'white',
               fontSize: 13, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 13 }}>auto_awesome</span> Créer mon premier agent
+              ✨ Créer mon premier assistant
             </Link>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14 }}>
             {customAgents.map(agent => (
               <div key={agent.id} style={{
-                background: 'rgba(255,255,255,0.05)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.08)',
+                background: 'var(--fz-bg, #FFFFFF)', borderRadius: 14, border: '1px solid var(--fz-border, #E2E8F0)',
                 padding: 16, display: 'flex', flexDirection: 'column', gap: 10,
                 borderTop: `3px solid ${agent.color ?? '#7c3aed'}`,
-                backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{
                     width: 40, height: 40, borderRadius: 10, background: `${agent.color ?? '#7c3aed'}18`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: agent.color ?? '#7c3aed' }}>{agent.emoji ? 'smart_toy' : 'smart_toy'}</span>
+                    🤖
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.role ?? 'Agent personnalisé'}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--fz-text, #1E293B)' }}>{agent.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.role ?? 'Assistant personnalisé'}</div>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {agent.domain && (
-                    <span style={{ fontSize: 10, padding: '2px 7px', borderRadius: 8, background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                    <span style={{ fontSize: 10, padding: '2px 7px', borderRadius: 8, background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', fontWeight: 600 }}>
                       {DOMAIN_LABELS[agent.domain] ?? agent.domain}
                     </span>
                   )}
                   <span style={{
                     fontSize: 10, padding: '2px 7px', borderRadius: 8, fontWeight: 600,
-                    background: agent.is_active ? 'rgba(16,185,129,0.15)' : 'var(--bg-secondary)',
-                    color: agent.is_active ? '#10b981' : 'var(--text-muted)',
+                    background: agent.is_active ? 'rgba(16,185,129,0.15)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    color: agent.is_active ? '#10b981' : 'var(--fz-text-muted, #94A3B8)',
                   }}>
-                    {agent.is_active ? '● Actif' : '○ Inactif'}
+                    {agent.is_active ? '✅ Actif' : '⬜ Inactif'}
                   </span>
                 </div>
 
                 <div style={{ display: 'flex', gap: 6, marginTop: 'auto' }}>
                   <Link href={`/client/agents/create?edit=${agent.id}`} style={{
-                    flex: 1, padding: '7px 0', borderRadius: 8, border: '1px solid var(--border-primary)',
-                    background: 'var(--bg-elevated)', color: 'var(--text-secondary)', fontSize: 11, fontWeight: 600,
+                    flex: 1, padding: '7px 0', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)',
+                    background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600,
                     textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 11 }}>edit</span> Éditer
+                    ✏️ Éditer
                   </Link>
                   <button
                     onClick={() => deleteAgent(agent.id, agent.name)}
                     disabled={deleting === agent.id}
                     style={{
                       padding: '7px 12px', borderRadius: 8, border: '1px solid rgba(239,68,68,0.3)',
-                      background: 'var(--bg-elevated)', color: '#ef4444', fontSize: 11, cursor: 'pointer',
+                      background: 'var(--fz-bg, #FFFFFF)', color: '#ef4444', fontSize: 11, cursor: 'pointer',
                     }}
                   >
-                    {deleting === agent.id ? '...' : <span className="material-symbols-rounded" style={{ fontSize: 11 }}>delete</span>}
+                    {deleting === agent.id ? '...' : '🗑️'}
                   </button>
                 </div>
               </div>
@@ -185,26 +193,26 @@ export default function AgentsPage() {
 
       {/* Agents Freenzy — Business */}
       <section style={{ marginBottom: 28 }}>
-        <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 15 }}>work</span> Agents business Freenzy
-          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--bg-secondary)', color: 'var(--text-secondary)', padding: '2px 8px', borderRadius: 10 }}>{businessAgents.length}</span>
+        <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--fz-text, #1E293B)' }}>
+          💼 Assistants business Freenzy
+          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', padding: '2px 8px', borderRadius: 10 }}>{businessAgents.length}</span>
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
           {businessAgents.map(agent => (
             <div key={agent.id} style={{
-              background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)', padding: '12px 14px',
+              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', padding: '12px 14px',
               display: 'flex', alignItems: 'center', gap: 10,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20, flexShrink: 0, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{agent.emoji}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.description ?? ''}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--fz-text, #1E293B)' }}>{agent.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)',
-                fontSize: 10, fontWeight: 600, color: 'var(--text-secondary)', textDecoration: 'none', flexShrink: 0,
+                padding: '4px 8px', borderRadius: 6, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
+                fontSize: 10, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', textDecoration: 'none', flexShrink: 0,
               }}>
-                Config
+                ⚙️ Config
               </Link>
             </div>
           ))}
@@ -213,26 +221,26 @@ export default function AgentsPage() {
 
       {/* Agents personnels */}
       <section>
-        <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 15 }}>person</span> Agents personnels Freenzy
-          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--bg-secondary)', color: 'var(--text-secondary)', padding: '2px 8px', borderRadius: 10 }}>{personalAgents.length}</span>
+        <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--fz-text, #1E293B)' }}>
+          👤 Assistants personnels Freenzy
+          <span style={{ fontSize: 11, fontWeight: 600, background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', padding: '2px 8px', borderRadius: 10 }}>{personalAgents.length}</span>
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
           {personalAgents.map(agent => (
             <div key={agent.id} style={{
-              background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)', padding: '12px 14px',
+              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', padding: '12px 14px',
               display: 'flex', alignItems: 'center', gap: 10,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20, flexShrink: 0, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{agent.emoji}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.description ?? ''}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--fz-text, #1E293B)' }}>{agent.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)',
-                fontSize: 10, fontWeight: 600, color: 'var(--text-secondary)', textDecoration: 'none', flexShrink: 0,
+                padding: '4px 8px', borderRadius: 6, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
+                fontSize: 10, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', textDecoration: 'none', flexShrink: 0,
               }}>
-                Config
+                ⚙️ Config
               </Link>
             </div>
           ))}

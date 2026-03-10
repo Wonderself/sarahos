@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { DEFAULT_AGENTS, loadAgentConfigs, getEffectiveAgent, type ResolvedAgent, type AgentTypeId } from '../../../lib/agent-config';
 import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 interface MeetingMessage {
   speaker: string;
@@ -16,27 +18,29 @@ interface MeetingMessage {
 }
 
 const MEETING_TEMPLATES = [
-  { icon: 'rocket_launch', title: 'Lancement de projet', topic: 'Lancer un nouveau projet stratégique', description: 'Définir les objectifs, les rôles et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
-  { icon: 'bar_chart', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les résultats et ajuster la stratégie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
-  { icon: 'lightbulb', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'Générer des idées innovantes en équipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
-  { icon: 'shield', title: 'Résolution de crise', topic: 'Résoudre une situation de crise urgente', description: 'Coordonner la réponse et protéger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
-  { icon: 'calendar_month', title: 'Planification annuelle', topic: 'Planification stratégique pour l\'année', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
-  { icon: 'handshake', title: 'Partenariat stratégique', topic: 'Évaluer un partenariat ou une acquisition', description: 'Analyser les opportunités et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
+  { icon: '\ud83d\ude80', title: 'Lancement de projet', topic: 'Lancer un nouveau projet strat\u00e9gique', description: 'D\u00e9finir les objectifs, les r\u00f4les et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
+  { icon: '\ud83d\udcca', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les r\u00e9sultats et ajuster la strat\u00e9gie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
+  { icon: '\ud83d\udca1', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'G\u00e9n\u00e9rer des id\u00e9es innovantes en \u00e9quipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
+  { icon: '\ud83d\udee1\ufe0f', title: 'R\u00e9solution de crise', topic: 'R\u00e9soudre une situation de crise urgente', description: 'Coordonner la r\u00e9ponse et prot\u00e9ger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
+  { icon: '\ud83d\udcc5', title: 'Planification annuelle', topic: 'Planification strat\u00e9gique pour l\'ann\u00e9e', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
+  { icon: '\ud83e\udd1d', title: 'Partenariat strat\u00e9gique', topic: '\u00c9valuer un partenariat ou une acquisition', description: 'Analyser les opportunit\u00e9s et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
 ];
 
 const TOPIC_SUGGESTIONS = [
   'Comment augmenter notre CA de 20% ?',
   'Faut-il recruter un dev ou externaliser ?',
-  'Notre concurrent a baissé ses prix, que faire ?',
-  'On doit réduire nos coûts de 15%, par où commencer ?',
+  'Notre concurrent a baiss\u00e9 ses prix, que faire ?',
+  'On doit r\u00e9duire nos co\u00fbts de 15%, par o\u00f9 commencer ?',
 ];
 
 const VALIDATION_SUGGESTIONS = [
-  'Creusez les coûts',
+  'Creusez les co\u00fbts',
   'Quels risques ?',
   'Plan d\'action concret',
   'Comparez les options',
 ];
+
+const meta = PAGE_META.meeting;
 
 export default function MeetingPage() {
   const [meetingAgents, setMeetingAgents] = useState<ResolvedAgent[]>([]);
@@ -85,10 +89,10 @@ export default function MeetingPage() {
       const profile = localStorage.getItem('fz_company_profile');
       if (profile) {
         const p = JSON.parse(profile);
-        return `Entreprise: ${p.companyName ?? 'N/A'}, Secteur: ${p.industry ?? 'N/A'}, Mission: ${p.mission ?? 'N/A'}, Défis: ${p.challenges ?? 'N/A'}, Objectifs: ${p.shortTermGoals ?? 'N/A'}`;
+        return `Entreprise: ${p.companyName ?? 'N/A'}, Secteur: ${p.industry ?? 'N/A'}, Mission: ${p.mission ?? 'N/A'}, D\u00e9fis: ${p.challenges ?? 'N/A'}, Objectifs: ${p.shortTermGoals ?? 'N/A'}`;
       }
     } catch { /* */ }
-    return 'Pas de profil entreprise configuré. Répondre de manière générique.';
+    return 'Pas de profil entreprise configur\u00e9. R\u00e9pondre de mani\u00e8re g\u00e9n\u00e9rique.';
   }
 
   function toggleAgent(id: string) {
@@ -233,18 +237,22 @@ export default function MeetingPage() {
   if (!meetingStarted) {
     return (
       <div className="client-page-scrollable">
-        <div className="page-header">
-          <div>
-            <h1 className="page-title">Salle de <span className="fz-logo-word">Réunion</span></h1>
-            <p className="page-subtitle">
-              Réunissez vos <span className="fz-logo-word">agents</span> pour des discussions stratégiques. Ils collaborent, débattent, et proposent des solutions <span className="fz-logo-word">ensemble</span>.
-            </p>
+        <div className="page-header" style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+            <div>
+              <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Salle de <span className="fz-logo-word">R\u00e9union</span></h1>
+              <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                R\u00e9unissez vos <span className="fz-logo-word">agents</span> pour des discussions strat\u00e9giques. Ils collaborent, d\u00e9battent, et proposent des solutions <span className="fz-logo-word">ensemble</span>.
+              </p>
+            </div>
+            <HelpBubble text={meta.helpText} />
           </div>
         </div>
 
         {/* Agent Selection */}
         <div className="card section">
-          <div className="section-title mb-16">Participants ({selectedAgents.length}/5)</div>
+          <div className="section-title mb-16" style={{ color: 'var(--fz-text, #1E293B)' }}>\ud83d\udc65 Participants ({selectedAgents.length}/5)</div>
           <div className="flex flex-wrap" style={{ gap: 10 }}>
             {meetingAgents.map(agent => {
               const selected = selectedAgents.includes(agent.id);
@@ -254,15 +262,15 @@ export default function MeetingPage() {
                   onClick={() => toggleAgent(agent.id)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 10, padding: '12px 18px',
-                    borderRadius: 'var(--radius-lg)', background: selected ? agent.color + '20' : 'var(--bg-secondary)',
-                    border: `2px solid ${selected ? agent.color : 'var(--border-primary)'}`,
+                    borderRadius: 'var(--radius-lg)', background: selected ? agent.color + '20' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: `2px solid ${selected ? agent.color : 'var(--fz-border, #E2E8F0)'}`,
                     cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 24, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+                  <span style={{ fontSize: 24 }}>\ud83e\udd16</span>
                   <div style={{ textAlign: 'left' }}>
-                    <div className="text-md font-semibold" style={{ color: selected ? agent.color : 'var(--text-primary)' }}>{agent.role}</div>
-                    <div className="text-xs text-muted">{selected ? 'Présent' : 'Inviter'}</div>
+                    <div className="text-md font-semibold" style={{ color: selected ? agent.color : 'var(--fz-text, #1E293B)' }}>{agent.role}</div>
+                    <div className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{selected ? 'Pr\u00e9sent' : 'Inviter'}</div>
                   </div>
                 </button>
               );
@@ -272,8 +280,8 @@ export default function MeetingPage() {
 
         {/* Topic */}
         <div className="card section">
-          <div className="section-title flex items-center gap-8 mb-16">
-            Sujet de la réunion
+          <div className="section-title flex items-center gap-8 mb-16" style={{ color: 'var(--fz-text, #1E293B)' }}>
+            Sujet de la r\u00e9union
             <VoiceInput
               onTranscript={(t) => setTopic(prev => prev ? prev + ' ' + t : t)}
               size="sm"
@@ -284,7 +292,7 @@ export default function MeetingPage() {
             onChange={e => setTopic(e.target.value)}
             className="input"
             rows={3}
-            placeholder="Décrivez le sujet, la problématique, ou l'objectif de cette réunion..."
+            placeholder="D\u00e9crivez le sujet, la probl\u00e9matique, ou l'objectif de cette r\u00e9union..."
             style={{ width: '100%', resize: 'vertical', marginBottom: 12 }}
           />
 
@@ -297,22 +305,22 @@ export default function MeetingPage() {
                 style={{
                   padding: '6px 14px',
                   borderRadius: 20,
-                  border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)',
                   cursor: 'pointer',
                   fontSize: 12,
-                  color: 'var(--text-secondary)',
+                  color: 'var(--fz-text-secondary, #64748B)',
                   transition: 'all 0.2s',
                 }}
                 onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-primary)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)'; e.currentTarget.style.color = 'var(--fz-text-secondary, #64748B)'; }}
               >
                 {suggestion}
               </button>
             ))}
           </div>
 
-          <div className="section-title text-md mb-12">Ou choisissez un template</div>
+          <div className="section-title text-md mb-12" style={{ color: 'var(--fz-text, #1E293B)' }}>Ou choisissez un template</div>
           <div className="grid-3" style={{ gap: 10 }}>
             {MEETING_TEMPLATES.map(tpl => (
               <button
@@ -324,13 +332,13 @@ export default function MeetingPage() {
                 className="card"
                 style={{
                   cursor: 'pointer', textAlign: 'left', padding: 14,
-                  border: topic === tpl.topic ? '2px solid var(--accent)' : '1px solid var(--border-primary)',
-                  background: topic === tpl.topic ? 'var(--accent-muted)' : 'var(--bg-secondary)',
+                  border: topic === tpl.topic ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
+                  background: topic === tpl.topic ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
                 }}
               >
-                <div className="text-xl mb-4"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{tpl.icon}</span></div>
-                <div className="text-md font-semibold">{tpl.title}</div>
-                <div className="text-xs text-muted mt-4" style={{ lineHeight: 1.4 }}>{tpl.description}</div>
+                <div className="text-xl mb-4">{tpl.icon}</div>
+                <div className="text-md font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>{tpl.title}</div>
+                <div className="text-xs mt-4" style={{ lineHeight: 1.4, color: 'var(--fz-text-muted, #94A3B8)' }}>{tpl.description}</div>
               </button>
             ))}
           </div>
@@ -343,7 +351,7 @@ export default function MeetingPage() {
             className="btn btn-primary text-lg"
             style={{ padding: '14px 48px' }}
           >
-            Lancer la réunion
+            Lancer la r\u00e9union
           </button>
         </div>
       </div>
@@ -356,10 +364,10 @@ export default function MeetingPage() {
   return (
     <div className="chat-height flex flex-col client-page-scrollable">
       {/* Meeting Header */}
-      <div className="flex flex-between items-center flex-wrap gap-8" style={{ padding: '12px 0', borderBottom: '1px solid var(--border-primary)' }}>
+      <div className="flex flex-between items-center flex-wrap gap-8" style={{ padding: '12px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
         <div>
-          <div className="text-lg font-bold">Réunion en cours</div>
-          <div className="text-sm text-tertiary">
+          <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>\ud83d\udcde R\u00e9union en cours</div>
+          <div className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
             {activeAgents.length} participants | {messages.length} interventions | {totalTokens.toLocaleString()} tokens | {(totalCost / 1_000_000).toFixed(4)} cr
           </div>
         </div>
@@ -369,14 +377,14 @@ export default function MeetingPage() {
               width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, background: a.color + '22', border: `2px solid ${a.color}`,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16, color: a.color || 'var(--accent)' }}>{a.materialIcon}</span>
+              \ud83e\udd16
             </span>
           ))}
         </div>
       </div>
 
       {/* Topic Bar */}
-      <div className="bg-secondary text-md" style={{ padding: '10px 16px', borderBottom: '1px solid var(--border-primary)' }}>
+      <div className="text-md" style={{ padding: '10px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text, #1E293B)' }}>
         <strong>Sujet:</strong> {topic}
       </div>
 
@@ -390,22 +398,22 @@ export default function MeetingPage() {
                 width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 20, background: agent.color + '22', border: `2px solid ${agent.color}`, flexShrink: 0,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+                \ud83e\udd16
               </div>
               <div className="flex-1">
                 <div className="flex gap-8 mb-4" style={{ alignItems: 'baseline' }}>
                   <span className="text-md font-bold" style={{ color: agent.color }}>{msg.speaker}</span>
-                  <span className="text-xs text-muted">{msg.speakerRole}</span>
+                  <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{msg.speakerRole}</span>
                 </div>
                 <div style={{
                   padding: '10px 14px', borderRadius: '4px 12px 12px 12px',
-                  background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
-                  fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap', color: 'var(--fz-text, #1E293B)',
                 }}>
                   {msg.content}
                 </div>
                 <div className="flex items-center gap-6 mt-4">
-                  <div className="text-xs text-muted">
+                  <div className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                     {msg.tokens} tokens | {(msg.cost / 1_000_000).toFixed(4)} cr
                   </div>
                   <AudioPlayback text={msg.content} gender={DEFAULT_AGENTS.find(a => a.name === msg.speaker || a.role === msg.speakerRole)?.gender ?? 'F'} size="sm" />
@@ -416,10 +424,10 @@ export default function MeetingPage() {
         })}
         {running && (
           <div className="flex gap-12 mb-16" style={{ padding: '0 4px' }}>
-            <div className="flex-center rounded-full bg-tertiary" style={{ width: 40, height: 40 }}>
+            <div className="flex-center rounded-full" style={{ width: 40, height: 40, background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
               <span className="animate-pulse">...</span>
             </div>
-            <div className="animate-pulse text-tertiary" style={{ padding: '10px 14px' }}>
+            <div className="animate-pulse" style={{ padding: '10px 14px', color: 'var(--fz-text-muted, #94A3B8)' }}>
               Un agent prend la parole...
             </div>
           </div>
@@ -434,11 +442,11 @@ export default function MeetingPage() {
             border: '2px solid var(--accent)',
             background: 'var(--accent-muted)',
           }}>
-            <div className="text-lg font-bold mb-4">
+            <div className="text-lg font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>
               Votre avis est important
             </div>
-            <div className="text-sm text-secondary" style={{ marginBottom: 14 }}>
-              Un tour de table est terminé. Donnez une orientation pour la suite ou laissez continuer librement.
+            <div className="text-sm" style={{ marginBottom: 14, color: 'var(--fz-text-secondary, #64748B)' }}>
+              Un tour de table est termin\u00e9. Donnez une orientation pour la suite ou laissez continuer librement.
             </div>
 
             {/* Suggestion chips */}
@@ -450,9 +458,9 @@ export default function MeetingPage() {
                   style={{
                     padding: '6px 14px',
                     borderRadius: 20,
-                    border: userDirection === suggestion ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
-                    background: userDirection === suggestion ? 'var(--accent)' : 'var(--bg-primary)',
-                    color: userDirection === suggestion ? '#fff' : 'var(--text-secondary)',
+                    border: userDirection === suggestion ? '1px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
+                    background: userDirection === suggestion ? 'var(--accent)' : 'var(--fz-bg, #FFFFFF)',
+                    color: userDirection === suggestion ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                     cursor: 'pointer',
                     fontSize: 12,
                     transition: 'all 0.2s',
@@ -486,7 +494,7 @@ export default function MeetingPage() {
                 Continuer
               </button>
               <button onClick={handleValidationStop} className="btn btn-danger" style={{ padding: '8px 20px' }}>
-                Arrêter
+                Arr\u00eater
               </button>
             </div>
           </div>
@@ -496,7 +504,7 @@ export default function MeetingPage() {
       </div>
 
       {/* Controls */}
-      <div className="flex gap-8 items-center flex-wrap" style={{ padding: '12px 0', borderTop: '1px solid var(--border-primary)' }}>
+      <div className="flex gap-8 items-center flex-wrap" style={{ padding: '12px 0', borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
         <button onClick={() => nextTurn()} disabled={running || validationNeeded} className="btn btn-primary flex-1">
           {running ? 'En cours...' : 'Tour suivant'}
         </button>
@@ -505,7 +513,7 @@ export default function MeetingPage() {
           disabled={(running && !autoMode) || validationNeeded}
           className={autoMode ? 'btn btn-danger flex-1' : 'btn btn-secondary flex-1'}
         >
-          {autoMode ? 'Arrêter le mode auto' : 'Mode auto (2 tours)'}
+          {autoMode ? 'Arr\u00eater le mode auto' : 'Mode auto (2 tours)'}
         </button>
         <button onClick={endMeeting} className="btn btn-ghost">
           Terminer

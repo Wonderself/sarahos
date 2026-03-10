@@ -4,8 +4,22 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { loadHistory, ACTION_META, type ActionCategory, type ActionEvent, type TimelineFilter } from '../../../lib/action-history';
 import { useIsMobile } from '../../../lib/use-media-query';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 const CATEGORIES: ActionCategory[] = ['message', 'document', 'meeting', 'game', 'reward', 'referral', 'login', 'agent', 'system'];
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  message: '💬',
+  document: '📄',
+  meeting: '👥',
+  game: '🎮',
+  reward: '🎁',
+  referral: '👋',
+  login: '🔑',
+  agent: '🤖',
+  system: '⚙️',
+};
 
 function groupByDate(events: ActionEvent[]): Record<string, ActionEvent[]> {
   const groups: Record<string, ActionEvent[]> = {};
@@ -52,16 +66,22 @@ export default function TimelinePage() {
     );
   };
 
+  const meta = PAGE_META.timeline;
+
   return (
     <div style={{ padding: '24px 20px', maxWidth: 800, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 26 : 32, color: '#7c3aed' }}>timeline</span>
-          Timeline
+        <h1 style={{
+          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1E293B)',
+          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
+        }}>
+          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta.emoji}</span>
+          {meta.title}
+          <HelpBubble text={meta.helpText} />
         </h1>
-        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>
-          Historique de toutes vos actions sur la plateforme
+        <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>
+          {meta.subtitle}
         </p>
       </div>
 
@@ -69,10 +89,10 @@ export default function TimelinePage() {
       <div style={{ marginBottom: 20 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 10, padding: '10px 14px',
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 20, color: 'rgba(255,255,255,0.35)' }}>search</span>
+          <span style={{ fontSize: 18 }}>🔍</span>
           <input
             type="text"
             value={search}
@@ -80,15 +100,14 @@ export default function TimelinePage() {
             placeholder="Rechercher dans la timeline..."
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              color: '#fff', fontSize: 14,
+              color: 'var(--fz-text, #1E293B)', fontSize: 14,
             }}
           />
           {search && (
             <span
-              className="material-symbols-rounded"
               onClick={() => setSearch('')}
-              style={{ fontSize: 18, color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}
-            >close</span>
+              style={{ fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)', cursor: 'pointer' }}
+            >✕</span>
           )}
         </div>
       </div>
@@ -96,7 +115,7 @@ export default function TimelinePage() {
       {/* Category filters */}
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 24 }}>
         {CATEGORIES.map(cat => {
-          const meta = ACTION_META[cat];
+          const catMeta = ACTION_META[cat];
           const active = activeCategories.includes(cat);
           return (
             <button
@@ -105,14 +124,14 @@ export default function TimelinePage() {
               style={{
                 padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
                 fontSize: 11, fontWeight: 700,
-                background: active ? meta.color : 'rgba(255,255,255,0.06)',
-                color: active ? '#fff' : 'rgba(255,255,255,0.5)',
+                background: active ? catMeta.color : 'var(--fz-bg-secondary, #F8FAFC)',
+                color: active ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
                 display: 'flex', alignItems: 'center', gap: 5,
                 transition: 'all 0.2s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{meta.icon}</span>
-              {meta.label}
+              <span style={{ fontSize: 14 }}>{CATEGORY_EMOJI[cat] ?? '📋'}</span>
+              {catMeta.label}
             </button>
           );
         })}
@@ -123,30 +142,30 @@ export default function TimelinePage() {
         display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 8 : 12, marginBottom: 28,
       }}>
         <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#7c3aed' }}>{events.length}</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#22c55e' }}>{dates.length}</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#f59e0b' }}>
             {new Set(events.filter(e => e.agentId).map(e => e.agentId)).size}
           </div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600, marginTop: 2 }}>AGENTS UTILISÉS</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>AGENTS UTILISÉS</div>
         </div>
       </div>
 
@@ -154,11 +173,12 @@ export default function TimelinePage() {
       {dates.length === 0 ? (
         <div style={{
           textAlign: 'center', padding: '60px 20px',
-          background: 'rgba(255,255,255,0.03)', borderRadius: 14,
+          background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 14,
+          border: '1px solid var(--fz-border, #E2E8F0)',
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 48, color: 'rgba(255,255,255,0.15)', marginBottom: 12, display: 'block' }}>history</span>
-          <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>Aucune action enregistrée</div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
+          <span style={{ fontSize: 48, marginBottom: 12, display: 'block' }}>🕐</span>
+          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 6 }}>Aucune action enregistrée</div>
+          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
             Vos actions apparaîtront ici au fur et à mesure
           </div>
         </div>
@@ -167,7 +187,7 @@ export default function TimelinePage() {
           {/* Vertical line */}
           <div style={{
             position: 'absolute', left: 8, top: 0, bottom: 0, width: 2,
-            background: 'rgba(255,255,255,0.08)',
+            background: 'var(--fz-border, #E2E8F0)',
           }} />
 
           {dates.map(date => (
@@ -175,25 +195,25 @@ export default function TimelinePage() {
               {/* Date header */}
               <div style={{
                 position: 'relative', marginBottom: 14,
-                fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.6)',
+                fontSize: 13, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)',
                 textTransform: 'capitalize',
               }}>
                 <div style={{
                   position: 'absolute', left: -24, top: 2, width: 12, height: 12,
-                  borderRadius: '50%', background: '#7c3aed', border: '2px solid #0f0720',
+                  borderRadius: '50%', background: '#7c3aed', border: '2px solid var(--fz-bg, #FFFFFF)',
                 }} />
                 {formatDate(date)}
               </div>
 
               {/* Events for this date */}
               {grouped[date].map(event => {
-                const meta = ACTION_META[event.type];
+                const catMeta = ACTION_META[event.type];
                 return (
                   <div
                     key={event.id}
                     style={{
                       position: 'relative', marginBottom: 8,
-                      background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
                       borderRadius: 10, padding: '12px 14px',
                       display: 'flex', alignItems: 'center', gap: 12,
                     }}
@@ -202,30 +222,29 @@ export default function TimelinePage() {
                     <div style={{
                       position: 'absolute', left: -22, top: '50%', transform: 'translateY(-50%)',
                       width: 8, height: 8, borderRadius: '50%',
-                      background: meta.color, opacity: 0.6,
+                      background: catMeta.color, opacity: 0.6,
                     }} />
 
                     {/* Icon */}
                     <div style={{
                       width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                      background: `${meta.color}15`, border: `1px solid ${meta.color}25`,
+                      background: `${catMeta.color}15`, border: `1px solid ${catMeta.color}25`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 18,
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18, color: meta.color }}>
-                        {meta.icon}
-                      </span>
+                      {CATEGORY_EMOJI[event.type] ?? '📋'}
                     </div>
 
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{event.title}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{event.title}</div>
                       {event.description && (
-                        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{event.description}</div>
+                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{event.description}</div>
                       )}
                     </div>
 
                     {/* Time */}
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, flexShrink: 0 }}>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, flexShrink: 0 }}>
                       {formatTime(event.timestamp)}
                     </div>
                   </div>

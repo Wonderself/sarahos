@@ -12,6 +12,8 @@ import OfflineBanner from '../../components/OfflineBanner';
 import PushPermissionBanner from '../../components/PushPermissionBanner';
 import { getFavorites } from '../../lib/favorite-agents';
 import { registerServiceWorker } from '../../lib/push-notifications';
+import { NAV_EMOJIS, SECTION_EMOJIS } from '../../lib/emoji-map';
+import OnboardingCopilot from '../../components/OnboardingCopilot';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -65,9 +67,9 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
       { href: '/client/custom-creation', icon: 'extension', label: 'Modules sur mesure', visible: true, order: 9 },
       { href: '/client/video-pro', icon: 'videocam', label: 'Vidéo Pro', visible: true, order: 10 },
       { href: '/client/formations', icon: 'school', label: 'Formations', visible: true, order: 11 },
-      { href: '/client/personal', icon: 'person', label: 'Mes Agents', visible: true, order: 12 },
-      { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser les Agents', visible: true, order: 13 },
-      { href: '/client/agents', icon: 'smart_toy', label: 'Mes agents IA', visible: true, order: 14 },
+      { href: '/client/personal', icon: 'person', label: 'Mes Assistants', visible: true, order: 12 },
+      { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser les Assistants', visible: true, order: 13 },
+      { href: '/client/agents', icon: 'smart_toy', label: 'Mes assistants IA', visible: true, order: 14 },
       { href: '/client/modules', icon: 'inventory_2', label: 'Mes modules', visible: true, order: 15 },
       { href: '/client/campaigns', icon: 'campaign', label: 'Campagnes', visible: true, order: 16 },
       { href: '/client/telephony', icon: 'phone', label: 'Téléphonie', visible: true, order: 17 },
@@ -117,7 +119,7 @@ const DEVELOPPEUR_SECTION: SectionConfig = {
 
 const AGENTS_PERSONNELS_SECTION: SectionConfig = {
   id: 'agents-perso',
-  title: 'Agents Personnels',
+  title: 'Assistants Personnels',
   visible: true,
   order: 1,
   items: [
@@ -233,6 +235,13 @@ function saveMenuSections(sections: SectionConfig[], desktop: boolean): void {
     else config.mobile = sections;
     localStorage.setItem(MENU_CONFIG_KEY, JSON.stringify(config));
   } catch { /* */ }
+}
+
+// ─── Emoji helper ─────────────────────────────────────────────────────────────
+
+function getNavEmoji(href: string): string {
+  const slug = href.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
+  return NAV_EMOJIS[slug] || NAV_EMOJIS[slug.split('-')[0]] || '📎';
 }
 
 // ─── Level titles ─────────────────────────────────────────────────────────────
@@ -770,7 +779,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16,
         padding: '8px 16px', fontSize: 13, fontWeight: 600,
       }}>
-        <span><span className="material-symbols-rounded mi-white" style={{ fontSize: 16 }}>warning</span> MODE ADMIN — vous agissez en tant que {session?.displayName ?? session?.email}</span>
+        <span>⚠️ MODE ADMIN — vous agissez en tant que {session?.displayName ?? session?.email}</span>
         <button
           onClick={exitImpersonation}
           style={{
@@ -789,7 +798,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <span className="fz-logo-text" style={{ fontSize: 16, color: 'var(--text-primary)' }}>freenzy.io</span>
         </div>
         <button className="mobile-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menu">
-          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{sidebarOpen ? 'close' : 'menu'}</span>
+          <span style={{ fontSize: 20 }}>{sidebarOpen ? '✕' : '☰'}</span>
         </button>
       </div>
 
@@ -807,9 +816,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
           <div className="flex-between items-center mt-4">
             <div className="badge badge-success flex items-center gap-4" style={{ padding: '3px 8px' }}>
-              <span className="material-symbols-rounded mi-success" style={{ fontSize: 14 }}>check_circle</span>
+              <span style={{ fontSize: 13 }}>✅</span>
               <span className="text-xs font-bold" style={{ color: '#16a34a' }}>
-                {activeAgentCount} agent{activeAgentCount > 1 ? 's' : ''} actif{activeAgentCount > 1 ? 's' : ''} / {ALL_AGENTS.length}
+                {activeAgentCount} assistant{activeAgentCount > 1 ? 's' : ''} actif{activeAgentCount > 1 ? 's' : ''} / {ALL_AGENTS.length}
               </span>
             </div>
             <button
@@ -821,7 +830,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 alignItems: 'center', justifyContent: 'center', fontSize: 16,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{darkMode ? 'light_mode' : 'dark_mode'}</span>
+              <span style={{ fontSize: 16 }}>{darkMode ? '☀️' : '🌙'}</span>
             </button>
           </div>
         </div>
@@ -1062,7 +1071,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             const hiddenItems = sortedItems.filter(item => !item.visible);
             return (
               <div key={section.id} className="nav-section">
-                <div className="nav-section-title">{section.title}</div>
+                <div className="nav-section-title">{SECTION_EMOJIS[section.id] || '📌'} {section.title}</div>
                 {visibleItems.map(item => {
                   const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
                   const isNotifications = item.href === '/client/notifications';
@@ -1070,7 +1079,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
                       onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
                     >
-                      <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span></span>
+                      <span className="nav-icon"><span style={{ fontSize: 16 }}>{getNavEmoji(item.href)}</span></span>
                       <span style={{ flex: 1 }}>{item.label}</span>
                       {isNotifications && notifUnreadCount > 0 && (
                         <span style={{
@@ -1087,7 +1096,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 {/* Hidden items — greyed out at bottom of section */}
                 {hiddenItems.map(item => (
                   <div key={item.href} className="nav-link nav-link-hidden">
-                    <span className="nav-icon" style={{ opacity: 0.4 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span></span>
+                    <span className="nav-icon" style={{ opacity: 0.4 }}><span style={{ fontSize: 16 }}>{getNavEmoji(item.href)}</span></span>
                     <span style={{ flex: 1 }}>{item.label}</span>
                     <button
                       onClick={() => restoreItem(section.id, item.href)}
@@ -1100,19 +1109,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             );
           })}
 
-          {/* Dynamic — Mes agents personnalisés */}
+          {/* Dynamic — Mes assistants personnalisés */}
           {customAgents.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title">Mes agents IA</div>
+              <div className="nav-section-title">Mes assistants IA</div>
               {customAgents.map(agent => (
                   <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`}>
-                    <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>smart_toy</span></span>
+                    <span className="nav-icon"><span style={{ fontSize: 16 }}>🤖</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
                   </Link>
               ))}
               <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }}>
-                <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>add_circle</span></span>
-                <span style={{ flex: 1 }}>Créer un agent</span>
+                <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
+                <span style={{ flex: 1 }}>Créer un assistant</span>
               </Link>
             </div>
           )}
@@ -1126,13 +1135,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 const isActive = pathname === href;
                 return (
                   <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}>
-                    <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>extension</span></span>
+                    <span className="nav-icon"><span style={{ fontSize: 16 }}>📦</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.name}</span>
                   </Link>
                 );
               })}
               <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }}>
-                <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>add_circle</span></span>
+                <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Nouveau module</span>
               </Link>
             </div>
@@ -1142,7 +1151,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div className="nav-section">
             <div className="nav-section-title">Statut</div>
             <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
-              <span className="nav-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>credit_card</span></span>
+              <span className="nav-icon"><span style={{ fontSize: 16 }}>💳</span></span>
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
                 fontSize: 12, fontWeight: 800, marginLeft: 'auto',
@@ -1158,13 +1167,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
                   alignItems: 'center', justifyContent: 'center',
-                  background: 'var(--gw-gradient, linear-gradient(135deg, #7c3aed, #06b6d4))',
+                  background: 'linear-gradient(135deg, var(--fz-accent, #7c3aed), #06b6d4)',
                   color: 'white', fontSize: 9, fontWeight: 700,
                 }}>{gamLevel}</span>
               </span>
               <span style={{ flex: 1 }}>Niv. {gamLevel} — {LEVEL_TITLES[gamLevel] ?? 'Maître'}</span>
               {gamStreak > 0 && (
-                <span style={{ fontSize: 11, color: 'var(--warning)', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}><span className="material-symbols-rounded" style={{ fontSize: 13, color: 'var(--warning)' }}>local_fire_department</span>{gamStreak}j</span>
+                <span style={{ fontSize: 11, color: 'var(--warning)', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}>🔥{gamStreak}j</span>
               )}
             </Link>
           </div>
@@ -1198,7 +1207,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>settings</span> Personnaliser le menu
+              ⚙️ Personnaliser le menu
             </button>
           </div>
         </div>
@@ -1221,7 +1230,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {!hasOnboarding && pathname !== '/client/onboarding' && (
           <div className="flex-between p-8" style={{ background: 'rgba(124,58,237,0.06)', borderBottom: '1px solid rgba(124,58,237,0.2)' }}>
             <span className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>
-              Présentez votre entreprise à vos agents pour des réponses personnalisées
+              Présentez votre entreprise à vos assistants pour des réponses personnalisées
             </span>
             <a href="/client/onboarding" className="text-sm font-semibold" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
               Configurer →
@@ -1235,8 +1244,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }}>
             <span className={`text-sm font-semibold ${walletBalance < 10_000_000 ? 'text-danger' : 'text-warning'}`}>
               {walletBalance < 10_000_000
-                ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> Crédits presque épuisés — Rechargez pour continuer à utiliser vos agents</>
-                : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Solde de crédits bas — Pensez à recharger</>}
+                ? <>⚠️ Crédits presque épuisés — Rechargez pour continuer à utiliser vos assistants</>
+                : <>💡 Solde de crédits bas — Pensez à recharger</>}
             </span>
             <div className="flex items-center gap-8">
               <Link href="/client/account" className="text-sm text-accent font-semibold" style={{ textDecoration: 'none' }}>
@@ -1249,24 +1258,31 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div className="page-container">{children}</div>
       </div>
 
-      {/* Floating Menu Button (mobile) */}
-      <button
-        className="mobile-fab-menu"
-        onClick={() => setSidebarOpen(o => !o)}
-        aria-label="Menu"
-        style={{
-          position: 'fixed', bottom: 24, right: 24, zIndex: 90,
-          width: 56, height: 56, borderRadius: '50%',
-          background: 'var(--gw-gradient, linear-gradient(135deg, #7c3aed, #06b6d4))',
-          color: '#fff', display: 'none', alignItems: 'center', justifyContent: 'center',
-          fontSize: 22, boxShadow: 'var(--gw-shadow-glow, 0 4px 20px rgba(124,58,237,0.4))',
-          border: 'none', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 28px rgba(124,58,237,0.5)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(124,58,237,0.4)'; }}
-      >
-        <span className="material-symbols-rounded mi-white" style={{ fontSize: 22 }}>menu</span>
-      </button>
+      {/* Bottom Tab Bar (mobile) */}
+      <div className="fz-bottom-tabs">
+        <div className="fz-bottom-tabs-inner">
+          <Link href="/client/dashboard" className={`fz-tab-item${pathname === '/client/dashboard' ? ' active' : ''}`}>
+            <span className="fz-tab-emoji">🏠</span>
+            <span>Accueil</span>
+          </Link>
+          <Link href="/client/chat" className={`fz-tab-item${pathname.startsWith('/client/chat') ? ' active' : ''}`}>
+            <span className="fz-tab-emoji">💬</span>
+            <span>Chat</span>
+          </Link>
+          <Link href="/client/studio" className={`fz-tab-item${pathname.startsWith('/client/studio') ? ' active' : ''}`}>
+            <span className="fz-tab-emoji">🎬</span>
+            <span>Studio</span>
+          </Link>
+          <Link href="/client/agents" className={`fz-tab-item${pathname.startsWith('/client/agents') ? ' active' : ''}`}>
+            <span className="fz-tab-emoji">🤖</span>
+            <span>Assistants</span>
+          </Link>
+          <button className="fz-tab-item" onClick={() => setSidebarOpen(o => !o)}>
+            <span className="fz-tab-emoji">☰</span>
+            <span>Menu</span>
+          </button>
+        </div>
+      </div>
 
       {/* Ctrl+K Search Modal */}
       {searchOpen && (
@@ -1305,7 +1321,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{link.icon}</span>
+                  <span style={{ fontSize: 18 }}>{getNavEmoji(link.href)}</span>
                   <span>{link.label}</span>
                 </Link>
               ))}
@@ -1323,6 +1339,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
 
     <OnboardingTour />
+    <OnboardingCopilot />
     {showQuickOnboarding && (
       <QuickOnboarding
         onComplete={() => {

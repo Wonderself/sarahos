@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 const DONE_KEY = 'fz_formations_done';
 
@@ -76,10 +78,10 @@ const FORMATIONS = [
 ];
 
 const BENEFITS = [
-  { icon: 'target', title: 'Sur mesure', desc: 'Formations adaptees a votre secteur et vos objectifs' },
-  { icon: 'person', title: 'Expert dedie', desc: 'Formateur specialise avec experience terrain' },
-  { icon: 'trending_up', title: 'Resultats concrets', desc: 'Exercices pratiques et plan d\'action personnalise' },
-  { icon: 'refresh', title: 'Suivi post-formation', desc: '30 jours d\'accompagnement apres chaque session' },
+  { icon: '🎯', title: 'Sur mesure', desc: 'Formations adaptees a votre secteur et vos objectifs' },
+  { icon: '👤', title: 'Expert dedie', desc: 'Formateur specialise avec experience terrain' },
+  { icon: '📈', title: 'Resultats concrets', desc: 'Exercices pratiques et plan d\'action personnalise' },
+  { icon: '🔄', title: 'Suivi post-formation', desc: '30 jours d\'accompagnement apres chaque session' },
 ];
 
 interface FormData {
@@ -177,10 +179,10 @@ export default function FormationsPage() {
   };
 
   const cardStyle: React.CSSProperties = {
-    background: 'var(--bg-elevated)',
+    background: 'var(--fz-bg, #FFFFFF)',
     borderRadius: 16,
     padding: '28px 24px',
-    border: '1px solid var(--border-primary)',
+    border: '1px solid var(--fz-border, #E2E8F0)',
     transition: 'box-shadow 0.25s, transform 0.25s',
     cursor: 'default',
     display: 'flex',
@@ -192,71 +194,37 @@ export default function FormationsPage() {
     width: '100%',
     padding: '12px 16px',
     fontSize: 14,
-    border: '1px solid var(--border-primary)',
+    border: '1px solid var(--fz-border, #E2E8F0)',
     borderRadius: 10,
     outline: 'none',
     fontFamily: 'inherit',
-    background: 'var(--bg-secondary)',
-    color: 'var(--text-primary)',
+    background: 'var(--fz-bg-secondary, #F8FAFC)',
+    color: 'var(--fz-text, #1E293B)',
     transition: 'border-color 0.2s',
   };
 
   const labelStyle: React.CSSProperties = {
     fontSize: 13,
     fontWeight: 600,
-    color: 'var(--text-secondary)',
+    color: 'var(--fz-text-secondary, #64748B)',
     marginBottom: 6,
     display: 'block',
   };
 
   return (
-    <div className="client-page-scrollable" style={{ background: 'var(--bg-primary)', minHeight: '100vh', paddingBottom: 80 }}>
+    <div className="client-page-scrollable" style={{ background: 'var(--fz-bg, #FFFFFF)', minHeight: '100vh', paddingBottom: 80 }}>
 
-      {/* ── Hero Section ── */}
-      <section style={{
-        background: `linear-gradient(135deg, ${accent}, #06b6d4)`,
-        padding: '56px 24px 48px',
-        textAlign: 'center',
-        borderRadius: '0 0 32px 32px',
-        marginBottom: 48,
-      }}>
-        <div style={{ maxWidth: 640, margin: '0 auto' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 16px',
-            background: 'rgba(255,255,255,0.2)',
-            borderRadius: 20,
-            fontSize: 13,
-            fontWeight: 600,
-            color: '#fff',
-            marginBottom: 20,
-            backdropFilter: 'blur(8px)',
-          }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>school</span> Services de formation
+      {/* ── Page Header ── */}
+      <div style={{ marginBottom: 24, padding: '24px 24px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.formations.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.formations.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.formations.subtitle}</p>
           </div>
-          <h1 style={{
-            fontSize: 'clamp(28px, 5vw, 44px)',
-            fontWeight: 800,
-            color: '#fff',
-            letterSpacing: '-0.03em',
-            lineHeight: 1.15,
-            marginBottom: 16,
-          }}>
-            <span className="fz-logo-word">Formations</span>
-          </h1>
-          <p style={{
-            fontSize: 17,
-            color: 'rgba(255,255,255,0.9)',
-            lineHeight: 1.6,
-            maxWidth: 500,
-            margin: '0 auto',
-          }}>
-            Developpez vos competences avec l&apos;<span className="fz-logo-word">IA</span>
-          </p>
+          <HelpBubble text={PAGE_META.formations.helpText} />
         </div>
-      </section>
+      </div>
 
       {/* ── Benefits Bar ── */}
       <section style={{ ...sectionStyle, marginBottom: 48 }}>
@@ -267,15 +235,15 @@ export default function FormationsPage() {
         }}>
           {BENEFITS.map(b => (
             <div key={b.title} style={{
-              background: 'var(--bg-elevated)',
+              background: 'var(--fz-bg, #FFFFFF)',
               borderRadius: 14,
               padding: '20px 18px',
-              border: '1px solid var(--border-primary)',
+              border: '1px solid var(--fz-border, #E2E8F0)',
               textAlign: 'center',
             }}>
-              <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{b.icon}</span></div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>{b.title}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{b.desc}</div>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>{b.icon}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>{b.title}</div>
+              <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5 }}>{b.desc}</div>
             </div>
           ))}
         </div>
@@ -287,13 +255,13 @@ export default function FormationsPage() {
           <h2 style={{
             fontSize: 28,
             fontWeight: 700,
-            color: 'var(--text-primary)',
+            color: 'var(--fz-text, #1E293B)',
             letterSpacing: '-0.03em',
             marginBottom: 8,
           }}>
             Nos formations
           </h2>
-          <p style={{ fontSize: 14, color: 'var(--text-secondary)', maxWidth: 480, margin: '0 auto' }}>
+          <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', maxWidth: 480, margin: '0 auto' }}>
             Des programmes concus pour vous rendre <span className="fz-logo-word">autonome</span> rapidement, avec des cas pratiques adaptes a votre activite.
           </p>
         </div>
@@ -301,7 +269,7 @@ export default function FormationsPage() {
         {/* Search + progress */}
         <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span></span>
+            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>🔍</span>
             <input
               type="text"
               placeholder="Rechercher une formation..."
@@ -309,8 +277,8 @@ export default function FormationsPage() {
               onChange={e => setSearch(e.target.value)}
               style={{
                 width: '100%', padding: '10px 12px 10px 36px', fontSize: 14,
-                border: '1px solid var(--border-primary)', borderRadius: 10, outline: 'none',
-                fontFamily: 'inherit', background: 'var(--bg-elevated)', boxSizing: 'border-box',
+                border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 10, outline: 'none',
+                fontFamily: 'inherit', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box',
               }}
               onFocus={e => (e.currentTarget.style.borderColor = accent)}
               onBlur={e => (e.currentTarget.style.borderColor = '')}
@@ -318,7 +286,7 @@ export default function FormationsPage() {
           </div>
           {doneCount > 0 && (
             <div style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, flexShrink: 0 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> {doneCount}/{FORMATIONS.length} terminée{doneCount > 1 ? 's' : ''}
+              ✅ {doneCount}/{FORMATIONS.length} terminée{doneCount > 1 ? 's' : ''}
             </div>
           )}
         </div>
@@ -329,8 +297,8 @@ export default function FormationsPage() {
           gap: 20,
         }}>
           {filteredFormations.length === 0 && (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>search</span></div>
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }}>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🔍</div>
               <div>Aucune formation ne correspond à votre recherche.</div>
               <button onClick={() => setSearch('')} style={{ marginTop: 10, fontSize: 12, color: accent, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Réinitialiser</button>
             </div>
@@ -383,13 +351,13 @@ export default function FormationsPage() {
                   fontSize: 24,
                   flexShrink: 0,
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{f.icon}</span>
+                  🎓
                 </div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{
                     fontSize: 16,
                     fontWeight: 700,
-                    color: 'var(--text-primary)',
+                    color: 'var(--fz-text, #1E293B)',
                     lineHeight: 1.3,
                     marginBottom: 0,
                   }}>
@@ -401,7 +369,7 @@ export default function FormationsPage() {
               {/* Description */}
               <p style={{
                 fontSize: 13,
-                color: 'var(--text-secondary)',
+                color: 'var(--fz-text-secondary, #64748B)',
                 lineHeight: 1.6,
                 margin: 0,
                 flex: 1,
@@ -416,7 +384,7 @@ export default function FormationsPage() {
                 gap: 10,
                 flexWrap: 'wrap',
                 paddingTop: 8,
-                borderTop: '1px solid var(--border-primary)',
+                borderTop: '1px solid var(--fz-border, #E2E8F0)',
               }}>
                 {/* Level Badge */}
                 <span style={{
@@ -436,10 +404,10 @@ export default function FormationsPage() {
                   alignItems: 'center',
                   gap: 4,
                   fontSize: 12,
-                  color: 'var(--text-secondary)',
+                  color: 'var(--fz-text-secondary, #64748B)',
                   fontWeight: 500,
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 12 }}>timer</span> {f.duration}
+                  ⏱️ {f.duration}
                 </span>
 
                 {/* Price */}
@@ -480,7 +448,7 @@ export default function FormationsPage() {
                     cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
                   }}
                 >
-                  {doneIds.has(f.id) ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Terminée</> : 'Marquer comme terminée'}
+                  {doneIds.has(f.id) ? <>✅ Terminée</> : 'Marquer comme terminée'}
                 </button>
               )}
             </div>
@@ -491,25 +459,25 @@ export default function FormationsPage() {
       {/* ── CTA / Quote Request Section ── */}
       <section style={sectionStyle}>
         <div style={{
-          background: 'var(--bg-elevated)',
+          background: 'var(--fz-bg, #FFFFFF)',
           borderRadius: 20,
           padding: 'clamp(24px, 4vw, 48px)',
-          border: '1px solid var(--border-primary)',
+          border: '1px solid var(--fz-border, #E2E8F0)',
           maxWidth: 680,
           margin: '0 auto',
         }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>mail</span></div>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>📧</div>
             <h2 style={{
               fontSize: 24,
               fontWeight: 700,
-              color: 'var(--text-primary)',
+              color: 'var(--fz-text, #1E293B)',
               letterSpacing: '-0.02em',
               marginBottom: 8,
             }}>
               Faire une demande
             </h2>
-            <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
+            <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
               Decrivez vos besoins et nous vous proposons un programme sur mesure adapte a votre activite.
             </p>
           </div>
@@ -522,7 +490,7 @@ export default function FormationsPage() {
               borderRadius: 14,
               border: '1px solid #bbf7d0',
             }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
               <h3 style={{ fontSize: 20, fontWeight: 700, color: '#15803d', marginBottom: 8 }}>
                 Demande envoyee !
               </h3>
@@ -537,7 +505,7 @@ export default function FormationsPage() {
                   fontSize: 13,
                   fontWeight: 600,
                   border: '1px solid #bbf7d0',
-                  background: 'var(--bg-elevated)',
+                  background: 'var(--fz-bg, #FFFFFF)',
                   color: '#15803d',
                   cursor: 'pointer',
                 }}
@@ -624,7 +592,7 @@ export default function FormationsPage() {
                           gap: 10,
                           padding: '10px 14px',
                           borderRadius: 10,
-                          border: `1.5px solid ${selected ? accent : 'var(--border-primary)'}`,
+                          border: `1.5px solid ${selected ? accent : 'var(--fz-border, #E2E8F0)'}`,
                           background: selected ? `${accent}08` : '#fff',
                           cursor: 'pointer',
                           textAlign: 'left',
@@ -646,14 +614,14 @@ export default function FormationsPage() {
                           flexShrink: 0,
                           transition: 'background 0.2s, border-color 0.2s',
                         }}>
-                          {selected ? <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span> : ''}
+                          {selected ? '✓' : ''}
                         </span>
-                        <span style={{ fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{f.icon}</span></span>
+                        <span style={{ fontSize: 16 }}>🎓</span>
                         <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
                             {f.title}
                           </div>
-                          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 1 }}>
+                          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>
                             {f.level} &middot; {f.duration}
                             {!f.available && <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: 6 }}>Bientot</span>}
                           </div>
@@ -712,7 +680,7 @@ export default function FormationsPage() {
 
               <p style={{
                 fontSize: 11,
-                color: 'var(--text-muted)',
+                color: 'var(--fz-text-muted, #94A3B8)',
                 textAlign: 'center',
                 lineHeight: 1.5,
                 margin: 0,

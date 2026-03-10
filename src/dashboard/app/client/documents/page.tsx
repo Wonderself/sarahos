@@ -6,6 +6,8 @@ import DOMPurify from 'isomorphic-dompurify';
 import { DEFAULT_AGENTS } from '../../../lib/agent-config';
 import VoiceInput from '../../../components/VoiceInput';
 import { useToast } from '../../../components/Toast';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 function escapeHtml(text: string): string {
   return text
@@ -20,9 +22,9 @@ function renderMarkdown(text: string): string {
   const safe = escapeHtml(text);
   return safe
     // Headers
-    .replace(/^### (.+)$/gm, '<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px;color:var(--text-primary)">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 style="font-size:18px;font-weight:700;margin:24px 0 10px;color:var(--text-primary)">$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1 style="font-size:22px;font-weight:800;margin:28px 0 12px;color:var(--text-primary)">$1</h1>')
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px;color:var(--fz-text, #1E293B)">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="font-size:18px;font-weight:700;margin:24px 0 10px;color:var(--fz-text, #1E293B)">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="font-size:22px;font-weight:800;margin:28px 0 12px;color:var(--fz-text, #1E293B)">$1</h1>')
     // Bold & italic
     .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
     .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:700">$1</strong>')
@@ -32,7 +34,7 @@ function renderMarkdown(text: string): string {
     // Numbered lists
     .replace(/^\d+\. (.+)$/gm, (_, content) => `<div style="padding-left:16px;margin:2px 0">${content}</div>`)
     // Horizontal rule
-    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border-primary);margin:16px 0">')
+    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--fz-border, #E2E8F0);margin:16px 0">')
     // Line breaks
     .replace(/\n\n/g, '<br><br>')
     .replace(/\n/g, '<br>');
@@ -816,6 +818,23 @@ export default function DocumentsPage() {
   const [filterCategory, setFilterCategory] = useState<string>('');
   const lastFocusedFieldRef = useRef<string>('');
 
+  // Profile completion banner
+  const [hasProfile, setHasProfile] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  useEffect(() => {
+    try {
+      const profile = localStorage.getItem('fz_company_profile');
+      if (profile && profile !== '{}' && profile !== 'null') {
+        setHasProfile(true);
+      }
+      const dismissed = localStorage.getItem('fz_dismiss_docs_profile');
+      if (dismissed === 'true') {
+        setBannerDismissed(true);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
   // Knowledge Base
   const [kbDocs, setKbDocs] = useState<Array<{ id: string; filename: string; context: string; file_size: number; token_count?: number; created_at: string }>>([]);
   const [kbStorage, setKbStorage] = useState<{ totalBytes: number; maxBytes: number } | null>(null);
@@ -937,13 +956,13 @@ export default function DocumentsPage() {
         <div className="flex items-center gap-12 mb-24">
           <button onClick={() => setViewingDoc(null)} className="btn btn-ghost btn-sm">← Retour</button>
           <div className="flex-1">
-            <h2 className="font-bold" style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{tpl?.icon ?? 'description'}</span> {viewingDoc.title}</h2>
+            <h2 className="font-bold" style={{ fontSize: 18 }}>📄 {viewingDoc.title}</h2>
             <div className="text-sm text-muted">
               {new Date(viewingDoc.createdAt).toLocaleString('fr-FR')} | {viewingDoc.tokens} tokens | {(viewingDoc.cost / 1_000_000).toFixed(4)} cr
             </div>
           </div>
           <button onClick={() => copyToClipboard(viewingDoc.content)} className="btn btn-primary btn-sm">
-            {copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Copié !</> : 'Copier'}
+            {copied ? <>✅ Copié !</> : '📋 Copier'}
           </button>
           <button onClick={() => {
             const blob = new Blob([viewingDoc.content], { type: 'text/plain;charset=utf-8' });
@@ -971,7 +990,7 @@ export default function DocumentsPage() {
         <div className="flex items-center gap-12 mb-24">
           <button onClick={() => { setSelectedTemplate(null); setFieldValues({}); }} className="btn btn-ghost btn-sm">← Retour</button>
           <div className="flex-1">
-            <h2 className="font-bold" style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{selectedTemplate.icon}</span> {selectedTemplate.title}</h2>
+            <h2 className="font-bold" style={{ fontSize: 18 }}>📄 {selectedTemplate.title}</h2>
             <div className="text-md text-secondary">{selectedTemplate.description}</div>
           </div>
           <VoiceInput
@@ -1030,7 +1049,7 @@ export default function DocumentsPage() {
                         }}
                         style={{
                           padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                          background: isSelected ? 'var(--accent)' : 'var(--bg-primary)',
+                          background: isSelected ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
                           color: isSelected ? 'white' : 'var(--text-tertiary)',
                           border: `1px solid ${isSelected ? 'var(--accent)' : 'var(--border-secondary)'}`,
                           cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
@@ -1061,7 +1080,7 @@ export default function DocumentsPage() {
             {generating ? (
               <span className="animate-pulse">{DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name} rédige votre document...</span>
             ) : (
-              <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>auto_awesome</span> Générer le document</>
+              <>✨ Générer le document</>
             )}
           </button>
         </div>
@@ -1074,14 +1093,92 @@ export default function DocumentsPage() {
 
   return (
     <div className="client-page-scrollable">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Générateur de <span className="fz-logo-word">Documents</span></h1>
-          <p className="page-subtitle">
-            {DEFAULT_AGENTS.find(a => a.id === 'fz-assistante')!.name} rédige pour vous : emails, propositions, contrats, posts... Choisissez un modèle et personnalisez.
-          </p>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.documents.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.documents.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.documents.helpText} />
         </div>
       </div>
+
+      {/* Profile Completion Banner */}
+      {!bannerDismissed && (
+        <div
+          className="fz-card"
+          style={{
+            borderLeft: `4px solid ${hasProfile ? '#22c55e' : 'var(--fz-accent, #7c3aed)'}`,
+            padding: 16,
+            marginBottom: 20,
+            background: 'var(--fz-bg, #fff)',
+            border: '1px solid var(--fz-border, #E2E8F0)',
+            borderLeftWidth: 4,
+            borderLeftStyle: 'solid',
+            borderLeftColor: hasProfile ? '#22c55e' : 'var(--fz-accent, #7c3aed)',
+            borderRadius: 8,
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            {hasProfile ? (
+              <p style={{ margin: 0, fontSize: 14, color: 'var(--fz-text, #1E293B)', lineHeight: 1.6 }}>
+                ✅ <strong>Vos documents sont prêts !</strong> Vos informations sont automatiquement intégrées dans chaque génération. Choisissez un modèle ci-dessous.
+              </p>
+            ) : (
+              <>
+                <p style={{ margin: '0 0 6px', fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+                  📋 Complétez votre profil pour des documents parfaits
+                </p>
+                <p style={{ margin: '0 0 10px', fontSize: 13, color: 'var(--fz-text, #1E293B)', lineHeight: 1.6, opacity: 0.85 }}>
+                  Vos informations (entreprise, secteur, objectifs) sont utilisées automatiquement dans chaque document généré. Plus votre profil est complet, plus vos documents seront pertinents et prêts à l&apos;emploi.
+                </p>
+                <a
+                  href="/client/onboarding"
+                  className="fz-btn-primary"
+                  style={{
+                    display: 'inline-block',
+                    padding: '8px 16px',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    borderRadius: 6,
+                    textDecoration: 'none',
+                    background: 'var(--fz-accent, #7c3aed)',
+                    color: '#fff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Compléter mon profil →
+                </a>
+              </>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              setBannerDismissed(true);
+              try { localStorage.setItem('fz_dismiss_docs_profile', 'true'); } catch { /* ignore */ }
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: 18,
+              color: 'var(--fz-text, #1E293B)',
+              opacity: 0.5,
+              padding: '0 4px',
+              lineHeight: 1,
+              flexShrink: 0,
+            }}
+            title="Fermer"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {/* Category Filter */}
       <div className="flex gap-6 flex-wrap mb-16">
@@ -1119,7 +1216,7 @@ export default function DocumentsPage() {
                 width: 48, height: 48,
                 fontSize: 24, background: tpl.color + '22', flexShrink: 0,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{tpl.icon}</span>
+                📄
               </div>
               <div>
                 <div className="font-bold mb-4" style={{ fontSize: 15 }}>{tpl.title}</div>
@@ -1140,7 +1237,7 @@ export default function DocumentsPage() {
       <div className="section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
           <div>
-            <div className="section-title" style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>psychology</span> Base de connaissance</div>
+            <div className="section-title" style={{ marginBottom: 4 }}>🧠 Base de connaissance</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
               Documents uploadés et injectés <span className="fz-logo-word">automatiquement</span> dans vos agents
             </div>
@@ -1166,7 +1263,7 @@ export default function DocumentsPage() {
           <div className="text-center text-tertiary" style={{ padding: 24 }}>Chargement...</div>
         ) : kbDocs.length === 0 ? (
           <div className="card text-center" style={{ padding: '32px 20px' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>folder_open</span></div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>📁</div>
             <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 6 }}>Aucun document uploadé</div>
             <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
               Utilisez le composant d&apos;upload ci-dessus pour enrichir la base de connaissance de vos agents
@@ -1180,7 +1277,7 @@ export default function DocumentsPage() {
               return (
                 <div key={doc.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ fontSize: 22, flexShrink: 0 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{doc.filename.endsWith('.pdf') ? 'picture_as_pdf' : doc.filename.endsWith('.docx') ? 'description' : doc.filename.endsWith('.xlsx') ? 'table_chart' : 'description'}</span>
+                    {doc.filename.endsWith('.pdf') ? '📑' : doc.filename.endsWith('.docx') ? '📄' : doc.filename.endsWith('.xlsx') ? '📊' : '📄'}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.filename}</div>
@@ -1221,14 +1318,14 @@ export default function DocumentsPage() {
                 <div key={doc.id} className="flex items-center gap-12 bg-secondary rounded-md" style={{
                   padding: '8px 12px',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{tpl?.icon ?? 'description'}</span>
+                  📄
                   <div className="flex-1" style={{ minWidth: 0 }}>
                     <div className="text-md font-semibold truncate">{doc.title}</div>
                     <div className="text-xs text-muted">{new Date(doc.createdAt).toLocaleString('fr-FR')}</div>
                   </div>
                   <button onClick={() => setViewingDoc(doc)} className="btn btn-ghost btn-sm">Voir</button>
                   <button onClick={() => copyToClipboard(doc.content)} className="btn btn-ghost btn-sm">Copier</button>
-                  <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} className="btn btn-ghost btn-sm text-danger" aria-label="Supprimer le document"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+                  <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} className="btn btn-ghost btn-sm text-danger" aria-label="Supprimer le document">🗑️</button>
                 </div>
               );
             })}

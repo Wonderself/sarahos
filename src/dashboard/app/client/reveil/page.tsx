@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META, REVEIL_MODE_EMOJIS } from '../../../lib/emoji-map';
 
 // ═══════════════════════════════════════════════════════
 //  Freenzy.io — Reveil Intelligent (Smart Alarm)
@@ -49,35 +51,35 @@ interface TestResult {
 // ─── Constants ───
 
 const ALARM_MODES = [
-  { id: 'doux',       icon: 'spa',              label: 'Doux',       color: '#93c5fd', desc: 'Un reveil tout en douceur pour commencer la journee sereinement' },
-  { id: 'dur',        icon: 'local_fire_department', label: 'Dur',   color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
-  { id: 'sympa',      icon: 'sentiment_satisfied', label: 'Sympa',   color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
-  { id: 'drole',      icon: 'mood',              label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
-  { id: 'fou',        icon: 'psychology_alt',    label: 'Fou',        color: '#7c3aed', desc: 'Un reveil completement delirant et imprevisible' },
-  { id: 'motivant',   icon: 'fitness_center',    label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
-  { id: 'zen',        icon: 'self_improvement',  label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
-  { id: 'energique',  icon: 'bolt',              label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },
+  { id: 'doux',       emoji: '🌸', label: 'Doux',       color: '#93c5fd', desc: 'Un reveil tout en douceur pour commencer la journee sereinement' },
+  { id: 'dur',        emoji: '🔥', label: 'Dur',        color: '#ef4444', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
+  { id: 'sympa',      emoji: '😊', label: 'Sympa',      color: '#4ade80', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
+  { id: 'drole',      emoji: '😂', label: 'Drole',      color: '#fb923c', desc: 'Commencez la journee en riant avec humour et blagues' },
+  { id: 'fou',        emoji: '🤪', label: 'Fou',        color: '#7c3aed', desc: 'Un reveil completement delirant et imprevisible' },
+  { id: 'motivant',   emoji: '💪', label: 'Motivant',   color: '#eab308', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
+  { id: 'zen',        emoji: '🧘', label: 'Zen',        color: '#2dd4bf', desc: 'Meditation, respiration, calme interieur' },
+  { id: 'energique',  emoji: '⚡', label: 'Energique',  color: '#f43f5e', desc: 'Reveil dynamique et plein d\'energie des le matin' },
 ];
 
 const RUBRICS = [
-  { id: 'bonne_humeur',       icon: 'mood',              label: 'Bonne humeur' },
-  { id: 'meteo',              icon: 'partly_cloudy_day',  label: 'Meteo' },
-  { id: 'astrologie',         icon: 'stars',             label: 'Astrologie' },
-  { id: 'annonce_perso',      icon: 'campaign',          label: 'Annonce personnalisee' },
-  { id: 'energies_jour',      icon: 'auto_awesome',      label: 'Energies du jour' },
-  { id: 'news',               icon: 'newspaper',         label: 'Actualites' },
-  { id: 'citation',           icon: 'format_quote',      label: 'Citation' },
-  { id: 'conseil_bien_etre',  icon: 'psychology',        label: 'Conseil bien-etre' },
-  { id: 'resume_agenda',      icon: 'calendar_month',    label: 'Resume de l\'agenda' },
-  { id: 'rappel_objectifs',   icon: 'target',            label: 'Rappel objectifs' },
-  { id: 'blague',             icon: 'sentiment_very_satisfied', label: 'Blague du jour' },
-  { id: 'horoscope_chinois',  icon: 'pets',              label: 'Horoscope chinois' },
-  { id: 'gratitude',          icon: 'volunteer_activism', label: 'Gratitude' },
-  { id: 'fun_fact',           icon: 'science',           label: 'Fun fact' },
-  { id: 'musique_suggeree',   icon: 'music_note',        label: 'Musique suggeree' },
-  { id: 'defi_jour',          icon: 'emoji_events',      label: 'Defi du jour' },
-  { id: 'anecdote_histoire',  icon: 'history_edu',       label: 'Anecdote historique' },
-  { id: 'conseil_productivite', icon: 'timer',           label: 'Conseil productivite' },
+  { id: 'bonne_humeur',       emoji: '😊',  label: 'Bonne humeur' },
+  { id: 'meteo',              emoji: '🌤️', label: 'Meteo' },
+  { id: 'astrologie',         emoji: '🌟',  label: 'Astrologie' },
+  { id: 'annonce_perso',      emoji: '📢',  label: 'Annonce personnalisee' },
+  { id: 'energies_jour',      emoji: '✨',  label: 'Energies du jour' },
+  { id: 'news',               emoji: '📰',  label: 'Actualites' },
+  { id: 'citation',           emoji: '💬',  label: 'Citation' },
+  { id: 'conseil_bien_etre',  emoji: '🧠',  label: 'Conseil bien-etre' },
+  { id: 'resume_agenda',      emoji: '📅',  label: 'Resume de l\'agenda' },
+  { id: 'rappel_objectifs',   emoji: '🎯',  label: 'Rappel objectifs' },
+  { id: 'blague',             emoji: '🤣',  label: 'Blague du jour' },
+  { id: 'horoscope_chinois',  emoji: '🐾',  label: 'Horoscope chinois' },
+  { id: 'gratitude',          emoji: '🙏',  label: 'Gratitude' },
+  { id: 'fun_fact',           emoji: '🔬',  label: 'Fun fact' },
+  { id: 'musique_suggeree',   emoji: '🎵',  label: 'Musique suggeree' },
+  { id: 'defi_jour',          emoji: '🏆',  label: 'Defi du jour' },
+  { id: 'anecdote_histoire',  emoji: '📜',  label: 'Anecdote historique' },
+  { id: 'conseil_productivite', emoji: '⏱️', label: 'Conseil productivite' },
 ];
 
 const DAY_LABELS = [
@@ -99,54 +101,54 @@ const ROUTINE_ITEMS = [
 ];
 
 const QUICK_ACTIONS = [
-  { icon: 'wb_sunny', label: 'Briefing', href: '/client/briefing' },
-  { icon: 'call', label: 'Repondeur', href: '/client/repondeur' },
-  { icon: 'chat', label: 'Discutez', href: '/client/chat' },
-  { icon: 'bar_chart', label: 'Dashboard', href: '/client/dashboard' },
+  { emoji: '☀️', label: 'Briefing', href: '/client/briefing' },
+  { emoji: '📞', label: 'Repondeur', href: '/client/repondeur' },
+  { emoji: '💬', label: 'Discutez', href: '/client/chat' },
+  { emoji: '📊', label: 'Dashboard', href: '/client/dashboard' },
 ];
 
 // ─── Content Modules ───
 
 const CONTENT_MODULES = [
-  { id: 'meteo' as const, icon: 'partly_cloudy_day', label: 'Meteo', desc: 'Previsions, temperature, suggestion vestimentaire', seconds: 30 },
-  { id: 'astrologie' as const, icon: 'stars', label: 'Astrologie', desc: 'Horoscope, numerologie, energies du jour', seconds: 45 },
-  { id: 'briefing' as const, icon: 'newspaper', label: 'Briefing du matin', desc: 'Actualites par categorie personnalisee', seconds: 60 },
-  { id: 'agenda' as const, icon: 'calendar_month', label: 'Agenda', desc: 'Evenements du jour, deadlines a venir', seconds: 30 },
-  { id: 'bienEtre' as const, icon: 'self_improvement', label: 'Bien-etre', desc: 'Meditation, exercice, suivi sommeil', seconds: 40 },
-  { id: 'motivation' as const, icon: 'fitness_center', label: 'Motivation', desc: 'Citation, objectifs, gratitude, defi', seconds: 35 },
-  { id: 'finance' as const, icon: 'trending_up', label: 'Finance', desc: 'Marches, crypto, alertes portfolio', seconds: 25 },
-  { id: 'social' as const, icon: 'group', label: 'Social', desc: 'Anniversaires, messages, reseaux', seconds: 20 },
+  { id: 'meteo' as const, emoji: '🌤️', label: 'Meteo', desc: 'Previsions, temperature, suggestion vestimentaire', seconds: 30 },
+  { id: 'astrologie' as const, emoji: '🌟', label: 'Astrologie', desc: 'Horoscope, numerologie, energies du jour', seconds: 45 },
+  { id: 'briefing' as const, emoji: '📰', label: 'Briefing du matin', desc: 'Actualites par categorie personnalisee', seconds: 60 },
+  { id: 'agenda' as const, emoji: '📅', label: 'Agenda', desc: 'Evenements du jour, deadlines a venir', seconds: 30 },
+  { id: 'bienEtre' as const, emoji: '🧘', label: 'Bien-etre', desc: 'Meditation, exercice, suivi sommeil', seconds: 40 },
+  { id: 'motivation' as const, emoji: '💪', label: 'Motivation', desc: 'Citation, objectifs, gratitude, defi', seconds: 35 },
+  { id: 'finance' as const, emoji: '📈', label: 'Finance', desc: 'Marches, crypto, alertes portfolio', seconds: 25 },
+  { id: 'social' as const, emoji: '👥', label: 'Social', desc: 'Anniversaires, messages, reseaux', seconds: 20 },
 ];
 
 const PRESETS = [
-  { id: 'express' as const, label: 'Express', icon: 'bolt', duration: '~2 min', desc: 'Meteo + Citation + Agenda', moduleIds: ['meteo', 'motivation', 'agenda'] },
-  { id: 'standard' as const, label: 'Standard', icon: 'wb_sunny', duration: '~5 min', desc: 'Meteo + Briefing + Agenda + Motivation', moduleIds: ['meteo', 'briefing', 'agenda', 'motivation'] },
-  { id: 'complet' as const, label: 'Complet', icon: 'auto_awesome', duration: '~10 min', desc: 'Tous les modules actives', moduleIds: ['meteo', 'astrologie', 'briefing', 'agenda', 'bienEtre', 'motivation', 'finance', 'social'] },
-  { id: 'custom' as const, label: 'Personnalise', icon: 'tune', duration: 'Variable', desc: 'Choisissez vos modules', moduleIds: [] },
+  { id: 'express' as const, label: 'Express', emoji: '⚡', duration: '~2 min', desc: 'Meteo + Citation + Agenda', moduleIds: ['meteo', 'motivation', 'agenda'] },
+  { id: 'standard' as const, label: 'Standard', emoji: '☀️', duration: '~5 min', desc: 'Meteo + Briefing + Agenda + Motivation', moduleIds: ['meteo', 'briefing', 'agenda', 'motivation'] },
+  { id: 'complet' as const, label: 'Complet', emoji: '✨', duration: '~10 min', desc: 'Tous les modules actives', moduleIds: ['meteo', 'astrologie', 'briefing', 'agenda', 'bienEtre', 'motivation', 'finance', 'social'] },
+  { id: 'custom' as const, label: 'Personnalise', emoji: '⚙️', duration: 'Variable', desc: 'Choisissez vos modules', moduleIds: [] },
 ];
 
 const BRIEFING_CATEGORIES = [
-  { id: 'tech', label: 'Tech', icon: 'computer' },
-  { id: 'business', label: 'Business', icon: 'work' },
-  { id: 'politique', label: 'Politique', icon: 'account_balance' },
-  { id: 'sport', label: 'Sport', icon: 'sports_soccer' },
-  { id: 'culture', label: 'Culture', icon: 'theater_comedy' },
-  { id: 'local', label: 'Local', icon: 'location_on' },
+  { id: 'tech', label: 'Tech', emoji: '💻' },
+  { id: 'business', label: 'Business', emoji: '💼' },
+  { id: 'politique', label: 'Politique', emoji: '🏛️' },
+  { id: 'sport', label: 'Sport', emoji: '⚽' },
+  { id: 'culture', label: 'Culture', emoji: '🎭' },
+  { id: 'local', label: 'Local', emoji: '📍' },
 ];
 
 const ZODIAC_SIGNS = [
-  { id: 'belier', label: 'Belier', icon: 'star', dates: '21 mars - 19 avril' },
-  { id: 'taureau', label: 'Taureau', icon: 'star', dates: '20 avril - 20 mai' },
-  { id: 'gemeaux', label: 'Gemeaux', icon: 'star', dates: '21 mai - 20 juin' },
-  { id: 'cancer', label: 'Cancer', icon: 'star', dates: '21 juin - 22 juillet' },
-  { id: 'lion', label: 'Lion', icon: 'star', dates: '23 juillet - 22 aout' },
-  { id: 'vierge', label: 'Vierge', icon: 'star', dates: '23 aout - 22 sept.' },
-  { id: 'balance', label: 'Balance', icon: 'star', dates: '23 sept. - 22 oct.' },
-  { id: 'scorpion', label: 'Scorpion', icon: 'star', dates: '23 oct. - 21 nov.' },
-  { id: 'sagittaire', label: 'Sagittaire', icon: 'star', dates: '22 nov. - 21 dec.' },
-  { id: 'capricorne', label: 'Capricorne', icon: 'star', dates: '22 dec. - 19 jan.' },
-  { id: 'verseau', label: 'Verseau', icon: 'star', dates: '20 jan. - 18 fev.' },
-  { id: 'poissons', label: 'Poissons', icon: 'star', dates: '19 fev. - 20 mars' },
+  { id: 'belier', label: 'Belier', emoji: '♈', dates: '21 mars - 19 avril' },
+  { id: 'taureau', label: 'Taureau', emoji: '♉', dates: '20 avril - 20 mai' },
+  { id: 'gemeaux', label: 'Gemeaux', emoji: '♊', dates: '21 mai - 20 juin' },
+  { id: 'cancer', label: 'Cancer', emoji: '♋', dates: '21 juin - 22 juillet' },
+  { id: 'lion', label: 'Lion', emoji: '♌', dates: '23 juillet - 22 aout' },
+  { id: 'vierge', label: 'Vierge', emoji: '♍', dates: '23 aout - 22 sept.' },
+  { id: 'balance', label: 'Balance', emoji: '♎', dates: '23 sept. - 22 oct.' },
+  { id: 'scorpion', label: 'Scorpion', emoji: '♏', dates: '23 oct. - 21 nov.' },
+  { id: 'sagittaire', label: 'Sagittaire', emoji: '♐', dates: '22 nov. - 21 dec.' },
+  { id: 'capricorne', label: 'Capricorne', emoji: '♑', dates: '22 dec. - 19 jan.' },
+  { id: 'verseau', label: 'Verseau', emoji: '♒', dates: '20 jan. - 18 fev.' },
+  { id: 'poissons', label: 'Poissons', emoji: '♓', dates: '19 fev. - 20 mars' },
 ];
 
 function getDefaultContentModules(): ContentModules {
@@ -452,11 +454,13 @@ export default function ReveilPage() {
   const hasHoroscope = alarm?.rubrics.includes('horoscope_chinois') || false;
   const hasAnnonce = alarm?.rubrics.includes('annonce_perso') || false;
 
+  const pageMeta = PAGE_META.reveil;
+
   // ─── Loading state ───
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-        <div className="animate-pulse text-md text-muted">Chargement du reveil...</div>
+        <div className="animate-pulse text-md" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement du reveil...</div>
       </div>
     );
   }
@@ -467,17 +471,40 @@ export default function ReveilPage() {
 
   return (
     <div className="client-page-scrollable">
+      {/* ─── PAGE HEADER ─── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        marginBottom: 24, paddingBottom: 16,
+        borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+      }}>
+        <span style={{ fontSize: 32 }}>{pageMeta.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{
+            fontSize: 22, fontWeight: 700, margin: 0,
+            color: 'var(--fz-text, #1E293B)',
+          }}>
+            {pageMeta.title}
+          </h1>
+          <p style={{
+            fontSize: 14, margin: '2px 0 0', color: 'var(--fz-text-secondary, #64748B)',
+          }}>
+            {pageMeta.subtitle}
+          </p>
+        </div>
+        <HelpBubble text={pageMeta.helpText} />
+      </div>
+
       {/* ─── STATUS BAR ─── */}
       {(error || success || saving) && (
         <div style={{ position: 'sticky', top: 0, zIndex: 30, padding: '0 0 8px' }}>
           {error && (
             <div className="alert alert-danger" style={{ marginBottom: 4 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> {error}
+              <span style={{ fontSize: 14 }}>&#9888;&#65039;</span> {error}
             </div>
           )}
           {success && (
             <div className="alert alert-success" style={{ marginBottom: 4 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> {success}
+              <span style={{ fontSize: 14 }}>&#10004;&#65039;</span> {success}
             </div>
           )}
           {saving && !error && !success && (
@@ -492,23 +519,23 @@ export default function ReveilPage() {
       {/*  1. HEADER                                     */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="page-header" style={{ textAlign: 'center', flexDirection: 'column', paddingBottom: 8 }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 8, display: 'block' }}>coffee</span>
+        <span style={{ fontSize: 48, marginBottom: 8, display: 'block' }}>☕</span>
         <div style={{
-          fontSize: 42, fontWeight: 200, color: 'var(--text-muted)',
+          fontSize: 42, fontWeight: 200, color: 'var(--fz-text-muted, #94A3B8)',
           letterSpacing: '-0.03em', fontFamily: 'var(--font-sans)',
         }}>
           {currentTime}
         </div>
-        <h1 className="page-title" style={{ marginTop: 8, marginBottom: 4, fontSize: 22 }}>
+        <h1 className="page-title" style={{ marginTop: 8, marginBottom: 4, fontSize: 22, color: 'var(--fz-text, #1E293B)' }}>
           {greeting}{session.displayName ? `, ${session.displayName}` : ''} !
         </h1>
-        <p className="page-subtitle" style={{ textTransform: 'capitalize', marginBottom: 4 }}>
+        <p className="page-subtitle" style={{ textTransform: 'capitalize', marginBottom: 4, color: 'var(--fz-text-secondary, #64748B)' }}>
           {currentDate}
         </p>
         <p className="text-sm" style={{ color: 'var(--accent)', fontWeight: 500 }}>
           {getNextAlarmLabel(alarm)}
         </p>
-        <p className="text-xs" style={{ color: 'var(--text-muted)', marginTop: 4 }}>Votre assistant <span className="fz-logo-word">IA</span> personnalise votre matin</p>
+        <p className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Votre assistant <span className="fz-logo-word">IA</span> personnalise votre matin</p>
       </div>
 
       {/* ═══════════════════════════════════════════════ */}
@@ -522,17 +549,17 @@ export default function ReveilPage() {
           <div className="flex items-center gap-16">
             <div style={{
               width: 48, height: 48, borderRadius: 'var(--radius-md)',
-              background: alarm?.enabled ? 'var(--success-muted)' : 'var(--bg-tertiary)',
+              background: alarm?.enabled ? 'var(--success-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 24, transition: 'background 0.3s',
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{alarm?.enabled ? 'notifications_active' : 'notifications_off'}</span>
+              <span style={{ fontSize: 24 }}>{alarm?.enabled ? '🔔' : '🔕'}</span>
             </div>
             <div>
-              <div className="text-lg font-bold">
+              <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>
                 <span className="fz-logo-word">Reveil Intelligent</span>
               </div>
-              <div className="text-sm text-muted">
+              <div className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                 {alarm?.enabled ? 'Actif — votre IA vous reveille chaque matin' : 'Inactif — activez votre reveil IA'}
               </div>
             </div>
@@ -543,9 +570,9 @@ export default function ReveilPage() {
             onClick={() => updateAlarm({ enabled: !alarm?.enabled })}
             style={{
               position: 'relative', width: 56, height: 30, borderRadius: 15,
-              background: alarm?.enabled ? 'var(--success)' : 'var(--bg-tertiary)',
+              background: alarm?.enabled ? 'var(--success)' : 'var(--fz-bg-secondary, #F8FAFC)',
               border: '2px solid transparent',
-              borderColor: alarm?.enabled ? 'var(--success)' : 'var(--border-secondary)',
+              borderColor: alarm?.enabled ? 'var(--success)' : 'var(--fz-border, #E2E8F0)',
               cursor: 'pointer', transition: 'all 0.3s ease', flexShrink: 0,
             }}
             title={alarm?.enabled ? 'Desactiver le reveil' : 'Activer le reveil'}
@@ -564,12 +591,12 @@ export default function ReveilPage() {
       {/*  3. TIME & SCHEDULE                            */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">Horaire et jours</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Horaire et jours</div>
         <div className="card" style={{ padding: '20px 24px' }}>
           {/* Time picker */}
           <div className="flex items-center gap-16 mb-16" style={{ flexWrap: 'wrap' }}>
             <div>
-              <label className="text-sm text-muted mb-4" style={{ display: 'block' }}>Heure du reveil</label>
+              <label className="text-sm mb-4" style={{ display: 'block', color: 'var(--fz-text-muted, #94A3B8)' }}>Heure du reveil</label>
               <input
                 type="time"
                 value={alarm?.time ?? '07:00'}
@@ -582,15 +609,15 @@ export default function ReveilPage() {
               />
             </div>
             <div style={{ flex: 1 }}>
-              <label className="text-sm text-muted mb-4" style={{ display: 'block' }}>Fuseau horaire</label>
-              <div className="text-md" style={{ padding: '12px 0', color: 'var(--text-secondary)' }}>
+              <label className="text-sm mb-4" style={{ display: 'block', color: 'var(--fz-text-muted, #94A3B8)' }}>Fuseau horaire</label>
+              <div className="text-md" style={{ padding: '12px 0', color: 'var(--fz-text-secondary, #64748B)' }}>
                 {alarm?.timezone ?? 'Europe/Paris'}
               </div>
             </div>
           </div>
 
           {/* Day selector */}
-          <label className="text-sm text-muted mb-8" style={{ display: 'block' }}>Jours actifs</label>
+          <label className="text-sm mb-8" style={{ display: 'block', color: 'var(--fz-text-muted, #94A3B8)' }}>Jours actifs</label>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {DAY_LABELS.map(day => {
               const isActive = alarm?.days.includes(day.index) ?? false;
@@ -609,9 +636,9 @@ export default function ReveilPage() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 14, fontWeight: 600,
                     fontFamily: 'var(--font-sans)',
-                    background: isActive ? 'var(--accent)' : 'var(--bg-tertiary)',
-                    color: isActive ? 'white' : 'var(--text-muted)',
-                    border: isActive ? '2px solid var(--accent)' : '2px solid var(--border-primary)',
+                    background: isActive ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    color: isActive ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                    border: isActive ? '2px solid var(--accent)' : '2px solid var(--fz-border, #E2E8F0)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
@@ -628,7 +655,7 @@ export default function ReveilPage() {
       {/*  4. MODE SELECTOR                              */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">Mode du reveil</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Mode du reveil</div>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
@@ -636,6 +663,7 @@ export default function ReveilPage() {
         }}>
           {ALARM_MODES.map(mode => {
             const isSelected = (alarm?.mode ?? 'doux') === mode.id;
+            const modeEmoji = REVEIL_MODE_EMOJIS[mode.id] || mode.emoji;
             return (
               <button
                 key={mode.id}
@@ -643,8 +671,8 @@ export default function ReveilPage() {
                 style={{
                   padding: '16px 14px',
                   borderRadius: 'var(--radius-md)',
-                  border: `2px solid ${isSelected ? mode.color : 'var(--border-primary)'}`,
-                  background: isSelected ? `${mode.color}15` : 'var(--bg-primary)',
+                  border: `2px solid ${isSelected ? mode.color : 'var(--fz-border, #E2E8F0)'}`,
+                  background: isSelected ? `${mode.color}15` : 'var(--fz-bg, #FFFFFF)',
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.2s ease',
@@ -661,14 +689,14 @@ export default function ReveilPage() {
                     alignItems: 'center', justifyContent: 'center',
                     color: 'white', fontSize: 10, fontWeight: 700,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span>
+                    ✓
                   </div>
                 )}
-                <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 6, display: 'block', color: mode.color }}>{mode.icon}</span>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>
+                <span style={{ fontSize: 28, marginBottom: 6, display: 'block' }}>{modeEmoji}</span>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>
                   {mode.label}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.4 }}>
                   {mode.desc}
                 </div>
               </button>
@@ -681,9 +709,9 @@ export default function ReveilPage() {
       {/*  5. RUBRICS GRID                               */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>
           Rubriques
-          <span className="text-sm text-muted" style={{ fontWeight: 400, marginLeft: 8 }}>
+          <span className="text-sm" style={{ fontWeight: 400, marginLeft: 8, color: 'var(--fz-text-muted, #94A3B8)' }}>
             {alarm?.rubrics.length ?? 0} active{(alarm?.rubrics.length ?? 0) > 1 ? 's' : ''}
           </span>
         </div>
@@ -708,8 +736,8 @@ export default function ReveilPage() {
                   display: 'flex', alignItems: 'center', gap: 10,
                   padding: '12px 14px',
                   borderRadius: 'var(--radius-sm)',
-                  border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border-primary)'}`,
-                  background: isActive ? 'var(--accent-muted)' : 'var(--bg-primary)',
+                  border: `1px solid ${isActive ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                  background: isActive ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
                   fontFamily: 'var(--font-sans)',
@@ -717,17 +745,17 @@ export default function ReveilPage() {
                   width: '100%',
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 20, flexShrink: 0 }}>{rubric.icon}</span>
+                <span style={{ fontSize: 20, flexShrink: 0 }}>{rubric.emoji}</span>
                 <span style={{
                   flex: 1, fontSize: 13, fontWeight: 500,
-                  color: isActive ? 'var(--accent-hover)' : 'var(--text-secondary)',
+                  color: isActive ? 'var(--accent-hover)' : 'var(--fz-text-secondary, #64748B)',
                 }}>
                   {rubric.label}
                 </span>
                 {/* Mini toggle */}
                 <div style={{
                   position: 'relative', width: 34, height: 18, borderRadius: 9,
-                  background: isActive ? 'var(--accent)' : 'var(--bg-tertiary)',
+                  background: isActive ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
                   flexShrink: 0, transition: 'background 0.2s',
                 }}>
                   <span style={{
@@ -750,8 +778,8 @@ export default function ReveilPage() {
             {(hasAstro || hasHoroscope) && (
               <div className="card" style={{ padding: '14px 18px' }}>
                 <div className="flex items-center gap-8 mb-8">
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{hasAstro ? 'stars' : 'pets'}</span>
-                  <span className="text-md font-semibold">
+                  <span style={{ fontSize: 18 }}>{hasAstro ? '🌟' : '🐾'}</span>
+                  <span className="text-md font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>
                     {hasAstro && hasHoroscope
                       ? 'Date de naissance (Astrologie & Horoscope chinois)'
                       : hasAstro
@@ -772,8 +800,8 @@ export default function ReveilPage() {
             {hasAnnonce && (
               <div className="card" style={{ padding: '14px 18px' }}>
                 <div className="flex items-center gap-8 mb-8">
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>campaign</span>
-                  <span className="text-md font-semibold">Annonce personnalisee</span>
+                  <span style={{ fontSize: 18 }}>📢</span>
+                  <span className="text-md font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>Annonce personnalisee</span>
                 </div>
                 <textarea
                   value={alarm?.customAnnouncement ?? ''}
@@ -795,7 +823,7 @@ export default function ReveilPage() {
       {/*  5b. PRESETS                                    */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>
           Profil de reveil
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
@@ -817,16 +845,16 @@ export default function ReveilPage() {
                 }}
                 style={{
                   padding: '16px 14px', borderRadius: 'var(--radius-md)',
-                  border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border-primary)'}`,
-                  background: isSelected ? 'var(--accent-muted)' : 'var(--bg-primary)',
+                  border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                  background: isSelected ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                   cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s',
                   fontFamily: 'var(--font-sans)',
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 6, display: 'block' }}>{p.icon}</span>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>{p.label}</div>
+                <span style={{ fontSize: 28, marginBottom: 6, display: 'block' }}>{p.emoji}</span>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>{p.label}</div>
                 <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>{p.duration}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.4 }}>{p.desc}</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.4 }}>{p.desc}</div>
               </button>
             );
           })}
@@ -837,7 +865,7 @@ export default function ReveilPage() {
       {/*  5c. CONTENT MODULES                            */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>
           Contenu du reveil
           <span style={{
             marginLeft: 10, fontSize: 11, fontWeight: 600, padding: '3px 10px',
@@ -854,8 +882,8 @@ export default function ReveilPage() {
             return (
               <div key={mod.id} style={{
                 borderRadius: 'var(--radius-md)',
-                border: `1px solid ${isEnabled ? 'var(--accent)' : 'var(--border-primary)'}`,
-                background: isEnabled ? 'var(--accent-muted)' : 'var(--bg-primary)',
+                border: `1px solid ${isEnabled ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                background: isEnabled ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                 overflow: 'hidden', transition: 'all 0.2s',
               }}>
                 {/* Module header */}
@@ -871,14 +899,14 @@ export default function ReveilPage() {
                     background: 'transparent', fontFamily: 'var(--font-sans)', textAlign: 'left',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 24, flexShrink: 0 }}>{mod.icon}</span>
+                  <span style={{ fontSize: 24, flexShrink: 0 }}>{mod.emoji}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{mod.label}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{mod.desc}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{mod.label}</div>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{mod.desc}</div>
                   </div>
                   <div style={{
                     position: 'relative', width: 40, height: 22, borderRadius: 11,
-                    background: isEnabled ? 'var(--accent)' : 'var(--bg-tertiary)',
+                    background: isEnabled ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
                     flexShrink: 0, transition: 'background 0.2s',
                   }}>
                     <span style={{
@@ -893,13 +921,13 @@ export default function ReveilPage() {
                 {/* Sub-options when enabled */}
                 {isEnabled && (
                   <div style={{
-                    padding: '0 16px 14px', borderTop: '1px solid var(--border-primary)',
+                    padding: '0 16px 14px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
                     paddingTop: 12,
                   }}>
                     {mod.id === 'meteo' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         <div>
-                          <label className="text-xs text-muted" style={{ display: 'block', marginBottom: 4 }}>Ville</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #94A3B8)' }}>Ville</label>
                           <input
                             type="text" className="input input-sm" style={{ width: '100%' }}
                             value={(modules.meteo as ContentModules['meteo']).city}
@@ -912,20 +940,20 @@ export default function ReveilPage() {
                             <button key={u} onClick={() => { const up = { ...modules }; up.meteo = { ...up.meteo, units: u as 'celsius' | 'fahrenheit' }; updateAlarm({ contentModules: up, preset: 'custom' }); }}
                               style={{
                                 padding: '4px 12px', borderRadius: 16, fontSize: 12, border: 'none', cursor: 'pointer',
-                                background: modules.meteo.units === u ? 'var(--accent)' : 'var(--bg-tertiary)',
-                                color: modules.meteo.units === u ? '#fff' : 'var(--text-secondary)',
+                                background: modules.meteo.units === u ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                                color: modules.meteo.units === u ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                               }}
                             >
                               {u === 'celsius' ? '°C' : '°F'}
                             </button>
                           ))}
                         </div>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.meteo.multiDay}
                             onChange={e => { const u = { ...modules }; u.meteo = { ...u.meteo, multiDay: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Previsions 3 jours
                         </label>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.meteo.clothingSuggestion}
                             onChange={e => { const u = { ...modules }; u.meteo = { ...u.meteo, clothingSuggestion: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Suggestion vestimentaire
@@ -936,7 +964,7 @@ export default function ReveilPage() {
                     {mod.id === 'astrologie' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         <div>
-                          <label className="text-xs text-muted" style={{ display: 'block', marginBottom: 4 }}>Signe zodiacal</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #94A3B8)' }}>Signe zodiacal</label>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                             {ZODIAC_SIGNS.map(z => (
                               <button key={z.id} onClick={() => { const u = { ...modules }; u.astrologie = { ...u.astrologie, zodiacSign: z.id }; updateAlarm({ contentModules: u, preset: 'custom' }); }}
@@ -944,24 +972,24 @@ export default function ReveilPage() {
                                 style={{
                                   width: 32, height: 32, borderRadius: '50%', border: 'none', cursor: 'pointer',
                                   fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                  background: modules.astrologie.zodiacSign === z.id ? 'var(--accent)' : 'var(--bg-tertiary)',
+                                  background: modules.astrologie.zodiacSign === z.id ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
                                   transition: 'all 0.15s',
                                 }}
                               >
-                                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{z.icon}</span>
+                                {z.emoji}
                               </button>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs text-muted" style={{ display: 'block', marginBottom: 4 }}>Niveau de detail</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #94A3B8)' }}>Niveau de detail</label>
                           <div className="flex gap-4">
                             {(['court', 'moyen', 'detaille'] as const).map(lvl => (
                               <button key={lvl} onClick={() => { const u = { ...modules }; u.astrologie = { ...u.astrologie, detailLevel: lvl }; updateAlarm({ contentModules: u, preset: 'custom' }); }}
                                 style={{
                                   padding: '4px 12px', borderRadius: 16, fontSize: 12, border: 'none', cursor: 'pointer',
-                                  background: modules.astrologie.detailLevel === lvl ? 'var(--accent)' : 'var(--bg-tertiary)',
-                                  color: modules.astrologie.detailLevel === lvl ? '#fff' : 'var(--text-secondary)',
+                                  background: modules.astrologie.detailLevel === lvl ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                                  color: modules.astrologie.detailLevel === lvl ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                                 }}
                               >
                                 {lvl.charAt(0).toUpperCase() + lvl.slice(1)}
@@ -969,12 +997,12 @@ export default function ReveilPage() {
                             ))}
                           </div>
                         </div>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.astrologie.horoscopeChinois}
                             onChange={e => { const u = { ...modules }; u.astrologie = { ...u.astrologie, horoscopeChinois: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Horoscope chinois
                         </label>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.astrologie.numerologie}
                             onChange={e => { const u = { ...modules }; u.astrologie = { ...u.astrologie, numerologie: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Numerologie
@@ -985,7 +1013,7 @@ export default function ReveilPage() {
                     {mod.id === 'briefing' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         <div>
-                          <label className="text-xs text-muted" style={{ display: 'block', marginBottom: 4 }}>Categories d&apos;actualites</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #94A3B8)' }}>Categories d&apos;actualites</label>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                             {BRIEFING_CATEGORIES.map(cat => {
                               const isActive = modules.briefing.categories.includes(cat.id);
@@ -998,25 +1026,25 @@ export default function ReveilPage() {
                                 }}
                                   style={{
                                     padding: '4px 12px', borderRadius: 16, fontSize: 12, border: 'none', cursor: 'pointer',
-                                    background: isActive ? 'var(--accent)' : 'var(--bg-tertiary)',
-                                    color: isActive ? '#fff' : 'var(--text-secondary)',
+                                    background: isActive ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                                    color: isActive ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                                   }}
                                 >
-                                  <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>{cat.icon}</span> {cat.label}
+                                  <span style={{ fontSize: 14, verticalAlign: 'middle' }}>{cat.emoji}</span> {cat.label}
                                 </button>
                               );
                             })}
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs text-muted" style={{ display: 'block', marginBottom: 4 }}>Nombre d&apos;articles</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #94A3B8)' }}>Nombre d&apos;articles</label>
                           <div className="flex gap-4">
                             {[3, 5, 10].map(n => (
                               <button key={n} onClick={() => { const u = { ...modules }; u.briefing = { ...u.briefing, itemCount: n }; updateAlarm({ contentModules: u, preset: 'custom' }); }}
                                 style={{
                                   padding: '4px 14px', borderRadius: 16, fontSize: 12, border: 'none', cursor: 'pointer',
-                                  background: modules.briefing.itemCount === n ? 'var(--accent)' : 'var(--bg-tertiary)',
-                                  color: modules.briefing.itemCount === n ? '#fff' : 'var(--text-secondary)',
+                                  background: modules.briefing.itemCount === n ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                                  color: modules.briefing.itemCount === n ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                                 }}
                               >
                                 {n}
@@ -1029,12 +1057,12 @@ export default function ReveilPage() {
 
                     {mod.id === 'agenda' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.agenda.showTodayEvents}
                             onChange={e => { const u = { ...modules }; u.agenda = { ...u.agenda, showTodayEvents: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Evenements du jour
                         </label>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.agenda.showDeadlines}
                             onChange={e => { const u = { ...modules }; u.agenda = { ...u.agenda, showDeadlines: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Deadlines a venir
@@ -1044,17 +1072,17 @@ export default function ReveilPage() {
 
                     {mod.id === 'bienEtre' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.bienEtre.meditation}
                             onChange={e => { const u = { ...modules }; u.bienEtre = { ...u.bienEtre, meditation: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Suggestion meditation
                         </label>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.bienEtre.exercise}
                             onChange={e => { const u = { ...modules }; u.bienEtre = { ...u.bienEtre, exercise: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Exercice du matin
                         </label>
-                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                        <label className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                           <input type="checkbox" checked={modules.bienEtre.sleepTracking}
                             onChange={e => { const u = { ...modules }; u.bienEtre = { ...u.bienEtre, sleepTracking: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                           Suivi du sommeil
@@ -1070,7 +1098,7 @@ export default function ReveilPage() {
                           { key: 'gratitudePrompt', label: 'Gratitude du matin' },
                           { key: 'defiDuJour', label: 'Defi du jour' },
                         ].map(opt => (
-                          <label key={opt.key} className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                          <label key={opt.key} className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                             <input type="checkbox" checked={(modules.motivation as Record<string, boolean>)[opt.key]}
                               onChange={e => { const u = { ...modules }; u.motivation = { ...u.motivation, [opt.key]: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                             {opt.label}
@@ -1086,7 +1114,7 @@ export default function ReveilPage() {
                           { key: 'crypto', label: 'Crypto & Bitcoin' },
                           { key: 'portfolioAlert', label: 'Alertes portfolio' },
                         ].map(opt => (
-                          <label key={opt.key} className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                          <label key={opt.key} className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                             <input type="checkbox" checked={(modules.finance as Record<string, boolean>)[opt.key]}
                               onChange={e => { const u = { ...modules }; u.finance = { ...u.finance, [opt.key]: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                             {opt.label}
@@ -1102,7 +1130,7 @@ export default function ReveilPage() {
                           { key: 'pendingMessages', label: 'Messages en attente' },
                           { key: 'socialHighlights', label: 'Highlights reseaux sociaux' },
                         ].map(opt => (
-                          <label key={opt.key} className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer' }}>
+                          <label key={opt.key} className="flex items-center gap-8 text-sm" style={{ cursor: 'pointer', color: 'var(--fz-text, #1E293B)' }}>
                             <input type="checkbox" checked={(modules.social as Record<string, boolean>)[opt.key]}
                               onChange={e => { const u = { ...modules }; u.social = { ...u.social, [opt.key]: e.target.checked }; updateAlarm({ contentModules: u, preset: 'custom' }); }} />
                             {opt.label}
@@ -1126,24 +1154,25 @@ export default function ReveilPage() {
         const enabledModules = CONTENT_MODULES.filter(m => modules[m.id]?.enabled);
         if (enabledModules.length === 0) return null;
         const mode = ALARM_MODES.find(m => m.id === alarm?.mode) ?? ALARM_MODES[0];
+        const modeEmoji = REVEIL_MODE_EMOJIS[mode.id] || mode.emoji;
         return (
           <div className="section">
-            <div className="section-title">Apercu du reveil</div>
+            <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Apercu du reveil</div>
             <div style={{
               borderLeft: `3px solid ${mode.color}`,
-              background: 'var(--bg-secondary)',
+              background: 'var(--fz-bg-secondary, #F8FAFC)',
               borderRadius: 'var(--radius-md)',
               padding: '16px 20px',
             }}>
-              <div className="text-sm text-secondary" style={{ lineHeight: 1.8 }}>
-                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', color: mode.color }}>{mode.icon}</span> {greeting}{session.displayName ? ` ${session.displayName}` : ''} !
+              <div className="text-sm" style={{ lineHeight: 1.8, color: 'var(--fz-text-secondary, #64748B)' }}>
+                <span style={{ fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+                  <span style={{ fontSize: 16, verticalAlign: 'middle' }}>{modeEmoji}</span> {greeting}{session.displayName ? ` ${session.displayName}` : ''} !
                 </span>
-                <span style={{ color: 'var(--text-muted)' }}> — Mode {mode.label}</span>
+                <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}> — Mode {mode.label}</span>
                 <br />
                 {enabledModules.map(m => (
                   <span key={m.id}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>{m.icon}</span>{' '}
+                    <span style={{ fontSize: 14, verticalAlign: 'middle' }}>{m.emoji}</span>{' '}
                     {m.id === 'meteo' && <><strong>Meteo</strong> : Il fait 18°C a {modules.meteo.city || 'Paris'}{modules.meteo.clothingSuggestion ? ', veste legere conseillee' : ''}.</>}
                     {m.id === 'astrologie' && <><strong>Horoscope</strong> : {modules.astrologie.zodiacSign ? ZODIAC_SIGNS.find(z => z.id === modules.astrologie.zodiacSign)?.label ?? 'votre signe' : 'votre signe'} — journee propice aux nouvelles initiatives.</>}
                     {m.id === 'briefing' && <><strong>Briefing</strong> : {modules.briefing.itemCount} actualites {modules.briefing.categories.length > 0 ? `(${modules.briefing.categories.join(', ')})` : ''}</>}
@@ -1156,7 +1185,7 @@ export default function ReveilPage() {
                   </span>
                 ))}
               </div>
-              <div className="text-xs text-muted" style={{ marginTop: 8, fontStyle: 'italic' }}>
+              <div className="text-xs" style={{ marginTop: 8, fontStyle: 'italic', color: 'var(--fz-text-muted, #94A3B8)' }}>
                 Apercu indicatif — le contenu reel sera genere par l&apos;IA selon vos parametres
               </div>
             </div>
@@ -1168,14 +1197,14 @@ export default function ReveilPage() {
       {/*  6. VOICE & DELIVERY                           */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">Voix et livraison</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Voix et livraison</div>
         <div className="card" style={{ padding: '20px 24px' }}>
           {/* Voice selector */}
-          <label className="text-sm text-muted mb-8" style={{ display: 'block' }}>Voix de l&apos;agent</label>
+          <label className="text-sm mb-8" style={{ display: 'block', color: 'var(--fz-text-muted, #94A3B8)' }}>Voix de l&apos;agent</label>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             {[
-              { id: 'sarah' as const, label: 'Maëva', icon: 'person', desc: 'Voix feminine chaleureuse' },
-              { id: 'emmanuel' as const, label: 'Emmanuel', icon: 'person', desc: 'Voix masculine posee' },
+              { id: 'sarah' as const, label: 'Maëva', emoji: '👩', desc: 'Voix feminine chaleureuse' },
+              { id: 'emmanuel' as const, label: 'Emmanuel', emoji: '👨', desc: 'Voix masculine posee' },
             ].map(v => {
               const isSelected = (alarm?.voice ?? 'sarah') === v.id;
               return (
@@ -1185,22 +1214,22 @@ export default function ReveilPage() {
                   style={{
                     flex: 1, padding: '14px 16px',
                     borderRadius: 'var(--radius-sm)',
-                    border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border-primary)'}`,
-                    background: isSelected ? 'var(--accent-muted)' : 'var(--bg-primary)',
+                    border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                    background: isSelected ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                     cursor: 'pointer', textAlign: 'left',
                     transition: 'all 0.2s', fontFamily: 'var(--font-sans)',
                   }}
                 >
                   <div className="flex items-center gap-10">
-                    <span className="material-symbols-rounded" style={{ fontSize: 28 }}>{v.icon}</span>
+                    <span style={{ fontSize: 28 }}>{v.emoji}</span>
                     <div>
                       <div style={{
                         fontSize: 14, fontWeight: 600,
-                        color: isSelected ? 'var(--accent-hover)' : 'var(--text-primary)',
+                        color: isSelected ? 'var(--accent-hover)' : 'var(--fz-text, #1E293B)',
                       }}>
                         {v.label}
                       </div>
-                      <div className="text-xs text-muted">{v.desc}</div>
+                      <div className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{v.desc}</div>
                     </div>
                   </div>
                 </button>
@@ -1209,11 +1238,11 @@ export default function ReveilPage() {
           </div>
 
           {/* Delivery method */}
-          <label className="text-sm text-muted mb-8" style={{ display: 'block' }}>Mode de livraison</label>
+          <label className="text-sm mb-8" style={{ display: 'block', color: 'var(--fz-text-muted, #94A3B8)' }}>Mode de livraison</label>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             {[
-              { id: 'call' as const, label: 'Appel telephonique', icon: 'call', desc: 'L\'IA vous appelle' },
-              { id: 'whatsapp' as const, label: 'Message WhatsApp', icon: 'chat', desc: 'Message vocal WhatsApp' },
+              { id: 'call' as const, label: 'Appel telephonique', emoji: '📞', desc: 'L\'IA vous appelle' },
+              { id: 'whatsapp' as const, label: 'Message WhatsApp', emoji: '💬', desc: 'Message vocal WhatsApp' },
             ].map(d => {
               const isSelected = (alarm?.delivery ?? 'call') === d.id;
               return (
@@ -1223,22 +1252,22 @@ export default function ReveilPage() {
                   style={{
                     flex: 1, padding: '14px 16px',
                     borderRadius: 'var(--radius-sm)',
-                    border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border-primary)'}`,
-                    background: isSelected ? 'var(--accent-muted)' : 'var(--bg-primary)',
+                    border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                    background: isSelected ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                     cursor: 'pointer', textAlign: 'left',
                     transition: 'all 0.2s', fontFamily: 'var(--font-sans)',
                   }}
                 >
                   <div className="flex items-center gap-10">
-                    <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{d.icon}</span>
+                    <span style={{ fontSize: 24 }}>{d.emoji}</span>
                     <div>
                       <div style={{
                         fontSize: 14, fontWeight: 600,
-                        color: isSelected ? 'var(--accent-hover)' : 'var(--text-primary)',
+                        color: isSelected ? 'var(--accent-hover)' : 'var(--fz-text, #1E293B)',
                       }}>
                         {d.label}
                       </div>
-                      <div className="text-xs text-muted">{d.desc}</div>
+                      <div className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{d.desc}</div>
                     </div>
                   </div>
                 </button>
@@ -1247,7 +1276,7 @@ export default function ReveilPage() {
           </div>
 
           {/* Phone number */}
-          <label className="text-sm text-muted mb-4" style={{ display: 'block' }}>Numero de telephone</label>
+          <label className="text-sm mb-4" style={{ display: 'block', color: 'var(--fz-text-muted, #94A3B8)' }}>Numero de telephone</label>
           <input
             type="tel"
             value={alarm?.phone ?? session.phone ?? ''}
@@ -1256,7 +1285,7 @@ export default function ReveilPage() {
             className="input"
             style={{ maxWidth: 280 }}
           />
-          <div className="text-xs text-muted mt-4">
+          <div className="text-xs mt-4" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
             Numero ou vous recevrez l&apos;appel ou le message WhatsApp
           </div>
         </div>
@@ -1266,11 +1295,11 @@ export default function ReveilPage() {
       {/*  6b. SONNERIE PERSONNALISEE                    */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>music_note</span> Sonnerie de l&apos;appel</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>🎵 Sonnerie de l&apos;appel</div>
         <div className="card" style={{ padding: '20px 24px' }}>
           <div style={{ marginBottom: 16 }}>
-            <div className="text-base font-bold" style={{ marginBottom: 6 }}>Personnalisez la sonnerie du reveil</div>
-            <div className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
+            <div className="text-base font-bold" style={{ marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>Personnalisez la sonnerie du reveil</div>
+            <div className="text-sm" style={{ lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
               Quand le reveil vous appelle, vous entendez d&apos;abord une sonnerie avant que l&apos;IA prenne la parole.
               Vous pouvez la personnaliser de plusieurs facons :
             </div>
@@ -1279,7 +1308,7 @@ export default function ReveilPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div className="fz-feature-card">
               <div className="fz-feature-icon" style={{ background: 'rgba(34,197,94,0.1)', borderColor: 'rgba(34,197,94,0.15)' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>phone_iphone</span>
+                <span style={{ fontSize: 20 }}>📱</span>
               </div>
               <div style={{ flex: 1 }}>
                 <div className="fz-feature-title">Sonnerie de votre telephone</div>
@@ -1293,7 +1322,7 @@ export default function ReveilPage() {
 
             <div className="fz-feature-card">
               <div className="fz-feature-icon" style={{ background: 'rgba(139,124,248,0.1)', borderColor: 'rgba(139,124,248,0.15)' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>queue_music</span>
+                <span style={{ fontSize: 20 }}>🎶</span>
               </div>
               <div style={{ flex: 1 }}>
                 <div className="fz-feature-title">Sonnerie personnalisee par contact</div>
@@ -1307,7 +1336,7 @@ export default function ReveilPage() {
 
             <div className="fz-feature-card">
               <div className="fz-feature-icon" style={{ background: 'rgba(249,115,22,0.1)', borderColor: 'rgba(249,115,22,0.15)' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>mic</span>
+                <span style={{ fontSize: 20 }}>🎤</span>
               </div>
               <div style={{ flex: 1 }}>
                 <div className="fz-feature-title">Intro vocale IA</div>
@@ -1326,16 +1355,16 @@ export default function ReveilPage() {
       {/*  6c. NUMERO IA — TWILIO                        */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>call</span> Votre numero IA dedie</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>📞 Votre numero IA dedie</div>
         <div style={{
-          background: 'linear-gradient(135deg, #0a0a14, #13132a)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)',
           borderRadius: 16, padding: 'clamp(20px, 4vw, 32px)',
-          border: '1px solid rgba(91,108,247,0.2)',
+          border: '1px solid var(--fz-border, #E2E8F0)',
           position: 'relative', overflow: 'hidden',
         }}>
           <div style={{
             position: 'absolute', top: -50, right: -50, width: 200, height: 200,
-            background: 'radial-gradient(circle, rgba(91,108,247,0.12) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(91,108,247,0.08) 0%, transparent 70%)',
             pointerEvents: 'none',
           }} />
 
@@ -1343,8 +1372,8 @@ export default function ReveilPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)',
-                color: '#86efac', padding: '4px 14px', borderRadius: 20,
+                background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)',
+                color: '#22c55e', padding: '4px 14px', borderRadius: 20,
                 fontSize: 11, fontWeight: 700,
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
@@ -1353,14 +1382,14 @@ export default function ReveilPage() {
             </div>
 
             <h3 style={{
-              fontSize: 'clamp(18px, 4vw, 24px)', fontWeight: 900, color: '#fff',
+              fontSize: 'clamp(18px, 4vw, 24px)', fontWeight: 900, color: 'var(--fz-text, #1E293B)',
               letterSpacing: '-0.03em', marginBottom: 10, lineHeight: 1.2,
             }}>
               Un numero de telephone IA{'\u00A0'}rien{'\u00A0'}que{'\u00A0'}pour{'\u00A0'}vous
             </h3>
 
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, marginBottom: 24, maxWidth: 600 }}>
-              Commandez un <strong style={{ color: 'rgba(255,255,255,0.8)' }}>numero supplementaire via Twilio</strong> et debloquez
+            <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.7, marginBottom: 24, maxWidth: 600 }}>
+              Commandez un <strong style={{ color: 'var(--fz-text-secondary, #64748B)' }}>numero supplementaire via Twilio</strong> et debloquez
               un assistant telephonique IA complet, disponible 24h/24 et 7j/7.
             </p>
 
@@ -1369,26 +1398,25 @@ export default function ReveilPage() {
               gap: 12, marginBottom: 24,
             }}>
               {[
-                { icon: 'notifications', title: 'Reveil intelligent', desc: 'Votre IA vous appelle chaque matin avec un briefing personnalise depuis votre propre numero.' },
-                { icon: 'call', title: 'Repondeur IA 24/7', desc: 'Quand vous ne repondez pas, l\'IA prend l\'appel, qualifie le lead et vous envoie un resume WhatsApp.' },
-                { icon: 'outgoing_mail', title: 'Appels sortants', desc: 'Programmez des appels IA : prospection, confirmations de RDV, relances clients, sondages.' },
-                { icon: 'chat', title: 'SMS & WhatsApp', desc: 'Envoyez et recevez des messages automatises : notifications, rappels, confirmations.' },
-                { icon: 'record_voice_over', title: 'Voix naturelle', desc: 'Powered by ElevenLabs : voix francaise naturelle (Maeva ou Emmanuel) pour toutes les interactions.' },
-                { icon: 'bar_chart', title: 'Analytics appels', desc: 'Statistiques completes : duree, qualification, conversion, enregistrements, transcriptions.' },
-                { icon: 'public', title: 'Numero local', desc: 'Choisissez un numero francais (+33), ou un numero dans 100+ pays pour vos clients internationaux.' },
-                { icon: 'lock', title: 'Securise', desc: 'Appels chiffres, conformite RGPD, enregistrements optionnels, suppression sur demande.' },
+                { emoji: '🔔', title: 'Reveil intelligent', desc: 'Votre IA vous appelle chaque matin avec un briefing personnalise depuis votre propre numero.' },
+                { emoji: '📞', title: 'Repondeur IA 24/7', desc: 'Quand vous ne repondez pas, l\'IA prend l\'appel, qualifie le lead et vous envoie un resume WhatsApp.' },
+                { emoji: '📤', title: 'Appels sortants', desc: 'Programmez des appels IA : prospection, confirmations de RDV, relances clients, sondages.' },
+                { emoji: '💬', title: 'SMS & WhatsApp', desc: 'Envoyez et recevez des messages automatises : notifications, rappels, confirmations.' },
+                { emoji: '🗣️', title: 'Voix naturelle', desc: 'Powered by ElevenLabs : voix francaise naturelle (Maeva ou Emmanuel) pour toutes les interactions.' },
+                { emoji: '📊', title: 'Analytics appels', desc: 'Statistiques completes : duree, qualification, conversion, enregistrements, transcriptions.' },
+                { emoji: '🌍', title: 'Numero local', desc: 'Choisissez un numero francais (+33), ou un numero dans 100+ pays pour vos clients internationaux.' },
+                { emoji: '🔒', title: 'Securise', desc: 'Appels chiffres, conformite RGPD, enregistrements optionnels, suppression sur demande.' },
               ].map((feature, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'flex-start', gap: 12,
                   padding: '14px 16px', borderRadius: 12,
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  backdropFilter: 'blur(12px)',
+                  background: 'var(--fz-bg-hover, #F1F5F9)',
+                  border: '1px solid var(--fz-border, #E2E8F0)',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, flexShrink: 0, color: '#e4e6eb' }}>{feature.icon}</span>
+                  <span style={{ fontSize: 22, flexShrink: 0 }}>{feature.emoji}</span>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#e4e6eb', marginBottom: 3 }}>{feature.title}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{feature.desc}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 3 }}>{feature.title}</div>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.5 }}>{feature.desc}</div>
                   </div>
                 </div>
               ))}
@@ -1397,16 +1425,16 @@ export default function ReveilPage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '14px 20px', borderRadius: 12,
-              background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.2)',
+              background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)',
               marginBottom: 20,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 22 }}>savings</span>
+              <span style={{ fontSize: 22 }}>💰</span>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#a5b4fc' }}>Tarif Twilio transparent</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>Tarif Twilio transparent</div>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6 }}>
                   Numero francais : ~1€/mois · Appels sortants : ~0.01€/min · SMS : ~0.04€/msg
                   <br />
-                  <span style={{ color: 'rgba(255,255,255,0.3)' }}>Facturation directe Twilio, aucune commission Freenzy.</span>
+                  <span style={{ color: 'var(--fz-text-muted, #94A3B8)', opacity: 0.7 }}>Facturation directe Twilio, aucune commission Freenzy.</span>
                 </div>
               </div>
             </div>
@@ -1423,15 +1451,15 @@ export default function ReveilPage() {
                   minHeight: 44,
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>call</span> Commander mon numero IA
+                📞 Commander mon numero IA
               </Link>
               <Link
                 href="/client/repondeur"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '12px 24px', borderRadius: 12,
-                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-                  color: 'rgba(255,255,255,0.7)',
+                  background: 'var(--fz-bg-hover, #F1F5F9)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  color: 'var(--fz-text-secondary, #64748B)',
                   fontWeight: 600, fontSize: 14,
                   textDecoration: 'none', transition: 'opacity 0.2s',
                   minHeight: 44,
@@ -1448,7 +1476,7 @@ export default function ReveilPage() {
       {/*  7. TEST BUTTON                                */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">Tester votre reveil</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Tester votre reveil</div>
         <div className="card" style={{ padding: '24px', textAlign: 'center' }}>
           <button
             onClick={testAlarm}
@@ -1463,10 +1491,10 @@ export default function ReveilPage() {
             {testing ? (
               <span className="animate-pulse">Test en cours...</span>
             ) : (
-              <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>notifications_active</span> Tester mon reveil maintenant</>
+              <>🔔 Tester mon reveil maintenant</>
             )}
           </button>
-          <div className="text-xs text-muted mt-8">
+          <div className="text-xs mt-8" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
             Genere et envoie un reveil de test avec vos parametres actuels
           </div>
         </div>
@@ -1475,20 +1503,20 @@ export default function ReveilPage() {
         {testResult && (
           <div className="card mt-12" style={{
             borderLeft: '3px solid var(--accent)',
-            background: 'var(--bg-secondary)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)',
             padding: '16px 20px',
           }}>
             <div className="flex items-center gap-8 mb-8">
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>smart_toy</span>
-              <span className="text-md font-bold">Apercu du reveil</span>
+              <span style={{ fontSize: 20 }}>🤖</span>
+              <span className="text-md font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>Apercu du reveil</span>
               {testResult.delivered && (
                 <span className="badge badge-success" style={{ marginLeft: 'auto' }}>
                   Livre
                 </span>
               )}
             </div>
-            <div className="text-md text-secondary" style={{
-              lineHeight: 1.7, whiteSpace: 'pre-wrap',
+            <div className="text-md" style={{
+              lineHeight: 1.7, whiteSpace: 'pre-wrap', color: 'var(--fz-text-secondary, #64748B)',
             }}>
               {testResult.content}
             </div>
@@ -1501,8 +1529,8 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
         <div className="flex-between items-center mb-12">
-          <div className="section-title" style={{ margin: 0 }}>Routine du matin</div>
-          <span className="text-sm text-muted">{routineDone}/{routineTotal} — {routinePct}%</span>
+          <div className="section-title" style={{ margin: 0, color: 'var(--fz-text, #1E293B)' }}>Routine du matin</div>
+          <span className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{routineDone}/{routineTotal} — {routinePct}%</span>
         </div>
         <div className="progress-bar mb-12" style={{ height: 4 }}>
           <div className="progress-fill" style={{
@@ -1519,23 +1547,23 @@ export default function ReveilPage() {
               className="flex items-center gap-12 rounded-md"
               style={{
                 padding: '10px 14px', border: 'none', cursor: 'pointer',
-                background: 'var(--bg-secondary)', width: '100%', textAlign: 'left',
+                background: 'var(--fz-bg-secondary, #F8FAFC)', width: '100%', textAlign: 'left',
                 fontFamily: 'var(--font-sans)', opacity: r.done ? 0.6 : 1,
                 transition: 'opacity 0.2s',
               }}
             >
               <div style={{
                 width: 22, height: 22, borderRadius: 6, flexShrink: 0,
-                border: r.done ? '2px solid var(--success)' : '2px solid var(--border-secondary)',
+                border: r.done ? '2px solid var(--success)' : '2px solid var(--fz-border, #E2E8F0)',
                 background: r.done ? 'var(--success)' : 'transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'white', fontSize: 12,
               }}>
-                {r.done && <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span>}
+                {r.done && <span style={{ fontSize: 12 }}>✓</span>}
               </div>
               <span className="text-base" style={{
                 textDecoration: r.done ? 'line-through' : 'none',
-                color: 'var(--text-primary)',
+                color: 'var(--fz-text, #1E293B)',
               }}>
                 {r.label}
               </span>
@@ -1548,7 +1576,7 @@ export default function ReveilPage() {
       {/*  9. QUICK ACTIONS                              */}
       {/* ═══════════════════════════════════════════════ */}
       <div className="section">
-        <div className="section-title">Actions rapides</div>
+        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Actions rapides</div>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
@@ -1564,8 +1592,8 @@ export default function ReveilPage() {
                 transition: 'border-color 0.2s, box-shadow 0.2s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{action.icon}</span>
-              <span className="text-md font-medium">{action.label}</span>
+              <span style={{ fontSize: 24 }}>{action.emoji}</span>
+              <span className="text-md font-medium" style={{ color: 'var(--fz-text, #1E293B)' }}>{action.label}</span>
             </Link>
           ))}
         </div>

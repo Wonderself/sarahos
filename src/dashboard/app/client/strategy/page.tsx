@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
 import { DEFAULT_AGENTS, type AgentTypeId } from '../../../lib/agent-config';
 import VoiceInput from '../../../components/VoiceInput';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Helper: get agent def by ID ───
 const agent = (id: AgentTypeId) => DEFAULT_AGENTS.find(a => a.id === id)!;
@@ -1415,7 +1417,7 @@ export default function StrategyPage() {
       return (
         <div key={i} className="text-md text-secondary" style={{ lineHeight: 1.6 }}>
           {parts.map((part, j) => {
-            if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--text-primary)' }}>{part.replace(/\*\*/g, '')}</strong>;
+            if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--fz-text, #1E293B)' }}>{part.replace(/\*\*/g, '')}</strong>;
             return part;
           })}
         </div>
@@ -1440,28 +1442,32 @@ export default function StrategyPage() {
   const progressPct = totalActions > 0 ? Math.round((doneActions / totalActions) * 100) : 0;
 
   const TABS = [
-    { id: 'dashboard' as const, label: 'Tableau de bord', icon: 'bar_chart' },
-    { id: 'strategies' as const, label: 'Stratégies', icon: 'target' },
-    { id: 'folders' as const, label: 'Dossiers', icon: 'folder' },
-    { id: 'documents' as const, label: 'Documents', icon: 'description' },
-    { id: 'history' as const, label: 'Historique IA', icon: 'chat' },
+    { id: 'dashboard' as const, label: 'Tableau de bord', icon: '📊' },
+    { id: 'strategies' as const, label: 'Stratégies', icon: '🎯' },
+    { id: 'folders' as const, label: 'Dossiers', icon: '📁' },
+    { id: 'documents' as const, label: 'Documents', icon: '📄' },
+    { id: 'history' as const, label: 'Historique IA', icon: '💬' },
   ];
 
   return (
     <div className="client-page-scrollable">
       {/* ─── Header ─── */}
-      <div className="page-header">
-        <h1 className="page-title">Plan d&apos;Attaque</h1>
-        <p className="page-subtitle">
-          Votre centre de commandement. Définissez votre objectif, pilotez vos <span className="fz-logo-word">stratégies</span>, organisez vos actions.
-        </p>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.strategy.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.strategy.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.strategy.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.strategy.helpText} />
+        </div>
       </div>
 
       {/* ─── Objective Banner ─── */}
       <div className="card mb-20" style={{
         padding: 20,
-        background: objective.title ? 'linear-gradient(135deg, #7c3aed08, #06b6d408)' : 'var(--bg-secondary)',
-        border: objective.title ? '1px solid var(--accent)' : '1px dashed var(--border-secondary)',
+        background: objective.title ? 'linear-gradient(135deg, #7c3aed08, #06b6d408)' : 'var(--fz-bg-secondary, #F8FAFC)',
+        border: objective.title ? '1px solid var(--accent)' : '1px dashed var(--fz-border, #E2E8F0)',
       }}>
         {!objective.title && !editingObjective ? (
           <button
@@ -1511,8 +1517,8 @@ export default function StrategyPage() {
                         padding: '4px 12px', fontFamily: 'var(--font-sans)',
                         fontWeight: objective.priority === p ? 700 : 500,
                         background: objective.priority === p ? (p === 'haute' ? '#ef444420' : p === 'moyenne' ? '#f59e0b20' : '#22c55e20') : 'var(--bg-primary)',
-                        color: objective.priority === p ? (p === 'haute' ? '#ef4444' : p === 'moyenne' ? '#f59e0b' : '#22c55e') : 'var(--text-tertiary)',
-                        border: `1px solid ${objective.priority === p ? 'currentColor' : 'var(--border-secondary)'}`,
+                        color: objective.priority === p ? (p === 'haute' ? '#ef4444' : p === 'moyenne' ? '#f59e0b' : '#22c55e') : 'var(--fz-text-muted, #94A3B8)',
+                        border: `1px solid ${objective.priority === p ? 'currentColor' : 'var(--fz-border, #E2E8F0)'}`,
                       }}
                     >
                       {p.charAt(0).toUpperCase() + p.slice(1)}
@@ -1539,7 +1545,7 @@ export default function StrategyPage() {
         ) : (
           <div>
             <div className="flex items-center gap-8 mb-4">
-              <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>target</span></span>
+              <span style={{ fontSize: 20 }}>🎯</span>
               <div className="text-lg font-bold" style={{ flex: 1 }}>{objective.title}</div>
               <button
                 onClick={() => setEditingObjective(true)}
@@ -1553,7 +1559,7 @@ export default function StrategyPage() {
             <div className="flex gap-8 flex-wrap text-xs">
               {objective.deadline && (
                 <span className="badge" style={{ background: 'var(--bg-primary)' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>calendar_month</span> {new Date(objective.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  📅 {new Date(objective.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </span>
               )}
               <span className="badge" style={{
@@ -1569,20 +1575,20 @@ export default function StrategyPage() {
       </div>
 
       {/* ─── Tabs ─── */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '2px solid var(--border-primary)', overflowX: 'auto' }}>
+      <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '2px solid var(--fz-border, #E2E8F0)', overflowX: 'auto' }}>
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             style={{
               padding: '10px 18px', fontSize: 13, fontWeight: activeTab === tab.id ? 700 : 500,
-              color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-secondary)',
+              color: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
               background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
               borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
               marginBottom: -2, fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{tab.icon}</span> {tab.label}
+            <span style={{ fontSize: 16 }}>{tab.icon}</span> {tab.label}
           </button>
         ))}
       </div>
@@ -1597,7 +1603,7 @@ export default function StrategyPage() {
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
               <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--accent)' }}>{progressPct}%</div>
               <div className="text-xs text-muted">Progression globale</div>
-              <div style={{ height: 4, background: 'var(--bg-secondary)', borderRadius: 2, marginTop: 8 }}>
+              <div style={{ height: 4, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 2, marginTop: 8 }}>
                 <div style={{ height: '100%', width: `${progressPct}%`, background: 'var(--accent)', borderRadius: 2, transition: 'width 0.3s' }} />
               </div>
             </div>
@@ -1610,7 +1616,7 @@ export default function StrategyPage() {
               <div className="text-xs text-muted">En cours</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--text-tertiary)' }}>{totalActions - doneActions - doingActions}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--fz-text-muted, #94A3B8)' }}>{totalActions - doneActions - doingActions}</div>
               <div className="text-xs text-muted">À faire</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
@@ -1637,9 +1643,9 @@ export default function StrategyPage() {
                   const pct = Math.round((done / folder.items.length) * 100);
                   return (
                     <div key={folder.id} className="flex items-center gap-8">
-                      <span style={{ fontSize: 16, width: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{folder.icon}</span></span>
+                      <span style={{ fontSize: 16, width: 24 }}>📁</span>
                       <span className="text-sm font-semibold" style={{ width: 140, flexShrink: 0 }}>{folder.name}</span>
-                      <div style={{ flex: 1, height: 6, background: 'var(--bg-secondary)', borderRadius: 3 }}>
+                      <div style={{ flex: 1, height: 6, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 3 }}>
                         <div style={{ height: '100%', width: `${pct}%`, background: folder.color, borderRadius: 3, transition: 'width 0.3s' }} />
                       </div>
                       <span className="text-xs text-muted" style={{ width: 60, textAlign: 'right' }}>{done}/{folder.items.length}</span>
@@ -1659,7 +1665,7 @@ export default function StrategyPage() {
                 onClick={generateSynthesis}
                 disabled={synthesizing}
               >
-                {synthesizing ? 'Analyse en cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>psychology</span> Générer la synthèse</>}
+                {synthesizing ? 'Analyse en cours...' : <>✨ Générer la synthèse</>}
               </button>
             </div>
             {synthesis ? (
@@ -1692,7 +1698,7 @@ export default function StrategyPage() {
       {activeTab === 'strategies' && (
         <div>
           {/* Agent tabs */}
-          <div className="flex gap-6 flex-wrap mb-16" style={{ padding: '6px 0', borderBottom: '1px solid var(--border-primary)' }}>
+          <div className="flex gap-6 flex-wrap mb-16" style={{ padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
             {AGENT_STRATEGIES.map(strat => {
               const isActive = strat.agentId === activeAgentId;
               const hasSaved = !!allStrategies.strategies[strat.agentId];
@@ -1705,12 +1711,12 @@ export default function StrategyPage() {
                   style={{
                     padding: '6px 14px', fontWeight: isActive ? 700 : 500,
                     background: isActive ? strat.color + '15' : 'transparent',
-                    color: isActive ? strat.color : 'var(--text-secondary)',
-                    border: `1px solid ${isActive ? strat.color + '44' : 'var(--border-secondary)'}`,
+                    color: isActive ? strat.color : 'var(--fz-text-secondary, #64748B)',
+                    border: `1px solid ${isActive ? strat.color + '44' : 'var(--fz-border, #E2E8F0)'}`,
                     fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                   }}
                 >
-                  <span><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{strat.icon}</span></span>
+                  <span style={{ fontSize: 16 }}>{strat.icon}</span>
                   {strat.shortLabel}
                   {hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--success)', display: 'inline-block' }} />}
                   {hasSaved && !hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--warning)', display: 'inline-block' }} />}
@@ -1721,7 +1727,7 @@ export default function StrategyPage() {
 
           {/* Reassurance */}
           <div className="alert alert-info mb-16">
-            <span className="text-base"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>lightbulb</span></span>{' '}
+            <span className="text-base">💡</span>{' '}
             <span className="text-md">{activeStrategy?.reassurance}</span>
           </div>
 
@@ -1731,7 +1737,7 @@ export default function StrategyPage() {
           {strategyViewMode === 'form' && activeStrategy && (
             <div className="card p-20">
               <div className="flex items-center gap-8 mb-16">
-                <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span></span>
+                <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
                 <div>
                   <div className="text-lg font-bold">{activeStrategy.title}</div>
                   <div className="text-sm text-muted">{activeStrategy.subtitle}</div>
@@ -1776,14 +1782,14 @@ export default function StrategyPage() {
                   disabled={generating || filledCount === 0}
                   style={{
                     minWidth: 200, padding: '10px 20px',
-                    background: generating ? 'var(--bg-tertiary)' : activeStrategy.color,
-                    borderColor: generating ? 'var(--border-secondary)' : activeStrategy.color,
+                    background: generating ? 'var(--fz-bg-hover, #F1F5F9)' : activeStrategy.color,
+                    borderColor: generating ? 'var(--fz-border, #E2E8F0)' : activeStrategy.color,
                   }}
                 >
                   {generating ? (
                     <span className="animate-pulse">{agent(activeStrategy.agentId).name} analyse et crée votre plan...</span>
                   ) : (
-                    <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>target</span> Générer mon plan d&apos;action</>
+                    <>🎯 Générer mon plan d&apos;action</>
                   )}
                 </button>
                 {currentPlan && (
@@ -1802,18 +1808,18 @@ export default function StrategyPage() {
               <div className="flex gap-8 flex-wrap mb-16">
                 <button className="btn btn-ghost btn-sm" onClick={() => setStrategyViewMode('form')}>← Modifier mes réponses</button>
                 <div style={{ flex: 1 }} />
-                <button className="btn btn-ghost btn-sm" onClick={copyPlan}>{copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Copié !</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Copier</>}</button>
+                <button className="btn btn-ghost btn-sm" onClick={copyPlan}>{copied ? <>✅ Copié !</> : <>📋 Copier</>}</button>
                 <button
                   className="btn btn-sm"
                   onClick={() => { setStrategyViewMode('form'); setTimeout(() => generatePlan(), 100); }}
                   style={{ background: activeStrategy.color, color: 'white', borderColor: activeStrategy.color }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>refresh</span> Régénérer
+                  🔄 Régénérer
                 </button>
               </div>
               <div className="card p-20">
-                <div className="flex items-center gap-8 mb-16" style={{ paddingBottom: 16, borderBottom: '1px solid var(--border-primary)' }}>
-                  <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span></span>
+                <div className="flex items-center gap-8 mb-16" style={{ paddingBottom: 16, borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+                  <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
                   <div>
                     <div className="text-lg font-bold">{activeStrategy.title}</div>
                     <div className="text-xs text-muted">
@@ -1854,17 +1860,17 @@ export default function StrategyPage() {
                       borderBottom: isExpanded ? `1px solid ${folder.color}22` : 'none',
                     }}
                   >
-                    <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{folder.icon}</span></span>
+                    <span style={{ fontSize: 20 }}>📁</span>
                     <div style={{ flex: 1, textAlign: 'left' }}>
                       <div className="text-md font-bold">{folder.name}</div>
                       <div className="text-xs text-muted">{total} action{total > 1 ? 's' : ''} • {done} terminée{done > 1 ? 's' : ''}</div>
                     </div>
                     {total > 0 && (
-                      <div style={{ width: 60, height: 6, background: 'var(--bg-secondary)', borderRadius: 3 }}>
+                      <div style={{ width: 60, height: 6, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 3 }}>
                         <div style={{ height: '100%', width: `${total > 0 ? (done / total) * 100 : 0}%`, background: folder.color, borderRadius: 3 }} />
                       </div>
                     )}
-                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>{isExpanded ? '▾' : '▸'}</span>
+                    <span className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{isExpanded ? '▾' : '▸'}</span>
                   </button>
 
                   {/* Folder content */}
@@ -1873,13 +1879,13 @@ export default function StrategyPage() {
                       {/* Items list */}
                       {folder.items.map(item => (
                         <div key={item.id} className="flex items-center gap-8 mb-6" style={{
-                          padding: '8px 10px', borderRadius: 8, background: 'var(--bg-secondary)',
+                          padding: '8px 10px', borderRadius: 8, background: 'var(--fz-bg-secondary, #F8FAFC)',
                         }}>
                           <button
                             onClick={() => toggleItemStatus(folder.id, item.id)}
                             style={{
                               width: 22, height: 22, borderRadius: 6, border: `2px solid ${
-                                item.status === 'done' ? 'var(--success)' : item.status === 'doing' ? 'var(--warning)' : 'var(--border-secondary)'
+                                item.status === 'done' ? 'var(--success)' : item.status === 'doing' ? 'var(--warning)' : 'var(--fz-border, #E2E8F0)'
                               }`,
                               background: item.status === 'done' ? 'var(--success)' : item.status === 'doing' ? 'var(--warning)' : 'transparent',
                               color: item.status !== 'todo' ? '#fff' : 'transparent',
@@ -1887,18 +1893,18 @@ export default function StrategyPage() {
                               fontSize: 11, cursor: 'pointer', flexShrink: 0,
                             }}
                           >
-                            {item.status === 'done' ? <span className="material-symbols-rounded" style={{ fontSize: 11 }}>check</span> : item.status === 'doing' ? <span className="material-symbols-rounded" style={{ fontSize: 11 }}>hourglass_empty</span> : ''}
+                            {item.status === 'done' ? '✅' : item.status === 'doing' ? '⏳' : ''}
                           </button>
                           <span className="text-sm" style={{
                             flex: 1,
                             textDecoration: item.status === 'done' ? 'line-through' : 'none',
-                            color: item.status === 'done' ? 'var(--text-tertiary)' : 'var(--text-primary)',
+                            color: item.status === 'done' ? 'var(--fz-text-muted, #94A3B8)' : 'var(--fz-text, #1E293B)',
                           }}>
                             {item.title}
                           </span>
                           <button
                             onClick={() => deleteItem(folder.id, item.id)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 14, padding: '0 4px' }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14, padding: '0 4px' }}
                           >
                             ×
                           </button>
@@ -1986,7 +1992,7 @@ export default function StrategyPage() {
           {/* Document list */}
           {documents.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>description</span></div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📄</div>
               <div className="text-md font-semibold mb-4">Aucun document</div>
               <p className="text-sm text-muted">Ajoutez des documents pour les analyser avec l&apos;IA et enrichir votre plan d&apos;attaque.</p>
             </div>
@@ -1995,7 +2001,7 @@ export default function StrategyPage() {
               {documents.map(doc => (
                 <div key={doc.id} className="card" style={{ padding: 16 }}>
                   <div className="flex items-center gap-8 mb-8">
-                    <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>description</span></span>
+                    <span style={{ fontSize: 20 }}>📄</span>
                     <div style={{ flex: 1 }}>
                       <div className="text-md font-bold">{doc.name}</div>
                       <div className="text-xs text-muted">
@@ -2008,7 +2014,7 @@ export default function StrategyPage() {
                       onClick={() => analyzeDocument(doc)}
                       disabled={analyzing}
                     >
-                      {analyzing ? '...' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>psychology</span> Analyser</>}
+                      {analyzing ? '...' : <>✨ Analyser</>}
                     </button>
                     <button
                       onClick={() => deleteDocument(doc.id)}
@@ -2053,9 +2059,9 @@ export default function StrategyPage() {
                     setShowUpload(true);
                   }}
                   className="card"
-                  style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: '1px solid var(--border-secondary)', background: 'var(--bg-secondary)', fontFamily: 'var(--font-sans)' }}
+                  style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', fontFamily: 'var(--font-sans)' }}
                 >
-                  <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{tpl.icon}</span></span>
+                  <span style={{ fontSize: 20 }}>{({'assignment':'📋','bar_chart':'📊','calendar_month':'📅','savings':'💰','target':'🎯','edit_note':'✏️'} as Record<string,string>)[tpl.icon] || tpl.icon}</span>
                   <div className="text-sm font-bold mt-4">{tpl.name}</div>
                   <div className="text-xs text-muted">{tpl.desc}</div>
                 </button>
@@ -2076,7 +2082,7 @@ export default function StrategyPage() {
 
           {conversations.length === 0 ? (
             <div className="card" style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>chat</span></div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
               <div className="text-md font-semibold mb-4">Aucun historique</div>
               <p className="text-sm text-muted">
                 Les plans générés dans l&apos;onglet Stratégies apparaîtront ici automatiquement.
@@ -2087,7 +2093,7 @@ export default function StrategyPage() {
               {conversations.map((conv, i) => (
                 <div key={i} className="card" style={{ padding: 16 }}>
                   <div className="flex items-center gap-8 mb-6">
-                    <span style={{ fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>smart_toy</span></span>
+                    <span style={{ fontSize: 16 }}>🤖</span>
                     <div className="text-sm font-bold" style={{ flex: 1 }}>{conv.summary}</div>
                     <span className="text-xs text-muted">
                       {new Date(conv.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -2097,7 +2103,7 @@ export default function StrategyPage() {
                   {conv.keyPoints.length > 0 && (
                     <div className="flex gap-6 flex-wrap">
                       {conv.keyPoints.map((kp, j) => (
-                        <span key={j} className="badge" style={{ fontSize: 10, background: 'var(--bg-secondary)' }}>
+                        <span key={j} className="badge" style={{ fontSize: 10, background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
                           {kp}
                         </span>
                       ))}
@@ -2153,8 +2159,8 @@ function FieldRenderer({
                 style={{
                   padding: '6px 14px', fontWeight: isSelected ? 600 : 500,
                   background: isSelected ? accentColor : 'var(--bg-primary)',
-                  color: isSelected ? 'white' : 'var(--text-tertiary)',
-                  border: `1px solid ${isSelected ? accentColor : 'var(--border-secondary)'}`,
+                  color: isSelected ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                  border: `1px solid ${isSelected ? accentColor : 'var(--fz-border, #E2E8F0)'}`,
                   fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                 }}
               >{opt}</button>
@@ -2172,8 +2178,8 @@ function FieldRenderer({
                 style={{
                   padding: '6px 14px', fontWeight: selected ? 600 : 500,
                   background: selected ? accentColor : 'var(--bg-primary)',
-                  color: selected ? 'white' : 'var(--text-tertiary)',
-                  border: `1px solid ${selected ? accentColor : 'var(--border-secondary)'}`,
+                  color: selected ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                  border: `1px solid ${selected ? accentColor : 'var(--fz-border, #E2E8F0)'}`,
                   fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                 }}
               >{chip}</button>

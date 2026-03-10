@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 const NOTIF_READ_KEY = 'fz_notif_read';
 
@@ -20,11 +22,11 @@ interface Notification {
 }
 
 
-const TYPE_ICONS: Record<NotifType, string> = {
-  alert: 'circle',
-  session: 'link',
-  update: 'arrow_upward',
-  info: 'info',
+const TYPE_EMOJIS: Record<NotifType, string> = {
+  alert: '⚠️',
+  session: '🔑',
+  update: '📦',
+  info: 'ℹ️',
 };
 
 const TYPE_LABELS: Record<NotifType, string> = {
@@ -135,7 +137,7 @@ export default function NotificationsPage() {
               id: 'alert-credits-low',
               type: 'alert',
               title: 'Crédits bas',
-              body: `Il vous reste ${credits} crédit${Number(credits) < 2 ? '' : 's'}. Rechargez votre compte pour continuer à utiliser vos agents IA.`,
+              body: `Il vous reste ${credits} crédit${Number(credits) < 2 ? '' : 's'}. Rechargez votre compte pour continuer à utiliser vos assistants IA.`,
               date: new Date().toISOString(),
               actionLabel: 'Recharger →',
               actionHref: '/client/account',
@@ -220,13 +222,16 @@ export default function NotificationsPage() {
     info: '#3b82f6',
   };
 
+  const pageMeta = PAGE_META.notifications;
+
   return (
     <div className="client-page-scrollable">
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">
-            <span className="fz-logo-word">Notifications</span>
+          <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 24 }}>{pageMeta.emoji}</span>
+            <span className="fz-logo-word">{pageMeta.title}</span>
             {unreadCount > 0 && (
               <span style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -236,6 +241,7 @@ export default function NotificationsPage() {
                 {unreadCount}
               </span>
             )}
+            <HelpBubble text={pageMeta.helpText} />
           </h1>
           <p className="page-subtitle">
             {unreadCount > 0
@@ -245,7 +251,7 @@ export default function NotificationsPage() {
         </div>
         {unreadCount > 0 && (
           <button onClick={handleMarkAllRead} className="btn btn-ghost btn-sm">
-            Tout marquer comme lu
+            ✅ Tout marquer comme lu
           </button>
         )}
       </div>
@@ -272,12 +278,12 @@ export default function NotificationsPage() {
       {/* Content */}
       {loading ? (
         <div className="text-center text-muted" style={{ padding: 60 }}>
-          <div className="animate-pulse" style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>notifications</span></div>
+          <div className="animate-pulse" style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
           <div>Chargement des notifications...</div>
         </div>
       ) : filtered.length === 0 ? (
         <div className="card text-center" style={{ padding: '60px 24px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check_circle</span></div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
           <div className="text-xl font-bold mb-8">Tout est parfait !</div>
           <div className="text-md text-secondary">Aucune notification dans cette catégorie.</div>
         </div>
@@ -298,9 +304,9 @@ export default function NotificationsPage() {
                 <div style={{
                   width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: typeColor[notif.type] + '15', fontSize: 18,
+                  background: typeColor[notif.type] + '15', fontSize: 20,
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{TYPE_ICONS[notif.type]}</span>
+                  {TYPE_EMOJIS[notif.type]}
                 </div>
 
                 {/* Content */}
@@ -356,12 +362,12 @@ export default function NotificationsPage() {
       {/* Bottom CTA if no alerts */}
       {!loading && notifications.filter(n => n.type === 'alert').length === 0 && (
         <div className="card text-center mt-16" style={{ padding: '24px 20px', background: 'var(--success-muted)', borderColor: 'var(--success)' }}>
-          <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>check_circle</span></span>
+          <span style={{ fontSize: 24 }}>✅</span>
           <div className="text-base font-semibold mt-6" style={{ color: 'var(--success)' }}>
             Aucune alerte active — Votre compte est en bonne santé
           </div>
           <div className="text-sm text-secondary mt-4">
-            Vos crédits sont suffisants et vos agents sont opérationnels.
+            Vos crédits sont suffisants et vos assistants sont opérationnels.
           </div>
           <Link href="/client/dashboard" className="btn btn-sm mt-12" style={{ background: 'var(--success)', color: '#fff', border: 'none' }}>
             Voir mon dashboard →

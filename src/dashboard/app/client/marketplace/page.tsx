@@ -7,6 +7,8 @@ import {
   type AgentTemplate, type Category, type SortMode,
 } from '../../../lib/marketplace-data';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { PAGE_META } from '../../../lib/emoji-map';
+import HelpBubble from '../../../components/HelpBubble';
 
 // ── Component ──
 
@@ -95,20 +97,22 @@ export default function MarketplacePage() {
 
   return (
     <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '32px 24px', maxWidth: 1200, margin: '0 auto' }}>
-      {/* ── Header ── */}
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 22 : 28 }}>storefront</span> Marketplace des <span className="fz-logo-word">Agents</span>
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
-          Explorez et installez des <span className="fz-logo-word">agents IA</span> specialises pour <span className="fz-logo-word">automatiser</span> vos taches quotidiennes.
-        </p>
+      {/* ── Page Header ── */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.marketplace.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.marketplace.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.marketplace.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.marketplace.helpText} />
+        </div>
       </div>
 
       {/* ── Featured Section ── */}
       <div style={{ marginBottom: 40 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 16 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>star</span> Agents vedettes
+        <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 16 }}>
+          ⭐ Assistants vedettes
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {featuredAgents.map((agent, idx) => (
@@ -158,7 +162,7 @@ export default function MarketplacePage() {
                     transition: 'all 0.2s',
                   }}
                 >
-                  {installing === agent.id ? '...' : installed.has(agent.id) ? <><span className="material-symbols-rounded" style={{ fontSize: 13 }}>check_circle</span> Installe</> : 'Installer'}
+                  {installing === agent.id ? '...' : installed.has(agent.id) ? <>✅ Installe</> : 'Installer'}
                 </button>
               </div>
             </div>
@@ -170,27 +174,27 @@ export default function MarketplacePage() {
       <div style={{ marginBottom: 24 }}>
         {/* Search bar */}
         <div style={{ position: 'relative', marginBottom: 16 }}>
-          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--text-muted)' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>search</span>
+          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            🔍
           </span>
           <input
             type="text"
-            placeholder="Rechercher un agent..."
+            placeholder="Rechercher un assistant..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
               width: '100%',
               padding: '12px 16px 12px 42px',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border-primary)',
-              background: 'var(--bg-primary)',
-              color: 'var(--text-primary)',
+              border: '1px solid var(--fz-border, #E2E8F0)',
+              background: 'var(--fz-bg, #FFFFFF)',
+              color: 'var(--fz-text, #1E293B)',
               fontSize: 14,
               outline: 'none',
               transition: 'border-color 0.2s',
             }}
             onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
-            onBlur={(e) => (e.target.style.borderColor = 'var(--border-primary)')}
+            onBlur={(e) => (e.target.style.borderColor = 'var(--fz-border, #E2E8F0)')}
           />
         </div>
 
@@ -203,9 +207,9 @@ export default function MarketplacePage() {
               style={{
                 padding: '6px 16px',
                 borderRadius: 20,
-                border: category === cat ? '2px solid var(--accent)' : '1px solid var(--border-primary)',
-                background: category === cat ? 'var(--accent-muted)' : 'var(--bg-primary)',
-                color: category === cat ? 'var(--accent)' : 'var(--text-secondary)',
+                border: category === cat ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
+                background: category === cat ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
+                color: category === cat ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
                 fontSize: 13,
                 fontWeight: category === cat ? 600 : 400,
                 cursor: 'pointer',
@@ -220,8 +224,8 @@ export default function MarketplacePage() {
 
         {/* Sort + count */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
-            {filtered.length} agent{filtered.length > 1 ? 's' : ''} trouve{filtered.length > 1 ? 's' : ''}
+          <span style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            {filtered.length} assistant{filtered.length > 1 ? 's' : ''} trouve{filtered.length > 1 ? 's' : ''}
           </span>
           <div style={{ display: 'flex', gap: 4 }}>
             {([
@@ -236,8 +240,8 @@ export default function MarketplacePage() {
                   padding: '5px 12px',
                   borderRadius: 'var(--radius-sm)',
                   border: 'none',
-                  background: sort === s.key ? 'var(--accent)' : 'var(--bg-secondary)',
-                  color: sort === s.key ? '#fff' : 'var(--text-secondary)',
+                  background: sort === s.key ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                  color: sort === s.key ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                   fontSize: 12,
                   fontWeight: 500,
                   cursor: 'pointer',
@@ -271,17 +275,17 @@ export default function MarketplacePage() {
       </div>
 
       {filtered.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>search</span></div>
-          <p style={{ fontSize: 15 }}>Aucun agent ne correspond a votre recherche.</p>
+        <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+          <p style={{ fontSize: 15 }}>Aucun assistant ne correspond a votre recherche.</p>
           <button
             onClick={() => { setSearch(''); setCategory('Tous'); }}
             style={{
               marginTop: 12,
               padding: '8px 20px',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border-primary)',
-              background: 'var(--bg-primary)',
+              border: '1px solid var(--fz-border, #E2E8F0)',
+              background: 'var(--fz-bg, #FFFFFF)',
               color: 'var(--accent)',
               fontSize: 13,
               cursor: 'pointer',
@@ -298,17 +302,17 @@ export default function MarketplacePage() {
           marginTop: 40,
           padding: '16px 24px',
           borderRadius: 'var(--radius-md)',
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)',
+          border: '1px solid var(--fz-border, #E2E8F0)',
           display: 'flex',
           justifyContent: 'space-around',
-          backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
           flexWrap: 'wrap',
           gap: 16,
         }}
       >
-        <StatItem label="Agents disponibles" value={TEMPLATES.length.toString()} />
-        <StatItem label="Agents installes" value={installed.size.toString()} />
+        <StatItem label="Assistants disponibles" value={TEMPLATES.length.toString()} />
+        <StatItem label="Assistants installes" value={installed.size.toString()} />
         <StatItem label="Categories" value={(CATEGORIES.length - 1).toString()} />
         <StatItem label="100% Gratuits" value={TEMPLATES.length.toString()} />
       </div>
@@ -334,15 +338,14 @@ function AgentCard({
   return (
     <div
       style={{
-        background: 'rgba(255,255,255,0.05)',
+        background: 'var(--fz-bg, #FFFFFF)',
         borderRadius: 'var(--radius-lg)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        border: '1px solid var(--fz-border, #E2E8F0)',
         padding: 20,
         transition: 'transform 0.2s, box-shadow 0.2s',
         cursor: 'default',
         display: 'flex',
         flexDirection: 'column',
-        backdropFilter: 'blur(12px)',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-3px)';
@@ -368,7 +371,7 @@ function AgentCard({
                 fontWeight: 600,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 11 }}>local_fire_department</span> Populaire
+              📈 Populaire
             </span>
           )}
           {agent.badge === 'nouveau' && (
@@ -382,14 +385,14 @@ function AgentCard({
                 fontWeight: 600,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 11 }}>auto_awesome</span> Nouveau
+              ✨ Nouveau
             </span>
           )}
         </div>
       </div>
 
       {/* Name */}
-      <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>{agent.name}</h3>
+      <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>{agent.name}</h3>
 
       {/* Category + tier badges */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
@@ -423,7 +426,7 @@ function AgentCard({
       <p
         style={{
           fontSize: 13,
-          color: 'var(--text-secondary)',
+          color: 'var(--fz-text-secondary, #64748B)',
           lineHeight: 1.5,
           marginBottom: 16,
           flex: 1,
@@ -438,7 +441,7 @@ function AgentCard({
 
       {/* Footer: installs + button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
           {agent.installs.toLocaleString('fr-FR')} installs
         </span>
         <button
@@ -447,9 +450,9 @@ function AgentCard({
           style={{
             padding: '7px 18px',
             borderRadius: 'var(--radius-md)',
-            border: isInstalled ? '1px solid var(--border-primary)' : 'none',
-            background: isInstalled ? 'var(--bg-primary)' : 'var(--accent)',
-            color: isInstalled ? 'var(--text-secondary)' : '#fff',
+            border: isInstalled ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
+            background: isInstalled ? 'var(--fz-bg, #FFFFFF)' : 'var(--accent)',
+            color: isInstalled ? 'var(--fz-text-secondary, #64748B)' : '#fff',
             fontSize: 13,
             fontWeight: 600,
             cursor: isInstalling ? 'wait' : 'pointer',
@@ -466,7 +469,7 @@ function AgentCard({
             }
           }}
         >
-          {isInstalling ? '...' : isInstalled ? <><span className="material-symbols-rounded" style={{ fontSize: 13 }}>check_circle</span> Installe</> : 'Installer'}
+          {isInstalling ? '...' : isInstalled ? <>✅ Installe</> : 'Installer'}
         </button>
       </div>
     </div>
@@ -477,7 +480,7 @@ function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ textAlign: 'center' }}>
       <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>{value}</div>
-      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{label}</div>
+      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{label}</div>
     </div>
   );
 }

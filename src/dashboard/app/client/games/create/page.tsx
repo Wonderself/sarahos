@@ -108,14 +108,14 @@ export default function CreateGamePage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0720', padding: '32px 24px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '32px 24px' }}>
       <div style={{ maxWidth: 700, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
           <Link
             href="/client/games"
             style={{
-              color: 'rgba(255,255,255,0.5)',
+              color: 'var(--fz-text-muted, #94A3B8)',
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -123,20 +123,19 @@ export default function CreateGamePage() {
               fontSize: 13,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>arrow_back</span>
+            ←
             Arcade
           </Link>
-          <span style={{ color: 'rgba(255,255,255,0.2)' }}>/</span>
-          <span style={{ color: '#fff', fontWeight: 600 }}>Créer un jeu</span>
+          <span style={{ color: 'var(--fz-border, #E2E8F0)' }}>/</span>
+          <span style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600 }}>Créer un jeu</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed' }}>
-            auto_awesome
-          </span>
+          <span style={{ fontSize: 28, color: '#7c3aed' }}>
+            ✨</span>
           <div>
-            <h1 style={{ color: '#fff', fontSize: 22, fontWeight: 700, margin: 0 }}>Créer un jeu avec l&apos;IA</h1>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>
+            <h1 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 22, fontWeight: 700, margin: 0 }}>Créer un jeu avec l&apos;IA</h1>
+            <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, margin: 0 }}>
               Décrivez votre jeu et l&apos;IA génère les questions
             </p>
           </div>
@@ -144,7 +143,7 @@ export default function CreateGamePage() {
 
         {/* Type selector */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, display: 'block', marginBottom: 8 }}>
+          <label style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 12, display: 'block', marginBottom: 8 }}>
             Type de jeu
           </label>
           <div style={{ display: 'flex', gap: 10 }}>
@@ -154,12 +153,12 @@ export default function CreateGamePage() {
                 onClick={() => setType(opt.value)}
                 style={{
                   flex: 1,
-                  background: type === opt.value ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.05)',
-                  border: `1px solid ${type === opt.value ? '#7c3aed' : 'rgba(255,255,255,0.08)'}`,
+                  background: type === opt.value ? 'rgba(124,58,237,0.15)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                  border: `1px solid ${type === opt.value ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
                   borderRadius: 10,
                   padding: '12px 16px',
                   cursor: 'pointer',
-                  color: type === opt.value ? '#7c3aed' : 'rgba(255,255,255,0.5)',
+                  color: type === opt.value ? '#7c3aed' : 'var(--fz-text-muted, #94A3B8)',
                   fontSize: 13,
                   fontWeight: 600,
                   display: 'flex',
@@ -168,7 +167,7 @@ export default function CreateGamePage() {
                   justifyContent: 'center',
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{opt.icon}</span>
+                <span style={{ fontSize: 16 }}>{opt.icon === 'quiz' ? '❓' : opt.icon === 'psychology' ? '🧠' : opt.icon === 'bolt' ? '⚡' : opt.icon}</span>
                 {opt.label}
               </button>
             ))}
@@ -177,7 +176,7 @@ export default function CreateGamePage() {
 
         {/* Prompt input */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, display: 'block', marginBottom: 8 }}>
+          <label style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 12, display: 'block', marginBottom: 8 }}>
             Décrivez votre jeu
           </label>
           <textarea
@@ -187,11 +186,11 @@ export default function CreateGamePage() {
             rows={4}
             style={{
               width: '100%',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'var(--fz-bg-secondary, #F8FAFC)',
+              border: '1px solid var(--fz-border, #E2E8F0)',
               borderRadius: 10,
               padding: '14px 16px',
-              color: '#fff',
+              color: 'var(--fz-text, #1E293B)',
               fontSize: 14,
               resize: 'vertical',
               outline: 'none',
@@ -207,7 +206,7 @@ export default function CreateGamePage() {
           disabled={!prompt.trim() || generating}
           style={{
             background: generating ? 'rgba(124,58,237,0.3)' : 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-            color: '#fff',
+            color: 'var(--fz-text, #1E293B)',
             border: 'none',
             borderRadius: 10,
             padding: '12px 28px',
@@ -221,8 +220,8 @@ export default function CreateGamePage() {
             opacity: !prompt.trim() ? 0.5 : 1,
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18, animation: generating ? 'spin 1s linear infinite' : 'none' }}>
-            {generating ? 'progress_activity' : 'auto_awesome'}
+          <span style={{ fontSize: 16, animation: generating ? 'spin 1s linear infinite' : 'none', display: 'inline-block' }}>
+            {generating ? '⏳' : '✨'}
           </span>
           {generating ? 'Génération en cours...' : 'Générer le jeu'}
         </button>
@@ -247,7 +246,7 @@ export default function CreateGamePage() {
         {/* Preview */}
         {game && (
           <div style={{ marginBottom: 24 }}>
-            <h3 style={{ color: '#fff', fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
+            <h3 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
               Aperçu ({game.questions.length} questions)
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -255,14 +254,14 @@ export default function CreateGamePage() {
                 <div
                   key={i}
                   style={{
-                    background: 'rgba(255,255,255,0.05)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     borderRadius: 10,
                     padding: '14px 16px',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>
+                    <span style={{ color: 'var(--fz-text, #1E293B)', fontSize: 13, fontWeight: 600 }}>
                       {i + 1}. {q.question}
                     </span>
                     <span
@@ -285,8 +284,8 @@ export default function CreateGamePage() {
                           fontSize: 11,
                           padding: '3px 10px',
                           borderRadius: 6,
-                          background: c === q.answer ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)',
-                          color: c === q.answer ? '#22c55e' : 'rgba(255,255,255,0.5)',
+                          background: c === q.answer ? 'rgba(34,197,94,0.12)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                          color: c === q.answer ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)',
                           border: c === q.answer ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
@@ -303,7 +302,7 @@ export default function CreateGamePage() {
                 onClick={handlePublish}
                 style={{
                   background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                  color: '#fff',
+                  color: 'var(--fz-text, #1E293B)',
                   border: 'none',
                   borderRadius: 10,
                   padding: '12px 28px',
@@ -316,7 +315,7 @@ export default function CreateGamePage() {
                   marginTop: 20,
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>publish</span>
+                📤
                 Publier dans la communauté
               </button>
             )}

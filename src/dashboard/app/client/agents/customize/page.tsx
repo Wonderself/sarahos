@@ -12,12 +12,12 @@ import {
 } from '../../../../lib/agent-config';
 
 const STEPS = [
-  { icon: 'theater_comedy', title: 'Identité', desc: 'Nom, rôle, avatar' },
-  { icon: 'tune', title: 'Personnalité', desc: 'Ton et style' },
-  { icon: 'psychology', title: 'Expertise', desc: 'Domaines et compétences' },
-  { icon: 'description', title: 'Instructions', desc: 'Règles personnalisées' },
-  { icon: 'business', title: 'Contexte', desc: 'Votre entreprise' },
-  { icon: 'visibility', title: 'Aperçu & Test', desc: 'Tester et sauvegarder' },
+  { icon: '🎭', title: 'Identité', desc: 'Nom, rôle, avatar' },
+  { icon: '⚙️', title: 'Personnalité', desc: 'Ton et style' },
+  { icon: '🧠', title: 'Expertise', desc: 'Domaines et compétences' },
+  { icon: '📝', title: 'Instructions', desc: 'Règles personnalisées' },
+  { icon: '🏢', title: 'Contexte', desc: 'Votre entreprise' },
+  { icon: '👁️', title: 'Aperçu & Test', desc: 'Tester et sauvegarder' },
 ];
 
 const PERSONALITY_SLIDERS: { key: keyof AgentPersonality; label: string; left: string; right: string }[] = [
@@ -74,7 +74,7 @@ function RuleList({ rules, onChange, placeholder }: { rules: string[]; onChange:
             onChange={e => { const updated = [...rules]; updated[i] = e.target.value; onChange(updated); }}
             className="input input-sm flex-1"
           />
-          <button onClick={() => onChange(rules.filter((_, j) => j !== i))} className="btn btn-ghost btn-xs" style={{ color: 'var(--danger)' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+          <button onClick={() => onChange(rules.filter((_, j) => j !== i))} className="btn btn-ghost btn-xs" style={{ color: 'var(--danger)' }}>✕</button>
         </div>
       ))}
       <button
@@ -338,7 +338,7 @@ export default function AgentCustomizePage() {
           model: 'claude-sonnet-4-20250514',
           messages: [
             { role: 'user', content: prompt },
-            { role: 'assistant', content: `Compris, je suis ${config.customName || 'votre agent'}, ${config.customRole}. Comment puis-je vous aider?` },
+            { role: 'assistant', content: `Compris, je suis ${config.customName || 'votre assistant'}, ${config.customRole}. Comment puis-je vous aider?` },
             { role: 'user', content: testMessage },
           ],
           maxTokens: 512,
@@ -365,11 +365,11 @@ export default function AgentCustomizePage() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Agent Studio</h1>
-          <p className="page-subtitle">Personnalisez vos agents IA — {customizedCount} agent{customizedCount !== 1 ? 's' : ''} personnalisé{customizedCount !== 1 ? 's' : ''}</p>
+          <p className="page-subtitle">Personnalisez vos assistants IA — {customizedCount} assistant{customizedCount !== 1 ? 's' : ''} personnalisé{customizedCount !== 1 ? 's' : ''}</p>
         </div>
         <div className="page-actions flex gap-8">
-          <button onClick={() => setShowExport(!showExport)} className="btn btn-ghost btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>settings</span> Import/Export</button>
-          {saved && <span className="badge badge-success" style={{ padding: '6px 14px' }}>Sauvegarde <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span></span>}
+          <button onClick={() => setShowExport(!showExport)} className="btn btn-ghost btn-sm">⚙️ Import/Export</button>
+          {saved && <span className="badge badge-success" style={{ padding: '6px 14px' }}>Sauvegarde ✅</span>}
         </div>
       </div>
 
@@ -399,13 +399,13 @@ export default function AgentCustomizePage() {
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px',
                 borderRadius: 'var(--radius-md)',
                 background: isSelected ? (effective?.accentColor ?? agent.color) + '22' : 'var(--bg-secondary)',
-                border: `2px solid ${isSelected ? (effective?.accentColor ?? agent.color) : 'var(--border-primary)'}`,
-                cursor: 'pointer', color: 'var(--text-primary)',
+                border: `2px solid ${isSelected ? (effective?.accentColor ?? agent.color) : 'var(--fz-border, #E2E8F0)'}`,
+                cursor: 'pointer', color: 'var(--fz-text, #1E293B)',
                 transition: 'all 0.15s', fontFamily: 'var(--font-sans)',
                 position: 'relative',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 20, color: agent.color || 'var(--accent)' }}>{agent.materialIcon || 'smart_toy'}</span>
+              <span style={{ fontSize: 18 }}>{agent.emoji || '🤖'}</span>
               <div style={{ textAlign: 'left' }}>
                 <div className="text-md font-semibold">{effective?.customName ?? agent.name}</div>
                 <div className="text-xs text-muted">{effective?.customRole ?? agent.role}</div>
@@ -415,7 +415,7 @@ export default function AgentCustomizePage() {
                   position: 'absolute', top: -4, right: -4, width: 14, height: 14, borderRadius: '50%',
                   background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 8, color: 'white', fontWeight: 800,
-                }}><span className="material-symbols-rounded" style={{ fontSize: 8 }}>check</span></span>
+                }}>✓</span>
               )}
             </button>
           );
@@ -431,7 +431,7 @@ export default function AgentCustomizePage() {
             className="card card-compact"
             style={{
               cursor: 'pointer', flex: 1, textAlign: 'left',
-              borderColor: config.templateId === preset.id ? preset.color : 'var(--border-primary)',
+              borderColor: config.templateId === preset.id ? preset.color : 'var(--fz-border, #E2E8F0)',
             }}
           >
             <div className="flex items-center gap-8 mb-4">
@@ -458,7 +458,7 @@ export default function AgentCustomizePage() {
               boxShadow: step === i ? 'var(--shadow-sm)' : 'none',
             }}
           >
-            <div style={{ fontSize: 18, marginBottom: 2 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{s.icon}</span></div>
+            <div style={{ fontSize: 18, marginBottom: 2 }}>{s.icon}</div>
             <div>{s.title}</div>
           </button>
         ))}
@@ -470,18 +470,18 @@ export default function AgentCustomizePage() {
         {step === 0 && (
           <div>
             <h3 className="text-xl font-bold mb-4">Identité & Rôle</h3>
-            <p className="text-md text-tertiary mb-24">Définissez l&apos;apparence et le titre de votre agent.</p>
+            <p className="text-md text-tertiary mb-24">Définissez l&apos;apparence et le titre de votre assistant.</p>
 
             <div className="grid-2 gap-20">
               <div>
                 <label className="text-sm font-semibold text-secondary" style={{ display: 'block', marginBottom: 6 }}>
-                  Nom de l&apos;agent
+                  Nom de l&apos;assistant
                 </label>
                 <input
                   value={config.customName}
                   onChange={e => updateConfig({ customName: e.target.value })}
                   className="input"
-                  placeholder="Mon agent"
+                  placeholder="Mon assistant"
                   style={{ width: '100%' }}
                 />
               </div>
@@ -511,7 +511,7 @@ export default function AgentCustomizePage() {
                     onClick={() => updateConfig({ emoji: e })}
                     style={{
                       width: 44, height: 44, borderRadius: 10,
-                      border: `2px solid ${config.emoji === e ? config.accentColor : 'var(--border-primary)'}`,
+                      border: `2px solid ${config.emoji === e ? config.accentColor : 'var(--fz-border, #E2E8F0)'}`,
                       background: config.emoji === e ? config.accentColor + '22' : 'var(--bg-primary)',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'all 0.1s',
@@ -553,10 +553,10 @@ export default function AgentCustomizePage() {
                   width: 48, height: 48, borderRadius: 14, fontSize: 24,
                   background: config.accentColor + '22', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{config.emoji}</span>
+                  <span style={{ fontSize: 24 }}>{config.emoji}</span>
                 </span>
                 <div>
-                  <div className="text-lg font-bold">{config.customName || 'votre agent'}</div>
+                  <div className="text-lg font-bold">{config.customName || 'votre assistant'}</div>
                   <div className="text-md" style={{ color: config.accentColor }}>{config.customRole || agentDef.role}</div>
                 </div>
               </div>
@@ -601,17 +601,17 @@ export default function AgentCustomizePage() {
             <div className="mt-24 p-16 rounded-md border">
               <div className="text-xs text-muted mb-8">Impact sur le comportement</div>
               <div className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
-                {config.personality.formality > 70 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat</span> Ton décontracté et amical. </>}
-                {config.personality.formality < 30 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>school</span> Ton formel et professionnel. </>}
-                {config.personality.creativity > 70 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Très créatif et innovant. </>}
-                {config.personality.creativity < 30 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>straighten</span> Factuel et pragmatique. </>}
-                {config.personality.proactivity > 70 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>rocket_launch</span> Proactif, anticipe vos besoins. </>}
-                {config.personality.humor > 60 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>sentiment_satisfied</span> N&apos;hésite pas à être léger. </>}
-                {config.personality.responseLength > 70 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>menu_book</span> Réponses détaillées avec exemples. </>}
-                {config.personality.responseLength < 30 && <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>bolt</span> Réponses ultra-concises. </>}
-                {config.personality.expertiseLevel > 70 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>school</span> Vocabulaire expert et technique. </>}
-                {config.personality.expertiseLevel < 30 && <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>eco</span> Langage simple et accessible. </>}
-                {Object.values(config.personality).every(v => v >= 40 && v <= 60) && <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>balance</span> Équilibré et polyvalent.</>}
+                {config.personality.formality > 70 && <>💬 Ton décontracté et amical. </>}
+                {config.personality.formality < 30 && <>🎓 Ton formel et professionnel. </>}
+                {config.personality.creativity > 70 && <>💡 Très créatif et innovant. </>}
+                {config.personality.creativity < 30 && <>📏 Factuel et pragmatique. </>}
+                {config.personality.proactivity > 70 && <>🚀 Proactif, anticipe vos besoins. </>}
+                {config.personality.humor > 60 && <>😊 N&apos;hésite pas à être léger. </>}
+                {config.personality.responseLength > 70 && <>📖 Réponses détaillées avec exemples. </>}
+                {config.personality.responseLength < 30 && <>⚡ Réponses ultra-concises. </>}
+                {config.personality.expertiseLevel > 70 && <>🎓 Vocabulaire expert et technique. </>}
+                {config.personality.expertiseLevel < 30 && <>🌿 Langage simple et accessible. </>}
+                {Object.values(config.personality).every(v => v >= 40 && v <= 60) && <>⚖️ Équilibré et polyvalent.</>}
               </div>
             </div>
           </div>
@@ -642,13 +642,13 @@ export default function AgentCustomizePage() {
                       }}
                       style={{
                         padding: '6px 12px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                        border: `1px solid ${isSelected ? config.accentColor : 'var(--border-primary)'}`,
+                        border: `1px solid ${isSelected ? config.accentColor : 'var(--fz-border, #E2E8F0)'}`,
                         background: isSelected ? config.accentColor + '22' : 'transparent',
                         color: isSelected ? config.accentColor : 'var(--text-secondary)',
                         cursor: 'pointer', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                       }}
                     >
-                      {isSelected ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span> </> : ''}{tag}
+                      {isSelected ? <>✅ </> : ''}{tag}
                     </button>
                   );
                 })}
@@ -679,7 +679,7 @@ export default function AgentCustomizePage() {
                 onChange={e => updateConfig({ expertise: { ...config.expertise, customKnowledge: e.target.value } })}
                 className="input"
                 rows={3}
-                placeholder="Informations spécifiques que l'agent doit connaître..."
+                placeholder="Informations spécifiques que l'assistant doit connaître..."
                 style={{ width: '100%', resize: 'vertical' }}
               />
             </div>
@@ -719,7 +719,7 @@ export default function AgentCustomizePage() {
             {/* Always Do */}
             <div className="mb-24">
               <label className="text-sm font-semibold text-success" style={{ display: 'block', marginBottom: 8 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> Toujours faire
+                ✅ Toujours faire
               </label>
               <RuleList
                 rules={config.instructions.alwaysDo}
@@ -731,7 +731,7 @@ export default function AgentCustomizePage() {
             {/* Never Do */}
             <div className="mb-24">
               <label className="text-sm font-semibold text-danger" style={{ display: 'block', marginBottom: 8 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span> Ne jamais faire
+                ✕ Ne jamais faire
               </label>
               <RuleList
                 rules={config.instructions.neverDo}
@@ -753,7 +753,7 @@ export default function AgentCustomizePage() {
                     className="card card-compact"
                     style={{
                       flex: 1, textAlign: 'center', cursor: 'pointer',
-                      borderColor: config.instructions.responseFormat === f.value ? config.accentColor : 'var(--border-primary)',
+                      borderColor: config.instructions.responseFormat === f.value ? config.accentColor : 'var(--fz-border, #E2E8F0)',
                       background: config.instructions.responseFormat === f.value ? config.accentColor + '15' : 'var(--bg-secondary)',
                     }}
                   >
@@ -797,13 +797,13 @@ export default function AgentCustomizePage() {
                       }}
                       style={{
                         padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                        border: `1px solid ${isSelected ? config.accentColor : 'var(--border-primary)'}`,
+                        border: `1px solid ${isSelected ? config.accentColor : 'var(--fz-border, #E2E8F0)'}`,
                         background: isSelected ? config.accentColor + '22' : 'transparent',
                         color: isSelected ? config.accentColor : 'var(--text-secondary)',
                         cursor: 'pointer', fontFamily: 'var(--font-sans)',
                       }}
                     >
-                      {isSelected ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span> </> : ''}{lang}
+                      {isSelected ? <>✅ </> : ''}{lang}
                     </button>
                   );
                 })}
@@ -860,7 +860,7 @@ export default function AgentCustomizePage() {
                 Documents de reference
               </label>
               <p className="text-xs text-muted mb-8">
-                Enrichissez le contexte de vos agents avec des documents. Peut beaucoup aider selon le cas, mais consomme plus de tokens.
+                Enrichissez le contexte de vos assistants avec des documents. Peut beaucoup aider selon le cas, mais consomme plus de tokens.
               </p>
               <DocumentUploader
                 agentContext="agent-customize"
@@ -880,7 +880,7 @@ export default function AgentCustomizePage() {
         {step === 5 && (
           <div>
             <h3 className="text-xl font-bold mb-4">Aperçu & Test</h3>
-            <p className="text-md text-tertiary mb-24">Vérifiez le prompt généré et testez votre agent personnalisé.</p>
+            <p className="text-md text-tertiary mb-24">Vérifiez le prompt généré et testez votre assistant personnalisé.</p>
 
             {/* Generated Prompt */}
             <div className="mb-24">
@@ -898,7 +898,7 @@ export default function AgentCustomizePage() {
             {/* Test Chat */}
             <div className="mb-24">
               <label className="text-sm font-semibold text-secondary" style={{ display: 'block', marginBottom: 8 }}>
-                Tester l&apos;agent (consomme des crédits)
+                Tester l&apos;assistant (consomme des crédits)
               </label>
               <div className="flex gap-8">
                 <input
@@ -918,7 +918,7 @@ export default function AgentCustomizePage() {
                   lineHeight: 1.7,
                 }}>
                   <div className="text-xs font-bold mb-4" style={{ color: config.accentColor }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{config.emoji}</span> {config.customName || 'votre agent'} répond :
+                    <span style={{ fontSize: 12 }}>{config.emoji}</span> {config.customName || 'votre assistant'} répond :
                   </div>
                   {testResponse}
                 </div>
@@ -928,7 +928,7 @@ export default function AgentCustomizePage() {
             {/* Actions */}
             <div className="flex gap-12">
               <button onClick={saveConfig} className="btn btn-primary text-lg" style={{ padding: '12px 32px' }}>
-                Sauvegarder {config.customName || 'votre agent'}
+                Sauvegarder {config.customName || 'votre assistant'}
               </button>
               <button onClick={resetAgent} className="btn btn-danger btn-sm">
                 Réinitialiser
@@ -944,26 +944,26 @@ export default function AgentCustomizePage() {
           display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
           borderBottom: '2px solid #7c3aed', paddingBottom: 12,
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 28 }}>mic</span>
+          🎤
           <div>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
               Voix &amp; Audio — ElevenLabs
             </h2>
-            <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>
-              Configurez la voix de vos agents avec ElevenLabs TTS
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              Configurez la voix de vos assistants avec ElevenLabs TTS
             </p>
           </div>
         </div>
 
         {/* 1. Voice Selection per Agent */}
         <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>target</span> S&eacute;lection de voix par agent
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>
+            🎯 S&eacute;lection de voix par agent
           </h3>
 
           {/* Agent dropdown */}
           <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 6 }}>
               Agent &agrave; configurer
             </label>
             <select
@@ -979,7 +979,7 @@ export default function AgentCustomizePage() {
           </div>
 
           {/* Voice grid */}
-          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 10 }}>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 10 }}>
             Voix disponibles
           </label>
           <div style={{
@@ -995,19 +995,19 @@ export default function AgentCustomizePage() {
                   onClick={() => { setSelectedVoiceId(v.id); saveVoiceSettings({ selectedVoiceId: v.id }); }}
                   style={{
                     padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
-                    border: `2px solid ${isSelected ? '#7c3aed' : 'var(--border-primary)'}`,
+                    border: `2px solid ${isSelected ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
                     background: isSelected ? '#7c3aed15' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{v.name}</span>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{v.name}</span>
                     {isSelected && (
                       <span style={{
                         width: 20, height: 20, borderRadius: '50%', background: '#7c3aed',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white',
-                      }}><span className="material-symbols-rounded mi-white" style={{ fontSize: 14 }}>check</span></span>
+                      }}>✓</span>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
@@ -1041,8 +1041,8 @@ export default function AgentCustomizePage() {
 
         {/* 2. Voice Settings */}
         <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--text-primary)' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>settings</span> R&eacute;glages vocaux
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>
+            ⚙️ R&eacute;glages vocaux
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
@@ -1051,7 +1051,7 @@ export default function AgentCustomizePage() {
               {/* Stability */}
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Stabilit&eacute;</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Stabilit&eacute;</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>{voiceStability.toFixed(2)}</span>
                 </div>
                 <input
@@ -1063,7 +1063,7 @@ export default function AgentCustomizePage() {
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
                   <span>Variable</span><span>Stable</span>
                 </div>
               </div>
@@ -1071,7 +1071,7 @@ export default function AgentCustomizePage() {
               {/* Similarity */}
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Similarit&eacute;</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Similarit&eacute;</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>{voiceSimilarity.toFixed(2)}</span>
                 </div>
                 <input
@@ -1083,7 +1083,7 @@ export default function AgentCustomizePage() {
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
                   <span>Faible</span><span>Forte</span>
                 </div>
               </div>
@@ -1091,7 +1091,7 @@ export default function AgentCustomizePage() {
               {/* Style */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>Style</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Style</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>{voiceStyle.toFixed(2)}</span>
                 </div>
                 <input
@@ -1103,7 +1103,7 @@ export default function AgentCustomizePage() {
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
                   <span>Neutre</span><span>Expressif</span>
                 </div>
               </div>
@@ -1113,7 +1113,7 @@ export default function AgentCustomizePage() {
             <div>
               {/* Speaker Boost Toggle */}
               <div style={{ marginBottom: 24 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
                   Speaker Boost
                 </label>
                 <div
@@ -1121,7 +1121,7 @@ export default function AgentCustomizePage() {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                     padding: '8px 16px', borderRadius: 10,
-                    border: `1px solid ${voiceSpeakerBoost ? '#7c3aed' : 'var(--border-primary)'}`,
+                    border: `1px solid ${voiceSpeakerBoost ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
                     background: voiceSpeakerBoost ? '#7c3aed15' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
@@ -1143,14 +1143,14 @@ export default function AgentCustomizePage() {
                     {voiceSpeakerBoost ? 'Activ\u00e9' : 'D\u00e9sactiv\u00e9'}
                   </span>
                 </div>
-                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 6 }}>
+                <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 6 }}>
                   Am&eacute;liore la clart&eacute; et la pr&eacute;sence de la voix
                 </p>
               </div>
 
               {/* Model Selector */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
                   Mod&egrave;le TTS
                 </label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1163,7 +1163,7 @@ export default function AgentCustomizePage() {
                       onClick={() => { setVoiceModel(m.id); saveVoiceSettings({ model: m.id }); }}
                       style={{
                         padding: '10px 14px', borderRadius: 10, cursor: 'pointer',
-                        border: `2px solid ${voiceModel === m.id ? '#7c3aed' : 'var(--border-primary)'}`,
+                        border: `2px solid ${voiceModel === m.id ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
                         background: voiceModel === m.id ? '#7c3aed15' : 'var(--bg-secondary)',
                         transition: 'all 0.15s',
                       }}
@@ -1171,16 +1171,16 @@ export default function AgentCustomizePage() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{
                           width: 16, height: 16, borderRadius: '50%',
-                          border: `2px solid ${voiceModel === m.id ? '#7c3aed' : 'var(--border-primary)'}`,
+                          border: `2px solid ${voiceModel === m.id ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                           {voiceModel === m.id && (
                             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#7c3aed' }} />
                           )}
                         </div>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{m.label}</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{m.label}</span>
                       </div>
-                      <p style={{ margin: '4px 0 0 24px', fontSize: 11, color: 'var(--text-muted)' }}>{m.desc}</p>
+                      <p style={{ margin: '4px 0 0 24px', fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{m.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -1198,11 +1198,11 @@ export default function AgentCustomizePage() {
               cursor: 'pointer',
             }}
           >
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>
               {'\uD83E\uDDEC'} Cloner ma voix
             </h3>
             <span style={{
-              fontSize: 18, color: 'var(--text-muted)', transition: 'transform 0.2s',
+              fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)', transition: 'transform 0.2s',
               transform: showVoiceClone ? 'rotate(180deg)' : 'rotate(0deg)',
             }}>{'\u25BC'}</span>
           </div>
@@ -1210,22 +1210,22 @@ export default function AgentCustomizePage() {
           {showVoiceClone && (
             <div style={{ marginTop: 16, opacity: 0.5, pointerEvents: 'none' as const }}>
               <div style={{
-                padding: 16, borderRadius: 10, border: '1px dashed var(--border-primary)',
+                padding: 16, borderRadius: 10, border: '1px dashed var(--fz-border, #E2E8F0)',
                 background: 'var(--bg-secondary)', marginBottom: 16,
               }}>
-                <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 12px 0', lineHeight: 1.6 }}>
+                <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 12px 0', lineHeight: 1.6 }}>
                   Uploadez 1-5 minutes d&apos;audio de votre voix pour cr&eacute;er un clone vocal personnalis&eacute;.
                   La qualit&eacute; du clone d&eacute;pend de la clart&eacute; de l&apos;enregistrement.
                 </p>
                 <div style={{
-                  padding: 32, borderRadius: 10, border: '2px dashed var(--border-primary)',
+                  padding: 32, borderRadius: 10, border: '2px dashed var(--fz-border, #E2E8F0)',
                   background: 'var(--bg-primary)', textAlign: 'center',
                 }}>
-                  <div style={{ marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 36 }}>mic</span></div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 4px 0' }}>
+                  <div style={{ marginBottom: 8 }}>🎤</div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 4px 0' }}>
                     Glissez un fichier audio ici
                   </p>
-                  <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0 }}>
+                  <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', margin: 0 }}>
                     Formats accept&eacute;s : MP3, WAV, M4A, OGG (max 25 MB)
                   </p>
                   <input type="file" accept="audio/*" disabled style={{ display: 'none' }} />
@@ -1236,7 +1236,7 @@ export default function AgentCustomizePage() {
                 padding: '10px 16px', borderRadius: 10,
                 background: '#f59e0b18', border: '1px solid #f59e0b40',
               }}>
-                <span className="material-symbols-rounded mi-warning" style={{ fontSize: 16 }}>star</span>
+                ⭐
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#f59e0b' }}>
                   Fonctionnalit&eacute; premium — Bient&ocirc;t disponible
                 </span>
@@ -1247,8 +1247,8 @@ export default function AgentCustomizePage() {
 
         {/* 4. Capabilities ElevenLabs */}
         <div className="card" style={{ padding: 24 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>lightbulb</span> Capacit&eacute;s ElevenLabs
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>
+            💡 Capacit&eacute;s ElevenLabs
           </h3>
           <div style={{
             display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
@@ -1259,14 +1259,14 @@ export default function AgentCustomizePage() {
                 key={cap.title}
                 style={{
                   padding: '14px 16px', borderRadius: 10,
-                  border: `1px solid ${cap.available ? '#7c3aed40' : 'var(--border-primary)'}`,
+                  border: `1px solid ${cap.available ? '#7c3aed40' : 'var(--fz-border, #E2E8F0)'}`,
                   background: cap.available ? '#7c3aed08' : 'var(--bg-secondary)',
                   opacity: cap.available ? 1 : 0.6,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{cap.icon}</span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{cap.title}</span>
+                  <span style={{ fontSize: 20 }}>{cap.icon === 'mic' ? '🎤' : cap.icon === 'record_voice_over' ? '🗣️' : cap.icon === 'music_note' ? '🎵' : cap.icon === 'language' ? '🌐' : cap.icon === 'volume_off' ? '🔇' : cap.icon === 'menu_book' ? '📖' : cap.icon}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{cap.title}</span>
                   {cap.available && (
                     <span style={{
                       marginLeft: 'auto', padding: '2px 8px', borderRadius: 10, fontSize: 9, fontWeight: 700,
@@ -1274,7 +1274,7 @@ export default function AgentCustomizePage() {
                     }}>ACTIF</span>
                   )}
                 </div>
-                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{cap.desc}</p>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.5 }}>{cap.desc}</p>
               </div>
             ))}
           </div>
@@ -1300,7 +1300,7 @@ export default function AgentCustomizePage() {
           </button>
         ) : (
           <button onClick={saveConfig} className="btn btn-primary">
-            Sauvegarder <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span>
+            Sauvegarder ✅
           </button>
         )}
       </div>

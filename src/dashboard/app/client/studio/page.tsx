@@ -4,6 +4,36 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { VIDEO_WORKFLOWS, PHOTO_WORKFLOWS } from '../../../lib/studio-workflows';
 import RoadmapBadge from '../../../components/studio/RoadmapBadge';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
+
+const ICON_TO_EMOJI: Record<string, string> = {
+  auto_awesome: '✨',
+  phone_iphone: '📱',
+  work: '💼',
+  palette: '🎨',
+  favorite: '❤️',
+  diamond: '💎',
+  photo_camera: '📸',
+  movie: '🎬',
+  videocam: '📹',
+  image: '🖼️',
+  edit: '✏️',
+  star: '⭐',
+  share: '🔗',
+  menu_book: '📖',
+  family_restroom: '👨‍👩‍👧',
+  live_tv: '📺',
+  person: '👤',
+  sync: '🔄',
+  redeem: '🎁',
+  mail: '✉️',
+  campaign: '📣',
+  mood: '😊',
+  inventory_2: '📦',
+};
+
+const getEmoji = (icon: string): string => ICON_TO_EMOJI[icon] || '🔹';
 
 const PHOTO_CATEGORIES = [
   { id: 'all', label: 'Tous', icon: 'auto_awesome' },
@@ -25,20 +55,27 @@ export default function StudioPage() {
   const availableVideoCount = VIDEO_WORKFLOWS.filter(w => w.available).length;
   const availablePhotoCount = PHOTO_WORKFLOWS.filter(w => w.available).length;
 
+  const meta = PAGE_META.studio;
+
   return (
     <div className="client-page-scrollable" style={{ padding: 32, maxWidth: 960, margin: '0 auto' }}>
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
-          <span className="fz-logo-word">Studio Creatif</span>
-        </h1>
-        <p style={{ fontSize: 14, color: 'var(--text-tertiary)', lineHeight: 1.6 }}>
-          Creez des photos et videos professionnelles guidees par nos <span className="fz-logo-word">agents</span> specialises.
-        </p>
+      {/* ─── Page Header ─── */}
+      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        <span style={{ fontSize: 32, lineHeight: 1 }}>{meta.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {meta.title}
+            <HelpBubble text={meta.helpText} />
+          </h1>
+          <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6 }}>
+            {meta.subtitle}
+          </p>
+        </div>
       </div>
 
       {/* ─── Tab Switcher ─── */}
       <div style={{
-        display: 'flex', background: 'var(--bg-secondary)', borderRadius: 10,
+        display: 'flex', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10,
         padding: 3, gap: 2, marginBottom: 28,
       }}>
         <button
@@ -47,16 +84,16 @@ export default function StudioPage() {
             flex: 1, textAlign: 'center', padding: '10px 16px', borderRadius: 8,
             fontSize: 14, fontWeight: activeTab === 'photo' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-            background: activeTab === 'photo' ? 'var(--bg-primary)' : 'transparent',
-            color: activeTab === 'photo' ? 'var(--text-primary)' : 'var(--text-tertiary)',
-            boxShadow: activeTab === 'photo' ? 'var(--shadow-sm)' : 'none',
+            background: activeTab === 'photo' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
+            color: activeTab === 'photo' ? 'var(--fz-text, #1E293B)' : 'var(--fz-text-muted, #94A3B8)',
+            boxShadow: activeTab === 'photo' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>photo_camera</span> Photo
+          📸 Photo
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
-            background: activeTab === 'photo' ? 'var(--success)' : 'var(--bg-tertiary)',
-            color: activeTab === 'photo' ? '#fff' : 'var(--text-muted)',
+            background: activeTab === 'photo' ? 'var(--success)' : 'var(--fz-bg-secondary, #F8FAFC)',
+            color: activeTab === 'photo' ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
           }}>
             {availablePhotoCount}/{PHOTO_WORKFLOWS.length}
           </span>
@@ -67,16 +104,16 @@ export default function StudioPage() {
             flex: 1, textAlign: 'center', padding: '10px 16px', borderRadius: 8,
             fontSize: 14, fontWeight: activeTab === 'video' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-            background: activeTab === 'video' ? 'var(--bg-primary)' : 'transparent',
-            color: activeTab === 'video' ? 'var(--text-primary)' : 'var(--text-tertiary)',
-            boxShadow: activeTab === 'video' ? 'var(--shadow-sm)' : 'none',
+            background: activeTab === 'video' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
+            color: activeTab === 'video' ? 'var(--fz-text, #1E293B)' : 'var(--fz-text-muted, #94A3B8)',
+            boxShadow: activeTab === 'video' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>movie</span> Video
+          🎬 Video
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
-            background: activeTab === 'video' ? 'var(--success)' : 'var(--bg-tertiary)',
-            color: activeTab === 'video' ? '#fff' : 'var(--text-muted)',
+            background: activeTab === 'video' ? 'var(--success)' : 'var(--fz-bg-secondary, #F8FAFC)',
+            color: activeTab === 'video' ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
           }}>
             {availableVideoCount}/{VIDEO_WORKFLOWS.length}
           </span>
@@ -87,10 +124,10 @@ export default function StudioPage() {
       {activeTab === 'photo' && (
         <section style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>photo_camera</span></span>
+            <span style={{ fontSize: 28 }}>📸</span>
             <div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Photo <span className="fz-logo-word">Studio</span></h2>
-              <p style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Guide par Emma — Directrice artistique</p>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Photo Studio</h2>
+              <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>Guide par Emma — Directrice artistique</p>
             </div>
             <span style={{
               marginLeft: 'auto', fontSize: 11, color: 'var(--success)', fontWeight: 600,
@@ -108,14 +145,14 @@ export default function StudioPage() {
                 onClick={() => setPhotoCategory(cat.id)}
                 style={{
                   padding: '6px 14px', borderRadius: 20,
-                  border: `1px solid ${photoCategory === cat.id ? 'var(--accent)' : 'var(--border-primary)'}`,
-                  background: photoCategory === cat.id ? 'var(--accent-muted)' : 'var(--bg-primary)',
-                  color: photoCategory === cat.id ? 'var(--accent)' : 'var(--text-tertiary)',
+                  border: `1px solid ${photoCategory === cat.id ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                  background: photoCategory === cat.id ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
+                  color: photoCategory === cat.id ? 'var(--accent)' : 'var(--fz-text-muted, #94A3B8)',
                   fontSize: 12, fontWeight: 600, cursor: 'pointer',
                   transition: 'all 0.15s',
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{cat.icon}</span> {cat.label}
+                {getEmoji(cat.icon)} {cat.label}
                 {cat.id !== 'all' && (
                   <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.7 }}>
                     ({PHOTO_WORKFLOWS.filter(w => w.category === cat.id).length})
@@ -132,8 +169,8 @@ export default function StudioPage() {
                 href={wf.available ? `/client/studio/photo?workflow=${wf.id}` : '#'}
                 style={{
                   display: 'block', padding: 16, borderRadius: 12,
-                  border: wf.id === 'photo-post' ? '2px solid var(--accent)' : '1px solid var(--border-primary)',
-                  background: wf.id === 'photo-post' ? 'var(--accent-muted)' : 'var(--bg-elevated)',
+                  border: wf.id === 'photo-post' ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
+                  background: wf.id === 'photo-post' ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                   textDecoration: 'none', transition: 'all 0.15s',
                   opacity: wf.available ? 1 : 0.7,
                   cursor: wf.available ? 'pointer' : 'default',
@@ -141,8 +178,8 @@ export default function StudioPage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{wf.icon}</span></span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{wf.label}</span>
+                  <span style={{ fontSize: 22 }}>{getEmoji(wf.icon)}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{wf.label}</span>
                   {wf.id === 'photo-post' && (
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 700,
@@ -157,10 +194,10 @@ export default function StudioPage() {
                     }}>Disponible</span>
                   )}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5 }}>
                   {wf.description}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 8 }}>
                   {wf.steps.length} etapes — {wf.costSteps.length > 0 ? 'IA generative' : 'Chat uniquement'}
                 </div>
               </Link>
@@ -173,10 +210,10 @@ export default function StudioPage() {
       {activeTab === 'video' && (
         <section style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>movie</span></span>
+            <span style={{ fontSize: 28 }}>🎬</span>
             <div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Video Studio</h2>
-              <p style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Guide par Lucas — Directeur video</p>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Video Studio</h2>
+              <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>Guide par Lucas — Directeur video</p>
             </div>
             <span style={{
               marginLeft: 'auto', fontSize: 11, color: 'var(--success)', fontWeight: 600,
@@ -193,15 +230,15 @@ export default function StudioPage() {
                 href={wf.available ? `/client/studio/video?workflow=${wf.id}` : '#'}
                 style={{
                   display: 'block', padding: 16, borderRadius: 12,
-                  border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)',
+                  border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
                   textDecoration: 'none', transition: 'all 0.15s',
                   opacity: wf.available ? 1 : 0.7,
                   cursor: wf.available ? 'pointer' : 'default',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{wf.icon}</span></span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{wf.label}</span>
+                  <span style={{ fontSize: 22 }}>{getEmoji(wf.icon)}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{wf.label}</span>
                   {!wf.available && <RoadmapBadge />}
                   {wf.available && (
                     <span style={{
@@ -210,10 +247,10 @@ export default function StudioPage() {
                     }}>Disponible</span>
                   )}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5 }}>
                   {wf.description}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 8 }}>
                   {wf.steps.length} etapes — {wf.costSteps.length > 0 ? `~${wf.costSteps.length + 1} APIs` : 'Chat uniquement'}
                 </div>
               </Link>
@@ -224,9 +261,9 @@ export default function StudioPage() {
 
       {/* Cost Summary — always visible */}
       <section style={{
-        padding: 20, borderRadius: 12, background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
+        padding: 20, borderRadius: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 14 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 14 }}>
           Tarification Studio
         </h3>
 
@@ -236,13 +273,13 @@ export default function StudioPage() {
             fontSize: 11, fontWeight: 700, color: 'var(--purple)', textTransform: 'uppercase',
             letterSpacing: 0.5, marginBottom: 8,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>photo_camera</span> Photo
+            📸 Photo
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 12 }}>
-            <div style={{ color: 'var(--text-secondary)' }}>Generation image (Nano Banana)</div>
-            <div style={{ color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right' }}>~10 credits</div>
-            <div style={{ color: 'var(--text-secondary)' }}>Generation image HD</div>
-            <div style={{ color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right' }}>~15 credits</div>
+            <div style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Generation image (Nano Banana)</div>
+            <div style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, textAlign: 'right' }}>~10 credits</div>
+            <div style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Generation image HD</div>
+            <div style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, textAlign: 'right' }}>~15 credits</div>
           </div>
         </div>
 
@@ -252,28 +289,28 @@ export default function StudioPage() {
             fontSize: 11, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase',
             letterSpacing: 0.5, marginBottom: 8,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>movie</span> Video
+            🎬 Video
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 12 }}>
-            <div style={{ color: 'var(--text-secondary)' }}>Video D-ID (talking head)</div>
-            <div style={{ color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right' }}>~25 credits</div>
-            <div style={{ color: 'var(--text-secondary)' }}>Synthese vocale Deepgram</div>
-            <div style={{ color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right' }}>~0.5 credits</div>
+            <div style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Video D-ID (talking head)</div>
+            <div style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, textAlign: 'right' }}>~25 credits</div>
+            <div style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Synthese vocale Deepgram</div>
+            <div style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, textAlign: 'right' }}>~0.5 credits</div>
           </div>
         </div>
 
         {/* Common */}
         <div>
           <div style={{
-            fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase',
+            fontSize: 11, fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase',
             letterSpacing: 0.5, marginBottom: 8,
           }}>
             Commun
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 12 }}>
-            <div style={{ color: 'var(--text-secondary)' }}>Message IA (guidage)</div>
-            <div style={{ color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right' }}>~1.5 credits</div>
-            <div style={{ color: 'var(--text-muted)' }}>Direction artistique (chat)</div>
+            <div style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Message IA (guidage)</div>
+            <div style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, textAlign: 'right' }}>~1.5 credits</div>
+            <div style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Direction artistique (chat)</div>
             <div style={{ color: 'var(--success)', fontWeight: 600, textAlign: 'right' }}>Inclus</div>
           </div>
         </div>

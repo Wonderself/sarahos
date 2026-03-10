@@ -13,21 +13,23 @@ import {
   CATEGORY_COLORS, FEATURED_GRADIENTS, MARKETPLACE_STORAGE_KEY,
   type AgentTemplate, type Category, type SortMode,
 } from '../../../lib/marketplace-data';
+import { PAGE_META } from '../../../lib/emoji-map';
+import HelpBubble from '../../../components/HelpBubble';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Mes agents persos (merged page)
 //  Section 1: Mon equipe (enterprise agents toggle)
-//  Section 2: Mes agents personnalises (personal by category)
-//  Section 3: Recruter de nouveaux agents
+//  Section 2: Mes assistants personnalises (personal by category)
+//  Section 3: Recruter de nouveaux assistants
 // ═══════════════════════════════════════════════════
 
 // ─── Personal agent categories ───
 
 const PERSONAL_CATEGORIES = [
-  { title: 'Finances Personnelles', icon: 'savings', ids: ['fz-budget', 'fz-negociateur', 'fz-impots'] as AgentTypeId[] },
-  { title: 'Freelances & Carriere', icon: 'work', ids: ['fz-comptable', 'fz-chasseur', 'fz-portfolio', 'fz-cv'] as AgentTypeId[] },
-  { title: 'Vie & Decisions', icon: 'psychology', ids: ['fz-contradicteur', 'fz-coach'] as AgentTypeId[] },
-  { title: 'Creatif & Bien-etre', icon: 'palette', ids: ['fz-ecrivain', 'fz-cineaste', 'fz-deconnexion'] as AgentTypeId[] },
+  { title: 'Finances Personnelles', icon: '💰', ids: ['fz-budget', 'fz-negociateur', 'fz-impots'] as AgentTypeId[] },
+  { title: 'Freelances & Carriere', icon: '💼', ids: ['fz-comptable', 'fz-chasseur', 'fz-portfolio', 'fz-cv'] as AgentTypeId[] },
+  { title: 'Vie & Decisions', icon: '🧠', ids: ['fz-contradicteur', 'fz-coach'] as AgentTypeId[] },
+  { title: 'Creatif & Bien-etre', icon: '🎨', ids: ['fz-ecrivain', 'fz-cineaste', 'fz-deconnexion'] as AgentTypeId[] },
 ];
 
 const PERSONAL_STORAGE_KEY = 'fz_personal_agents_active';
@@ -211,14 +213,15 @@ export default function PersonalAgentsPage() {
   return (
     <div className="client-page-scrollable">
       {/* ─── Header ─── */}
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
         <div>
-          <h1 className="page-title">Mes <span className="fz-logo-word">agents</span></h1>
-          <p className="page-subtitle">
-            Gérez votre équipe <span className="fz-logo-word">IA</span> et explorez le marketplace — {totalActive} agent{totalActive > 1 ? 's' : ''} actif{totalActive > 1 ? 's' : ''}
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.personal.emoji} {PAGE_META.personal.title}</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+            {PAGE_META.personal.subtitle} — {totalActive} assistant{totalActive > 1 ? 's' : ''} actif{totalActive > 1 ? 's' : ''}
           </p>
         </div>
         <div className="page-actions flex gap-8 items-center">
+          <HelpBubble text={PAGE_META.personal.helpText} />
           <div className="badge badge-primary" style={{ padding: '6px 14px', fontSize: 13 }}>
             {activeBusinessIds.length} business + {activePersonalIds.length} perso
           </div>
@@ -227,7 +230,7 @@ export default function PersonalAgentsPage() {
 
       {/* ─── Tabs ─── */}
       <div style={{
-        display: 'flex', background: 'var(--bg-secondary)', borderRadius: 10,
+        display: 'flex', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10,
         padding: 3, gap: 2, marginBottom: 24,
       }}>
         <button
@@ -236,12 +239,12 @@ export default function PersonalAgentsPage() {
             flex: 1, textAlign: 'center', padding: '10px 16px', borderRadius: 8,
             fontSize: 14, fontWeight: activeTab === 'equipe' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-            background: activeTab === 'equipe' ? 'var(--bg-primary)' : 'transparent',
-            color: activeTab === 'equipe' ? 'var(--text-primary)' : 'var(--text-tertiary)',
+            background: activeTab === 'equipe' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
+            color: activeTab === 'equipe' ? 'var(--fz-text, #1E293B)' : 'var(--fz-text-muted, #94A3B8)',
             boxShadow: activeTab === 'equipe' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>person</span> Mon équipe
+          👤 Mon équipe
         </button>
         <button
           onClick={() => setActiveTab('marketplace')}
@@ -249,16 +252,16 @@ export default function PersonalAgentsPage() {
             flex: 1, textAlign: 'center', padding: '10px 16px', borderRadius: 8,
             fontSize: 14, fontWeight: activeTab === 'marketplace' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
-            background: activeTab === 'marketplace' ? 'var(--bg-primary)' : 'transparent',
-            color: activeTab === 'marketplace' ? 'var(--text-primary)' : 'var(--text-tertiary)',
+            background: activeTab === 'marketplace' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
+            color: activeTab === 'marketplace' ? 'var(--fz-text, #1E293B)' : 'var(--fz-text-muted, #94A3B8)',
             boxShadow: activeTab === 'marketplace' ? 'var(--shadow-sm)' : 'none',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>storefront</span> Marketplace
+          🏪 Marketplace
           <span style={{
             marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
-            background: activeTab === 'marketplace' ? 'var(--accent)' : 'var(--bg-tertiary)',
-            color: activeTab === 'marketplace' ? '#fff' : 'var(--text-muted)',
+            background: activeTab === 'marketplace' ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+            color: activeTab === 'marketplace' ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
           }}>
             {MARKETPLACE_TEMPLATES.length}
           </span>
@@ -274,7 +277,7 @@ export default function PersonalAgentsPage() {
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="input"
-          placeholder="Rechercher un agent par nom ou role..."
+          placeholder="Rechercher un assistant par nom ou role..."
           style={{ width: '100%', maxWidth: 400 }}
         />
       </div>
@@ -287,20 +290,20 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#7c3aed15', fontSize: 18,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>business</span>
+            🏢
           </div>
           <div>
             <h2 className="text-xl font-bold">Mon équipe</h2>
             <p className="text-sm text-muted">
-              {activeBusinessAgents.length} agent{activeBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise actif{activeBusinessAgents.length > 1 ? 's' : ''} sur {teamAgents.length}
+              {activeBusinessAgents.length} assistant{activeBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise actif{activeBusinessAgents.length > 1 ? 's' : ''} sur {teamAgents.length}
             </p>
           </div>
         </div>
 
         {activeBusinessAgents.length === 0 && (
           <div className="card p-24" style={{ textAlign: 'center' }}>
-            <p className="text-md text-muted mb-8">Aucun agent d&apos;entreprise actif</p>
-            <p className="text-sm text-tertiary">Recrutez des agents dans la section ci-dessous</p>
+            <p className="text-md text-muted mb-8">Aucun assistant d&apos;entreprise actif</p>
+            <p className="text-sm text-tertiary">Recrutez des assistants dans la section ci-dessous</p>
           </div>
         )}
 
@@ -326,12 +329,12 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#06b6d415', fontSize: 18,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>person</span>
+            👤
           </div>
           <div>
-            <h2 className="text-xl font-bold">Mes agents personnalises</h2>
+            <h2 className="text-xl font-bold">Mes assistants personnalises</h2>
             <p className="text-sm text-muted">
-              {activePersonalIds.length} agent{activePersonalIds.length > 1 ? 's' : ''} perso actif{activePersonalIds.length > 1 ? 's' : ''} sur {PERSONAL_AGENTS.length}
+              {activePersonalIds.length} assistant{activePersonalIds.length > 1 ? 's' : ''} perso actif{activePersonalIds.length > 1 ? 's' : ''} sur {PERSONAL_AGENTS.length}
             </p>
           </div>
         </div>
@@ -353,18 +356,18 @@ export default function PersonalAgentsPage() {
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                   padding: '8px 12px', borderRadius: 'var(--radius-md)',
-                  background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
                   cursor: 'pointer', fontFamily: 'var(--font-sans)', marginBottom: 8,
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-hover)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--bg-secondary)'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-bg-hover, #F1F5F9)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-bg-secondary, #F8FAFC)'; }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{cat.icon}</span>
+                {cat.icon}
                 <span className="text-md font-semibold text-primary" style={{ flex: 1, textAlign: 'left' }}>{cat.title}</span>
                 <span className="text-xs text-muted">{activeInCat}/{agents.length} actifs</span>
                 <span style={{
-                  fontSize: 12, color: 'var(--text-muted)',
+                  fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)',
                   transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.2s',
                 }}>
@@ -398,22 +401,22 @@ export default function PersonalAgentsPage() {
           <div className="flex-center rounded-md" style={{
             width: 36, height: 36, background: '#22c55e15', fontSize: 18,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>rocket_launch</span>
+            🚀
           </div>
           <div>
-            <h2 className="text-xl font-bold">Recruter de nouveaux agents</h2>
+            <h2 className="text-xl font-bold">Recruter de nouveaux assistants</h2>
             <p className="text-sm text-muted">
-              {inactiveBusinessAgents.length} agent{inactiveBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise disponible{inactiveBusinessAgents.length > 1 ? 's' : ''}
+              {inactiveBusinessAgents.length} assistant{inactiveBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise disponible{inactiveBusinessAgents.length > 1 ? 's' : ''}
             </p>
           </div>
         </div>
 
         {inactiveBusinessAgents.length === 0 && (
           <div className="card p-24" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>celebration</span></div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
             <p className="text-md font-semibold mb-4">Équipe au complet !</p>
             <p className="text-sm text-muted">
-              Tous les agents d&apos;entreprise sont actifs dans votre équipe.
+              Tous les assistants d&apos;entreprise sont actifs dans votre équipe.
             </p>
           </div>
         )}
@@ -434,21 +437,21 @@ export default function PersonalAgentsPage() {
       {/* ─── Bottom CTA ─── */}
       <div className="card p-24" style={{
         background: 'linear-gradient(135deg, #7c3aed08, #06b6d408)',
-        border: '1px solid var(--border-secondary)',
+        border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
         <div className="flex-between flex-wrap" style={{ gap: 16 }}>
           <div>
-            <h3 className="text-lg font-bold mb-4">Vos agents sont prêts</h3>
+            <h3 className="text-lg font-bold mb-4">Vos assistants sont prêts</h3>
             <p className="text-sm text-secondary">
               Discutez avec votre équipe IA ou personnalisez leurs comportements en profondeur.
             </p>
           </div>
           <div className="flex gap-12 flex-wrap">
             <Link href="/client/chat" className="btn btn-primary" style={{ textDecoration: 'none' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat</span> Discuter avec mes agents
+              💬 Discuter avec mes assistants
             </Link>
             <Link href="/client/agents/customize" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>palette</span> Personnaliser mes agents
+              🎨 Personnaliser mes assistants
             </Link>
           </div>
         </div>
@@ -461,21 +464,21 @@ export default function PersonalAgentsPage() {
         <div>
           {/* Search bar */}
           <div style={{ position: 'relative', marginBottom: 16 }}>
-            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--text-muted)' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>search</span>
+            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              🔍
             </span>
             <input
               type="text"
-              placeholder="Rechercher un agent..."
+              placeholder="Rechercher un assistant..."
               value={mpSearch}
               onChange={e => setMpSearch(e.target.value)}
               style={{
                 width: '100%', padding: '12px 16px 12px 42px', borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-primary)', background: 'var(--bg-primary)',
-                color: 'var(--text-primary)', fontSize: 14, outline: 'none', transition: 'border-color 0.2s',
+                border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
+                color: 'var(--fz-text, #1E293B)', fontSize: 14, outline: 'none', transition: 'border-color 0.2s',
               }}
               onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
-              onBlur={e => (e.target.style.borderColor = 'var(--border-primary)')}
+              onBlur={e => (e.target.style.borderColor = 'var(--fz-border, #E2E8F0)')}
             />
           </div>
 
@@ -487,9 +490,9 @@ export default function PersonalAgentsPage() {
                 onClick={() => setMpCategory(cat)}
                 style={{
                   padding: '6px 16px', borderRadius: 20,
-                  border: mpCategory === cat ? '2px solid var(--accent)' : '1px solid var(--border-primary)',
-                  background: mpCategory === cat ? 'var(--accent-muted)' : 'var(--bg-primary)',
-                  color: mpCategory === cat ? 'var(--accent)' : 'var(--text-secondary)',
+                  border: mpCategory === cat ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
+                  background: mpCategory === cat ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
+                  color: mpCategory === cat ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
                   fontSize: 13, fontWeight: mpCategory === cat ? 600 : 400,
                   cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap',
                 }}
@@ -501,8 +504,8 @@ export default function PersonalAgentsPage() {
 
           {/* Sort + count */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <span style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
-              {mpFiltered.length} agent{mpFiltered.length > 1 ? 's' : ''} trouve{mpFiltered.length > 1 ? 's' : ''}
+            <span style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              {mpFiltered.length} assistant{mpFiltered.length > 1 ? 's' : ''} trouve{mpFiltered.length > 1 ? 's' : ''}
             </span>
             <div style={{ display: 'flex', gap: 4 }}>
               {([
@@ -515,8 +518,8 @@ export default function PersonalAgentsPage() {
                   onClick={() => setMpSort(s.key)}
                   style={{
                     padding: '5px 12px', borderRadius: 'var(--radius-sm)', border: 'none',
-                    background: mpSort === s.key ? 'var(--accent)' : 'var(--bg-secondary)',
-                    color: mpSort === s.key ? '#fff' : 'var(--text-secondary)',
+                    background: mpSort === s.key ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    color: mpSort === s.key ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                     fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
@@ -536,8 +539,8 @@ export default function PersonalAgentsPage() {
                 <div
                   key={agent.id}
                   style={{
-                    background: 'var(--bg-primary)', borderRadius: 'var(--radius-lg)',
-                    border: '1px solid var(--border-primary)', padding: 20,
+                    background: 'var(--fz-bg, #FFFFFF)', borderRadius: 'var(--radius-lg)',
+                    border: '1px solid var(--fz-border, #E2E8F0)', padding: 20,
                     transition: 'transform 0.2s, box-shadow 0.2s', display: 'flex', flexDirection: 'column',
                   }}
                   onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
@@ -548,17 +551,17 @@ export default function PersonalAgentsPage() {
                     <div style={{ display: 'flex', gap: 6 }}>
                       {agent.badge === 'populaire' && (
                         <span style={{ padding: '2px 8px', borderRadius: 10, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600 }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>local_fire_department</span> Populaire
+                          🔥 Populaire
                         </span>
                       )}
                       {agent.badge === 'nouveau' && (
                         <span style={{ padding: '2px 8px', borderRadius: 10, background: '#dbeafe', color: '#1e40af', fontSize: 11, fontWeight: 600 }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 11 }}>auto_awesome</span> Nouveau
+                          ✨ Nouveau
                         </span>
                       )}
                     </div>
                   </div>
-                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>{agent.name}</h3>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>{agent.name}</h3>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
                     <span style={{ padding: '2px 10px', borderRadius: 10, background: catColor + '18', color: catColor, fontSize: 11, fontWeight: 600 }}>
                       {agent.category}
@@ -572,24 +575,24 @@ export default function PersonalAgentsPage() {
                       {agent.tier === 'free' ? 'Gratuit' : 'Premium'}
                     </span>
                   </div>
-                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 16, flex: 1 }}>
+                  <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5, marginBottom: 16, flex: 1 }}>
                     {agent.description}
                   </p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{agent.installs.toLocaleString('fr-FR')} installs</span>
+                    <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{agent.installs.toLocaleString('fr-FR')} installs</span>
                     <button
                       onClick={() => handleMpToggleInstall(agent.id)}
                       disabled={isInstallingThis}
                       style={{
                         padding: '7px 18px', borderRadius: 'var(--radius-md)',
-                        border: isInstalled ? '1px solid var(--border-primary)' : 'none',
-                        background: isInstalled ? 'var(--bg-primary)' : 'var(--accent)',
-                        color: isInstalled ? 'var(--text-secondary)' : '#fff',
+                        border: isInstalled ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
+                        background: isInstalled ? 'var(--fz-bg, #FFFFFF)' : 'var(--accent)',
+                        color: isInstalled ? 'var(--fz-text-secondary, #64748B)' : '#fff',
                         fontSize: 13, fontWeight: 600, cursor: isInstallingThis ? 'wait' : 'pointer',
                         transition: 'all 0.2s',
                       }}
                     >
-                      {isInstallingThis ? '...' : isInstalled ? <><span className="material-symbols-rounded" style={{ fontSize: 13 }}>check_circle</span> Installe</> : 'Installer'}
+                      {isInstallingThis ? '...' : isInstalled ? <>✅ Installe</> : 'Installer'}
                     </button>
                   </div>
                 </div>
@@ -598,14 +601,14 @@ export default function PersonalAgentsPage() {
           </div>
 
           {mpFiltered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>search</span></div>
-              <p style={{ fontSize: 15 }}>Aucun agent ne correspond a votre recherche.</p>
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--fz-text-muted, #94A3B8)' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+              <p style={{ fontSize: 15 }}>Aucun assistant ne correspond a votre recherche.</p>
               <button
                 onClick={() => { setMpSearch(''); setMpCategory('Tous'); }}
                 style={{
                   marginTop: 12, padding: '8px 20px', borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-primary)', background: 'var(--bg-primary)',
+                  border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)',
                   color: 'var(--accent)', fontSize: 13, cursor: 'pointer',
                 }}
               >
@@ -617,18 +620,18 @@ export default function PersonalAgentsPage() {
           {/* Stats bar */}
           <div style={{
             marginTop: 40, padding: '16px 24px', borderRadius: 'var(--radius-md)',
-            background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
             display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16,
           }}>
             {[
-              { label: 'Agents disponibles', value: MARKETPLACE_TEMPLATES.length },
-              { label: 'Agents installes', value: mpInstalled.size },
+              { label: 'Assistants disponibles', value: MARKETPLACE_TEMPLATES.length },
+              { label: 'Assistants installes', value: mpInstalled.size },
               { label: 'Categories', value: MARKETPLACE_CATEGORIES.length - 1 },
               { label: 'Gratuits', value: MARKETPLACE_TEMPLATES.filter(t => t.tier === 'free').length },
             ].map(stat => (
               <div key={stat.label} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>{stat.value}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{stat.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -674,7 +677,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
           width: 42, height: 42, fontSize: 22,
           background: `${agent.color}15`,
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+          {agent.emoji}
         </div>
         <div style={{ flex: 1 }}>
           <div className="font-bold text-base">{agent.name}</div>
@@ -718,7 +721,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
           onClick={onToggle}
           style={{
             position: 'relative', width: 40, height: 22, borderRadius: 11,
-            background: isActive ? agent.color : 'var(--bg-tertiary)',
+            background: isActive ? agent.color : 'var(--fz-bg-secondary, #F8FAFC)',
             border: 'none', cursor: 'pointer', transition: 'background 0.2s',
             flexShrink: 0,
           }}
@@ -756,7 +759,7 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
           width: 42, height: 42, fontSize: 22,
           background: `${agent.color}10`,
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+          {agent.emoji}
         </div>
         <div style={{ flex: 1 }}>
           <div className="font-semibold text-base">{agent.name}</div>
@@ -776,9 +779,9 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
             className="text-xs rounded-sm"
             style={{
               padding: '2px 8px',
-              background: 'var(--bg-tertiary)',
-              color: 'var(--text-muted)',
-              border: '1px solid var(--border-primary)',
+              background: 'var(--fz-bg-secondary, #F8FAFC)',
+              color: 'var(--fz-text-muted, #94A3B8)',
+              border: '1px solid var(--fz-border, #E2E8F0)',
             }}
           >
             {cap}
@@ -825,7 +828,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
               background: `${agent.color}15`,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+            {agent.emoji}
           </div>
           <div>
             <div className="font-bold text-base">{agent.name}</div>
@@ -882,7 +885,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
             style={{ fontSize: 11, padding: '4px 10px' }}
             title={mode.description}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 11, marginRight: 4 }}>{mode.icon}</span>
+            {mode.icon} 
             {mode.name}
           </button>
         ))}
@@ -906,7 +909,7 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.6'; }}
     >
       <div className="flex items-center gap-12">
-        <span className="material-symbols-rounded" style={{ fontSize: 20, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+        {agent.emoji}
         <div>
           <span className="text-sm font-semibold">{agent.name}</span>
           <span className="text-xs text-muted" style={{ marginLeft: 8 }}>{agent.role}</span>
@@ -918,7 +921,7 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
           onClick={onToggle}
           style={{
             position: 'relative', width: 40, height: 22, borderRadius: 11,
-            background: 'var(--bg-tertiary)', border: 'none', cursor: 'pointer',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', cursor: 'pointer',
             transition: 'background 0.2s', flexShrink: 0,
           }}
           title="Activer"

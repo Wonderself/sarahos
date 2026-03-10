@@ -195,7 +195,7 @@ function FieldEditor({ field, onChange, onDelete }: {
             <option key={ft.type} value={ft.type}>{ft.label}</option>
           ))}
         </select>
-        <button onClick={onDelete} style={{ padding: '6px 10px', borderRadius: 8, border: 'none', background: '#fef2f2', color: '#ef4444', cursor: 'pointer', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+        <button onClick={onDelete} style={{ padding: '6px 10px', borderRadius: 8, border: 'none', background: '#fef2f2', color: '#ef4444', cursor: 'pointer', fontSize: 13 }}>✕</button>
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <input
@@ -391,7 +391,7 @@ function BuilderContent() {
       {/* ── Header ── */}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>
-          {editId ? <><span className="material-symbols-rounded" style={{ fontSize: 22 }}>edit</span> Modifier le module</> : <><span className="material-symbols-rounded" style={{ fontSize: 22 }}>build</span> Créer un module</>}
+          {editId ? <>✏️ Modifier le module</> : <>🔧 Créer un module</>}
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
           Créez une mini-application fonctionnelle intégrée à votre dashboard.
@@ -418,7 +418,7 @@ function BuilderContent() {
                 transition: 'all 0.2s',
               }}
             >
-              {done ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span>{' '}</> : `${s}. `}{label}
+              {done ? <>✅{' '}</> : `${s}. `}{label}
             </button>
           );
         })}
@@ -444,7 +444,7 @@ function BuilderContent() {
               }}
             >
               <div style={{ position: 'absolute', top: 10, right: 14, padding: '3px 10px', borderRadius: 8, background: autre.color, color: '#fff', fontSize: 11, fontWeight: 700 }}>Recommande</div>
-              <div style={{ fontSize: 36, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 36 }}>{autre.icon}</span></div>
+              <div style={{ fontSize: 36, marginBottom: 10 }}><span style={{ fontSize: 32 }}>{autre.icon === 'extension' ? '📦' : autre.icon}</span></div>
               <div style={{ fontWeight: 800, fontSize: 17, marginBottom: 6 }}>{autre.title}</div>
               <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{autre.desc}</div>
             </button>
@@ -462,7 +462,7 @@ function BuilderContent() {
                   cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',
                 }}
               >
-                <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{mt.icon}</span></div>
+                <div style={{ fontSize: 28, marginBottom: 8 }}><span style={{ fontSize: 24 }}>{mt.icon === 'extension' ? '📦' : mt.icon === 'assignment' ? '📋' : mt.icon === 'bar_chart' ? '📊' : mt.icon === 'smart_toy' ? '🤖' : mt.icon === 'trending_up' ? '📈' : mt.icon}</span></div>
                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{mt.title}</div>
                 <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{mt.desc}</div>
               </button>
@@ -496,7 +496,7 @@ function BuilderContent() {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{tpl.icon}</span>
+                    <span style={{ fontSize: 20 }}>{tpl.icon === 'architecture' ? '🏗️' : tpl.icon === 'straighten' ? '📏' : tpl.icon === 'receipt' ? '🧾' : tpl.icon === 'storefront' ? '🏪' : tpl.icon === 'savings' ? '💰' : tpl.icon === 'home' ? '🏠' : tpl.icon === 'description' ? '📝' : tpl.icon === 'restaurant' ? '🍽️' : tpl.icon === 'local_hospital' ? '🏥' : tpl.icon === 'school' ? '🎓' : tpl.icon === 'balance' ? '⚖️' : tpl.icon === 'calculate' ? '🧮' : tpl.icon === 'celebration' ? '🎉' : tpl.icon === 'local_shipping' ? '🚚' : tpl.icon === 'badge' ? '🪪' : tpl.icon === 'mail' ? '📧' : tpl.icon === 'build' ? '🔧' : tpl.icon}</span>
                     <span style={{ fontWeight: 700, fontSize: 13 }}>{tpl.title}</span>
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 6 }}>{tpl.desc}</div>
@@ -523,7 +523,7 @@ function BuilderContent() {
                     width: 36, height: 36, borderRadius: 8, border: `2px solid ${emoji === e ? 'var(--accent)' : 'transparent'}`,
                     background: emoji === e ? 'var(--accent)20' : 'var(--bg-secondary)',
                     cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{e}</span></button>
+                  }}><span style={{ fontSize: 16 }}>{e === 'assignment' ? '📋' : e === 'bar_chart' ? '📊' : e === 'smart_toy' ? '🤖' : e === 'trending_up' ? '📈' : e === 'target' ? '🎯' : e === 'work' ? '💼' : e === 'trophy' ? '🏆' : e === 'bolt' ? '⚡' : e === 'star' ? '⭐' : e === 'local_fire_department' ? '🔥' : e === 'lightbulb' ? '💡' : e === 'storefront' ? '🏪' : e === 'call' ? '📞' : e === 'mail' ? '📧' : e === 'edit_note' ? '✏️' : e === 'palette' ? '🎨' : e === 'home' ? '🏠' : e === 'group' ? '👥' : e === 'build' ? '🔧' : e === 'inventory_2' ? '📦' : e === 'language' ? '🌐' : e === 'savings' ? '💰' : e === 'calendar_month' ? '📅' : e === 'notifications' ? '🔔' : e}</span></button>
                 ))}
               </div>
             </div>
@@ -542,7 +542,7 @@ function BuilderContent() {
 
           {/* Preview */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: `${color}15`, borderRadius: 12, border: `2px solid ${color}40`, alignSelf: 'flex-start' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{emoji}</span>
+            <span style={{ fontSize: 22 }}>{emoji}</span>
             <span style={{ fontWeight: 700, fontSize: 15 }}>{name || 'Nom du module'}</span>
           </div>
 
@@ -665,7 +665,7 @@ function BuilderContent() {
           {/* Dashboard */}
           {moduleType === 'dashboard' && (
             <div style={{ background: 'var(--bg-secondary)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>trending_up</span></div>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>📈</div>
               <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
                 Votre tableau de bord sera généré automatiquement à partir des données de vos autres modules.
                 Il affichera des compteurs, des graphiques et des statistiques en temps réel.
@@ -781,7 +781,7 @@ function BuilderContent() {
           {/* Preview card */}
           <div style={{ background: `${color}10`, border: `2px solid ${color}40`, borderRadius: 16, padding: 24, display: 'flex', alignItems: 'center', gap: 16 }}>
             <div style={{ width: 60, height: 60, borderRadius: 14, background: `${color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 28 }}>{emoji}</span>
+              <span style={{ fontSize: 26 }}>{emoji}</span>
             </div>
             <div>
               <div style={{ fontWeight: 700, fontSize: 16 }}>{name}</div>
@@ -837,7 +837,7 @@ function BuilderContent() {
             disabled={saving}
             style={{ padding: '10px 28px', borderRadius: 10, background: 'var(--accent)', color: 'white', border: 'none', cursor: saving ? 'wait' : 'pointer', fontWeight: 700, fontSize: 14 }}
           >
-            {saving ? 'Publication...' : editId ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Mettre à jour</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>rocket_launch</span> Publier le module</>}
+            {saving ? 'Publication...' : editId ? <>✅ Mettre à jour</> : <>🚀 Publier le module</>}
           </button>
         )}
       </div>

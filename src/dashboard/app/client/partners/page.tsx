@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 interface Partner {
   name: string;
@@ -12,6 +14,21 @@ interface Partner {
   logo?: string;
   comingSoon?: boolean;
 }
+
+const CATEGORY_EMOJIS: Record<string, string> = {
+  movie: '🎬',
+  trending_up: '📈',
+  library_books: '📚',
+  school: '🎓',
+  bar_chart: '📊',
+};
+
+const PARTNER_EMOJIS: Record<string, string> = {
+  videocam: '📹',
+  rocket_launch: '🚀',
+  menu_book: '📖',
+  trending_up: '📈',
+};
 
 const PARTNER_CATEGORIES = [
   {
@@ -101,11 +118,16 @@ export default function PartnersPage() {
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: 8 }}>
-          Nos <span className="fz-logo-word">Partenaires</span>
-        </h1>
-        <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.partners.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.partners.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.partners.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.partners.helpText} />
+        </div>
+        <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6, marginTop: 12 }}>
           Decouvrez notre ecosysteme de partenaires de confiance. Des experts dans leur domaine pour completer les services de <span className="fz-logo-word">Freenzy.io</span>.
         </p>
       </div>
@@ -116,17 +138,17 @@ export default function PartnersPage() {
             onClick={() => setExpandedCategory(expandedCategory === catIdx ? null : catIdx)}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-              padding: '16px 20px', background: 'var(--bg-secondary)', borderRadius: 12,
+              padding: '16px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12,
               border: 'none', cursor: 'pointer', textAlign: 'left',
               fontFamily: 'var(--font-sans)',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{cat.emoji}</span>
+            <span style={{ fontSize: 24 }}>{CATEGORY_EMOJIS[cat.emoji] ?? cat.emoji}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{cat.title}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{cat.subtitle}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{cat.title}</div>
+              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{cat.subtitle}</div>
             </div>
-            <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'var(--text-muted)', transform: expandedCategory === catIdx ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>chevron_right</span>
+            <span style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', transform: expandedCategory === catIdx ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>{expandedCategory === catIdx ? '▼' : '▶'}</span>
           </button>
 
           {expandedCategory === catIdx && (
@@ -134,8 +156,8 @@ export default function PartnersPage() {
               {cat.partners.map(partner => (
                 <div key={partner.name} style={{
                   padding: '20px', borderRadius: 12,
-                  border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg, #FFFFFF)',
                   position: 'relative',
                 }}>
                   {partner.comingSoon && (
@@ -151,14 +173,14 @@ export default function PartnersPage() {
                       background: partner.color + '15',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 20, color: partner.color }}>{partner.emoji}</span>
+                      <span style={{ fontSize: 20 }}>{PARTNER_EMOJIS[partner.emoji] ?? partner.emoji}</span>
                     </div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{partner.name}</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{partner.name}</div>
                       <div style={{ fontSize: 11, color: partner.color, fontWeight: 600 }}>{partner.category}</div>
                     </div>
                   </div>
-                  <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6, margin: '0 0 14px' }}>
+                  <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6, margin: '0 0 14px' }}>
                     {partner.description}
                   </p>
                   {partner.url && !partner.comingSoon && (
@@ -172,11 +194,11 @@ export default function PartnersPage() {
                         textDecoration: 'none',
                       }}
                     >
-                      Visiter le site <span className="material-symbols-rounded" style={{ fontSize: 12 }}>arrow_forward</span>
+                      Visiter le site <span style={{ fontSize: 12 }}>&rarr;</span>
                     </a>
                   )}
                   {!partner.url && !partner.comingSoon && (
-                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       Contactez-nous pour en savoir plus
                     </span>
                   )}
@@ -190,12 +212,12 @@ export default function PartnersPage() {
       {/* Info box */}
       <div style={{
         marginTop: 32, padding: '20px 24px', borderRadius: 12,
-        background: 'var(--accent-muted)', border: '1px solid var(--border-primary)',
+        background: 'var(--accent-muted)', border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 6 }}>
           Devenir partenaire
         </div>
-        <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+        <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6, margin: 0 }}>
           Vous souhaitez rejoindre notre ecosysteme de partenaires ? Contactez-nous pour decouvrir les opportunites de collaboration et beneficier de la visibilite aupres de nos utilisateurs.
         </p>
       </div>

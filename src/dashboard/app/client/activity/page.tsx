@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 interface Activity {
   id: string;
@@ -13,22 +15,22 @@ interface Activity {
   created_at: string;
 }
 
-const ACTION_ICON: Record<string, string> = {
-  login: 'key',
-  deposit: 'savings',
-  withdrawal: 'payments',
-  update_preferences: 'settings',
-  chat: 'chat',
-  meeting: 'handshake',
-  document: 'description',
-  register: 'celebration',
-  password_reset: 'lock',
-  logout: 'logout',
-  update_profile: 'person',
-  agent_call: 'smart_toy',
-  billing: 'credit_card',
-  upload: 'upload',
-  download: 'download',
+const ACTION_EMOJI: Record<string, string> = {
+  login: '🔑',
+  deposit: '💰',
+  withdrawal: '💸',
+  update_preferences: '⚙️',
+  chat: '💬',
+  meeting: '🤝',
+  document: '📄',
+  register: '🎉',
+  password_reset: '🔒',
+  logout: '🚪',
+  update_profile: '👤',
+  agent_call: '🤖',
+  billing: '💳',
+  upload: '📤',
+  download: '📥',
 };
 
 const ACTION_LABEL: Record<string, string> = {
@@ -49,8 +51,8 @@ const ACTION_LABEL: Record<string, string> = {
   download: 'Telechargement',
 };
 
-function getActionIcon(action: string): string {
-  return ACTION_ICON[action] ?? 'edit_note';
+function getActionEmoji(action: string): string {
+  return ACTION_EMOJI[action] ?? '📝';
 }
 
 function getActionLabel(action: string): string {
@@ -170,16 +172,18 @@ export default function ActivityPage() {
     fetchActivities(offset, true);
   }
 
+  const meta = PAGE_META.activity;
+
   if (loading) {
     return (
       <div className="flex-center" style={{ minHeight: 400, flexDirection: 'column', gap: 12 }}>
         {loadingTimedOut ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>link_off</span></div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>🔗</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
               Impossible de charger les données
             </div>
-            <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>
+            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>
               Vérifiez votre connexion ou réessayez.
             </div>
             <button
@@ -205,13 +209,15 @@ export default function ActivityPage() {
       <div style={{ marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 style={{
-            fontSize: 22, fontWeight: 700, color: 'var(--text-primary)',
+            fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)',
             letterSpacing: '-0.02em', marginBottom: 6,
+            display: 'flex', alignItems: 'center', gap: 8,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 22 }}>assignment</span> Journal d&apos;<span className="fz-logo-word">Activité</span>
+            <span style={{ fontSize: 24 }}>{meta.emoji}</span> {meta.title}
+            <HelpBubble text={meta.helpText} />
           </h1>
-          <p style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>
-            Historique de toutes vos actions sur la <span className="fz-logo-word">plateforme</span>
+          <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            {meta.subtitle}
           </p>
         </div>
         {activities.length > 0 && (
@@ -230,11 +236,11 @@ export default function ActivityPage() {
             }}
             style={{
               padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-              border: '1.5px solid var(--border-primary)', background: 'var(--bg-secondary)',
-              color: 'var(--text-primary)', cursor: 'pointer',
+              border: '1.5px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
+              color: 'var(--fz-text, #1E293B)', cursor: 'pointer',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Export CSV
+            📥 Export CSV
           </button>
         )}
       </div>
@@ -248,14 +254,14 @@ export default function ActivityPage() {
       {activities.length === 0 && !error && (
         <div style={{
           textAlign: 'center', padding: '60px 20px',
-          background: 'var(--bg-secondary)', borderRadius: 16,
-          border: '1px solid var(--border-primary)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 16,
+          border: '1px solid var(--fz-border, #E2E8F0)',
         }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>inbox</span></div>
-          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>📭</div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
             Aucune activite pour le moment
           </div>
-          <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>
+          <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>
             Vos actions apparaitront ici au fur et a mesure de votre utilisation.
           </div>
         </div>
@@ -266,7 +272,7 @@ export default function ActivityPage() {
         <div key={groupLabel} style={{ marginBottom: 32 }}>
           {/* Group header */}
           <div style={{
-            fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)',
+            fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)',
             textTransform: 'uppercase', letterSpacing: '0.05em',
             marginBottom: 14, paddingLeft: 20,
           }}>
@@ -278,7 +284,7 @@ export default function ActivityPage() {
             {/* Left border line */}
             <div style={{
               position: 'absolute', left: 7, top: 4, bottom: 4,
-              width: 2, background: 'var(--border-primary)',
+              width: 2, background: 'var(--fz-border, #E2E8F0)',
               borderRadius: 1,
             }} />
 
@@ -291,51 +297,51 @@ export default function ActivityPage() {
                 <div style={{
                   position: 'absolute', left: -16, top: 14,
                   width: 10, height: 10, borderRadius: '50%',
-                  background: 'var(--bg-elevated)',
+                  background: 'var(--fz-bg, #FFFFFF)',
                   border: '2px solid var(--accent, #7c3aed)',
                   zIndex: 1,
                 }} />
 
                 {/* Card */}
                 <div style={{
-                  background: 'var(--bg-elevated)',
-                  border: '1px solid var(--border-primary)',
+                  background: 'var(--fz-bg, #FFFFFF)',
+                  border: '1px solid var(--fz-border, #E2E8F0)',
                   borderRadius: 12, padding: '14px 18px',
                   transition: 'border-color 0.15s ease',
                 }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-secondary, #d1d5db)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-primary)')}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--fz-border, #CBD5E1)')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)')}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     {/* Emoji icon */}
                     <div style={{
                       width: 36, height: 36, borderRadius: 10,
-                      background: 'var(--bg-secondary)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 18, flexShrink: 0,
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{getActionIcon(activity.action)}</span>
+                      {getActionEmoji(activity.action)}
                     </div>
 
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
                           {getActionLabel(activity.action)}
                         </span>
-                        <span style={{ fontSize: 12, color: 'var(--text-muted)', flexShrink: 0 }}>
+                        <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>
                           {formatTime(activity.created_at)}
                         </span>
                       </div>
 
                       {/* Description or resource info */}
                       {(activity.description || activity.resource_type) && (
-                        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, lineHeight: 1.5 }}>
+                        <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginTop: 4, lineHeight: 1.5 }}>
                           {activity.description ?? (
                             <span>
                               {activity.resource_type}
                               {activity.resource_id && (
-                                <span style={{ color: 'var(--text-muted)' }}> #{activity.resource_id.slice(0, 8)}</span>
+                                <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}> #{activity.resource_id.slice(0, 8)}</span>
                               )}
                             </span>
                           )}
@@ -344,7 +350,7 @@ export default function ActivityPage() {
 
                       {/* IP address (subtle) */}
                       {activity.ip_address && (
-                        <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
                           IP: {activity.ip_address}
                         </div>
                       )}
@@ -366,7 +372,7 @@ export default function ActivityPage() {
             className="btn btn-ghost"
             style={{
               fontSize: 13, fontWeight: 500, padding: '10px 28px',
-              borderRadius: 10, border: '1px solid var(--border-primary)',
+              borderRadius: 10, border: '1px solid var(--fz-border, #E2E8F0)',
             }}
           >
             {loadingMore ? 'Chargement...' : 'Charger plus d\'activites'}
@@ -378,7 +384,7 @@ export default function ActivityPage() {
       {!hasMore && activities.length > 0 && (
         <div style={{
           textAlign: 'center', padding: '16px 0 40px',
-          fontSize: 12, color: 'var(--text-muted)',
+          fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)',
         }}>
           Fin de l&apos;historique
         </div>

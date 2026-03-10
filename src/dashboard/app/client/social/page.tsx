@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useUserData } from '../../../lib/use-user-data';
+import { HelpBubble } from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ───────────────────────────────────────────────
 interface SavedPost {
@@ -84,12 +86,12 @@ interface AccountAnalysis {
 
 // ─── Constants ───────────────────────────────────────────
 const PLATFORMS = [
-  { id: 'linkedin', label: 'LinkedIn', emoji: 'work', color: '#0077b5' },
-  { id: 'instagram', label: 'Instagram', emoji: 'photo_camera', color: '#E4405F' },
-  { id: 'facebook', label: 'Facebook', emoji: 'thumb_up', color: '#1877f2' },
-  { id: 'twitter', label: 'Twitter/X', emoji: 'tag', color: '#1da1f2' },
-  { id: 'tiktok', label: 'TikTok', emoji: 'music_note', color: '#000000' },
-  { id: 'youtube', label: 'YouTube', emoji: 'smart_display', color: '#FF0000' },
+  { id: 'linkedin', label: 'LinkedIn', emoji: '\uD83D\uDCBC', color: '#0077b5' },
+  { id: 'instagram', label: 'Instagram', emoji: '\uD83D\uDCF8', color: '#E4405F' },
+  { id: 'facebook', label: 'Facebook', emoji: '\uD83D\uDCD8', color: '#1877f2' },
+  { id: 'twitter', label: 'Twitter/X', emoji: '\uD83D\uDC26', color: '#1da1f2' },
+  { id: 'tiktok', label: 'TikTok', emoji: '\uD83C\uDFB5', color: '#000000' },
+  { id: 'youtube', label: 'YouTube', emoji: '\uD83D\uDCFA', color: '#FF0000' },
 ] as const;
 
 const POST_TYPES = [
@@ -105,12 +107,12 @@ const LANGUAGES = ['Francais', 'Anglais', 'Espagnol'] as const;
 const LENGTHS = ['Courte', 'Moyenne', 'Longue'] as const;
 
 const TABS = [
-  { id: 'generator', label: 'Generateur', emoji: 'edit' },
-  { id: 'posts', label: 'Mes posts', emoji: 'assignment' },
-  { id: 'calendar', label: 'Calendrier', emoji: 'calendar_month' },
-  { id: 'accounts', label: 'Mes comptes', emoji: 'link' },
-  { id: 'analytics', label: 'Analytics', emoji: 'bar_chart' },
-  { id: 'competitors', label: 'Concurrents', emoji: 'target' },
+  { id: 'generator', label: 'Generateur', emoji: '\u270F\uFE0F' },
+  { id: 'posts', label: 'Mes posts', emoji: '\uD83D\uDCCB' },
+  { id: 'calendar', label: 'Calendrier', emoji: '\uD83D\uDCC5' },
+  { id: 'accounts', label: 'Mes comptes', emoji: '\uD83D\uDD17' },
+  { id: 'analytics', label: 'Analytics', emoji: '\uD83D\uDCCA' },
+  { id: 'competitors', label: 'Concurrents', emoji: '\uD83C\uDFAF' },
 ] as const;
 
 const DAYS_FR = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
@@ -180,7 +182,7 @@ function platformColor(platformId: string): string {
 }
 
 function platformEmoji(platformId: string): string {
-  return PLATFORMS.find(p => p.id === platformId)?.emoji ?? 'phone_iphone';
+  return PLATFORMS.find(p => p.id === platformId)?.emoji ?? '\uD83D\uDCF1';
 }
 
 // ─── Mock data helpers ──────────────────────────────────
@@ -729,43 +731,43 @@ export default function SocialMediaPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 20,
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 20, color: pColor }}>{pEmoji}</span>
+            <span style={{ fontSize: 20 }}>{pEmoji}</span>
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 14 }}>Votre Entreprise</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>Votre Entreprise</div>
+            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
               {pLabel} {'\u00B7'} Apercu du post
             </div>
           </div>
         </div>
         <div style={{
           padding: 16, fontSize: 14, lineHeight: 1.7,
-          whiteSpace: 'pre-wrap', color: 'var(--text-primary)',
+          whiteSpace: 'pre-wrap', color: 'var(--fz-text, #1E293B)',
           maxHeight: 400, overflowY: 'auto',
         }}>
           {content}
         </div>
         <div style={{
           padding: '10px 16px', borderTop: `1px solid ${pColor}15`,
-          display: 'flex', gap: 20, fontSize: 12, color: 'var(--text-muted)',
+          display: 'flex', gap: 20, fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)',
         }}>
           {platformId === 'linkedin' && (
-            <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>thumb_up</span> J&apos;aime &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat_bubble</span> Commenter &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>repeat</span> Republier</>
+            <>{'\uD83D\uDC4D'} J&apos;aime &nbsp; {'\uD83D\uDCAC'} Commenter &nbsp; {'\uD83D\uDD01'} Republier</>
           )}
           {platformId === 'instagram' && (
-            <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>favorite</span> J&apos;aime &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat_bubble</span> Commenter &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>send</span> Envoyer</>
+            <>{'\u2764\uFE0F'} J&apos;aime &nbsp; {'\uD83D\uDCAC'} Commenter &nbsp; {'\uD83D\uDCE4'} Envoyer</>
           )}
           {platformId === 'facebook' && (
-            <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>thumb_up</span> J&apos;aime &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat_bubble</span> Commenter &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>share</span> Partager</>
+            <>{'\uD83D\uDC4D'} J&apos;aime &nbsp; {'\uD83D\uDCAC'} Commenter &nbsp; {'\uD83D\uDCE4'} Partager</>
           )}
           {platformId === 'twitter' && (
-            <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>favorite</span> Liker &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>repeat</span> Retweeter &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat_bubble</span> Repondre</>
+            <>{'\u2764\uFE0F'} Liker &nbsp; {'\uD83D\uDD01'} Retweeter &nbsp; {'\uD83D\uDCAC'} Repondre</>
           )}
           {platformId === 'tiktok' && (
-            <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>favorite</span> J&apos;aime &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat_bubble</span> Commenter &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>repeat</span> Partager</>
+            <>{'\u2764\uFE0F'} J&apos;aime &nbsp; {'\uD83D\uDCAC'} Commenter &nbsp; {'\uD83D\uDD01'} Partager</>
           )}
           {platformId === 'youtube' && (
-            <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>thumb_up</span> J&apos;aime &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chat_bubble</span> Commenter &nbsp; <span className="material-symbols-rounded" style={{ fontSize: 14 }}>notifications</span> S&apos;abonner</>
+            <>{'\uD83D\uDC4D'} J&apos;aime &nbsp; {'\uD83D\uDCAC'} Commenter &nbsp; {'\uD83D\uDD14'} S&apos;abonner</>
           )}
         </div>
       </div>
@@ -779,11 +781,16 @@ export default function SocialMediaPage() {
     <div className="fz-page">
       {/* Page Header */}
       <div className="fz-page-header">
-        <div className="fz-page-surtitle"><span className="fz-logo-word">Communication</span></div>
-        <h1 className="fz-page-title">Reseaux sociaux</h1>
-        <p className="fz-page-subtitle">
-          Generez, planifiez et analysez vos contenus <span className="fz-logo-word">automatiquement</span> pour tous vos reseaux
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 32 }}>{PAGE_META.social.emoji}</span>
+          <div>
+            <h1 className="fz-page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.social.title}</h1>
+            <p className="fz-page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+              {PAGE_META.social.subtitle}
+            </p>
+          </div>
+          <HelpBubble text={PAGE_META.social.helpText} />
+        </div>
       </div>
 
       {/* Tab Navigation */}
@@ -794,7 +801,7 @@ export default function SocialMediaPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`fz-tab ${activeTab === tab.id ? 'fz-tab-active' : ''}`}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{tab.emoji}</span>
+            <span style={{ fontSize: 16 }}>{tab.emoji}</span>
             {tab.label}
           </button>
         ))}
@@ -815,7 +822,7 @@ export default function SocialMediaPage() {
                   className={`fz-pill ${platform === p.id ? 'fz-pill-active' : ''}`}
                   style={platform === p.id ? { borderColor: p.color, background: `${p.color}12`, color: p.color } : {}}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: p.color }}>{p.emoji}</span>
+                  <span style={{ fontSize: 16 }}>{p.emoji}</span>
                   {p.label}
                 </button>
               ))}
@@ -854,13 +861,13 @@ export default function SocialMediaPage() {
                 transform: showAdvanced ? 'rotate(90deg)' : 'rotate(0deg)',
                 transition: 'transform 0.2s ease',
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>chevron_right</span>
+                <span style={{ fontSize: 14 }}>{'\u25B6'}</span>
               </span>
               Options avancees
             </button>
 
             {showAdvanced && (
-              <div className="fz-grid-2" style={{ marginTop: 12, padding: 16, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', gap: 16 }}>
+              <div className="fz-grid-2" style={{ marginTop: 12, padding: 16, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)', gap: 16 }}>
                 <div>
                   <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Ton</label>
                   <select value={tone} onChange={e => setTone(e.target.value)} className="fz-select">
@@ -943,7 +950,7 @@ export default function SocialMediaPage() {
               {renderPlatformPreview(generatedContent, platform)}
               <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
                 <button onClick={handleCopy} className={`fz-btn ${copySuccess ? 'fz-btn-success' : 'fz-btn-secondary'} fz-btn-sm`}>
-                  {copySuccess ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check</span> Copie !</> : 'Copier'}
+                  {copySuccess ? <><span style={{ fontSize: 14, verticalAlign: 'middle' }}>{'\u2705'}</span> Copie !</> : 'Copier'}
                 </button>
                 <button onClick={handleRegenerate} disabled={isGenerating} className="fz-btn fz-btn-secondary fz-btn-sm" style={{ opacity: isGenerating ? 0.5 : 1 }}>
                   Regenerer
@@ -963,19 +970,19 @@ export default function SocialMediaPage() {
                 {savedPosts.slice(0, 5).map(post => (
                   <div key={post.id} style={{
                     padding: 14, borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)',
+                    border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span className="fz-badge" style={{ background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {post.platform}
+                          <span style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {post.platform}
                         </span>
                         <span className="fz-badge">{post.type}</span>
                       </div>
-                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{formatDate(post.createdAt)}</span>
+                      <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{formatDate(post.createdAt)}</span>
                     </div>
                     <div style={{
-                      fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5,
+                      fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5,
                       overflow: 'hidden', textOverflow: 'ellipsis',
                       display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                     }}>
@@ -1004,7 +1011,7 @@ export default function SocialMediaPage() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginRight: 8 }}>Plateforme:</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginRight: 8 }}>Plateforme:</label>
                   <select value={postsFilter} onChange={e => setPostsFilter(e.target.value)} className="fz-select" style={{ width: 'auto', minWidth: 120 }}>
                     <option value="all">Toutes</option>
                     {PLATFORMS.map(p => (
@@ -1013,7 +1020,7 @@ export default function SocialMediaPage() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginRight: 8 }}>Tri:</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginRight: 8 }}>Tri:</label>
                   <select value={postsSort} onChange={e => setPostsSort(e.target.value as 'date' | 'platform')} className="fz-select" style={{ width: 'auto', minWidth: 120 }}>
                     <option value="date">Plus recents</option>
                     <option value="platform">Par plateforme</option>
@@ -1031,7 +1038,7 @@ export default function SocialMediaPage() {
           {/* Posts List */}
           {getFilteredPosts().length === 0 ? (
             <div className="fz-empty">
-              <div className="fz-empty-icon"><span className="material-symbols-rounded" style={{ fontSize: 48 }}>assignment</span></div>
+              <div className="fz-empty-icon"><span style={{ fontSize: 48 }}>{'\uD83D\uDCCB'}</span></div>
               <div className="fz-empty-title">Aucun post sauvegarde</div>
               <div className="fz-empty-desc">Generez votre premier post dans l&apos;onglet Generateur</div>
               <button onClick={() => setActiveTab('generator')} className="fz-btn fz-btn-primary fz-btn-sm" style={{ marginTop: 12 }}>
@@ -1051,13 +1058,13 @@ export default function SocialMediaPage() {
                         onClick={() => togglePostSelect(post.id)}
                         style={{
                           width: 20, height: 20, borderRadius: 'var(--radius-sm)', flexShrink: 0,
-                          border: isSelected ? '2px solid var(--accent)' : '2px solid var(--border-secondary)',
+                          border: isSelected ? '2px solid var(--accent)' : '2px solid var(--fz-border, #E2E8F0)',
                           background: isSelected ? 'var(--accent)' : 'transparent',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           cursor: 'pointer', marginTop: 2, color: '#fff', fontSize: 12,
                         }}
                       >
-                        {isSelected && <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span>}
+                        {isSelected && <span style={{ fontSize: 12 }}>{'\u2713'}</span>}
                       </div>
 
                       <div style={{ flex: 1, minWidth: 0 }}>
@@ -1065,16 +1072,16 @@ export default function SocialMediaPage() {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <span className="fz-badge" style={{ background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
-                              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {PLATFORMS.find(p => p.id === post.platform)?.label ?? post.platform}
+                              <span style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {PLATFORMS.find(p => p.id === post.platform)?.label ?? post.platform}
                             </span>
                             <span className="fz-badge">{post.type}</span>
                           </div>
-                          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{formatDate(post.createdAt)}</span>
+                          <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{formatDate(post.createdAt)}</span>
                         </div>
 
                         {/* Content preview */}
                         <div style={{
-                          fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6,
+                          fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6,
                           overflow: 'hidden', textOverflow: 'ellipsis',
                           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
                           marginBottom: 12,
@@ -1084,10 +1091,10 @@ export default function SocialMediaPage() {
 
                         {/* Engagement stats */}
                         <div style={{ display: 'flex', gap: 16, marginBottom: 12, flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>favorite</span> {eng.likes}</span>
-                          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>chat_bubble</span> {eng.comments}</span>
-                          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>repeat</span> {eng.shares}</span>
-                          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>visibility</span> {eng.views}</span>
+                          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2764\uFE0F'} {eng.likes}</span>
+                          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\uD83D\uDCAC'} {eng.comments}</span>
+                          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\uD83D\uDD01'} {eng.shares}</span>
+                          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\uD83D\uDC41\uFE0F'} {eng.views}</span>
                         </div>
 
                         {/* Actions */}
@@ -1150,9 +1157,9 @@ export default function SocialMediaPage() {
                   className="fz-btn fz-btn-secondary fz-btn-sm"
                   style={{ width: 32, height: 32, padding: 0, justifyContent: 'center' }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>chevron_left</span>
+                  <span style={{ fontSize: 16 }}>{'\u25C0'}</span>
                 </button>
-                <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', minWidth: 140, textAlign: 'center' }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)', minWidth: 140, textAlign: 'center' }}>
                   {calendarView === 'week'
                     ? (() => {
                         const dates = getWeekDates(weekOffset);
@@ -1169,7 +1176,7 @@ export default function SocialMediaPage() {
                   className="fz-btn fz-btn-secondary fz-btn-sm"
                   style={{ width: 32, height: 32, padding: 0, justifyContent: 'center' }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>chevron_right</span>
+                  <span style={{ fontSize: 16 }}>{'\u25B6'}</span>
                 </button>
                 {calendarView === 'week' && weekOffset !== 0 && (
                   <button onClick={() => setWeekOffset(0)} className="fz-btn fz-btn-ghost fz-btn-sm">
@@ -1196,15 +1203,15 @@ export default function SocialMediaPage() {
                   }}>
                     <div style={{
                       padding: '8px 10px',
-                      borderBottom: '1px solid var(--border-primary)',
-                      background: isToday ? 'var(--accent-muted)' : 'var(--bg-secondary)',
+                      borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+                      background: isToday ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     }}>
                       <div>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: isToday ? 'var(--accent)' : 'var(--text-muted)', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: isToday ? 'var(--accent)' : 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase' }}>
                           {DAYS_FR[i]}
                         </span>
-                        <span style={{ marginLeft: 6, fontSize: 14, fontWeight: 700, color: isToday ? 'var(--accent)' : 'var(--text-primary)' }}>
+                        <span style={{ marginLeft: 6, fontSize: 14, fontWeight: 700, color: isToday ? 'var(--accent)' : 'var(--fz-text, #1E293B)' }}>
                           {date.getDate()}
                         </span>
                       </div>
@@ -1229,17 +1236,17 @@ export default function SocialMediaPage() {
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <span className="material-symbols-rounded" style={{ fontSize: 10 }}>{platformEmoji(p.platform)}</span>
-                            <span style={{ fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <span style={{ fontSize: 10 }}>{platformEmoji(p.platform)}</span>
+                            <span style={{ fontWeight: 600, color: 'var(--fz-text, #1E293B)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {p.title}
                             </span>
                           </div>
-                          {p.time && <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{p.time}</div>}
+                          {p.time && <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{p.time}</div>}
                         </div>
                       ))}
                       {dayPosts.length === 0 && (
                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>Aucun post</span>
+                          <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>Aucun post</span>
                         </div>
                       )}
                     </div>
@@ -1254,7 +1261,7 @@ export default function SocialMediaPage() {
             <div className="fz-card" style={{ overflowX: 'auto' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 8 }}>
                 {DAYS_FR.map(d => (
-                  <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', padding: '4px 0', textTransform: 'uppercase' }}>
+                  <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)', padding: '4px 0', textTransform: 'uppercase' }}>
                     {d}
                   </div>
                 ))}
@@ -1262,19 +1269,19 @@ export default function SocialMediaPage() {
               {getMonthDates(monthDate.getFullYear(), monthDate.getMonth()).map((week, wi) => (
                 <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 4 }}>
                   {week.map((date, di) => {
-                    if (!date) return <div key={di} style={{ minHeight: 60, borderRadius: 'var(--radius-sm)', background: 'var(--bg-secondary)' }} />;
+                    if (!date) return <div key={di} style={{ minHeight: 60, borderRadius: 'var(--radius-sm)', background: 'var(--fz-bg-secondary, #F8FAFC)' }} />;
                     const key = dateToKey(date);
                     const dayPosts = getPostsForDate(key);
                     const isToday = dateToKey(new Date()) === key;
                     return (
                       <div key={di} style={{
                         minHeight: 60, borderRadius: 'var(--radius-sm)',
-                        border: isToday ? '1px solid var(--accent)' : '1px solid var(--border-primary)',
-                        background: 'var(--bg-elevated)', padding: 4, cursor: 'pointer',
+                        border: isToday ? '1px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
+                        background: 'var(--fz-bg, #FFFFFF)', padding: 4, cursor: 'pointer',
                       }}
                       onClick={() => { setShowAddPost(key); setNewCalPost({ platform: 'linkedin', title: '', content: '', time: '09:00' }); }}
                       >
-                        <div style={{ fontSize: 12, fontWeight: 600, color: isToday ? 'var(--accent)' : 'var(--text-primary)', marginBottom: 4 }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: isToday ? 'var(--accent)' : 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
                           {date.getDate()}
                         </div>
                         <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
@@ -1292,14 +1299,14 @@ export default function SocialMediaPage() {
               ))}
               <div style={{ display: 'flex', gap: 16, marginTop: 12, flexWrap: 'wrap' }}>
                 {PLATFORMS.map(p => (
-                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--text-muted)' }}>
+                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
                     <div style={{ width: 8, height: 8, borderRadius: '50%', background: p.color }} />
                     {p.label}
                   </div>
                 ))}
-                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>|</span>
+                <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>|</span>
                 {Object.entries(statusLabels).map(([key, label]) => (
-                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--text-muted)' }}>
+                  <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
                     <div style={{ width: 10, height: 4, borderRadius: 2, background: statusColors[key] }} />
                     {label}
                   </div>
@@ -1330,7 +1337,7 @@ export default function SocialMediaPage() {
                         className={`fz-pill ${newCalPost.platform === p.id ? 'fz-pill-active' : ''}`}
                         style={newCalPost.platform === p.id ? { borderColor: p.color, color: p.color } : {}}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{p.emoji}</span> {p.label}
+                        <span style={{ fontSize: 14 }}>{p.emoji}</span> {p.label}
                       </button>
                     ))}
                   </div>
@@ -1372,23 +1379,23 @@ export default function SocialMediaPage() {
                 width: '90%', maxWidth: 440, zIndex: 1000, boxShadow: 'var(--shadow-lg)',
               }}>
                 <div className="fz-section-title" style={{ marginBottom: 6 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{platformEmoji(editingCalPost.platform)}</span> {editingCalPost.title}
+                  <span style={{ fontSize: 16 }}>{platformEmoji(editingCalPost.platform)}</span> {editingCalPost.title}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
                   {editingCalPost.date} {editingCalPost.time ? `a ${editingCalPost.time}` : ''}
                 </div>
 
                 {editingCalPost.content && (
                   <div style={{
-                    padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)',
-                    fontSize: 13, lineHeight: 1.6, color: 'var(--text-secondary)',
+                    padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    fontSize: 13, lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)',
                     marginBottom: 16, maxHeight: 200, overflowY: 'auto', whiteSpace: 'pre-wrap',
                   }}>
                     {editingCalPost.content}
                   </div>
                 )}
 
-                <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary)' }}>Changer le statut</div>
+                <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8, color: 'var(--fz-text-secondary, #64748B)' }}>Changer le statut</div>
                 <div className="fz-pill-group" style={{ marginBottom: 16 }}>
                   {(Object.entries(statusLabels) as [CalendarPost['status'], string][]).map(([key, label]) => (
                     <button
@@ -1422,7 +1429,7 @@ export default function SocialMediaPage() {
       {activeTab === 'accounts' && (
         <div>
           <div className="fz-info-box fz-info-box-accent" style={{ marginBottom: 20 }}>
-            <span className="fz-info-box-icon"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>link</span></span>
+            <span className="fz-info-box-icon"><span style={{ fontSize: 20 }}>{'\uD83D\uDD17'}</span></span>
             <div>
               <strong>Connectez vos comptes</strong> pour publier directement depuis Freenzy.io. Configurez vos cles API pour chaque plateforme. Vos identifiants sont stockes localement et ne quittent jamais votre navigateur.
             </div>
@@ -1433,11 +1440,11 @@ export default function SocialMediaPage() {
             <div className="fz-card">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: '#0077b515', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#0077b5' }}>work</span>
+                  <span style={{ fontSize: 22 }}>{'\uD83D\uDCBC'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#0077b5' }}>LinkedIn</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>LinkedIn Developer App</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>LinkedIn Developer App</div>
                 </div>
                 <span className={`fz-badge ${platformKeys.linkedin?.connected ? 'fz-badge-success' : ''}`}>
                   {platformKeys.linkedin?.connected ? 'Connecte' : 'Deconnecte'}
@@ -1447,10 +1454,10 @@ export default function SocialMediaPage() {
               {platformKeys.linkedin?.connected ? (
                 <div>
                   {(() => { const acc = connectedAccounts.find(a => a.platform === 'linkedin'); return acc ? (
-                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', marginBottom: 12 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{acc.username}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{acc.followers.toLocaleString()} abonnes</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
+                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', marginBottom: 12 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{acc.username}</div>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{acc.followers.toLocaleString()} abonnes</div>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
                     </div>
                   ) : null; })()}
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -1482,11 +1489,11 @@ export default function SocialMediaPage() {
             <div className="fz-card">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: '#1877f215', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#1877f2' }}>thumb_up</span>
+                  <span style={{ fontSize: 22 }}>{'\uD83D\uDCD8'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1877f2' }}>Facebook / Instagram</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Meta Business Suite</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Meta Business Suite</div>
                 </div>
                 <span className={`fz-badge ${platformKeys.facebook?.connected ? 'fz-badge-success' : ''}`}>
                   {platformKeys.facebook?.connected ? 'Connecte' : 'Deconnecte'}
@@ -1496,10 +1503,10 @@ export default function SocialMediaPage() {
               {platformKeys.facebook?.connected ? (
                 <div>
                   {(() => { const acc = connectedAccounts.find(a => a.platform === 'facebook'); return acc ? (
-                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', marginBottom: 12 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{acc.username}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{acc.followers.toLocaleString()} abonnes</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
+                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', marginBottom: 12 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{acc.username}</div>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{acc.followers.toLocaleString()} abonnes</div>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
                     </div>
                   ) : null; })()}
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -1542,11 +1549,11 @@ export default function SocialMediaPage() {
             <div className="fz-card">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: '#1da1f215', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#1da1f2' }}>tag</span>
+                  <span style={{ fontSize: 22 }}>{'\uD83D\uDC26'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1da1f2' }}>Twitter / X</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>API payante ($100/mois)</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>API payante ($100/mois)</div>
                 </div>
                 <span className={`fz-badge ${platformKeys.twitter?.connected ? 'fz-badge-success' : ''}`}>
                   {platformKeys.twitter?.connected ? 'Connecte' : 'Deconnecte'}
@@ -1556,10 +1563,10 @@ export default function SocialMediaPage() {
               {platformKeys.twitter?.connected ? (
                 <div>
                   {(() => { const acc = connectedAccounts.find(a => a.platform === 'twitter'); return acc ? (
-                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', marginBottom: 12 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{acc.username}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{acc.followers.toLocaleString()} abonnes</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
+                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', marginBottom: 12 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{acc.username}</div>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{acc.followers.toLocaleString()} abonnes</div>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
                     </div>
                   ) : null; })()}
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -1591,18 +1598,18 @@ export default function SocialMediaPage() {
             <div className="fz-card">
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: '#E4405F15', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#E4405F' }}>photo_camera</span>
+                  <span style={{ fontSize: 22 }}>{'\uD83D\uDCF8'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#E4405F' }}>Instagram</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Via Facebook Business</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Via Facebook Business</div>
                 </div>
                 <span className={`fz-badge ${platformKeys.facebook?.connected ? 'fz-badge-info' : ''}`}>
                   {platformKeys.facebook?.connected ? 'Via Facebook' : 'Deconnecte'}
                 </span>
               </div>
               <div className="fz-info-box" style={{ fontSize: 13 }}>
-                <span className="fz-info-box-icon"><span className="material-symbols-rounded" style={{ fontSize: 16 }}>info</span></span>
+                <span className="fz-info-box-icon"><span style={{ fontSize: 16 }}>{'\u2139\uFE0F'}</span></span>
                 <span>Instagram utilise les memes identifiants que Facebook Business. Connectez votre compte Facebook pour publier sur Instagram.</span>
               </div>
             </div>
@@ -1611,15 +1618,15 @@ export default function SocialMediaPage() {
             <div className="fz-card" style={{ opacity: 0.5 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: '#00000010', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22 }}>music_note</span>
+                  <span style={{ fontSize: 22 }}>{'\uD83C\uDFB5'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700 }}>TikTok</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Bientot disponible</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Bientot disponible</div>
                 </div>
                 <span className="fz-badge fz-badge-warning">Prochainement</span>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6 }}>
                 L&apos;integration TikTok sera disponible dans une future mise a jour.
               </div>
             </div>
@@ -1628,15 +1635,15 @@ export default function SocialMediaPage() {
             <div className="fz-card" style={{ opacity: 0.5 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: '#FF000015', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#FF0000' }}>smart_display</span>
+                  <span style={{ fontSize: 22 }}>{'\uD83D\uDCFA'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#FF0000' }}>YouTube</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Bientot disponible</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Bientot disponible</div>
                 </div>
                 <span className="fz-badge fz-badge-warning">Prochainement</span>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6 }}>
                 L&apos;integration YouTube sera disponible dans une future mise a jour.
               </div>
             </div>
@@ -1644,7 +1651,7 @@ export default function SocialMediaPage() {
 
           {/* Security Note */}
           <div className="fz-info-box fz-info-box-success" style={{ marginTop: 20 }}>
-            <span className="fz-info-box-icon"><span className="material-symbols-rounded" style={{ fontSize: 20 }}>lock</span></span>
+            <span className="fz-info-box-icon"><span style={{ fontSize: 20 }}>{'\uD83D\uDD12'}</span></span>
             <span>
               <strong>Securite :</strong> Vos cles API sont stockees localement dans votre navigateur (localStorage) et ne sont jamais envoyees a nos serveurs. La connexion utilise une simulation OAuth pour le moment.
             </span>
@@ -1679,7 +1686,7 @@ export default function SocialMediaPage() {
             <div className="fz-stat">
               <div className="fz-stat-label">Meilleure plateforme</div>
               <div className="fz-stat-value" style={{ fontSize: 20 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{platformEmoji(analytics.bestPlatform)}</span> {PLATFORMS.find(p => p.id === analytics.bestPlatform)?.label ?? '-'}
+                <span style={{ fontSize: 20 }}>{platformEmoji(analytics.bestPlatform)}</span> {PLATFORMS.find(p => p.id === analytics.bestPlatform)?.label ?? '-'}
               </div>
               <div className="fz-stat-sub">{analytics.byPlatform[analytics.bestPlatform] ?? 0} posts</div>
             </div>
@@ -1719,10 +1726,10 @@ export default function SocialMediaPage() {
                 <div style={{ textAlign: 'center', padding: '24px 0' }}>
                   <div style={{
                     width: 32, height: 32, margin: '0 auto 12px',
-                    border: '3px solid var(--border-secondary)', borderTopColor: 'var(--accent)',
+                    border: '3px solid var(--fz-border, #E2E8F0)', borderTopColor: 'var(--accent)',
                     borderRadius: '50%', animation: 'spin 0.8s linear infinite',
                   }} />
-                  <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Analyse en cours...</div>
+                  <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Analyse en cours...</div>
                 </div>
               )}
 
@@ -1747,7 +1754,7 @@ export default function SocialMediaPage() {
                     </div>
                   </div>
                   <div style={{ marginTop: 16 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Top hashtags</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>Top hashtags</div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {analysisResult.topHashtags.map(tag => (
                         <span key={tag} className="fz-badge fz-badge-accent">{tag}</span>
@@ -1755,10 +1762,10 @@ export default function SocialMediaPage() {
                     </div>
                   </div>
                   <div style={{ marginTop: 12, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       <strong>Abonnements:</strong> {analysisResult.following.toLocaleString()}
                     </div>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       <strong>Posts:</strong> {analysisResult.totalPosts}
                     </div>
                   </div>
@@ -1774,7 +1781,7 @@ export default function SocialMediaPage() {
 
             {savedPosts.length === 0 ? (
               <div className="fz-empty">
-                <div className="fz-empty-icon"><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bar_chart</span></div>
+                <div className="fz-empty-icon"><span style={{ fontSize: 48 }}>{'\uD83D\uDCCA'}</span></div>
                 <div className="fz-empty-title">Pas de donnees</div>
                 <div className="fz-empty-desc">Generez des posts pour voir leurs performances</div>
               </div>
@@ -1784,8 +1791,8 @@ export default function SocialMediaPage() {
                   <div key={post.id} className="fz-card" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{
                       width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                      background: idx < 3 ? 'var(--accent-muted)' : 'var(--bg-tertiary)',
-                      color: idx < 3 ? 'var(--accent)' : 'var(--text-muted)',
+                      background: idx < 3 ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
+                      color: idx < 3 ? 'var(--accent)' : 'var(--fz-text-muted, #94A3B8)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontWeight: 800, fontSize: 14,
                     }}>
@@ -1794,20 +1801,20 @@ export default function SocialMediaPage() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                         <span className="fz-badge" style={{ background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {post.platform}
+                          <span style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {post.platform}
                         </span>
                       </div>
                       <div style={{
-                        fontSize: 13, color: 'var(--text-secondary)',
+                        fontSize: 13, color: 'var(--fz-text-secondary, #64748B)',
                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       }}>
                         {post.content.slice(0, 80)}...
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>favorite</span> {post.engagement.likes}</span>
-                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>chat_bubble</span> {post.engagement.comments}</span>
-                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>repeat</span> {post.engagement.shares}</span>
+                      <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2764\uFE0F'} {post.engagement.likes}</span>
+                      <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\uD83D\uDCAC'} {post.engagement.comments}</span>
+                      <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\uD83D\uDD01'} {post.engagement.shares}</span>
                     </div>
                   </div>
                 ))}
@@ -1835,20 +1842,20 @@ export default function SocialMediaPage() {
                   const height = Math.max((count / maxCount) * 80, 4);
                   return (
                     <div key={day} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>{count}</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{count}</span>
                       <div style={{
                         width: '100%', maxWidth: 40, height, borderRadius: 'var(--radius-sm)',
-                        background: count > 0 ? 'linear-gradient(180deg, var(--accent), #06b6d4)' : 'var(--bg-tertiary)',
+                        background: count > 0 ? 'linear-gradient(180deg, var(--accent), #06b6d4)' : 'var(--fz-bg-secondary, #F8FAFC)',
                         transition: 'height 0.3s ease',
                       }} />
-                      <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)' }}>{day}</span>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)' }}>{day}</span>
                     </div>
                   );
                 })}
               </div>
               <div className="fz-divider" style={{ margin: '16px 0' }} />
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                   <strong>Meilleur jour:</strong> {(() => {
                     let bestDay = 'Lundi';
                     let bestCount = 0;
@@ -1859,7 +1866,7 @@ export default function SocialMediaPage() {
                     return bestDay;
                   })()}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                   <strong>Total planifies:</strong> {calendarPosts.length}
                 </div>
               </div>
@@ -1907,7 +1914,7 @@ export default function SocialMediaPage() {
                 onClick={() => setShowCompSearch(!showCompSearch)}
                 className="fz-btn fz-btn-secondary fz-btn-sm"
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span> Rechercher
+                <span style={{ fontSize: 14 }}>{'\uD83D\uDD0D'}</span> Rechercher
               </button>
             </div>
           </div>
@@ -1934,14 +1941,14 @@ export default function SocialMediaPage() {
                   {getSearchResults().map((result, idx) => (
                     <div key={idx} style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)',
-                      border: '1px solid var(--border-primary)',
+                      padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)',
+                      border: '1px solid var(--fz-border, #E2E8F0)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{platformEmoji(result.platform)}</span>
+                        <span style={{ fontSize: 18 }}>{platformEmoji(result.platform)}</span>
                         <div>
-                          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{result.name}</div>
-                          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{result.name}</div>
+                          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                             {PLATFORMS.find(p => p.id === result.platform)?.label} - {result.followers.toLocaleString()} abonnes
                           </div>
                         </div>
@@ -1966,7 +1973,7 @@ export default function SocialMediaPage() {
           {/* Competitors List */}
           {competitors.length === 0 ? (
             <div className="fz-empty">
-              <div className="fz-empty-icon"><span className="material-symbols-rounded" style={{ fontSize: 48 }}>target</span></div>
+              <div className="fz-empty-icon"><span style={{ fontSize: 48 }}>{'\uD83C\uDFAF'}</span></div>
               <div className="fz-empty-title">Aucun concurrent suivi</div>
               <div className="fz-empty-desc">Ajoutez des concurrents pour comparer vos performances</div>
             </div>
@@ -1978,10 +1985,10 @@ export default function SocialMediaPage() {
                   <div key={comp.id} className="fz-card">
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{platformEmoji(comp.platform)}</span>
+                        <span style={{ fontSize: 22 }}>{platformEmoji(comp.platform)}</span>
                         <div>
-                          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{comp.name}</div>
-                          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{comp.username} - {PLATFORMS.find(p => p.id === comp.platform)?.label}</div>
+                          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{comp.name}</div>
+                          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{comp.username} - {PLATFORMS.find(p => p.id === comp.platform)?.label}</div>
                         </div>
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -1999,23 +2006,23 @@ export default function SocialMediaPage() {
                           {isComparing ? 'Fermer' : 'Comparer'}
                         </button>
                         <button onClick={() => removeCompetitor(comp.id)} className="fz-btn fz-btn-danger fz-btn-sm">
-                          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
+                          <span style={{ fontSize: 14 }}>{'\u2716'}</span>
                         </button>
                       </div>
                     </div>
 
                     {/* Stats */}
                     <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: isComparing ? 16 : 0 }}>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                         <strong>{comp.followers.toLocaleString()}</strong> abonnes
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                         <strong>{comp.avgEngagement}%</strong> engagement
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                         <strong>{comp.postFrequency}</strong>
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                         Top: <strong>{comp.topContent}</strong>
                       </div>
                     </div>
@@ -2047,14 +2054,14 @@ export default function SocialMediaPage() {
                           </div>
                         </div>
                         <div className="fz-grid-2" style={{ gap: 12, marginTop: 12 }}>
-                          <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', textAlign: 'center' }}>
-                            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Votre engagement</div>
+                          <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', textAlign: 'center' }}>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4 }}>Votre engagement</div>
                             <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--accent)' }}>
                               {savedPosts.length > 0 ? `${(analytics.avgEngagement / Math.max(savedPosts.length, 1)).toFixed(1)}%` : '0%'}
                             </div>
                           </div>
-                          <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', textAlign: 'center' }}>
-                            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>Engagement concurrent</div>
+                          <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: 'var(--fz-bg-secondary, #F8FAFC)', textAlign: 'center' }}>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4 }}>Engagement concurrent</div>
                             <div style={{ fontSize: 18, fontWeight: 800, color: platformColor(comp.platform) }}>
                               {comp.avgEngagement}%
                             </div>

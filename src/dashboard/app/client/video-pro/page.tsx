@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 const SERVICES = [
   {
     id: 'corporate',
-    icon: 'movie',
+    icon: '\ud83c\udfac',
     title: 'Video corporate',
     subtitle: 'Presentation d\'entreprise',
     description:
@@ -16,7 +18,7 @@ const SERVICES = [
   },
   {
     id: 'social',
-    icon: 'phone_iphone',
+    icon: '\ud83d\udcf1',
     title: 'Contenu reseaux sociaux',
     subtitle: 'Reels, TikTok, Shorts',
     description:
@@ -26,7 +28,7 @@ const SERVICES = [
   },
   {
     id: 'podcast',
-    icon: 'mic',
+    icon: '\ud83c\udfa4',
     title: 'Podcasts video',
     subtitle: 'Enregistrement & montage',
     description:
@@ -36,7 +38,7 @@ const SERVICES = [
   },
   {
     id: 'formation',
-    icon: 'menu_book',
+    icon: '\ud83d\udcda',
     title: 'Videos de formation',
     subtitle: 'Tutoriels & e-learning',
     description:
@@ -46,7 +48,7 @@ const SERVICES = [
   },
   {
     id: 'ecommerce',
-    icon: 'shopping_cart',
+    icon: '\ud83d\uded2',
     title: 'Videos produit e-commerce',
     subtitle: 'Mise en valeur produit',
     description:
@@ -56,7 +58,7 @@ const SERVICES = [
   },
   {
     id: 'motion',
-    icon: 'palette',
+    icon: '\ud83c\udfa8',
     title: 'Motion design',
     subtitle: 'Animations & infographies',
     description:
@@ -73,6 +75,8 @@ const BUDGET_OPTIONS = [
   { value: '2000-5000', label: '2 000 - 5 000 EUR' },
   { value: '>5000', label: 'Plus de 5 000 EUR' },
 ];
+
+const meta = PAGE_META['video-pro'];
 
 export default function VideoProPage() {
   const [form, setForm] = useState({
@@ -137,11 +141,11 @@ export default function VideoProPage() {
   if (submitted) {
     return (
       <div style={{ maxWidth: 600, margin: '80px auto', textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16, color: '#10b981' }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>check</span></div>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
+        <div style={{ fontSize: 48, marginBottom: 16, color: '#10b981' }}>\u2705</div>
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
           Demande envoyee avec succes !
         </h2>
-        <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 24 }}>
+        <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6, marginBottom: 24 }}>
           Notre equipe de production va etudier votre brief et vous recontacter sous 24 a 48h
           avec une proposition detaillee et un planning de realisation.
         </p>
@@ -163,6 +167,18 @@ export default function VideoProPage() {
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto' }}>
+
+      {/* Page Header */}
+      <div className="page-header" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+          <div>
+            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{meta.title}</h1>
+            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{meta.subtitle}</p>
+          </div>
+          <HelpBubble text={meta.helpText} />
+        </div>
+      </div>
 
       {/* Hero Section */}
       <div style={{
@@ -186,7 +202,7 @@ export default function VideoProPage() {
           </h1>
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6, maxWidth: 560, margin: 0 }}>
             Productions video professionnelles assistees par <span className="fz-logo-word">IA</span>.
-            De l&apos;idee au produit fini, nos <span className="fz-logo-word">agents</span> et nos experts creent vos contenus video avec qualite et rapidite.
+            De l&apos;idee au produit fini, nos <span className="fz-logo-word">assistants</span> et nos experts creent vos contenus video avec qualite et rapidite.
           </p>
         </div>
       </div>
@@ -200,7 +216,7 @@ export default function VideoProPage() {
           <div
             key={svc.id}
             style={{
-              background: 'var(--bg-elevated)', borderRadius: 14, border: '1px solid var(--border-primary)',
+              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 14, border: '1px solid var(--fz-border, #E2E8F0)',
               padding: '24px 20px', display: 'flex', flexDirection: 'column',
               transition: 'all 0.2s ease',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
@@ -211,28 +227,28 @@ export default function VideoProPage() {
               (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLDivElement).style.borderColor = '#e5e7eb';
+              (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--fz-border, #E2E8F0)';
               (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
               (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
             }}
           >
-            <div style={{ fontSize: 32, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>{svc.icon}</span></div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>{svc.icon}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>
               {svc.title}
             </div>
             <div style={{ fontSize: 12, color: '#7c3aed', fontWeight: 600, marginBottom: 10 }}>
               {svc.subtitle}
             </div>
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
               {svc.description}
             </p>
             <div style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '10px 0', borderTop: '1px solid var(--border-primary)', marginBottom: 12,
+              padding: '10px 0', borderTop: '1px solid var(--fz-border, #E2E8F0)', marginBottom: 12,
             }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{svc.price}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{svc.delivery}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{svc.price}</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{svc.delivery}</div>
               </div>
             </div>
             <button
@@ -263,14 +279,14 @@ export default function VideoProPage() {
         background: 'var(--accent-muted)', borderRadius: 14, padding: '20px 24px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 12, marginBottom: 40,
-        border: '1px solid var(--border-primary)',
+        border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
             Ou creez vous-meme dans notre Studio Creatif
           </div>
-          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-            Generez vos propres videos et photos guidees par nos agents IA, en toute autonomie.
+          <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>
+            Generez vos propres videos et photos guidees par nos assistants IA, en toute autonomie.
           </div>
         </div>
         <Link
@@ -289,21 +305,21 @@ export default function VideoProPage() {
 
       {/* Devis Section */}
       <div id="devis-section" style={{
-        background: 'var(--bg-elevated)', borderRadius: 16, border: '1px solid var(--border-primary)',
+        background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: '1px solid var(--fz-border, #E2E8F0)',
         padding: '32px 28px', marginBottom: 40,
         boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
       }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
           Demander un devis
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 24 }}>
+        <p style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 24 }}>
           Decrivez votre projet et recevez une proposition personnalisee sous 48h.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Name */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
               Nom complet *
             </label>
             <input
@@ -312,7 +328,7 @@ export default function VideoProPage() {
               placeholder="Votre nom"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -323,7 +339,7 @@ export default function VideoProPage() {
 
           {/* Email */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
               Email *
             </label>
             <input
@@ -333,7 +349,7 @@ export default function VideoProPage() {
               placeholder="votre@email.com"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -346,7 +362,7 @@ export default function VideoProPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Phone */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
               Telephone (optionnel)
             </label>
             <input
@@ -355,7 +371,7 @@ export default function VideoProPage() {
               placeholder="+33 6 12 34 56 78"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
@@ -366,7 +382,7 @@ export default function VideoProPage() {
 
           {/* Service Select */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
               Service souhaite *
             </label>
             <select
@@ -374,8 +390,8 @@ export default function VideoProPage() {
               onChange={e => setForm(prev => ({ ...prev, service: e.target.value }))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
-                background: 'var(--bg-elevated)', outline: 'none', transition: 'border-color 0.15s',
+                border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+                background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
@@ -391,7 +407,7 @@ export default function VideoProPage() {
 
         {/* Brief */}
         <div style={{ marginBottom: 14 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
             Brief du projet *
           </label>
           <textarea
@@ -401,7 +417,7 @@ export default function VideoProPage() {
             rows={4}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
+              border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
               resize: 'vertical', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
@@ -412,7 +428,7 @@ export default function VideoProPage() {
 
         {/* Budget */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4, display: 'block' }}>
+          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
             Budget estimatif
           </label>
           <select
@@ -420,8 +436,8 @@ export default function VideoProPage() {
             onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid var(--border-primary)', fontSize: 13, fontFamily: 'var(--font-sans)',
-              background: 'var(--bg-elevated)', outline: 'none', transition: 'border-color 0.15s',
+              border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, fontFamily: 'var(--font-sans)',
+              background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
             onFocus={e => { e.currentTarget.style.borderColor = '#7c3aed'; }}
@@ -459,7 +475,7 @@ export default function VideoProPage() {
           {submitting ? 'Envoi en cours...' : 'Envoyer la demande de devis'}
         </button>
 
-        <p style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'center', marginTop: 12, marginBottom: 0 }}>
+        <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', marginTop: 12, marginBottom: 0 }}>
           Notre equipe de production analysera votre brief et vous enverra une proposition detaillee sous 48h.
         </p>
       </div>

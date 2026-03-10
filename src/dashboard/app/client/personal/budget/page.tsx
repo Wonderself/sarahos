@@ -7,6 +7,8 @@ import {
 } from 'recharts';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -39,7 +41,7 @@ const CAT_COLORS: Record<TxCategory, string> = {
   income: '#22c55e', expense: '#ef4444', savings: '#3b82f6', investment: '#06b6d4',
 };
 const CAT_ICONS: Record<TxCategory, string> = {
-  income: 'savings', expense: 'money_off', savings: 'account_balance', investment: 'trending_up',
+  income: '💰', expense: '💸', savings: '🏦', investment: '📈',
 };
 
 function fmt(cents: number) {
@@ -188,7 +190,7 @@ export default function BudgetPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>savings</span></div>
+        <div style={{ fontSize: 40 }}>💰</div>
         <div className="text-md text-tertiary animate-pulse">Chargement du budget...</div>
       </div>
     );
@@ -197,19 +199,22 @@ export default function BudgetPage() {
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--text-tertiary)', textDecoration: 'none' }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>savings</span> Budget Personnel</h1>
-          <p className="page-subtitle">Suivez vos revenus, dépenses et objectifs d&apos;épargne</p>
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.budget.emoji} {PAGE_META.budget.title}</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.budget.subtitle}</p>
         </div>
-        <Link href="/client/chat?agent=fz-budget" className="btn btn-primary btn-sm">
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>chat</span> Analyser avec fz-budget
-        </Link>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <HelpBubble text={PAGE_META.budget.helpText} />
+          <Link href="/client/chat?agent=fz-budget" className="btn btn-primary btn-sm">
+            💬 Analyser avec fz-budget
+          </Link>
+        </div>
       </div>
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
@@ -217,15 +222,15 @@ export default function BudgetPage() {
       {/* Stats cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Solde ce mois', value: fmt(balance), icon: 'balance', color: balance >= 0 ? '#22c55e' : '#ef4444' },
-          { label: 'Revenus', value: fmt(totalIncome), icon: 'savings', color: '#22c55e' },
-          { label: 'Dépenses', value: fmt(totalExpenses), icon: 'money_off', color: '#ef4444' },
-          { label: 'Épargne', value: fmt(totalSavings), icon: 'account_balance', color: '#3b82f6' },
+          { label: 'Solde ce mois', value: fmt(balance), icon: '⚖️', color: balance >= 0 ? '#22c55e' : '#ef4444' },
+          { label: 'Revenus', value: fmt(totalIncome), icon: '💰', color: '#22c55e' },
+          { label: 'Dépenses', value: fmt(totalExpenses), icon: '💸', color: '#ef4444' },
+          { label: 'Épargne', value: fmt(totalSavings), icon: '🏦', color: '#3b82f6' },
         ].map(stat => (
           <div key={stat.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 24, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{stat.icon}</span></div>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>{stat.icon}</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: stat.color }}>{stat.value}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{stat.label}</div>
+            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{stat.label}</div>
           </div>
         ))}
       </div>
@@ -238,12 +243,12 @@ export default function BudgetPage() {
             onClick={() => setActiveSection(tab)}
             style={{
               padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              border: activeSection === tab ? '1.5px solid var(--accent)' : '1.5px solid var(--border-primary)',
-              background: activeSection === tab ? 'var(--accent)' : 'var(--bg-secondary)',
-              color: activeSection === tab ? '#fff' : 'var(--text-primary)',
+              border: activeSection === tab ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
+              background: activeSection === tab ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              color: activeSection === tab ? '#fff' : 'var(--fz-text, #1E293B)',
             }}
           >
-            {tab === 'overview' ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bar_chart</span> Vue d&apos;ensemble</> : tab === 'transactions' ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Transactions</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>target</span> Objectifs</>}
+            {tab === 'overview' ? <>📊 Vue d&apos;ensemble</> : tab === 'transactions' ? <>📋 Transactions</> : <>🎯 Objectifs</>}
           </button>
         ))}
       </div>
@@ -251,20 +256,20 @@ export default function BudgetPage() {
       {/* Overview tab */}
       {activeSection === 'overview' && (
         <div className="card" style={{ padding: 24 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)' }}>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>
             Évolution sur 6 mois
           </h3>
           {transactions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-tertiary)' }}>
-              <div style={{ fontSize: 36, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 36 }}>bar_chart</span></div>
+            <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--fz-text-muted, #94A3B8)' }}>
+              <div style={{ fontSize: 36, marginBottom: 8 }}>📊</div>
               <div>Ajoutez des transactions pour voir votre évolution</div>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} tickFormatter={v => `${v}€`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />
+                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--fz-text-muted, #94A3B8)' }} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--fz-text-muted, #94A3B8)' }} tickFormatter={v => `${v}€`} />
                 <Tooltip formatter={(value: number | undefined) => `${(value ?? 0).toLocaleString('fr-FR')} €`} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar dataKey="Revenus" fill="#22c55e" radius={[3, 3, 0, 0]} />
@@ -299,9 +304,9 @@ export default function BudgetPage() {
 
           {displayedTx.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>assignment</span></div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
               <div style={{ fontWeight: 600, marginBottom: 6 }}>Aucune transaction</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
                 Enregistrez vos revenus et dépenses pour suivre votre budget
               </div>
               <button onClick={() => setShowTxModal(true)} className="btn btn-primary btn-sm">
@@ -320,8 +325,8 @@ export default function BudgetPage() {
                     {CAT_ICONS[tx.category]}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{tx.label}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>{tx.label}</div>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       {new Date(tx.date).toLocaleDateString('fr-FR')}
                       {tx.is_recurring && <span style={{ marginLeft: 6, background: 'var(--accent)20', color: 'var(--accent)', padding: '1px 6px', borderRadius: 4, fontSize: 10 }}>Récurrent</span>}
                     </div>
@@ -331,7 +336,7 @@ export default function BudgetPage() {
                   </div>
                   <button
                     onClick={() => handleDeleteTx(tx.id)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 16, padding: '4px 6px', flexShrink: 0 }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16, padding: '4px 6px', flexShrink: 0 }}
                     title="Supprimer"
                   >
                     ×
@@ -353,9 +358,9 @@ export default function BudgetPage() {
           </div>
           {goals.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>target</span></div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>🎯</div>
               <div style={{ fontWeight: 600, marginBottom: 6 }}>Aucun objectif</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
                 Définissez des objectifs d&apos;épargne ou d&apos;investissement
               </div>
               <button onClick={() => setShowGoalModal(true)} className="btn btn-primary btn-sm">
@@ -370,8 +375,8 @@ export default function BudgetPage() {
                   <div key={goal.id} className="card" style={{ padding: '16px 20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                       <div>
-                        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>{goal.label}</div>
-                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--fz-text, #1E293B)' }}>{goal.label}</div>
+                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                           {fmt(goal.current_cents)} / {fmt(goal.target_cents)}
                         </div>
                       </div>
@@ -379,7 +384,7 @@ export default function BudgetPage() {
                         {pct}%
                       </div>
                     </div>
-                    <div style={{ height: 8, borderRadius: 4, background: 'var(--bg-tertiary)', overflow: 'hidden' }}>
+                    <div style={{ height: 8, borderRadius: 4, background: 'var(--fz-bg-secondary, #F8FAFC)', overflow: 'hidden' }}>
                       <div style={{
                         height: '100%', borderRadius: 4, width: `${pct}%`,
                         background: pct >= 100 ? '#22c55e' : 'var(--accent)',
@@ -387,7 +392,7 @@ export default function BudgetPage() {
                       }} />
                     </div>
                     {goal.status === 'completed' && (
-                      <div style={{ fontSize: 12, color: '#22c55e', marginTop: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Objectif atteint !</div>
+                      <div style={{ fontSize: 12, color: '#22c55e', marginTop: 6 }}>✅ Objectif atteint !</div>
                     )}
                   </div>
                 );
@@ -404,7 +409,7 @@ export default function BudgetPage() {
           alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
         }}>
           <div className="card" style={{ width: '100%', maxWidth: 420, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>add_circle</span> Ajouter une transaction</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Ajouter une transaction</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Libellé</label>
@@ -464,7 +469,7 @@ export default function BudgetPage() {
           alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
         }}>
           <div className="card" style={{ width: '100%', maxWidth: 380, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>target</span> Nouvel objectif</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>🎯 Nouvel objectif</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Nom de l&apos;objectif</label>

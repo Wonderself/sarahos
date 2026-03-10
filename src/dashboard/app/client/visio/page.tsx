@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ALL_AGENTS } from '../../../lib/agent-config';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 const VISIO_AGENTS = ALL_AGENTS.map(a => ({
   id: a.id,
@@ -34,6 +36,8 @@ function formatDuration(sec: number): string {
   return `${m}min${s > 0 ? ` ${s}s` : ''}`;
 }
 
+const meta = PAGE_META.visio;
+
 export default function VisioPage() {
   const [callHistory, setCallHistory] = useState<CallRecord[]>([]);
   const [activeSection, setActiveSection] = useState<'agents' | 'history'>('agents');
@@ -63,16 +67,22 @@ export default function VisioPage() {
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 24 }}>mic</span> Visio <span className="fz-logo-word">Agents</span></h1>
-        <p className="page-subtitle">
-          Parlez face-à-face avec vos agents IA en <span className="fz-logo-word">temps réel</span>. Micro + synthèse vocale pour une expérience naturelle.
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+          <div>
+            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{meta.title}</h1>
+            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+              Parlez face-\u00e0-face avec vos assistants IA en <span className="fz-logo-word">temps r\u00e9el</span>. Micro + synth\u00e8se vocale pour une exp\u00e9rience naturelle.
+            </p>
+          </div>
+          <HelpBubble text={meta.helpText} />
+        </div>
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
           padding: '6px 12px', borderRadius: 8, background: '#fef3c720', border: '1px solid #fcd34d40',
           fontSize: 11, color: '#b45309',
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span> Consomme ~3x plus de crédits qu&apos;un chat texte (<span className="fz-logo-word">STT + LLM + TTS</span>)
+          \u26a1 Consomme ~3x plus de cr\u00e9dits qu&apos;un chat texte (<span className="fz-logo-word">STT + LLM + TTS</span>)
         </div>
       </div>
 
@@ -80,15 +90,15 @@ export default function VisioPage() {
       {totalCalls > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
-            { label: 'Appels au total', value: String(totalCalls), icon: 'call', color: 'var(--accent)' },
-            { label: 'Ce mois', value: String(thisMonth.length), icon: 'calendar_month', color: '#3b82f6' },
-            { label: 'Durée ce mois', value: formatDuration(totalDurationMonth), icon: 'timer', color: '#f59e0b' },
-            { label: 'Agent favori', value: topAgent?.name ?? '—', icon: (topAgent as any)?.materialIcon ?? 'smart_toy', color: '#22c55e' },
+            { label: 'Appels au total', value: String(totalCalls), icon: '\ud83d\udcde', color: 'var(--accent)' },
+            { label: 'Ce mois', value: String(thisMonth.length), icon: '\ud83d\udcc5', color: '#3b82f6' },
+            { label: 'Dur\u00e9e ce mois', value: formatDuration(totalDurationMonth), icon: '\u23f1\ufe0f', color: '#f59e0b' },
+            { label: 'Assistant favori', value: topAgent?.name ?? '\u2014', icon: '\ud83e\udd16', color: '#22c55e' },
           ].map(s => (
-            <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
-              <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{s.icon}</span></div>
+            <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -96,18 +106,18 @@ export default function VisioPage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-        {([['agents', 'mic', 'Agents'], ['history', 'assignment', `Historique${totalCalls > 0 ? ` (${totalCalls})` : ''}`]] as [string, string, string][]).map(([t, icon, l]) => (
+        {([['agents', '\ud83c\udfa4', 'Assistants'], ['history', '\ud83d\udccb', `Historique${totalCalls > 0 ? ` (${totalCalls})` : ''}`]] as [string, string, string][]).map(([t, icon, l]) => (
           <button
             key={t}
             onClick={() => setActiveSection(t as 'agents' | 'history')}
             style={{
               padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              border: activeSection === t ? '1.5px solid var(--accent)' : '1.5px solid var(--border-primary)',
-              background: activeSection === t ? 'var(--accent)' : 'var(--bg-secondary)',
-              color: activeSection === t ? '#fff' : 'var(--text-primary)',
+              border: activeSection === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
+              background: activeSection === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              color: activeSection === t ? '#fff' : 'var(--fz-text, #1E293B)',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{icon}</span> {l}
+            {icon} {l}
           </button>
         ))}
       </div>
@@ -122,15 +132,14 @@ export default function VisioPage() {
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <div
-                className="card"
-                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s' }}
+                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = agent.color;
                   e.currentTarget.style.boxShadow = `0 4px 12px ${agent.color}20`;
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'var(--border-primary)';
+                  e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)';
                   e.currentTarget.style.boxShadow = 'none';
                   e.currentTarget.style.transform = 'none';
                 }}
@@ -139,14 +148,15 @@ export default function VisioPage() {
                   width: 64, height: 64, borderRadius: '50%', margin: '0 auto 12px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: `${agent.color}15`, border: `2px solid ${agent.color}40`,
+                  fontSize: 28,
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 28, color: agent.color }}>{(agent as any).materialIcon ?? 'smart_toy'}</span>
+                  \ud83e\udd16
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{agent.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{agent.role}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{agent.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{agent.role}</div>
                   {agentFreq[agent.id] && (
-                    <div style={{ fontSize: 10, color: 'var(--text-tertiary)', marginTop: 4 }}>
+                    <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
                       {agentFreq[agent.id]} appel{agentFreq[agent.id] > 1 ? 's' : ''}
                     </div>
                   )}
@@ -155,7 +165,7 @@ export default function VisioPage() {
                     padding: '4px 10px', borderRadius: 6, background: `${agent.color}10`,
                     display: 'inline-block',
                   }}>
-                    Appeler <span className="material-symbols-rounded" style={{ fontSize: 11 }}>call</span>
+                    Appeler \ud83d\udcde
                   </div>
                 </div>
               </div>
@@ -167,11 +177,11 @@ export default function VisioPage() {
       {/* Call history */}
       {activeSection === 'history' && (
         callHistory.length === 0 ? (
-          <div className="card" style={{ textAlign: 'center', padding: '60px 40px' }}>
-            <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>call</span></div>
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>Aucun appel pour le moment</div>
-            <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
-              Vos appels avec les agents apparaîtront ici après chaque conversation visio
+          <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div style={{ marginBottom: 16, fontSize: 48 }}>\ud83d\udcde</div>
+            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel pour le moment</div>
+            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              Vos appels avec les assistants appara\u00eetront ici apr\u00e8s chaque conversation visio
             </div>
           </div>
         ) : (
@@ -179,21 +189,21 @@ export default function VisioPage() {
             {callHistory.map((call, i) => {
               const agent = VISIO_AGENTS.find(a => a.id === call.agentId);
               const statusColor = call.status === 'completed' ? '#22c55e' : call.status === 'missed' ? '#f59e0b' : '#ef4444';
-              const statusLabel = call.status === 'completed' ? 'Terminé' : call.status === 'missed' ? 'Manqué' : 'Erreur';
+              const statusLabel = call.status === 'completed' ? 'Termin\u00e9' : call.status === 'missed' ? 'Manqu\u00e9' : 'Erreur';
               return (
-                <div key={i} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div key={i} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <div style={{
                     width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: (agent?.color ?? '#7c3aed') + '15', fontSize: 18,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: agent?.color ?? '#7c3aed' }}>{(agent as any)?.materialIcon ?? 'smart_toy'}</span>
+                    \ud83e\udd16
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14 }}>{call.agentName}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>{call.agentName}</div>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                       {new Date(call.startedAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                      {call.durationSeconds > 0 && ` · ${formatDuration(call.durationSeconds)}`}
+                      {call.durationSeconds > 0 && ` \u00b7 ${formatDuration(call.durationSeconds)}`}
                     </div>
                   </div>
                   <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: statusColor + '20', color: statusColor, flexShrink: 0 }}>
@@ -213,13 +223,13 @@ export default function VisioPage() {
       )}
 
       {/* Audio diagnostic */}
-      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Problèmes audio ?</div>
-        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 8 }}>
-          Testez votre micro et vos haut-parleurs pour vérifier que tout fonctionne.
+      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Probl\u00e8mes audio ?</div>
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 8 }}>
+          Testez votre micro et vos haut-parleurs pour v\u00e9rifier que tout fonctionne.
         </div>
         <Link href="/client/visio/diagnostic" style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
-          Lancer le diagnostic audio →
+          Lancer le diagnostic audio \u2192
         </Link>
       </div>
     </div>

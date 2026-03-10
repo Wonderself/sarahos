@@ -7,8 +7,67 @@ import {
 } from '../../../lib/rewards';
 import type { RewardsState, RewardAction } from '../../../lib/rewards';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { HelpBubble } from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 type Category = keyof typeof REWARD_CATEGORIES;
+
+// Material icon name -> emoji mapping for reward action icons
+const ICON_EMOJI: Record<string, string> = {
+  share: '\uD83D\uDD17', // 🔗
+  work: '\uD83D\uDCBC', // 💼
+  thumb_up: '\uD83D\uDC4D', // 👍
+  chat: '\uD83D\uDCAC', // 💬
+  star: '\u2B50', // ⭐
+  verified: '\u2705', // ✅
+  rocket_launch: '\uD83D\uDE80', // 🚀
+  chat_bubble: '\uD83D\uDCAC', // 💬
+  description: '\uD83D\uDCC4', // 📄
+  groups: '\uD83D\uDC65', // 👥
+  call: '\uD83D\uDCDE', // 📞
+  tune: '\uD83D\uDD27', // 🔧
+  account_circle: '\uD83D\uDC64', // 👤
+  login: '\uD83D\uDD11', // 🔑
+  diversity_3: '\uD83E\uDD1D', // 🤝
+  palette: '\uD83C\uDFA8', // 🎨
+  smartphone: '\uD83D\uDCF1', // 📱
+  person_add: '\uD83D\uDC65', // 👥
+  emoji_people: '\uD83D\uDE4B', // 🙋
+  paid: '\uD83D\uDCB0', // 💰
+  store: '\uD83C\uDFEA', // 🏪
+  forum: '\uD83D\uDCAC', // 💬
+  rate_review: '\u270D\uFE0F', // ✍️
+  bug_report: '\uD83D\uDC1B', // 🐛
+  lightbulb: '\uD83D\uDCA1', // 💡
+  local_fire_department: '\uD83D\uDD25', // 🔥
+  whatshot: '\uD83D\uDD25', // 🔥
+  military_tech: '\uD83C\uDF96\uFE0F', // 🎖️
+  emoji_events: '\uD83C\uDFC6', // 🏆
+  bolt: '\u26A1', // ⚡
+  edit: '\u270F\uFE0F', // ✏️
+  toll: '\uD83E\uDE99', // 🪙
+  check_circle: '\u2705', // ✅
+  error: '\u274C', // ❌
+  link: '\uD83D\uDD17', // 🔗
+  content_copy: '\uD83D\uDCCB', // 📋
+  card_giftcard: '\uD83C\uDFC6', // 🏆
+  lock_open: '\uD83D\uDD13', // 🔓
+  check: '\u2705', // ✅
+  schedule: '\uD83D\uDD50', // 🕐
+};
+
+function getIconEmoji(iconName: string): string {
+  return ICON_EMOJI[iconName] || '\u2B50'; // fallback: ⭐
+}
+
+// Category icon mapping
+const CAT_ICON_EMOJI: Record<string, string> = {
+  share: '\uD83D\uDD17', // 🔗
+  bolt: '\u26A1', // ⚡
+  person_add: '\uD83D\uDC65', // 👥
+  edit: '\u270F\uFE0F', // ✏️
+  emoji_events: '\uD83C\uDFC6', // 🏆
+};
 
 function getToken() {
   if (typeof window === 'undefined') return '';
@@ -67,6 +126,8 @@ export default function RewardsPage() {
   const totalPossible = getTotalPossibleCredits();
   const progress = totalPossible > 0 ? Math.round((state.totalEarned / totalPossible) * 100) : 0;
 
+  const meta = PAGE_META.rewards;
+
   return (
     <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
       {/* Toast */}
@@ -79,22 +140,36 @@ export default function RewardsPage() {
           boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
           animation: 'lp-fade-in 0.3s ease',
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 8 }}>
-            {toast.type === 'success' ? 'check_circle' : 'error'}
+          <span style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 8 }}>
+            {toast.type === 'success' ? '\u2705' : '\u274C'}
           </span>
           {toast.message}
         </div>
       )}
 
-      {/* Header */}
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: '#fff', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: isMobile ? 26 : 32, color: '#f59e0b' }}>card_giftcard</span>
-          Récompenses
-        </h1>
-        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14 }}>
-          Gagnez des crédits gratuits en partageant, en utilisant la plateforme et en invitant vos proches.
-        </p>
+      {/* Page Header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        marginBottom: 24, padding: '0 0 16px 0',
+        borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+      }}>
+        <span style={{ fontSize: 32 }}>{meta.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{
+            fontSize: isMobile ? 22 : 28, fontWeight: 800, margin: 0,
+            color: 'var(--fz-text, #1E293B)',
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            {meta.title}
+            <HelpBubble text={meta.helpText} />
+          </h1>
+          <p style={{
+            margin: '4px 0 0', fontSize: 14,
+            color: 'var(--fz-text-secondary, #64748B)',
+          }}>
+            {meta.subtitle}
+          </p>
+        </div>
       </div>
 
       {/* Stats strip */}
@@ -102,34 +177,35 @@ export default function RewardsPage() {
         display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 10 : 14, marginBottom: 28,
       }}>
         <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>{state.totalEarned}</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, marginTop: 4 }}>CRÉDITS GAGNÉS</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>CR\u00c9DITS GAGN\u00c9S</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#f59e0b' }}>{state.claimed.length}</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPLÉTÉES</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPL\u00c9T\u00c9ES</div>
         </div>
         <div style={{
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           borderRadius: 14, padding: '18px 16px', textAlign: 'center',
           backdropFilter: 'blur(12px)',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>{progress}%</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, marginTop: 4 }}>PROGRESSION</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>PROGRESSION</div>
         </div>
       </div>
 
       {/* Progress bar */}
       <div style={{
-        background: 'rgba(255,255,255,0.07)', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
+        background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
+        border: '1px solid var(--fz-border, #E2E8F0)',
       }}>
         <div style={{
           width: `${progress}%`, height: '100%', borderRadius: 6,
@@ -145,17 +221,17 @@ export default function RewardsPage() {
           borderRadius: 14, padding: '16px 20px', marginBottom: 28,
           display: 'flex', alignItems: 'center', gap: 14,
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#f97316' }}>link</span>
+          <span style={{ fontSize: 28 }}>{'\uD83D\uDD17'}</span>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>Votre lien de parrainage</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>Votre lien de parrainage</div>
+            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', fontFamily: 'monospace', wordBreak: 'break-all' }}>
               freenzy.io/?ref={referralCode}
             </div>
           </div>
           <button
             onClick={() => {
               navigator.clipboard.writeText(`https://freenzy.io/?ref=${referralCode}`);
-              setToast({ message: 'Lien copié !', type: 'success' });
+              setToast({ message: 'Lien copi\u00e9 !', type: 'success' });
               setTimeout(() => setToast(null), 2000);
             }}
             style={{
@@ -163,7 +239,7 @@ export default function RewardsPage() {
               background: '#f97316', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>content_copy</span>
+            <span style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{'\uD83D\uDCCB'}</span>
             Copier
           </button>
         </div>
@@ -176,8 +252,8 @@ export default function RewardsPage() {
           style={{
             padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
             fontSize: 12, fontWeight: 700,
-            background: activeCategory === 'all' ? '#7c3aed' : 'rgba(255,255,255,0.06)',
-            color: activeCategory === 'all' ? '#fff' : 'rgba(255,255,255,0.6)',
+            background: activeCategory === 'all' ? '#7c3aed' : 'var(--fz-bg-secondary, #F8FAFC)',
+            color: activeCategory === 'all' ? '#fff' : 'var(--fz-text-secondary, #64748B)',
           }}
         >
           Toutes ({REWARD_ACTIONS.length})
@@ -191,12 +267,12 @@ export default function RewardsPage() {
               style={{
                 padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
                 fontSize: 12, fontWeight: 700,
-                background: activeCategory === key ? meta.color : 'rgba(255,255,255,0.06)',
-                color: activeCategory === key ? '#fff' : 'rgba(255,255,255,0.6)',
+                background: activeCategory === key ? meta.color : 'var(--fz-bg-secondary, #F8FAFC)',
+                color: activeCategory === key ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                 display: 'flex', alignItems: 'center', gap: 6,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{meta.icon}</span>
+              <span style={{ fontSize: 14 }}>{CAT_ICON_EMOJI[meta.icon] || '\u2B50'}</span>
               {meta.label} ({count})
             </button>
           );
@@ -214,8 +290,8 @@ export default function RewardsPage() {
             <div
               key={action.id}
               style={{
-                background: claimed ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${claimed ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
+                background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : 'var(--fz-bg, #FFFFFF)',
+                border: `1px solid ${claimed ? 'var(--fz-border, #E2E8F0)' : 'var(--fz-border, #E2E8F0)'}`,
                 borderRadius: 14, padding: '16px 20px',
                 display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 14,
                 flexWrap: isMobile ? 'wrap' as const : 'nowrap' as const,
@@ -229,24 +305,24 @@ export default function RewardsPage() {
                 background: `${catMeta.color}15`, border: `1px solid ${catMeta.color}30`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 22, color: catMeta.color }}>
-                  {action.icon}
+                <span style={{ fontSize: 22 }}>
+                  {getIconEmoji(action.icon)}
                 </span>
               </div>
 
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{action.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{action.label}</span>
                   {action.oneTime && claimCount > 0 && (
-                    <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#22c55e' }}>check_circle</span>
+                    <span style={{ fontSize: 16 }}>{'\u2705'}</span>
                   )}
                 </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.4 }}>
                   {action.description}
                 </div>
                 {!action.oneTime && action.maxClaims && (
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 3, opacity: 0.7 }}>
                     {claimCount}/{action.maxClaims} fois
                   </div>
                 )}
@@ -255,12 +331,12 @@ export default function RewardsPage() {
               {/* Credits badge */}
               <div style={{
                 padding: '6px 14px', borderRadius: 8,
-                background: claimed ? 'rgba(255,255,255,0.05)' : `${catMeta.color}15`,
-                color: claimed ? 'rgba(255,255,255,0.3)' : catMeta.color,
+                background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : `${catMeta.color}15`,
+                color: claimed ? 'var(--fz-text-muted, #94A3B8)' : catMeta.color,
                 fontSize: 14, fontWeight: 800, flexShrink: 0,
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>toll</span>
+                <span style={{ fontSize: 16 }}>{'\uD83E\uDE99'}</span>
                 +{action.credits}
               </div>
 
@@ -270,13 +346,13 @@ export default function RewardsPage() {
                 disabled={claimed}
                 style={{
                   padding: '8px 16px', borderRadius: 8, border: 'none',
-                  background: claimed ? 'rgba(255,255,255,0.05)' : catMeta.color,
-                  color: claimed ? 'rgba(255,255,255,0.3)' : '#fff',
+                  background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : catMeta.color,
+                  color: claimed ? 'var(--fz-text-muted, #94A3B8)' : '#fff',
                   fontWeight: 700, fontSize: 12, cursor: claimed ? 'default' : 'pointer',
                   flexShrink: 0, minWidth: 80, textAlign: 'center',
                 }}
               >
-                {claimed ? 'Fait' : 'Réclamer'}
+                {claimed ? 'Fait' : 'R\u00e9clamer'}
               </button>
             </div>
           );
@@ -290,14 +366,14 @@ export default function RewardsPage() {
         backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
           Total possible
         </div>
         <div style={{ fontSize: 32, fontWeight: 800, color: '#7c3aed' }}>
-          {totalPossible} crédits
+          {totalPossible} cr\u00e9dits
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>
-          en complétant toutes les actions disponibles
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+          en compl\u00e9tant toutes les actions disponibles
         </div>
       </div>
     </div>

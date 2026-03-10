@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../components/Toast';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -21,11 +23,11 @@ interface UserModule {
   updated_at: string;
 }
 
-const TYPE_LABELS: Record<string, { label: string; icon: string; color: string }> = {
-  form: { label: 'Formulaire', icon: 'assignment', color: '#10b981' },
-  crm: { label: 'Base CRM', icon: 'bar_chart', color: '#3b82f6' },
-  agent: { label: 'Agent IA', icon: 'smart_toy', color: '#8b5cf6' },
-  dashboard: { label: 'Dashboard', icon: 'trending_up', color: '#f59e0b' },
+const TYPE_LABELS: Record<string, { label: string; emoji: string; color: string }> = {
+  form: { label: 'Formulaire', emoji: '📋', color: '#10b981' },
+  crm: { label: 'Base CRM', emoji: '📊', color: '#3b82f6' },
+  agent: { label: 'Assistant IA', emoji: '🤖', color: '#8b5cf6' },
+  dashboard: { label: 'Dashboard', emoji: '📈', color: '#f59e0b' },
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -102,7 +104,7 @@ export default function ModulesPage() {
   }
 
   if (loading) return (
-    <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-secondary)' }}>
+    <div style={{ padding: 32, textAlign: 'center', color: 'var(--fz-text-secondary, #64748B)' }}>
       Chargement des modules...
     </div>
   );
@@ -110,29 +112,33 @@ export default function ModulesPage() {
   return (
     <div className="client-page-scrollable" style={{ padding: '24px 32px', maxWidth: 1100, margin: '0 auto' }}>
 
-      {/* ── Header ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
-        <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>inventory_2</span> Mes <span className="fz-logo-word">modules</span></h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-            Créez des mini-applications intégrées à votre dashboard — formulaires, bases de données, <span className="fz-logo-word">agents IA</span>, tableaux de bord.
-          </p>
+      {/* ── Page Header ── */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.modules.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.modules.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.modules.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.modules.helpText} />
+          <div style={{ marginLeft: 'auto' }}>
+            <Link href="/client/modules/builder" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              ➕ Créer un module
+            </Link>
+          </div>
         </div>
-        <Link href="/client/modules/builder" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          + Créer un module
-        </Link>
       </div>
 
       {/* ── Empty state ── */}
       {modules.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 40px', background: 'var(--bg-card)', borderRadius: 20, border: '2px dashed var(--border)' }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 56 }}>inventory_2</span></div>
-          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Aucun module créé</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-            Créez votre premier module : un formulaire de collecte, une base CRM, un agent IA dédié ou un tableau de bord personnalisé.
+        <div style={{ textAlign: 'center', padding: '60px 40px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20, border: '2px dashed var(--fz-border, #E2E8F0)' }}>
+          <div style={{ fontSize: 56, marginBottom: 16 }}>📦</div>
+          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun module créé</h2>
+          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+            Créez votre premier module : un formulaire de collecte, une base CRM, un assistant IA dédié ou un tableau de bord personnalisé.
           </p>
           <Link href="/client/modules/builder" className="btn btn-primary" style={{ textDecoration: 'none' }}>
-            + Créer mon premier module
+            ➕ Créer mon premier module
           </Link>
         </div>
       )}
@@ -141,9 +147,9 @@ export default function ModulesPage() {
       {modules.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {modules.map(mod => {
-            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, icon: 'inventory_2', color: '#7c3aed' };
+            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: '#7c3aed' };
             return (
-              <div key={mod.id} style={{ background: 'var(--bg-card)', borderRadius: 16, padding: 20, border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
+              <div key={mod.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, padding: 20, border: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', flexDirection: 'column', gap: 12, transition: 'box-shadow 0.2s' }}>
 
                 {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -154,11 +160,11 @@ export default function ModulesPage() {
                     {mod.emoji}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--fz-text, #1E293B)' }}>
                       {mod.name}
                     </div>
                     {mod.description && (
-                      <div style={{ fontSize: 12, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {mod.description}
                       </div>
                     )}
@@ -168,15 +174,15 @@ export default function ModulesPage() {
                 {/* Badges */}
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
                   <span style={{ background: `${typeInfo.color}20`, color: typeInfo.color, borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{typeInfo.icon}</span> {typeInfo.label}
+                    <span style={{ fontSize: 12 }}>{typeInfo.emoji}</span> {typeInfo.label}
                   </span>
                   {mod.is_published ? (
-                    <span style={{ background: '#10b98120', color: '#10b981', borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Publié</span>
+                    <span style={{ background: '#10b98120', color: '#10b981', borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>✅ Publié</span>
                   ) : (
                     <span style={{ background: '#6b728020', color: '#6b7280', borderRadius: 20, padding: '2px 10px', fontSize: 12 }}>Brouillon</span>
                   )}
                   {mod.record_count > 0 && (
-                    <span style={{ background: 'var(--bg-secondary)', borderRadius: 20, padding: '2px 10px', fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <span style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 20, padding: '2px 10px', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>
                       {mod.record_count} enregistrement{mod.record_count > 1 ? 's' : ''}
                     </span>
                   )}
@@ -184,7 +190,7 @@ export default function ModulesPage() {
 
                 {/* Footer */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: 4 }}>
-                  <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+                  <span style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
                     Modifié {timeAgo(mod.updated_at)}
                   </span>
                   <div style={{ display: 'flex', gap: 6 }}>
@@ -199,28 +205,28 @@ export default function ModulesPage() {
                     {mod.public_access && (
                       <button
                         onClick={() => copyPublicUrl(mod)}
-                        style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: 'var(--text-secondary)' }}
+                        style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
                         title="Copier l'URL publique"
                       >
-                        {copyDone === mod.id ? <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> : <span className="material-symbols-rounded" style={{ fontSize: 12 }}>link</span>}
+                        {copyDone === mod.id ? '✅' : '🔗'}
                       </button>
                     )}
                     {/* Edit */}
                     <Link
                       href={`/client/modules/builder?edit=${mod.id}`}
-                      style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', textDecoration: 'none', fontSize: 12, color: 'var(--text-secondary)' }}
+                      style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', background: 'transparent', textDecoration: 'none', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
                       title="Modifier"
                     >
-                      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>edit</span>
+                      ✏️
                     </Link>
                     {/* Delete */}
                     <button
                       onClick={() => setConfirmDelete(mod)}
                       disabled={deleting === mod.id}
-                      style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
+                      style={{ padding: '5px 10px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
                       title="Supprimer"
                     >
-                      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>delete</span>
+                      🗑️
                     </button>
                   </div>
                 </div>
@@ -233,13 +239,13 @@ export default function ModulesPage() {
       {/* ── Confirm delete modal ── */}
       {confirmDelete && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 32, width: 400, maxWidth: '90vw' }}>
-            <h3 style={{ fontWeight: 700, marginBottom: 12 }}>Supprimer le module ?</h3>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>
+          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20, padding: 32, width: 400, maxWidth: '90vw', border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <h3 style={{ fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Supprimer le module ?</h3>
+            <p style={{ color: 'var(--fz-text-secondary, #64748B)', marginBottom: 24 }}>
               Le module <strong>{confirmDelete.name}</strong> et tous ses enregistrements ({confirmDelete.record_count}) seront définitivement supprimés.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-              <button onClick={() => setConfirmDelete(null)} className="btn" style={{ background: 'var(--bg-secondary)' }}>Annuler</button>
+              <button onClick={() => setConfirmDelete(null)} className="btn" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)' }}>Annuler</button>
               <button
                 onClick={() => deleteModule(confirmDelete)}
                 disabled={deleting === confirmDelete.id}

@@ -28,6 +28,32 @@ import type {
   DeepDiscussion, DiscussionMessage, DiscussionCategory, SensitivityAlert, ShareContent,
 } from '../../../lib/deep-discussion.types';
 import { SlideOver } from '../../../components/SlideOver';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
+
+// ─── Material Icon → Emoji Mapping ──────────────────────────────────────────
+
+const ICON_EMOJI_MAP: Record<string, string> = {
+  psychology: '🧠', search: '🔍', add: '➕', delete: '🗑️', share: '🔗',
+  download: '⬇️', edit: '✏️', send: '📤', close: '✕', auto_awesome: '✨',
+  bookmark: '🔖', history: '🕐', expand_more: '▼', expand_less: '▲',
+  warning: '⚠️', info: 'ℹ️', flash_on: '⚡', favorite: '❤️',
+  chat_bubble: '💬', record_voice_over: '🗣️', refresh: '🔄',
+  balance: '⚖️', account_balance: '🏛️', volunteer_activism: '🙏',
+  theater_comedy: '🎭', public: '🌍', person: '👤', science: '🔬',
+  trending_up: '📈', map: '🗺️', palette: '🎨', smart_toy: '🤖',
+  group: '👥', history_edu: '📜', all_inclusive: '♾️', star: '⭐',
+  star_outline: '☆', arrow_back: '←', check_circle: '✅', swords: '⚔️',
+  pause: '⏸️', play_arrow: '▶️', content_copy: '📋', lightbulb: '💡',
+  shield: '🛡️', casino: '🎲', target: '🎯', schedule: '🕐',
+  bolt: '⚡', rocket_launch: '🚀', crown: '👑', wb_twilight: '🌅',
+  biotech: '🧬', self_improvement: '🧘', music_note: '🎵',
+  thumb_up: '👍', work: '💼',
+};
+
+function iconEmoji(materialIcon: string): string {
+  return ICON_EMOJI_MAP[materialIcon] ?? '💬';
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -749,23 +775,23 @@ export default function DiscussionsPage() {
         onClick={onClick}
         style={{
           padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
-          background: highlight ? 'linear-gradient(135deg, #1a0a2e, #0f1a3e)' : 'var(--bg-secondary, #111)',
-          border: `1px solid ${highlight ? '#7c3aed33' : 'var(--border-primary, #1e1e1e)'}`,
+          background: highlight ? 'linear-gradient(135deg, #f3f0ff, #eef2ff)' : 'var(--fz-bg-secondary, #F8FAFC)',
+          border: `1px solid ${highlight ? '#7c3aed33' : 'var(--fz-border, #E2E8F0)'}`,
           transition: 'border-color 0.2s, transform 0.15s',
         }}
         onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? '#7c3aed33' : 'var(--border-primary, #1e1e1e)'; e.currentTarget.style.transform = 'none'; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = highlight ? '#7c3aed33' : 'var(--fz-border, #E2E8F0)'; e.currentTarget.style.transform = 'none'; }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{t.materialIcon}</span>
-          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#7c3aed22', color: '#a78bfa' }}>
+          <span style={{ fontSize: 20 }}>{iconEmoji(t.materialIcon)}</span>
+          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#7c3aed22', color: '#7c3aed' }}>
             {catInfo?.label}
           </span>
         </div>
-        <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary, #fff)', margin: '0 0 3px', lineHeight: 1.3 }}>
+        <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: '0 0 3px', lineHeight: 1.3 }}>
           {t.title}
         </h3>
-        <p style={{ fontSize: 11, color: 'var(--text-secondary, #888)', margin: '0 0 4px', lineHeight: 1.3 }}>
+        <p style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 4px', lineHeight: 1.3 }}>
           {t.description}
         </p>
         {t.tags && t.tags.length > 0 && (
@@ -775,7 +801,7 @@ export default function DiscussionsPage() {
               return tagInfo ? (
                 <span key={tagId} style={{
                   fontSize: 9, padding: '1px 6px', borderRadius: 8,
-                  background: '#7c3aed11', color: '#a78bfa', whiteSpace: 'nowrap',
+                  background: '#7c3aed11', color: '#7c3aed', whiteSpace: 'nowrap',
                 }}>
                   {tagInfo.label}
                 </span>
@@ -795,14 +821,35 @@ export default function DiscussionsPage() {
       : 'En réflexion...';
 
   return (
-    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+
+      {/* ─── Page Header ─── */}
+      <div style={{
+        padding: isMobile ? '18px 16px 14px' : '24px 32px 18px',
+        borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+        background: 'var(--fz-bg, #FFFFFF)',
+        display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0,
+      }}>
+        <span style={{ fontSize: 32 }}>{PAGE_META.discussions.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+            {PAGE_META.discussions.title}
+          </h1>
+          <p style={{ margin: '2px 0 0', fontSize: 14, color: 'var(--fz-text-secondary, #64748B)' }}>
+            {PAGE_META.discussions.subtitle}
+          </p>
+        </div>
+        <HelpBubble text={PAGE_META.discussions.helpText} />
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', flex: 1, overflow: 'hidden' }}>
 
       {/* ─── Left Panel: Discussion List ─── */}
       {(!isMobile || !activeId) && <div style={{
         width: isMobile ? '100%' : 320, minWidth: isMobile ? 'auto' : 320,
-        borderRight: isMobile ? 'none' : '1px solid var(--border-primary, #1e1e1e)',
-        borderBottom: isMobile ? '1px solid var(--border-primary, #1e1e1e)' : 'none',
-        display: 'flex', flexDirection: 'column', background: 'var(--bg-secondary, #111)',
+        borderRight: isMobile ? 'none' : '1px solid var(--fz-border, #E2E8F0)',
+        borderBottom: isMobile ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
+        display: 'flex', flexDirection: 'column', background: 'var(--fz-bg-secondary, #F8FAFC)',
         ...(isMobile ? { flex: 1 } : {}),
       }}>
 
@@ -825,8 +872,8 @@ export default function DiscussionsPage() {
             onChange={e => setSearchQuery(e.target.value)}
             style={{
               width: '100%', marginTop: 8, padding: '8px 12px', borderRadius: 6,
-              background: 'var(--bg-primary, #0a0a0a)', border: '1px solid var(--border-primary, #1e1e1e)',
-              color: 'var(--text-primary, #fff)', fontSize: 13,
+              background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)',
+              color: 'var(--fz-text, #1E293B)', fontSize: 13,
             }}
           />
           <select
@@ -834,8 +881,8 @@ export default function DiscussionsPage() {
             onChange={e => setCategoryFilter(e.target.value)}
             style={{
               width: '100%', marginTop: 6, padding: '6px 10px', borderRadius: 6,
-              background: 'var(--bg-primary, #0a0a0a)', border: '1px solid var(--border-primary, #1e1e1e)',
-              color: 'var(--text-primary, #fff)', fontSize: 12,
+              background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)',
+              color: 'var(--fz-text, #1E293B)', fontSize: 12,
             }}
           >
             <option value="all">Toutes les catégories</option>
@@ -848,8 +895,8 @@ export default function DiscussionsPage() {
         {/* List */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px' }}>
           {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--text-secondary, #888)' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>psychology</span></div>
+            <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--fz-text-secondary, #64748B)' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>🧠</div>
               <p style={{ fontSize: 14, fontWeight: 600 }}>Aucune discussion</p>
               <p style={{ fontSize: 12, marginTop: 4, marginBottom: 16 }}>Lancez votre première discussion <span className="fz-logo-word">profonde</span></p>
               <button
@@ -871,23 +918,23 @@ export default function DiscussionsPage() {
                 onClick={() => { setActiveId(d.id); setFollowUps([]); }}
                 style={{
                   padding: '12px 12px', marginBottom: 4, borderRadius: 8, cursor: 'pointer',
-                  background: activeId === d.id ? 'var(--bg-active, #1a1a2e)' : 'transparent',
+                  background: activeId === d.id ? '#7c3aed0a' : 'transparent',
                   border: activeId === d.id ? '1px solid #7c3aed33' : '1px solid transparent',
                   transition: 'all 0.15s',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{catInfo?.materialIcon ?? 'psychology'}</span>
+                  <span style={{ fontSize: 18 }}>{iconEmoji(catInfo?.materialIcon ?? 'psychology')}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontSize: 13, fontWeight: 600, color: 'var(--text-primary, #fff)',
+                      fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)',
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                       display: 'flex', alignItems: 'center', gap: 4,
                     }}>
-                      {d.starred && <span className="material-symbols-rounded" style={{ color: '#FBBF24', fontSize: 12 }}>star</span>}
+                      {d.starred && <span style={{ fontSize: 12 }}>⭐</span>}
                       {d.title}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)', display: 'flex', gap: 8, marginTop: 2 }}>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', display: 'flex', gap: 8, marginTop: 2 }}>
                       <span>{timeAgo(d.lastActivityAt)}</span>
                       <span>{d.depth} échanges</span>
                       {d.keyPoints.length > 0 && <span>{d.keyPoints.length} pts clés</span>}
@@ -898,12 +945,12 @@ export default function DiscussionsPage() {
                     onClick={(e) => { e.stopPropagation(); toggleStar(d.id); }}
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer', padding: 2,
-                      color: d.starred ? '#FBBF24' : 'var(--text-secondary, #555)',
+                      color: d.starred ? '#FBBF24' : 'var(--fz-text-muted, #94A3B8)',
                       fontSize: 14, transition: 'color 0.15s',
                     }}
                     title={d.starred ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{d.starred ? 'star' : 'star_outline'}</span>
+                    <span style={{ fontSize: 14 }}>{d.starred ? '⭐' : '☆'}</span>
                   </button>
                   <span style={{
                     width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
@@ -917,25 +964,25 @@ export default function DiscussionsPage() {
 
         {/* Insights */}
         {discussions.length > 0 && (
-          <div style={{ borderTop: '1px solid var(--border-primary, #1e1e1e)', padding: '8px 12px' }}>
+          <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', padding: '8px 12px' }}>
             <button
               onClick={() => setInsightsOpen(!insightsOpen)}
               style={{
-                background: 'none', border: 'none', color: 'var(--text-secondary, #888)',
+                background: 'none', border: 'none', color: 'var(--fz-text-secondary, #64748B)',
                 fontSize: 12, cursor: 'pointer', width: '100%', textAlign: 'left', padding: '4px 0',
               }}
             >
               {insightsOpen ? '▼' : '▶'} Insights ({discussions.length} discussions)
             </button>
             {insightsOpen && (
-              <div style={{ fontSize: 12, color: 'var(--text-secondary, #888)', padding: '4px 0' }}>
+              <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', padding: '4px 0' }}>
                 <div>Profondeur totale: {totalDepth} échanges</div>
                 <div>Points clés: {totalKeyPoints}</div>
                 {topCategories.length > 0 && (
                   <div style={{ marginTop: 4 }}>
                     {topCategories.map(([cat, count]) => {
                       const info = DISCUSSION_CATEGORIES.find(c => c.id === cat);
-                      return <div key={cat}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>{info?.materialIcon}</span> {info?.label}: {count}</div>;
+                      return <div key={cat}>{iconEmoji(info?.materialIcon ?? 'psychology')} {info?.label}: {count}</div>;
                     })}
                   </div>
                 )}
@@ -953,13 +1000,12 @@ export default function DiscussionsPage() {
             onClick={() => setActiveId(null)}
             style={{
               display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px',
-              background: 'var(--bg-secondary)', border: 'none', borderBottom: '1px solid var(--border-primary)',
-              color: 'var(--text-primary)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+              color: 'var(--fz-text, #1E293B)', fontSize: 13, fontWeight: 600, cursor: 'pointer',
               fontFamily: 'inherit',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>arrow_back</span>
-            Retour aux discussions
+            ← Retour aux discussions
           </button>
         )}
 
@@ -970,11 +1016,11 @@ export default function DiscussionsPage() {
             <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
               <div style={{
                 flex: 1, minWidth: 200, display: 'flex', gap: 8,
-                background: 'var(--bg-secondary, #111)', borderRadius: 10,
-                border: '1px solid var(--border-primary, #1e1e1e)', padding: '4px 4px 4px 14px',
+                background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10,
+                border: '1px solid var(--fz-border, #E2E8F0)', padding: '4px 4px 4px 14px',
                 alignItems: 'center',
               }}>
-                <span className="material-symbols-rounded" style={{ color: 'var(--text-secondary, #888)', fontSize: 14 }}>search</span>
+                <span style={{ fontSize: 14 }}>🔍</span>
                 <input
                   type="text"
                   placeholder="Chercher un sujet parmi 80+ discussions..."
@@ -982,7 +1028,7 @@ export default function DiscussionsPage() {
                   onChange={e => setTemplateSearch(e.target.value)}
                   style={{
                     flex: 1, background: 'none', border: 'none', outline: 'none',
-                    color: 'var(--text-primary, #fff)', fontSize: 14, padding: '8px 0',
+                    color: 'var(--fz-text, #1E293B)', fontSize: 14, padding: '8px 0',
                   }}
                 />
               </div>
@@ -993,11 +1039,11 @@ export default function DiscussionsPage() {
                 }}
                 style={{
                   padding: '10px 16px', borderRadius: 10, cursor: 'pointer',
-                  background: 'var(--bg-secondary, #111)', border: '1px solid var(--border-primary, #1e1e1e)',
-                  color: '#a78bfa', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+                  color: '#7c3aed', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap',
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 13 }}>casino</span> Sujet aléatoire
+                🎲 Sujet aléatoire
               </button>
               <button
                 onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(''); setWizardResult(null); }}
@@ -1012,9 +1058,9 @@ export default function DiscussionsPage() {
             </div>
 
             {/* Keyboard hint */}
-            <div style={{ fontSize: 11, color: 'var(--text-secondary, #555)', marginBottom: 12, display: 'flex', gap: 16 }}>
-              <span><kbd style={{ padding: '1px 5px', borderRadius: 3, background: '#1e1e1e', border: '1px solid #333', fontSize: 10 }}>Ctrl+N</kbd> Nouvelle</span>
-              <span><kbd style={{ padding: '1px 5px', borderRadius: 3, background: '#1e1e1e', border: '1px solid #333', fontSize: 10 }}>Esc</kbd> Retour</span>
+            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 12, display: 'flex', gap: 16 }}>
+              <span><kbd style={{ padding: '1px 5px', borderRadius: 3, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 10 }}>Ctrl+N</kbd> Nouvelle</span>
+              <span><kbd style={{ padding: '1px 5px', borderRadius: 3, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)', fontSize: 10 }}>Esc</kbd> Retour</span>
             </div>
 
             {/* Tag filter pills */}
@@ -1031,13 +1077,13 @@ export default function DiscussionsPage() {
                     style={{
                       padding: '5px 12px', borderRadius: 16, fontSize: 12, cursor: 'pointer',
                       whiteSpace: 'nowrap', fontWeight: isActive ? 600 : 400,
-                      background: isActive ? '#7c3aed22' : 'var(--bg-secondary, #111)',
-                      border: `1px solid ${isActive ? '#7c3aed' : 'var(--border-primary, #1e1e1e)'}`,
-                      color: isActive ? '#a78bfa' : 'var(--text-secondary, #888)',
+                      background: isActive ? '#7c3aed22' : 'var(--fz-bg-secondary, #F8FAFC)',
+                      border: `1px solid ${isActive ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
+                      color: isActive ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
                       transition: 'all 0.15s',
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{tag.materialIcon}</span> {tag.label}
+                    {iconEmoji(tag.materialIcon)} {tag.label}
                   </button>
                 );
               })}
@@ -1062,7 +1108,7 @@ export default function DiscussionsPage() {
               ].filter(Boolean).join(' + ');
               return (
               <>
-                <h2 style={{ fontSize: 15, color: 'var(--text-secondary, #888)', marginBottom: 12 }}>
+                <h2 style={{ fontSize: 15, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 12 }}>
                   {matchingTemplates.length} sujet{matchingTemplates.length !== 1 ? 's' : ''} — {filterLabel}
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
@@ -1071,7 +1117,7 @@ export default function DiscussionsPage() {
                   ))}
                 </div>
                 {matchingTemplates.length === 0 && (
-                  <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary, #888)' }}>
+                  <div style={{ textAlign: 'center', padding: '40px', color: 'var(--fz-text-secondary, #64748B)' }}>
                     <p>Aucun résultat. Créez votre propre sujet !</p>
                     <button
                       onClick={() => { setWizardOpen(true); setWizardStep('input'); setWizardInput(templateSearch || ''); setWizardResult(null); }}
@@ -1094,13 +1140,13 @@ export default function DiscussionsPage() {
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20,
                   padding: '16px 20px', borderRadius: 12,
-                  background: 'linear-gradient(135deg, #1a0a2e, #0f1a3e)',
+                  background: 'linear-gradient(135deg, #f3f0ff, #eef2ff)',
                   border: '1px solid #7c3aed33',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 36 }}>balance</span>
+                  <span style={{ fontSize: 36 }}>⚖️</span>
                   <div style={{ flex: 1 }}>
-                    <h3 style={{ margin: 0, fontSize: 15, color: '#fff' }}>Naël — Le Contradicteur</h3>
-                    <p style={{ margin: '2px 0 0', fontSize: 12, color: '#94A3B8' }}>
+                    <h3 style={{ margin: 0, fontSize: 15, color: 'var(--fz-text, #1E293B)' }}>Naël — Le Contradicteur</h3>
+                    <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       Prêt à débattre. Méthode socratique, argumentation structurée, intelligence Opus.
                     </p>
                   </div>
@@ -1118,8 +1164,8 @@ export default function DiscussionsPage() {
 
                 {/* Daily picks */}
                 <div style={{ marginBottom: 24 }}>
-                  <h2 style={{ fontSize: 15, color: 'var(--text-primary, #fff)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 15 }}>target</span> Discussions du jour
+                  <h2 style={{ fontSize: 15, color: 'var(--fz-text, #1E293B)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    🎯 Discussions du jour
                   </h2>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
                     {getDailyTemplates().map(t => (
@@ -1131,8 +1177,8 @@ export default function DiscussionsPage() {
                 {/* Recent discussions (if any) */}
                 {discussions.length > 0 && (
                   <div style={{ marginBottom: 24 }}>
-                    <h2 style={{ fontSize: 15, color: 'var(--text-primary, #fff)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 15 }}>schedule</span> Reprendre une discussion
+                    <h2 style={{ fontSize: 15, color: 'var(--fz-text, #1E293B)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      🕐 Reprendre une discussion
                     </h2>
                     <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
                       {discussions.slice(0, 4).map(d => {
@@ -1143,18 +1189,18 @@ export default function DiscussionsPage() {
                             onClick={() => { setActiveId(d.id); setFollowUps([]); }}
                             style={{
                               minWidth: 200, padding: '12px 16px', borderRadius: 10, cursor: 'pointer',
-                              background: 'var(--bg-secondary, #111)',
-                              border: '1px solid var(--border-primary, #1e1e1e)',
+                              background: 'var(--fz-bg-secondary, #F8FAFC)',
+                              border: '1px solid var(--fz-border, #E2E8F0)',
                               transition: 'border-color 0.2s',
                             }}
                             onMouseEnter={e => (e.currentTarget.style.borderColor = '#7c3aed')}
-                            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-primary, #1e1e1e)')}
+                            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)')}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{catInfo?.materialIcon}</span>
-                              <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{d.title.slice(0, 35)}{d.title.length > 35 ? '...' : ''}</span>
+                              <span style={{ fontSize: 16 }}>{iconEmoji(catInfo?.materialIcon ?? 'psychology')}</span>
+                              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{d.title.slice(0, 35)}{d.title.length > 35 ? '...' : ''}</span>
                             </div>
-                            <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)' }}>
+                            <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
                               {d.depth} échanges · {d.keyPoints.length} pts clés · {timeAgo(d.lastActivityAt)}
                             </div>
                           </div>
@@ -1168,12 +1214,12 @@ export default function DiscussionsPage() {
                 {TEMPLATE_SECTIONS.map(section => (
                   <div key={section.id} style={{ marginBottom: 28 }}>
                     <h2 style={{
-                      fontSize: 15, color: 'var(--text-primary, #fff)', marginBottom: 4,
+                      fontSize: 15, color: 'var(--fz-text, #1E293B)', marginBottom: 4,
                       display: 'flex', alignItems: 'center', gap: 8,
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{section.materialIcon}</span> {section.title}
+                      {iconEmoji(section.materialIcon)} {section.title}
                     </h2>
-                    <p style={{ fontSize: 12, color: 'var(--text-secondary, #888)', margin: '0 0 10px' }}>
+                    <p style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 10px' }}>
                       {section.description}
                     </p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 8 }}>
@@ -1191,10 +1237,10 @@ export default function DiscussionsPage() {
           <>
             {/* Header */}
             <div style={{
-              padding: '12px 20px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
+              padding: '12px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
               display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0,
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 24, color: '#a78bfa' }}>{active.agentEmoji}</span>
+              <span style={{ fontSize: 24 }}>{iconEmoji(active.agentEmoji)}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {editingTitle ? (
@@ -1215,14 +1261,14 @@ export default function DiscussionsPage() {
                       }}
                       autoFocus
                       style={{
-                        margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--text-primary, #fff)',
-                        background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #7c3aed',
+                        margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)',
+                        background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #7c3aed',
                         borderRadius: 6, padding: '2px 8px', outline: 'none', minWidth: 200,
                       }}
                     />
                   ) : (
                     <h2
-                      style={{ margin: 0, fontSize: 16, color: 'var(--text-primary, #fff)', cursor: 'pointer' }}
+                      style={{ margin: 0, fontSize: 16, color: 'var(--fz-text, #1E293B)', cursor: 'pointer' }}
                       onDoubleClick={() => { setEditingTitle(true); setEditTitleValue(active.title); }}
                       title="Double-clic pour modifier le titre"
                     >
@@ -1231,12 +1277,12 @@ export default function DiscussionsPage() {
                   )}
                   <span style={{
                     fontSize: 10, padding: '2px 8px', borderRadius: 10,
-                    background: '#7c3aed22', color: '#a78bfa',
+                    background: '#7c3aed22', color: '#7c3aed',
                   }}>
                     {DISCUSSION_CATEGORIES.find(c => c.id === active.category)?.label}
                   </span>
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary, #888)', display: 'flex', gap: 12, marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'flex', gap: 12, marginTop: 2 }}>
                   <span>{active.agentName}</span>
                   <span>{active.depth} échanges</span>
                   <span>{active.keyPoints.length} points clés</span>
@@ -1249,7 +1295,7 @@ export default function DiscussionsPage() {
                           width: 16, height: 16, borderRadius: '50%', background: `${p.color}22`,
                           border: `1px solid ${p.color}44`, display: 'inline-flex', alignItems: 'center',
                           justifyContent: 'center', fontSize: 10,
-                        }}><span className="material-symbols-rounded" style={{ fontSize: 10 }}>{p.materialIcon}</span></span>
+                        }}>{iconEmoji(p.materialIcon)}</span>
                       ))}
                     </span>
                   )}
@@ -1259,9 +1305,9 @@ export default function DiscussionsPage() {
                 {active.status === 'completed' ? (
                   <span style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-                    background: '#22C55E11', border: '1px solid #22C55E33', color: '#4ADE80',
+                    background: '#22C55E11', border: '1px solid #22C55E33', color: '#16A34A',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Terminée
+                    ✅ Terminée
                   </span>
                 ) : active.depth >= 2 && (
                   <button
@@ -1269,11 +1315,11 @@ export default function DiscussionsPage() {
                     disabled={loading}
                     style={{
                       padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                      background: '#22C55E11', border: '1px solid #22C55E33', color: '#4ADE80',
+                      background: '#22C55E11', border: '1px solid #22C55E33', color: '#16A34A',
                     }}
                     title="Conclure et obtenir un bilan"
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Conclure
+                    ✅ Conclure
                   </button>
                 )}
                 <button
@@ -1281,69 +1327,69 @@ export default function DiscussionsPage() {
                   title={active.challengeMode ? 'Désactiver le mode challenge' : 'Activer le mode challenge'}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: active.challengeMode ? '#EF444422' : 'var(--bg-secondary, #111)',
-                    border: `1px solid ${active.challengeMode ? '#EF4444' : 'var(--border-primary, #1e1e1e)'}`,
-                    color: active.challengeMode ? '#EF4444' : 'var(--text-secondary, #888)',
+                    background: active.challengeMode ? '#EF444422' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: `1px solid ${active.challengeMode ? '#EF4444' : 'var(--fz-border, #E2E8F0)'}`,
+                    color: active.challengeMode ? '#EF4444' : 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
-                  {active.challengeMode ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>swords</span> Challenge ON</> : <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>swords</span> Challenge</>}
+                  {active.challengeMode ? <>⚔️ Challenge ON</> : <>⚔️ Challenge</>}
                 </button>
                 <button
                   onClick={togglePause}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: 'var(--bg-secondary, #111)',
-                    border: '1px solid var(--border-primary, #1e1e1e)',
-                    color: 'var(--text-secondary, #888)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    color: 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
-                  {active.status === 'active' ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>pause</span> Pause</> : <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>play_arrow</span> Reprendre</>}
+                  {active.status === 'active' ? <>⏸️ Pause</> : <>▶️ Reprendre</>}
                 </button>
                 {/* [Item 14] Search in messages */}
                 <button
                   onClick={() => { setMessageSearchOpen(!messageSearchOpen); setMessageSearch(''); }}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: messageSearchOpen ? '#7c3aed22' : 'var(--bg-secondary, #111)',
-                    border: `1px solid ${messageSearchOpen ? '#7c3aed' : 'var(--border-primary, #1e1e1e)'}`,
-                    color: messageSearchOpen ? '#a78bfa' : 'var(--text-secondary, #888)',
+                    background: messageSearchOpen ? '#7c3aed22' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: `1px solid ${messageSearchOpen ? '#7c3aed' : 'var(--fz-border, #E2E8F0)'}`,
+                    color: messageSearchOpen ? '#7c3aed' : 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span>
+                  🔍
                 </button>
                 <button
                   onClick={handleExport}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: 'var(--bg-secondary, #111)',
-                    border: '1px solid var(--border-primary, #1e1e1e)',
-                    color: 'var(--text-secondary, #888)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    color: 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>download</span> Exporter
+                  ⬇️ Exporter
                 </button>
                 <button
                   onClick={shareDiscussionSummary}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: 'var(--bg-secondary, #111)',
-                    border: '1px solid var(--border-primary, #1e1e1e)',
-                    color: 'var(--text-secondary, #888)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    color: 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
-                  ↗ Partager
+                  🔗 Partager
                 </button>
                 {/* [Item 1] Delete with confirmation */}
                 <button
                   onClick={() => setConfirmDeleteId(active.id)}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: 'var(--bg-secondary, #111)',
-                    border: '1px solid var(--border-primary, #1e1e1e)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
                     color: '#EF4444',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>delete</span>
+                  🗑️
                 </button>
               </div>
             </div>
@@ -1362,7 +1408,7 @@ export default function DiscussionsPage() {
                   onClick={() => setConfirmDeleteId(null)}
                   style={{
                     padding: '5px 14px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
-                    background: 'transparent', border: '1px solid #555', color: '#aaa',
+                    background: 'transparent', border: '1px solid var(--fz-border, #E2E8F0)', color: 'var(--fz-text-secondary, #64748B)',
                   }}
                 >
                   Annuler
@@ -1382,10 +1428,10 @@ export default function DiscussionsPage() {
             {/* [Item 14] Message search bar */}
             {messageSearchOpen && (
               <div style={{
-                padding: '6px 20px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
+                padding: '6px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
                 display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 13, color: '#888' }}>search</span>
+                <span style={{ fontSize: 13 }}>🔍</span>
                 <input
                   type="text"
                   placeholder="Rechercher dans la discussion..."
@@ -1394,17 +1440,17 @@ export default function DiscussionsPage() {
                   autoFocus
                   style={{
                     flex: 1, background: 'none', border: 'none', outline: 'none',
-                    color: 'var(--text-primary, #fff)', fontSize: 13, padding: '6px 0',
+                    color: 'var(--fz-text, #1E293B)', fontSize: 13, padding: '6px 0',
                   }}
                 />
                 <button
                   onClick={() => { setMessageSearchOpen(false); setMessageSearch(''); }}
                   style={{
-                    background: 'none', border: 'none', color: '#888', cursor: 'pointer',
+                    background: 'none', border: 'none', color: 'var(--fz-text-muted, #94A3B8)', cursor: 'pointer',
                     fontSize: 14, padding: '2px 4px',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
+                  ✕
                 </button>
               </div>
             )}
@@ -1412,16 +1458,16 @@ export default function DiscussionsPage() {
             {/* [Item 8] Depth Progress Bar */}
             {active.depth > 0 && (
               <div style={{
-                padding: '6px 20px 8px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
+                padding: '6px 20px 8px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
                 flexShrink: 0,
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                  <span style={{ fontSize: 10, color: 'var(--text-secondary, #888)' }}>Profondeur</span>
-                  <span style={{ fontSize: 10, color: '#a78bfa', fontWeight: 600 }}>
+                  <span style={{ fontSize: 10, color: 'var(--fz-text-secondary, #64748B)' }}>Profondeur</span>
+                  <span style={{ fontSize: 10, color: '#7c3aed', fontWeight: 600 }}>
                     {getDepthMilestone(active.depth).label}
                   </span>
                 </div>
-                <div style={{ height: 3, borderRadius: 2, background: '#1e1e1e', overflow: 'hidden' }}>
+                <div style={{ height: 3, borderRadius: 2, background: 'var(--fz-border, #E2E8F0)', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', borderRadius: 2,
                     background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
@@ -1435,10 +1481,10 @@ export default function DiscussionsPage() {
             {/* Key Points Bar (if any) */}
             {active.keyPoints.length > 0 && (
               <div style={{
-                padding: '8px 20px', borderBottom: '1px solid var(--border-primary, #1e1e1e)',
+                padding: '8px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
                 display: 'flex', gap: 8, overflowX: 'auto', flexShrink: 0,
               }}>
-                <span style={{ fontSize: 12, color: 'var(--text-secondary, #888)', whiteSpace: 'nowrap', lineHeight: '24px' }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', whiteSpace: 'nowrap', lineHeight: '24px' }}>
                   Points clés:
                 </span>
                 {active.keyPoints.slice(-6).map(kp => (
@@ -1460,9 +1506,9 @@ export default function DiscussionsPage() {
             {/* Messages */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
               {active.messages.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-secondary, #888)' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 16, display: 'block', color: '#a78bfa' }}>{active.agentEmoji}</span>
-                  <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary, #fff)' }}>
+                <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
+                  <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>{iconEmoji(active.agentEmoji)}</span>
+                  <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
                     {active.agentName} est prêt
                   </p>
                   <p style={{ fontSize: 14, marginTop: 4 }}>
@@ -1508,11 +1554,11 @@ export default function DiscussionsPage() {
                         maxWidth: '80%', padding: '12px 16px', borderRadius: 12, position: 'relative',
                         background: msg.role === 'user'
                           ? 'linear-gradient(135deg, #7c3aed, #06b6d4)'
-                          : 'var(--bg-secondary, #111)',
+                          : 'var(--fz-bg-secondary, #F8FAFC)',
                         border: msg.role === 'assistant'
-                          ? `1px solid ${isHighlighted ? '#FBBF24' : 'var(--border-primary, #1e1e1e)'}`
+                          ? `1px solid ${isHighlighted ? '#FBBF24' : 'var(--fz-border, #E2E8F0)'}`
                           : 'none',
-                        color: 'var(--text-primary, #fff)',
+                        color: msg.role === 'user' ? '#fff' : 'var(--fz-text, #1E293B)',
                       }}>
                         {/* Copy + Share buttons on hover */}
                         {msgHoverIdx === realIdx && (
@@ -1520,30 +1566,30 @@ export default function DiscussionsPage() {
                             <button
                               onClick={() => copyMessage(msg.content)}
                               style={{
-                                background: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: 4,
-                                color: '#aaa', fontSize: 11, cursor: 'pointer', padding: '2px 6px',
+                                background: 'rgba(0,0,0,0.15)', border: 'none', borderRadius: 4,
+                                color: 'var(--fz-text-muted, #94A3B8)', fontSize: 11, cursor: 'pointer', padding: '2px 6px',
                               }}
                               title="Copier"
                             >
-                              <span className="material-symbols-rounded" style={{ fontSize: 12 }}>content_copy</span>
+                              📋
                             </button>
                             {msg.role === 'assistant' && (
                               <button
                                 onClick={() => shareMessage(msg)}
                                 style={{
-                                  background: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: 4,
-                                  color: '#aaa', fontSize: 11, cursor: 'pointer', padding: '2px 6px',
+                                  background: 'rgba(0,0,0,0.15)', border: 'none', borderRadius: 4,
+                                  color: 'var(--fz-text-muted, #94A3B8)', fontSize: 11, cursor: 'pointer', padding: '2px 6px',
                                 }}
                                 title="Partager"
                               >
-                                ↗
+                                🔗
                               </button>
                             )}
                           </div>
                         )}
                         {msg.role === 'assistant' && (
-                          <div style={{ fontSize: 11, color: '#a78bfa', marginBottom: 4 }}>
-                            <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#a78bfa' }}>{active.agentEmoji}</span> {active.agentName}
+                          <div style={{ fontSize: 11, color: '#7c3aed', marginBottom: 4 }}>
+                            {iconEmoji(active.agentEmoji)} {active.agentName}
                           </div>
                         )}
                         <div style={{ fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
@@ -1551,7 +1597,7 @@ export default function DiscussionsPage() {
                         </div>
                         {/* [Item 7] Timestamp */}
                         <div style={{
-                          fontSize: 10, color: msg.role === 'user' ? 'rgba(255,255,255,0.5)' : 'var(--text-secondary, #555)',
+                          fontSize: 10, color: msg.role === 'user' ? 'rgba(255,255,255,0.5)' : 'var(--fz-text-muted, #94A3B8)',
                           marginTop: 4, textAlign: msg.role === 'user' ? 'right' : 'left',
                         }}>
                           {formatTimestamp(msg.timestamp)}
@@ -1572,7 +1618,7 @@ export default function DiscussionsPage() {
                               fontSize: 12, color: '#A78BFA',
                             }}
                           >
-                            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> {kp.text}
+                            💡 {kp.text}
                             <button
                               onClick={(e) => { e.stopPropagation(); shareKeyPoint(kp); }}
                               style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#A78BFA', fontSize: 11, padding: '0 2px', opacity: 0.6 }}
@@ -1594,7 +1640,7 @@ export default function DiscussionsPage() {
                           fontSize: 12, color: '#FBBF24',
                         }}
                       >
-                        <span style={{ flex: 1 }}><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>shield</span> Sujet sensible : {sa.topic}</span>
+                        <span style={{ flex: 1 }}>🛡️ Sujet sensible : {sa.topic}</span>
                         <button
                           onClick={() => setSensitivityAlerts(prev => prev.filter(a => a.id !== sa.id))}
                           style={{
@@ -1603,7 +1649,7 @@ export default function DiscussionsPage() {
                           }}
                           title="Fermer"
                         >
-                          <span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span>
+                          ✕
                         </button>
                       </div>
                     ))}
@@ -1616,9 +1662,9 @@ export default function DiscussionsPage() {
                 <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 12, animation: 'fadeSlideUp 0.25s ease' }}>
                   <div style={{
                     padding: '12px 16px', borderRadius: 12,
-                    background: 'var(--bg-secondary, #111)',
-                    border: '1px solid var(--border-primary, #1e1e1e)',
-                    color: 'var(--text-secondary, #888)', fontSize: 14,
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    color: 'var(--fz-text-secondary, #64748B)', fontSize: 14,
                   }}>
                     <span className="typing-dots">{loadingText}</span>
                   </div>
@@ -1637,7 +1683,7 @@ export default function DiscussionsPage() {
                       display: 'flex', alignItems: 'center', gap: 6,
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 14 }}>refresh</span> Réessayer
+                    🔄 Réessayer
                   </button>
                 </div>
               )}
@@ -1648,7 +1694,7 @@ export default function DiscussionsPage() {
             {/* [Item 11] Follow-ups redesigned as cards */}
             {followUps.length > 0 && !loading && (
               <div style={{
-                padding: '10px 20px', borderTop: '1px solid var(--border-primary, #1e1e1e)',
+                padding: '10px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
                 display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: 8, flexShrink: 0,
               }}>
@@ -1658,9 +1704,9 @@ export default function DiscussionsPage() {
                     onClick={() => sendMessage(q)}
                     style={{
                       padding: '10px 14px', borderRadius: 10, fontSize: 12, cursor: 'pointer',
-                      background: 'var(--bg-secondary, #111)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)',
                       border: '1px solid #7c3aed33', textAlign: 'left',
-                      color: 'var(--text-primary, #ddd)', transition: 'border-color 0.2s, transform 0.15s',
+                      color: 'var(--fz-text, #1E293B)', transition: 'border-color 0.2s, transform 0.15s',
                       display: 'flex', alignItems: 'flex-start', gap: 8,
                     }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
@@ -1680,7 +1726,7 @@ export default function DiscussionsPage() {
                 background: '#F59E0B11', display: 'flex', alignItems: 'center', gap: 8,
                 flexShrink: 0,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 13 }}>pause</span>
+                <span style={{ fontSize: 13 }}>⏸️</span>
                 <span style={{ fontSize: 12, color: '#FBBF24', flex: 1 }}>
                   Discussion en pause — cliquez &quot;Reprendre&quot; pour continuer.
                 </span>
@@ -1689,7 +1735,7 @@ export default function DiscussionsPage() {
 
             {/* Input */}
             <div style={{
-              padding: '12px 20px', borderTop: '1px solid var(--border-primary, #1e1e1e)',
+              padding: '12px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
               display: 'flex', gap: 8, flexShrink: 0,
             }}>
               <textarea
@@ -1715,9 +1761,9 @@ export default function DiscussionsPage() {
                 rows={2}
                 style={{
                   flex: 1, padding: '10px 14px', borderRadius: 8, resize: 'none',
-                  background: 'var(--bg-primary, #0a0a0a)',
-                  border: '1px solid var(--border-primary, #1e1e1e)',
-                  color: 'var(--text-primary, #fff)', fontSize: 14,
+                  background: 'var(--fz-bg, #FFFFFF)',
+                  border: '1px solid var(--fz-border, #E2E8F0)',
+                  color: 'var(--fz-text, #1E293B)', fontSize: 14,
                   opacity: (active.status === 'paused' || active.status === 'completed') ? 0.5 : 1,
                 }}
               />
@@ -1744,7 +1790,7 @@ export default function DiscussionsPage() {
                   disabled={loading || active.messages.length === 0 || active.status === 'paused' || active.status === 'completed'}
                   style={{
                     padding: '8px 12px', borderRadius: 8, fontSize: 11, cursor: 'pointer',
-                    background: 'var(--bg-secondary, #111)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: '1px solid #7c3aed33',
                     color: '#A78BFA', fontWeight: 600,
                     opacity: active.messages.length === 0 ? 0.3 : 1,
@@ -1769,15 +1815,15 @@ export default function DiscussionsPage() {
         >
           <div style={{
             width: '100%', maxWidth: 520, borderRadius: isMobile ? 12 : 16, padding: isMobile ? '20px 16px' : '32px',
-            background: 'var(--bg-secondary, #111)', border: '1px solid var(--border-primary, #1e1e1e)',
+            background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)',
             margin: isMobile ? '0 12px' : 0, boxSizing: 'border-box' as const,
           }}>
             {wizardStep === 'input' && (
               <>
-                <h2 style={{ margin: '0 0 4px', fontSize: 20, color: 'var(--text-primary, #fff)' }}>
+                <h2 style={{ margin: '0 0 4px', fontSize: 20, color: 'var(--fz-text, #1E293B)' }}>
                   Nouvelle discussion
                 </h2>
-                <p style={{ margin: '0 0 20px', fontSize: 14, color: 'var(--text-secondary, #888)' }}>
+                <p style={{ margin: '0 0 20px', fontSize: 14, color: 'var(--fz-text-secondary, #64748B)' }}>
                   Décrivez le sujet que vous souhaitez explorer en profondeur
                 </p>
                 <textarea
@@ -1787,9 +1833,9 @@ export default function DiscussionsPage() {
                   rows={4}
                   style={{
                     width: '100%', padding: '12px 14px', borderRadius: 8, resize: 'none',
-                    background: 'var(--bg-primary, #0a0a0a)',
-                    border: '1px solid var(--border-primary, #1e1e1e)',
-                    color: 'var(--text-primary, #fff)', fontSize: 14,
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E2E8F0)',
+                    color: 'var(--fz-text, #1E293B)', fontSize: 14,
                   }}
                   autoFocus
                   onKeyDown={e => {
@@ -1804,8 +1850,8 @@ export default function DiscussionsPage() {
                     onClick={() => { setWizardOpen(false); pendingSendRef.current = null; }}
                     style={{
                       padding: '10px 20px', borderRadius: 8, cursor: 'pointer',
-                      background: 'transparent', border: '1px solid var(--border-primary, #1e1e1e)',
-                      color: 'var(--text-secondary, #888)', fontSize: 14,
+                      background: 'transparent', border: '1px solid var(--fz-border, #E2E8F0)',
+                      color: 'var(--fz-text-secondary, #64748B)', fontSize: 14,
                     }}
                   >
                     Annuler
@@ -1827,11 +1873,11 @@ export default function DiscussionsPage() {
 
             {wizardStep === 'analyzing' && (
               <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>search</span>
-                <p style={{ fontSize: 16, color: 'var(--text-primary, #fff)', fontWeight: 600 }}>
+                <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>🔍</span>
+                <p style={{ fontSize: 16, color: 'var(--fz-text, #1E293B)', fontWeight: 600 }}>
                   Analyse en cours...
                 </p>
-                <p style={{ fontSize: 14, color: 'var(--text-secondary, #888)' }}>
+                <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)' }}>
                   Sélection du meilleur agent pour ce sujet
                 </p>
               </div>
@@ -1839,22 +1885,22 @@ export default function DiscussionsPage() {
 
             {wizardStep === 'ready' && wizardResult && (
               <>
-                <h2 style={{ margin: '0 0 20px', fontSize: 20, color: 'var(--text-primary, #fff)' }}>
+                <h2 style={{ margin: '0 0 20px', fontSize: 20, color: 'var(--fz-text, #1E293B)' }}>
                   Discussion prête
                 </h2>
 
                 {/* Agent card */}
                 <div style={{
                   padding: '16px', borderRadius: 10, marginBottom: 16,
-                  background: 'var(--bg-primary, #0a0a0a)', border: '1px solid #7c3aed33',
+                  background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid #7c3aed33',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#a78bfa' }}>{wizardResult.agentEmoji}</span>
+                    <span style={{ fontSize: 36 }}>{iconEmoji(wizardResult.agentEmoji)}</span>
                     <div>
-                      <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary, #fff)' }}>
+                      <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
                         {wizardResult.agentName}
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--text-secondary, #888)', marginTop: 2 }}>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginTop: 2 }}>
                         {wizardResult.reasoning}
                       </div>
                     </div>
@@ -1864,7 +1910,7 @@ export default function DiscussionsPage() {
                 {/* Category + Title */}
                 <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
                   <div style={{ flex: 1 }}>
-                    <label style={{ fontSize: 12, color: 'var(--text-secondary, #888)', display: 'block', marginBottom: 4 }}>
+                    <label style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>
                       Catégorie
                     </label>
                     <select
@@ -1872,9 +1918,9 @@ export default function DiscussionsPage() {
                       onChange={e => setWizardResult(prev => prev ? { ...prev, category: e.target.value as DiscussionCategory } : null)}
                       style={{
                         width: '100%', padding: '8px 10px', borderRadius: 6,
-                        background: 'var(--bg-primary, #0a0a0a)',
-                        border: '1px solid var(--border-primary, #1e1e1e)',
-                        color: 'var(--text-primary, #fff)', fontSize: 13,
+                        background: 'var(--fz-bg, #FFFFFF)',
+                        border: '1px solid var(--fz-border, #E2E8F0)',
+                        color: 'var(--fz-text, #1E293B)', fontSize: 13,
                       }}
                     >
                       {DISCUSSION_CATEGORIES.map(c => (
@@ -1885,7 +1931,7 @@ export default function DiscussionsPage() {
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
-                  <label style={{ fontSize: 12, color: 'var(--text-secondary, #888)', display: 'block', marginBottom: 4 }}>
+                  <label style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>
                     Titre
                   </label>
                   <input
@@ -1894,9 +1940,9 @@ export default function DiscussionsPage() {
                     onChange={e => setWizardResult(prev => prev ? { ...prev, suggestedTitle: e.target.value } : null)}
                     style={{
                       width: '100%', padding: '8px 12px', borderRadius: 6,
-                      background: 'var(--bg-primary, #0a0a0a)',
-                      border: '1px solid var(--border-primary, #1e1e1e)',
-                      color: 'var(--text-primary, #fff)', fontSize: 14,
+                      background: 'var(--fz-bg, #FFFFFF)',
+                      border: '1px solid var(--fz-border, #E2E8F0)',
+                      color: 'var(--fz-text, #1E293B)', fontSize: 14,
                     }}
                   />
                 </div>
@@ -1906,8 +1952,8 @@ export default function DiscussionsPage() {
                     onClick={() => { setWizardStep('input'); setWizardResult(null); }}
                     style={{
                       padding: '10px 20px', borderRadius: 8, cursor: 'pointer',
-                      background: 'transparent', border: '1px solid var(--border-primary, #1e1e1e)',
-                      color: 'var(--text-secondary, #888)', fontSize: 14,
+                      background: 'transparent', border: '1px solid var(--fz-border, #E2E8F0)',
+                      color: 'var(--fz-text-secondary, #64748B)', fontSize: 14,
                     }}
                   >
                     Retour
@@ -1942,8 +1988,8 @@ export default function DiscussionsPage() {
               onClick={() => setShareOpen(false)}
               style={{
                 flex: 1, padding: '10px', borderRadius: 8, cursor: 'pointer',
-                background: 'transparent', border: '1px solid var(--border-primary, #1e1e1e)',
-                color: 'var(--text-secondary, #888)', fontSize: 13,
+                background: 'transparent', border: '1px solid var(--fz-border, #E2E8F0)',
+                color: 'var(--fz-text-secondary, #64748B)', fontSize: 13,
               }}
             >
               Fermer
@@ -1955,7 +2001,7 @@ export default function DiscussionsPage() {
                 background: '#7c3aed', border: 'none', color: '#fff', fontWeight: 600, fontSize: 13,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>content_copy</span> Copier le texte
+              📋 Copier le texte
             </button>
           </div>
         }
@@ -1963,14 +2009,14 @@ export default function DiscussionsPage() {
         {/* Preview */}
         <div style={{
           padding: 16, borderRadius: 10, marginBottom: 20,
-          background: 'var(--bg-primary, #0a0a0a)', border: '1px solid var(--border-primary, #1e1e1e)',
+          background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
           maxHeight: 200, overflowY: 'auto',
         }}>
-          <p style={{ fontSize: 13, color: 'var(--text-primary, #fff)', lineHeight: 1.6, whiteSpace: 'pre-wrap', margin: 0 }}>
+          <p style={{ fontSize: 13, color: 'var(--fz-text, #1E293B)', lineHeight: 1.6, whiteSpace: 'pre-wrap', margin: 0 }}>
             {shareContent?.text}
           </p>
-          <div style={{ fontSize: 11, color: 'var(--text-secondary, #888)', marginTop: 8 }}>
-            — <span className="material-symbols-rounded" style={{ fontSize: 12, color: '#a78bfa' }}>{shareContent?.agentEmoji}</span> {shareContent?.agentName} · &quot;{shareContent?.discussionTitle}&quot;
+          <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', marginTop: 8 }}>
+            — {iconEmoji(shareContent?.agentEmoji ?? 'psychology')} {shareContent?.agentName} · &quot;{shareContent?.discussionTitle}&quot;
           </div>
         </div>
 
@@ -1984,7 +2030,7 @@ export default function DiscussionsPage() {
               border: 'none', color: '#fff', fontWeight: 600, fontSize: 14,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>share</span> Partager via le système
+            🔗 Partager via le système
           </button>
         )}
 
@@ -2004,18 +2050,18 @@ export default function DiscussionsPage() {
               onMouseEnter={e => { e.currentTarget.style.background = `${p.color}22`; e.currentTarget.style.borderColor = `${p.color}66`; }}
               onMouseLeave={e => { e.currentTarget.style.background = `${p.color}12`; e.currentTarget.style.borderColor = `${p.color}33`; }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{p.materialIcon}</span> {p.label}
+              {iconEmoji(p.materialIcon)} {p.label}
             </button>
           ))}
         </div>
 
         {/* Connected platforms info */}
         {connectedPlatforms.length > 0 && (
-          <div style={{ fontSize: 11, color: 'var(--text-secondary, #666)', display: 'flex', alignItems: 'center', gap: 6, padding: '8px 0', borderTop: '1px solid var(--border-primary, #1e1e1e)' }}>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', display: 'flex', alignItems: 'center', gap: 6, padding: '8px 0', borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
             <span>Comptes connectés :</span>
             {connectedPlatforms.map(p => (
               <span key={p.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 3, padding: '2px 8px', borderRadius: 10, background: `${p.color}11`, color: p.color, fontSize: 10, fontWeight: 600 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{p.materialIcon}</span> {p.label}
+                {iconEmoji(p.materialIcon)} {p.label}
               </span>
             ))}
           </div>
@@ -2029,6 +2075,7 @@ export default function DiscussionsPage() {
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
+      </div>
     </div>
   );
 }

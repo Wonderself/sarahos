@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DEPOSIT_OPTIONS, COMMISSION_TIERS, DEFAULT_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
+import { HelpBubble } from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 interface WalletData {
   balance: number;
@@ -18,13 +20,13 @@ interface UsageData {
 }
 
 const NOTIFICATION_CHANNELS = [
-  { key: 'notifyInApp', icon: 'notifications', label: 'In-App', comingSoon: false },
-  { key: 'notifyEmail', icon: 'mail', label: 'Email', comingSoon: false },
-  { key: 'notifySms', icon: 'phone_iphone', label: 'SMS', comingSoon: true },
-  { key: 'notifyWhatsapp', icon: 'chat', label: 'WhatsApp', comingSoon: false },
-  { key: 'notifyLowBalance', icon: 'savings', label: 'Alertes solde bas', comingSoon: false },
-  { key: 'notifyDailyReport', icon: 'bar_chart', label: 'Rapport quotidien', comingSoon: false },
-  { key: 'notifyWeeklyReport', icon: 'trending_up', label: 'Rapport hebdomadaire', comingSoon: false },
+  { key: 'notifyInApp', icon: '🔔', label: 'In-App', comingSoon: false },
+  { key: 'notifyEmail', icon: '📧', label: 'Email', comingSoon: false },
+  { key: 'notifySms', icon: '📱', label: 'SMS', comingSoon: true },
+  { key: 'notifyWhatsapp', icon: '💬', label: 'WhatsApp', comingSoon: false },
+  { key: 'notifyLowBalance', icon: '💰', label: 'Alertes solde bas', comingSoon: false },
+  { key: 'notifyDailyReport', icon: '📊', label: 'Rapport quotidien', comingSoon: false },
+  { key: 'notifyWeeklyReport', icon: '📈', label: 'Rapport hebdomadaire', comingSoon: false },
 ];
 
 export default function AccountPage() {
@@ -294,10 +296,14 @@ export default function AccountPage() {
 
   return (
     <div className="client-page-scrollable">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Compte & <span className="fz-logo-word">Crédits</span></h1>
-          <p className="page-subtitle">Votre profil, votre taux, vos crédits</p>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.account.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.account.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.account.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.account.helpText} />
         </div>
       </div>
 
@@ -343,7 +349,7 @@ export default function AccountPage() {
           <div className="section-title">Code de parrainage</div>
           <div className="card flex-between items-center flex-wrap gap-12">
             <div className="flex items-center gap-12">
-              <span style={{ fontSize: 28 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>redeem</span></span>
+              <span style={{ fontSize: 28 }}>🎁</span>
               <div>
                 <div className="text-md font-bold">Invitez vos amis, gagnez 20 EUR de crédits</div>
                 <div className="text-sm text-secondary" style={{ marginTop: 2 }}>
@@ -353,7 +359,7 @@ export default function AccountPage() {
             </div>
             <div className="flex gap-8">
               <button onClick={copyReferralCode} className="btn btn-primary btn-sm">
-                {copied ? 'Copie !' : 'Copier le lien'}
+                {copied ? '✅ Copie !' : '📋 Copier le lien'}
               </button>
               <Link href="/client/referrals" className="btn btn-secondary btn-sm">
                 Details &rarr;
@@ -386,7 +392,7 @@ export default function AccountPage() {
           <div className="separator" />
           <div>
             <div className="text-xs text-muted mb-4">Clé API</div>
-            <code className="text-sm text-mono text-tertiary rounded-sm" style={{ background: 'var(--bg-primary)', padding: '4px 8px' }}>
+            <code className="text-sm text-mono text-tertiary rounded-sm" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', padding: '4px 8px' }}>
               {session.apiKey ? `${(session.apiKey as string).slice(0, 12)}...` : 'Non disponible'}
             </code>
           </div>
@@ -395,9 +401,9 @@ export default function AccountPage() {
 
       {/* Wallet */}
       <div className="section">
-        <div className="section-title">Wallet & Crédits</div>
+        <div className="section-title">💰 Wallet & Crédits</div>
         {loading ? (
-          <div className="card"><div className="animate-pulse" style={{ color: 'var(--text-muted)' }}>Chargement...</div></div>
+          <div className="card"><div className="animate-pulse" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div></div>
         ) : (
           <div className="grid-3">
             <div className="stat-card">
@@ -433,7 +439,7 @@ export default function AccountPage() {
             {DEPOSIT_OPTIONS.map(opt => (
               <div key={opt.id} className="card card-lift text-center" style={{
                 padding: 16, position: 'relative',
-                borderColor: opt.popular ? '#7c3aed' : 'var(--border-primary)',
+                borderColor: opt.popular ? '#7c3aed' : 'var(--fz-border, #E2E8F0)',
                 borderWidth: opt.popular ? 2 : 1,
               }}>
                 {opt.popular && (
@@ -445,7 +451,7 @@ export default function AccountPage() {
                     POPULAIRE
                   </div>
                 )}
-                <div className="mb-4" style={{ fontSize: 24, marginTop: opt.popular ? 6 : 0 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{opt.icon}</span></div>
+                <div className="mb-4" style={{ fontSize: 24, marginTop: opt.popular ? 6 : 0 }}>💳</div>
                 <div className="font-bold" style={{ fontSize: 24, marginBottom: 2 }}>{opt.amount}€</div>
                 <div className="text-sm text-secondary mb-8">{(opt.amount * 100).toLocaleString()} crédits</div>
                 <button className="btn btn-primary btn-sm w-full"
@@ -459,9 +465,9 @@ export default function AccountPage() {
       </div>
 
       {/* Auto-Recharge */}
-      <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 24, marginTop: 24 }}>
-        <h3 className="font-bold text-lg mb-4"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>refresh</span> Recharge Automatique</h3>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
+      <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 24, marginTop: 24 }}>
+        <h3 className="font-bold text-lg mb-4">🔄 Recharge Automatique</h3>
+        <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 16 }}>
           Activez la recharge <span className="fz-logo-word">automatique</span> pour ne jamais manquer de crédits.
           Sans Stripe, un administrateur traitera votre demande manuellement.
         </p>
@@ -491,8 +497,8 @@ export default function AccountPage() {
                 min={1}
                 className="w-full"
                 style={{
-                  padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14,
+                  padding: '8px 12px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontSize: 14,
                 }}
               />
               <small className="text-xs text-muted" style={{ display: 'block', marginTop: 4 }}>
@@ -510,8 +516,8 @@ export default function AccountPage() {
                 min={1}
                 className="w-full"
                 style={{
-                  padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14,
+                  padding: '8px 12px', borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)',
+                  background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontSize: 14,
                 }}
               />
               <small className="text-xs text-muted" style={{ display: 'block', marginTop: 4 }}>
@@ -524,7 +530,7 @@ export default function AccountPage() {
                 disabled={autoTopupLoading}
                 className="btn btn-primary btn-sm"
               >
-                {autoTopupLoading ? 'Sauvegarde...' : autoTopupSaved ? 'Sauvegarde !' : 'Sauvegarder'}
+                {autoTopupLoading ? 'Sauvegarde...' : autoTopupSaved ? '✅ Sauvegarde !' : 'Sauvegarder'}
               </button>
               {autoTopupSaved && (
                 <span className="text-sm text-success" style={{ marginLeft: 12 }}>
@@ -537,9 +543,9 @@ export default function AccountPage() {
       </div>
 
       {/* Type de compte */}
-      <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 24, marginTop: 24 }}>
-        <h3 className="font-bold text-lg mb-4"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>label</span> Type de compte</h3>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
+      <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 24, marginTop: 24 }}>
+        <h3 className="font-bold text-lg mb-4">🏷️ Type de compte</h3>
+        <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 16 }}>
           Activez le mode Entreprise pour accéder aux modules business et à la section «&nbsp;Mon Entreprise&nbsp;» dans le menu.
         </p>
         <div style={{ display: 'flex', gap: 12 }}>
@@ -547,38 +553,38 @@ export default function AccountPage() {
             onClick={() => toggleProMode(false)}
             style={{
               flex: 1, padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
-              border: `2px solid ${!isPro ? 'var(--accent)' : 'var(--border-primary)'}`,
+              border: `2px solid ${!isPro ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
               background: !isPro ? 'var(--accent-muted)' : 'transparent',
               textAlign: 'center', transition: 'all 0.2s',
             }}
           >
-            <div style={{ fontSize: 24, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>person</span></div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: !isPro ? 'var(--accent)' : 'var(--text-primary)' }}>Personnel</div>
+            <div style={{ fontSize: 24, marginBottom: 4 }}>👤</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: !isPro ? 'var(--accent)' : 'var(--fz-text, #1E293B)' }}>Personnel</div>
           </button>
           <button
             onClick={() => toggleProMode(true)}
             style={{
               flex: 1, padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
-              border: `2px solid ${isPro ? 'var(--accent)' : 'var(--border-primary)'}`,
+              border: `2px solid ${isPro ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
               background: isPro ? 'var(--accent-muted)' : 'transparent',
               textAlign: 'center', transition: 'all 0.2s',
             }}
           >
-            <div style={{ fontSize: 24, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>business</span></div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: isPro ? 'var(--accent)' : 'var(--text-primary)' }}>Entreprise</div>
+            <div style={{ fontSize: 24, marginBottom: 4 }}>🏢</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: isPro ? 'var(--accent)' : 'var(--fz-text, #1E293B)' }}>Entreprise</div>
           </button>
         </div>
         {isPro && (
           <p className="text-xs text-success" style={{ marginTop: 10 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>check_circle</span> Section «&nbsp;Mon Entreprise&nbsp;» activée dans le menu — rechargez la page pour voir les changements.
+            ✅ Section «&nbsp;Mon Entreprise&nbsp;» activée dans le menu — rechargez la page pour voir les changements.
           </p>
         )}
       </div>
 
       {/* Notification Preferences */}
-      <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: 24, marginTop: 24 }}>
-        <h3 className="font-bold text-lg mb-4"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>notifications</span> Preferences de Notification</h3>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
+      <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 24, marginTop: 24 }}>
+        <h3 className="font-bold text-lg mb-4">🔔 Preferences de Notification</h3>
+        <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 16 }}>
           Choisissez comment vous souhaitez etre notifie.
         </p>
 
@@ -588,10 +594,10 @@ export default function AccountPage() {
               key={channel.key}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: 12,
-                borderRadius: 8, border: '1px solid var(--border-color, var(--border-primary))',
+                borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)',
                 cursor: channel.comingSoon ? 'not-allowed' : 'pointer',
                 opacity: channel.comingSoon ? 0.6 : 1,
-                background: notifPrefs[channel.key] ? 'var(--bg-elevated, var(--bg-primary))' : 'transparent',
+                background: notifPrefs[channel.key] ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
                 transition: 'background 0.15s',
               }}
             >
@@ -602,7 +608,7 @@ export default function AccountPage() {
                 onChange={() => setNotifPrefs(prev => ({ ...prev, [channel.key]: !prev[channel.key] }))}
                 style={{ width: 16, height: 16, cursor: channel.comingSoon ? 'not-allowed' : 'pointer' }}
               />
-              <span className="text-md"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{channel.icon}</span> {channel.label}</span>
+              <span className="text-md">{channel.icon} {channel.label}</span>
               {channel.comingSoon && (
                 <span className="badge badge-warning" style={{ fontSize: 10, marginLeft: 'auto', padding: '2px 6px' }}>
                   Bientot
@@ -618,7 +624,7 @@ export default function AccountPage() {
             disabled={notifLoading}
             className="btn btn-primary btn-sm"
           >
-            {notifLoading ? 'Sauvegarde...' : notifSaved ? 'Sauvegarde !' : 'Sauvegarder les preferences'}
+            {notifLoading ? 'Sauvegarde...' : notifSaved ? '✅ Sauvegarde !' : 'Sauvegarder les preferences'}
           </button>
           {notifSaved && (
             <span className="text-sm text-success">
@@ -632,16 +638,16 @@ export default function AccountPage() {
       <div className="card mt-16 p-16">
         <h3 className="font-bold text-lg mb-16">Canaux de communication</h3>
         {[
-          { icon: 'phone_iphone', name: 'WhatsApp', desc: 'Parlez a vos agents par message et notes vocales', status: 'Bientot' },
-          { icon: 'chat', name: 'SMS', desc: 'Recevez des alertes et rapports par SMS', status: 'Bientot' },
-          { icon: 'mail', name: 'Email', desc: 'Notifications et rapports par email', status: 'Bientot' },
-          { icon: 'mic', name: 'Voix (Deepgram)', desc: 'Dictez vos messages et ecoutez les reponses', status: 'Actif' },
+          { icon: '📱', name: 'WhatsApp', desc: 'Parlez a vos agents par message et notes vocales', status: 'Bientot' },
+          { icon: '💬', name: 'SMS', desc: 'Recevez des alertes et rapports par SMS', status: 'Bientot' },
+          { icon: '📧', name: 'Email', desc: 'Notifications et rapports par email', status: 'Bientot' },
+          { icon: '🎙️', name: 'Voix (Deepgram)', desc: 'Dictez vos messages et ecoutez les reponses', status: 'Actif' },
         ].map((ch, i, arr) => (
           <div key={ch.name} className="flex-between items-center" style={{
-            padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--border-primary)' : 'none',
+            padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
           }}>
             <div className="flex items-center gap-8">
-              <span style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>{ch.icon}</span></span>
+              <span style={{ fontSize: 20 }}>{ch.icon}</span>
               <div>
                 <div className="text-base font-semibold">{ch.name}</div>
                 <div className="text-sm text-muted">{ch.desc}</div>
@@ -657,16 +663,16 @@ export default function AccountPage() {
         <h3 className="font-bold text-lg mb-12">Integrations</h3>
         <div className="grid-auto gap-12" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
           {[
-            { icon: 'record_voice_over', title: 'Voix Premium (ElevenLabs)', desc: 'Voix ultra-realistes', active: true },
-            { icon: 'videocam', title: 'Avatar Video (D-ID)', desc: 'Vos agents en video', active: false },
-            { icon: 'phone_iphone', title: 'WhatsApp Business', desc: 'Vos agents sur WhatsApp', active: false },
+            { icon: '🎙️', title: 'Voix Premium (ElevenLabs)', desc: 'Voix ultra-realistes', active: true },
+            { icon: '🎬', title: 'Avatar Video (D-ID)', desc: 'Vos agents en video', active: false },
+            { icon: '📱', title: 'WhatsApp Business', desc: 'Vos agents sur WhatsApp', active: false },
           ].map(item => (
             <div key={item.title} className="border rounded-md p-12" style={{
-              background: item.active ? '#22c55e08' : 'var(--bg-primary)',
+              background: item.active ? '#22c55e08' : 'var(--fz-bg, #FFFFFF)',
               borderColor: item.active ? '#22c55e44' : undefined,
             }}>
               <div className="flex-between items-center mb-4">
-                <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{item.icon}</span></span>
+                <span style={{ fontSize: 22 }}>{item.icon}</span>
                 <span className={`badge ${item.active ? 'badge-success' : 'badge-warning'}`} style={{ fontSize: 10 }}>
                   {item.active ? 'Actif' : 'Bientot'}
                 </span>
@@ -701,9 +707,9 @@ export default function AccountPage() {
 
       {/* Sessions */}
       <div className="section">
-        <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>lock</span> Appareils connectés</div>
+        <div className="section-title">🔒 Appareils connectés</div>
         {sessions.length === 0 ? (
-          <div className="card text-center" style={{ padding: '24px', color: 'var(--text-tertiary)', fontSize: 13 }}>
+          <div className="card text-center" style={{ padding: '24px', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>
             Aucune session active trouvée
           </div>
         ) : (
@@ -711,7 +717,7 @@ export default function AccountPage() {
             {sessions.map(s => (
               <div key={s.jti} className="card" style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ fontSize: 22, flexShrink: 0 }}>
-                  {/mobile|android|iphone/i.test(s.userAgent ?? '') ? 'phone_iphone' : 'terminal'}
+                  {/mobile|android|iphone/i.test(s.userAgent ?? '') ? '📱' : '💻'}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -722,7 +728,7 @@ export default function AccountPage() {
                       </span>
                     )}
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                     {s.ip ? `IP: ${s.ip} · ` : ''}
                     {s.lastSeen ? `Dernière activité: ${new Date(s.lastSeen).toLocaleString('fr-FR')}` : `Créée le ${new Date(s.createdAt).toLocaleDateString('fr-FR')}`}
                   </div>
@@ -744,24 +750,24 @@ export default function AccountPage() {
       {/* Invoices */}
       {invoices.length > 0 && (
         <div className="section">
-          <div className="section-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>receipt</span> Factures</div>
+          <div className="section-title">🧾 Factures</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {invoices.slice(0, 10).map(inv => (
               <div key={inv.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ fontSize: 20, flexShrink: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 20 }}>receipt</span></div>
+                <div style={{ fontSize: 20, flexShrink: 0 }}>🧾</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 13 }}>
                     Dépôt de {(Number(inv.amount ?? 0) / 1_000_000).toFixed(0)} crédits
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                     {new Date(inv.createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </div>
                 </div>
                 <button
                   onClick={() => downloadInvoice(inv.transactionId ?? inv.id)}
-                  style={{ fontSize: 12, fontWeight: 600, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', cursor: 'pointer', flexShrink: 0 }}
+                  style={{ fontSize: 12, fontWeight: 600, padding: '6px 12px', borderRadius: 6, border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text, #1E293B)', cursor: 'pointer', flexShrink: 0 }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span> Télécharger
+                  ⬇️ Télécharger
                 </button>
               </div>
             ))}

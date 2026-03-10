@@ -5,6 +5,8 @@ import { useUserData } from '../../../lib/use-user-data';
 import { ALL_AGENTS } from '../../../lib/agent-config';
 import { ACTION_TYPE_ICONS, ACTION_TYPE_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDueDate } from '../../../lib/action-parser';
 import { SlideOver } from '../../../components/SlideOver';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 // ─── Types ───
 
@@ -173,19 +175,24 @@ export default function ActionsPage() {
   return (
     <div className="client-page-scrollable">
       {/* Header */}
-      <div className="flex flex-between items-center mb-8 flex-wrap gap-6">
-        <div>
-          <h1 className="text-xl font-bold">Centre d&apos;<span className="fz-logo-word">actions</span></h1>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Actions proposées par vos <span className="fz-logo-word">agents</span>, suivi et exécution
-          </p>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 28 }}>{PAGE_META.actions.emoji}</span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>{PAGE_META.actions.title}</h1>
+            <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', margin: '2px 0 0' }}>{PAGE_META.actions.subtitle}</p>
+          </div>
+          <HelpBubble text={PAGE_META.actions.helpText} />
         </div>
+      </div>
+      <div className="flex flex-between items-center mb-8 flex-wrap gap-6">
+        <div />
         <div className="flex gap-6 items-center">
           <button
             onClick={() => setViewMode(viewMode === 'kanban' ? 'list' : 'kanban')}
             className="btn btn-secondary btn-sm"
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{viewMode === 'kanban' ? 'assignment' : 'bar_chart'}</span> {viewMode === 'kanban' ? 'Liste' : 'Kanban'}
+            {viewMode === 'kanban' ? '📋' : '📊'} {viewMode === 'kanban' ? 'Liste' : 'Kanban'}
           </button>
           <button
             onClick={() => setShowAddModal(true)}
@@ -201,7 +208,7 @@ export default function ActionsPage() {
       {stats && (
         <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))' }}>
           {[
-            { label: 'Total', value: stats.total, color: 'var(--text-primary)' },
+            { label: 'Total', value: stats.total, color: 'var(--fz-text, #1E293B)' },
             { label: 'Proposées', value: stats.proposed, color: '#8B5CF6' },
             { label: 'À faire', value: stats.accepted, color: '#3B82F6' },
             { label: 'En cours', value: stats.inProgress, color: '#F59E0B' },
@@ -209,10 +216,10 @@ export default function ActionsPage() {
             { label: 'En retard', value: overdueCount, color: '#EF4444' },
           ].map(s => (
             <div key={s.label} className="rounded-sm" style={{
-              padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(12px)',
+              padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)',
+              borderRadius: 8,
             }}>
-              <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+              <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{s.label}</div>
               <div className="text-lg font-bold" style={{ color: s.color }}>{s.value}</div>
             </div>
           ))}
@@ -250,7 +257,7 @@ export default function ActionsPage() {
             className="input"
             style={{ fontSize: 12, padding: '4px 8px', width: 'auto' }}
           >
-            <option value="">Tous les agents</option>
+            <option value="">Tous les assistants</option>
             {usedAgents.map(a => (
               <option key={a} value={a}>{getAgentEmoji(a)} {getAgentName(a)}</option>
             ))}
@@ -260,7 +267,7 @@ export default function ActionsPage() {
 
       {/* Loading */}
       {loading && (
-        <div className="text-center" style={{ padding: '40px', color: 'var(--text-secondary)' }}>
+        <div className="text-center" style={{ padding: '40px', color: 'var(--fz-text-secondary, #64748B)' }}>
           Chargement...
         </div>
       )}
@@ -268,13 +275,13 @@ export default function ActionsPage() {
       {/* Empty state */}
       {!loading && actions.length === 0 && (
         <div className="text-center" style={{
-          padding: '60px 20px', background: 'rgba(255,255,255,0.05)',
-          borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)',
+          padding: '60px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)',
+          borderRadius: 8, border: '1px solid var(--fz-border, #E2E8F0)',
         }}>
-          <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>bolt</span></div>
-          <h3 className="text-lg font-semibold mb-4">Aucune action pour le moment</h3>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)', maxWidth: 400, margin: '0 auto' }}>
-            Discutez avec vos agents dans le chat — ils proposeront des actions concrètes
+          <div style={{ marginBottom: 12, fontSize: 48 }}>⚡</div>
+          <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>Aucune action pour le moment</h3>
+          <p className="text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)', maxWidth: 400, margin: '0 auto' }}>
+            Discutez avec vos assistants dans le chat — ils proposeront des actions concrètes
             à la fin de vos conversations.
           </p>
         </div>
@@ -288,7 +295,7 @@ export default function ActionsPage() {
               <div className="flex items-center gap-6 mb-6" style={{ padding: '0 4px' }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
                 <span className="text-sm font-semibold">{col.label}</span>
-                <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                   {actionsForColumn(col.id).length}
                 </span>
               </div>
@@ -316,14 +323,14 @@ export default function ActionsPage() {
               className="flex items-center gap-8 rounded-sm cursor-pointer"
               onClick={() => setSelectedAction(action)}
               style={{
-                padding: '10px 12px', background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                padding: '10px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)',
+                border: '1px solid var(--fz-border, #E2E8F0)',
               }}
             >
-              <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? <span className="material-symbols-rounded" style={{ fontSize: 16 }}>bolt</span>}</span>
+              <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
               <div style={{ flex: 1 }}>
                 <div className="text-sm font-medium">{action.title}</div>
-                <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
                   {ACTION_TYPE_LABELS[action.type] ?? action.type}
                   {action.sourceAgent && ` · ${getAgentEmoji(action.sourceAgent)} ${getAgentName(action.sourceAgent)}`}
                 </div>
@@ -335,12 +342,12 @@ export default function ActionsPage() {
               }}>
                 {PRIORITY_LABELS[action.priority] ?? action.priority}
               </span>
-              <span className="text-xs" style={{ color: 'var(--text-tertiary)', minWidth: 80 }}>
+              <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)', minWidth: 80 }}>
                 {COLUMNS.find(c => c.id === action.status)?.label ?? action.status}
               </span>
               {action.dueDate && (
                 <span className="text-xs" style={{
-                  color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--text-tertiary)',
+                  color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--fz-text-muted, #94A3B8)',
                 }}>
                   {formatDueDate(action.dueDate)}
                 </span>
@@ -404,17 +411,17 @@ function ActionCard({
       onClick={onClick}
       style={{
         padding: '10px 12px',
-        background: 'rgba(255,255,255,0.05)',
-        border: isOverdue ? '1px solid #EF444444' : '1px solid rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(12px)',
+        background: 'var(--fz-bg-secondary, #F8FAFC)',
+        border: isOverdue ? '1px solid #EF444444' : '1px solid var(--fz-border, #E2E8F0)',
+        borderRadius: 8,
       }}
     >
       <div className="flex items-center gap-6 mb-4">
-        <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[action.type] ?? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span>}</span>
+        <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
         <span className="text-sm font-medium" style={{ flex: 1, lineHeight: 1.3 }}>{action.title}</span>
       </div>
       {action.description && (
-        <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.3 }}>
+        <p className="text-xs mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.3 }}>
           {action.description.length > 80 ? action.description.slice(0, 80) + '...' : action.description}
         </p>
       )}
@@ -428,14 +435,14 @@ function ActionCard({
             {PRIORITY_LABELS[action.priority]}
           </span>
           {action.dueDate && (
-            <span className="text-xs" style={{ color: isOverdue ? '#EF4444' : 'var(--text-tertiary)' }}>
+            <span className="text-xs" style={{ color: isOverdue ? '#EF4444' : 'var(--fz-text-muted, #94A3B8)' }}>
               {formatDueDate(action.dueDate)}
             </span>
           )}
         </div>
         {action.sourceAgent && (
           <span className="text-xs" title={getAgentName(action.sourceAgent)}>
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{getAgentMaterialIcon(action.sourceAgent)}</span>
+            {getAgentEmoji(action.sourceAgent) || '🤖'}
           </span>
         )}
       </div>
@@ -498,7 +505,7 @@ function ActionDetailPanel({
     <div className="flex flex-col gap-8">
       {/* Status timeline */}
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Statut</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Statut</label>
         <div className="flex gap-4">
           {COLUMNS.map((col, i) => (
             <button
@@ -508,8 +515,8 @@ function ActionDetailPanel({
               style={{
                 fontSize: 11, flex: 1,
                 background: action.status === col.id ? `${col.color}22` : 'transparent',
-                color: action.status === col.id ? col.color : 'var(--text-secondary)',
-                borderColor: action.status === col.id ? `${col.color}44` : 'var(--border)',
+                color: action.status === col.id ? col.color : 'var(--fz-text-secondary, #64748B)',
+                borderColor: action.status === col.id ? `${col.color}44` : 'var(--fz-border, #E2E8F0)',
                 fontWeight: action.status === col.id ? 600 : 400,
               }}
             >
@@ -522,7 +529,7 @@ function ActionDetailPanel({
       {/* Description */}
       {action.description && (
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Description</label>
+          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Description</label>
           <p className="text-sm" style={{ lineHeight: 1.5 }}>{action.description}</p>
         </div>
       )}
@@ -530,33 +537,33 @@ function ActionDetailPanel({
       {/* Metadata */}
       <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <div>
-          <label className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Type</label>
+          <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Type</label>
           <div className="text-sm">{ACTION_TYPE_ICONS[action.type]} {ACTION_TYPE_LABELS[action.type]}</div>
         </div>
         <div>
-          <label className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Priorité</label>
+          <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Priorité</label>
           <div className="text-sm" style={{ color: PRIORITY_COLORS[action.priority] }}>
             {PRIORITY_LABELS[action.priority]}
           </div>
         </div>
         {action.sourceAgent && (
           <div>
-            <label className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Agent source</label>
+            <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Assistant source</label>
             <div className="text-sm">{getAgentEmoji(action.sourceAgent)} {getAgentName(action.sourceAgent)}</div>
           </div>
         )}
         {action.dueDate && (
           <div>
-            <label className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Échéance</label>
+            <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Échéance</label>
             <div className="text-sm" style={{
-              color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--text-primary)',
+              color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--fz-text, #1E293B)',
             }}>
               {new Date(action.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
           </div>
         )}
         <div>
-          <label className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Créée le</label>
+          <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Créée le</label>
           <div className="text-sm">
             {new Date(action.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
           </div>
@@ -564,7 +571,7 @@ function ActionDetailPanel({
       </div>
 
       {/* Danger Zone */}
-      <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16, marginTop: 8 }}>
+      <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', paddingTop: 16, marginTop: 8 }}>
         <button
           onClick={onDelete}
           className="btn btn-sm"
@@ -616,7 +623,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Type</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Type</label>
         <select value={type} onChange={e => setType(e.target.value)} className="input" style={{ fontSize: 13 }}>
           {ALL_TYPES.map(t => (
             <option key={t} value={t}>{ACTION_TYPE_ICONS[t]} {ACTION_TYPE_LABELS[t]}</option>
@@ -624,7 +631,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
         </select>
       </div>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Titre *</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Titre *</label>
         <input
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -635,7 +642,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
         />
       </div>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Description</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Description</label>
         <textarea
           value={description}
           onChange={e => setDescription(e.target.value)}
@@ -647,7 +654,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
       </div>
       <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Priorité</label>
+          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Priorité</label>
           <select value={priority} onChange={e => setPriority(e.target.value)} className="input" style={{ fontSize: 13 }}>
             {ALL_PRIORITIES.map(p => (
               <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>
@@ -655,7 +662,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
           </select>
         </div>
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--text-secondary)', display: 'block' }}>Échéance</label>
+          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Échéance</label>
           <input
             type="date"
             value={dueDate}

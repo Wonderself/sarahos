@@ -7,13 +7,15 @@ import { recordEvent } from '../../../lib/gamification';
 import { DEFAULT_AGENTS, ALL_AGENTS, loadAgentConfigs, getEffectiveAgent, type ResolvedAgent } from '../../../lib/agent-config';
 import { recordAgentInteraction, recordFeedback, getBond, LEVEL_NAMES, LEVEL_ICONS } from '../../../lib/agent-bonding';
 import { parseActionProposals, ACTION_TYPE_ICONS, ACTION_TYPE_LABELS, PRIORITY_LABELS, PRIORITY_COLORS, formatDueDate, type ParsedActionProposal } from '../../../lib/action-parser';
+import HelpBubble from '../../../components/HelpBubble';
+import { PAGE_META } from '../../../lib/emoji-map';
 
 type CommMode = 'chat' | 'visio' | 'whatsapp' | 'repondeur';
 const COMM_TABS: { id: CommMode; label: string; icon: string }[] = [
-  { id: 'chat', label: 'Chat texte', icon: 'chat' },
-  { id: 'visio', label: 'Appel vocal', icon: 'mic' },
-  { id: 'whatsapp', label: 'WhatsApp', icon: 'phone_iphone' },
-  { id: 'repondeur', label: 'Répondeur IA', icon: 'call' },
+  { id: 'chat', label: 'Chat texte', icon: '💬' },
+  { id: 'visio', label: 'Appel vocal', icon: '🎤' },
+  { id: 'whatsapp', label: 'WhatsApp', icon: '📱' },
+  { id: 'repondeur', label: 'Répondeur IA', icon: '📞' },
 ];
 import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
@@ -690,6 +692,16 @@ export default function ChatPage() {
 
   return (
     <div className="chat-page">
+      {/* ═══ PAGE HEADER ═══ */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid var(--fz-border, #E2E8F0)`, background: 'var(--fz-bg, #FFFFFF)' }}>
+        <span style={{ fontSize: 28 }}>{PAGE_META.chat.emoji}</span>
+        <div style={{ flex: 1 }}>
+          <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.chat.title}</h1>
+          <p style={{ fontSize: 13, margin: 0, color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.chat.subtitle}</p>
+        </div>
+        <HelpBubble text={PAGE_META.chat.helpText} />
+      </div>
+
       {/* ═══ COMPACT HEADER ═══ */}
       <div className="chat-header-compact">
         {/* Agent info — clickable to open agent selector */}
@@ -700,7 +712,7 @@ export default function ChatPage() {
           <div style={{ minWidth: 0, flex: 1 }}>
             <div className="chat-header-agent-name">
               {selectedAgent.name}
-              {selectedAgent.isCustomized && <span className="material-symbols-rounded" style={{ fontSize: 9, marginLeft: 4, color: 'var(--accent)' }}>auto_awesome</span>}
+              {selectedAgent.isCustomized && <span style={{ fontSize: 9, marginLeft: 4, color: 'var(--accent)' }}>✨</span>}
             </div>
             <div className="chat-header-agent-status">
               {selectedAgent.role} · {totalTokens.toLocaleString()} tokens
@@ -710,7 +722,7 @@ export default function ChatPage() {
               })()}
             </div>
           </div>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>&#9662;</span>
+          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>&#9662;</span>
         </div>
 
         {/* Actions menu */}
@@ -726,34 +738,34 @@ export default function ChatPage() {
           {showActionsMenu && (
             <div style={{
               position: 'absolute', top: '100%', right: 0, marginTop: 4, zIndex: 20,
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 'var(--radius-md)', boxShadow: '0 0 40px rgba(124,58,237,0.15)',
+              background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)',
+              borderRadius: 'var(--radius-md)', boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
               backdropFilter: 'blur(12px)',
               minWidth: 180, padding: 4,
             }}>
               <button onClick={() => { setSearchActive(s => !s); setSearchQuery(''); setShowActionsMenu(false); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span> Rechercher
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                🔍 Rechercher
               </button>
               {messages.length > 0 && (
                 <button onClick={() => { exportConversation(); setShowActionsMenu(false); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
-                  ↓ Exporter
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                  📥 Exporter
                 </button>
               )}
               <button onClick={() => { setShowHistory(!showHistory); setShowActionsMenu(false); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>library_books</span> Historique {history.length > 0 && `(${history.length})`}
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                🕐 Historique {history.length > 0 && `(${history.length})`}
               </button>
               {faqEntries.length > 0 && (
                 <button onClick={() => { setShowFaqPanel(!showFaqPanel); setShowActionsMenu(false); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> FAQ ({faqEntries.filter(e => e.agentId === selectedAgent?.id).length})
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                  💡 FAQ ({faqEntries.filter(e => e.agentId === selectedAgent?.id).length})
                 </button>
               )}
               <button onClick={() => { setShowActionsMenu(false); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', borderRadius: 6, fontFamily: 'inherit' }}>
-                <Link href="/client/agents/customize" style={{ color: 'inherit', textDecoration: 'none' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>palette</span> Personnaliser</Link>
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                <Link href="/client/agents/customize" style={{ color: 'inherit', textDecoration: 'none' }}>🎨 Personnaliser</Link>
               </button>
             </div>
           )}
@@ -765,47 +777,47 @@ export default function ChatPage() {
 
       {/* ═══ SEARCH BAR ═══ */}
       {searchActive && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>search</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <span style={{ fontSize: 14 }}>🔍</span>
           <input
             autoFocus
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => e.key === 'Escape' && (setSearchActive(false), setSearchQuery(''))}
             placeholder="Rechercher dans la conversation..."
-            style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit' }}
+            style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 14, color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit' }}
           />
           {searchQuery && (
-            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
               {messages.filter(m => m.content.toLowerCase().includes(searchQuery.toLowerCase())).length} résultat(s)
             </span>
           )}
-          <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+          <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16 }}>✕</button>
         </div>
       )}
 
       {/* ═══ HISTORY PANEL ═══ */}
       {showHistory && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', maxHeight: 280, overflowY: 'auto', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', maxHeight: 280, overflowY: 'auto', background: 'var(--fz-bg-secondary, #F8FAFC)', backdropFilter: 'blur(12px)' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">Conversations récentes</span>
             <div className="flex gap-4">
               {history.length > 0 && (
                 <button onClick={clearHistory} className="btn btn-ghost btn-sm text-xs text-danger">Effacer tout</button>
               )}
-              <button onClick={() => setShowHistory(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+              <button onClick={() => setShowHistory(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16 }}>✕</button>
             </div>
           </div>
           {history.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--bg-primary)', borderRadius: 6, border: '1px solid var(--border-primary)' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 13 }}>search</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 6, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+              <span style={{ fontSize: 13 }}>🔍</span>
               <input
                 value={historySearchQuery}
                 onChange={e => setHistorySearchQuery(e.target.value)}
                 placeholder="Rechercher dans l'historique..."
-                style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 12, color: 'var(--text-primary)', fontFamily: 'inherit' }}
+                style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 12, color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit' }}
               />
-              {historySearchQuery && <button onClick={() => setHistorySearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 13 }}>close</span></button>}
+              {historySearchQuery && <button onClick={() => setHistorySearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>}
             </div>
           )}
           {history.length === 0 ? (
@@ -825,7 +837,7 @@ export default function ChatPage() {
                   className="flex items-center gap-8 rounded-sm border pointer w-full"
                   style={{
                     padding: '8px 12px',
-                    background: h.id === currentConvoId ? 'var(--accent-muted)' : 'var(--bg-primary)',
+                    background: h.id === currentConvoId ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
                     textAlign: 'left', fontFamily: 'var(--font-sans)',
                   }}
                 >
@@ -851,20 +863,20 @@ export default function ChatPage() {
 
       {/* ═══ FAQ PANEL ═══ */}
       {showFaqPanel && selectedAgent && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', maxHeight: 250, overflowY: 'auto', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', maxHeight: 250, overflowY: 'auto', background: 'var(--fz-bg-secondary, #F8FAFC)', backdropFilter: 'blur(12px)' }}>
           <div className="flex flex-between items-center mb-8">
-            <span className="text-md font-bold"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> FAQ de {selectedAgent.name}</span>
-            <button onClick={() => setShowFaqPanel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+            <span className="text-md font-bold">💡 FAQ de {selectedAgent.name}</span>
+            <button onClick={() => setShowFaqPanel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16 }}>✕</button>
           </div>
           <div className="text-xs text-muted mb-8">Réponses gratuites (0 token)</div>
           {faqEntries.filter(e => e.agentId === selectedAgent.id).length === 0 ? (
             <div className="text-sm text-muted" style={{ padding: '8px 0' }}>
-              Aucune FAQ pour cet agent. Cliquez &laquo; FAQ &raquo; sur une réponse pour la sauvegarder.
+              Aucune FAQ pour cet assistant. Cliquez &laquo; FAQ &raquo; sur une réponse pour la sauvegarder.
             </div>
           ) : (
             <div className="flex flex-col gap-4">
               {faqEntries.filter(e => e.agentId === selectedAgent.id).map(entry => (
-                <div key={entry.id} className="rounded-sm border" style={{ padding: '8px 12px', background: 'var(--bg-primary)' }}>
+                <div key={entry.id} className="rounded-sm border" style={{ padding: '8px 12px', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <div className="flex flex-between items-center">
                     <div className="text-sm font-semibold" style={{ flex: 1, minWidth: 0 }}>
                       Q: {entry.question.substring(0, 80)}{entry.question.length > 80 ? '...' : ''}
@@ -872,7 +884,7 @@ export default function ChatPage() {
                     <div className="flex gap-4 items-center">
                       <span className="text-xs text-success">Utilisée {entry.usedCount}x</span>
                       <button onClick={() => deleteFaqEntry(entry.id)} className="text-xs text-danger pointer"
-                        style={{ background: 'none', border: 'none', fontFamily: 'var(--font-sans)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span></button>
+                        style={{ background: 'none', border: 'none', fontFamily: 'var(--font-sans)' }}>✕</button>
                     </div>
                   </div>
                   <div className="text-xs text-muted truncate mt-4">R: {entry.answer.substring(0, 120)}...</div>
@@ -887,9 +899,9 @@ export default function ChatPage() {
       {commMode === 'visio' && (
         <div className="flex-1" style={{ overflowY: 'auto', padding: '24px 16px' }}>
           <div style={{ marginBottom: 20 }}>
-            <h2 className="text-lg font-bold" style={{ marginBottom: 6 }}>Appel vocal avec vos <span className="fz-logo-word">agents</span></h2>
+            <h2 className="text-lg font-bold" style={{ marginBottom: 6 }}>Appel vocal avec vos <span className="fz-logo-word">assistants</span></h2>
             <p className="text-sm text-secondary" style={{ lineHeight: 1.6 }}>
-              Parlez en temps réel avec vos agents IA. Micro + synthèse vocale <span className="fz-logo-word">ElevenLabs</span>.
+              Parlez en temps réel avec vos assistants IA. Micro + synthèse vocale <span className="fz-logo-word">ElevenLabs</span>.
             </p>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
@@ -926,14 +938,14 @@ export default function ChatPage() {
       {commMode === 'whatsapp' && (
         <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
           <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
-            <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>phone_iphone</span></div>
+            <div style={{ marginBottom: 16, fontSize: 48 }}>📱</div>
             <h2 className="text-xl font-bold mb-8">WhatsApp Business</h2>
             <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
-              Discutez avec vos <span className="fz-logo-word">agents IA</span> directement depuis WhatsApp.
+              Discutez avec vos <span className="fz-logo-word">assistants IA</span> directement depuis WhatsApp.
             </p>
             <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
               {['Messages texte et vocaux', 'Briefings quotidiens', 'Alertes en temps réel', 'Support multi-agents', 'Répondeur IA intégré'].map(f => (
-                <div key={f} className="flex items-center gap-8 text-sm"><span className="material-symbols-rounded" style={{ fontSize: 14, color: '#22c55e' }}>check_circle</span> {f}</div>
+                <div key={f} className="flex items-center gap-8 text-sm"><span style={{ fontSize: 14 }}>✅</span> {f}</div>
               ))}
             </div>
             <Link href="/client/whatsapp" className="btn btn-primary">Configurer WhatsApp →</Link>
@@ -945,14 +957,14 @@ export default function ChatPage() {
       {commMode === 'repondeur' && (
         <div className="flex-1 flex flex-center" style={{ padding: '40px 20px' }}>
           <div className="card" style={{ padding: 32, maxWidth: 500, textAlign: 'center' }}>
-            <div style={{ marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>call</span></div>
+            <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
             <h2 className="text-xl font-bold mb-8">Répondeur <span className="fz-logo-word">IA</span></h2>
             <p className="text-sm text-secondary mb-16" style={{ lineHeight: 1.6 }}>
               Votre standard téléphonique <span className="fz-logo-word">intelligent 24/7</span>.
             </p>
             <div className="flex flex-col gap-8 mb-20" style={{ textAlign: 'left' }}>
               {['7 modes de fonctionnement', '7 styles de réponse', '10 compétences IA', 'FAQ automatique', 'Détection VIP & anti-spam', 'Résumés horaires/quotidiens', 'Intégration Twilio complète'].map(f => (
-                <div key={f} className="flex items-center gap-8 text-sm"><span className="material-symbols-rounded" style={{ fontSize: 14, color: '#22c55e' }}>check_circle</span> {f}</div>
+                <div key={f} className="flex items-center gap-8 text-sm"><span style={{ fontSize: 14 }}>✅</span> {f}</div>
               ))}
             </div>
             <Link href="/client/repondeur" className="btn btn-primary">Configurer le répondeur →</Link>
@@ -968,10 +980,10 @@ export default function ChatPage() {
         {messages.length === 0 && (
           <div className="text-center text-tertiary" style={{ padding: '40px 12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <div className="mb-16" style={{ fontSize: 48 }}>{selectedAgent.emoji}</div>
-            <div className="text-xl font-semibold mb-8" style={{ color: 'var(--text-primary)' }}>
+            <div className="text-xl font-semibold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>
               Bonjour, je suis {selectedAgent.name}
             </div>
-            <div className="text-base" style={{ maxWidth: 400, margin: '0 auto', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+            <div className="text-base" style={{ maxWidth: 400, margin: '0 auto', lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
               Votre {selectedAgent.role}. Posez-moi vos questions, demandez-moi de rédiger, analyser, planifier...
             </div>
             {/* Agent Modes */}
@@ -1108,24 +1120,24 @@ export default function ChatPage() {
             {/* Reunions multi-agents */}
             <div style={{ marginTop: 32, textAlign: 'left', maxWidth: 600, margin: '32px auto 0' }}>
               <div className="flex items-center gap-8 mb-8" style={{ justifyContent: 'center' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>account_balance</span>
-                <span className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Reunions multi-agents</span>
+                <span style={{ fontSize: 20 }}>🏛️</span>
+                <span className="text-base font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>Reunions multi-assistants</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 8 }}>
                 {([
-                  { id: 'lancement-projet', emoji: 'rocket_launch', title: 'Lancement de projet', desc: 'Scope, roles et timeline' },
-                  { id: 'revue-trimestrielle', emoji: 'bar_chart', title: 'Revue trimestrielle', desc: 'Resultats et strategie' },
-                  { id: 'brainstorming-produit', emoji: 'lightbulb', title: 'Brainstorming', desc: 'Idees innovantes' },
-                  { id: 'resolution-crise', emoji: 'shield', title: 'Resolution de crise', desc: 'Situation urgente' },
-                  { id: 'planification-annuelle', emoji: 'calendar_month', title: 'Planification', desc: 'Vision et objectifs' },
-                  { id: 'partenariat-strategique', emoji: 'handshake', title: 'Partenariat', desc: 'Opportunites' },
+                  { id: 'lancement-projet', emoji: '🚀', title: 'Lancement de projet', desc: 'Scope, roles et timeline' },
+                  { id: 'revue-trimestrielle', emoji: '📊', title: 'Revue trimestrielle', desc: 'Resultats et strategie' },
+                  { id: 'brainstorming-produit', emoji: '💡', title: 'Brainstorming', desc: 'Idees innovantes' },
+                  { id: 'resolution-crise', emoji: '🛡️', title: 'Resolution de crise', desc: 'Situation urgente' },
+                  { id: 'planification-annuelle', emoji: '📅', title: 'Planification', desc: 'Vision et objectifs' },
+                  { id: 'partenariat-strategique', emoji: '🤝', title: 'Partenariat', desc: 'Opportunites' },
                 ] as const).map(tpl => (
                   <Link key={tpl.id} href={`/client/meeting?template=${tpl.id}`} style={{
                     display: 'block', padding: '10px 12px', borderRadius: 8,
-                    border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
                     textDecoration: 'none', color: 'inherit', transition: 'border-color 0.15s',
                   }}>
-                    <div className="text-sm font-semibold"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{tpl.emoji}</span> {tpl.title}</div>
+                    <div className="text-sm font-semibold">{tpl.emoji} {tpl.title}</div>
                     <div className="text-xs text-muted">{tpl.desc}</div>
                   </Link>
                 ))}
@@ -1138,7 +1150,7 @@ export default function ChatPage() {
             </div>
 
             <div className="flex items-center gap-6 mt-16" style={{ justifyContent: 'center' }}>
-              <span className="text-xs text-muted"><span className="material-symbols-rounded" style={{ fontSize: 12 }}>phone_iphone</span> Vous pouvez aussi discuter via</span>
+              <span className="text-xs text-muted">📱 Vous pouvez aussi discuter via</span>
               <Link href="/client/whatsapp" className="text-xs font-semibold" style={{ color: 'var(--accent)', textDecoration: 'none' }}>WhatsApp</Link>
             </div>
           </div>
@@ -1183,15 +1195,15 @@ export default function ChatPage() {
                         </span>
                       )}
                       <button onClick={() => copyMessage(msg.content, i)}
-                        style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--border-primary)', color: copiedIdx === i ? 'var(--success)' : 'var(--text-muted)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
+                        style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', color: copiedIdx === i ? 'var(--success)' : 'var(--fz-text-muted, #94A3B8)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
                         title="Copier">
-                        {copiedIdx === i ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> : <span className="material-symbols-rounded" style={{ fontSize: 10 }}>assignment</span>}
+                        {copiedIdx === i ? '✅' : '📋'}
                       </button>
                       {!msg.isFaq && i > 0 && messages[i - 1]?.role === 'user' && (
                         <button onClick={() => saveAsFaq(i - 1, i)}
-                          style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--border-primary)', color: savedFaqIdx === i ? '#22c55e' : 'var(--text-muted)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
+                          style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', color: savedFaqIdx === i ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
                           title="Sauvegarder en FAQ">
-                          {savedFaqIdx === i ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> : <span className="material-symbols-rounded" style={{ fontSize: 10 }}>save</span>}
+                          {savedFaqIdx === i ? '✅' : '💾'}
                         </button>
                       )}
                     </div>
@@ -1207,19 +1219,19 @@ export default function ChatPage() {
               <div style={{ display: 'flex', gap: 6, marginTop: 6, paddingLeft: 38 }}>
                 <button
                   onClick={() => { if (selectedAgent) { recordFeedback(selectedAgent.id, true); recordEvent({ type: 'agent_feedback' }); } setFeedbackGiven(prev => ({ ...prev, [i]: 'positive' })); }}
-                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
-                  Utile <span className="material-symbols-rounded" style={{ fontSize: 12 }}>thumb_up</span>
+                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', fontFamily: 'var(--font-sans)' }}>
+                  Utile 👍
                 </button>
                 <button
                   onClick={() => { if (selectedAgent) { recordFeedback(selectedAgent.id, false); recordEvent({ type: 'agent_feedback' }); } setFeedbackGiven(prev => ({ ...prev, [i]: 'negative' })); }}
-                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontFamily: 'var(--font-sans)' }}>
-                  A ameliorer <span className="material-symbols-rounded" style={{ fontSize: 12 }}>thumb_down</span>
+                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', fontFamily: 'var(--font-sans)' }}>
+                  A ameliorer 👎
                 </button>
               </div>
             )}
             {feedbackGiven[i] && (
               <div style={{ fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#22c55e' : '#f97316', marginTop: 4, fontWeight: 500, paddingLeft: 38 }}>
-                {feedbackGiven[i] === 'positive' ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>volunteer_activism</span> Merci pour votre retour !</> : 'Noté, on va s\'améliorer !'}
+                {feedbackGiven[i] === 'positive' ? <>🙏 Merci pour votre retour !</> : 'Noté, on va s\'améliorer !'}
               </div>
             )}
           </div>
@@ -1231,7 +1243,7 @@ export default function ChatPage() {
             <div className="chat-msg-avatar" style={{ background: selectedAgent.color + '22' }}>
               {selectedAgent.emoji}
             </div>
-            <div className="chat-msg-content" style={{ background: 'var(--bg-secondary)' }}>
+            <div className="chat-msg-content" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
               <div className="animate-pulse text-tertiary" style={{ fontSize: 14 }}>
                 {selectedAgent.name} réfléchit...
               </div>
@@ -1245,9 +1257,9 @@ export default function ChatPage() {
 
       {/* Action Proposals */}
       {actionProposals.length > 0 && !loading && (
-        <div style={{ padding: '8px 16px', borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', maxHeight: 200, overflowY: 'auto' }}>
+        <div style={{ padding: '8px 16px', borderTop: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', backdropFilter: 'blur(12px)', maxHeight: 200, overflowY: 'auto' }}>
           <div className="flex flex-between items-center mb-4">
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
+            <span className="text-sm font-semibold" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
               Actions proposées ({actionProposals.length})
             </span>
             {actionProposals.length > 1 && (
@@ -1279,22 +1291,22 @@ export default function ChatPage() {
             {actionProposals.map((p, i) => (
               <div key={i} className="rounded-sm" style={{
                 padding: '8px 12px', minWidth: 220, flexShrink: 0,
-                border: acceptedActions.has(i) ? '1px solid var(--success)' : '1px solid var(--border-primary)',
-                background: acceptedActions.has(i) ? 'var(--success-muted)' : 'var(--bg-primary)',
+                border: acceptedActions.has(i) ? '1px solid var(--success)' : '1px solid var(--fz-border, #E2E8F0)',
+                background: acceptedActions.has(i) ? 'var(--success-muted)' : 'var(--fz-bg, #FFFFFF)',
                 opacity: acceptedActions.has(i) ? 0.7 : 1,
               }}>
                 <div className="flex items-center gap-6 mb-2">
-                  <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[p.type] ?? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span>}</span>
+                  <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[p.type] ?? '⚡'}</span>
                   <span className="text-xs font-semibold" style={{ flex: 1 }}>{p.title}</span>
                   <span className="text-xs" style={{ padding: '1px 4px', borderRadius: 3, background: `${PRIORITY_COLORS[p.priority]}22`, color: PRIORITY_COLORS[p.priority] }}>
                     {PRIORITY_LABELS[p.priority] ?? p.priority}
                   </span>
                 </div>
-                {p.description && <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)', lineHeight: 1.3 }}>{p.description}</p>}
+                {p.description && <p className="text-xs mb-2" style={{ color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.3 }}>{p.description}</p>}
                 <div className="flex flex-between items-center">
-                  <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{ACTION_TYPE_LABELS[p.type] ?? p.type}{p.dueDate ? ` · ${formatDueDate(p.dueDate)}` : ''}</span>
+                  <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{ACTION_TYPE_LABELS[p.type] ?? p.type}{p.dueDate ? ` · ${formatDueDate(p.dueDate)}` : ''}</span>
                   {acceptedActions.has(i) ? (
-                    <span className="material-symbols-rounded text-xs font-medium" style={{ fontSize: 14, color: 'var(--success)' }}>check_circle</span>
+                    <span style={{ fontSize: 14, color: 'var(--success)' }}>✅</span>
                   ) : (
                     <button disabled={actionSaving} onClick={async () => {
                       setActionSaving(true);
@@ -1344,7 +1356,7 @@ export default function ChatPage() {
           padding: '6px 16px', background: 'var(--info-muted)', borderTop: '1px solid var(--info)',
         }}>
           <span className="text-xs font-medium" style={{ color: 'var(--info)' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Question fréquente ! Sauvegardez en FAQ (gratuit).
+            💡 Question fréquente ! Sauvegardez en FAQ (gratuit).
           </span>
           <div className="flex gap-4">
             <button onClick={() => {
@@ -1365,7 +1377,7 @@ export default function ChatPage() {
         <div className="flex flex-between items-center flex-wrap gap-6" style={{
           padding: '6px 16px', background: '#22c55e10', borderTop: '1px solid #22c55e33',
         }}>
-          <span className="text-xs font-semibold text-success"><span className="material-symbols-rounded" style={{ fontSize: 12 }}>lightbulb</span> FAQ trouvée — 0 token</span>
+          <span className="text-xs font-semibold text-success">💡 FAQ trouvée — 0 token</span>
           <div className="flex gap-4">
             <button onClick={() => useFaqAnswer(faqMatch)} className="btn btn-sm"
               style={{ fontSize: 10, background: '#22c55e', color: 'white', borderColor: '#22c55e' }}>Utiliser FAQ</button>
@@ -1392,7 +1404,7 @@ export default function ChatPage() {
                 resetTextareaHeight();
               }
             }}
-            placeholder={`Écrivez à ${selectedAgent?.name ?? 'votre agent'}...`}
+            placeholder={`Écrivez à ${selectedAgent?.name ?? 'votre assistant'}...`}
             rows={1}
             style={{ height: textareaHeight }}
           />
@@ -1400,7 +1412,7 @@ export default function ChatPage() {
         <div className="chat-send-modes">
           {input.trim() ? (
             <button className="chat-send-btn chat-send-text" onClick={() => { sendMessageStream(); resetTextareaHeight(); }} title="Envoyer">
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>send</span>
+              📤
             </button>
           ) : (
             <>
@@ -1411,7 +1423,7 @@ export default function ChatPage() {
               />
               <Link href={`/client/visio/${selectedAgent?.id ?? 'fz-assistante'}`}>
                 <button className="chat-send-btn chat-send-visio" title="Appel visio">
-                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>videocam</span>
+                  📹
                 </button>
               </Link>
             </>
@@ -1427,7 +1439,7 @@ export default function ChatPage() {
             className={`chat-mode-pill ${commMode === tab.id ? 'active' : ''}`}
             onClick={() => setCommMode(tab.id)}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{tab.icon}</span> {tab.label}
+            <span style={{ fontSize: 14 }}>{tab.icon}</span> {tab.label}
           </button>
         ))}
       </div>
@@ -1439,7 +1451,7 @@ export default function ChatPage() {
         <div className="agent-bottom-sheet-overlay open" onClick={() => setShowAgentSheet(false)} />
         <div className="agent-bottom-sheet open">
           <div className="agent-bottom-sheet-handle" />
-          <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Choisir un agent</div>
+          <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Choisir un assistant</div>
           {agents.map(agent => (
             <div
               key={agent.id}
@@ -1454,10 +1466,10 @@ export default function ChatPage() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{agent.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{agent.role}</div>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{agent.role}</div>
               </div>
-              {agent.isCustomized && <span style={{ fontSize: 10, color: 'var(--accent)' }}><span className="material-symbols-rounded" style={{ fontSize: 10 }}>auto_awesome</span> Perso</span>}
-              {selectedAgent.id === agent.id && <span className="material-symbols-rounded" style={{ color: 'var(--accent)', fontSize: 16 }}>check</span>}
+              {agent.isCustomized && <span style={{ fontSize: 10, color: 'var(--accent)' }}>✨ Perso</span>}
+              {selectedAgent.id === agent.id && <span style={{ color: 'var(--accent)', fontSize: 16 }}>✅</span>}
             </div>
           ))}
         </div>

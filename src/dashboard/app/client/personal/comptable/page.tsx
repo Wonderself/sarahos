@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,7 +37,7 @@ const TYPE_LABELS: Record<RecordType, string> = {
   invoice: 'Facture', expense: 'Dépense', revenue: 'Revenu',
 };
 const TYPE_ICONS: Record<RecordType, string> = {
-  invoice: 'receipt', expense: 'money_off', revenue: 'savings',
+  invoice: '🧾', expense: '💸', revenue: '💰',
 };
 const STATUS_LABELS: Record<RecordStatus, string> = {
   pending: 'En attente', paid: 'Payée', overdue: 'En retard', cancelled: 'Annulée',
@@ -192,7 +194,7 @@ export default function ComptablePage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>receipt</span></div>
+        <div style={{ fontSize: 40 }}>🧾</div>
         <div className="text-md text-tertiary animate-pulse">Chargement de la comptabilité...</div>
       </div>
     );
@@ -201,19 +203,20 @@ export default function ComptablePage() {
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto' }}>
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
         <div>
           <div style={{ marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--text-tertiary)', textDecoration: 'none' }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>receipt</span> Comptabilité</h1>
-          <p className="page-subtitle">Factures, dépenses et rappels fiscaux</p>
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.comptable.emoji} {PAGE_META.comptable.title}</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.comptable.subtitle}</p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={exportCSV} className="btn btn-ghost btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span> Export CSV</button>
-          <Link href="/client/chat?agent=fz-comptable" className="btn btn-primary btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>chat</span> fz-comptable</Link>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <HelpBubble text={PAGE_META.comptable.helpText} />
+          <button onClick={exportCSV} className="btn btn-ghost btn-sm">⬇️ Export CSV</button>
+          <Link href="/client/chat?agent=fz-comptable" className="btn btn-primary btn-sm">💬 fz-comptable</Link>
         </div>
       </div>
 
@@ -222,33 +225,33 @@ export default function ComptablePage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: `CA ${currentQ}`, value: fmt(totalCA), icon: 'savings', color: '#22c55e' },
-          { label: `Charges ${currentQ}`, value: fmt(totalCharges), icon: 'money_off', color: '#ef4444' },
-          { label: 'Bénéfice net', value: fmt(benef), icon: 'bar_chart', color: benef >= 0 ? '#22c55e' : '#ef4444' },
-          { label: 'En retard', value: `${overdueCount} facture${overdueCount !== 1 ? 's' : ''}`, icon: 'warning', color: overdueCount > 0 ? '#ef4444' : '#22c55e' },
+          { label: `CA ${currentQ}`, value: fmt(totalCA), icon: '💰', color: '#22c55e' },
+          { label: `Charges ${currentQ}`, value: fmt(totalCharges), icon: '💸', color: '#ef4444' },
+          { label: 'Bénéfice net', value: fmt(benef), icon: '📊', color: benef >= 0 ? '#22c55e' : '#ef4444' },
+          { label: 'En retard', value: `${overdueCount} facture${overdueCount !== 1 ? 's' : ''}`, icon: '⚠️', color: overdueCount > 0 ? '#ef4444' : '#22c55e' },
         ].map(s => (
           <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
-            <div style={{ fontSize: 22, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{s.icon}</span></div>
+            <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{s.label}</div>
+            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        {([['records', 'assignment', 'Enregistrements'], ['reminders', 'alarm', 'Rappels fiscaux'], ['recap', 'bar_chart', 'Récap trimestriel']] as [string, string, string][]).map(([t, icon, label]) => (
+        {([['records', '📋', 'Enregistrements'], ['reminders', '⏰', 'Rappels fiscaux'], ['recap', '📊', 'Récap trimestriel']] as [string, string, string][]).map(([t, icon, label]) => (
           <button
             key={t}
             onClick={() => setActiveTab(t as 'records' | 'reminders' | 'recap')}
             style={{
               padding: '8px 16px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              border: activeTab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--border-primary)',
-              background: activeTab === t ? 'var(--accent)' : 'var(--bg-secondary)',
-              color: activeTab === t ? '#fff' : 'var(--text-primary)',
+              border: activeTab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
+              background: activeTab === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              color: activeTab === t ? '#fff' : 'var(--fz-text, #1E293B)',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{icon}</span> {label}
+            {icon} {label}
           </button>
         ))}
       </div>
@@ -272,7 +275,7 @@ export default function ComptablePage() {
 
           {displayed.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>receipt</span></div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>🧾</div>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun enregistrement</div>
               <button onClick={() => setShowRecordModal(true)} className="btn btn-primary btn-sm">+ Première entrée</button>
             </div>
@@ -280,15 +283,15 @@ export default function ComptablePage() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-primary)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
                     {['Type', 'Libellé', 'Montant', 'Statut', 'Date', 'Référence', ''].map(h => (
-                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {displayed.map(r => (
-                    <tr key={r.id} style={{ borderBottom: '1px solid var(--border-primary)' }}>
+                    <tr key={r.id} style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
                       <td style={{ padding: '10px 12px', fontSize: 13 }}>{TYPE_ICONS[r.type]} {TYPE_LABELS[r.type]}</td>
                       <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 600 }}>{r.label}</td>
                       <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: r.type === 'expense' ? '#ef4444' : '#22c55e' }}>
@@ -302,12 +305,12 @@ export default function ComptablePage() {
                           {STATUS_LABELS[r.status]}
                         </span>
                       </td>
-                      <td style={{ padding: '10px 12px', fontSize: 12, color: 'var(--text-tertiary)' }}>
+                      <td style={{ padding: '10px 12px', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                         {new Date(r.date).toLocaleDateString('fr-FR')}
                       </td>
-                      <td style={{ padding: '10px 12px', fontSize: 12, color: 'var(--text-tertiary)' }}>{r.reference ?? '—'}</td>
+                      <td style={{ padding: '10px 12px', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{r.reference ?? '—'}</td>
                       <td style={{ padding: '10px 12px' }}>
-                        <button onClick={() => handleDeleteRecord(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 14 }}>×</button>
+                        <button onClick={() => handleDeleteRecord(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>×</button>
                       </td>
                     </tr>
                   ))}
@@ -326,9 +329,9 @@ export default function ComptablePage() {
           </div>
           {reminders.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>alarm</span></div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>⏰</div>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun rappel fiscal</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
                 TVA, IS, URSSAF... configurez vos rappels pour ne rien oublier
               </div>
               <button onClick={() => setShowReminderModal(true)} className="btn btn-primary btn-sm">+ Ajouter un rappel</button>
@@ -352,14 +355,14 @@ export default function ComptablePage() {
                         style={{ width: 16, height: 16, cursor: 'pointer', flexShrink: 0 }}
                       />
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', textDecoration: r.is_done ? 'line-through' : 'none' }}>
+                        <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)', textDecoration: r.is_done ? 'line-through' : 'none' }}>
                           {r.title}
                         </div>
-                        {r.note && <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{r.note}</div>}
+                        {r.note && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{r.note}</div>}
                       </div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: isOverdue ? '#ef4444' : 'var(--text-tertiary)', flexShrink: 0 }}>
-                        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>calendar_month</span> {new Date(r.due_date).toLocaleDateString('fr-FR')}
-                        {isOverdue && <span style={{ marginLeft: 4, color: '#ef4444' }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>warning</span> En retard</span>}
+                      <div style={{ fontSize: 12, fontWeight: 600, color: isOverdue ? '#ef4444' : 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>
+                        📅 {new Date(r.due_date).toLocaleDateString('fr-FR')}
+                        {isOverdue && <span style={{ marginLeft: 4, color: '#ef4444' }}>⚠️ En retard</span>}
                       </div>
                     </div>
                   );
@@ -383,14 +386,14 @@ export default function ComptablePage() {
                 <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 16 }}>{q} {year}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>CA Brut</span>
+                    <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>CA Brut</span>
                     <span style={{ fontWeight: 700, color: '#22c55e' }}>{fmt(ca)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Charges</span>
+                    <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Charges</span>
                     <span style={{ fontWeight: 700, color: '#ef4444' }}>{fmt(charges)}</span>
                   </div>
-                  <div style={{ borderTop: '1px solid var(--border-primary)', paddingTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                  <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', paddingTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
                     <span style={{ fontWeight: 700 }}>Bénéfice net</span>
                     <span style={{ fontWeight: 700, color: net >= 0 ? '#22c55e' : '#ef4444' }}>{fmt(net)}</span>
                   </div>
@@ -405,7 +408,7 @@ export default function ComptablePage() {
       {showRecordModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 460, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>add_circle</span> Nouvel enregistrement</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Nouvel enregistrement</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
@@ -454,7 +457,7 @@ export default function ComptablePage() {
       {showReminderModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 380, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>alarm</span> Nouveau rappel fiscal</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>⏰ Nouveau rappel fiscal</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Titre</label>

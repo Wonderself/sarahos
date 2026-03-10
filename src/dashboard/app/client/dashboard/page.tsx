@@ -7,10 +7,8 @@ import type { AgentTypeId } from '../../../lib/agent-config';
 import FreenzyWelcome from '../../../components/FreenzyWelcome';
 import { useToast } from '../../../components/Toast';
 import { useIsMobile } from '../../../lib/use-media-query';
-import HomeScreenIcon from '../../../components/HomeScreenIcon';
-import { KpiWidget, BriefingWidget, TasksWidget } from '../../../components/HomeScreenWidget';
-import { DEFAULT_APPS, loadLayout, saveLayout, getOrderedApps, getAppsBySection, getDockApps } from '../../../lib/home-screen-apps';
-import type { HomeScreenLayout } from '../../../lib/home-screen-apps';
+import HelpBubble from '../../../components/HelpBubble';
+import { QUICK_ACTIONS, FEATURE_SECTIONS } from '../../../lib/emoji-map';
 
 // ─── Types ───
 
@@ -226,7 +224,7 @@ export default function ClientDashboard() {
         body: JSON.stringify({
           token: s.token,
           model: 'claude-sonnet-4-20250514',
-          messages: [{ role: 'user', content: `Tu es l'assistante IA de Freenzy. Nous sommes le ${today}. Genere un briefing du jour concis (max 4 lignes). Contexte: ${companyProfile}. Stats: ${stats.totalMessages} messages, ${stats.totalDocuments} docs, streak ${stats.streak}j, ${activeAgentIds.length} agents. Structure: 1 salutation + 2-3 priorites concretes. Sois directe et actionnable. Francais.` }],
+          messages: [{ role: 'user', content: `Tu es l'assistante IA de Freenzy. Nous sommes le ${today}. Genere un briefing du jour concis (max 4 lignes). Contexte: ${companyProfile}. Stats: ${stats.totalMessages} messages, ${stats.totalDocuments} docs, streak ${stats.streak}j, ${activeAgentIds.length} assistants. Structure: 1 salutation + 2-3 priorites concretes. Sois directe et actionnable. Francais.` }],
           maxTokens: 300,
           agentName: 'fz-dg',
         }),
@@ -268,189 +266,286 @@ export default function ClientDashboard() {
   const todosDone = todos.filter(t => t.done).length;
   const todosTotal = todos.length;
 
-  // ─── Home Screen state ───
-  const [layout, setLayout] = useState<HomeScreenLayout | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [draggedId, setDraggedId] = useState<string | null>(null);
-  const [dragOverId, setDragOverId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLayout(loadLayout());
-  }, []);
-
-  const orderedApps = layout ? getOrderedApps(layout) : DEFAULT_APPS;
-  const sections = getAppsBySection(orderedApps);
-  const dockApps = layout ? getDockApps(layout) : [];
-  const dockIds = new Set(layout?.dockApps ?? []);
-
-  // ─── Drag handlers ───
-
-  function handleDragStart(_e: React.DragEvent<HTMLDivElement>, id: string) {
-    setDraggedId(id);
-  }
-
-  function handleDragOver(_e: React.DragEvent<HTMLDivElement>, id: string) {
-    if (draggedId && draggedId !== id) setDragOverId(id);
-  }
-
-  function handleDrop(_e: React.DragEvent<HTMLDivElement>, targetId: string) {
-    if (!layout || !draggedId || draggedId === targetId) {
-      setDraggedId(null);
-      setDragOverId(null);
-      return;
-    }
-    const order = [...layout.appOrder];
-    const fromIdx = order.indexOf(draggedId);
-    const toIdx = order.indexOf(targetId);
-    if (fromIdx === -1 || toIdx === -1) return;
-    order.splice(fromIdx, 1);
-    order.splice(toIdx, 0, draggedId);
-    const updated = { ...layout, appOrder: order };
-    setLayout(updated);
-    saveLayout(updated);
-    setDraggedId(null);
-    setDragOverId(null);
-  }
-
-  function handleDragEnd() {
-    setDraggedId(null);
-    setDragOverId(null);
-  }
-
-  function handleLongPress() {
-    setIsEditing(true);
-  }
-
   return (
-    <>
-      <div className={`client-page-scrollable hs-container${isEditing ? ' hs-editing' : ''}`}>
-        {showWelcome && (
-          <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
-        )}
+    <div style={{ padding: isMobile ? '16px 12px 32px' : '24px 32px 40px', maxWidth: 1100, margin: '0 auto' }}>
+      {showWelcome && (
+        <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
+      )}
 
-        {/* ── Status Bar ── */}
-        <div className="hs-status-bar">
-          <div className="hs-status-left">
-            {greeting}, {userName || 'cher client'}
-          </div>
-          <div className="hs-status-right">
-            <div className="hs-credits-pill">
-              <span className="material-symbols-rounded" style={{ fontSize: 14 }}>toll</span>
-              {credits.toFixed(1)}
+      {/* ── Greeting Header ── */}
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1E293B)', margin: 0 }}>
+          {greeting}, {userName || 'cher client'} 👋
+        </h1>
+        <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', margin: '4px 0 0' }}>
+          {todayStr} — Votre tableau de bord personnel
+        </p>
+      </div>
+
+      {/* ── Onboarding banner ── */}
+      {!hasProfile && !isDismissed('onboarding') && (
+        <div className="fz-card" style={{
+          padding: '14px 18px', marginBottom: 16,
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.06), rgba(6,182,212,0.04))',
+          border: '1px solid rgba(124,58,237,0.15)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: 24 }}>🏗️</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Configurez votre profil entreprise</div>
+              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>5 minutes pour booster vos assistants IA</div>
             </div>
-            <Link href="/client/notifications" style={{ color: 'inherit', textDecoration: 'none', display: 'flex' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>notifications</span>
+            <Link href="/client/onboarding" className="fz-btn-primary fz-btn-sm" style={{ textDecoration: 'none' }}>
+              Configurer →
             </Link>
-          </div>
-        </div>
-
-        {/* ── Edit mode bar ── */}
-        {isEditing && (
-          <div className="hs-edit-bar">
-            <span>Maintenez et deplacez pour reorganiser</span>
-            <button className="hs-done-btn" onClick={() => setIsEditing(false)}>Terminer</button>
-          </div>
-        )}
-
-        {/* ── Onboarding banner (new user only) ── */}
-        {!hasProfile && !isDismissed('onboarding') && (
-          <div style={{
-            padding: '12px 14px', marginBottom: 12,
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(6,182,212,0.05))',
-            border: '1px solid rgba(124,58,237,0.15)', borderRadius: 16,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#a78bfa' }}>domain</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Configurez votre profil entreprise</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>5 minutes pour booster vos agents IA</div>
-              </div>
-              <Link href="/client/onboarding" style={{
-                background: '#7c3aed', border: 'none', borderRadius: 10, padding: '6px 12px',
-                color: '#fff', fontSize: 11, fontWeight: 600, textDecoration: 'none',
-              }}>
-                Configurer
-              </Link>
-              <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'rgba(255,255,255,0.3)' }}>close</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ── Widget Zone ── */}
-        <div className="hs-widget-zone">
-          <KpiWidget
-            credits={credits}
-            messages={stats.totalMessages}
-            activeAgents={activeAgents.length}
-            streak={stats.streak}
-          />
-          <BriefingWidget
-            briefing={briefing}
-            loading={briefingLoading}
-            onLoad={loadBriefing}
-          />
-          {todos.length > 0 && (
-            <TasksWidget tasks={todos} onToggle={toggleTodo} />
-          )}
-        </div>
-
-        {/* ── App Grid by section ── */}
-        {sections.map(sec => (
-          <div key={sec.section}>
-            <div className="hs-section-title">{sec.title}</div>
-            <div className="hs-grid">
-              {sec.apps
-                .filter(app => !dockIds.has(app.id))
-                .map(app => (
-                  <HomeScreenIcon
-                    key={app.id}
-                    app={app}
-                    isEditing={isEditing}
-                    onLongPress={handleLongPress}
-                    draggable={isEditing}
-                    onDragStart={handleDragStart}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onDragEnd={handleDragEnd}
-                    isDragging={draggedId === app.id}
-                    isDragOver={dragOverId === app.id}
-                  />
-                ))}
-            </div>
-          </div>
-        ))}
-
-        {/* ── Referral banner ── */}
-        {!isDismissed('referral') && (
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', marginTop: 8,
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: 14,
-          }}>
-            <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, textDecoration: 'none', color: 'inherit' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#f97316' }}>redeem</span>
-              <div>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Invitez un ami</span>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginLeft: 8 }}>+20 EUR</span>
-              </div>
-            </Link>
-            <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>close</span>
+            <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: 'var(--fz-text-muted)' }}>
+              ×
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── KPI Cards ── */}
+      <div className="fz-kpi-grid" style={{ marginBottom: 24 }}>
+        <Link href="/client/account" className="fz-card-hover" style={{ textDecoration: 'none', padding: '16px 18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: 22 }}>💰</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Crédits</span>
+          </div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{credits.toFixed(1)}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+            {daysLeft > 0 ? `~${daysLeft}j restants · ${averageDaily}/j` : 'Rechargez vos crédits'}
+          </div>
+        </Link>
+        <div className="fz-card" style={{ padding: '16px 18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: 22 }}>💬</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Messages</span>
+          </div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{stats.totalMessages}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Conversations avec vos assistants</div>
+        </div>
+        <Link href="/client/agents" className="fz-card-hover" style={{ textDecoration: 'none', padding: '16px 18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: 22 }}>🤖</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Assistants</span>
+          </div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{activeAgents.length}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Assistants actifs sur {DEFAULT_AGENTS.length}</div>
+        </Link>
+        <div className="fz-card" style={{ padding: '16px 18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: 22 }}>🔥</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Streak</span>
+          </div>
+          <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--fz-text, #1E293B)' }}>{stats.streak}j</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Jours consecutifs d&apos;utilisation</div>
+        </div>
+      </div>
+
+      {/* ── AI Briefing ── */}
+      <div className="fz-card" style={{ padding: '18px 20px', marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 20 }}>🧠</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Briefing IA du jour</span>
+            <HelpBubble text="Chaque matin, votre IA analyse votre activité et vous propose un résumé actionnable." />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {briefingTime && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>Mis à jour à {briefingTime}</span>}
+            <button onClick={refreshBriefing} className="fz-btn-ghost fz-btn-sm" disabled={briefingLoading}>
+              {briefingLoading ? '⏳' : '🔄'} {briefingLoading ? 'Génération...' : 'Actualiser'}
+            </button>
+          </div>
+        </div>
+        {briefingLoading && !briefingLoaded ? (
+          <div style={{ padding: '12px 0', color: 'var(--fz-text-muted)', fontSize: 13, fontStyle: 'italic' }}>
+            ⏳ Votre briefing IA est en cours de génération...
+          </div>
+        ) : briefing ? (
+          <div style={{
+            fontSize: 13, lineHeight: 1.7, color: 'var(--fz-text-secondary, #64748B)',
+            background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10, padding: '12px 16px',
+            whiteSpace: 'pre-wrap',
+          }}>
+            {briefing}
+          </div>
+        ) : (
+          <div style={{ fontSize: 13, color: 'var(--fz-text-muted)', fontStyle: 'italic' }}>
+            Connectez-vous pour recevoir votre briefing quotidien.
           </div>
         )}
       </div>
 
-      {/* ── Dock (fixed bottom) ── */}
-      {dockApps.length > 0 && (
-        <div className="hs-dock">
-          {dockApps.map(app => (
-            <HomeScreenIcon key={app.id} app={app} />
+      {/* ── Quick Actions ── */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <span style={{ fontSize: 18 }}>⚡</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Actions rapides</span>
+          <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
+        </div>
+        <div className="fz-quick-actions">
+          {QUICK_ACTIONS.map(action => (
+            <Link key={action.href} href={action.href} className="fz-card-hover" style={{
+              textDecoration: 'none', padding: '14px 16px',
+              display: 'flex', alignItems: 'center', gap: 12,
+            }}>
+              <span style={{ fontSize: 28 }}>{action.emoji}</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{action.label}</div>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{action.desc}</div>
+              </div>
+            </Link>
           ))}
         </div>
+      </div>
+
+      {/* ── Todos & Priorities ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, marginBottom: 28 }}>
+        {/* Todos */}
+        <div className="fz-card" style={{ padding: '16px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <span style={{ fontSize: 18 }}>✅</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: 'var(--fz-text-muted)' }}>({todosDone}/{todosTotal})</span>}
+            </span>
+            <HelpBubble text="Ajoutez vos tâches pour la journée. Elles sont sauvegardées automatiquement." />
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+            <input
+              className="fz-input"
+              type="text"
+              value={newTodo}
+              onChange={e => setNewTodo(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && addTodo()}
+              placeholder="Ajouter une tâche..."
+              style={{ flex: 1, fontSize: 13, padding: '8px 12px' }}
+            />
+            <button onClick={addTodo} className="fz-btn-primary fz-btn-sm">+</button>
+          </div>
+          <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+            {todos.length === 0 && (
+              <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', padding: '8px 0', textAlign: 'center', fontStyle: 'italic' }}>
+                Aucune tâche — ajoutez-en une ci-dessus
+              </div>
+            )}
+            {todos.map(todo => (
+              <div key={todo.id} style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
+                borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+              }}>
+                <button onClick={() => toggleTodo(todo.id)} style={{
+                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, padding: 0,
+                }}>
+                  {todo.done ? '✅' : '⬜'}
+                </button>
+                <span style={{
+                  flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)',
+                  textDecoration: todo.done ? 'line-through' : 'none',
+                  opacity: todo.done ? 0.5 : 1,
+                }}>
+                  {todo.text}
+                </span>
+                <button onClick={() => removeTodo(todo.id)} style={{
+                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted)',
+                  padding: '0 4px',
+                }}>
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Priorities */}
+        <div className="fz-card" style={{ padding: '16px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <span style={{ fontSize: 18 }}>🎯</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>3 priorités du jour</span>
+            <HelpBubble text="Définissez vos 3 objectifs principaux. Restez concentré sur l'essentiel." />
+          </div>
+          {[0, 1, 2].map(idx => (
+            <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <span style={{
+                width: 24, height: 24, borderRadius: '50%',
+                background: idx === 0 ? '#ef4444' : idx === 1 ? '#f59e0b' : '#22c55e',
+                color: '#fff', fontSize: 12, fontWeight: 800,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {idx + 1}
+              </span>
+              <input
+                className="fz-input"
+                type="text"
+                value={priorities[idx] || ''}
+                onChange={e => updatePriority(idx, e.target.value)}
+                placeholder={`Priorité n°${idx + 1}...`}
+                style={{ flex: 1, fontSize: 13, padding: '8px 12px' }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Feature Sections Grid ── */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+          <span style={{ fontSize: 18 }}>🧭</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Toutes vos fonctionnalités</span>
+          <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {FEATURE_SECTIONS.map(section => (
+            <div key={section.id} className="fz-section-card">
+              <div className="fz-section-header">
+                <span style={{ fontSize: 20 }}>{section.emoji}</span>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+                    {section.title}
+                    {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: '#7c3aed', marginLeft: 8, padding: '1px 6px', background: 'rgba(124,58,237,0.08)', borderRadius: 4 }}>PRO</span>}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{section.subtitle}</div>
+                </div>
+              </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))',
+                gap: 8,
+              }}>
+                {section.items.map(item => (
+                  <Link key={item.id} href={item.href} className="fz-feature-item" style={{ textDecoration: 'none' }}>
+                    <span style={{ fontSize: 22 }}>{item.emoji}</span>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{item.label}</div>
+                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>{item.desc}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Referral banner ── */}
+      {!isDismissed('referral') && (
+        <div className="fz-card" style={{
+          display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', marginBottom: 16,
+          background: 'linear-gradient(135deg, rgba(249,115,22,0.06), rgba(234,179,8,0.04))',
+          border: '1px solid rgba(249,115,22,0.15)',
+        }}>
+          <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, textDecoration: 'none', color: 'inherit' }}>
+            <span style={{ fontSize: 28 }}>🎁</span>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Invitez un ami, gagnez 20€</div>
+              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
+            </div>
+          </Link>
+          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: 'var(--fz-text-muted)' }}>
+            ×
+          </button>
+        </div>
       )}
-    </>
+    </div>
   );
 }

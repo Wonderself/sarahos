@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -39,7 +41,7 @@ const TYPE_LABELS: Record<ProjectType, string> = {
   roman: 'Roman', scenario: 'Scénario', essai: 'Essai', nouvelles: 'Nouvelles', autre: 'Autre',
 };
 const TYPE_ICONS: Record<ProjectType, string> = {
-  roman: 'menu_book', scenario: 'movie', essai: 'edit_note', nouvelles: 'auto_awesome', autre: 'description',
+  roman: '📖', scenario: '🎬', essai: '✍️', nouvelles: '✨', autre: '📄',
 };
 const STATUS_LABELS: Record<ProjectStatus, string> = {
   draft: 'Brouillon', in_progress: 'En cours', revision: 'Révision', completed: 'Terminé', paused: 'Pause',
@@ -215,7 +217,7 @@ export default function EcrivainPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>draw</span></div>
+        <div style={{ fontSize: 40 }}>✍️</div>
         <div className="text-md text-tertiary animate-pulse">Chargement de vos projets...</div>
       </div>
     );
@@ -226,27 +228,27 @@ export default function EcrivainPage() {
     return (
       <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto' }}>
         {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, fontSize: 13, color: 'var(--text-tertiary)', flexWrap: 'wrap' }}>
-          <button onClick={() => { setSelectedChapter(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 13 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', flexWrap: 'wrap' }}>
+          <button onClick={() => { setSelectedChapter(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>
             ← Retour
           </button>
           <span>|</span>
           <span>{TYPE_ICONS[selectedProject.type]} {selectedProject.title}</span>
           <span>›</span>
-          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedChapter.title}</span>
+          <span style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600 }}>{selectedChapter.title}</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 20 }}>
           {/* Editor */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text-primary)' }}>{selectedChapter.title}</div>
+              <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--fz-text, #1E293B)' }}>{selectedChapter.title}</div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                   {editorWordCount.toLocaleString('fr-FR')} mots
                 </span>
-                <span style={{ fontSize: 11, color: editorSaving ? '#f59e0b' : editorSaved ? '#22c55e' : 'var(--text-tertiary)' }}>
-                  {editorSaving ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>hourglass_empty</span> Sauvegarde...</> : editorSaved ? <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Sauvegardé</> : ''}
+                <span style={{ fontSize: 11, color: editorSaving ? '#f59e0b' : editorSaved ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)' }}>
+                  {editorSaving ? <>⏳ Sauvegarde...</> : editorSaved ? <>✅ Sauvegardé</> : ''}
                 </span>
               </div>
             </div>
@@ -256,20 +258,20 @@ export default function EcrivainPage() {
               placeholder="Commencez à écrire votre chapitre..."
               style={{
                 width: '100%', minHeight: 520, padding: '16px 20px',
-                background: 'var(--bg-secondary)', border: '1.5px solid var(--border-primary)',
-                borderRadius: 12, fontSize: 15, lineHeight: 1.8, color: 'var(--text-primary)',
+                background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1.5px solid var(--fz-border, #E2E8F0)',
+                borderRadius: 12, fontSize: 15, lineHeight: 1.8, color: 'var(--fz-text, #1E293B)',
                 resize: 'vertical', fontFamily: 'Georgia, serif', outline: 'none',
                 boxSizing: 'border-box',
               }}
               onFocus={e => { e.target.style.borderColor = 'var(--accent)'; }}
-              onBlur={e => { e.target.style.borderColor = 'var(--border-primary)'; }}
+              onBlur={e => { e.target.style.borderColor = 'var(--fz-border, #E2E8F0)'; }}
             />
           </div>
 
           {/* Sidebar */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div className="card" style={{ padding: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut du chapitre</div>
+              <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut du chapitre</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {(Object.entries(CHAPTER_STATUS_LABELS) as [ChapterStatus, string][]).map(([s, l]) => (
                   <button
@@ -277,9 +279,9 @@ export default function EcrivainPage() {
                     onClick={() => handleChapterStatusChange(selectedChapter.id, s)}
                     style={{
                       padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                      border: selectedChapter.status === s ? `2px solid ${CHAPTER_STATUS_COLORS[s]}` : '1.5px solid var(--border-primary)',
-                      background: selectedChapter.status === s ? CHAPTER_STATUS_COLORS[s] + '20' : 'var(--bg-secondary)',
-                      color: selectedChapter.status === s ? CHAPTER_STATUS_COLORS[s] : 'var(--text-secondary)',
+                      border: selectedChapter.status === s ? `2px solid ${CHAPTER_STATUS_COLORS[s]}` : '1.5px solid var(--fz-border, #E2E8F0)',
+                      background: selectedChapter.status === s ? CHAPTER_STATUS_COLORS[s] + '20' : 'var(--fz-bg-secondary, #F8FAFC)',
+                      color: selectedChapter.status === s ? CHAPTER_STATUS_COLORS[s] : 'var(--fz-text-secondary, #64748B)',
                       cursor: 'pointer', textAlign: 'left',
                     }}
                   >
@@ -291,8 +293,8 @@ export default function EcrivainPage() {
 
             {selectedChapter.ai_notes && (
               <div className="card" style={{ padding: 16, borderLeft: '3px solid var(--accent)' }}>
-                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8, color: 'var(--accent)' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>smart_toy</span> Notes AI</div>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{selectedChapter.ai_notes}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8, color: 'var(--accent)' }}>🤖 Notes AI</div>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6 }}>{selectedChapter.ai_notes}</div>
               </div>
             )}
 
@@ -301,7 +303,7 @@ export default function EcrivainPage() {
               className="btn btn-primary btn-sm"
               style={{ textAlign: 'center', textDecoration: 'none' }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>draw</span> Continuer avec fz-écrivain
+              ✍️ Continuer avec fz-écrivain
             </Link>
           </div>
         </div>
@@ -318,7 +320,7 @@ export default function EcrivainPage() {
     return (
       <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <button onClick={() => setSelectedProject(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 13 }}>
+          <button onClick={() => setSelectedProject(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>
             ← Mes projets
           </button>
         </div>
@@ -329,7 +331,7 @@ export default function EcrivainPage() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                 <span style={{ fontSize: 28 }}>{TYPE_ICONS[selectedProject.type]}</span>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>{selectedProject.title}</h2>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{selectedProject.title}</h2>
                 <span style={{
                   fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6,
                   background: STATUS_COLORS[selectedProject.status] + '20', color: STATUS_COLORS[selectedProject.status],
@@ -337,25 +339,25 @@ export default function EcrivainPage() {
                   {STATUS_LABELS[selectedProject.status]}
                 </span>
               </div>
-              {selectedProject.genre && <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Genre : {selectedProject.genre}</div>}
+              {selectedProject.genre && <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Genre : {selectedProject.genre}</div>}
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>
                 {totalWords.toLocaleString('fr-FR')} mots
               </div>
-              {goalWords > 0 && <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>/ {goalWords.toLocaleString('fr-FR')} objectif</div>}
+              {goalWords > 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>/ {goalWords.toLocaleString('fr-FR')} objectif</div>}
             </div>
           </div>
           {goalWords > 0 && (
             <div style={{ marginTop: 12 }}>
-              <div style={{ height: 6, borderRadius: 3, background: 'var(--bg-tertiary)', overflow: 'hidden' }}>
+              <div style={{ height: 6, borderRadius: 3, background: 'var(--fz-bg-secondary, #F8FAFC)', overflow: 'hidden' }}>
                 <div style={{ height: '100%', width: `${pct}%`, background: 'var(--accent)', borderRadius: 3, transition: 'width 0.6s' }} />
               </div>
-              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>{pct}% de l&apos;objectif</div>
+              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>{pct}% de l&apos;objectif</div>
             </div>
           )}
           {selectedProject.synopsis && (
-            <div style={{ marginTop: 12, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, fontStyle: 'italic' }}>
+            <div style={{ marginTop: 12, fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, fontStyle: 'italic' }}>
               &ldquo;{selectedProject.synopsis}&rdquo;
             </div>
           )}
@@ -371,7 +373,7 @@ export default function EcrivainPage() {
           <div className="text-center text-tertiary" style={{ padding: 40 }}>Chargement des chapitres...</div>
         ) : chapters.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ fontSize: 36, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 36 }}>menu_book</span></div>
+            <div style={{ fontSize: 36, marginBottom: 12 }}>📖</div>
             <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun chapitre</div>
             <button onClick={() => setShowChapterModal(true)} className="btn btn-primary btn-sm">Écrire le premier chapitre</button>
           </div>
@@ -384,15 +386,15 @@ export default function EcrivainPage() {
                 style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
                 onClick={() => selectChapter(c)}
               >
-                <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--fz-bg-secondary, #F8FAFC)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
                   {i + 1}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 600, fontSize: 14 }}>{c.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                     {c.word_count.toLocaleString('fr-FR')} mots
                     {c.content && c.content.length > 0 && (
-                      <span style={{ marginLeft: 8, color: 'var(--text-tertiary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ marginLeft: 8, color: 'var(--fz-text-muted, #94A3B8)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         · {c.content.slice(0, 60).trim()}...
                       </span>
                     )}
@@ -406,7 +408,7 @@ export default function EcrivainPage() {
                 </span>
                 <button
                   onClick={e => { e.stopPropagation(); handleDeleteChapter(c.id); }}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: 16, flexShrink: 0 }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16, flexShrink: 0 }}
                 >×</button>
               </div>
             ))}
@@ -417,7 +419,7 @@ export default function EcrivainPage() {
         {showChapterModal && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
             <div className="card" style={{ width: '100%', maxWidth: 360, padding: 24 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>menu_book</span> Nouveau chapitre</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>📖 Nouveau chapitre</h3>
               <input className="input" placeholder="Titre du chapitre..." value={chapterForm.title} onChange={e => setChapterForm({ title: e.target.value })} autoFocus />
               <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
                 <button onClick={() => setShowChapterModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
@@ -435,30 +437,33 @@ export default function EcrivainPage() {
   // ── Projects list ──
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
         <div>
           <div style={{ marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--text-tertiary)', textDecoration: 'none' }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>draw</span> Atelier d&apos;écriture</h1>
-          <p className="page-subtitle">Vos projets littéraires, scénarios et essais</p>
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.ecrivain.emoji} {PAGE_META.ecrivain.title}</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.ecrivain.subtitle}</p>
         </div>
-        <button onClick={() => setShowProjectModal(true)} className="btn btn-primary">+ Nouveau projet</button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <HelpBubble text={PAGE_META.ecrivain.helpText} />
+          <button onClick={() => setShowProjectModal(true)} className="btn btn-primary">+ Nouveau projet</button>
+        </div>
       </div>
 
       {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
 
       {projects.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '80px 40px' }}>
-          <div style={{ fontSize: 52, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 52 }}>draw</span></div>
+          <div style={{ fontSize: 52, marginBottom: 16 }}>✍️</div>
           <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Votre atelier vous attend</div>
-          <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 24, maxWidth: 360, margin: '0 auto 24px' }}>
+          <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 24, maxWidth: 360, margin: '0 auto 24px' }}>
             Démarrez un roman, un scénario, un essai... fz-écrivain vous accompagne à chaque étape.
           </div>
           <button onClick={() => setShowProjectModal(true)} className="btn btn-primary">
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>draw</span> Créer mon premier projet
+            ✍️ Créer mon premier projet
           </button>
         </div>
       ) : (
@@ -477,15 +482,15 @@ export default function EcrivainPage() {
                   </span>
                 </div>
                 <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{p.title}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 10 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 10 }}>
                   {TYPE_LABELS[p.type]}{p.genre ? ` · ${p.genre}` : ''}
                 </div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', marginBottom: 6 }}>
                   {p.current_word_count.toLocaleString('fr-FR')} mots
-                  {p.word_count_goal ? <span style={{ fontWeight: 400, color: 'var(--text-tertiary)' }}> / {p.word_count_goal.toLocaleString('fr-FR')}</span> : ''}
+                  {p.word_count_goal ? <span style={{ fontWeight: 400, color: 'var(--fz-text-muted, #94A3B8)' }}> / {p.word_count_goal.toLocaleString('fr-FR')}</span> : ''}
                 </div>
                 {p.word_count_goal && p.word_count_goal > 0 && (
-                  <div style={{ height: 4, borderRadius: 2, background: 'var(--bg-tertiary)', overflow: 'hidden' }}>
+                  <div style={{ height: 4, borderRadius: 2, background: 'var(--fz-bg-secondary, #F8FAFC)', overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${pct}%`, background: 'var(--accent)', borderRadius: 2 }} />
                   </div>
                 )}
@@ -499,7 +504,7 @@ export default function EcrivainPage() {
       {showProjectModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
           <div className="card" style={{ width: '100%', maxWidth: 460, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>draw</span> Nouveau projet</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>✍️ Nouveau projet</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Titre</label>

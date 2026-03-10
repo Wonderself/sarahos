@@ -328,7 +328,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 marginBottom: 24,
                 lineHeight: 1.5,
               }}>
-                Choisissez ce qui vous correspond le mieux. On vous suggérera l&apos;agent idéal.
+                Choisissez ce qui vous correspond le mieux. On vous suggérera l&apos;assistant idéal.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -395,7 +395,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 marginBottom: 6,
                 marginTop: 0,
               }}>
-                Rencontrez votre premier agent
+                Rencontrez votre premier assistant
               </h2>
               <p style={{
                 color: 'rgba(255,255,255,0.55)',
@@ -403,7 +403,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 marginBottom: 24,
                 lineHeight: 1.5,
               }}>
-                Voici l&apos;agent parfait pour votre objectif. Il est prêt à vous aider !
+                Voici l&apos;assistant parfait pour votre objectif. Il est prêt à vous aider !
               </p>
 
               {/* Agent Card */}

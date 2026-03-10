@@ -60,11 +60,11 @@ export default function GamePage() {
 
   if (!config || !GameComponent) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0f0720', padding: '40px 24px', textAlign: 'center' }}>
-        <p style={{ color: '#fff', fontSize: 18, marginBottom: 16 }}>Jeu introuvable</p>
+      <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '40px 24px', textAlign: 'center' }}>
+        <p style={{ color: 'var(--fz-text, #1E293B)', fontSize: 18, marginBottom: 16 }}>Jeu introuvable</p>
         <Link href="/client/games" style={{ color: '#7c3aed', textDecoration: 'none', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
-            arrow_back
+          <span style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>
+            ←
           </span>
           Retour à l&apos;Arcade
         </Link>
@@ -77,14 +77,14 @@ export default function GamePage() {
     .filter(Boolean) as Badge[];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0720', padding: '24px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '24px' }}>
       <BadgeUnlockPopup />
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Link
             href="/client/games"
             style={{
-              color: 'rgba(255,255,255,0.5)',
+              color: 'var(--fz-text-muted, #94A3B8)',
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -92,15 +92,15 @@ export default function GamePage() {
               fontSize: 13,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>arrow_back</span>
+            ←
             Arcade
           </Link>
-          <span style={{ color: 'rgba(255,255,255,0.2)' }}>/</span>
+          <span style={{ color: 'var(--fz-border, #E2E8F0)' }}>/</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 20, color: config.color }}>
+            <span style={{ fontSize: 18, color: config.color }}>
               {config.icon}
             </span>
-            <span style={{ color: '#fff', fontWeight: 600, fontSize: 16 }}>{config.name}</span>
+            <span style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, fontSize: 16 }}>{config.name}</span>
           </div>
         </div>
 
@@ -123,14 +123,14 @@ export default function GamePage() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#f59e0b' }}>
-                stars
+              <span style={{ fontSize: 26 }}>
+                ⭐
               </span>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
                   +{sessionPoints} pts
                 </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                   Points gagnés cette partie
                 </div>
               </div>
@@ -152,7 +152,7 @@ export default function GamePage() {
                       border: '1px solid rgba(245,158,11,0.2)',
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#f59e0b' }}>
+                    <span style={{ fontSize: 16 }}>
                       {badge.icon}
                     </span>
                     <span style={{ fontSize: 12, fontWeight: 600, color: '#f59e0b' }}>
@@ -168,14 +168,14 @@ export default function GamePage() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'rgba(255,255,255,0.3)',
+                color: 'var(--fz-text-muted, #94A3B8)',
                 cursor: 'pointer',
                 fontSize: 18,
                 padding: 4,
                 display: 'flex',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>close</span>
+              ✕
             </button>
           </div>
         )}

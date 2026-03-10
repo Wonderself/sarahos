@@ -198,7 +198,7 @@ function PhotoStudioContent() {
                 boxShadow: mode === 'free' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>edit</span> Création libre
+              ✏️ Création libre
             </button>
             <button
               onClick={() => setMode('request')}
@@ -210,7 +210,7 @@ function PhotoStudioContent() {
                 boxShadow: mode === 'request' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span> Demandes agents
+              ⬇️ Demandes agents
               {pendingRequests.length > 0 && (
                 <span style={{
                   fontSize: 9, fontWeight: 700, background: '#ef4444', color: 'white',
@@ -242,7 +242,7 @@ function PhotoStudioContent() {
           borderBottom: `1px solid ${activeRequest.agentColor}30`,
           padding: '7px 16px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{activeRequest.agentEmoji}</span>
+          <span style={{ fontSize: 14 }}>{activeRequest.agentEmoji}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: activeRequest.agentColor }}>
               {activeRequest.agentName}
@@ -261,7 +261,7 @@ function PhotoStudioContent() {
             onClick={() => setActiveRequest(null)}
             style={{ fontSize: 10, color: '#6b7280', background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 12 }}>close</span>
+            ✕
           </button>
         </div>
       )}
@@ -461,7 +461,7 @@ function PhotoStudioContent() {
                       background: '#06b6d4', color: 'white', fontSize: 13, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 13, verticalAlign: 'middle' }}>download</span> Télécharger le brief
+                    ⬇️ Télécharger le brief
                   </button>
                 )}
               </div>

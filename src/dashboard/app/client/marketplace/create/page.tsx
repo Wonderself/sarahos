@@ -106,13 +106,13 @@ export default function MarketplaceCreatePage() {
   };
 
   // ─── Styles
-  const cardBg = 'rgba(255,255,255,0.04)';
-  const borderColor = 'rgba(255,255,255,0.08)';
+  const cardBg = 'var(--fz-bg-secondary, #F8FAFC)';
+  const borderColor = 'var(--fz-border, #E2E8F0)';
   const accent = '#7c3aed';
   const catColor = CATEGORY_COLORS[category] || accent;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f', color: '#fff', padding: '32px 24px 80px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', padding: '32px 24px 80px' }}>
       {/* Header */}
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         {/* Back link */}
@@ -121,7 +121,7 @@ export default function MarketplaceCreatePage() {
           style={{
             background: 'none',
             border: 'none',
-            color: 'rgba(255,255,255,0.5)',
+            color: 'var(--fz-text-muted, #94A3B8)',
             fontSize: 14,
             cursor: 'pointer',
             display: 'flex',
@@ -131,17 +131,17 @@ export default function MarketplaceCreatePage() {
             marginBottom: 24,
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>arrow_back</span>
+          ←
           Retour au Marketplace
         </button>
 
         <h1 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 6px' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 28, color: accent, verticalAlign: 'middle', marginRight: 10 }}>
-            add_circle
+          <span style={{ fontSize: 26, verticalAlign: 'middle', marginRight: 10 }}>
+            ➕
           </span>
           Creer & Partager
         </h1>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, margin: '0 0 32px' }}>
+        <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14, margin: '0 0 32px' }}>
           Creez votre propre template d&apos;agent et partagez-le avec la communaute
         </p>
 
@@ -152,13 +152,13 @@ export default function MarketplaceCreatePage() {
             {/* Basic info */}
             <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 14, padding: 24 }}>
               <h2 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20, color: accent }}>info</span>
+                <span style={{ fontSize: 18 }}>ℹ️</span>
                 Informations de base
               </h2>
 
               {/* Name */}
               <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
                   Nom du template *
                 </span>
                 <input
@@ -170,10 +170,10 @@ export default function MarketplaceCreatePage() {
                   style={{
                     width: '100%',
                     padding: '10px 14px',
-                    background: 'rgba(255,255,255,0.04)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 8,
-                    color: '#fff',
+                    color: 'var(--fz-text, #1E293B)',
                     fontSize: 14,
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -183,7 +183,7 @@ export default function MarketplaceCreatePage() {
 
               {/* Description */}
               <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
                   Description *
                 </span>
                 <textarea
@@ -195,10 +195,10 @@ export default function MarketplaceCreatePage() {
                   style={{
                     width: '100%',
                     padding: '10px 14px',
-                    background: 'rgba(255,255,255,0.04)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 8,
-                    color: '#fff',
+                    color: 'var(--fz-text, #1E293B)',
                     fontSize: 14,
                     outline: 'none',
                     resize: 'vertical',
@@ -206,7 +206,7 @@ export default function MarketplaceCreatePage() {
                     boxSizing: 'border-box',
                   }}
                 />
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', float: 'right', marginTop: 2 }}>
+                <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', float: 'right', marginTop: 2 }}>
                   {description.length}/300
                 </span>
               </label>
@@ -215,7 +215,7 @@ export default function MarketplaceCreatePage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                 {/* Category */}
                 <label>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
                     Categorie
                   </span>
                   <select
@@ -224,10 +224,10 @@ export default function MarketplaceCreatePage() {
                     style={{
                       width: '100%',
                       padding: '10px 14px',
-                      background: 'rgba(255,255,255,0.04)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)',
                       border: `1px solid ${borderColor}`,
                       borderRadius: 8,
-                      color: '#fff',
+                      color: 'var(--fz-text, #1E293B)',
                       fontSize: 14,
                       outline: 'none',
                       cursor: 'pointer',
@@ -235,7 +235,7 @@ export default function MarketplaceCreatePage() {
                     }}
                   >
                     {categoryOptions.map((c) => (
-                      <option key={c} value={c} style={{ background: '#1a1a2e', color: '#fff' }}>
+                      <option key={c} value={c} style={{ background: '#1a1a2e', color: 'var(--fz-text, #1E293B)' }}>
                         {c}
                       </option>
                     ))}
@@ -244,7 +244,7 @@ export default function MarketplaceCreatePage() {
 
                 {/* Agent base */}
                 <label>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
                     Agent de base
                   </span>
                   <select
@@ -253,10 +253,10 @@ export default function MarketplaceCreatePage() {
                     style={{
                       width: '100%',
                       padding: '10px 14px',
-                      background: 'rgba(255,255,255,0.04)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)',
                       border: `1px solid ${borderColor}`,
                       borderRadius: 8,
-                      color: '#fff',
+                      color: 'var(--fz-text, #1E293B)',
                       fontSize: 14,
                       outline: 'none',
                       cursor: 'pointer',
@@ -264,7 +264,7 @@ export default function MarketplaceCreatePage() {
                     }}
                   >
                     {ALL_AGENTS.map((a) => (
-                      <option key={a.id} value={a.id} style={{ background: '#1a1a2e', color: '#fff' }}>
+                      <option key={a.id} value={a.id} style={{ background: '#1a1a2e', color: 'var(--fz-text, #1E293B)' }}>
                         {a.name}
                       </option>
                     ))}
@@ -276,13 +276,13 @@ export default function MarketplaceCreatePage() {
             {/* Agent config */}
             <div style={{ background: cardBg, border: `1px solid ${borderColor}`, borderRadius: 14, padding: 24 }}>
               <h2 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 20, color: accent }}>tune</span>
+                <span style={{ fontSize: 18 }}>⚙️</span>
                 Configuration de l&apos;agent
               </h2>
 
               {/* System prompt */}
               <label style={{ display: 'block', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
                   Prompt systeme personnalise
                 </span>
                 <textarea
@@ -293,10 +293,10 @@ export default function MarketplaceCreatePage() {
                   style={{
                     width: '100%',
                     padding: '10px 14px',
-                    background: 'rgba(255,255,255,0.04)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 8,
-                    color: '#fff',
+                    color: 'var(--fz-text, #1E293B)',
                     fontSize: 13,
                     outline: 'none',
                     resize: 'vertical',
@@ -308,7 +308,7 @@ export default function MarketplaceCreatePage() {
 
               {/* Welcome message */}
               <label style={{ display: 'block', marginBottom: 18 }}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>
                   Message d&apos;accueil
                 </span>
                 <input
@@ -319,10 +319,10 @@ export default function MarketplaceCreatePage() {
                   style={{
                     width: '100%',
                     padding: '10px 14px',
-                    background: 'rgba(255,255,255,0.04)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 8,
-                    color: '#fff',
+                    color: 'var(--fz-text, #1E293B)',
                     fontSize: 14,
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -332,17 +332,17 @@ export default function MarketplaceCreatePage() {
 
               {/* Personality sliders */}
               <div style={{ marginTop: 4 }}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 12 }}>
+                <span style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 12 }}>
                   Personnalite
                 </span>
                 {PERSONALITY_SLIDERS.map(({ key, label, low, high }) => (
                   <div key={key} style={{ marginBottom: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{label}</span>
+                      <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{label}</span>
                       <span style={{ fontSize: 11, color: accent, fontWeight: 600 }}>{personality[key]}%</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', minWidth: 60, textAlign: 'right' }}>{low}</span>
+                      <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', minWidth: 60, textAlign: 'right' }}>{low}</span>
                       <input
                         type="range"
                         min={0}
@@ -356,7 +356,7 @@ export default function MarketplaceCreatePage() {
                           cursor: 'pointer',
                         }}
                       />
-                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', minWidth: 60 }}>{high}</span>
+                      <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', minWidth: 60 }}>{high}</span>
                     </div>
                   </div>
                 ))}
@@ -373,7 +373,7 @@ export default function MarketplaceCreatePage() {
                 background: publishing ? 'rgba(91,108,247,0.4)' : accent,
                 border: 'none',
                 borderRadius: 12,
-                color: '#fff',
+                color: 'var(--fz-text, #1E293B)',
                 fontSize: 15,
                 fontWeight: 700,
                 cursor: publishing ? 'not-allowed' : 'pointer',
@@ -384,8 +384,8 @@ export default function MarketplaceCreatePage() {
                 transition: 'background 0.2s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>
-                {publishing ? 'hourglass_empty' : 'publish'}
+              <span style={{ fontSize: 18 }}>
+                {publishing ? '⏳' : '📤'}
               </span>
               {publishing ? 'Publication en cours...' : 'Publier le template'}
             </button>
@@ -393,8 +393,8 @@ export default function MarketplaceCreatePage() {
 
           {/* ─── Right: Live preview ─── */}
           <div style={{ position: 'sticky', top: 24 }}>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>visibility</span>
+            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+              👁️
               Apercu en direct
             </div>
 
@@ -440,22 +440,22 @@ export default function MarketplaceCreatePage() {
                     justifyContent: 'center',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 24, color: catColor }}>
+                  <span style={{ fontSize: 22, color: catColor }}>
                     {selectedAgent?.icon || 'smart_toy'}
                   </span>
                 </div>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
                     {name || 'Nom du template'}
                   </div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                     Base: {selectedAgent?.name || '—'}
                   </div>
                 </div>
               </div>
 
               {/* Description */}
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, margin: '0 0 16px' }}>
+              <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5, margin: '0 0 16px' }}>
                 {description || 'La description de votre template apparaitra ici...'}
               </p>
 
@@ -463,17 +463,17 @@ export default function MarketplaceCreatePage() {
               {welcomeMessage && (
                 <div
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 10,
                     padding: '10px 14px',
                     marginBottom: 16,
                   }}
                 >
-                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>
                     Message d&apos;accueil
                   </div>
-                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontStyle: 'italic' }}>
+                  <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', fontStyle: 'italic' }}>
                     &ldquo;{welcomeMessage}&rdquo;
                   </div>
                 </div>
@@ -481,16 +481,16 @@ export default function MarketplaceCreatePage() {
 
               {/* Personality bars */}
               <div style={{ borderTop: `1px solid ${borderColor}`, paddingTop: 14 }}>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>
+                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>
                   Personnalite
                 </div>
                 {PERSONALITY_SLIDERS.map(({ key, label }) => (
                   <div key={key} style={{ marginBottom: 8 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{label}</span>
+                      <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{label}</span>
                       <span style={{ fontSize: 10, color: accent }}>{personality[key]}%</span>
                     </div>
-                    <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }}>
+                    <div style={{ height: 3, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 2 }}>
                       <div
                         style={{
                           height: '100%',
@@ -517,12 +517,12 @@ export default function MarketplaceCreatePage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>person</span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Par Moi</span>
+                  👤
+                  <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>Par Moi</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 14, color: '#fbbf24' }}>star</span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Nouveau</span>
+                  ⭐
+                  <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>Nouveau</span>
                 </div>
               </div>
             </div>
@@ -540,11 +540,11 @@ export default function MarketplaceCreatePage() {
                 alignItems: 'flex-start',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18, color: accent, marginTop: 1, flexShrink: 0 }}>
-                lightbulb
+              <span style={{ fontSize: 16, marginTop: 1, flexShrink: 0 }}>
+                💡
               </span>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>
-                <strong style={{ color: 'rgba(255,255,255,0.7)' }}>Astuce :</strong> Un bon template a un prompt systeme precis et une personnalite coherente avec son cas d&apos;usage.
+              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.5 }}>
+                <strong style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Astuce :</strong> Un bon template a un prompt systeme precis et une personnalite coherente avec son cas d&apos;usage.
               </div>
             </div>
           </div>

@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useToast } from '../../../../components/Toast';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import HelpBubble from '../../../../components/HelpBubble';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -166,9 +168,9 @@ export default function CVPage() {
     const lines = [
       `# ${profile.first_name ?? ''} ${profile.last_name ?? ''}`,
       profile.title ? `**${profile.title}**` : '',
-      profile.email ? `<span className="material-symbols-rounded" style={{ fontSize: 18 }}>mail</span> ${profile.email}` : '',
-      profile.phone ? `<span className="material-symbols-rounded" style={{ fontSize: 18 }}>phone_iphone</span> ${profile.phone}` : '',
-      profile.linkedin ? `<span className="material-symbols-rounded" style={{ fontSize: 18 }}>link</span> ${profile.linkedin}` : '',
+      profile.email ? `📧 ${profile.email}` : '',
+      profile.phone ? `📱 ${profile.phone}` : '',
+      profile.linkedin ? `🔗 ${profile.linkedin}` : '',
       profile.location ? `[location] ${profile.location}` : '',
       '',
       profile.summary ? `## Résumé\n${profile.summary}` : '',
@@ -191,7 +193,7 @@ export default function CVPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>description</span></div>
+        <div style={{ fontSize: 40 }}>📄</div>
         <div className="text-md text-tertiary animate-pulse">Chargement de votre CV...</div>
       </div>
     );
@@ -204,14 +206,14 @@ export default function CVPage() {
         style={{
           width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer',
-          color: 'var(--text-primary)', fontWeight: 700, fontSize: 14,
+          color: 'var(--fz-text, #1E293B)', fontWeight: 700, fontSize: 14,
         }}
       >
         <span>{icon} {title}</span>
         <span style={{ fontSize: 18, transform: openSection === id ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▾</span>
       </button>
       {openSection === id && (
-        <div style={{ padding: '0 20px 20px', borderTop: '1px solid var(--border-primary)' }}>
+        <div style={{ padding: '0 20px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
           <div style={{ paddingTop: 16 }}>{children}</div>
         </div>
       )}
@@ -221,19 +223,20 @@ export default function CVPage() {
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
         <div>
           <div style={{ marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--text-tertiary)', textDecoration: 'none' }}>← Agents personnels</Link>
+            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>← Agents personnels</Link>
           </div>
-          <h1 className="page-title"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>description</span> CV 2026</h1>
-          <p className="page-subtitle">Construisez un CV moderne et laissez fz-cv vous aider</p>
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.cv.emoji} {PAGE_META.cv.title}</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.cv.subtitle}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {saved && <span style={{ fontSize: 12, color: '#22c55e' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>check_circle</span> Sauvegardé</span>}
-          {saving && <span style={{ fontSize: 12, color: '#f59e0b' }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>hourglass_empty</span> Sauvegarde...</span>}
-          <button onClick={copyMarkdown} className="btn btn-ghost btn-sm">{copied ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Copié !</> : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Copier Markdown</>}</button>
-          <Link href="/client/chat?agent=fz-cv" className="btn btn-primary btn-sm"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>smart_toy</span> fz-cv</Link>
+          <HelpBubble text={PAGE_META.cv.helpText} />
+          {saved && <span style={{ fontSize: 12, color: '#22c55e' }}>✅ Sauvegardé</span>}
+          {saving && <span style={{ fontSize: 12, color: '#f59e0b' }}>⏳ Sauvegarde...</span>}
+          <button onClick={copyMarkdown} className="btn btn-ghost btn-sm">{copied ? <>✅ Copié !</> : <>📋 Copier Markdown</>}</button>
+          <Link href="/client/chat?agent=fz-cv" className="btn btn-primary btn-sm">🤖 fz-cv</Link>
         </div>
       </div>
 
@@ -247,7 +250,7 @@ export default function CVPage() {
             {comp.score}%
           </div>
         </div>
-        <div style={{ height: 8, borderRadius: 4, background: 'var(--bg-tertiary)', overflow: 'hidden', marginBottom: 12 }}>
+        <div style={{ height: 8, borderRadius: 4, background: 'var(--fz-bg-secondary, #F8FAFC)', overflow: 'hidden', marginBottom: 12 }}>
           <div style={{
             height: '100%', width: `${comp.score}%`, borderRadius: 4, transition: 'width 0.6s',
             background: comp.score >= 80 ? '#22c55e' : comp.score >= 50 ? '#f59e0b' : '#ef4444',
@@ -257,17 +260,17 @@ export default function CVPage() {
           {comp.items.map(item => (
             <span key={item.label} style={{
               fontSize: 11, padding: '2px 8px', borderRadius: 6, fontWeight: 600,
-              background: item.done ? '#22c55e20' : 'var(--bg-tertiary)',
-              color: item.done ? '#22c55e' : 'var(--text-tertiary)',
+              background: item.done ? '#22c55e20' : 'var(--fz-bg-secondary, #F8FAFC)',
+              color: item.done ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)',
             }}>
-              {item.done ? 'check_circle' : '○'} {item.label}
+              {item.done ? '✅' : '○'} {item.label}
             </span>
           ))}
         </div>
       </div>
 
       {/* Sections */}
-      <AccordionSection id="info" title="Informations personnelles" icon="person">
+      <AccordionSection id="info" title="Informations personnelles" icon="👤">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           {[
             { key: 'first_name', label: 'Prénom', placeholder: 'Jean' },
@@ -279,7 +282,7 @@ export default function CVPage() {
             { key: 'location', label: 'Localisation', placeholder: 'Paris, France' },
           ].map(f => (
             <div key={f.key} style={{ gridColumn: f.key === 'title' ? 'span 2' : undefined }}>
-              <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.label}</label>
+              <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.label}</label>
               <input
                 className="input"
                 placeholder={f.placeholder}
@@ -289,7 +292,7 @@ export default function CVPage() {
             </div>
           ))}
           <div style={{ gridColumn: 'span 2' }}>
-            <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Résumé professionnel</label>
+            <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Résumé professionnel</label>
             <textarea
               className="input"
               rows={3}
@@ -302,45 +305,45 @@ export default function CVPage() {
         </div>
       </AccordionSection>
 
-      <AccordionSection id="skills" title={`Compétences (${profile.skills?.length ?? 0})`} icon="lightbulb">
+      <AccordionSection id="skills" title={`Compétences (${profile.skills?.length ?? 0})`} icon="💡">
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
           {(profile.skills ?? []).map((s, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, background: 'var(--bg-tertiary)', border: '1px solid var(--border-primary)' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
               <span style={{ fontSize: 13 }}>{s.name}</span>
               <select
                 value={s.level}
                 onChange={e => updateSkillLevel(i, e.target.value as Skill['level'])}
-                style={{ fontSize: 10, border: 'none', background: 'none', color: 'var(--text-tertiary)', cursor: 'pointer' }}
+                style={{ fontSize: 10, border: 'none', background: 'none', color: 'var(--fz-text-muted, #94A3B8)', cursor: 'pointer' }}
               >
                 {SKILL_LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
               </select>
-              <button onClick={() => removeSkill(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--text-tertiary)', lineHeight: 1 }}>×</button>
+              <button onClick={() => removeSkill(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1 }}>×</button>
             </div>
           ))}
         </div>
         <button onClick={addSkill} className="btn btn-ghost btn-sm">+ Ajouter une compétence</button>
       </AccordionSection>
 
-      <AccordionSection id="experiences" title={`Expériences (${profile.experiences?.length ?? 0})`} icon="work">
+      <AccordionSection id="experiences" title={`Expériences (${profile.experiences?.length ?? 0})`} icon="💼">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {(profile.experiences ?? []).map((e, i) => (
-            <div key={i} style={{ padding: '12px 14px', background: 'var(--bg-tertiary)', borderRadius: 8, position: 'relative' }}>
-              <button onClick={() => removeExperience(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--text-tertiary)' }}>×</button>
+            <div key={i} style={{ padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, position: 'relative' }}>
+              <button onClick={() => removeExperience(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>POSTE</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>POSTE</label>
                   <input className="input" placeholder="Développeur Senior" value={e.title} onChange={ev => updateExperience(i, { title: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>ENTREPRISE</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>ENTREPRISE</label>
                   <input className="input" placeholder="Nom de l'entreprise" value={e.employer} onChange={ev => updateExperience(i, { employer: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>DÉBUT</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DÉBUT</label>
                   <input className="input" placeholder="2022" value={e.start} onChange={ev => updateExperience(i, { start: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>FIN</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>FIN</label>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                     <input className="input" placeholder="2024" value={e.end ?? ''} disabled={!!e.current} onChange={ev => updateExperience(i, { end: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                     <label style={{ fontSize: 11, display: 'flex', gap: 4, alignItems: 'center', whiteSpace: 'nowrap', cursor: 'pointer' }}>
@@ -350,7 +353,7 @@ export default function CVPage() {
                   </div>
                 </div>
                 <div style={{ gridColumn: 'span 2' }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>DESCRIPTION</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DESCRIPTION</label>
                   <textarea className="input" rows={2} placeholder="Missions, réalisations..." value={e.description ?? ''} onChange={ev => updateExperience(i, { description: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} style={{ resize: 'none' }} />
                 </div>
               </div>
@@ -360,26 +363,26 @@ export default function CVPage() {
         <button onClick={addExperience} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une expérience</button>
       </AccordionSection>
 
-      <AccordionSection id="education" title={`Formation (${profile.education?.length ?? 0})`} icon="school">
+      <AccordionSection id="education" title={`Formation (${profile.education?.length ?? 0})`} icon="🎓">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {(profile.education ?? []).map((e, i) => (
-            <div key={i} style={{ padding: '12px 14px', background: 'var(--bg-tertiary)', borderRadius: 8, position: 'relative' }}>
-              <button onClick={() => removeEducation(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--text-tertiary)' }}>×</button>
+            <div key={i} style={{ padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, position: 'relative' }}>
+              <button onClick={() => removeEducation(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>DIPLÔME</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DIPLÔME</label>
                   <input className="input" placeholder="Master, Licence..." value={e.degree} onChange={ev => updateEducation(i, { degree: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>ÉCOLE</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>ÉCOLE</label>
                   <input className="input" placeholder="Nom de l'école" value={e.school} onChange={ev => updateEducation(i, { school: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>SPÉCIALITÉ</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>SPÉCIALITÉ</label>
                   <input className="input" placeholder="Informatique, Finance..." value={e.field ?? ''} onChange={ev => updateEducation(i, { field: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--text-tertiary)' }}>ANNÉE</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>ANNÉE</label>
                   <input className="input" placeholder="2021" value={e.year ?? ''} onChange={ev => updateEducation(i, { year: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
               </div>
@@ -389,7 +392,7 @@ export default function CVPage() {
         <button onClick={addEducation} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une formation</button>
       </AccordionSection>
 
-      <AccordionSection id="languages" title={`Langues (${profile.languages?.length ?? 0})`} icon="language">
+      <AccordionSection id="languages" title={`Langues (${profile.languages?.length ?? 0})`} icon="🌐">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(profile.languages ?? []).map((l, i) => (
             <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -409,14 +412,14 @@ export default function CVPage() {
               >
                 {LANG_LEVELS.map(v => <option key={v} value={v}>{v}</option>)}
               </select>
-              <button onClick={() => removeLanguage(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-tertiary)' }}>×</button>
+              <button onClick={() => removeLanguage(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
             </div>
           ))}
         </div>
         <button onClick={addLanguage} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une langue</button>
       </AccordionSection>
 
-      <AccordionSection id="goals" title="Objectifs de carrière" icon="target">
+      <AccordionSection id="goals" title="Objectifs de carrière" icon="🎯">
         <textarea
           className="input"
           rows={4}

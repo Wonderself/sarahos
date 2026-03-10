@@ -12,9 +12,9 @@ interface FreenzyWelcomeProps {
 const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg') ?? { name: 'Freenzy', materialIcon: 'verified' };
 
 const QUICK_ACTIONS: Array<{ icon: string; label: string; desc: string; href: string }> = [
-  { icon: 'chat', label: `Discuter avec ${dgAgent.name}`, desc: `${DEFAULT_AGENTS.length} agents prets`, href: '/client/chat' },
-  { icon: 'groups', label: 'Reunion strategique', desc: 'Reunissez vos agents', href: '/client/meeting' },
-  { icon: 'tune', label: 'Agent Studio', desc: 'Personnalisez vos agents', href: '/client/agents/customize' },
+  { icon: 'chat', label: `Discuter avec ${dgAgent.name}`, desc: `${DEFAULT_AGENTS.length} assistants prets`, href: '/client/chat' },
+  { icon: 'groups', label: 'Reunion strategique', desc: 'Reunissez vos assistants', href: '/client/meeting' },
+  { icon: 'tune', label: 'Agent Studio', desc: 'Personnalisez vos assistants', href: '/client/agents/customize' },
   { icon: 'wb_sunny', label: 'Briefing du jour', desc: 'Taches et insights', href: '/client/briefing' },
 ];
 
@@ -43,7 +43,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
             {greeting}, {userName || 'cher client'} !
           </h2>
           <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: 380, margin: '0 auto' }}>
-            Votre equipe de <span className="fz-logo-word">{agentDetails.length} agents IA</span> est prete.
+            Votre equipe de <span className="fz-logo-word">{agentDetails.length} assistants IA</span> est prete.
           </p>
         </div>
 
@@ -77,7 +77,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
               Configurons votre profil !
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: 8 }}>
-              Plus vos agents connaissent votre entreprise, plus leurs réponses sont précises. <strong>5 minutes</strong> qui changent tout.
+              Plus vos assistants connaissent votre entreprise, plus leurs réponses sont précises. <strong>5 minutes</strong> qui changent tout.
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <Link href="/client/onboarding" onClick={onDismiss} className="btn btn-primary" style={{ fontSize: 12, padding: '6px 16px' }}>

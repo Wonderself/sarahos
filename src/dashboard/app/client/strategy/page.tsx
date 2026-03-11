@@ -1720,7 +1720,7 @@ export default function StrategyPage() {
                     fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{strat.icon}</span>
+                  {/^[a-z_]+$/.test(strat.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{strat.icon}</span> : <span style={{ marginRight: 4 }}>{strat.icon}</span>}
                   {strat.shortLabel}
                   {hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--success)', display: 'inline-block' }} />}
                   {hasSaved && !hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--warning)', display: 'inline-block' }} />}
@@ -1741,7 +1741,7 @@ export default function StrategyPage() {
           {strategyViewMode === 'form' && activeStrategy && (
             <div className="card p-20">
               <div className="flex items-center gap-8 mb-16">
-                <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
+                {/^[a-z_]+$/.test(activeStrategy.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span> : <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>}
                 <div>
                   <div className="text-lg font-bold">{activeStrategy.title}</div>
                   <div className="text-sm text-muted">{activeStrategy.subtitle}</div>
@@ -1823,7 +1823,7 @@ export default function StrategyPage() {
               </div>
               <div className="card p-20">
                 <div className="flex items-center gap-8 mb-16" style={{ paddingBottom: 16, borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
+                  {/^[a-z_]+$/.test(activeStrategy.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span> : <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>}
                   <div>
                     <div className="text-lg font-bold">{activeStrategy.title}</div>
                     <div className="text-xs text-muted">

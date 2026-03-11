@@ -1541,7 +1541,7 @@ export default function ChatPage() {
                 <div className="flex gap-8 flex-center flex-wrap mt-16">
                   {agentDef.modes.map(mode => (
                     <div key={mode.id} className="rounded-md bg-secondary border text-sm" style={{ padding: '10px 14px', maxWidth: 200, textAlign: 'left' }}>
-                      <div className="font-bold" style={{ marginBottom: 2 }}><span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{mode.icon}</span>{mode.name}</div>
+                      <div className="font-bold" style={{ marginBottom: 2 }}>{/^[a-z_]+$/.test(mode.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{mode.icon}</span> : <span style={{ marginRight: 4 }}>{mode.icon}</span>}{mode.name}</div>
                       <div className="text-xs text-muted">{mode.description}</div>
                     </div>
                   ))}

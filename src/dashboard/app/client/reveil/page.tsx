@@ -1384,7 +1384,7 @@ export default function ReveilPage() {
               fontSize: 'clamp(18px, 4vw, 24px)', fontWeight: 900, color: 'var(--fz-text, #1A1A1A)',
               letterSpacing: '-0.03em', marginBottom: 10, lineHeight: 1.2,
             }}>
-              Un numero de telephone IA{' '}rien{' '}que{' '}pour{' '}vous
+              Un numero de telephone IA{'\u00A0'}rien{'\u00A0'}que{'\u00A0'}pour{'\u00A0'}vous
             </h3>
 
             <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.7, marginBottom: 24, maxWidth: 600 }}>

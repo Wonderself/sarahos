@@ -9,87 +9,70 @@ const STEPS = [
   {
     icon: 'chat',
     title: 'Posez votre question',
-    desc: '\u00c9crivez naturellement, l\u2019IA comprend le contexte.',
+    desc: 'Écrivez naturellement, l\'IA comprend le contexte.',
   },
   {
     icon: 'memory',
-    title: 'L\u2019IA se souvient',
-    desc: 'Votre historique et pr\u00e9f\u00e9rences sont m\u00e9moris\u00e9s.',
+    title: 'L\'IA se souvient',
+    desc: 'Votre historique et préférences sont mémorisés.',
   },
   {
     icon: 'lightbulb',
-    title: 'Obtenez des r\u00e9ponses pertinentes',
-    desc: 'Des r\u00e9ponses pr\u00e9cises, sourc\u00e9es et adapt\u00e9es \u00e0 votre contexte.',
+    title: 'Obtenez des réponses pertinentes',
+    desc: 'Des réponses précises, sourcées et adaptées à votre contexte.',
   },
 ];
 
 const FEATURES = [
   {
     icon: 'history',
-    title: 'M\u00e9moire contextuelle',
-    desc: 'L\u2019IA se souvient de vos conversations pr\u00e9c\u00e9dentes.',
+    title: 'Mémoire contextuelle',
+    desc: 'L\'IA se souvient de vos conversations précédentes.',
   },
   {
     icon: 'translate',
     title: 'Multilingue natif',
-    desc: 'Discutez dans 12+ langues sans changer de param\u00e8tre.',
+    desc: 'Discutez dans 12+ langues sans changer de paramètre.',
   },
   {
     icon: 'attach_file',
     title: 'Analyse de documents',
-    desc: 'Uploadez PDF, images, tableaux pour une analyse instantan\u00e9e.',
+    desc: 'Uploadez PDF, images, tableaux pour une analyse instantanée.',
   },
   {
     icon: 'code',
     title: 'Code & technique',
-    desc: 'G\u00e9n\u00e9ration, debug et explication de code en temps r\u00e9el.',
+    desc: 'Génération, debug et explication de code en temps réel.',
   },
   {
     icon: 'brush',
-    title: 'Cr\u00e9ation visuelle',
-    desc: 'G\u00e9n\u00e9rez des images, logos et visuels directement dans la conversation.',
+    title: 'Création visuelle',
+    desc: 'Générez des images, logos et visuels directement dans la conversation.',
   },
   {
     icon: 'shield',
-    title: 'Confidentialit\u00e9 totale',
-    desc: 'Vos donn\u00e9es ne sont jamais utilis\u00e9es pour entra\u00eener les mod\u00e8les.',
+    title: 'Confidentialité totale',
+    desc: 'Vos données ne sont jamais utilisées pour entraîner les modèles.',
   },
 ];
 
 const DEMO_MESSAGES = [
   {
     role: 'user',
-    text: 'Je lance une startup SaaS B2B dans la cybers\u00e9curit\u00e9. Quels sont les points cl\u00e9s pour mon business plan ?',
+    text: 'Je lance une startup SaaS B2B dans la cybersécurité. Quels sont les points clés pour mon business plan ?',
   },
   {
     role: 'ai',
-    text: 'Pour un SaaS B2B cybers\u00e9curit\u00e9, voici les 5 piliers de votre business plan :\n\n1. **March\u00e9** \u2014 Le march\u00e9 mondial de la cybers\u00e9curit\u00e9 atteint 266 Md$ en 2027. Ciblez un segment pr\u00e9cis (PME, sant\u00e9, fintech).\n2. **Mod\u00e8le** \u2014 ARR avec pricing par si\u00e8ge ou par usage. Visez un LTV/CAC > 3.\n3. **Produit** \u2014 MVP en 3 mois, certifications SOC2/ISO 27001 obligatoires.\n4. **Go-to-market** \u2014 Sales-led pour l\u2019entreprise, PLG pour les PME.\n5. **Financement** \u2014 Pr\u00e9-seed 500K-1M\u20ac, seed apr\u00e8s premiers clients payants.',
+    text: 'Pour un SaaS B2B cybersécurité, voici les 5 piliers de votre business plan :\n\n1. **Marché** — Le marché mondial de la cybersécurité atteint 266 Md$ en 2027. Ciblez un segment précis (PME, santé, fintech).\n2. **Modèle** — ARR avec pricing par siège ou par usage. Visez un LTV/CAC > 3.\n3. **Produit** — MVP en 3 mois, certifications SOC2/ISO 27001 obligatoires.\n4. **Go-to-market** — Sales-led pour l\'entreprise, PLG pour les PME.\n5. **Financement** — Pré-seed 500K-1M€, seed après premiers clients payants.',
   },
   {
     role: 'user',
-    text: 'Bonne analyse. Peux-tu approfondir le point 4, en tenant compte que je cible les PME fran\u00e7aises ?',
+    text: 'Bonne analyse. Peux-tu approfondir le point 4, en tenant compte que je cible les PME françaises ?',
   },
   {
     role: 'ai',
-    text: 'Pour les PME fran\u00e7aises en cybers\u00e9curit\u00e9, je recommande une strat\u00e9gie PLG adapt\u00e9e :\n\n**Acquisition** \u2014 Freemium avec audit de s\u00e9curit\u00e9 gratuit (fort taux de conversion en France). Partenariats avec les CCI et BPI France.\n**Canal** \u2014 R\u00e9seau de revendeurs IT locaux + int\u00e9grateurs. Les PME fran\u00e7aises ach\u00e8tent via des tiers de confiance.\n**Contenu** \u2014 Blog SEO en fran\u00e7ais sur la conformit\u00e9 RGPD/NIS2, webinaires mensuels.\n**Pricing** \u2014 3 paliers : 49\u20ac/mois (5 postes), 149\u20ac/mois (25 postes), sur-mesure au-del\u00e0.\n\nVoulez-vous que je d\u00e9taille le plan de contenu SEO ou le mod\u00e8le financier ?',
+    text: 'Pour les PME françaises en cybersécurité, je recommande une stratégie PLG adaptée :\n\n**Acquisition** — Freemium avec audit de sécurité gratuit (fort taux de conversion en France). Partenariats avec les CCI et BPI France.\n**Canal** — Réseau de revendeurs IT locaux + intégrateurs. Les PME françaises achètent via des tiers de confiance.\n**Contenu** — Blog SEO en français sur la conformité RGPD/NIS2, webinaires mensuels.\n**Pricing** — 3 paliers : 49€/mois (5 postes), 149€/mois (25 postes), sur-mesure au-delà.\n\nVoulez-vous que je détaille le plan de contenu SEO ou le modèle financier ?',
   },
-  {
-    role: 'user',
-    text: 'Oui, d\u00e9taille le mod\u00e8le financier sur 3 ans.',
-  },
-  {
-    role: 'ai',
-    text: 'Voici une projection financi\u00e8re sur 3 ans pour votre SaaS cybers\u00e9curit\u00e9 PME :\n\n**Ann\u00e9e 1** \u2014 50 clients, MRR 7K\u20ac, ARR 84K\u20ac. Focus acquisition + produit.\n**Ann\u00e9e 2** \u2014 200 clients, MRR 32K\u20ac, ARR 384K\u20ac. Recrutement sales + CSM.\n**Ann\u00e9e 3** \u2014 500 clients, MRR 85K\u20ac, ARR 1M\u20ac. Expansion europ\u00e9enne.\n\nHypoth\u00e8ses : churn 5%/mois, ARPU 170\u20ac, CAC 800\u20ac, LTV/CAC ratio de 4.2.\n\nJe peux vous g\u00e9n\u00e9rer un tableur d\u00e9taill\u00e9 avec ces projections si vous le souhaitez.',
-  },
-];
-
-const USE_CASES = [
-  { icon: 'business', title: 'Strat\u00e9gie business', desc: 'Business plans, analyses de march\u00e9 et conseils strat\u00e9giques.' },
-  { icon: 'school', title: '\u00c9ducation & recherche', desc: 'Explications p\u00e9dagogiques, synth\u00e8ses et aide \u00e0 la r\u00e9daction.' },
-  { icon: 'code', title: 'D\u00e9veloppement', desc: 'Debug, code review, architecture et documentation technique.' },
-  { icon: 'edit_note', title: 'R\u00e9daction', desc: 'Articles, emails, posts r\u00e9seaux sociaux et copywriting.' },
-  { icon: 'analytics', title: 'Analyse de donn\u00e9es', desc: 'Interpr\u00e9tation de tableaux, graphiques et rapports.' },
-  { icon: 'translate', title: 'Traduction', desc: 'Traduction contextuelle dans 12+ langues avec nuances.' },
 ];
 
 const MODELS = [
@@ -99,46 +82,46 @@ const MODELS = [
     credits: '~0.2',
     color: '#22c55e',
     icon: 'bolt',
-    details: 'Id\u00e9al pour les questions simples, r\u00e9sum\u00e9s et traductions rapides.',
+    details: 'Idéal pour les questions simples, résumés et traductions rapides.',
   },
   {
     name: 'Sonnet',
-    desc: '\u00c9quilibr\u00e9',
+    desc: 'Équilibré',
     credits: '~0.5',
     color: '#7c3aed',
     icon: 'balance',
-    details: 'Parfait pour l\u2019analyse, la r\u00e9daction et les t\u00e2ches complexes du quotidien.',
+    details: 'Parfait pour l\'analyse, la rédaction et les tâches complexes du quotidien.',
   },
   {
     name: 'Opus',
-    desc: 'Avanc\u00e9, raisonnement',
+    desc: 'Avancé, raisonnement',
     credits: '~2',
     color: '#f59e0b',
     icon: 'psychology',
-    details: 'Raisonnement profond, r\u00e9solution de probl\u00e8mes complexes et cr\u00e9ation avanc\u00e9e.',
+    details: 'Raisonnement profond, résolution de problèmes complexes et création avancée.',
   },
 ];
 
 const FAQS = [
   {
     q: 'Combien de messages puis-je envoyer ?',
-    a: 'Il n\u2019y a pas de limite de messages. Chaque message consomme des cr\u00e9dits en fonction du mod\u00e8le utilis\u00e9 : ~0.2 pour Haiku, ~0.5 pour Sonnet, ~2 pour Opus.',
+    a: 'Il n\'y a pas de limite de messages. Chaque message consomme des crédits en fonction du modèle utilisé : ~0.2 pour Haiku, ~0.5 pour Sonnet, ~2 pour Opus.',
   },
   {
-    q: 'L\u2019IA se souvient-elle de mes conversations pr\u00e9c\u00e9dentes ?',
-    a: 'Oui. La m\u00e9moire contextuelle retient vos pr\u00e9f\u00e9rences, votre historique et le contexte de vos \u00e9changes pour des r\u00e9ponses toujours plus pertinentes.',
+    q: 'L\'IA se souvient-elle de mes conversations précédentes ?',
+    a: 'Oui. La mémoire contextuelle retient vos préférences, votre historique et le contexte de vos échanges pour des réponses toujours plus pertinentes.',
   },
   {
     q: 'Quels types de fichiers puis-je analyser ?',
-    a: 'Vous pouvez uploader des PDF, images (PNG, JPG), tableurs (CSV, Excel), documents Word et fichiers texte. L\u2019IA les analyse et r\u00e9pond \u00e0 vos questions dessus.',
+    a: 'Vous pouvez uploader des PDF, images (PNG, JPG), tableurs (CSV, Excel), documents Word et fichiers texte. L\'IA les analyse et répond à vos questions dessus.',
   },
   {
-    q: 'Mes donn\u00e9es sont-elles confidentielles ?',
-    a: 'Absolument. Vos conversations sont chiffr\u00e9es, h\u00e9berg\u00e9es en Europe et ne sont jamais utilis\u00e9es pour entra\u00eener les mod\u00e8les IA. Suppression automatique apr\u00e8s 90 jours.',
+    q: 'Mes données sont-elles confidentielles ?',
+    a: 'Absolument. Vos conversations sont chiffrées, hébergées en Europe et ne sont jamais utilisées pour entraîner les modèles IA. Suppression automatique après 90 jours.',
   },
   {
     q: 'Puis-je utiliser les discussions pour du code ?',
-    a: 'Oui. L\u2019IA g\u00e9n\u00e8re, debug et explique du code dans 20+ langages. Elle peut aussi analyser vos fichiers de code upload\u00e9s et proposer des am\u00e9liorations.',
+    a: 'Oui. L\'IA génère, debug et explique du code dans 20+ langages. Elle peut aussi analyser vos fichiers de code uploadés et proposer des améliorations.',
   },
 ];
 
@@ -240,89 +223,38 @@ export default function DiscussionsPage() {
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           Voyez comment l&apos;IA se souvient du contexte et approfondit ses réponses.
         </p>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          {/* Context badge */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#06b6d4' }}>memory</span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
-              Conversation avec mémoire contextuelle
-            </span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {DEMO_MESSAGES.map((msg, i) => (
-              <div key={i} style={{
-                display: 'flex',
-                justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+        <div style={{ maxWidth: 720, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {DEMO_MESSAGES.map((msg, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+            }}>
+              <div style={{
+                maxWidth: '85%',
+                background: msg.role === 'user' ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${msg.role === 'user' ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.08)'}`,
+                borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                padding: '16px 20px',
               }}>
-                <div style={{
-                  maxWidth: '85%',
-                  background: msg.role === 'user' ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.04)',
-                  border: `1px solid ${msg.role === 'user' ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                  borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                  padding: '16px 20px',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: msg.role === 'user' ? '#a78bfa' : '#06b6d4' }}>
-                      {msg.role === 'user' ? 'person' : 'smart_toy'}
-                    </span>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: msg.role === 'user' ? '#a78bfa' : '#06b6d4', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                      {msg.role === 'user' ? 'Vous' : 'Freenzy IA'}
-                    </span>
-                    {msg.role === 'ai' && (
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginLeft: 'auto' }}>Sonnet</span>
-                    )}
-                  </div>
-                  <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.65, whiteSpace: 'pre-line' }}>
-                    {msg.text}
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 18, color: msg.role === 'user' ? '#a78bfa' : '#06b6d4' }}>
+                    {msg.role === 'user' ? 'person' : 'smart_toy'}
+                  </span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: msg.role === 'user' ? '#a78bfa' : '#06b6d4', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                    {msg.role === 'user' ? 'Vous' : 'Freenzy IA'}
+                  </span>
+                </div>
+                <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.65, whiteSpace: 'pre-line' }}>
+                  {msg.text}
                 </div>
               </div>
-            ))}
-            {/* Typing indicator */}
-            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <div style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '16px 16px 16px 4px',
-                padding: '14px 20px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-              }}>
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#06b6d4', opacity: 0.6 }} />
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#06b6d4', opacity: 0.4 }} />
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#06b6d4', opacity: 0.2 }} />
-              </div>
             </div>
-          </div>
-          <div style={{ textAlign: 'center', marginTop: 16 }}>
+          ))}
+          <div style={{ textAlign: 'center', marginTop: 8 }}>
             <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, fontStyle: 'italic' }}>
               L&apos;IA se souvient que vous ciblez les PME françaises en cybersécurité...
             </span>
           </div>
-        </div>
-      </section>
-
-      {/* Use cases */}
-      <section style={{ ...sectionStyle, paddingTop: 40 }}>
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
-          Pour tous vos cas d&apos;usage
-        </h2>
-        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
-          Une IA polyvalente qui s&apos;adapte à chaque domaine.
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 18, maxWidth: 1000, margin: '0 auto' }}>
-          {USE_CASES.map((uc, i) => (
-            <div key={i} style={{ ...cardStyle, padding: '22px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#a78bfa' }}>{uc.icon}</span>
-              </div>
-              <div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, margin: '0 0 4px' }}>{uc.title}</h3>
-                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13.5, lineHeight: 1.5, margin: 0 }}>{uc.desc}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -343,7 +275,7 @@ export default function DiscussionsPage() {
               <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{model.name}</h3>
               <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginBottom: 12 }}>{model.desc}</p>
               <div style={{ background: `${model.color}15`, border: `1px solid ${model.color}30`, borderRadius: 100, padding: '6px 16px', display: 'inline-block', fontSize: 14, fontWeight: 700, color: model.color, marginBottom: 16 }}>
-                {model.credits} crédit{model.credits === '~2' ? 's' : ''}
+                {model.credits} crédit{model.credits !== '~2' ? '' : 's'}
               </div>
               <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>{model.details}</p>
             </div>

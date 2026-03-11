@@ -619,10 +619,10 @@ export default function LandingPage() {
                   transition: 'all 0.3s',
                   display: 'flex', gap: 14, alignItems: 'flex-start',
                 }}>
-                  <span style={{ fontSize: 22, flexShrink: 0, marginTop: 2 }}>{agent.emoji}</span>
-                  <div>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', marginBottom: 3 }}>{agent.name}</p>
-                    <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.4, margin: 0 }}>{agent.desc}</p>
+                  <span className="material-symbols-rounded" style={{ fontSize: 24, color: agent.color, flexShrink: 0, width: 28, height: 28, overflow: 'hidden', marginTop: 2 }}>{agent.icon}</span>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 3 }}>{agent.name}</p>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.4, margin: 0 }}>{agent.desc}</p>
                   </div>
                 </div>
               ))}

@@ -85,7 +85,7 @@ export default function PublicNav() {
         </Link>
 
         {/* Desktop links */}
-        <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <div className="public-nav-links">
           {/* Fonctionnalités dropdown */}
           <div
             onMouseEnter={handleFeaturesEnter}

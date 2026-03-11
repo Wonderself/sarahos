@@ -787,7 +787,7 @@ function BuilderContent() {
               <div style={{ fontWeight: 700, fontSize: 16 }}>{name}</div>
               {description && <div style={{ color: 'var(--text-secondary)', fontSize: 13 }}>{description}</div>}
               <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>
-                {MODULE_TYPES.find(t => t.type === moduleType)?.icon} {MODULE_TYPES.find(t => t.type === moduleType)?.title}
+                <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>{MODULE_TYPES.find(t => t.type === moduleType)?.icon}</span>{MODULE_TYPES.find(t => t.type === moduleType)?.title}
                 {' · '}/client/modules/<strong>{slug}</strong>
               </div>
             </div>

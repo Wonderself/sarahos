@@ -942,7 +942,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
             }}
             title={mode.description}
           >
-            {mode.icon}
+            <span className="material-symbols-rounded" style={{ fontSize: 14, marginRight: 4, verticalAlign: 'middle' }}>{mode.icon}</span>
             {mode.name}
           </button>
         ))}

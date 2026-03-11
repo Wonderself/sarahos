@@ -56,7 +56,7 @@ const STATUS_LABELS: Record<CallStatus, string> = {
   completed: 'Terminé', failed: 'Échec', busy: 'Occupé', 'no-answer': 'Sans réponse',
 };
 const STATUS_COLORS: Record<CallStatus, string> = {
-  completed: '#1A1A1A', failed: '#1A1A1A', busy: '#6B6B6B', 'no-answer': '#9B9B9B',
+  completed: '#22c55e', failed: '#ef4444', busy: '#f59e0b', 'no-answer': '#6b7280',
 };
 const TABS = ['Historique', 'Personas', 'Pipeline'] as const;
 type Tab = typeof TABS[number];
@@ -200,7 +200,7 @@ export default function TelephonyPage() {
     Latence: s.total,
   })) ?? [];
 
-  const healthColor = health?.status === 'ok' ? '#1A1A1A' : health?.status === 'degraded' ? '#6B6B6B' : '#9B9B9B';
+  const healthColor = health?.status === 'ok' ? '#22c55e' : health?.status === 'degraded' ? '#f59e0b' : '#ef4444';
   const healthLabel = health?.status === 'ok' ? 'Opérationnel' : health?.status === 'degraded' ? 'Dégradé' : 'En panne';
 
   return (
@@ -222,12 +222,12 @@ export default function TelephonyPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Total appels', value: String(totalCalls), icon: '☎️', color: '#1A1A1A' },
-          { label: 'Taux de succès', value: `${successRate}%`, icon: '✅', color: '#1A1A1A' },
-          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: '⏱️', color: '#1A1A1A' },
-          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: '💰', color: '#1A1A1A' },
+          { label: 'Total appels', value: String(totalCalls), icon: '☎️', color: 'var(--accent)' },
+          { label: 'Taux de succès', value: `${successRate}%`, icon: '✅', color: '#22c55e' },
+          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: '⏱️', color: '#f59e0b' },
+          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: '💰', color: '#3b82f6' },
         ].map(s => (
-          <div key={s.label} style={{ padding: '14px 18px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+          <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
             <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
@@ -239,10 +239,10 @@ export default function TelephonyPage() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
-            padding: '8px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-            border: tab === t ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
-            background: tab === t ? '#1A1A1A' : '#fff',
-            color: tab === t ? '#fff' : '#1A1A1A',
+            padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            border: tab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
+            background: tab === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
+            color: tab === t ? '#fff' : 'var(--fz-text, #1E293B)',
           }}>{t}</button>
         ))}
       </div>
@@ -254,10 +254,10 @@ export default function TelephonyPage() {
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {(['all', 'completed', 'failed', 'busy', 'no-answer'] as const).map(s => (
                 <button key={s} onClick={() => setFilterStatus(s)} style={{
-                  padding: '5px 12px', borderRadius: 8, fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  border: filterStatus === s ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
-                  background: filterStatus === s ? '#1A1A1A' : '#fff',
-                  color: filterStatus === s ? '#fff' : '#6B6B6B',
+                  padding: '5px 12px', borderRadius: 16, fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                  border: filterStatus === s ? `1.5px solid ${s === 'all' ? 'var(--accent)' : STATUS_COLORS[s as CallStatus]}` : '1.5px solid var(--fz-border, #E2E8F0)',
+                  background: filterStatus === s ? (s === 'all' ? 'var(--accent)' : STATUS_COLORS[s as CallStatus]) + '15' : 'var(--fz-bg-secondary, #F8FAFC)',
+                  color: filterStatus === s ? (s === 'all' ? 'var(--accent)' : STATUS_COLORS[s as CallStatus]) : 'var(--fz-text-secondary, #64748B)',
                 }}>
                   {s === 'all' ? 'Tous' : STATUS_LABELS[s as CallStatus]}
                 </button>
@@ -273,7 +273,7 @@ export default function TelephonyPage() {
           {callsLoading ? (
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement...</div>
           ) : displayedCalls.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
               <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel{filterStatus !== 'all' ? ' ' + STATUS_LABELS[filterStatus as CallStatus].toLowerCase() : ''}</div>
               <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les appels <span className="fz-logo-word">Twilio</span> apparaîtront ici.</div>
@@ -281,7 +281,7 @@ export default function TelephonyPage() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {displayedCalls.map(call => (
-                <div key={call.id} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={call.id} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <div style={{ flexShrink: 0, fontSize: 24 }}>📞</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
@@ -313,7 +313,7 @@ export default function TelephonyPage() {
           {personasLoading ? (
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des personas...</div>
           ) : personas.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
               <div style={{ marginBottom: 16, fontSize: 48 }}>🎭</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune persona disponible</div>
               <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les personas vocales apparaîtront ici.</div>
@@ -321,9 +321,9 @@ export default function TelephonyPage() {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
               {personas.map(p => (
-                <div key={p.id} style={{ padding: 20, position: 'relative', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={p.id} style={{ padding: 20, position: 'relative', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   {p.active && (
-                    <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: '#F0F0F0', color: '#1A1A1A' }}>
+                    <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: '#22c55e20', color: '#22c55e' }}>
                       Active
                     </span>
                   )}
@@ -365,7 +365,7 @@ export default function TelephonyPage() {
           ) : (
             <>
               {/* Health status */}
-              <div style={{ padding: 20, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <div style={{ padding: 20, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>État du pipeline</h3>
                   <span style={{ fontSize: 13, fontWeight: 700, padding: '4px 12px', borderRadius: 8, background: healthColor + '20', color: healthColor }}>
@@ -380,7 +380,7 @@ export default function TelephonyPage() {
                   ].map(item => (
                     <div key={item.label} style={{ textAlign: 'center', padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10 }}>
                       <div style={{ marginBottom: 4, fontSize: 22 }}>{item.icon}</div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: item.value === 'ok' ? '#1A1A1A' : item.value === 'degraded' ? '#6B6B6B' : '#9B9B9B' }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: item.value === 'ok' ? '#22c55e' : item.value === 'degraded' ? '#f59e0b' : 'var(--fz-text-secondary, #64748B)' }}>
                         {item.value === 'ok' ? 'OK' : item.value === 'degraded' ? 'Dégradé' : item.value}
                       </div>
                       <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{item.label}</div>
@@ -391,7 +391,7 @@ export default function TelephonyPage() {
 
               {/* Latency metrics */}
               {metrics && (
-                <div style={{ padding: 20, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div style={{ padding: 20, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Latences moyennes</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 20 }}>
                     {[
@@ -400,9 +400,9 @@ export default function TelephonyPage() {
                       { label: 'TTS', value: metrics.ttsLatency, icon: '🔊' },
                       { label: 'Total', value: metrics.totalLatency, icon: '⚡', highlight: true },
                     ].map(m => (
-                      <div key={m.label} style={{ padding: '12px', textAlign: 'center', borderRadius: 8, border: '1px solid #E5E5E5', background: m.highlight ? '#F7F7F7' : '#fff' }}>
+                      <div key={m.label} style={{ padding: '12px', textAlign: 'center', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: m.highlight ? 'var(--accent)10' : 'var(--fz-bg, #FFFFFF)' }}>
                         <div style={{ marginBottom: 4, fontSize: 18 }}>{m.icon}</div>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: '#1A1A1A' }}>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: m.highlight ? 'var(--accent)' : 'var(--fz-text, #1E293B)' }}>
                           {m.value != null ? `${m.value}ms` : '—'}
                         </div>
                         <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>{m.label}</div>
@@ -419,7 +419,7 @@ export default function TelephonyPage() {
                           <XAxis dataKey="time" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
                           <YAxis tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} unit="ms" />
                           <Tooltip formatter={(v: number | undefined) => [`${v ?? 0}ms`, 'Latence']} />
-                          <Line type="monotone" dataKey="Latence" stroke="#1A1A1A" strokeWidth={2} dot={false} />
+                          <Line type="monotone" dataKey="Latence" stroke="var(--accent)" strokeWidth={2} dot={false} />
                         </LineChart>
                       </ResponsiveContainer>
                     </>

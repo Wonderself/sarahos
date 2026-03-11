@@ -205,7 +205,7 @@ export default function LandingPage() {
         }}>
           <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ marginBottom: 'clamp(4px, 1vw, 10px)', marginTop: -8 }}>
-              <span style={{
+              <span className="lp-hero-badge" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
                 background: '#F7F7F7', border: '1px solid #E5E5E5',
                 color: '#1A1A1A', padding: '5px 16px', borderRadius: 40,
@@ -262,7 +262,7 @@ export default function LandingPage() {
             )}
 
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('hero_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
                 padding: '12px 20px', background: '#1A1A1A', color: '#fff',
                 borderRadius: 8, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',

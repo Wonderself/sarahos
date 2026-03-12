@@ -10,9 +10,9 @@ const SITE_URL = 'https://freenzy.io';
 const SITE_NAME = 'Freenzy.io';
 const APP_NAME = 'Flashboard';
 const TAGLINE = 'Free & Easy';
-const DEFAULT_TITLE = 'Freenzy.io — 82 Agents IA & Répondeur Intelligent pour PME | Free & Easy';
+const DEFAULT_TITLE = 'Freenzy.io — 100 Agents IA & Répondeur pour PME | Free & Easy';
 const DEFAULT_DESCRIPTION =
-  'Freenzy.io : Free & Easy. Répondeur téléphonique IA 24/7 + 82 agents IA spécialisés (Marketing, Finance, Commercial, RH, Vidéo, Photo…). Toutes les IA du marché au prix officiel. 0% de commission. Sans abonnement. L\'IA accessible à tous.';
+  'Répondeur téléphonique IA 24/7 + 100 agents spécialisés (Marketing, Finance, Commercial, RH, Vidéo). Toutes les IA au prix officiel. 0% commission, sans abonnement.';
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     'secrétaire IA', 'secrétariat téléphonique IA', 'répondeur automatique IA',
     'répondeur vocal intelligent', 'standard téléphonique IA', 'répondeur 24h24',
     // Agents
-    'agent IA entreprise', 'assistant virtuel PME', '82 agents IA',
+    'agent IA entreprise', 'assistant virtuel PME', '100 agents IA',
     'multi-agent IA', 'agent IA spécialisé', 'OS IA entreprise',
     'agent marketing IA', 'agent commercial IA', 'agent RH IA',
     'agent finance IA', 'agent juridique IA', 'agent vidéo IA',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Freenzy.io — Free & Easy | 82 Agents IA & Répondeur Intelligent pour PME',
     description:
-      'Free & Easy : l\'IA accessible à tous. Ne manquez plus jamais un appel. 82 agents IA spécialisés pour automatiser toute votre entreprise. Toutes les IA du marché au prix officiel. 0% commission, sans abonnement.',
+      'Free & Easy : l\'IA accessible à tous. Ne manquez plus jamais un appel. 100 agents IA spécialisés pour automatiser toute votre entreprise. Toutes les IA du marché au prix officiel. 0% commission, sans abonnement.',
     type: 'website',
     url: SITE_URL,
     locale: 'fr_FR',
@@ -180,7 +180,7 @@ const jsonLd = {
       ],
       featureList: [
         'Répondeur téléphonique IA 24/7',
-        '82 agents IA spécialisés',
+        '100 agents IA spécialisés',
         'WhatsApp IA Business',
         'Social Media Autopilot',
         'Factory Documents IA',

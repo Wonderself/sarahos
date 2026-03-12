@@ -17,6 +17,10 @@ export default function robots(): MetadataRoute.Robots {
           '/whatsapp',
           '/register',
           '/reset-password',
+          '/blog/',
+          '/fonctionnalites/',
+          '/cas/',
+          '/vs-alternatives',
           '/images/',
         ],
         disallow: [

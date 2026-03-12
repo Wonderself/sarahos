@@ -19,6 +19,13 @@ export default function LoginPage() {
   const [selectedAgents, setSelectedAgents] = useState<AgentTypeId[]>(['fz-repondeur']);
   const [registeredSession, setRegisteredSession] = useState<Record<string, unknown> | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const isDark = localStorage.getItem('fz_dark_mode') === 'true';
+    setDark(isDark);
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -180,15 +187,15 @@ export default function LoginPage() {
   // ── Step 2: Agent Selection after registration ──
   if (step === 'agents') {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', background: '#fff' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-primary)' }}>
         <div className="flex-center" style={{ flex: 1, padding: 24, minHeight: '100vh' }}>
           <div style={{ maxWidth: 640, width: '100%' }}>
             <div className="text-center" style={{ marginBottom: 32 }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>celebration</span></div>
-              <div style={{ fontSize: 24, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#111827', marginBottom: 8, letterSpacing: '-0.02em' }}>
+              <div style={{ fontSize: 24, fontWeight: 600, fontFamily: 'var(--font-display)', color: 'var(--text-primary)', marginBottom: 8, letterSpacing: '-0.02em' }}>
                 Bienvenue ! Choisissez vos <span className="fz-logo-word">agents</span>
               </div>
-              <div style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6 }}>
+              <div style={{ fontSize: 14, color: 'var(--text-tertiary)', lineHeight: 1.6 }}>
                 Selectionnez les agents dont vous avez besoin. Vous pourrez en activer d&apos;autres plus tard.
                 <br />
                 <span style={{ color: '#7c3aed', fontWeight: 600 }}>Camille (Répondeur Intelligent)</span> est pre-selectionnee par defaut.
@@ -212,8 +219,8 @@ export default function LoginPage() {
                     type="button"
                     onClick={() => toggleAgentSelection(agent.id)}
                     style={{
-                      background: selected ? '#fafafa' : '#fff',
-                      border: `1.5px solid ${selected ? agent.color : 'rgba(0,0,0,0.08)'}`,
+                      background: selected ? 'var(--bg-secondary)' : 'var(--bg-primary)',
+                      border: `1.5px solid ${selected ? agent.color : 'var(--border-primary)'}`,
                       borderRadius: 14, padding: '16px 14px',
                       cursor: 'pointer', textAlign: 'left',
                       transition: 'all 0.2s ease',
@@ -225,21 +232,21 @@ export default function LoginPage() {
                     <div style={{
                       position: 'absolute', top: 10, right: 10,
                       width: 20, height: 20, borderRadius: 6,
-                      background: selected ? agent.color : '#f3f4f6',
-                      border: `1.5px solid ${selected ? agent.color : 'rgba(0,0,0,0.1)'}`,
+                      background: selected ? agent.color : 'var(--bg-tertiary)',
+                      border: `1.5px solid ${selected ? agent.color : 'var(--border-primary)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       color: 'white', fontSize: 11, fontWeight: 700,
                     }}>
                       {selected && <span className="material-symbols-rounded" style={{ fontSize: 11 }}>check</span>}
                     </div>
                     <div style={{ fontSize: 28, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 2 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>
                       {agent.name}
                     </div>
-                    <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 4 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 4 }}>
                       {agent.role}
                     </div>
-                    <div style={{ fontSize: 10, color: '#9ca3af', lineHeight: 1.4 }}>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.4 }}>
                       {agent.tagline}
                     </div>
                   </button>
@@ -256,7 +263,7 @@ export default function LoginPage() {
               >
                 Commencer avec {selectedAgents.length} agent{selectedAgents.length > 1 ? 's' : ''}
               </button>
-              <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 12 }}>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 12 }}>
                 Vous pourrez activer ou desactiver des agents a tout moment.
               </div>
             </div>
@@ -268,16 +275,16 @@ export default function LoginPage() {
 
   // ── Step 1: Login / Register Form ──
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', background: '#fff' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-primary)' }}>
       {/* Form panel */}
       <div className="flex-center" style={{ flex: 1, padding: 24, minHeight: '100vh' }}>
       <div style={{ maxWidth: 400, width: '100%' }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div className="fz-logo-text fz-logo-text-light" style={{ fontSize: 22, margin: '0 auto 14px' }}>
+          <div className={`fz-logo-text ${dark ? '' : 'fz-logo-text-light'}`} style={{ fontSize: 22, margin: '0 auto 14px' }}>
             freenzy.io
           </div>
-          <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4, fontFamily: 'var(--font-display)' }}>
+          <p style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 4, fontFamily: 'var(--font-display)' }}>
             Votre équipe <span className="fz-logo-word">IA</span> disponible 24/7
           </p>
         </div>
@@ -304,14 +311,14 @@ export default function LoginPage() {
 
           {/* Tabs */}
           {(mode === 'login' || mode === 'register') && (
-            <div style={{ display: 'flex', gap: 2, padding: 3, background: '#f3f4f6', borderRadius: 10, marginBottom: 20 }}>
+            <div style={{ display: 'flex', gap: 2, padding: 3, background: 'var(--bg-tertiary)', borderRadius: 10, marginBottom: 20 }}>
               <button
                 onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
                 style={{
                   flex: 1, padding: '8px 0', borderRadius: 8, fontSize: 13, fontWeight: 500,
                   border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)',
-                  background: mode === 'login' ? '#fff' : 'transparent',
-                  color: mode === 'login' ? '#111827' : '#6b7280',
+                  background: mode === 'login' ? 'var(--bg-elevated)' : 'transparent',
+                  color: mode === 'login' ? 'var(--text-primary)' : 'var(--text-tertiary)',
                   boxShadow: mode === 'login' ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
                 }}
               >
@@ -322,8 +329,8 @@ export default function LoginPage() {
                 style={{
                   flex: 1, padding: '8px 0', borderRadius: 8, fontSize: 13, fontWeight: 500,
                   border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)',
-                  background: mode === 'register' ? '#fff' : 'transparent',
-                  color: mode === 'register' ? '#111827' : '#6b7280',
+                  background: mode === 'register' ? 'var(--bg-elevated)' : 'transparent',
+                  color: mode === 'register' ? 'var(--text-primary)' : 'var(--text-tertiary)',
                   boxShadow: mode === 'register' ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
                 }}
               >
@@ -352,37 +359,37 @@ export default function LoginPage() {
               {mode === 'register' && (
                 <>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
                       Nom complet
                     </label>
                     <input type="text" className="input w-full" placeholder="Marie Dupont"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={name} onChange={e => setName(e.target.value)} required />
                   </div>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
                       Email professionnel
                     </label>
                     <input type="email" className="input w-full" placeholder="marie@entreprise.com"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={email} onChange={e => setEmail(e.target.value)} required />
                   </div>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
                       Mot de passe
                     </label>
                     <input type="password" className="input w-full" placeholder="Min 10 car., majuscule, minuscule, chiffre"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={password} onChange={e => setPassword(e.target.value)} required minLength={10} />
                   </div>
                   <div style={{
-                    background: '#f0fdf4', borderRadius: 12, padding: '12px 16px', marginBottom: 16,
+                    background: 'var(--success-muted)', borderRadius: 12, padding: '12px 16px', marginBottom: 16,
                     border: '1px solid rgba(22,163,74,0.12)',
                   }}>
                     <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#16a34a' }}>
                       Accès <span className="fz-logo-word">gratuit</span> · 0% de commission
                     </div>
-                    <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>
                       Payez uniquement les tokens consommés, au prix officiel.
                     </div>
                   </div>
@@ -392,15 +399,15 @@ export default function LoginPage() {
               {mode === 'login' && (
                 <>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>Email</label>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Email</label>
                     <input type="email" className="input w-full" placeholder="marie@entreprise.com"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={email} onChange={e => setEmail(e.target.value)} required />
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>Mot de passe</label>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Mot de passe</label>
                     <input type="password" className="input w-full" placeholder="Votre mot de passe"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={password} onChange={e => setPassword(e.target.value)} required />
                   </div>
                   <div style={{ textAlign: 'right', marginBottom: 16 }}>
@@ -416,9 +423,9 @@ export default function LoginPage() {
 
               {mode === 'forgot' && (
                 <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>Email de votre compte</label>
+                  <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Email de votre compte</label>
                   <input type="email" className="input w-full" placeholder="marie@entreprise.com"
-                    style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                    style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                     value={email} onChange={e => setEmail(e.target.value)} required />
                 </div>
               )}
@@ -426,22 +433,22 @@ export default function LoginPage() {
               {mode === 'reset' && (
                 <>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>Nouveau mot de passe</label>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Nouveau mot de passe</label>
                     <input type="password" className="input w-full" placeholder="Min 10 car., majuscule, minuscule, chiffre"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={password} onChange={e => setPassword(e.target.value)} required minLength={10} />
                   </div>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>Confirmer le mot de passe</label>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Confirmer le mot de passe</label>
                     <input type="password" className="input w-full" placeholder="Repetez le mot de passe"
-                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                      style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid var(--border-secondary)' }}
                       value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} required minLength={10} />
                   </div>
                 </>
               )}
 
               {mode === 'register' && (
-                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: '#6b7280', cursor: 'pointer', marginBottom: 4 }}>
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: 'var(--text-tertiary)', cursor: 'pointer', marginBottom: 4 }}>
                   <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
                     style={{ marginTop: 2, accentColor: '#7c3aed' }} />
                   <span>
@@ -477,7 +484,7 @@ export default function LoginPage() {
                   onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
                   style={{
                     width: '100%', marginTop: 10, padding: '10px 0', fontSize: 13,
-                    background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer',
+                    background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer',
                     fontFamily: 'var(--font-sans)',
                   }}
                 >
@@ -499,23 +506,23 @@ export default function LoginPage() {
           {DEFAULT_AGENTS.slice(0, 4).map(agent => (
             <div key={agent.id} style={{
               display: 'flex', alignItems: 'center', gap: 8,
-              padding: '8px 12px', borderRadius: 12, background: '#fafafa',
+              padding: '8px 12px', borderRadius: 12, background: 'var(--bg-secondary)',
             }}>
               <span style={{ fontSize: 18 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></span>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#374151' }}>{agent.role}</div>
-                <div style={{ fontSize: 10, color: '#9ca3af' }}>{agent.tagline}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{agent.role}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{agent.tagline}</div>
               </div>
             </div>
           ))}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
-            padding: '8px 12px', borderRadius: 12, background: '#fafafa',
+            padding: '8px 12px', borderRadius: 12, background: 'var(--bg-secondary)',
           }}>
             <span style={{ fontSize: 18 }}>+</span>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: '#374151' }}>{DEFAULT_AGENTS.length - 4} autres agents</div>
-              <div style={{ fontSize: 10, color: '#9ca3af' }}>Tous gratuits</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{DEFAULT_AGENTS.length - 4} autres agents</div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>Tous gratuits</div>
             </div>
           </div>
         </div>

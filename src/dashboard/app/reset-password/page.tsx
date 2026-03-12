@@ -11,6 +11,7 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -19,7 +20,20 @@ export default function ResetPasswordPage() {
       setToken(urlToken);
       setMode('reset');
     }
+    try {
+      setDark(localStorage.getItem('fz_dark_mode') === 'true');
+    } catch {}
   }, []);
+
+  const bgPage = dark ? '#0f0720' : '#fff';
+  const bgCard = dark ? 'rgba(255,255,255,0.04)' : '#fff';
+  const textPrimary = dark ? '#e4e6eb' : '#111827';
+  const textSecondary = dark ? 'rgba(255,255,255,0.55)' : '#6b7280';
+  const textLabel = dark ? 'rgba(255,255,255,0.7)' : '#374151';
+  const inputBorder = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)';
+  const inputBg = dark ? 'rgba(255,255,255,0.06)' : '#fff';
+  const inputColor = dark ? '#e4e6eb' : '#1d1d1f';
+  const btnBg = dark ? 'linear-gradient(135deg, #7c3aed, #06b6d4)' : '#1d1d1f';
 
   async function handleForgot(e: React.FormEvent) {
     e.preventDefault();
@@ -72,66 +86,83 @@ export default function ResetPasswordPage() {
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    padding: '11px 14px', fontSize: 14, borderRadius: 10,
+    border: `1px solid ${inputBorder}`, background: inputBg,
+    color: inputColor, width: '100%', boxSizing: 'border-box',
+    outline: 'none',
+  };
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', background: '#fff' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', background: bgPage }}>
       <div className="flex-center" style={{ flex: 1, padding: 24, minHeight: '100vh' }}>
-        <div style={{ maxWidth: 400, width: '100%' }}>
+        <div style={{ maxWidth: 400, width: '100%', background: bgCard, borderRadius: 20, padding: dark ? 32 : 0, border: dark ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div className="fz-logo-text fz-logo-text-light" style={{ fontSize: 22, margin: '0 auto 14px' }}>
+            <div className={dark ? 'fz-logo-text fz-logo-text-dark' : 'fz-logo-text fz-logo-text-light'} style={{ fontSize: 22, margin: '0 auto 14px' }}>
               freenzy.io
             </div>
-            <p style={{ fontSize: 14, color: '#9ca3af', marginTop: 4 }}>
-              Votre équipe IA disponible 24/7
+            <p style={{ fontSize: 14, color: textSecondary, marginTop: 4 }}>
+              Votre &eacute;quipe IA disponible 24/7
             </p>
           </div>
 
           {/* Title */}
           <div className="text-center" style={{ marginBottom: 24 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
-              {mode === 'reset' ? 'Nouveau mot de passe' : 'Mot de passe oublie'}
+            <div style={{ fontSize: 20, fontWeight: 700, color: textPrimary, letterSpacing: '-0.02em' }}>
+              {mode === 'reset' ? 'Nouveau mot de passe' : 'Mot de passe oubli\u00e9'}
             </div>
-            <div style={{ fontSize: 14, color: '#6b7280', marginTop: 6 }}>
+            <div style={{ fontSize: 14, color: textSecondary, marginTop: 6 }}>
               {mode === 'reset'
                 ? 'Choisissez un nouveau mot de passe pour votre compte'
-                : 'Entrez votre email pour recevoir un lien de reinitialisation'}
+                : 'Entrez votre email pour recevoir un lien de r\u00e9initialisation'}
             </div>
           </div>
 
           {/* Success */}
           {success && (
-            <div className="alert alert-success mb-16 text-md">{success}</div>
+            <div style={{
+              marginBottom: 16, fontSize: 13, padding: '12px 16px', borderRadius: 10,
+              background: dark ? 'rgba(34,197,94,0.12)' : '#f0fdf4',
+              border: `1px solid ${dark ? 'rgba(34,197,94,0.25)' : '#bbf7d0'}`,
+              color: dark ? '#4ade80' : '#166534',
+            }}>{success}</div>
           )}
 
           {/* Error */}
           {error && (
-            <div className="alert alert-danger" style={{ marginBottom: 16, fontSize: 13 }}>{error}</div>
+            <div style={{
+              marginBottom: 16, fontSize: 13, padding: '12px 16px', borderRadius: 10,
+              background: dark ? 'rgba(239,68,68,0.12)' : '#fef2f2',
+              border: `1px solid ${dark ? 'rgba(239,68,68,0.25)' : '#fecaca'}`,
+              color: dark ? '#f87171' : '#991b1b',
+            }}>{error}</div>
           )}
 
           {/* Forgot password form */}
           {mode === 'forgot' && !success && (
             <form onSubmit={handleForgot}>
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>
+                <label htmlFor="reset-email" style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: textLabel }}>
                   Email de votre compte
                 </label>
                 <input
+                  id="reset-email"
                   type="email"
-                  className="input w-full"
                   placeholder="marie@entreprise.com"
-                  style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                  style={inputStyle}
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
+                  aria-required="true"
                 />
               </div>
 
               <button
                 type="submit"
-                className="btn btn-primary w-full"
                 style={{
-                  height: 46, fontSize: 14, borderRadius: 10, fontWeight: 600,
-                  background: '#1d1d1f', border: 'none',
+                  width: '100%', height: 46, fontSize: 14, borderRadius: 10, fontWeight: 600,
+                  background: btnBg, border: 'none', color: '#fff', cursor: 'pointer',
                 }}
                 disabled={loading}
               >
@@ -144,42 +175,43 @@ export default function ResetPasswordPage() {
           {mode === 'reset' && !success && (
             <form onSubmit={handleReset}>
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>
+                <label htmlFor="reset-new-pw" style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: textLabel }}>
                   Nouveau mot de passe
                 </label>
                 <input
+                  id="reset-new-pw"
                   type="password"
-                  className="input w-full"
                   placeholder="Min 10 car., majuscule, minuscule, chiffre"
-                  style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                  style={inputStyle}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
                   minLength={10}
+                  aria-required="true"
                 />
               </div>
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: '#374151' }}>
+                <label htmlFor="reset-confirm-pw" style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: textLabel }}>
                   Confirmer le mot de passe
                 </label>
                 <input
+                  id="reset-confirm-pw"
                   type="password"
-                  className="input w-full"
-                  placeholder="Repetez le mot de passe"
-                  style={{ padding: '11px 14px', fontSize: 14, borderRadius: 10, border: '1px solid rgba(0,0,0,0.12)' }}
+                  placeholder="R\u00e9p\u00e9tez le mot de passe"
+                  style={inputStyle}
                   value={passwordConfirm}
                   onChange={e => setPasswordConfirm(e.target.value)}
                   required
                   minLength={10}
+                  aria-required="true"
                 />
               </div>
 
               <button
                 type="submit"
-                className="btn btn-primary w-full"
                 style={{
-                  height: 46, fontSize: 14, borderRadius: 10, fontWeight: 600,
-                  background: '#1d1d1f', border: 'none',
+                  width: '100%', height: 46, fontSize: 14, borderRadius: 10, fontWeight: 600,
+                  background: btnBg, border: 'none', color: '#fff', cursor: 'pointer',
                 }}
                 disabled={loading}
               >
@@ -197,7 +229,7 @@ export default function ResetPasswordPage() {
                 fontWeight: 500,
               }}
             >
-              Retour a la connexion
+              Retour &agrave; la connexion
             </a>
           </div>
         </div>

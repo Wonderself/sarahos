@@ -201,10 +201,10 @@ export default function WhatsAppPage() {
         {loadingTimedOut ? (
           <>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', marginBottom: 8 }}>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
               Impossible de charger les données
             </div>
-            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 16 }}>
+            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
               Vérifiez votre connexion ou réessayez.
             </div>
             <button
@@ -215,7 +215,7 @@ export default function WhatsAppPage() {
             </button>
           </>
         ) : (
-          <div className="animate-pulse text-md" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>Chargement...</div>
+          <div className="animate-pulse text-md" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div>
         )}
       </div>
     );
@@ -225,8 +225,8 @@ export default function WhatsAppPage() {
     <div className="page-container max-w-lg client-page-scrollable">
       <div className="page-header">
         <div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>💬 WhatsApp</h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>💬 WhatsApp</h1>
+          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
             Conversez avec vos <span className="fz-logo-word">assistants IA</span> directement sur WhatsApp. Changez d&apos;assistant avec @nom.
           </p>
         </div>
@@ -241,20 +241,20 @@ export default function WhatsAppPage() {
 
       {/* Guide WhatsApp */}
       {showGuide && (
-        <div className="card section" style={{ background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)' }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1A1A1A)' }}>Commandes <span className="fz-logo-word">WhatsApp</span></h3>
+        <div className="card section" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Commandes <span className="fz-logo-word">WhatsApp</span></h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {WA_COMMANDS.map(c => (
               <div key={c.cmd} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                 <code style={{
-                  fontSize: 13, fontWeight: 600, color: '#1A1A1A',
-                  background: 'rgba(0,0,0,0.03)', padding: '2px 8px', borderRadius: 6,
+                  fontSize: 13, fontWeight: 600, color: '#25D366',
+                  background: 'rgba(37,211,102,0.08)', padding: '2px 8px', borderRadius: 6,
                 }}>{c.cmd}</code>
                 <span style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{c.desc}</span>
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 12 }}>
+          <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 12 }}>
             Par défaut, les réponses sont courtes (300 car.). Dites &quot;détaille&quot; pour une réponse complète.
           </p>
         </div>
@@ -272,7 +272,7 @@ export default function WhatsAppPage() {
       {/* Link phone */}
       {(!status?.linked || step === 'link') && step !== 'verify' && (
         <div className="card section">
-          <h2 className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Lier votre numero WhatsApp</h2>
+          <h2 className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Lier votre numero WhatsApp</h2>
           <div className="flex gap-12 items-center">
             <input
               type="tel"
@@ -285,7 +285,7 @@ export default function WhatsAppPage() {
               📤 Envoyer le code
             </button>
           </div>
-          <p style={{ color: 'var(--fz-text-muted, #9B9B9B)' }} className="text-md mt-8">
+          <p style={{ color: 'var(--fz-text-muted, #94A3B8)' }} className="text-md mt-8">
             Format international requis (ex: +33612345678). Un code de verification sera envoye sur WhatsApp.
           </p>
         </div>
@@ -294,8 +294,8 @@ export default function WhatsAppPage() {
       {/* Verify code */}
       {step === 'verify' && (
         <div className="card section wa-bg">
-          <h2 className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Verification</h2>
-          <p className="mb-12" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>Entrez le code a 6 chiffres recu sur WhatsApp :</p>
+          <h2 className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Verification</h2>
+          <p className="mb-12" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Entrez le code a 6 chiffres recu sur WhatsApp :</p>
           <div className="flex gap-12 items-center">
             <input
               type="text"
@@ -317,18 +317,18 @@ export default function WhatsAppPage() {
         <>
           <div className="card info-card info-card-success section">
             <div className="flex-between mb-16">
-              <h2 className="section-title mb-0" style={{ color: 'var(--fz-text, #1A1A1A)' }}>WhatsApp connecte</h2>
+              <h2 className="section-title mb-0" style={{ color: 'var(--fz-text, #1E293B)' }}>WhatsApp connecte</h2>
               <span className="wa-badge-active">Actif</span>
             </div>
 
             <div className="grid-2 mb-16">
               <div>
-                <div style={{ color: 'var(--fz-text-muted, #9B9B9B)' }} className="text-md">📞 Numero</div>
-                <div className="font-semibold text-lg" style={{ color: 'var(--fz-text, #1A1A1A)' }}>{status.phoneNumber}</div>
+                <div style={{ color: 'var(--fz-text-muted, #94A3B8)' }} className="text-md">📞 Numero</div>
+                <div className="font-semibold text-lg" style={{ color: 'var(--fz-text, #1E293B)' }}>{status.phoneNumber}</div>
               </div>
               <div>
-                <div style={{ color: 'var(--fz-text-muted, #9B9B9B)' }} className="text-md">Dernier message</div>
-                <div className="font-semibold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>{status.lastMessageAt ? new Date(status.lastMessageAt).toLocaleString('fr-FR') : 'Aucun'}</div>
+                <div style={{ color: 'var(--fz-text-muted, #94A3B8)' }} className="text-md">Dernier message</div>
+                <div className="font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>{status.lastMessageAt ? new Date(status.lastMessageAt).toLocaleString('fr-FR') : 'Aucun'}</div>
               </div>
             </div>
 
@@ -336,7 +336,7 @@ export default function WhatsAppPage() {
             <div className="separator"></div>
             <div>
               <div className="flex-between items-center mb-12">
-                <h3 className="text-lg" style={{ color: 'var(--fz-text, #1A1A1A)' }}>🤖 Assistant principal</h3>
+                <h3 className="text-lg" style={{ color: 'var(--fz-text, #1E293B)' }}>🤖 Assistant principal</h3>
                 <button
                   onClick={() => setShowAgentPicker(!showAgentPicker)}
                   className="btn btn-ghost btn-sm"
@@ -354,17 +354,17 @@ export default function WhatsAppPage() {
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 12,
                     padding: '10px 14px', borderRadius: 10,
-                    background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
+                    background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                   }}>
                     <span style={{ fontSize: 24 }}>🤖</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{current.name}</div>
-                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{current.role}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{current.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{current.role}</div>
                     </div>
                     {bond && bond.relationshipLevel > 1 && (
                       <div style={{
                         fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
-                        background: 'rgba(0,0,0,0.04)', color: '#1A1A1A',
+                        background: 'rgba(91,108,247,0.1)', color: 'var(--fz-accent, #0EA5E9)',
                       }}>
                         {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
                       </div>
@@ -392,18 +392,18 @@ export default function WhatsAppPage() {
                         style={{
                           display: 'flex', flexDirection: 'column', alignItems: 'center',
                           gap: 4, padding: '10px 6px', borderRadius: 10, cursor: 'pointer',
-                          border: isSelected ? '2px solid #1A1A1A' : '1px solid var(--fz-border, #E5E5E5)',
-                          background: isSelected ? 'rgba(0,0,0,0.02)' : 'var(--fz-bg-secondary, #F7F7F7)',
+                          border: isSelected ? '2px solid #25D366' : '1px solid var(--fz-border, #E2E8F0)',
+                          background: isSelected ? 'rgba(37,211,102,0.06)' : 'var(--fz-bg-secondary, #F8FAFC)',
                           transition: 'all 0.15s',
                         }}
                       >
                         <span style={{ fontSize: 22 }}>🤖</span>
-                        <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', color: 'var(--fz-text, #1A1A1A)' }}>{agent.name}</span>
-                        <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', textAlign: 'center', lineHeight: 1.2 }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', color: 'var(--fz-text, #1E293B)' }}>{agent.name}</span>
+                        <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', lineHeight: 1.2 }}>
                           {agent.role.length > 20 ? agent.role.slice(0, 18) + '...' : agent.role}
                         </span>
                         {bond.relationshipLevel > 1 && (
-                          <span style={{ fontSize: 10, color: '#1A1A1A' }}>
+                          <span style={{ fontSize: 10, color: 'var(--fz-accent, #0EA5E9)' }}>
                             {LEVEL_ICONS[bond.relationshipLevel]} Niv.{bond.relationshipLevel}
                           </span>
                         )}
@@ -435,7 +435,7 @@ export default function WhatsAppPage() {
           {/* Top Agents — Bonding */}
           {topAgents.length > 0 && (
             <div className="card section">
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1A1A1A)' }}>Mes assistants preferes</h3>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Mes assistants preferes</h3>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {topAgents.map(bond => {
                   const agentDef = DEFAULT_AGENTS.find(a => a.id === bond.agentId);
@@ -444,17 +444,17 @@ export default function WhatsAppPage() {
                     <div key={bond.agentId} style={{
                       display: 'flex', alignItems: 'center', gap: 8,
                       padding: '8px 14px', borderRadius: 10,
-                      background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
+                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
                       flex: '1 1 140px', minWidth: 140,
                     }}>
                       <span style={{ fontSize: 20 }}>🤖</span>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{agentDef.name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{agentDef.name}</div>
+                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
                           {bond.totalInteractions} echanges · {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
                         </div>
                         {bond.satisfactionScore !== 50 && (
-                          <div style={{ fontSize: 10, color: bond.satisfactionScore >= 60 ? '#1A1A1A' : '#6B6B6B' }}>
+                          <div style={{ fontSize: 10, color: bond.satisfactionScore >= 60 ? '#22c55e' : '#ef4444' }}>
                             Satisfaction: {bond.satisfactionScore}%
                           </div>
                         )}
@@ -468,9 +468,9 @@ export default function WhatsAppPage() {
 
           {/* Conversations */}
           <div className="section">
-            <h2 className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>💬 Conversations</h2>
+            <h2 className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>💬 Conversations</h2>
             {conversations.length === 0 ? (
-              <p style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>Aucune conversation. Envoyez un message WhatsApp au numero Freenzy.io pour commencer !</p>
+              <p style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Aucune conversation. Envoyez un message WhatsApp au numero Freenzy.io pour commencer !</p>
             ) : (
               <div className="flex-col gap-8">
                 {conversations.map((conv) => (
@@ -480,15 +480,15 @@ export default function WhatsAppPage() {
                     className={`card-compact rounded-md border pointer ${selectedConv === conv.id ? 'wa-conv-active' : ''}`}
                   >
                     <div className="flex-between">
-                      <span className="font-semibold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+                      <span className="font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>
                         {(() => {
                           const agent = DEFAULT_AGENTS.find(a => a.id === conv.agentName || a.name.toLowerCase() === conv.agentName);
                           return agent ? agent.name : conv.agentName;
                         })()}
                       </span>
-                      <span className="text-md" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
+                      <span className="text-md" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
                     </div>
-                    <div className="text-md mt-4" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
+                    <div className="text-md mt-4" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
                       {conv.messageCount} messages · {conv.totalTokens} tokens · {conv.status}
                     </div>
                   </div>
@@ -500,7 +500,7 @@ export default function WhatsAppPage() {
           {/* Messages */}
           {selectedConv && (
             <div className="card section">
-              <h3 className="text-lg mb-12" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Messages</h3>
+              <h3 className="text-lg mb-12" style={{ color: 'var(--fz-text, #1E293B)' }}>Messages</h3>
               <div className="flex-col gap-8 wa-messages-scroll">
                 {messages.map((msg) => {
                   const agent = msg.direction === 'outbound' ? getAgentForMessage(msg) : null;
@@ -509,7 +509,7 @@ export default function WhatsAppPage() {
                       {/* Agent indicator for outbound messages */}
                       {agent && (
                         <div style={{
-                          fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)',
+                          fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)',
                           marginBottom: 2, textAlign: 'right',
                         }}>
                           🤖 {agent.name}
@@ -517,7 +517,7 @@ export default function WhatsAppPage() {
                       )}
                       <div className={`wa-bubble ${msg.direction === 'inbound' ? 'wa-bubble-inbound' : 'wa-bubble-outbound'}`}>
                         <div className="text-base">{msg.content || msg.transcription || `[${msg.messageType}]`}</div>
-                        <div className="text-xs mt-4 text-right" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
+                        <div className="text-xs mt-4 text-right" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
                           {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                           {msg.tokensUsed > 0 && ` · ${msg.tokensUsed}t`}
                         </div>
@@ -526,7 +526,7 @@ export default function WhatsAppPage() {
                   );
                 })}
                 {messages.length === 0 && (
-                  <p className="text-center" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>Aucun message</p>
+                  <p className="text-center" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Aucun message</p>
                 )}
               </div>
             </div>

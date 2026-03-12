@@ -108,7 +108,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-marketing',
     icon: 'bar_chart',
-    color: '#1A1A1A',
+    color: '#ec4899',
     shortLabel: 'Marketing',
     title: 'Stratégie Marketing',
     subtitle: 'Définissez votre présence digitale et vos objectifs marketing',
@@ -126,7 +126,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-finance',
     icon: 'savings',
-    color: '#1A1A1A',
+    color: '#f59e0b',
     shortLabel: 'Finance',
     title: 'Stratégie Financière',
     subtitle: 'Maîtrisez vos finances et optimisez votre rentabilité',
@@ -144,7 +144,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-assistante',
     icon: 'assignment',
-    color: '#1A1A1A',
+    color: 'var(--fz-accent, #0EA5E9)',
     shortLabel: 'Organisation',
     title: 'Stratégie Organisation',
     subtitle: 'Optimisez votre quotidien et gagnez du temps',
@@ -161,7 +161,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-dg',
     icon: 'verified',
-    color: '#1A1A1A',
+    color: '#06b6d4',
     shortLabel: 'Strategie',
     title: 'Strategie d\'Entreprise',
     subtitle: 'Définissez votre cap et accélérez votre croissance',
@@ -179,7 +179,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-dev',
     icon: 'terminal',
-    color: '#1A1A1A',
+    color: '#3b82f6',
     shortLabel: 'Tech',
     title: 'Stratégie Technique',
     subtitle: 'Structurez votre stack et votre roadmap tech',
@@ -197,7 +197,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-repondeur',
     icon: 'call',
-    color: '#1A1A1A',
+    color: '#22c55e',
     shortLabel: 'Service Client',
     title: 'Stratégie Service Client',
     subtitle: 'Construisez un service client qui fidélise',
@@ -215,7 +215,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-commercial',
     icon: 'handshake',
-    color: '#1A1A1A',
+    color: '#f97316',
     shortLabel: 'Commercial',
     title: 'Stratégie Commerciale',
     subtitle: 'Structurez votre pipeline et boostez vos ventes',
@@ -233,7 +233,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-rh',
     icon: 'group',
-    color: '#1A1A1A',
+    color: '#14b8a6',
     shortLabel: 'RH',
     title: 'Stratégie RH',
     subtitle: 'Attirez, développez et fidélisez vos talents',
@@ -251,7 +251,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-communication',
     icon: 'campaign',
-    color: '#1A1A1A',
+    color: '#8b5cf6',
     shortLabel: 'Communication',
     title: 'Stratégie Communication',
     subtitle: 'Construisez une image forte et cohérente',
@@ -269,7 +269,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-juridique',
     icon: 'balance',
-    color: '#1A1A1A',
+    color: '#64748b',
     shortLabel: 'Juridique',
     title: 'Stratégie Juridique',
     subtitle: 'Sécurisez votre entreprise sur le plan légal',
@@ -288,7 +288,7 @@ const AGENT_STRATEGIES: AgentStrategyDef[] = [
   {
     agentId: 'fz-qualite',
     icon: '✅',
-    color: '#1A1A1A',
+    color: '#10b981',
     shortLabel: 'Qualité',
     title: 'Plan Qualité & Amélioration Continue',
     subtitle: 'Structurez votre démarche qualité et visez l\'excellence',
@@ -363,7 +363,7 @@ Sois rigoureuse, structurée et pragmatique. Appuie-toi sur les méthodologies S
   {
     agentId: 'fz-data',
     icon: '📈',
-    color: '#1A1A1A',
+    color: '#0ea5e9',
     shortLabel: 'Data',
     title: 'Stratégie Data & Analytics',
     subtitle: 'Exploitez vos données pour prendre de meilleures décisions',
@@ -515,7 +515,7 @@ Sois centrée utilisateur, data-driven et orientée impact. Utilise le vocabulai
   {
     agentId: 'fz-csm',
     icon: '🤗',
-    color: '#1A1A1A',
+    color: '#f97316',
     shortLabel: 'Succès Client',
     title: 'Plan Succès Client',
     subtitle: 'Transformez vos clients en ambassadeurs fidèles',
@@ -823,7 +823,7 @@ Sois créative, centrée utilisateur et rigoureuse sur l'accessibilité.`,
   {
     agentId: 'fz-formation',
     icon: '🎓',
-    color: '#1A1A1A',
+    color: 'var(--fz-accent, #0EA5E9)',
     shortLabel: 'Formation',
     title: 'Plan Formation & Développement',
     subtitle: 'Développez les compétences de vos équipes',
@@ -900,7 +900,7 @@ Sois pédagogue, structuré et orienté impact mesurable sur la performance.`,
   {
     agentId: 'fz-innovation',
     icon: '💡',
-    color: '#1A1A1A',
+    color: '#eab308',
     shortLabel: 'Innovation',
     title: 'Stratégie Innovation',
     subtitle: 'Innovez méthodiquement pour garder une longueur d\'avance',
@@ -1057,14 +1057,14 @@ const STRATEGY_STORAGE_KEY = 'fz_agent_strategies';
 const PROJECT_STORAGE_KEY = 'fz_plan_attaque';
 
 const DEFAULT_FOLDERS: ActionFolder[] = [
-  { id: 'f-marketing', name: 'Marketing & Comm', icon: 'bar_chart', color: '#1A1A1A', items: [] },
-  { id: 'f-finance', name: 'Finance & Budget', icon: 'savings', color: '#1A1A1A', items: [] },
-  { id: 'f-tech', name: 'Tech & Produit', icon: 'terminal', color: '#1A1A1A', items: [] },
-  { id: 'f-commercial', name: 'Commercial & Ventes', icon: 'handshake', color: '#1A1A1A', items: [] },
-  { id: 'f-rh', name: 'RH & Recrutement', icon: 'group', color: '#1A1A1A', items: [] },
-  { id: 'f-juridique', name: 'Juridique & Admin', icon: 'balance', color: '#1A1A1A', items: [] },
-  { id: 'f-operations', name: 'Opérations', icon: 'settings', color: '#1A1A1A', items: [] },
-  { id: 'f-other', name: 'Divers', icon: 'folder', color: '#1A1A1A', items: [] },
+  { id: 'f-marketing', name: 'Marketing & Comm', icon: 'bar_chart', color: '#ec4899', items: [] },
+  { id: 'f-finance', name: 'Finance & Budget', icon: 'savings', color: '#f59e0b', items: [] },
+  { id: 'f-tech', name: 'Tech & Produit', icon: 'terminal', color: '#3b82f6', items: [] },
+  { id: 'f-commercial', name: 'Commercial & Ventes', icon: 'handshake', color: '#f97316', items: [] },
+  { id: 'f-rh', name: 'RH & Recrutement', icon: 'group', color: '#14b8a6', items: [] },
+  { id: 'f-juridique', name: 'Juridique & Admin', icon: 'balance', color: '#64748b', items: [] },
+  { id: 'f-operations', name: 'Opérations', icon: 'settings', color: '#8b5cf6', items: [] },
+  { id: 'f-other', name: 'Divers', icon: 'folder', color: 'var(--fz-accent, #0EA5E9)', items: [] },
 ];
 
 /* ═══════════════════════════════════════════
@@ -1411,7 +1411,7 @@ export default function StrategyPage() {
   // ─── Helpers ───
   function renderPlan(text: string) {
     return text.split('\n').map((line, i) => {
-      if (line.startsWith('## ')) return <h3 key={i} className="font-bold" style={{ fontSize: 15, color: '#1A1A1A', marginTop: 20, marginBottom: 8 }}>{line.replace('## ', '')}</h3>;
+      if (line.startsWith('## ')) return <h3 key={i} className="font-bold" style={{ fontSize: 15, color: 'var(--accent)', marginTop: 20, marginBottom: 8 }}>{line.replace('## ', '')}</h3>;
       if (line.startsWith('### ')) return <h4 key={i} className="text-md font-bold" style={{ marginTop: 12, marginBottom: 4 }}>{line.replace('### ', '')}</h4>;
       if (line.startsWith('- ') || line.startsWith('* ')) return <div key={i} className="text-md text-secondary" style={{ paddingLeft: 16, lineHeight: 1.6 }}>• {line.slice(2)}</div>;
       if (line.startsWith('**') && line.endsWith('**')) return <div key={i} className="text-md font-bold mt-8">{line.replace(/\*\*/g, '')}</div>;
@@ -1420,7 +1420,7 @@ export default function StrategyPage() {
       return (
         <div key={i} className="text-md text-secondary" style={{ lineHeight: 1.6 }}>
           {parts.map((part, j) => {
-            if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#1A1A1A' }}>{part.replace(/\*\*/g, '')}</strong>;
+            if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--fz-text, #1E293B)' }}>{part.replace(/\*\*/g, '')}</strong>;
             return part;
           })}
         </div>
@@ -1459,8 +1459,8 @@ export default function StrategyPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 18 }}>{PAGE_META.strategy.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: 0 }}>{PAGE_META.strategy.title}</h1>
-            <p style={{ fontSize: 12, color: '#9B9B9B', margin: '2px 0 0' }}>{PAGE_META.strategy.subtitle}</p>
+            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.strategy.title}</h1>
+            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.strategy.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.strategy.helpText} />
         </div>
@@ -1470,8 +1470,8 @@ export default function StrategyPage() {
       {/* ─── Objective Banner ─── */}
       <div className="card mb-20" style={{
         padding: 20,
-        background: objective.title ? '#F7F7F7' : '#F7F7F7',
-        border: objective.title ? '1px solid #E5E5E5' : '1px dashed #E5E5E5',
+        background: objective.title ? 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)' : 'var(--fz-bg-secondary, #F8FAFC)',
+        border: objective.title ? '1px solid var(--accent)' : '1px dashed var(--fz-border, #E2E8F0)',
       }}>
         {!objective.title && !editingObjective ? (
           <button
@@ -1483,7 +1483,7 @@ export default function StrategyPage() {
           </button>
         ) : editingObjective ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div className="text-md font-bold" style={{ color: '#1A1A1A' }}>Votre objectif</div>
+            <div className="text-md font-bold" style={{ color: 'var(--accent)' }}>Votre objectif</div>
             <input
               className="input w-full"
               placeholder="Ex: Lancer notre produit SaaS en 3 mois"
@@ -1520,9 +1520,9 @@ export default function StrategyPage() {
                       style={{
                         padding: '4px 12px', fontFamily: 'var(--font-sans)',
                         fontWeight: objective.priority === p ? 700 : 500,
-                        background: objective.priority === p ? 'rgba(0,0,0,0.06)' : 'var(--bg-primary)',
-                        color: objective.priority === p ? '#1A1A1A' : '#9B9B9B',
-                        border: `1px solid ${objective.priority === p ? 'currentColor' : '#E5E5E5'}`,
+                        background: objective.priority === p ? (p === 'haute' ? '#ef444420' : p === 'moyenne' ? '#f59e0b20' : '#22c55e20') : 'var(--bg-primary)',
+                        color: objective.priority === p ? (p === 'haute' ? '#ef4444' : p === 'moyenne' ? '#f59e0b' : '#22c55e') : 'var(--fz-text-muted, #94A3B8)',
+                        border: `1px solid ${objective.priority === p ? 'currentColor' : 'var(--fz-border, #E2E8F0)'}`,
                       }}
                     >
                       {p.charAt(0).toUpperCase() + p.slice(1)}
@@ -1567,8 +1567,8 @@ export default function StrategyPage() {
                 </span>
               )}
               <span className="badge" style={{
-                background: 'rgba(0,0,0,0.04)',
-                color: '#1A1A1A',
+                background: objective.priority === 'haute' ? '#ef444415' : objective.priority === 'moyenne' ? '#f59e0b15' : '#22c55e15',
+                color: objective.priority === 'haute' ? '#ef4444' : objective.priority === 'moyenne' ? '#f59e0b' : '#22c55e',
               }}>
                 Priorité {objective.priority}
               </span>
@@ -1579,16 +1579,16 @@ export default function StrategyPage() {
       </div>
 
       {/* ─── Tabs ─── */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '2px solid #E5E5E5', overflowX: 'auto' }}>
+      <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '2px solid var(--fz-border, #E2E8F0)', overflowX: 'auto' }}>
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             style={{
               padding: '10px 18px', fontSize: 13, fontWeight: activeTab === tab.id ? 700 : 500,
-              color: activeTab === tab.id ? '#1A1A1A' : '#6B6B6B',
+              color: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
               background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
-              borderBottom: activeTab === tab.id ? '2px solid #1A1A1A' : '2px solid transparent',
+              borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
               marginBottom: -2, fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
             }}
           >
@@ -1605,10 +1605,10 @@ export default function StrategyPage() {
           {/* KPI Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{progressPct}%</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--accent)' }}>{progressPct}%</div>
               <div className="text-xs text-muted">Progression globale</div>
-              <div style={{ height: 4, background: '#F7F7F7', borderRadius: 2, marginTop: 8 }}>
-                <div style={{ height: '100%', width: `${progressPct}%`, background: '#1A1A1A', borderRadius: 2, transition: 'width 0.3s' }} />
+              <div style={{ height: 4, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 2, marginTop: 8 }}>
+                <div style={{ height: '100%', width: `${progressPct}%`, background: 'var(--accent)', borderRadius: 2, transition: 'width 0.3s' }} />
               </div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
@@ -1620,15 +1620,15 @@ export default function StrategyPage() {
               <div className="text-xs text-muted">En cours</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#9B9B9B' }}>{totalActions - doneActions - doingActions}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--fz-text-muted, #94A3B8)' }}>{totalActions - doneActions - doingActions}</div>
               <div className="text-xs text-muted">À faire</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{plansGenerated}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#06b6d4' }}>{plansGenerated}</div>
               <div className="text-xs text-muted">Plans générés</div>
             </div>
             <div className="card" style={{ padding: 16, textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{documents.length}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#3b82f6' }}>{documents.length}</div>
               <div className="text-xs text-muted">Documents</div>
             </div>
           </div>
@@ -1649,7 +1649,7 @@ export default function StrategyPage() {
                     <div key={folder.id} className="flex items-center gap-8">
                       <span style={{ fontSize: 16, width: 24 }}>📁</span>
                       <span className="text-sm font-semibold" style={{ width: 140, flexShrink: 0 }}>{folder.name}</span>
-                      <div style={{ flex: 1, height: 6, background: '#F7F7F7', borderRadius: 3 }}>
+                      <div style={{ flex: 1, height: 6, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 3 }}>
                         <div style={{ height: '100%', width: `${pct}%`, background: folder.color, borderRadius: 3, transition: 'width 0.3s' }} />
                       </div>
                       <span className="text-xs text-muted" style={{ width: 60, textAlign: 'right' }}>{done}/{folder.items.length}</span>
@@ -1702,7 +1702,7 @@ export default function StrategyPage() {
       {activeTab === 'strategies' && (
         <div>
           {/* Agent tabs */}
-          <div className="flex gap-6 flex-wrap mb-16" style={{ padding: '6px 0', borderBottom: '1px solid #E5E5E5' }}>
+          <div className="flex gap-6 flex-wrap mb-16" style={{ padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
             {AGENT_STRATEGIES.map(strat => {
               const isActive = strat.agentId === activeAgentId;
               const hasSaved = !!allStrategies.strategies[strat.agentId];
@@ -1715,12 +1715,12 @@ export default function StrategyPage() {
                   style={{
                     padding: '6px 14px', fontWeight: isActive ? 700 : 500,
                     background: isActive ? strat.color + '15' : 'transparent',
-                    color: isActive ? strat.color : '#6B6B6B',
-                    border: `1px solid ${isActive ? strat.color + '44' : '#E5E5E5'}`,
+                    color: isActive ? strat.color : 'var(--fz-text-secondary, #64748B)',
+                    border: `1px solid ${isActive ? strat.color + '44' : 'var(--fz-border, #E2E8F0)'}`,
                     fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                   }}
                 >
-                  <span style={{ fontSize: 16 }}>{strat.icon}</span>
+                  {/^[a-z_]+$/.test(strat.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{strat.icon}</span> : <span style={{ marginRight: 4 }}>{strat.icon}</span>}
                   {strat.shortLabel}
                   {hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--success)', display: 'inline-block' }} />}
                   {hasSaved && !hasPlan && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--warning)', display: 'inline-block' }} />}
@@ -1741,7 +1741,7 @@ export default function StrategyPage() {
           {strategyViewMode === 'form' && activeStrategy && (
             <div className="card p-20">
               <div className="flex items-center gap-8 mb-16">
-                <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
+                {/^[a-z_]+$/.test(activeStrategy.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span> : <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>}
                 <div>
                   <div className="text-lg font-bold">{activeStrategy.title}</div>
                   <div className="text-sm text-muted">{activeStrategy.subtitle}</div>
@@ -1786,8 +1786,8 @@ export default function StrategyPage() {
                   disabled={generating || filledCount === 0}
                   style={{
                     minWidth: 200, padding: '10px 20px',
-                    background: generating ? '#F0F0F0' : activeStrategy.color,
-                    borderColor: generating ? '#E5E5E5' : activeStrategy.color,
+                    background: generating ? 'var(--fz-bg-hover, #F1F5F9)' : activeStrategy.color,
+                    borderColor: generating ? 'var(--fz-border, #E2E8F0)' : activeStrategy.color,
                   }}
                 >
                   {generating ? (
@@ -1822,8 +1822,8 @@ export default function StrategyPage() {
                 </button>
               </div>
               <div className="card p-20">
-                <div className="flex items-center gap-8 mb-16" style={{ paddingBottom: 16, borderBottom: '1px solid #E5E5E5' }}>
-                  <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>
+                <div className="flex items-center gap-8 mb-16" style={{ paddingBottom: 16, borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+                  {/^[a-z_]+$/.test(activeStrategy.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 24 }}>{activeStrategy.icon}</span> : <span style={{ fontSize: 24 }}>{activeStrategy.icon}</span>}
                   <div>
                     <div className="text-lg font-bold">{activeStrategy.title}</div>
                     <div className="text-xs text-muted">
@@ -1870,11 +1870,11 @@ export default function StrategyPage() {
                       <div className="text-xs text-muted">{total} action{total > 1 ? 's' : ''} • {done} terminée{done > 1 ? 's' : ''}</div>
                     </div>
                     {total > 0 && (
-                      <div style={{ width: 60, height: 6, background: '#F7F7F7', borderRadius: 3 }}>
+                      <div style={{ width: 60, height: 6, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 3 }}>
                         <div style={{ height: '100%', width: `${total > 0 ? (done / total) * 100 : 0}%`, background: folder.color, borderRadius: 3 }} />
                       </div>
                     )}
-                    <span className="text-sm" style={{ color: '#9B9B9B' }}>{isExpanded ? '▾' : '▸'}</span>
+                    <span className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{isExpanded ? '▾' : '▸'}</span>
                   </button>
 
                   {/* Folder content */}
@@ -1883,13 +1883,13 @@ export default function StrategyPage() {
                       {/* Items list */}
                       {folder.items.map(item => (
                         <div key={item.id} className="flex items-center gap-8 mb-6" style={{
-                          padding: '8px 10px', borderRadius: 8, background: '#F7F7F7',
+                          padding: '8px 10px', borderRadius: 8, background: 'var(--fz-bg-secondary, #F8FAFC)',
                         }}>
                           <button
                             onClick={() => toggleItemStatus(folder.id, item.id)}
                             style={{
                               width: 22, height: 22, borderRadius: 6, border: `2px solid ${
-                                item.status === 'done' ? 'var(--success)' : item.status === 'doing' ? 'var(--warning)' : '#E5E5E5'
+                                item.status === 'done' ? 'var(--success)' : item.status === 'doing' ? 'var(--warning)' : 'var(--fz-border, #E2E8F0)'
                               }`,
                               background: item.status === 'done' ? 'var(--success)' : item.status === 'doing' ? 'var(--warning)' : 'transparent',
                               color: item.status !== 'todo' ? '#fff' : 'transparent',
@@ -1902,13 +1902,13 @@ export default function StrategyPage() {
                           <span className="text-sm" style={{
                             flex: 1,
                             textDecoration: item.status === 'done' ? 'line-through' : 'none',
-                            color: item.status === 'done' ? '#9B9B9B' : '#1A1A1A',
+                            color: item.status === 'done' ? 'var(--fz-text-muted, #94A3B8)' : 'var(--fz-text, #1E293B)',
                           }}>
                             {item.title}
                           </span>
                           <button
                             onClick={() => deleteItem(folder.id, item.id)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9B9B9B', fontSize: 14, padding: '0 4px' }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14, padding: '0 4px' }}
                           >
                             ×
                           </button>
@@ -2014,7 +2014,7 @@ export default function StrategyPage() {
                     </div>
                     <button
                       className="btn btn-sm"
-                      style={{ background: '#1A1A1A', color: '#fff', borderColor: '#1A1A1A' }}
+                      style={{ background: 'var(--accent)', color: '#fff', borderColor: 'var(--accent)' }}
                       onClick={() => analyzeDocument(doc)}
                       disabled={analyzing}
                     >
@@ -2038,7 +2038,7 @@ export default function StrategyPage() {
           {/* Analysis result */}
           {analysisResult && (
             <div className="card mt-16" style={{ padding: 20 }}>
-              <div className="text-md font-bold mb-12" style={{ color: '#1A1A1A' }}>Analyse IA</div>
+              <div className="text-md font-bold mb-12" style={{ color: 'var(--accent)' }}>Analyse IA</div>
               <div>{renderPlan(analysisResult)}</div>
             </div>
           )}
@@ -2063,7 +2063,7 @@ export default function StrategyPage() {
                     setShowUpload(true);
                   }}
                   className="card"
-                  style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: '1px solid #E5E5E5', background: '#F7F7F7', fontFamily: 'var(--font-sans)' }}
+                  style={{ padding: 14, textAlign: 'left', cursor: 'pointer', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg-secondary, #F8FAFC)', fontFamily: 'var(--font-sans)' }}
                 >
                   <span style={{ fontSize: 20 }}>{({'assignment':'📋','bar_chart':'📊','calendar_month':'📅','savings':'💰','target':'🎯','edit_note':'✏️'} as Record<string,string>)[tpl.icon] || tpl.icon}</span>
                   <div className="text-sm font-bold mt-4">{tpl.name}</div>
@@ -2107,7 +2107,7 @@ export default function StrategyPage() {
                   {conv.keyPoints.length > 0 && (
                     <div className="flex gap-6 flex-wrap">
                       {conv.keyPoints.map((kp, j) => (
-                        <span key={j} className="badge" style={{ fontSize: 10, background: '#F7F7F7' }}>
+                        <span key={j} className="badge" style={{ fontSize: 10, background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
                           {kp}
                         </span>
                       ))}
@@ -2163,8 +2163,8 @@ function FieldRenderer({
                 style={{
                   padding: '6px 14px', fontWeight: isSelected ? 600 : 500,
                   background: isSelected ? accentColor : 'var(--bg-primary)',
-                  color: isSelected ? 'white' : '#9B9B9B',
-                  border: `1px solid ${isSelected ? accentColor : '#E5E5E5'}`,
+                  color: isSelected ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                  border: `1px solid ${isSelected ? accentColor : 'var(--fz-border, #E2E8F0)'}`,
                   fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                 }}
               >{opt}</button>
@@ -2182,8 +2182,8 @@ function FieldRenderer({
                 style={{
                   padding: '6px 14px', fontWeight: selected ? 600 : 500,
                   background: selected ? accentColor : 'var(--bg-primary)',
-                  color: selected ? 'white' : '#9B9B9B',
-                  border: `1px solid ${selected ? accentColor : '#E5E5E5'}`,
+                  color: selected ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                  border: `1px solid ${selected ? accentColor : 'var(--fz-border, #E2E8F0)'}`,
                   fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                 }}
               >{chip}</button>

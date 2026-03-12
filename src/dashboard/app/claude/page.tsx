@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DEFAULT_AGENTS } from '../../lib/agent-config';
 import PublicNav from '../../components/PublicNav';
@@ -21,9 +22,23 @@ const OPUS_AGENT_IDS = ['fz-dev', 'fz-dg'];
 export default function ClaudePage() {
   const sonnetAgents = DEFAULT_AGENTS.filter(a => !OPUS_AGENT_IDS.includes(a.id));
   const opusAgents = DEFAULT_AGENTS.filter(a => OPUS_AGENT_IDS.includes(a.id));
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    const isDark = localStorage.getItem('fz_dark_mode') === 'true';
+    setDark(isDark);
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
+
+  const txt = dark ? '#e4e6eb' : '#1d1d1f';
+  const txtSub = dark ? '#a0a4b0' : '#86868b';
+  const bg = dark ? '#0f0720' : '#fff';
+  const bgSurface = dark ? '#1a0e3a' : '#f5f5f7';
+  const bgCard = dark ? 'rgba(255,255,255,0.05)' : '#fff';
+  const btnBg = dark ? '#7c3aed' : '#1d1d1f';
+  const borderCol = dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
 
   return (
-    <div style={{ background: '#fff', color: '#1d1d1f', minHeight: '100vh' }}>
+    <div style={{ background: bg, color: txt, minHeight: '100vh' }}>
 
       <PublicNav />
 
@@ -35,14 +50,14 @@ export default function ClaudePage() {
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '5px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600,
-          background: '#f5f5f7', color: '#86868b', marginBottom: 24,
+          background: bgSurface, color: txtSub, marginBottom: 24,
         }}>
-          <ClaudeIcon size={14} color="#86868b" /> Propulse par Anthropic
+          <ClaudeIcon size={14} color={txtSub} /> Propulse par Anthropic
         </div>
 
         <h1 style={{
           fontSize: 48, fontWeight: 700, letterSpacing: '-0.03em',
-          lineHeight: 1.1, marginBottom: 16, color: '#1d1d1f',
+          lineHeight: 1.1, marginBottom: 16, color: txt,
         }}>
           L&apos;IA la plus avancee
           <br />
@@ -50,7 +65,7 @@ export default function ClaudePage() {
         </h1>
 
         <p style={{
-          fontSize: 17, color: '#86868b', lineHeight: 1.6,
+          fontSize: 17, color: txtSub, lineHeight: 1.6,
           maxWidth: 520, margin: '0 auto 32px',
         }}>
           Freenzy.io utilise exclusivement les modeles Claude d&apos;Anthropic — reconnus comme les plus performants,
@@ -59,7 +74,7 @@ export default function ClaudePage() {
 
         <Link href="/login?mode=register" style={{
           display: 'inline-block', padding: '12px 32px', fontSize: 15, fontWeight: 600,
-          borderRadius: 12, background: '#1d1d1f', color: '#fff',
+          borderRadius: 12, background: btnBg, color: '#fff',
           textDecoration: 'none', transition: 'opacity 0.2s',
         }}>
           Commencer gratuitement
@@ -71,11 +86,11 @@ export default function ClaudePage() {
         {/* ═══ Pourquoi Claude ═══ */}
         <section style={{ padding: '48px 0' }}>
           <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 6 }}>Technologie</div>
-            <h2 style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 6 }}>Technologie</div>
+            <h2 style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em', color: txt, marginBottom: 8 }}>
               Pourquoi Claude AI ?
             </h2>
-            <p style={{ fontSize: 15, color: '#86868b', lineHeight: 1.6, maxWidth: 520 }}>
+            <p style={{ fontSize: 15, color: txtSub, lineHeight: 1.6, maxWidth: 520 }}>
               Le choix de l&apos;IA qui propulse votre entreprise n&apos;est pas anodin.
             </p>
           </div>
@@ -91,11 +106,11 @@ export default function ClaudePage() {
             ].map(c => (
               <div key={c.title} style={{
                 padding: 24, borderRadius: 12,
-                background: '#f5f5f7',
+                background: bgSurface,
               }}>
                 <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{c.icon}</span></div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{c.title}</div>
-                <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.6 }}>{c.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 6 }}>{c.title}</div>
+                <div style={{ fontSize: 13, color: txtSub, lineHeight: 1.6 }}>{c.desc}</div>
               </div>
             ))}
           </div>
@@ -104,8 +119,8 @@ export default function ClaudePage() {
         {/* ═══ Deux modeles ═══ */}
         <section style={{ padding: '48px 0' }}>
           <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 6 }}>Architecture</div>
-            <h2 style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 6 }}>Architecture</div>
+            <h2 style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em', color: txt }}>
               Deux modeles, deux forces
             </h2>
           </div>
@@ -115,20 +130,20 @@ export default function ClaudePage() {
           }}>
             {/* Sonnet */}
             <div style={{
-              padding: 32, borderRadius: 12, border: '1px solid #f5f5f7',
-              background: '#fff',
+              padding: 32, borderRadius: 12, border: `1px solid ${borderCol}`,
+              background: bgCard,
             }}>
               <div style={{
                 display: 'inline-block', padding: '4px 12px', borderRadius: 20,
-                background: '#f5f5f7', color: '#86868b',
+                background: bgSurface, color: txtSub,
                 fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', marginBottom: 16,
               }}>
                 CLAUDE SONNET
               </div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.03em', marginBottom: 8 }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: txt, letterSpacing: '-0.03em', marginBottom: 8 }}>
                 Rapide &amp; Efficace
               </div>
-              <p style={{ fontSize: 14, color: '#86868b', lineHeight: 1.6, marginBottom: 20 }}>
+              <p style={{ fontSize: 14, color: txtSub, lineHeight: 1.6, marginBottom: 20 }}>
                 Le moteur de vos {sonnetAgents.length} agents du quotidien. Reponses en quelques secondes pour les emails,
                 analyses, documents et taches courantes.
               </p>
@@ -139,32 +154,32 @@ export default function ClaudePage() {
                   'Ideal pour les taches courantes',
                   'Comprehension contextuelle avancee',
                 ].map(f => (
-                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#86868b' }}>
-                    <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 14 }}>check</span> {f}
+                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: txtSub }}>
+                    <span className="material-symbols-rounded" style={{ color: txt, fontSize: 14 }}>check</span> {f}
                   </div>
                 ))}
               </div>
-              <div style={{ borderTop: '1px solid #f5f5f7', paddingTop: 14, fontSize: 12, color: '#86868b' }}>
+              <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: 14, fontSize: 12, color: txtSub }}>
                 Agents : {sonnetAgents.map(a => a.name).join(', ')}
               </div>
             </div>
 
             {/* Opus */}
             <div style={{
-              padding: 32, borderRadius: 12, border: '1px solid #1d1d1f',
-              background: '#fff',
+              padding: 32, borderRadius: 12, border: `1px solid ${dark ? '#7c3aed' : '#1d1d1f'}`,
+              background: bgCard,
             }}>
               <div style={{
                 display: 'inline-block', padding: '4px 12px', borderRadius: 20,
-                background: '#1d1d1f', color: '#fff',
+                background: btnBg, color: '#fff',
                 fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', marginBottom: 16,
               }}>
                 CLAUDE OPUS
               </div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.03em', marginBottom: 8 }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: txt, letterSpacing: '-0.03em', marginBottom: 8 }}>
                 Strategique &amp; Profond
               </div>
-              <p style={{ fontSize: 14, color: '#86868b', lineHeight: 1.6, marginBottom: 20 }}>
+              <p style={{ fontSize: 14, color: txtSub, lineHeight: 1.6, marginBottom: 20 }}>
                 Reserve aux decisions strategiques et problemes complexes. Extended Thinking pour
                 une reflexion approfondie avant chaque reponse.
               </p>
@@ -175,12 +190,12 @@ export default function ClaudePage() {
                   'Decisions strategiques a long terme',
                   'Le modele le plus puissant d\'Anthropic',
                 ].map(f => (
-                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#86868b' }}>
-                    <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 14 }}>check</span> {f}
+                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: txtSub }}>
+                    <span className="material-symbols-rounded" style={{ color: txt, fontSize: 14 }}>check</span> {f}
                   </div>
                 ))}
               </div>
-              <div style={{ borderTop: '1px solid #f5f5f7', paddingTop: 14, fontSize: 12, color: '#86868b' }}>
+              <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: 14, fontSize: 12, color: txtSub }}>
                 Agents : {opusAgents.map(a => `${a.name} (${a.role})`).join(', ')}
               </div>
             </div>
@@ -190,22 +205,22 @@ export default function ClaudePage() {
         {/* ═══ Extended Thinking ═══ */}
         <section style={{ padding: '48px 0', maxWidth: 780, margin: '0 auto' }}>
           <div style={{
-            padding: 40, borderRadius: 12, background: '#f5f5f7',
+            padding: 40, borderRadius: 12, background: bgSurface,
           }}>
             <div style={{ marginBottom: 24 }}>
               <div style={{
                 display: 'inline-block', padding: '4px 12px', borderRadius: 20,
-                background: '#fff', color: '#86868b', border: '1px solid rgba(0,0,0,0.08)',
+                background: bgCard, color: txtSub, border: `1px solid ${borderCol}`,
                 fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', marginBottom: 16,
               }}>
                 EXCLUSIF
               </div>
-              <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f', marginBottom: 8 }}>
+              <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: txt, marginBottom: 8 }}>
                 Quand l&apos;IA reflechit avant de repondre
               </h2>
             </div>
-            <p style={{ fontSize: 14, color: '#86868b', lineHeight: 1.7, marginBottom: 28, maxWidth: 560 }}>
-              Claude Opus dispose de l&apos;<strong style={{ color: '#1d1d1f' }}>Extended Thinking</strong> — une capacite unique qui lui permet de
+            <p style={{ fontSize: 14, color: txtSub, lineHeight: 1.7, marginBottom: 28, maxWidth: 560 }}>
+              Claude Opus dispose de l&apos;<strong style={{ color: txt }}>Extended Thinking</strong> — une capacite unique qui lui permet de
               developper un raisonnement interne structure avant de formuler sa reponse. Comme un dirigeant
               qui pese le pour et le contre.
             </p>
@@ -219,11 +234,11 @@ export default function ClaudePage() {
               ].map(s => (
                 <div key={s.title} style={{
                   textAlign: 'center', padding: 16, borderRadius: 10,
-                  background: '#fff',
+                  background: bgCard,
                 }}>
                   <div style={{ fontSize: 24, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', marginBottom: 4 }}>{s.title}</div>
-                  <div style={{ fontSize: 12, color: '#86868b', lineHeight: 1.5 }}>{s.desc}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: txt, marginBottom: 4 }}>{s.title}</div>
+                  <div style={{ fontSize: 12, color: txtSub, lineHeight: 1.5 }}>{s.desc}</div>
                 </div>
               ))}
             </div>
@@ -233,30 +248,30 @@ export default function ClaudePage() {
         {/* ═══ Repartition agents ═══ */}
         <section style={{ padding: '48px 0' }}>
           <div style={{ marginBottom: 28 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 6 }}>Repartition</div>
-            <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 6 }}>Repartition</div>
+            <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: txt }}>
               Quel agent utilise quel modele
             </h2>
           </div>
-          <div style={{ maxWidth: 680, borderRadius: 12, border: '1px solid #f5f5f7', overflow: 'hidden' }}>
+          <div style={{ maxWidth: 680, borderRadius: 12, border: `1px solid ${borderCol}`, overflow: 'hidden' }}>
             {DEFAULT_AGENTS.map((agent, i) => {
               const isOpus = OPUS_AGENT_IDS.includes(agent.id);
               return (
                 <div key={agent.id} style={{
                   display: 'flex', alignItems: 'center',
                   gap: 12, padding: '14px 20px',
-                  borderBottom: i < DEFAULT_AGENTS.length - 1 ? '1px solid #f5f5f7' : 'none',
-                  background: '#fff',
+                  borderBottom: i < DEFAULT_AGENTS.length - 1 ? `1px solid ${borderCol}` : 'none',
+                  background: bgCard,
                 }}>
                   <div style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f' }}>{agent.name}</div>
-                    <div style={{ fontSize: 12, color: '#86868b' }}>{agent.role}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: txt }}>{agent.name}</div>
+                    <div style={{ fontSize: 12, color: txtSub }}>{agent.role}</div>
                   </div>
                   <div style={{
                     padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
-                    background: isOpus ? '#1d1d1f' : '#f5f5f7',
-                    color: isOpus ? '#fff' : '#86868b',
+                    background: isOpus ? btnBg : bgSurface,
+                    color: isOpus ? '#fff' : txtSub,
                   }}>
                     {isOpus ? 'Opus' : 'Sonnet'}
                   </div>
@@ -269,8 +284,8 @@ export default function ClaudePage() {
         {/* ═══ Securite & Ethique ═══ */}
         <section style={{ padding: '48px 0' }}>
           <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 6 }}>Confiance</div>
-            <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 6 }}>Confiance</div>
+            <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: txt }}>
               Securite et ethique au coeur
             </h2>
           </div>
@@ -285,11 +300,11 @@ export default function ClaudePage() {
               { icon: 'trophy', title: 'Benchmarks #1', desc: 'Classe #1 sur MMLU, HumanEval, GSM8K. Le plus performant en raisonnement et comprehension.' },
             ].map(c => (
               <div key={c.title} style={{
-                padding: 24, borderRadius: 12, background: '#f5f5f7',
+                padding: 24, borderRadius: 12, background: bgSurface,
               }}>
                 <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{c.icon}</span></div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>{c.title}</div>
-                <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.6 }}>{c.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 6 }}>{c.title}</div>
+                <div style={{ fontSize: 13, color: txtSub, lineHeight: 1.6 }}>{c.desc}</div>
               </div>
             ))}
           </div>
@@ -298,8 +313,8 @@ export default function ClaudePage() {
         {/* ═══ Ecosysteme ═══ */}
         <section style={{ padding: '48px 0' }}>
           <div style={{ marginBottom: 32 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 6 }}>Integrations</div>
-            <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: '#1d1d1f' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 6 }}>Integrations</div>
+            <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em', color: txt }}>
               Un ecosysteme complet autour de Claude
             </h2>
           </div>
@@ -316,12 +331,12 @@ export default function ClaudePage() {
               <Link key={t.title} href={t.href} style={{
                 textDecoration: 'none', color: 'inherit',
                 padding: 24, display: 'block', borderRadius: 12,
-                border: '1px solid #f5f5f7', background: '#fff',
+                border: `1px solid ${borderCol}`, background: bgCard,
                 transition: 'background 0.2s',
               }}>
                 <div style={{ fontSize: 28, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{t.icon}</span></div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 4 }}>{t.title}</div>
-                <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.6 }}>{t.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 4 }}>{t.title}</div>
+                <div style={{ fontSize: 13, color: txtSub, lineHeight: 1.6 }}>{t.desc}</div>
               </Link>
             ))}
           </div>
@@ -330,29 +345,29 @@ export default function ClaudePage() {
         {/* ═══ CTA Final ═══ */}
         <section style={{
           padding: '48px 32px', borderRadius: 12,
-          background: '#f5f5f7', textAlign: 'center', marginBottom: 48,
+          background: bgSurface, textAlign: 'center', marginBottom: 48,
         }}>
-          <ClaudeIcon size={36} color="#1d1d1f" />
+          <ClaudeIcon size={36} color={txt} />
           <h2 style={{
             fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em',
-            color: '#1d1d1f', marginTop: 16, marginBottom: 10,
+            color: txt, marginTop: 16, marginBottom: 10,
           }}>
             Pret a decouvrir la puissance de Claude AI ?
           </h2>
-          <p style={{ fontSize: 15, color: '#86868b', maxWidth: 440, margin: '0 auto 24px' }}>
+          <p style={{ fontSize: 15, color: txtSub, maxWidth: 440, margin: '0 auto 24px' }}>
             Testez Sonnet et Opus — accès gratuit, 0% de commission
           </p>
           <Link href="/login?mode=register" style={{
             display: 'inline-block', padding: '12px 32px', fontSize: 15, fontWeight: 600,
-            borderRadius: 12, background: '#1d1d1f', color: '#fff',
+            borderRadius: 12, background: btnBg, color: '#fff',
             textDecoration: 'none', transition: 'opacity 0.2s',
           }}>
             Essayer gratuitement
           </Link>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, marginTop: 16 }}>
             {['Claude Sonnet & Opus', `${DEFAULT_AGENTS.length} agents IA`, 'Extended Thinking'].map(t => (
-              <span key={t} style={{ fontSize: 12, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <span className="material-symbols-rounded" style={{ color: '#1d1d1f', fontSize: 14 }}>check</span> {t}
+              <span key={t} style={{ fontSize: 12, color: txtSub, display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span className="material-symbols-rounded" style={{ color: txt, fontSize: 14 }}>check</span> {t}
               </span>
             ))}
           </div>

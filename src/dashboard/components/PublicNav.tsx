@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 const NAV_LINKS = [
   { href: '/demo', label: 'Démo' },
   { href: '/plans', label: 'Tarifs & API' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 const FEATURE_LINKS = [
@@ -85,7 +86,7 @@ export default function PublicNav() {
         </Link>
 
         {/* Desktop links */}
-        <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <div className="public-nav-links">
           {/* Fonctionnalités dropdown */}
           <div
             onMouseEnter={handleFeaturesEnter}

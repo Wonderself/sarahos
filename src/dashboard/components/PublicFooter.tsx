@@ -4,6 +4,7 @@ const PRODUCT_LINKS = [
   { href: '/demo', label: 'Demo' },
   { href: '/plans', label: 'Tarifs' },
   { href: '/tarifs-api', label: 'API' },
+  { href: '/blog', label: 'Blog' },
   { href: '/login', label: 'Se connecter' },
 ];
 

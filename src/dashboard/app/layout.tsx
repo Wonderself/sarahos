@@ -10,9 +10,9 @@ const SITE_URL = 'https://freenzy.io';
 const SITE_NAME = 'Freenzy.io';
 const APP_NAME = 'Flashboard';
 const TAGLINE = 'Free & Easy';
-const DEFAULT_TITLE = 'Freenzy.io — 82 Agents IA & Répondeur Intelligent pour PME | Free & Easy';
+const DEFAULT_TITLE = 'Freenzy.io — 100 Agents IA & Répondeur pour PME | Free & Easy';
 const DEFAULT_DESCRIPTION =
-  'Freenzy.io : Free & Easy. Répondeur téléphonique IA 24/7 + 82 agents IA spécialisés (Marketing, Finance, Commercial, RH, Vidéo, Photo…). Toutes les IA du marché au prix officiel. 0% de commission. Sans abonnement. L\'IA accessible à tous.';
+  'Répondeur téléphonique IA 24/7 + 100 agents spécialisés (Marketing, Finance, Commercial, RH, Vidéo). Toutes les IA au prix officiel. 0% commission, sans abonnement.';
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     'secrétaire IA', 'secrétariat téléphonique IA', 'répondeur automatique IA',
     'répondeur vocal intelligent', 'standard téléphonique IA', 'répondeur 24h24',
     // Agents
-    'agent IA entreprise', 'assistant virtuel PME', '82 agents IA',
+    'agent IA entreprise', 'assistant virtuel PME', '100 agents IA',
     'multi-agent IA', 'agent IA spécialisé', 'OS IA entreprise',
     'agent marketing IA', 'agent commercial IA', 'agent RH IA',
     'agent finance IA', 'agent juridique IA', 'agent vidéo IA',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Freenzy.io — Free & Easy | 82 Agents IA & Répondeur Intelligent pour PME',
     description:
-      'Free & Easy : l\'IA accessible à tous. Ne manquez plus jamais un appel. 82 agents IA spécialisés pour automatiser toute votre entreprise. Toutes les IA du marché au prix officiel. 0% commission, sans abonnement.',
+      'Free & Easy : l\'IA accessible à tous. Ne manquez plus jamais un appel. 100 agents IA spécialisés pour automatiser toute votre entreprise. Toutes les IA du marché au prix officiel. 0% commission, sans abonnement.',
     type: 'website',
     url: SITE_URL,
     locale: 'fr_FR',
@@ -180,7 +180,7 @@ const jsonLd = {
       ],
       featureList: [
         'Répondeur téléphonique IA 24/7',
-        '82 agents IA spécialisés',
+        '100 agents IA spécialisés',
         'WhatsApp IA Business',
         'Social Media Autopilot',
         'Factory Documents IA',
@@ -280,7 +280,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+        {/* Text fonts: swap (show fallback immediately) */}
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+        {/* Material Symbols: block (invisible until loaded — prevents icon names showing as text) */}
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
 
         {/* JSON-LD Structured Data */}
         <script

@@ -353,7 +353,7 @@ export default function Game2048() {
                 gap: 4,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+              ←
               Arcade
             </Link>
           </div>

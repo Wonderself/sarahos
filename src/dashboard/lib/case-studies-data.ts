@@ -88,7 +88,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         'Avant Freenzy, je passais mes matinées au téléphone et mes soirées sur les plannings. Maintenant, je peux enfin me concentrer sur ce que j\'aime : la cuisine et mes clients.',
       note: 'Scénario type basé sur des cas d\'usage réels',
     },
-    ctaText: 'Essayer Freenzy pour mon restaurant',
+    ctaText: 'Explorer Freenzy pour mon restaurant',
   },
   {
     slug: 'immobilier',
@@ -165,7 +165,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         'Freenzy a changé ma façon de travailler. Je me concentre sur les visites et la relation client, pendant que mes agents gèrent tout le reste. Mon chiffre d\'affaires a suivi.',
       note: 'Scénario type basé sur des cas d\'usage réels',
     },
-    ctaText: 'Essayer Freenzy pour mon agence',
+    ctaText: 'Explorer Freenzy pour mon agence',
   },
   {
     slug: 'cabinet',
@@ -242,6 +242,6 @@ export const CASE_STUDIES: CaseStudy[] = [
         'Avec Freenzy, j\'ai enfin l\'impression d\'avoir une équipe complète derrière moi. La veille juridique seule me fait gagner un temps fou. Mes clients sentent la différence.',
       note: 'Scénario type basé sur des cas d\'usage réels',
     },
-    ctaText: 'Essayer Freenzy pour mon cabinet',
+    ctaText: 'Explorer Freenzy pour mon cabinet',
   },
 ];

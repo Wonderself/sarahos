@@ -77,7 +77,7 @@ export default function UserEnterpriseTab({ userId, json, loading, showToast, on
       {/* Formatted Display */}
       {hasCompanyData && (
         <div style={styles.card}>
-          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>business</span> Apercu du profil</div>
+          <div style={styles.cardTitle}>🏢 Apercu du profil</div>
           <div style={styles.grid2}>
             {companyFields.map(field => {
               const value = companyObj[field];
@@ -95,7 +95,7 @@ export default function UserEnterpriseTab({ userId, json, loading, showToast, on
 
       {/* JSON Editor */}
       <div style={styles.card}>
-        <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>edit_note</span> Editeur JSON</div>
+        <div style={styles.cardTitle}>📝 Editeur JSON</div>
         <div style={styles.formGroup}>
           <textarea
             style={{
@@ -108,7 +108,7 @@ export default function UserEnterpriseTab({ userId, json, loading, showToast, on
           />
           {parseError && (
             <div style={{ color: 'var(--danger)', fontSize: 12, marginTop: 6 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>warning</span> {parseError}
+              ⚠️ {parseError}
             </div>
           )}
         </div>
@@ -118,7 +118,7 @@ export default function UserEnterpriseTab({ userId, json, loading, showToast, on
             onClick={handleSave}
             disabled={saving || !!parseError}
           >
-            {saving ? 'Sauvegarde...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>save</span> Sauvegarder</>}
+            {saving ? 'Sauvegarde...' : <>💾 Sauvegarder</>}
           </button>
           <button
             style={styles.btnSecondary}

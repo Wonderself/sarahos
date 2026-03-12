@@ -5,6 +5,8 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META, REPONDEUR_MODE_EMOJIS, REPONDEUR_SCENARIO_EMOJIS } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -192,6 +194,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
 // ══════════════════════════════════════════════════════════════════════════════
 export default function RepondeurPage() {
   const isMobile = useIsMobile();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const [config, setConfig] = useState<RepondeurConfig | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -200,10 +203,16 @@ export default function RepondeurPage() {
   const [success, setSuccess] = useState('');
   const [tab, setTab] = useState<'overview' | 'config' | 'contacts' | 'inbox' | 'settings'>('overview');
 
-  // Setup wizard state
+  // Setup wizard state — persisted for visitors via localStorage
+  const { draft: wizardDraft, updateField: updateWizardField, clearDraft: clearWizardDraft } = useVisitorDraftObject('repondeur', {
+    wizardScenario: '',
+    wizardPhone: '',
+  });
   const [wizardStep, setWizardStep] = useState(1);
-  const [wizardScenario, setWizardScenario] = useState('');
-  const [wizardPhone, setWizardPhone] = useState('');
+  const wizardScenario = wizardDraft.wizardScenario;
+  const setWizardScenario = (v: string) => updateWizardField('wizardScenario', v);
+  const wizardPhone = wizardDraft.wizardPhone;
+  const setWizardPhone = (v: string) => updateWizardField('wizardPhone', v);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -225,6 +234,7 @@ export default function RepondeurPage() {
   const showError = (msg: string) => { setError(msg); setTimeout(() => setError(''), 5000); };
 
   const updateConfig = async (updates: Partial<RepondeurConfig>) => {
+    if (!requireAuth('Connectez-vous pour configurer le repondeur')) return;
     try {
       setSaving(true);
       setError('');
@@ -242,6 +252,7 @@ export default function RepondeurPage() {
 
   // ── Wizard: create first config ────────────────────────────────────────────
   const finishWizard = async () => {
+    if (!requireAuth('Connectez-vous pour activer le repondeur')) return;
     try {
       setSaving(true);
       const scenario = SCENARIO_TEMPLATES.find(s => s.id === wizardScenario);
@@ -254,6 +265,7 @@ export default function RepondeurPage() {
       });
       setConfig(data);
       setTab('overview');
+      clearWizardDraft();
       showSuccess('Répondeur activé ! Bienvenue');
     } catch (e) {
       showError(e instanceof Error ? e.message : 'Erreur de création');
@@ -342,7 +354,7 @@ export default function RepondeurPage() {
                 onClick={() => wizardScenario && setWizardStep(2)}
                 disabled={!wizardScenario}
                 style={{
-                  padding: '10px 32px', borderRadius: 8, border: 'none',
+                  padding: '10px 32px', borderRadius: 8, border: 'none', minHeight: 44,
                   background: wizardScenario ? '#1A1A1A' : '#E5E5E5',
                   color: wizardScenario ? 'white' : '#9B9B9B',
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
@@ -427,7 +439,7 @@ export default function RepondeurPage() {
                 onClick={finishWizard}
                 disabled={saving}
                 style={{
-                  padding: '10px 32px', borderRadius: 8, border: 'none',
+                  padding: '10px 32px', borderRadius: 8, border: 'none', minHeight: 44,
                   background: saving ? '#9B9B9B' : '#1A1A1A', color: 'white',
                   fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
                 }}
@@ -437,6 +449,7 @@ export default function RepondeurPage() {
             </div>
           </div>
         )}
+        {LoginModalComponent}
       </div>
     );
   }
@@ -476,8 +489,8 @@ export default function RepondeurPage() {
             <button
               onClick={() => updateConfig({ isActive: !config.isActive })}
               style={{
-                padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 700,
-                cursor: 'pointer',
+                padding: '10px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 700,
+                cursor: 'pointer', minHeight: 44,
                 background: config.isActive ? '#fef2f2' : '#fff',
                 color: config.isActive ? 'var(--danger)' : '#1A1A1A',
               }}
@@ -536,6 +549,7 @@ export default function RepondeurPage() {
           <SettingsTab config={config} onUpdate={updateConfig} saving={saving} />
         )}
       </div>
+      {LoginModalComponent}
     </div>
   );
 }
@@ -715,7 +729,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               key={p.id}
               onClick={() => applyPreset(p)}
               style={{
-                padding: '6px 14px', borderRadius: 20, border: '1px solid #E5E5E5',
+                padding: '10px 14px', borderRadius: 20, border: '1px solid #E5E5E5', minHeight: 44,
                 background: mode === p.mode ? 'rgba(0,0,0,0.04)' : '#fff',
                 color: mode === p.mode ? '#1A1A1A' : '#6B6B6B',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
@@ -867,6 +881,7 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
   showError: (m: string) => void;
   showSuccess: (m: string) => void;
 }) {
+  const isMobile = useIsMobile();
   const [subTab, setSubTab] = useState<'faq' | 'vip' | 'blocked'>('faq');
   const [newQ, setNewQ] = useState('');
   const [newA, setNewA] = useState('');
@@ -917,14 +932,14 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
   return (
     <div style={{ maxWidth: 760 }}>
       {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: '#F7F7F7', borderRadius: 8, padding: 4, width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: '#F7F7F7', borderRadius: 8, padding: 4, width: isMobile ? '100%' : 'fit-content', flexWrap: 'wrap' }}>
         {([['faq', '❓', 'FAQ', config.faqEntries.length], ['vip', '⭐', 'VIP', config.vipContacts.length], ['blocked', '🚫', 'Bloqués', config.blockedContacts.length]] as [string, string, string, number][]).map(([id, tabIcon, label, count]) => (
           <button
             key={id}
             onClick={() => setSubTab(id as 'vip' | 'faq' | 'blocked')}
             style={{
-              padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              background: subTab === id ? '#fff' : 'transparent',
+              padding: '10px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              minHeight: 44, background: subTab === id ? '#fff' : 'transparent',
               color: subTab === id ? '#1A1A1A' : '#6B6B6B',
               boxShadow: subTab === id ? 'none' : 'none',
               display: 'flex', alignItems: 'center', gap: 6,
@@ -973,10 +988,10 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
           <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
             <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>➕ Ajouter un contact VIP</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', width: 140 }} />
-              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 100 }} />
-              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 120 }} />
-              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#1A1A1A' : '#E5E5E5', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Ajouter</button>
+              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', flex: '1 1 120px', minWidth: 0, minHeight: 44 }} />
+              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: '1 1 100px', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 0, minHeight: 44 }} />
+              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: '1 1 120px', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 0, minHeight: 44 }} />
+              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#1A1A1A' : '#E5E5E5', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer', minHeight: 44 }}>Ajouter</button>
             </div>
           </div>
           {config.vipContacts.length === 0 ? (

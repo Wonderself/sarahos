@@ -359,7 +359,7 @@ export default function CampaignsPage() {
 
         {/* Detail panel */}
         {selectedCampaign && (
-          <div style={{ padding: 20, alignSelf: 'start', position: 'sticky', top: 16, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5' }}>
+          <div style={{ padding: 20, alignSelf: 'start', position: isMobile ? 'relative' as const : 'sticky' as const, top: isMobile ? 0 : 16, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ fontWeight: 700, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, color: 'var(--fz-text, #1E293B)' }}>
                 {selectedCampaign.name}
@@ -439,7 +439,7 @@ export default function CampaignsPage() {
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
-          <div style={{ width: '100%', maxWidth: isMobile ? '95vw' : 520, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5' }}>
+          <div style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5' }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>Nouvelle campagne</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -515,7 +515,7 @@ export default function CampaignsPage() {
       {showPostModal && selectedCampaign && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setShowPostModal(false); }}>
-          <div style={{ width: '100%', maxWidth: isMobile ? '95vw' : 460, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5' }}>
+          <div style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 460, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5' }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>Ajouter un post</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

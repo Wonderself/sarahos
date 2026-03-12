@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 interface Activity {
   id: string;
@@ -103,6 +104,7 @@ function groupActivities(activities: Activity[]): Record<string, Activity[]> {
 const PAGE_SIZE = 50;
 
 export default function ActivityPage() {
+  const isMobile = useIsMobile();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingTimedOut, setLoadingTimedOut] = useState(false);
@@ -276,13 +278,13 @@ export default function ActivityPage() {
           <div style={{
             fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)',
             textTransform: 'uppercase', letterSpacing: '0.05em',
-            marginBottom: 14, paddingLeft: 20,
+            marginBottom: 14, paddingLeft: isMobile ? 12 : 20,
           }}>
             {groupLabel}
           </div>
 
           {/* Timeline items */}
-          <div style={{ position: 'relative', paddingLeft: 20 }}>
+          <div style={{ position: 'relative', paddingLeft: isMobile ? 12 : 20 }}>
             {/* Left border line */}
             <div style={{
               position: 'absolute', left: 7, top: 4, bottom: 4,

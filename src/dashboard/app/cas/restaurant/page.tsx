@@ -4,240 +4,191 @@ import Link from 'next/link';
 import PublicNav from '@/components/PublicNav';
 import PublicFooter from '@/components/PublicFooter';
 import { CASE_STUDIES } from '@/lib/case-studies-data';
+import Script from 'next/script';
 
 const study = CASE_STUDIES.find((s) => s.slug === 'restaurant')!;
+
+const iconToEmoji: Record<string, string> = {
+  restaurant: '🍽️', apartment: '🏢', account_balance: '🏛️', phone_missed: '📞',
+  edit_calendar: '📅', group_off: '👥', call: '📞', campaign: '📢', badge: '🪪',
+  person_search: '🔍', description: '📄', notifications_off: '🔕', storefront: '🏪',
+  gavel: '⚖️', support_agent: '🤖', schedule: '⏰', content_copy: '📋',
+  visibility_off: '👁️', calculate: '🧮', monitoring: '📊', person: '👤',
+  check_circle: '✅', format_quote: '💬', info: 'ℹ️', arrow_forward: '→',
+  close: '✕', search: '🔍', star: '⭐', check: '✅', arrow_back: '←',
+  phone: '📞', mail: '📧', smart_toy: '🤖', bolt: '⚡', auto_fix_high: '✨',
+  rocket_launch: '🚀', settings: '⚙️', analytics: '📊', trending_up: '📈',
+  celebration: '🎉', share: '📤', group: '👥', business: '🏢', credit_card: '💳',
+  savings: '💰', calendar_month: '📅', home: '🏠', real_estate_agent: '🏠',
+  balance: '⚖️', local_hospital: '🏥', medical_services: '🏥', chat: '💬',
+  visibility: '👁️', verified: '✅', expand_more: '▼', chevron_right: '›',
+  more_vert: '⋮', receipt_long: '🧾', point_of_sale: '💳', inventory: '📦',
+  menu_book: '📖', local_dining: '🍽️', room_service: '🛎️', hotel: '🏨',
+  key: '🔑', vpn_key: '🔑', meeting_room: '🚪', house: '🏠', villa: '🏡',
+  location_on: '📍', map: '🗺️', directions: '🧭',
+};
+const e = (icon: string) => iconToEmoji[icon] || icon;
+
+const srOnlyStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0,0,0,0)',
+  whiteSpace: 'nowrap',
+  borderWidth: 0,
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Freenzy.io pour Restaurants — Automatisez Reservations, Commandes et Service Client avec l\'IA',
+  description: 'Comment les restaurants utilisent Freenzy.io pour automatiser les reservations telephoniques, gerer les commandes, repondre aux avis clients et optimiser leur presence en ligne. ROI moyen : 340%.',
+  author: { '@type': 'Organization', name: 'Freenzy.io' },
+  publisher: { '@type': 'Organization', name: 'Freenzy.io' },
+  about: { '@type': 'SoftwareApplication', name: 'Freenzy.io', applicationCategory: 'BusinessApplication' },
+};
 
 export default function CasRestaurantPage() {
   return (
     <div style={{ background: '#0f0720', minHeight: '100vh', color: '#ffffff' }}>
+      <Script
+        id="jsonld-restaurant"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PublicNav />
 
-      {/* Hero */}
-      <section
-        style={{
-          padding: '120px 24px 80px',
-          textAlign: 'center',
-          maxWidth: 900,
-          margin: '0 auto',
-        }}
-      >
-        <div
+      <main aria-label="Etude de cas restauration — Freenzy.io">
+        {/* Hero */}
+        <section
+          aria-label="Presentation de l'etude de cas restaurant"
+          className="cs-hero"
           style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            background: 'rgba(124,58,237,0.12)',
-            border: '1px solid rgba(124,58,237,0.3)',
-            borderRadius: 100,
-            padding: '8px 20px',
-            marginBottom: 32,
-            fontSize: 14,
-            color: '#7c3aed',
-            fontWeight: 500,
+            padding: '120px 24px 80px',
+            textAlign: 'center',
+            maxWidth: 900,
+            margin: '0 auto',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>
-            {study.sectorIcon}
-          </span>
-          {study.sector}
-        </div>
-        <h1
-          style={{
-            fontSize: 'clamp(1.8rem, 5vw, 3rem)',
-            fontWeight: 800,
-            lineHeight: 1.15,
-            marginBottom: 24,
-            letterSpacing: '-0.03em',
-          }}
-        >
-          {study.heroTitle}
-        </h1>
-        <p
-          style={{
-            fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
-            color: 'rgba(255,255,255,0.6)',
-            lineHeight: 1.7,
-            maxWidth: 700,
-            margin: '0 auto 32px',
-          }}
-        >
-          {study.heroSubtitle}
-        </p>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 12,
-            background: 'rgba(255,255,255,0.05)',
-            borderRadius: 100,
-            padding: '12px 24px',
-            fontSize: 15,
-            color: 'rgba(255,255,255,0.7)',
-          }}
-        >
-          <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#7c3aed' }}>
-            person
-          </span>
-          {study.persona.name}, {study.persona.age} ans — {study.persona.role} à {study.persona.city}
-        </div>
-      </section>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              background: 'rgba(124,58,237,0.12)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              borderRadius: 100,
+              padding: '8px 20px',
+              marginBottom: 32,
+              fontSize: 14,
+              color: '#7c3aed',
+              fontWeight: 500,
+            }}
+          >
+            <span role="img" aria-label="Restaurant" style={{ fontSize: 18 }}>
+              {e(study.sectorIcon)}
+            </span>
+            {study.sector}
+          </div>
+          <h1
+            style={{
+              fontSize: 'clamp(1.8rem, 5vw, 3rem)',
+              fontWeight: 800,
+              lineHeight: 1.15,
+              marginBottom: 24,
+              letterSpacing: '-0.03em',
+            }}
+          >
+            {study.heroTitle}
+          </h1>
+          <p
+            style={{
+              fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+              color: 'rgba(255,255,255,0.6)',
+              lineHeight: 1.7,
+              maxWidth: 700,
+              margin: '0 auto 32px',
+            }}
+          >
+            {study.heroSubtitle}
+          </p>
+          <div
+            className="cs-persona-badge"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 12,
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 100,
+              padding: '12px 24px',
+              fontSize: 15,
+              color: 'rgba(255,255,255,0.7)',
+              maxWidth: '100%',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+            }}
+          >
+            <span role="img" aria-label="Personne" style={{ fontSize: 20, color: '#7c3aed' }}>
+              {'👤'}
+            </span>
+            {study.persona.name}, {study.persona.age} ans — {study.persona.role} {'\u00E0'} {study.persona.city}
+          </div>
 
-      {/* Les défis */}
-      <section style={{ padding: '0 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
-        <h2
-          style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-            fontWeight: 700,
-            textAlign: 'center',
-            marginBottom: 16,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Les{' '}
-          <span style={{ color: '#ef4444' }}>défis</span>{' '}
-          de {study.persona.name}
-        </h2>
-        <p
-          style={{
-            textAlign: 'center',
-            color: 'rgba(255,255,255,0.5)',
-            fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
-            maxWidth: 550,
-            margin: '0 auto 60px',
-            lineHeight: 1.6,
-          }}
-        >
-          Avant Freenzy, le quotidien était une course contre la montre.
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 24,
-            justifyContent: 'center',
-          }}
-        >
-          {study.painPoints.map((pain, i) => (
-            <div
-              key={i}
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 16,
-                padding: 32,
-                flex: '1 1 280px',
-                maxWidth: 340,
-              }}
-            >
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 12,
-                  background: 'rgba(239,68,68,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 20,
-                }}
-              >
-                <span
-                  className="material-symbols-rounded"
-                  style={{ fontSize: 24, color: '#ef4444' }}
-                >
-                  {pain.icon}
-                </span>
-              </div>
-              <h3
-                style={{
-                  fontSize: 16,
-                  fontWeight: 600,
-                  marginBottom: 12,
-                  color: '#ffffff',
-                }}
-              >
-                {pain.title}
-              </h3>
-              <p
-                style={{
-                  fontSize: 14,
-                  color: 'rgba(255,255,255,0.5)',
-                  lineHeight: 1.65,
-                  margin: 0,
-                }}
-              >
-                {pain.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+          {/* sr-only SEO paragraph */}
+          <p style={srOnlyStyle}>
+            Freenzy.io est la solution d&apos;intelligence artificielle multi-agents pour les restaurants, brasseries, hotels et etablissements de restauration. Automatisez la prise de reservations telephoniques 24h/24, gerez les commandes en ligne, repondez automatiquement aux avis Google et TripAdvisor, et generez vos menus et cartes numeriques. Cette etude de cas presente les resultats concrets obtenus par un restaurateur utilisant les agents IA Freenzy pour optimiser son service client et augmenter son chiffre d&apos;affaires avec un ROI de 340%.
+          </p>
+        </section>
 
-      {/* La solution Freenzy */}
-      <section style={{ padding: '0 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
-        <h2
-          style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-            fontWeight: 700,
-            textAlign: 'center',
-            marginBottom: 16,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          La solution{' '}
-          <span style={{ color: '#7c3aed' }}>Freenzy</span>
-        </h2>
-        <p
-          style={{
-            textAlign: 'center',
-            color: 'rgba(255,255,255,0.5)',
-            fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
-            maxWidth: 550,
-            margin: '0 auto 60px',
-            lineHeight: 1.6,
-          }}
-        >
-          3 agents IA spécialisés, travaillant en continu pour {study.persona.name}.
-        </p>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 24,
-            justifyContent: 'center',
-          }}
-        >
-          {study.solutions.map((sol, i) => (
-            <div
-              key={i}
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 16,
-                padding: 32,
-                flex: '1 1 280px',
-                maxWidth: 340,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
+        {/* Les defis */}
+        <section aria-label="Les defis avant Freenzy" className="cs-section" style={{ padding: '0 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
+          <h2
+            style={{
+              fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: 16,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Les{' '}
+            <span style={{ color: '#ef4444' }}>defis</span>{' '}
+            de {study.persona.name}
+          </h2>
+          <p
+            style={{
+              textAlign: 'center',
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
+              maxWidth: 550,
+              margin: '0 auto 60px',
+              lineHeight: 1.6,
+            }}
+          >
+            Avant Freenzy, le quotidien etait une course contre la montre.
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 24,
+              justifyContent: 'center',
+            }}
+          >
+            {study.painPoints.map((pain, i) => (
               <div
+                key={i}
+                className="cs-card"
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 2,
-                  background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
-                  opacity: 0.6,
-                }}
-              />
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  marginBottom: 20,
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 16,
+                  padding: 32,
+                  flex: '1 1 280px',
+                  maxWidth: 340,
                 }}
               >
                 <div
@@ -245,227 +196,353 @@ export default function CasRestaurantPage() {
                     width: 48,
                     height: 48,
                     borderRadius: 12,
-                    background: 'rgba(124,58,237,0.12)',
+                    background: 'rgba(239,68,68,0.1)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    marginBottom: 20,
                   }}
                 >
                   <span
-                    className="material-symbols-rounded"
-                    style={{ fontSize: 24, color: '#7c3aed' }}
+                    role="img"
+                    aria-label={pain.title}
+                    style={{ fontSize: 24, color: '#ef4444' }}
                   >
-                    {sol.agentIcon}
+                    {e(pain.icon)}
                   </span>
                 </div>
-                <div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>
-                    Agent
-                  </div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: '#7c3aed' }}>
-                    {sol.agent}
-                  </div>
-                </div>
+                <h3
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 600,
+                    marginBottom: 12,
+                    color: '#ffffff',
+                  }}
+                >
+                  {pain.title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: 14,
+                    color: 'rgba(255,255,255,0.5)',
+                    lineHeight: 1.65,
+                    margin: 0,
+                  }}
+                >
+                  {pain.description}
+                </p>
               </div>
-              <p
-                style={{
-                  fontSize: 14,
-                  color: 'rgba(255,255,255,0.7)',
-                  lineHeight: 1.6,
-                  marginBottom: 16,
-                }}
-              >
-                {sol.action}
-              </p>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '10px 14px',
-                  background: 'rgba(34,197,94,0.08)',
-                  borderRadius: 8,
-                  fontSize: 13,
-                  color: '#22c55e',
-                  fontWeight: 500,
-                }}
-              >
-                <span className="material-symbols-rounded" style={{ fontSize: 16 }}>
-                  check_circle
-                </span>
-                {sol.result}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      {/* Les résultats */}
-      <section style={{ padding: '0 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
-        <h2
-          style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-            fontWeight: 700,
-            textAlign: 'center',
-            marginBottom: 60,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Les{' '}
-          <span
+        {/* La solution Freenzy */}
+        <section aria-label="Solutions IA Freenzy pour la restauration" className="cs-section" style={{ padding: '0 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
+          <h2
             style={{
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: 16,
+              letterSpacing: '-0.02em',
             }}
           >
-            résultats
-          </span>
-        </h2>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 24,
-            justifyContent: 'center',
-          }}
-        >
-          {study.results.map((res, i) => (
-            <div
-              key={i}
+            La solution{' '}
+            <span style={{ color: '#7c3aed' }}>Freenzy</span>
+          </h2>
+          <p
+            style={{
+              textAlign: 'center',
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
+              maxWidth: 550,
+              margin: '0 auto 60px',
+              lineHeight: 1.6,
+            }}
+          >
+            3 agents IA specialises, travaillant en continu pour {study.persona.name}.
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 24,
+              justifyContent: 'center',
+            }}
+          >
+            {study.solutions.map((sol, i) => (
+              <div
+                key={i}
+                className="cs-card"
+                style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 16,
+                  padding: 32,
+                  flex: '1 1 280px',
+                  maxWidth: 340,
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: 'linear-gradient(90deg, #7c3aed, #06b6d4)',
+                    opacity: 0.6,
+                  }}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    marginBottom: 20,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 12,
+                      background: 'rgba(124,58,237,0.12)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span
+                      role="img"
+                      aria-label={`Agent ${sol.agent}`}
+                      style={{ fontSize: 24, color: '#7c3aed' }}
+                    >
+                      {e(sol.agentIcon)}
+                    </span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>
+                      Agent
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#7c3aed' }}>
+                      {sol.agent}
+                    </div>
+                  </div>
+                </div>
+                <p
+                  style={{
+                    fontSize: 14,
+                    color: 'rgba(255,255,255,0.7)',
+                    lineHeight: 1.6,
+                    marginBottom: 16,
+                  }}
+                >
+                  {sol.action}
+                </p>
+                <div
+                  className="cs-result-badge"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 8,
+                    padding: '10px 14px',
+                    background: 'rgba(34,197,94,0.08)',
+                    borderRadius: 8,
+                    fontSize: 13,
+                    color: '#22c55e',
+                    fontWeight: 500,
+                  }}
+                >
+                  <span role="img" aria-label="Resultat positif" style={{ fontSize: 16 }}>
+                    ✅
+                  </span>
+                  {sol.result}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Les resultats */}
+        <section aria-label="Resultats chiffres obtenus" className="cs-section" style={{ padding: '0 24px 100px', maxWidth: 1100, margin: '0 auto' }}>
+          <h2
+            style={{
+              fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: 60,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Les{' '}
+            <span
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 16,
-                padding: '40px 32px',
-                flex: '1 1 260px',
-                maxWidth: 320,
-                textAlign: 'center',
+                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
               }}
             >
-              <div
+              resultats
+            </span>
+          </h2>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 24,
+              justifyContent: 'center',
+            }}
+          >
+            {study.results.map((res, i) => (
+              <figure
+                key={i}
+                className="cs-stat-card"
+                aria-label={`${res.value} — ${res.metric}`}
                 style={{
-                  fontSize: 'clamp(2.5rem, 6vw, 3.5rem)',
-                  fontWeight: 800,
-                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  marginBottom: 8,
-                  lineHeight: 1,
-                }}
-              >
-                {res.value}
-              </div>
-              <div
-                style={{
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: '#ffffff',
-                  marginBottom: 10,
-                }}
-              >
-                {res.metric}
-              </div>
-              <p
-                style={{
-                  fontSize: 13,
-                  color: 'rgba(255,255,255,0.5)',
-                  lineHeight: 1.6,
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 16,
+                  padding: '40px 32px',
+                  flex: '1 1 260px',
+                  maxWidth: 320,
+                  textAlign: 'center',
                   margin: 0,
                 }}
               >
-                {res.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonial */}
-      <section style={{ padding: '0 24px 100px', maxWidth: 800, margin: '0 auto' }}>
-        <div
-          style={{
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 24,
-            padding: '48px 40px',
-            textAlign: 'center',
-            position: 'relative',
-          }}
-        >
-          <span
-            className="material-symbols-rounded"
-            style={{
-              fontSize: 40,
-              color: 'rgba(124,58,237,0.3)',
-              marginBottom: 24,
-              display: 'block',
-            }}
-          >
-            format_quote
-          </span>
-          <blockquote
-            style={{
-              fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
-              color: 'rgba(255,255,255,0.85)',
-              lineHeight: 1.8,
-              fontStyle: 'italic',
-              marginBottom: 24,
-              maxWidth: 600,
-              margin: '0 auto 24px',
-            }}
-          >
-            &laquo; {study.testimonial.quote} &raquo;
-          </blockquote>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#7c3aed', marginBottom: 4 }}>
-            {study.persona.name}, {study.persona.role}
+                <div
+                  aria-label={`Statistique : ${res.value} ${res.metric}`}
+                  style={{
+                    fontSize: 'clamp(2.5rem, 6vw, 3.5rem)',
+                    fontWeight: 800,
+                    background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    marginBottom: 8,
+                    lineHeight: 1,
+                  }}
+                >
+                  {res.value}
+                </div>
+                <figcaption
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 600,
+                    color: '#ffffff',
+                    marginBottom: 10,
+                  }}
+                >
+                  {res.metric}
+                </figcaption>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: 'rgba(255,255,255,0.5)',
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {res.description}
+                </p>
+              </figure>
+            ))}
           </div>
-          <div
+        </section>
+
+        {/* Testimonial */}
+        <section aria-label="Temoignage client restaurateur" className="cs-section" style={{ padding: '0 24px 100px', maxWidth: 800, margin: '0 auto' }}>
+          <article
+            className="cs-testimonial"
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 24,
+              padding: '48px 40px',
+              textAlign: 'center',
+              position: 'relative',
+            }}
+          >
+            <span
+              role="img"
+              aria-label="Citation"
+              style={{
+                fontSize: 40,
+                color: 'rgba(124,58,237,0.3)',
+                marginBottom: 24,
+                display: 'block',
+              }}
+            >
+              💬
+            </span>
+            <blockquote
+              style={{
+                fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+                color: 'rgba(255,255,255,0.85)',
+                lineHeight: 1.8,
+                fontStyle: 'italic',
+                marginBottom: 24,
+                maxWidth: 600,
+                margin: '0 auto 24px',
+              }}
+            >
+              &laquo; {study.testimonial.quote} &raquo;
+            </blockquote>
+            <div style={{ fontSize: 15, fontWeight: 600, color: '#7c3aed', marginBottom: 4 }}>
+              {study.persona.name}, {study.persona.role}
+            </div>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 12,
+                color: 'rgba(255,255,255,0.35)',
+                marginTop: 8,
+                background: 'rgba(255,255,255,0.04)',
+                padding: '4px 12px',
+                borderRadius: 100,
+              }}
+            >
+              <span role="img" aria-label="Information" style={{ fontSize: 14 }}>
+                ℹ️
+              </span>
+              {study.testimonial.note}
+            </div>
+          </article>
+        </section>
+
+        {/* CTA */}
+        <section aria-label="Appel a l'action — essayer Freenzy" className="cs-cta-section" style={{ padding: '0 24px 120px', textAlign: 'center' }}>
+          <Link
+            href="/client/dashboard"
+            title="Accedez au dashboard Freenzy.io pour votre restaurant"
+            aria-label="Explorer le dashboard Freenzy.io pour automatiser votre restaurant"
+            className="cs-cta-btn"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 6,
-              fontSize: 12,
-              color: 'rgba(255,255,255,0.35)',
-              marginTop: 8,
-              background: 'rgba(255,255,255,0.04)',
-              padding: '4px 12px',
-              borderRadius: 100,
+              gap: 10,
+              padding: '16px 36px',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              color: '#ffffff',
+              borderRadius: 12,
+              fontSize: 16,
+              fontWeight: 600,
+              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              minHeight: 48,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>
-              info
+            {study.ctaText}
+            <span role="img" aria-label="Fleche vers la droite" style={{ fontSize: 20 }}>
+              →
             </span>
-            {study.testimonial.note}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section style={{ padding: '0 24px 120px', textAlign: 'center' }}>
-        <Link
-          href="/register"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '16px 36px',
-            background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-            color: '#ffffff',
-            borderRadius: 12,
-            fontSize: 16,
-            fontWeight: 600,
-            textDecoration: 'none',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          {study.ctaText}
-          <span className="material-symbols-rounded" style={{ fontSize: 20 }}>
-            arrow_forward
-          </span>
-        </Link>
-      </section>
+          </Link>
+        </section>
+      </main>
 
       <PublicFooter />
     </div>

@@ -14,8 +14,8 @@ export default function TestimonialCard({
 
   return (
     <div style={{
-      padding: 28, height: '100%', display: 'flex', flexDirection: 'column',
-      borderRadius: 20, background: '#fafafa',
+      padding: 'min(28px, 5vw)', height: '100%', display: 'flex', flexDirection: 'column',
+      borderRadius: 20, background: '#fafafa', minWidth: 0,
     }}>
       {/* Stars */}
       <div style={{ display: 'flex', gap: 2, marginBottom: 18 }}>

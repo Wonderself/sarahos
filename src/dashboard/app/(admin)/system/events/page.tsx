@@ -106,7 +106,7 @@ export default async function EventsPage() {
             alignItems: 'flex-start', marginBottom: 2,
             background: event.type === 'Error' ? 'rgba(220,38,38,0.05)' : 'transparent',
           }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 16, marginTop: 2 }}>{typeIcons[event.type] ?? 'radio_button_checked'}</span>
+            {typeIcons[event.type] ?? 'radio_button_checked'}
             <div className="flex-1" style={{ minWidth: 0 }}>
               <div className="flex items-center gap-8" style={{ marginBottom: 3 }}>
                 <span className={`badge ${typeColors[event.type] ?? 'badge-neutral'}`}>{event.type}</span>
@@ -149,7 +149,7 @@ export default async function EventsPage() {
                 const pct = events.length > 0 ? (count / events.length) * 100 : 0;
                 return (
                   <div key={type} className="flex items-center gap-8">
-                    <span className="material-symbols-rounded text-base">{typeIcons[type] ?? 'radio_button_checked'}</span>
+                    {typeIcons[type] ?? 'radio_button_checked'}
                     <span className="text-md font-medium" style={{ minWidth: 140 }}>{type}</span>
                     <div className="progress-bar" style={{ flex: 1 }}>
                       <div className="progress-bar-fill" style={{ width: `${pct}%` }} />

@@ -12,21 +12,21 @@ const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
 // 25 document templates
 const TEMPLATES = [
-  { id: 'email-pro', icon: 'mail', title: 'Email professionnel', prompt: 'Rédige un email professionnel: {brief}. Ton: {tone}. Objet clair, corps structuré, formule de politesse.' },
-  { id: 'proposition', icon: 'work', title: 'Proposition commerciale', prompt: 'Crée une proposition commerciale pour: {brief}. Inclure: contexte, offre, bénéfices, tarifs, conditions.' },
-  { id: 'business-plan', icon: 'bar_chart', title: 'Business Plan', prompt: 'Rédige un business plan: {brief}. Structure: résumé, marché, produit, stratégie, finances, équipe.' },
-  { id: 'post-social', icon: 'phone_iphone', title: 'Post réseaux sociaux', prompt: 'Crée un post {platform} sur: {brief}. Ton: {tone}. Inclure hashtags, CTA, emojis pertinents.' },
-  { id: 'rapport', icon: 'assignment', title: 'Rapport', prompt: 'Rédige un rapport structuré sur: {brief}. Introduction, analyse, recommandations, conclusion.' },
-  { id: 'contrat', icon: 'balance', title: 'Contrat', prompt: 'Rédige un contrat pour: {brief}. Parties, objet, obligations, conditions, durée, résiliation.' },
-  { id: 'brief-creatif', icon: 'palette', title: 'Brief créatif', prompt: 'Crée un brief créatif pour: {brief}. Objectif, cible, ton, messages clés, contraintes, livrables.' },
-  { id: 'plan-marketing', icon: 'campaign', title: 'Plan marketing', prompt: 'Crée un plan marketing digital pour: {brief}. Canaux, calendrier, budget, KPIs, actions prioritaires.' },
-  { id: 'swot', icon: 'search', title: 'Analyse SWOT', prompt: 'Réalise une analyse SWOT pour: {brief}. Forces, Faiblesses, Opportunités, Menaces, avec recommandations.' },
-  { id: 'script-vente', icon: 'target', title: 'Script de vente', prompt: 'Crée un script de vente pour: {brief}. Accroche, découverte, argumentation, objections, closing.' },
-  { id: 'cv', icon: 'edit_note', title: 'CV / Résumé', prompt: 'Rédige un CV pour: {brief}. Format professionnel, compétences, expériences, formation.' },
-  { id: 'lettre-motivation', icon: 'mail', title: 'Lettre de motivation', prompt: 'Rédige une lettre de motivation pour: {brief}. Accroche, parcours, motivation, projet.' },
-  { id: 'newsletter', icon: 'newspaper', title: 'Newsletter', prompt: 'Rédige une newsletter sur: {brief}. Objet accrocheur, intro, sections, CTA, footer.' },
-  { id: 'faq', icon: 'help', title: 'FAQ', prompt: 'Crée une FAQ pour: {brief}. 10+ questions/réponses organisées par thème.' },
-  { id: 'presentation', icon: 'movie', title: 'Présentation', prompt: 'Crée le contenu pour une présentation: {brief}. Slide par slide avec titre, bullet points, notes orateur.' },
+  { id: 'email-pro', icon: '📧', title: 'Email professionnel', prompt: 'Rédige un email professionnel: {brief}. Ton: {tone}. Objet clair, corps structuré, formule de politesse.' },
+  { id: 'proposition', icon: '💼', title: 'Proposition commerciale', prompt: 'Crée une proposition commerciale pour: {brief}. Inclure: contexte, offre, bénéfices, tarifs, conditions.' },
+  { id: 'business-plan', icon: '📊', title: 'Business Plan', prompt: 'Rédige un business plan: {brief}. Structure: résumé, marché, produit, stratégie, finances, équipe.' },
+  { id: 'post-social', icon: '📱', title: 'Post réseaux sociaux', prompt: 'Crée un post {platform} sur: {brief}. Ton: {tone}. Inclure hashtags, CTA, emojis pertinents.' },
+  { id: 'rapport', icon: '📋', title: 'Rapport', prompt: 'Rédige un rapport structuré sur: {brief}. Introduction, analyse, recommandations, conclusion.' },
+  { id: 'contrat', icon: '⚖️', title: 'Contrat', prompt: 'Rédige un contrat pour: {brief}. Parties, objet, obligations, conditions, durée, résiliation.' },
+  { id: 'brief-creatif', icon: '🎨', title: 'Brief créatif', prompt: 'Crée un brief créatif pour: {brief}. Objectif, cible, ton, messages clés, contraintes, livrables.' },
+  { id: 'plan-marketing', icon: '📢', title: 'Plan marketing', prompt: 'Crée un plan marketing digital pour: {brief}. Canaux, calendrier, budget, KPIs, actions prioritaires.' },
+  { id: 'swot', icon: '🔍', title: 'Analyse SWOT', prompt: 'Réalise une analyse SWOT pour: {brief}. Forces, Faiblesses, Opportunités, Menaces, avec recommandations.' },
+  { id: 'script-vente', icon: '🎯', title: 'Script de vente', prompt: 'Crée un script de vente pour: {brief}. Accroche, découverte, argumentation, objections, closing.' },
+  { id: 'cv', icon: '📝', title: 'CV / Résumé', prompt: 'Rédige un CV pour: {brief}. Format professionnel, compétences, expériences, formation.' },
+  { id: 'lettre-motivation', icon: '📧', title: 'Lettre de motivation', prompt: 'Rédige une lettre de motivation pour: {brief}. Accroche, parcours, motivation, projet.' },
+  { id: 'newsletter', icon: '📰', title: 'Newsletter', prompt: 'Rédige une newsletter sur: {brief}. Objet accrocheur, intro, sections, CTA, footer.' },
+  { id: 'faq', icon: '❓', title: 'FAQ', prompt: 'Crée une FAQ pour: {brief}. 10+ questions/réponses organisées par thème.' },
+  { id: 'presentation', icon: '🎬', title: 'Présentation', prompt: 'Crée le contenu pour une présentation: {brief}. Slide par slide avec titre, bullet points, notes orateur.' },
 ];
 
 interface GeneratedDoc {
@@ -127,7 +127,7 @@ export default function MyDocumentsPage() {
                   onClick={() => { setSelectedTemplate(t.id); setResult(''); }}
                   className={`p-3 rounded-lg border text-left transition-all ${selectedTemplate === t.id ? 'bg-neutral-200/10 border-neutral-400' : 'bg-[#F7F7F7] border-neutral-200 hover:border-neutral-300'}`}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{t.icon}</span>
+                  {t.icon}
                   <p className="text-neutral-900 text-sm font-medium mt-1">{t.title}</p>
                 </button>
               ))}
@@ -140,7 +140,7 @@ export default function MyDocumentsPage() {
               <>
                 <div className="bg-[#F7F7F7] rounded-xl p-5 border border-neutral-200">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{template.icon}</span>
+                    {template.icon}
                     <h3 className="text-neutral-900 font-medium">{template.title}</h3>
                   </div>
                   <textarea
@@ -192,7 +192,7 @@ export default function MyDocumentsPage() {
             <div className="bg-[#F7F7F7] rounded-xl p-6 border border-neutral-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{viewDoc.templateIcon}</span>
+                  {viewDoc.templateIcon}
                   <h3 className="text-neutral-900 font-medium">{viewDoc.templateTitle}</h3>
                 </div>
                 <div className="flex gap-2">
@@ -207,7 +207,7 @@ export default function MyDocumentsPage() {
             docs.map(doc => (
               <div key={doc.id} className="bg-[#F7F7F7] rounded-xl p-4 border border-neutral-200 flex items-center justify-between hover:border-neutral-300 cursor-pointer" onClick={() => setViewDoc(doc)}>
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{doc.templateIcon}</span>
+                  {doc.templateIcon}
                   <div>
                     <p className="text-neutral-900 text-sm font-medium">{doc.templateTitle}</p>
                     <p className="text-neutral-500 text-xs mt-0.5">{doc.brief.slice(0, 80)}{doc.brief.length > 80 ? '...' : ''}</p>

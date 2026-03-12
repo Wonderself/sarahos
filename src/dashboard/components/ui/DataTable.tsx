@@ -23,7 +23,7 @@ export default function DataTable<T extends Record<string, unknown>>({
   if (data.length === 0) {
     return (
       <div className="empty-state">
-        <div className="empty-state-icon"><span className="material-symbols-rounded" style={{ fontSize: 32 }}>{emptyIcon}</span></div>
+        <div className="empty-state-icon"><span style={{ fontSize: 32 }}>{emptyIcon}</span></div>
         <div className="empty-state-text">{emptyText}</div>
       </div>
     );

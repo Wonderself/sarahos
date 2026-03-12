@@ -206,7 +206,7 @@ export default function VideoProPage() {
 
       {/* Service Cards Grid */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
         gap: 16, marginBottom: 36,
       }}>
         {SERVICES.map(svc => (
@@ -246,7 +246,7 @@ export default function VideoProPage() {
             <button
               onClick={() => handleOrder(svc.id)}
               style={{
-                width: '100%', padding: '10px 0', fontSize: 13, fontWeight: 600,
+                width: '100%', padding: '10px 0', fontSize: 13, fontWeight: 600, minHeight: 44,
                 borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff',
                 color: '#1A1A1A', cursor: 'pointer', transition: 'all 0.15s',
                 fontFamily: 'var(--font-sans)',
@@ -455,7 +455,7 @@ export default function VideoProPage() {
           onClick={handleSubmit}
           disabled={submitting}
           style={{
-            width: '100%', padding: '13px 0', fontSize: 14, fontWeight: 700,
+            width: '100%', padding: '13px 0', fontSize: 14, fontWeight: 700, minHeight: 44,
             borderRadius: 8, background: '#1A1A1A', color: '#fff', border: '1px solid #E5E5E5',
             cursor: submitting ? 'wait' : 'pointer', opacity: submitting ? 0.7 : 1,
             transition: 'background 0.15s', fontFamily: 'var(--font-sans)',

@@ -78,7 +78,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>movie</span>
+          <span style={{ fontSize: 14 }}>🎬</span>
           <span style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>
             Vidéothèque
           </span>
@@ -106,7 +106,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
 
       {expanded && items.length === 0 && (
         <div style={{ padding: '24px 16px', textAlign: 'center' }}>
-          <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>videocam</span></div>
+          <div style={{ fontSize: 28, marginBottom: 8 }}>📹</div>
           <div style={{ fontSize: 12, color: '#9B9B9B' }}>
             Vos vidéos générées apparaîtront ici
           </div>
@@ -126,7 +126,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                 display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8,
                 paddingBottom: 6, borderBottom: '1px solid #f3f4f6',
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 12 }}>film_reel</span>
+                <span style={{ fontSize: 12 }}>🎞️</span>
                 <span style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>{project}</span>
                 <span style={{
                   fontSize: 10, color: '#6b7280', background: '#f3f4f6',
@@ -202,7 +202,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
               {/* Project assignment */}
               <div style={{ marginBottom: 10 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 11 }}>film_reel</span> Projet / Film
+                  <span style={{ fontSize: 11 }}>🎞️</span> Projet / Film
                 </div>
                 {editingProject === expandedItem.id ? (
                   <div style={{ display: 'flex', gap: 6 }}>
@@ -231,7 +231,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                         padding: '6px 10px', borderRadius: 7, border: '1px solid #e5e7eb',
                         background: 'white', color: '#6b7280', fontSize: 11, cursor: 'pointer',
                       }}
-                    ><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+                    ><span style={{ fontSize: 14 }}>✕</span></button>
                   </div>
                 ) : (
                   <button
@@ -246,7 +246,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                     }}
                   >
                     {expandedItem.projectName
-                      ? <><span className="material-symbols-rounded" style={{ fontSize: 11 }}>folder</span> {expandedItem.projectName} (modifier)</>
+                      ? <><span style={{ fontSize: 11 }}>📁</span> {expandedItem.projectName} (modifier)</>
                       : '+ Assigner à un projet'}
                   </button>
                 )}
@@ -263,7 +263,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                       cursor: 'pointer', fontWeight: 600,
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 10, verticalAlign: 'middle' }}>undo</span> Réutiliser script
+                    <span style={{ fontSize: 10, verticalAlign: 'middle' }}>↩️</span> Réutiliser script
                   </button>
                 )}
                 <a
@@ -278,7 +278,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                     display: 'inline-block',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 10, verticalAlign: 'middle' }}>download</span> Télécharger
+                  <span style={{ fontSize: 10, verticalAlign: 'middle' }}>📥</span> Télécharger
                 </a>
                 <button
                   onClick={() => handleDelete(expandedItem.id)}
@@ -346,7 +346,7 @@ function VideoGrid({
                 background: '#1A1A1A', borderRadius: '50%',
                 width: 12, height: 12, display: 'flex', alignItems: 'center',
                 justifyContent: 'center', fontSize: 7, color: 'white', fontWeight: 700,
-              }}><span className="material-symbols-rounded" style={{ fontSize: 7 }}>check</span></div>
+              }}>✅</div>
             )}
           </div>
           <div style={{ fontSize: 9, color: '#9B9B9B', marginTop: 2, textAlign: 'center' }}>

@@ -10,6 +10,9 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { isAuthenticated as checkIsAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
+import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { useVisitorDraft } from '../../../lib/useVisitorDraft';
 
 function escapeHtml(text: string): string {
   return text
@@ -833,9 +836,10 @@ const CU = {
 
 export default function DocumentsPage() {
   const isMobile = useIsMobile();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const { showError, showSuccess } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<DocTemplate | null>(null);
-  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
+  const [fieldValues, setFieldValues, clearFieldsDraft] = useVisitorDraft<Record<string, string>>('documents', 'fields', {});
   const [generating, setGenerating] = useState(false);
   const { data: generatedDocs, setData: setGeneratedDocs } = useUserData<GeneratedDoc[]>('documents', [], 'fz_docs');
   const [viewingDoc, setViewingDoc] = useState<GeneratedDoc | null>(null);
@@ -897,8 +901,9 @@ export default function DocumentsPage() {
 
   async function generateDocument() {
     if (!selectedTemplate) return;
+    if (!requireAuth('Connectez-vous pour generer un document')) return;
     const session = getSession();
-    if (!session.token) { window.location.href = '/login'; return; }
+    if (!session.token) return;
 
     // Validate required fields
     const missingRequired = selectedTemplate.fields.filter(f => f.required && !fieldValues[f.key]?.trim());
@@ -951,6 +956,7 @@ export default function DocumentsPage() {
       setViewingDoc(doc);
       setSelectedTemplate(null);
       setFieldValues({});
+      clearFieldsDraft();
     } catch (e) {
       showError(e instanceof Error ? e.message : 'Erreur lors de la génération');
     } finally {
@@ -1128,6 +1134,25 @@ export default function DocumentsPage() {
 
   // Template gallery
   const filteredTemplates = filterCategory ? TEMPLATES.filter(t => t.category === filterCategory) : TEMPLATES;
+
+  if (!checkIsAuthenticated()) {
+    return (
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto' }}>
+        <VisitorEmptyState
+          icon="📄"
+          title="Connectez-vous pour générer des documents"
+          description="Créez des documents professionnels en quelques secondes grâce à l'IA. Contrats, emails, rapports, business plans — plus de 50 modèles disponibles."
+          features={[
+            { icon: '📝', label: 'Contrats & juridique', desc: 'CGV, NDA, contrats de travail, statuts' },
+            { icon: '📧', label: 'Emails & courriers', desc: 'Prospection, relance, réclamation, formel' },
+            { icon: '📊', label: 'Business & stratégie', desc: 'Business plans, rapports, présentations' },
+            { icon: '🎯', label: 'Marketing', desc: 'Posts réseaux sociaux, newsletters, landing pages' },
+          ]}
+        />
+        {LoginModalComponent}
+      </div>
+    );
+  }
 
   return (
     <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1100 }}>
@@ -1391,6 +1416,7 @@ export default function DocumentsPage() {
           </div>
         </section>
       )}
+      {LoginModalComponent}
     </div>
   );
 }

@@ -152,7 +152,15 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(`${API_BASE}/auth/confirm-email?token=${encodeURIComponent(token)}`);
     if (res.redirected) {
-      return NextResponse.redirect(res.url);
+      // Validate redirect URL to prevent open redirect
+      try {
+        const redirectUrl = new URL(res.url);
+        const allowedOrigins = [new URL(req.url).origin, new URL(API_BASE).origin];
+        if (allowedOrigins.includes(redirectUrl.origin)) {
+          return NextResponse.redirect(res.url);
+        }
+      } catch { /* invalid URL, fall through */ }
+      return NextResponse.redirect(new URL('/login', req.url));
     }
     const data = await res.json();
     if (!res.ok) return NextResponse.json(data, { status: res.status });

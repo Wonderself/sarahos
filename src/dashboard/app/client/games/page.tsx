@@ -201,8 +201,9 @@ export default function GamesHubPage() {
               display: 'flex',
               gap: 10,
               overflowX: 'auto',
-              paddingBottom: 8,
+              paddingBottom: 12,
               scrollbarWidth: 'thin',
+              WebkitOverflowScrolling: 'touch',
             }}
           >
             {badges

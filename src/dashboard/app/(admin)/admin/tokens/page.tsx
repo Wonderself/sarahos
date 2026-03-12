@@ -25,19 +25,19 @@ export default async function TokensPage() {
         <div className="card p-24">
           <div className="flex flex-wrap gap-8 flex-center">
             {[
-              { icon: 'chat', label: 'Votre message', desc: 'Texte envoyé' },
+              { icon: '💬', label: 'Votre message', desc: 'Texte envoyé' },
               { icon: '→', label: '', desc: '' },
-              { icon: 'download', label: 'Tokens input', desc: 'Message + contexte' },
+              { icon: '📥', label: 'Tokens input', desc: 'Message + contexte' },
               { icon: '→', label: '', desc: '' },
-              { icon: 'smart_toy', label: 'LLM génère', desc: 'Claude répond' },
+              { icon: '🤖', label: 'LLM génère', desc: 'Claude répond' },
               { icon: '→', label: '', desc: '' },
-              { icon: 'upload', label: 'Tokens output', desc: 'Réponse générée' },
+              { icon: '📤', label: 'Tokens output', desc: 'Réponse générée' },
               { icon: '→', label: '', desc: '' },
-              { icon: 'savings', label: 'Coût calculé', desc: 'Crédits déduits' },
+              { icon: '💰', label: 'Coût calculé', desc: 'Crédits déduits' },
             ].map((s, i) => (
               s.label ? (
                 <div key={i} className="text-center bg-secondary rounded-md" style={{ padding: '12px 16px', minWidth: 90 }}>
-                  <div style={{ marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
+                  <div style={{ marginBottom: 4 }}>{s.icon}</div>
                   <div className="text-sm font-bold">{s.label}</div>
                   <div style={{ fontSize: 10 }} className="text-muted">{s.desc}</div>
                 </div>
@@ -150,42 +150,42 @@ export default async function TokensPage() {
         <div className="grid-2 gap-16">
           {[
             {
-              icon: 'target',
+              icon: '🎯',
               title: 'Utiliser Sonnet par défaut',
               desc: 'Sonnet est 5x moins cher qu\'Opus pour une qualité excellente. Réservez Opus aux décisions stratégiques critiques.',
               saving: 'Économie : ~80% par rapport à Opus',
               color: '#1A1A1A',
             },
             {
-              icon: 'straighten',
+              icon: '📏',
               title: 'Configurer la concision des agents',
               desc: 'Dans Agent Studio, réglez "Longueur de réponse" à 0-30 (concis). Moins de tokens output = moins de crédits.',
               saving: 'Économie : jusqu\'à -60% output tokens',
               color: '#1A1A1A',
             },
             {
-              icon: 'business',
+              icon: '🏢',
               title: 'Remplir le profil entreprise',
               desc: 'Un profil complet évite les questions de clarification. L\'agent comprend directement le contexte = moins d\'échanges.',
               saving: 'Économie : -30% d\'échanges en moyenne',
               color: '#6B6B6B',
             },
             {
-              icon: 'wb_sunny',
+              icon: '☀️',
               title: 'Utiliser les briefings quotidiens',
               desc: 'Un seul briefing résume toutes les infos importantes. Plus efficace que 5 chats séparés.',
               saving: 'Économie : ~2.70 cr au lieu de ~3.45 cr (5 chats)',
               color: '#9B9B9B',
             },
             {
-              icon: 'assignment',
+              icon: '📋',
               title: 'Préférer les campagnes structurées',
               desc: 'Les campagnes guident l\'agent avec des templates. Moins d\'allers-retours, moins de tokens gaspillés.',
               saving: 'Économie : -25% par rapport à du chat libre',
               color: '#6B6B6B',
             },
             {
-              icon: 'refresh',
+              icon: '🔄',
               title: 'Éviter les conversations trop longues',
               desc: 'Le contexte s\'accumule à chaque message (tokens input augmentent). Commencez une nouvelle conversation régulièrement.',
               saving: 'Économie : -40% sur les conversations longues',
@@ -194,7 +194,7 @@ export default async function TokensPage() {
           ].map(s => (
             <div key={s.title} className="card card-lift p-20" style={{ borderLeft: `3px solid ${s.color}` }}>
               <div className="flex items-center gap-8 mb-8">
-                <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{s.icon}</span>
+                {s.icon}
                 <div className="text-base font-bold">{s.title}</div>
               </div>
               <div className="text-md text-secondary mb-8" style={{ lineHeight: 1.5 }}>{s.desc}</div>
@@ -280,21 +280,21 @@ export default async function TokensPage() {
             {[
               {
                 phase: 'Phase 1 — Découverte (Semaines 1-2)',
-                icon: 'error',
+                icon: '❌',
                 tokens: 'Coûteux',
                 desc: 'L\'agent envoie le profil entreprise complet + le system prompt + le contexte de personnalisation à chaque message. C\'est normal : Freenzy apprend à vous connaître.',
                 detail: 'Le premier message d\'une conversation est le plus cher car il inclut tout le contexte (~500-700 tokens de system prompt). Les crédits de bienvenue couvrent cette phase d\'apprentissage.',
               },
               {
                 phase: 'Phase 2 — Optimisation (Semaines 3-4)',
-                icon: 'pending',
+                icon: '⏳',
                 tokens: 'Modéré',
                 desc: 'Les conversations longues sont tronquées automatiquement (seuls les 8 derniers messages sont envoyés). L\'utilisateur commence à sauvegarder les réponses fréquentes en FAQ.',
                 detail: 'La troncation automatique empêche les coûts de monter linéairement. Une conversation de 50 messages coûte pareil qu\'une de 8 messages.',
               },
               {
                 phase: 'Phase 3 — Maturité (Semaines 5+)',
-                icon: 'check_circle',
+                icon: '✅',
                 tokens: 'Économique',
                 desc: 'La base FAQ grandit : les questions courantes ont des réponses instantanées (0 token). L\'utilisateur a déjà configuré ses agents — moins de tâtonnements.',
                 detail: 'Chaque réponse FAQ évitée = 0.69 à 2.40 crédits économisés. Après 1 mois, un utilisateur actif a typiquement 20-30 FAQs qui couvrent 40-60% de ses questions récurrentes.',
@@ -302,7 +302,7 @@ export default async function TokensPage() {
             ].map(p => (
               <div key={p.phase} className="bg-secondary rounded-md border" style={{ padding: '12px 16px' }}>
                 <div className="flex items-center gap-8" style={{ marginBottom: 6 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{p.icon}</span>
+                  {p.icon}
                   <span className="text-base font-bold">{p.phase}</span>
                   <span className="badge badge-neutral" style={{ fontSize: 10 }}>{p.tokens}</span>
                 </div>
@@ -334,13 +334,13 @@ export default async function TokensPage() {
           </div>
           <div className="flex flex-col gap-12 mt-16">
             {[
-              { label: 'Budget quotidien', desc: 'Limite de dépenses par jour par utilisateur (configurable)', icon: 'bar_chart' },
-              { label: 'Circuit breaker', desc: 'Coupe automatiquement les appels API si les erreurs sont trop fréquentes', icon: 'power' },
-              { label: 'Alerte solde bas', desc: 'Notification quand le solde de crédits passe sous le seuil', icon: 'warning' },
-              { label: 'Rate limiting', desc: 'Limite le nombre de requêtes par minute par utilisateur', icon: 'speed' },
+              { label: 'Budget quotidien', desc: 'Limite de dépenses par jour par utilisateur (configurable)', icon: '📊' },
+              { label: 'Circuit breaker', desc: 'Coupe automatiquement les appels API si les erreurs sont trop fréquentes', icon: '⏻' },
+              { label: 'Alerte solde bas', desc: 'Notification quand le solde de crédits passe sous le seuil', icon: '⚠️' },
+              { label: 'Rate limiting', desc: 'Limite le nombre de requêtes par minute par utilisateur', icon: '⚡' },
             ].map(a => (
               <div key={a.label} className="flex gap-12" style={{ alignItems: 'flex-start', padding: '8px 0', borderBottom: '1px solid var(--border-primary)' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{a.icon}</span>
+                {a.icon}
                 <div>
                   <div className="text-md font-semibold">{a.label}</div>
                   <div className="text-sm text-muted">{a.desc}</div>

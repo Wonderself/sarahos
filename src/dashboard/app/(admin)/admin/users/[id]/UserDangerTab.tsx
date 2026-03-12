@@ -53,7 +53,7 @@ export default function UserDangerTab({ user, showToast }: {
       <div style={{ ...styles.card, border: '1px solid rgba(0,0,0,0.15)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>theater_comedy</span> Impersonation</div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>🎭 Impersonation</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
               Accéder au dashboard en tant que {user.displayName} pendant 1h.
               Un banner rouge sera affiché. Toutes les actions sont loguées.
@@ -70,7 +70,7 @@ export default function UserDangerTab({ user, showToast }: {
               opacity: impersonating ? 0.7 : 1,
             }}
           >
-            {impersonating ? 'Connexion…' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>theater_comedy</span> Se connecter comme ce user</>}
+            {impersonating ? 'Connexion…' : <>🎭 Se connecter comme ce user</>}
           </button>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function UserDangerTab({ user, showToast }: {
       <div style={{ ...styles.card, border: '1px solid rgba(0,0,0,0.12)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>key</span> Régénérer la clé API</div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>🔑 Régénérer la clé API</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>L&apos;ancienne clé API sera immédiatement invalidée.</div>
           </div>
           <button
@@ -96,7 +96,7 @@ export default function UserDangerTab({ user, showToast }: {
       <div style={{ ...styles.card, border: '1px solid rgba(220,38,38,0.25)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#DC2626', marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>block</span> Désactiver le compte</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#DC2626', marginBottom: 4 }}>🚫 Désactiver le compte</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Le user ne pourra plus se connecter. Ses données sont conservées.</div>
           </div>
           <button

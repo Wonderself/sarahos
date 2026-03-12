@@ -70,7 +70,7 @@ export default function TimelinePage() {
   const meta = PAGE_META.timeline;
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 800, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{
@@ -108,7 +108,7 @@ export default function TimelinePage() {
           {search && (
             <span
               onClick={() => setSearch('')}
-              style={{ fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)', cursor: 'pointer' }}
+              style={{ fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)', cursor: 'pointer', minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >✕</span>
           )}
         </div>
@@ -124,8 +124,8 @@ export default function TimelinePage() {
               key={cat}
               onClick={() => toggleCategory(cat)}
               style={{
-                padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                fontSize: 11, fontWeight: 700,
+                padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                fontSize: 12, fontWeight: 700, minHeight: 44,
                 background: active ? '#1A1A1A' : 'var(--fz-bg-secondary, #F7F7F7)',
                 color: active ? '#fff' : 'var(--fz-text-muted, #9B9B9B)',
                 display: 'flex', alignItems: 'center', gap: 5,
@@ -217,7 +217,8 @@ export default function TimelinePage() {
                       position: 'relative', marginBottom: 8,
                       background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
                       borderRadius: 10, padding: '12px 14px',
-                      display: 'flex', alignItems: 'center', gap: 12,
+                      display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: 12,
+                      flexWrap: isMobile ? 'wrap' : 'nowrap',
                     }}
                   >
                     {/* Dot on timeline */}

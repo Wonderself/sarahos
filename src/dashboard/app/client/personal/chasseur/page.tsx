@@ -361,7 +361,7 @@ export default function ChasseurPage() {
           <div className="card" style={{ width: '100%', maxWidth: 480, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>🎯 Nouvelle mission</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Poste / Mission</label>
                   <input className="input" placeholder="Ex: Développeur React..." value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} autoFocus />
@@ -371,7 +371,7 @@ export default function ChasseurPage() {
                   <input className="input" placeholder="Nom de l'entreprise" value={form.company} onChange={e => setForm(p => ({ ...p, company: e.target.value }))} />
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Type</label>
                   <select className="input" value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value as MissionType }))}>
@@ -385,7 +385,7 @@ export default function ChasseurPage() {
                   </select>
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>TJM (€/jour)</label>
                   <input className="input" type="number" placeholder="600" value={form.tjm} onChange={e => setForm(p => ({ ...p, tjm: e.target.value }))} />

@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth, requireAdmin } from '@/lib/api-auth';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
-const DASHBOARD_API_KEY = process.env['DASHBOARD_API_KEY'];
-if (!DASHBOARD_API_KEY) {
-  console.error('[SECURITY] DASHBOARD_API_KEY environment variable is not set');
+const DASHBOARD_API_KEY = process.env['DASHBOARD_API_KEY'] ?? '';
+
+if (typeof process !== 'undefined' && !DASHBOARD_API_KEY && process.env.NODE_ENV === 'production') {
+  console.error('[SECURITY] DASHBOARD_API_KEY is not set — admin actions will fail!');
 }
 
 let adminToken: string | null = null;
@@ -62,24 +64,20 @@ function callAction(params: Record<string, unknown>, action: unknown, headers: R
   }
 }
 
-const ALLOWED_ACTIONS = new Set([
-  'createUser', 'updateUser', 'deleteUser', 'resetUserKey',
-  'depositCredits', 'decideApproval', 'pauseAgent', 'resumeAgent',
-  'createPromo', 'deletePromo', 'sendNotification',
-]);
-
 export async function POST(req: NextRequest) {
+  // Verify caller is authenticated admin
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+  const adminCheck = requireAdmin(auth);
+  if (adminCheck) return adminCheck;
+
   if (!DASHBOARD_API_KEY) {
-    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    return NextResponse.json({ error: 'DASHBOARD_API_KEY not configured' }, { status: 503 });
   }
 
   let body: Record<string, unknown>;
   try { body = await req.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
   const { action, ...params } = body;
-
-  if (typeof action !== 'string' || !ALLOWED_ACTIONS.has(action)) {
-    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
-  }
 
   try {
     let token = await getAdminToken();

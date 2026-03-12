@@ -55,7 +55,7 @@ export default function PushPermissionBanner() {
     <div
       style={{
         position: 'fixed',
-        bottom: 0,
+        bottom: 'env(safe-area-inset-bottom, 0px)',
         left: 0,
         right: 0,
         zIndex: 9999,
@@ -77,14 +77,13 @@ export default function PushPermissionBanner() {
           display: 'flex',
           alignItems: 'center',
           gap: 14,
+          flexWrap: 'wrap' as const,
         }}
       >
         {/* Icon */}
-        <span
-          className="material-symbols-rounded"
-          style={{ fontSize: 28, color: '#1A1A1A', flexShrink: 0 }}
+        <span style={{ fontSize: 28, color: '#1A1A1A', flexShrink: 0 }}
         >
-          notifications_active
+          🔔
         </span>
 
         {/* Text */}

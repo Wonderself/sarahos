@@ -96,7 +96,7 @@ export default function StudioPage() {
       <PageExplanation pageId="studio" text={PAGE_META.studio?.helpText} />
 
       {/* ─── Stat cards ─── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12, marginBottom: 24 }}>
         <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ fontSize: 22 }}>📸</span>
           <div>
@@ -168,7 +168,7 @@ export default function StudioPage() {
                 key={cat.id}
                 onClick={() => setPhotoCategory(cat.id)}
                 style={{
-                  height: 32, padding: '0 14px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                  height: isMobile ? 36 : 32, padding: isMobile ? '0 12px' : '0 14px', borderRadius: 6, fontSize: 12, fontWeight: 500,
                   border: `1px solid ${photoCategory === cat.id ? CU.accent : CU.border}`,
                   background: photoCategory === cat.id ? `${CU.accent}12` : 'var(--fz-bg, #FFFFFF)',
                   color: photoCategory === cat.id ? CU.accent : CU.textMuted,

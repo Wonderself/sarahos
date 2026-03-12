@@ -57,20 +57,17 @@ function getModelIcon(model: string) {
 const CU = {
   card: {
     border: '1px solid #E5E5E5' as const,
-    border: '1px solid #E5E5E5',
     borderRadius: 8,
     background: '#fff',
   },
   sectionCard: {
     border: '1px solid #E5E5E5' as const,
-    border: '1px solid #E5E5E5',
     borderRadius: 8,
     padding: '16px 24px',
     background: '#fff',
   },
   statCard: {
     border: '1px solid #E5E5E5' as const,
-    border: '1px solid #E5E5E5',
     borderRadius: 8,
     padding: '16px 20px',
     background: '#fff',
@@ -244,9 +241,9 @@ export default function AnalyticsPage() {
         <>
           {/* Daily chart */}
           {last30Days.length > 0 && (
-            <div style={{ ...CU.sectionCard, padding: 24, marginBottom: 20 }}>
+            <div style={{ ...CU.sectionCard, padding: isMobile ? 12 : 24, marginBottom: 20, overflowX: 'auto' as const, WebkitOverflowScrolling: 'touch' as const }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#1A1A1A', margin: '0 0 16px' }}>Activité quotidienne</h3>
-              <ResponsiveContainer width="100%" height={240}>
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 240}>
                 <BarChart data={last30Days} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5" />
                   <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />

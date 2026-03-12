@@ -3,6 +3,19 @@
    Inspired by Apple Human Interface / Linear / Vercel
    ═══════════════════════════════════════════════════════ */
 
+/* Screen-reader only — hidden visually but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 :root {
   /* Core palette — LIGHT */
   --bg-primary: #ffffff;
@@ -365,22 +378,7 @@ a { color: inherit; text-decoration: none; }
   margin-top: 10px;
 }
 
-.dark-mode-toggle {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid var(--border-secondary);
-  background: var(--bg-elevated);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: background 0.2s;
-}
-.dark-mode-toggle:hover {
-  background: var(--bg-hover);
-}
+/* dark-mode-toggle removed */
 
 .approval-badge {
   margin-left: auto;
@@ -896,6 +894,7 @@ a { color: inherit; text-decoration: none; }
   scrollbar-width: none;
 }
 .emoji-rail::-webkit-scrollbar { display: none; }
+.emoji-rail.emoji-rail-hidden { transform: translateX(-100%); pointer-events: none; opacity: 0; transition: transform 0.25s ease, opacity 0.2s ease; }
 
 .emoji-rail-top { margin-bottom: 4px; }
 
@@ -1018,6 +1017,7 @@ a { color: inherit; text-decoration: none; }
 }
 .client-sidebar.sidebar-expanded {
   transform: translateX(0);
+  left: 0;
 }
 .client-main-content {
   margin-left: 56px;
@@ -1028,7 +1028,7 @@ a { color: inherit; text-decoration: none; }
   transition: margin-left 0.25s ease;
 }
 .client-main-content.content-shifted {
-  margin-left: 296px; /* 56px rail + 240px sidebar */
+  margin-left: 240px; /* sidebar only, emoji rail hidden */
 }
 
 /* ─── Mobile Nav ─── */
@@ -1067,7 +1067,7 @@ a { color: inherit; text-decoration: none; }
   height: 56px;
   background: var(--fz-bg, #FFFFFF);
   border-bottom: 1px solid var(--fz-border, #E2E8F0);
-  z-index: 45;
+  z-index: 52;
   align-items: center;
   justify-content: space-between;
   padding: 0 12px 0 16px;
@@ -1139,10 +1139,11 @@ a { color: inherit; text-decoration: none; }
   }
   .client-sidebar.sidebar-expanded {
     transform: translateX(0);
+    left: 0 !important;
   }
 
-  /* Overlay starts after emoji rail */
-  .sidebar-overlay { left: 56px; }
+  /* Overlay starts at left edge (emoji rail hidden when sidebar open) */
+  .sidebar-overlay { left: 0; }
 
   .main-content { margin-left: 56px !important; padding-top: 56px; }
   .client-main-content { margin-left: 56px !important; padding-top: 48px; }
@@ -1904,10 +1905,50 @@ a { color: inherit; text-decoration: none; }
 .lp-studio-bento-right { display: flex; flex-direction: column; gap: 16px; }
 
 /* ── Arcade games strip ── */
-.lp-arcade-strip { display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; -ms-overflow-style: none; }
+.lp-arcade-strip { display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
 .lp-arcade-strip::-webkit-scrollbar { display: none; }
 .lp-arcade-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .lp-arcade-badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+/* ── Mobile carousel scroll-snap ── */
+.lp-carousel-scroll {
+  display: flex !important;
+  grid-template-columns: none !important;
+  gap: 12px;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  scroll-behavior: smooth;
+}
+.lp-carousel-scroll::-webkit-scrollbar { display: none; }
+.lp-carousel-scroll > * {
+  scroll-snap-align: start;
+  min-width: 85%;
+  flex-shrink: 0;
+}
+/* Tablet: 2 items visible */
+@media (min-width: 481px) and (max-width: 767px) {
+  .lp-carousel-scroll > * {
+    min-width: 47%;
+  }
+}
+/* Desktop: grid layout, no scroll-snap */
+@media (min-width: 768px) {
+  .lp-carousel-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    overflow-x: hidden !important;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+  .lp-carousel-scroll > * {
+    min-width: 0;
+    scroll-snap-align: unset;
+  }
+}
 
 /* ═══════════════════════════════════════════════════════
    Public Pages — Responsive breakpoints
@@ -3072,17 +3113,7 @@ a { color: inherit; text-decoration: none; }
   gap: 8px;
 }
 
-/* Dark mode overrides for customize panel */
-[data-theme="dark"] .customize-section {
-  background: var(--bg-elevated);
-}
-[data-theme="dark"] .customize-section-header {
-  background: var(--bg-secondary);
-}
-
-[data-theme="dark"] .select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
+/* Dark mode removed */
 
 /* ═══════════════════════════════════════════════════════
    Landing Redesign v0.14 — Freenzy.io
@@ -3102,6 +3133,9 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   width: max-content;
   animation: lp-scroll 36s linear infinite;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
 }
 .lp-ticker:hover { animation-play-state: paused; }
 .lp-ticker-item {
@@ -3841,21 +3875,7 @@ th.sortable:hover { color: var(--text-primary); }
 .text-right    { text-align: right; }
 .text-center   { text-align: center; }
 
-/* ─── Dark mode skeleton ─── */
-[data-theme="dark"] .skeleton {
-  background: linear-gradient(
-    90deg,
-    #1e2433 25%,
-    #2a3044 50%,
-    #1e2433 75%
-  );
-  background-size: 200% 100%;
-}
-
-[data-theme="dark"] .slide-over {
-  border-left-color: rgba(255, 255, 255, 0.08);
-  background: #1a0e3a;
-}
+/* Dark mode skeleton + slide-over removed */
 
 /* ─── Mobile: Full-width slide-over on phone ─── */
 @media (max-width: 480px) {
@@ -4163,13 +4183,7 @@ th.sortable:hover { color: var(--text-primary); }
   .stat-value, .stat-value-sm { font-size: 18px; }
 }
 
-/* ── Dark mode table ── */
-[data-theme="dark"] .table-responsive {
-  background:
-    linear-gradient(to left, var(--bg-secondary) 20%, transparent) right center / 40px 100% no-repeat,
-    linear-gradient(to right, var(--bg-secondary) 20%, transparent) left center / 40px 100% no-repeat;
-  background-attachment: local, local;
-}
+/* Dark mode table removed */
 
 /* ── Sidebar keyboard shortcut hints: hide on mobile ── */
 @media (max-width: 768px) {
@@ -4716,6 +4730,9 @@ img, video, canvas, svg { display: block; max-width: 100%; height: auto; }
   display: flex;
   width: max-content;
   animation: lp-scroll-reverse 42s linear infinite;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
 }
 .lp-ticker-reverse:hover { animation-play-state: paused; }
 
@@ -5550,10 +5567,7 @@ img, video, canvas, svg { display: block; max-width: 100%; height: auto; }
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0,0,0,0.06);
 }
-[data-theme="dark"] .fz-card-glass {
-  background: rgba(30,33,48,0.7);
-  border-color: rgba(255,255,255,0.08);
-}
+/* Dark card-glass removed */
 
 /* ── Stat Cards — Landing style ── */
 .fz-stat-grid {
@@ -7145,4 +7159,943 @@ img, video, canvas, svg { display: block; max-width: 100%; height: auto; }
   @keyframes cu-slide-sheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .cu-group-card { margin: 0; }
   .cu-stat-card { flex: 1; min-width: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE-FIRST RESPONSIVE FIXES — Landing Page
+   Perfect mobile rendering: no overflow, no clipping
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Global: prevent ANY horizontal overflow on mobile ── */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden !important; }
+  main { overflow-x: hidden; }
+}
+
+/* ── Hero: letter-spacing too aggressive on small screens ── */
+@media (max-width: 480px) {
+  .lp-gradient-h1 { letter-spacing: -1px !important; }
+}
+@media (max-width: 374px) {
+  .lp-gradient-h1 { letter-spacing: -0.5px !important; }
+}
+
+/* ── Hero: section horizontal padding tighter on phones ── */
+@media (max-width: 480px) {
+  .lp-hero-viewport section { padding-left: 16px !important; padding-right: 16px !important; }
+}
+@media (max-width: 374px) {
+  .lp-hero-viewport section { padding-left: 12px !important; padding-right: 12px !important; }
+}
+
+/* ── Hero badge: prevent nowrap overflow ── */
+@media (max-width: 480px) {
+  .lp-hero-badge { white-space: normal !important; text-align: center; line-height: 1.4 !important; }
+}
+
+/* ── Hero avatars: remove negative margin overlap on mobile ── */
+@media (max-width: 480px) {
+  .lp-hero-avatars span { margin-left: 0 !important; font-size: 16px !important; }
+  .lp-hero-social-proof { font-size: 11px !important; }
+}
+
+/* ── Tickers: speed up + shrink on mobile ── */
+@media (max-width: 768px) {
+  .lp-ticker { animation-duration: 24s !important; }
+  .lp-ticker-reverse { animation-duration: 28s !important; }
+}
+@media (max-width: 480px) {
+  .lp-ticker-wrap {
+    mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%) !important;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%) !important;
+  }
+  .lp-activity-chip { padding: 4px 10px !important; gap: 6px !important; }
+  .lp-activity-chip span { font-size: 10px !important; }
+  .lp-stats-badge { padding: 4px 10px !important; gap: 5px !important; }
+  .lp-stats-badge-icon { font-size: 12px !important; }
+  .lp-stats-badge-value { font-size: 11px !important; }
+  .lp-stats-badge-label { font-size: 9px !important; }
+}
+
+/* ── All landing sections: tighter horizontal padding on phones ── */
+@media (max-width: 480px) {
+  main > section { padding-left: 16px !important; padding-right: 16px !important; }
+}
+@media (max-width: 374px) {
+  main > section { padding-left: 12px !important; padding-right: 12px !important; }
+}
+
+/* ── Tool category tabs: scroll hint on mobile ── */
+@media (max-width: 480px) {
+  .lp-tools-tabs {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px !important;
+  }
+  .lp-tools-tabs::-webkit-scrollbar { display: none; }
+  .lp-tools-tabs button { padding: 8px 14px !important; font-size: 12px !important; }
+}
+
+/* ── WhatsApp mockup: narrower on small phones ── */
+@media (max-width: 480px) {
+  .lp-wa-mockup { max-width: 100% !important; padding: 16px 12px !important; }
+}
+
+/* ── Demo section: shrink label minWidth on phones ── */
+@media (max-width: 480px) {
+  .lp-demo-label { min-width: 44px !important; font-size: 9px !important; letter-spacing: 0.2px !important; }
+  .lp-demo-line { padding: 6px 9px !important; gap: 8px !important; }
+  .lp-demo-line span:last-child { font-size: 11px !important; }
+}
+
+/* ── Demo tabs: horizontal scroll on phone ── */
+@media (max-width: 480px) {
+  .lp-demo-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .lp-demo-tabs::-webkit-scrollbar { display: none; }
+  .lp-demo-tabs button { padding: 8px 12px !important; font-size: 12px !important; }
+}
+
+/* ── Scenario steps + Why Freenzy cards ── */
+@media (max-width: 480px) {
+  .lp-scenario-steps { gap: 12px !important; }
+  .lp-scenario-steps > div { padding: 16px 14px !important; }
+}
+
+/* ── Personal agents grid: reduce card padding ── */
+@media (max-width: 480px) {
+  .lp-personal-grid > div { padding: 12px 14px !important; gap: 10px !important; }
+}
+
+/* ── Studio bento: tighter gaps on small phones ── */
+@media (max-width: 374px) {
+  .lp-studio-bento { gap: 12px !important; }
+  .lp-studio-bento-right { gap: 12px !important; }
+}
+
+/* ── Custom modules grid: stack on mobile ── */
+@media (max-width: 480px) {
+  .lp-custom-grid > div { padding: 20px 16px !important; }
+}
+
+/* ── Carousel items: reduce minHeight on mobile ── */
+@media (max-width: 480px) {
+  .lp-carousel-scroll-item > div { min-height: auto !important; }
+}
+
+/* ── Discussion mockup: text fits on mobile ── */
+@media (max-width: 480px) {
+  .lp-discussions-grid > div:last-child { border-radius: 12px !important; }
+  .lp-discussions-grid > div:last-child p { font-size: 13px !important; }
+}
+
+/* ── FAQ: question text wraps cleanly ── */
+@media (max-width: 480px) {
+  .lp-faq-item { padding: 12px 14px !important; }
+  .lp-faq-item > div > div:first-child { font-size: 13px !important; }
+  .lp-faq-answer { font-size: 13px !important; }
+}
+
+/* ── Plans grids: single column on very small screens ── */
+@media (max-width: 400px) {
+  .lp-plans-deposits { grid-template-columns: 1fr !important; }
+  .lp-plans-credits { grid-template-columns: 1fr !important; }
+  .lp-plans-value-props { grid-template-columns: 1fr !important; }
+}
+
+/* ── CTA final section: rewards chips wrap cleanly ── */
+@media (max-width: 480px) {
+  .lp-rewards-chips { gap: 6px !important; }
+  .lp-rewards-chips > div { padding: 4px 10px !important; }
+  .lp-rewards-chips > div span:last-child { font-size: 11px !important; }
+}
+
+/* ── Trust badges: wrap cleanly on phone ── */
+@media (max-width: 480px) {
+  .lp-trust-strip { gap: 12px !important; }
+  .lp-trust-strip > div { font-size: 10px !important; }
+}
+
+/* ── Category pills: smaller on mobile ── */
+@media (max-width: 480px) {
+  .lp-category-pills > span { font-size: 11px !important; padding: 4px 10px !important; }
+}
+
+/* ── Prevent text overflow in any card ── */
+@media (max-width: 480px) {
+  .lp-app-card { gap: 10px !important; }
+  .lp-app-card > div:last-child { min-width: 0; }
+  .lp-app-card p { word-break: break-word; }
+}
+
+
+/* ===================================================
+   AUTH PAGES - Login, Register, Reset Password
+   =================================================== */
+
+.auth-submit-btn {
+  min-height: 48px !important;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  .auth-agent-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .auth-agent-cta { width: 100% !important; padding: 0 20px !important; }
+  .auth-tagline-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 480px) {
+  .auth-page > .flex-center { padding: 16px !important; }
+  .auth-agent-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  .auth-agent-card { padding: 12px 10px !important; border-radius: 12px !important; }
+  .auth-agent-cta { width: 100% !important; font-size: 14px !important; }
+  .auth-tagline-grid { grid-template-columns: 1fr !important; gap: 6px !important; }
+  .auth-submit-btn { font-size: 14px !important; }
+}
+
+@media (max-width: 374px) {
+  .auth-page > .flex-center { padding: 12px !important; }
+  .auth-agent-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+  .auth-agent-card { padding: 10px 8px !important; }
+}
+
+/* ===================================================
+   VARIANT PAGES - Responsive Fixes
+   =================================================== */
+
+@media (max-width: 480px) {
+  .variant-card { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  .variant-card > div:last-child { align-self: flex-end; }
+}
+
+@media (max-width: 768px) {
+  .lp-steps-3col { grid-template-columns: 1fr !important; gap: 14px !important; }
+}
+
+/* ═══════════════════════════════════════════════════
+   LEGAL PAGES — Responsive
+   ═══════════════════════════════════════════════════ */
+
+/* Base: ensure text never overflows */
+.legal-content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.legal-content a {
+  color: #7c3aed;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.legal-content a:hover {
+  color: #6d28d9;
+}
+
+/* Tablet: hide sidebar, stack layout */
+@media (max-width: 768px) {
+  .legal-layout-body {
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 32px 20px 48px !important;
+  }
+  .legal-sidebar {
+    display: none !important;
+  }
+  .legal-main {
+    max-width: 100% !important;
+  }
+  .legal-hero {
+    padding: 48px 20px 36px !important;
+  }
+  .legal-article h1 {
+    font-size: 20px !important;
+  }
+  .legal-section-title {
+    font-size: 14px !important;
+  }
+  .legal-section-body {
+    font-size: 14px !important;
+    padding-left: 8px !important;
+  }
+}
+
+/* Mobile: tighter spacing */
+@media (max-width: 480px) {
+  .legal-layout-body {
+    padding: 24px 16px 40px !important;
+  }
+  .legal-hero {
+    padding: 40px 16px 28px !important;
+    margin-top: 48px !important;
+  }
+  .legal-hero h1 {
+    font-size: clamp(18px, 5vw, 28px) !important;
+  }
+  .legal-article h1 {
+    font-size: 18px !important;
+  }
+  .legal-article > div:first-child {
+    margin-bottom: 24px !important;
+    padding-bottom: 16px !important;
+  }
+  .legal-section {
+    margin-bottom: 28px !important;
+  }
+  .legal-section-title {
+    font-size: 13px !important;
+    padding-left: 10px !important;
+    gap: 6px !important;
+  }
+  .legal-section-body {
+    font-size: 13px !important;
+    line-height: 1.7 !important;
+    padding-left: 4px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Feature Pages — Responsive (repondeur, documents, social, reveil)
+   ═══════════════════════════════════════════════════════ */
+
+/* FAQ chevron fix */
+.fp-faq-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; gap: 12px;
+}
+.fp-faq-header > span:first-child {
+  flex: 1; min-width: 0; word-break: break-word;
+}
+.fp-faq-chevron {
+  flex-shrink: 0; width: 24px; text-align: center;
+}
+
+/* Table scroll wrapper */
+.fp-table-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+.fp-table-wrap table {
+  min-width: 540px;
+}
+
+/* ROI calculator rows — prevent overflow */
+.fp-roi-row {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; min-width: 0;
+}
+.fp-roi-row > span:first-child {
+  min-width: 0; word-break: break-word;
+}
+.fp-roi-row > span:last-child {
+  flex-shrink: 0; white-space: nowrap;
+}
+
+/* ── Feature pages Tablet ≤ 768px ── */
+@media (max-width: 768px) {
+  /* Hero */
+  .fp-hero { padding-top: 110px !important; padding-bottom: 50px !important; }
+  .fp-hero-inner { padding: 0 16px !important; }
+
+  /* Steps: stack to 1 column */
+  .fp-steps-grid > div { flex: 1 1 100% !important; max-width: 100% !important; }
+
+  /* Features: 2 columns */
+  .fp-features-grid > div { flex: 1 1 calc(50% - 12px) !important; max-width: calc(50% - 12px) !important; }
+
+  /* Comparison: stack */
+  .fp-compare-row > div { flex: 1 1 100% !important; max-width: 100% !important; }
+  .fp-compare-arrow { display: none !important; }
+
+  /* Grids */
+  .fp-security-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .fp-doc-grid { grid-template-columns: 1fr !important; }
+  .fp-platform-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Trust badges */
+  .fp-trust-badges > div { padding: 10px 16px !important; }
+
+  /* Voice cards */
+  .fp-voice-grid > div { flex: 1 1 100% !important; max-width: 400px !important; }
+
+  /* Quality cards */
+  .fp-quality-grid > div { flex: 1 1 100% !important; max-width: 100% !important; }
+
+  /* Integrations */
+  .fp-integrations-grid > div { flex: 1 1 100% !important; max-width: 100% !important; }
+
+  /* Calendar strip */
+  .fp-calendar-strip > div { min-width: 80px !important; }
+
+  /* FAQ */
+  .fp-faq-header { padding: 16px 20px !important; }
+
+  /* ROI rows */
+  .fp-roi-row { flex-wrap: wrap !important; }
+
+  /* Template buttons */
+  .fp-template-btns > button { padding: 8px 14px !important; }
+
+  /* Modes */
+  .fp-modes-grid > button { min-width: 90px !important; }
+}
+
+/* ── Feature pages Phone ≤ 480px ── */
+@media (max-width: 480px) {
+  /* Features: 1 column */
+  .fp-features-grid > div { flex: 1 1 100% !important; max-width: 100% !important; }
+
+  /* Grids */
+  .fp-security-grid { grid-template-columns: 1fr !important; }
+  .fp-platform-grid { grid-template-columns: 1fr !important; }
+
+  /* Trust badges smaller */
+  .fp-trust-badges > div { padding: 8px 12px !important; font-size: 13px !important; }
+
+  /* Modes smaller */
+  .fp-modes-grid > button { min-width: 75px !important; padding: 12px 14px !important; }
+
+  /* Pricing stats stack */
+  .fp-pricing-stats { gap: 20px !important; }
+
+  /* FAQ smaller */
+  .fp-faq-header { padding: 14px 16px !important; gap: 8px !important; }
+  .fp-faq-header > span:first-child { font-size: 14px !important; }
+
+  /* ROI smaller text */
+  .fp-roi-row { padding: 10px 12px !important; }
+  .fp-roi-row > span:first-child { font-size: 12px !important; }
+  .fp-roi-row > span:last-child { font-size: 15px !important; }
+
+  /* Calendar strip */
+  .fp-calendar-strip > div { min-width: 70px !important; padding: 12px 14px !important; }
+
+  /* Template buttons */
+  .fp-template-btns > button { padding: 8px 12px !important; font-size: 13px !important; }
+}
+
+/* ── Feature pages Extra small ≤ 374px ── */
+@media (max-width: 374px) {
+  .fp-hero h1 { font-size: 1.75rem !important; }
+  .fp-pricing-stats { gap: 16px !important; flex-direction: column !important; align-items: center !important; }
+  .fp-trust-badges { flex-direction: column !important; align-items: center !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Claude Page — Responsive
+   ═══════════════════════════════════════════════════════ */
+
+/* Extended Thinking 3-col → 1-col on mobile */
+@media (max-width: 768px) {
+  .claude-thinking-grid { grid-template-columns: 1fr !important; }
+  .claude-thinking-box { padding: 24px !important; }
+  .claude-model-card { padding: 24px !important; }
+}
+
+/* Models grid: single column on small phones */
+@media (max-width: 480px) {
+  .claude-models-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Agent list: tighter padding on mobile */
+@media (max-width: 480px) {
+  .claude-agents-list > div { padding: 12px 14px !important; gap: 8px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   WhatsApp Page — Responsive
+   ═══════════════════════════════════════════════════════ */
+
+/* 3-col grids → stack on tablet */
+@media (max-width: 768px) {
+  .wa-steps-grid { grid-template-columns: 1fr !important; }
+  .wa-features-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .wa-repondeur-grid { grid-template-columns: 1fr !important; }
+  .wa-security-grid { grid-template-columns: 1fr !important; }
+  .wa-vocal-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .wa-repondeur-box { padding: 24px !important; }
+}
+
+/* 2-col features + agents → 1-col on phone */
+@media (max-width: 480px) {
+  .wa-features-grid { grid-template-columns: 1fr !important; }
+  .wa-agents-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CAROUSEL / TICKER / SCROLL-SNAP — Deep Audit Fixes
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Carousel dots: enforce 44px min touch target ── */
+.lp-carousel-dots button {
+  min-width: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── TechCarousel: 2-col grid on tablet ── */
+@media (min-width: 481px) and (max-width: 767px) {
+  .lp-tech-carousel {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    overflow-x: hidden !important;
+    scroll-snap-type: none !important;
+  }
+  .lp-tech-carousel > * {
+    min-width: 0 !important;
+  }
+}
+
+/* ── Carousel: fuller width on very small phones ── */
+@media (max-width: 400px) {
+  .lp-carousel-scroll > * {
+    min-width: 92% !important;
+  }
+}
+@media (max-width: 374px) {
+  .lp-carousel-scroll > * {
+    min-width: 95% !important;
+  }
+}
+
+/* ── Tickers: faster on small phones (less waiting) ── */
+@media (max-width: 400px) {
+  .lp-ticker { animation-duration: 20s !important; }
+  .lp-ticker-reverse { animation-duration: 22s !important; }
+}
+@media (max-width: 374px) {
+  .lp-ticker { animation-duration: 16s !important; }
+  .lp-ticker-reverse { animation-duration: 18s !important; }
+  .lp-ticker-item { margin: 0 3px !important; padding: 6px 12px !important; }
+  .lp-stats-badge { margin: 0 3px !important; }
+}
+
+/* ── Ticker items: prevent text clipping at edges ── */
+.lp-ticker-item,
+.lp-stats-badge {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Carousel container: clip overflow on desktop ── */
+@media (min-width: 768px) {
+  .lp-carousel-scroll {
+    overflow: hidden !important;
+  }
+}
+
+/* ── Arcade strip: snap alignment for children ── */
+.lp-arcade-strip > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ── Fade-in: respect reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .lp-carousel-scroll-item {
+    animation: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   PLANS + VS-ALTERNATIVES — Responsive Fixes
+   ═══════════════════════════════════════════════════ */
+
+/* ── Plans: howto grid (moved from inline <style>) ── */
+.lp-plans-howto {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* ── Plans: value prop items — right border only on desktop ── */
+.lp-plans-value-prop-item {
+  border-right: 1px solid #f2f2f2;
+}
+.lp-plans-value-prop-item:last-child {
+  border-right: none;
+}
+
+/* ── VS-Alternatives: table vs cards toggle ── */
+.vs-cards-mobile { display: none; }
+.vs-table-desktop { display: block; }
+
+/* ── Tablet ≤ 768px ── */
+@media (max-width: 768px) {
+  /* Plans: value props lose right border when 2-col */
+  .lp-plans-value-prop-item { border-right: none !important; }
+
+  /* VS: hide desktop table, show mobile cards */
+  .vs-table-desktop { display: none !important; }
+  .vs-cards-mobile { display: block !important; }
+
+  /* VS: features 2-col */
+  .vs-features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+
+  /* VS: CTA button wraps */
+  .vs-cta-btn { padding: 14px 24px !important; font-size: 14px !important; }
+
+  /* Plans: agents grid 2-col */
+  .lp-plans-agents-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Plans: ecosystem grid 2-col */
+  .lp-plans-ecosystem-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ── Phone ≤ 480px ── */
+@media (max-width: 480px) {
+  /* Plans: howto single column */
+  .lp-plans-howto { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  /* Plans: commission card tighter padding */
+  .lp-plans-commission-card { padding: 24px 18px !important; }
+
+  /* VS: features single column */
+  .vs-features-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  /* VS: mobile cards 2x2 inside each card */
+  .vs-cards-mobile > div > div:last-child {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+
+  /* Plans: agents grid single column */
+  .lp-plans-agents-grid { grid-template-columns: 1fr !important; }
+
+  /* Plans: ecosystem grid single column */
+  .lp-plans-ecosystem-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Small phone ≤ 400px ── */
+@media (max-width: 400px) {
+  /* VS: mobile card inner grid stack to 1-col */
+  .vs-cards-mobile > div > div:last-child {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Tiny ≤ 374px ── */
+@media (max-width: 374px) {
+  .lp-plans-zero-pct { font-size: 42px !important; letter-spacing: -2px !important; }
+  .vs-cta-btn { padding: 12px 16px !important; font-size: 13px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   LANDING PAGE — Responsive Audit Fixes (2026-03-12)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── TechCarousel: show all items in grid on desktop, scroll on mobile ── */
+.lp-tech-carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.lp-tech-carousel::-webkit-scrollbar { display: none; }
+.lp-tech-carousel > * {
+  scroll-snap-align: start;
+  min-width: 75%;
+  flex-shrink: 0;
+}
+@media (min-width: 769px) {
+  .lp-tech-carousel {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .lp-tech-carousel > * {
+    min-width: 0 !important;
+    flex-shrink: 1;
+  }
+}
+
+/* ── Carousel scroll: ensure mobile override wins over any inline grid ── */
+@media (max-width: 767px) {
+  .lp-carousel-scroll {
+    display: flex !important;
+    grid-template-columns: none !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+  }
+  .lp-carousel-scroll > * {
+    min-width: 75% !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start !important;
+  }
+}
+
+/* ── Carousel dots: ensure tappable on mobile, prevent clipping ── */
+.lp-carousel-dots {
+  padding: 8px 0;
+  overflow: visible;
+}
+.lp-carousel-dots button {
+  min-width: 28px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── CTA buttons: ensure all are tappable (min 44px) ── */
+.lp-cta-primary {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── FAQ answer: proper spacing ── */
+.lp-faq-answer {
+  margin-top: 12px;
+  padding-top: 12px;
+  font-size: 14px;
+  color: #6B6B6B;
+  line-height: 1.65;
+}
+
+/* ── Prevent text overflow globally in landing sections ── */
+main > section {
+  overflow-x: hidden;
+}
+main > section p,
+main > section h2,
+main > section h3,
+main > section span {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ── Discussion mockup: prevent overflow on tablets ── */
+@media (max-width: 768px) {
+  .lp-discussions-grid > div:last-child {
+    max-width: 100% !important;
+    overflow: hidden;
+  }
+}
+
+/* ── Studio bento: main card no overflow ── */
+.lp-studio-bento > div:first-child {
+  overflow: hidden;
+}
+
+/* ── Personal agents grid: prevent card text overflow ── */
+.lp-personal-grid > div {
+  min-width: 0;
+  overflow: hidden;
+}
+.lp-personal-grid > div > div {
+  min-width: 0;
+}
+.lp-personal-grid > div > div p {
+  overflow-wrap: break-word;
+}
+
+/* ── Custom grid cards: ensure min-width 0 for text truncation ── */
+.lp-custom-grid > div {
+  min-width: 0;
+}
+
+/* ── Rewards chips: clean wrap on very small screens ── */
+@media (max-width: 374px) {
+  .lp-rewards-chips > div {
+    padding: 4px 8px !important;
+    gap: 4px !important;
+  }
+  .lp-rewards-chips > div span:first-child { font-size: 12px !important; }
+  .lp-rewards-chips > div span:last-child { font-size: 10px !important; }
+}
+
+/* ── Trust strip: center on mobile ── */
+@media (max-width: 768px) {
+  .lp-trust-strip {
+    justify-content: center !important;
+  }
+}
+
+/* ── Hero CTA buttons: tighter on very small screens ── */
+@media (max-width: 374px) {
+  .lp-hero-viewport .lp-cta-primary { font-size: 13px !important; padding: 12px 16px !important; }
+}
+
+/* ── Ticker items: ensure no clipping ── */
+.lp-ticker-item,
+.lp-stats-badge {
+  flex-shrink: 0;
+}
+
+/* ── App cards: tool name & badge don't overflow ── */
+.lp-app-card > div:last-child > div:first-child {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+@media (max-width: 480px) {
+  .lp-app-card > div:first-child {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px;
+  }
+  .lp-app-card > div:first-child span { font-size: 18px !important; }
+}
+
+/* ── Carousel scroll items: ensure card contents don't overflow ── */
+.lp-carousel-scroll-item {
+  min-width: 0;
+  overflow: hidden;
+}
+@media (max-width: 767px) {
+  .lp-carousel-scroll-item {
+    min-width: 75% !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Case Study Pages — Responsive Styles
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Base: word-break safety on all cards ── */
+.cs-card,
+.cs-stat-card,
+.cs-testimonial {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.cs-result-badge {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.cs-result-badge > span {
+  flex-shrink: 0;
+}
+
+/* ── Tablet: 768px ── */
+@media (max-width: 768px) {
+  .cs-hero {
+    padding: 100px 20px 60px !important;
+  }
+  .cs-section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-bottom: 70px !important;
+  }
+  .cs-testimonial {
+    padding: 36px 28px !important;
+    border-radius: 18px !important;
+  }
+  .cs-cta-section {
+    padding-bottom: 80px !important;
+  }
+}
+
+/* ── Mobile: 480px ── */
+@media (max-width: 480px) {
+  .cs-hero {
+    padding: 90px 16px 48px !important;
+  }
+  .cs-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-bottom: 56px !important;
+  }
+  .cs-persona-badge {
+    border-radius: 16px !important;
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    gap: 8px !important;
+  }
+  .cs-card {
+    max-width: none !important;
+    flex: 1 1 100% !important;
+    padding: 24px !important;
+  }
+  .cs-stat-card {
+    max-width: none !important;
+    flex: 1 1 100% !important;
+    padding: 28px 20px !important;
+  }
+  .cs-testimonial {
+    padding: 28px 20px !important;
+    border-radius: 16px !important;
+  }
+  .cs-cta-btn {
+    padding: 14px 28px !important;
+    font-size: 15px !important;
+    width: calc(100% - 32px) !important;
+    max-width: 320px !important;
+    justify-content: center !important;
+  }
+  .cs-cta-section {
+    padding-bottom: 64px !important;
+  }
+}
+
+/* ── Small mobile: 400px ── */
+@media (max-width: 400px) {
+  .cs-hero {
+    padding: 84px 12px 40px !important;
+  }
+  .cs-section {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-bottom: 48px !important;
+  }
+  .cs-persona-badge {
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+  }
+  .cs-card {
+    padding: 20px !important;
+  }
+  .cs-stat-card {
+    padding: 24px 16px !important;
+  }
+  .cs-testimonial {
+    padding: 24px 16px !important;
+  }
+}
+
+/* ── Very small: 374px (iPhone SE) ── */
+@media (max-width: 374px) {
+  .cs-hero {
+    padding: 80px 10px 36px !important;
+  }
+  .cs-section {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .cs-persona-badge {
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+    gap: 6px !important;
+    border-radius: 12px !important;
+  }
+  .cs-card {
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+  .cs-stat-card {
+    padding: 20px 14px !important;
+    border-radius: 12px !important;
+  }
+  .cs-cta-btn {
+    font-size: 14px !important;
+    padding: 12px 20px !important;
+  }
 }

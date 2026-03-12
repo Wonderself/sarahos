@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateExternalUrl } from '@/lib/api-auth';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
@@ -59,6 +60,12 @@ export async function POST(req: NextRequest) {
 
 async function analyzeUrl(url: string, description: string | undefined, token: string) {
   if (!url) return NextResponse.json({ error: 'URL requise' }, { status: 400 });
+
+  // SSRF protection: validate URL before fetching
+  const urlCheck = validateExternalUrl(url);
+  if (!urlCheck.valid) {
+    return NextResponse.json({ error: urlCheck.error }, { status: 400 });
+  }
 
   // Fetch the website content
   let siteText = '';

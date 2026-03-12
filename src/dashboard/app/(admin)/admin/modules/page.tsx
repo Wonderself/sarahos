@@ -91,7 +91,7 @@ export default async function ModulesPage() {
         <div className="section-title">Tous les modules ({modules.length})</div>
         {modules.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>inventory_2</span></div>
+            <div style={{ marginBottom: 8 }}>📦</div>
             <div>Aucun module enregistré pour l&apos;instant.</div>
           </div>
         ) : (

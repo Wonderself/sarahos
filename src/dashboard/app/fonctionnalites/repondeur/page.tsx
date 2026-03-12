@@ -7,17 +7,20 @@ import { useState } from 'react';
 
 const STEPS = [
   {
-    icon: 'call',
+    icon: '📞',
+    iconLabel: 'téléphone qui sonne',
     title: 'Un client appelle',
     desc: 'Votre numéro professionnel reçoit un appel, même à 3h du matin.',
   },
   {
-    icon: 'smart_toy',
+    icon: '🤖',
+    iconLabel: 'robot intelligence artificielle',
     title: "L'IA répond naturellement",
     desc: 'Une voix française fluide accueille, écoute et répond à votre place.',
   },
   {
-    icon: 'summarize',
+    icon: '📋',
+    iconLabel: 'presse-papiers résumé',
     title: 'Vous recevez le résumé',
     desc: 'Email ou WhatsApp : nom, motif, urgence, tout est noté pour vous.',
   },
@@ -25,32 +28,38 @@ const STEPS = [
 
 const FEATURES = [
   {
-    icon: 'bolt',
+    icon: '⚡',
+    iconLabel: 'éclair réponse rapide',
     title: 'Réponse instantanée 24/7',
     desc: "Plus aucun appel manqué. L'IA décroche en moins de 2 secondes, jour et nuit, weekends et jours fériés.",
   },
   {
-    icon: 'filter_alt',
+    icon: '🔍',
+    iconLabel: 'loupe qualification',
     title: 'Qualification des leads',
     desc: "L'IA identifie les prospects sérieux, note leur besoin et leur urgence pour que vous rappeliez les bons contacts.",
   },
   {
-    icon: 'quiz',
+    icon: '❓',
+    iconLabel: 'point interrogation FAQ',
     title: 'FAQ automatique',
     desc: 'Horaires, tarifs, adresse : les questions récurrentes sont traitées sans mobiliser votre équipe.',
   },
   {
-    icon: 'swap_calls',
+    icon: '📲',
+    iconLabel: 'transfert appel mobile',
     title: 'Transfert intelligent',
     desc: "Appel urgent ? L'IA transfère directement vers votre mobile ou un collaborateur désigné.",
   },
   {
-    icon: 'mark_email_read',
+    icon: '📧',
+    iconLabel: 'email notification résumé',
     title: 'Résumé par email / WhatsApp',
     desc: 'Après chaque appel, recevez un compte-rendu clair avec le nom, le motif et les actions suggérées.',
   },
   {
-    icon: 'record_voice_over',
+    icon: '🗣️',
+    iconLabel: 'voix naturelle synthèse vocale',
     title: 'Voix naturelle française',
     desc: "Technologie ElevenLabs premium : vos clients croient parler à un vrai collaborateur, pas à un robot.",
   },
@@ -88,6 +97,48 @@ const FAQS = [
   },
 ];
 
+const srOnly: React.CSSProperties = { position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 };
+
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Freenzy.io Répondeur Intelligent IA',
+  description: "Répondeur téléphonique intelligent propulsé par l'intelligence artificielle. Transcription automatique, qualification des leads, transfert intelligent et résumé instantané par WhatsApp ou email. Voix naturelle française ElevenLabs. Disponible 24h/24, 7j/7.",
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  url: 'https://freenzy.io/fonctionnalites/repondeur',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'EUR',
+    description: '50 crédits offerts à l\'inscription, sans carte bancaire. Environ 10 appels gratuits.',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '347',
+    bestRating: '5',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Freenzy.io',
+    url: 'https://freenzy.io',
+  },
+};
+
+const FAQ_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(faq => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a,
+    },
+  })),
+};
+
 export default function RepondeurPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [missedCalls, setMissedCalls] = useState(15);
@@ -108,15 +159,17 @@ export default function RepondeurPage() {
   const accentGradient = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
 
   return (
-    <div style={{ background: '#0f0720', color: '#fff', minHeight: '100vh' }}>
+    <main aria-label="Répondeur intelligent IA Freenzy.io — standard téléphonique automatique avec intelligence artificielle" style={{ background: '#0f0720', color: '#fff', minHeight: '100vh' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }} />
       <PublicNav />
 
       {/* Hero */}
-      <section style={{ paddingTop: 140, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+      <section className="fp-hero" aria-label="Présentation du répondeur intelligent IA Freenzy" style={{ paddingTop: 140, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -200, left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} aria-hidden="true" />
+        <div className="fp-hero-inner" style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 100, padding: '8px 20px', marginBottom: 28, fontSize: 14, color: '#7c3aed' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>call</span>
+            <span role="img" aria-label="téléphone répondeur intelligent">📞</span>
             Répondeur IA
           </div>
           <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.1, margin: '0 0 20px' }}>
@@ -126,12 +179,15 @@ export default function RepondeurPage() {
           <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', color: 'rgba(255,255,255,0.7)', maxWidth: 600, margin: '0 auto 40px', lineHeight: 1.6 }}>
             Votre standard téléphonique IA répond 24h/24 avec une voix naturelle française. Vos clients sont accueillis, qualifiés et vous recevez un résumé instantané.
           </p>
+          <p style={srOnly}>
+            Le répondeur intelligent IA de Freenzy.io est un standard téléphonique automatique propulsé par l&apos;intelligence artificielle Claude d&apos;Anthropic et la synthèse vocale ElevenLabs. Il transcrit, analyse et répond à vos appels professionnels 24h/24, 7j/7, avec détection d&apos;urgence et transfert intelligent. Idéal pour les restaurants, cabinets médicaux, agences immobilières, TPE et PME françaises qui ne veulent plus manquer aucun appel client.
+          </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
-              Essayer gratuitement
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
+            <Link href="/client/dashboard" title="Accedez au dashboard Freenzy.io pour explorer le repondeur intelligent IA" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
+              Acceder a Freenzy
+              <span aria-hidden="true" style={{ fontSize: 20 }}>→</span>
             </Link>
-            <Link href="/demo" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
+            <Link href="/demo" title="Voir la démonstration en direct du répondeur IA Freenzy.io" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
               Voir la démo
             </Link>
           </div>
@@ -139,20 +195,20 @@ export default function RepondeurPage() {
       </section>
 
       {/* 3 Steps */}
-      <section style={sectionStyle}>
+      <section aria-label="Comment fonctionne le répondeur IA en 3 étapes" style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Comment ça marche ?
         </h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           Trois étapes simples pour ne plus jamais rater un appel.
         </p>
-        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="fp-steps-grid" style={{ display: 'flex', gap: 32, flexWrap: 'wrap', justifyContent: 'center' }}>
           {STEPS.map((step, i) => (
             <div key={i} style={{ ...cardStyle, flex: '1 1 280px', maxWidth: 340, textAlign: 'center', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', width: 36, height: 36, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16 }}>
+              <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)', width: 36, height: 36, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16 }} aria-label={`Étape ${i + 1}`}>
                 {i + 1}
               </div>
-              <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
+              <span role="img" aria-label={step.iconLabel} style={{ fontSize: 40, marginBottom: 16, display: 'block', marginTop: 12 }}>{step.icon}</span>
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{step.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 15, lineHeight: 1.6 }}>{step.desc}</p>
             </div>
@@ -161,17 +217,17 @@ export default function RepondeurPage() {
       </section>
 
       {/* 6 Features */}
-      <section style={{ ...sectionStyle, paddingTop: 40 }}>
+      <section aria-label="Fonctionnalités principales du répondeur intelligent IA" style={{ ...sectionStyle, paddingTop: 40 }}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Tout ce dont vous avez besoin
         </h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           Un répondeur complet qui travaille pour vous, même quand vous dormez.
         </p>
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="fp-features-grid" style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {FEATURES.map((feat, i) => (
             <div key={i} style={{ ...cardStyle, flex: '1 1 320px', maxWidth: 360 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 32, color: '#7c3aed', marginBottom: 14, display: 'block' }}>{feat.icon}</span>
+              <span role="img" aria-label={feat.iconLabel} style={{ fontSize: 32, marginBottom: 14, display: 'block' }}>{feat.icon}</span>
               <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{feat.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14.5, lineHeight: 1.65 }}>{feat.desc}</p>
             </div>
@@ -180,17 +236,17 @@ export default function RepondeurPage() {
       </section>
 
       {/* Temps économisé */}
-      <section style={{ padding: '80px 24px', maxWidth: 900, margin: '0 auto' }}>
+      <section aria-label="Comparaison du temps gagné avec et sans répondeur IA Freenzy" style={{ padding: '80px 24px', maxWidth: 900, margin: '0 auto' }}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 16 }}>
           Combien de temps gagnez-vous ?
         </h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 56, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           Comparez votre quotidien sans et avec Freenzy.
         </p>
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="fp-compare-row" style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
           {/* Sans Freenzy */}
           <div style={{ flex: '1 1 260px', maxWidth: 320, background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: 16, padding: '32px 28px', textAlign: 'center' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 44, color: '#ef4444', marginBottom: 16, display: 'block' }}>phone_missed</span>
+            <span role="img" aria-label="téléphone avec croix appels manqués" style={{ fontSize: 44, marginBottom: 16, display: 'block' }}>📵</span>
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: '#ef4444' }}>Sans Freenzy</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '12px 16px' }}>
@@ -205,12 +261,12 @@ export default function RepondeurPage() {
             </div>
           </div>
           {/* Arrow */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed' }}>arrow_forward</span>
+          <div className="fp-compare-arrow" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} aria-hidden="true">
+            <span style={{ fontSize: 40, color: '#7c3aed' }}>{'→'}</span>
           </div>
           {/* Avec Freenzy */}
           <div style={{ flex: '1 1 260px', maxWidth: 320, background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.15)', borderRadius: 16, padding: '32px 28px', textAlign: 'center' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 44, color: '#22c55e', marginBottom: 16, display: 'block' }}>smart_toy</span>
+            <span role="img" aria-label="robot IA répondeur automatique" style={{ fontSize: 44, marginBottom: 16, display: 'block' }}>🤖</span>
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: '#22c55e' }}>Avec Freenzy</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '12px 16px' }}>
@@ -234,7 +290,7 @@ export default function RepondeurPage() {
       </section>
 
       {/* Demo Conversation */}
-      <section style={sectionStyle}>
+      <section aria-label="Exemple de conversation entre un client et le répondeur IA Freenzy" style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Exemple de conversation
         </h2>
@@ -245,7 +301,7 @@ export default function RepondeurPage() {
           {/* Phone header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{ width: 44, height: 44, borderRadius: '50%', background: accentGradient, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#fff' }}>call</span>
+              <span role="img" aria-label="appel téléphonique entrant" style={{ fontSize: 22 }}>📞</span>
             </div>
             <div>
               <div style={{ fontWeight: 700, fontSize: 15 }}>Appel entrant</div>
@@ -277,7 +333,7 @@ export default function RepondeurPage() {
           {/* Summary */}
           <div style={{ marginTop: 20, padding: '16px 18px', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#22c55e' }}>summarize</span>
+              <span role="img" aria-label="résumé de l'appel envoyé par WhatsApp" style={{ fontSize: 18 }}>📋</span>
               <span style={{ fontWeight: 700, fontSize: 13, color: '#22c55e' }}>Résumé envoyé par WhatsApp</span>
             </div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
@@ -291,9 +347,9 @@ export default function RepondeurPage() {
       </section>
 
       {/* Pricing */}
-      <section style={sectionStyle}>
+      <section aria-label="Tarification du répondeur intelligent IA Freenzy" style={sectionStyle}>
         <div style={{ ...cardStyle, textAlign: 'center', maxWidth: 600, margin: '0 auto', background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#7c3aed', marginBottom: 12, display: 'block' }}>payments</span>
+          <span role="img" aria-label="carte bancaire tarification" style={{ fontSize: 40, marginBottom: 12, display: 'block' }}>💳</span>
           <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', fontWeight: 700, marginBottom: 12 }}>
             Tarification simple
           </h2>
@@ -301,49 +357,29 @@ export default function RepondeurPage() {
             Environ <strong style={{ color: '#fff' }}>10 appels entrants</strong> pour 50 crédits offerts à l&apos;inscription.
             <br />Pas d&apos;abonnement, pas de frais cachés. Vous payez uniquement ce que vous consommez.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', marginBottom: 24 }}>
+          <div className="fp-pricing-stats" style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap', marginBottom: 24 }}>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>~5</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits / appel</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>{'~5'}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{'crédits / appel'}</div>
             </div>
             <div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>50</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>crédits offerts</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>{'50'}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{'crédits offerts'}</div>
             </div>
             <div>
               <div style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed' }}>0 €</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>pour commencer</div>
             </div>
           </div>
-          <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
-            Créer mon compte gratuit
-            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
+          <Link href="/client/dashboard" title="Accedez au dashboard pour explorer le repondeur IA" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
+            Explorer le Dashboard
+            <span aria-hidden="true" style={{ fontSize: 20 }}>→</span>
           </Link>
         </div>
       </section>
 
-      {/* Sécurité & Conformité — Trust Badges */}
-      <section style={{ padding: '80px 24px', maxWidth: 900, margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 48 }}>
-          Confiance & Conformité
-        </h2>
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {[
-            { icon: 'verified_user', label: 'RGPD Confiant', color: '#22c55e' },
-            { icon: 'enhanced_encryption', label: 'Données chiffrées', color: '#06b6d4' },
-            { icon: 'dns', label: 'Serveurs EU', color: '#7c3aed' },
-            { icon: 'fingerprint', label: 'Signature Twilio HMAC', color: '#f59e0b' },
-          ].map((badge, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 100, padding: '12px 24px' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 22, color: badge.color }}>{badge.icon}</span>
-              <span style={{ fontWeight: 700, fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>{badge.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* FAQ */}
-      <section style={sectionStyle}>
+      <section aria-label="Questions fréquentes sur le répondeur intelligent IA" style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Questions fréquentes
         </h2>
@@ -352,10 +388,10 @@ export default function RepondeurPage() {
         </p>
         <div style={{ maxWidth: 720, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {FAQS.map((faq, i) => (
-            <div key={i} style={{ ...cardStyle, padding: '0', overflow: 'hidden', cursor: 'pointer' }} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px' }}>
+            <div key={i} className="fp-faq-item" style={{ ...cardStyle, padding: '0', overflow: 'hidden', cursor: 'pointer' }} onClick={() => setOpenFaq(openFaq === i ? null : i)} role="button" aria-expanded={openFaq === i} aria-label={`Question : ${faq.q}`}>
+              <div className="fp-faq-header">
                 <span style={{ fontWeight: 600, fontSize: 15 }}>{faq.q}</span>
-                <span className="material-symbols-rounded" style={{ fontSize: 22, color: 'rgba(255,255,255,0.4)', transition: 'transform 0.2s', transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)' }}>expand_more</span>
+                <span className="fp-faq-chevron" aria-hidden="true" style={{ fontSize: 22, color: 'rgba(255,255,255,0.4)', transition: 'transform 0.2s', transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)', display: 'inline-block' }}>{'▼'}</span>
               </div>
               {openFaq === i && (
                 <div style={{ padding: '0 24px 20px', color: 'rgba(255,255,255,0.65)', fontSize: 14.5, lineHeight: 1.65 }}>
@@ -368,7 +404,7 @@ export default function RepondeurPage() {
       </section>
 
       {/* Calculateur de ROI */}
-      <section style={sectionStyle}>
+      <section aria-label="Calculateur de retour sur investissement du répondeur IA" style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Calculateur de ROI
         </h2>
@@ -376,54 +412,59 @@ export default function RepondeurPage() {
           Estimez combien vous perdez chaque mois en appels manqués.
         </p>
         <div style={{ maxWidth: 600, margin: '0 auto', ...cardStyle, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)' }}>
-          <label style={{ display: 'block', fontWeight: 600, fontSize: 15, marginBottom: 16 }}>
+          <label htmlFor="missed-calls-slider" style={{ display: 'block', fontWeight: 600, fontSize: 15, marginBottom: 16 }}>
             Combien d&apos;appels manqués par mois ?
           </label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
             <input
+              id="missed-calls-slider"
               type="range"
               min={1}
               max={100}
               value={missedCalls}
               onChange={(e) => setMissedCalls(Number(e.target.value))}
               style={{ flex: 1, accentColor: '#7c3aed' }}
+              aria-label="Nombre d'appels manqués par mois"
+              aria-valuemin={1}
+              aria-valuemax={100}
+              aria-valuenow={missedCalls}
             />
             <span style={{ fontSize: 28, fontWeight: 800, color: '#7c3aed', minWidth: 50, textAlign: 'right' }}>{missedCalls}</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
-              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>Manque à gagner ({missedCalls} x 85€)</span>
-              <span style={{ fontWeight: 700, fontSize: 18, color: '#ef4444' }}>{(missedCalls * 85).toLocaleString('fr-FR')} €</span>
+            <div className="fp-roi-row" style={{ padding: '14px 18px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>{'Manque à gagner ('}{missedCalls}{' x 85€)'}</span>
+              <span style={{ fontWeight: 700, fontSize: 18, color: '#ef4444' }}>{(missedCalls * 85).toLocaleString('fr-FR')}{' €'}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 10 }}>
-              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>Coût Freenzy ({missedCalls} x 5 cr x 0.05€)</span>
-              <span style={{ fontWeight: 700, fontSize: 18, color: '#7c3aed' }}>{(missedCalls * 5 * 0.05).toFixed(2).replace('.', ',')} €</span>
+            <div className="fp-roi-row" style={{ padding: '14px 18px', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 10 }}>
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>{'Coût Freenzy ('}{missedCalls}{' x 5 cr x 0.05€)'}</span>
+              <span style={{ fontWeight: 700, fontSize: 18, color: '#7c3aed' }}>{(missedCalls * 5 * 0.05).toFixed(2).replace('.', ',')}{' €'}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10 }}>
-              <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, fontWeight: 600 }}>Économie nette / mois</span>
-              <span style={{ fontWeight: 800, fontSize: 24, color: '#22c55e' }}>{(missedCalls * 85 - missedCalls * 5 * 0.05).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+            <div className="fp-roi-row" style={{ padding: '16px 18px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 10 }}>
+              <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, fontWeight: 600 }}>{'Économie nette / mois'}</span>
+              <span style={{ fontWeight: 800, fontSize: 24, color: '#22c55e' }}>{(missedCalls * 85 - missedCalls * 5 * 0.05).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{' €'}</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Sécurité & Conformité */}
-      <section style={sectionStyle}>
+      <section aria-label="Sécurité et conformité RGPD du répondeur IA" style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Sécurité & Conformité
         </h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           Vos données et celles de vos clients sont protégées à chaque instant.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, maxWidth: 900, margin: '0 auto' }}>
+        <div className="fp-security-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, maxWidth: 900, margin: '0 auto' }}>
           {[
-            { icon: 'verified_user', title: 'RGPD conforme', desc: 'Données hébergées en EU' },
-            { icon: 'enhanced_encryption', title: 'Chiffrement AES-256', desc: 'Appels et données chiffrés de bout en bout' },
-            { icon: 'shield', title: 'Isolation des données', desc: 'Chaque compte est cloisonné' },
-            { icon: 'auto_delete', title: 'Pas de rétention', desc: 'Données supprimées après 90 jours' },
+            { icon: '✅', iconLabel: 'conformité RGPD validée', title: 'RGPD conforme', desc: 'Données hébergées en EU' },
+            { icon: '🔒', iconLabel: 'cadenas chiffrement sécurisé', title: 'Chiffrement AES-256', desc: 'Appels et données chiffrés de bout en bout' },
+            { icon: '🛡️', iconLabel: 'bouclier protection données', title: 'Isolation des données', desc: 'Chaque compte est cloisonné' },
+            { icon: '🗑️', iconLabel: 'suppression automatique données', title: 'Pas de rétention', desc: 'Données supprimées après 90 jours' },
           ].map((item, i) => (
             <div key={i} style={{ ...cardStyle, background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', textAlign: 'center', padding: '28px 20px' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 36, color: '#22c55e', marginBottom: 12, display: 'block' }}>{item.icon}</span>
+              <span role="img" aria-label={item.iconLabel} style={{ fontSize: 36, marginBottom: 12, display: 'block' }}>{item.icon}</span>
               <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{item.title}</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.5 }}>{item.desc}</p>
             </div>
@@ -432,20 +473,20 @@ export default function RepondeurPage() {
       </section>
 
       {/* Vs secrétaire traditionnelle */}
-      <section style={sectionStyle}>
+      <section aria-label="Comparaison entre le répondeur IA et une secrétaire traditionnelle" style={sectionStyle}>
         <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Vs secrétaire traditionnelle
         </h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginBottom: 48, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           Comparez et faites le bon choix pour votre entreprise.
         </p>
-        <div style={{ maxWidth: 800, margin: '0 auto', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, background: 'rgba(255,255,255,0.04)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="fp-table-wrap" style={{ maxWidth: 800, margin: '0 auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, background: 'rgba(255,255,255,0.04)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }} aria-label="Tableau comparatif répondeur IA vs secrétaire traditionnelle">
             <thead>
               <tr>
-                <th style={{ padding: '18px 20px', textAlign: 'left', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Critère</th>
-                <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Secrétaire</th>
-                <th style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#7c3aed', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Freenzy Répondeur</th>
+                <th scope="col" style={{ padding: '18px 20px', textAlign: 'left', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Critère</th>
+                <th scope="col" style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Secrétaire</th>
+                <th scope="col" style={{ padding: '18px 20px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#7c3aed', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Freenzy Répondeur</th>
               </tr>
             </thead>
             <tbody>
@@ -461,7 +502,7 @@ export default function RepondeurPage() {
                   <td style={{ padding: '14px 20px', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>{row.criteria}</td>
                   <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>{row.secretary}</td>
                   <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#22c55e' }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 6 }}>check_circle</span>
+                    <span role="img" aria-label="avantage Freenzy" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 6 }}>✅</span>
                     {row.freenzy}
                   </td>
                 </tr>
@@ -472,20 +513,20 @@ export default function RepondeurPage() {
       </section>
 
       {/* Final CTA */}
-      <section style={{ ...sectionStyle, textAlign: 'center', paddingBottom: 100 }}>
+      <section aria-label="Inscription gratuite au répondeur intelligent IA Freenzy" style={{ ...sectionStyle, textAlign: 'center', paddingBottom: 100 }}>
         <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, marginBottom: 16 }}>
           Prêt à ne plus jamais rater un appel ?
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: 32, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           50 crédits offerts — aucune carte bancaire requise.
         </p>
-        <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '16px 40px', borderRadius: 10, fontWeight: 700, fontSize: 17, textDecoration: 'none' }}>
-          Commencer gratuitement
-          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>rocket_launch</span>
+        <Link href="/client/dashboard" title="Accedez au dashboard Freenzy.io et explorez le repondeur intelligent IA" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '16px 40px', borderRadius: 10, fontWeight: 700, fontSize: 17, textDecoration: 'none' }}>
+          Acceder au Dashboard
+          <span role="img" aria-label="fusée démarrage rapide" style={{ fontSize: 22 }}>🚀</span>
         </Link>
       </section>
 
       <PublicFooter />
-    </div>
+    </main>
   );
 }

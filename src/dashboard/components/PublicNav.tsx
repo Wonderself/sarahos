@@ -83,6 +83,7 @@ export default function PublicNav() {
           >
             freenzy.io
           </span>
+          <span style={{ fontSize: 9, fontStyle: 'italic', color: isDark ? 'rgba(255,255,255,0.4)' : '#B0B0B0', fontWeight: 400, marginLeft: -4, alignSelf: 'flex-end', marginBottom: 2 }}>Beta Test 1</span>
         </Link>
 
         {/* Desktop links */}
@@ -132,7 +133,7 @@ export default function PublicNav() {
                 }}
                 style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-                  marginTop: 8, minWidth: 300, maxHeight: 420, overflowY: 'auto',
+                  marginTop: 8, minWidth: 'min(300px, calc(100vw - 32px))', maxHeight: 420, overflowY: 'auto',
                   background: '#FFFFFF', border: '1px solid #E5E5E5',
                   borderRadius: 12, padding: '8px',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
@@ -194,6 +195,19 @@ export default function PublicNav() {
             href="/login"
             style={{
               fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em', textDecoration: 'none',
+              padding: '8px 16px', borderRadius: 8,
+              background: 'transparent',
+              color: '#1A1A1A',
+              border: '1px solid #E5E5E5',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Ouvrir un compte
+          </Link>
+          <Link
+            href="/client/dashboard"
+            style={{
+              fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em', textDecoration: 'none',
               padding: '8px 20px', borderRadius: 8,
               background: '#1A1A1A',
               color: '#fff',
@@ -201,7 +215,7 @@ export default function PublicNav() {
               transition: 'all 0.3s ease',
             }}
           >
-            Se connecter
+            Acceder a Freenzy
           </Link>
         </div>
 
@@ -308,24 +322,25 @@ export default function PublicNav() {
           ))}
           <div style={{ height: 1, background: '#e5e7eb', margin: '8px 0' }} />
           <Link
+            href="/client/dashboard"
+            style={{
+              fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
+              padding: '12px 20px', borderRadius: 10,
+              background: '#1A1A1A', color: '#fff',
+            }}
+          >
+            Acceder a Freenzy
+          </Link>
+          <Link
             href="/login"
             style={{
               fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
               padding: '12px 20px', borderRadius: 10,
-              background: '#1A1A1A', color: '#fff',
+              background: 'transparent', color: '#1A1A1A',
+              border: '1px solid #E5E5E5',
             }}
           >
-            Se connecter
-          </Link>
-          <Link
-            href="/login?mode=register"
-            style={{
-              fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
-              padding: '12px 20px', borderRadius: 10,
-              background: '#1A1A1A', color: '#fff',
-            }}
-          >
-            Créer un compte gratuit
+            Ouvrir un compte
           </Link>
         </div>
       )}

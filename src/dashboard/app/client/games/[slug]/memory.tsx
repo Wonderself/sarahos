@@ -5,9 +5,9 @@ import { recordGameScore } from '@/lib/games-engine';
 import Link from 'next/link';
 
 const ICONS = [
-  'favorite', 'star', 'diamond', 'bolt',
-  'rocket_launch', 'pets', 'music_note', 'local_fire_department',
-  'emoji_objects', 'spa', 'ac_unit', 'eco',
+  '❤️', '⭐', '💎', '⚡',
+  '🚀', '🐾', '🎵', '🔥',
+  '💡', '🧘', '❄️', '🌿',
 ];
 
 interface Card {
@@ -134,15 +134,11 @@ export default function MemoryGame() {
       {/* Stats */}
       <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
-            touch_app
-          </span>
+          👆
           {moves} coups
         </div>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
-            timer
-          </span>
+          ⏱️
           {formatTime(timer)}
         </div>
       </div>
@@ -193,18 +189,14 @@ export default function MemoryGame() {
               }}
             >
               {show ? (
-                <span
-                  className="material-symbols-rounded"
-                  style={{ fontSize: 'min(8vw, 32px)', color: COLORS[card.pairId] }}
+                <span style={{ fontSize: 'min(8vw, 32px)', color: COLORS[card.pairId] }}
                 >
                   {card.icon}
                 </span>
               ) : (
-                <span
-                  className="material-symbols-rounded"
-                  style={{ fontSize: 'min(6vw, 24px)', color: 'rgba(255,255,255,0.15)' }}
+                <span style={{ fontSize: 'min(6vw, 24px)', color: 'rgba(255,255,255,0.15)' }}
                 >
-                  help
+                  ❓
                 </span>
               )}
             </div>
@@ -247,7 +239,7 @@ export default function MemoryGame() {
                 gap: 4,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+              ←
               Arcade
             </Link>
           </div>

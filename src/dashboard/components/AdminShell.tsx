@@ -52,11 +52,7 @@ export default function AdminShell({
         return;
       }
       if (session.displayName) setAdminName(session.displayName);
-      const savedDark = localStorage.getItem('fz_dark_mode');
-      if (savedDark === 'true') {
-        setDarkMode(true);
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+      // Dark mode removed — always light
     } catch { /* */ }
   }, []);
 
@@ -119,27 +115,7 @@ export default function AdminShell({
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [router]);
 
-  function toggleDarkMode() {
-    const newValue = !darkMode;
-    setDarkMode(newValue);
-    if (newValue) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-    try { localStorage.setItem('fz_dark_mode', String(newValue)); } catch { /* */ }
-    const stored = localStorage.getItem('fz_session');
-    if (stored) {
-      try {
-        const s = JSON.parse(stored);
-        fetch('/api/portal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path: '/portal/preferences', token: s.token, method: 'PATCH', data: { darkMode: newValue } }),
-        }).catch(() => {});
-      } catch { /* */ }
-    }
-  }
+  // toggleDarkMode removed — always light theme
 
   function logout() {
     localStorage.removeItem('fz_session');
@@ -162,27 +138,24 @@ export default function AdminShell({
     <div className="app-shell">
       {/* Mobile Top Bar */}
       <div className="mobile-topbar">
-        <div className="mobile-topbar-center" style={{ marginLeft: 8 }}>
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setSidebarOpen(o => !o)}
+          aria-label="Menu"
+        >
+          {sidebarOpen ? '\u2715' : '\u2630'}
+        </button>
+        <div className="mobile-topbar-center">
           <span className="text-sm font-bold">Admin</span>
           <span className={`admin-status-dot-mini ${systemStatus}`} />
         </div>
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-          <button
-            className="mobile-topbar-action"
-            onClick={() => document.dispatchEvent(new CustomEvent('fz:open-search'))}
-            aria-label="Recherche"
-          >
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>search</span>
-          </button>
-          <button
-            className="mobile-menu-btn"
-            onClick={() => setSidebarOpen(o => !o)}
-            aria-label="Menu"
-            style={{ display: 'flex' }}
-          >
-            <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{sidebarOpen ? 'close' : 'menu'}</span>
-          </button>
-        </div>
+        <button
+          className="mobile-topbar-action"
+          onClick={() => document.dispatchEvent(new CustomEvent('fz:open-search'))}
+          aria-label="Recherche"
+        >
+          🔍
+        </button>
       </div>
 
       {/* Sidebar Overlay */}
@@ -197,7 +170,7 @@ export default function AdminShell({
         <div className="sidebar-header">
           <div className="sidebar-logo">
             <div>
-              <div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>freenzy.io</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}><div className="sidebar-logo-text fz-logo-text" style={{ letterSpacing: '-0.04em' }}>freenzy.io</div><span style={{ fontSize: 8, fontStyle: 'italic', color: 'var(--text-secondary)', opacity: 0.5 }}>Beta Test 1</span></div>
               <div className="sidebar-logo-version">Console Admin</div>
             </div>
           </div>
@@ -206,13 +179,7 @@ export default function AdminShell({
               <span className="status-dot" />
               {systemStatus === 'ok' ? 'OK' : systemStatus === 'error' ? 'Erreur' : '...'}
             </div>
-            <button
-              className="dark-mode-toggle"
-              onClick={toggleDarkMode}
-              title={darkMode ? 'Mode clair' : 'Mode sombre'}
-            >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{darkMode ? 'light_mode' : 'dark_mode'}</span>
-            </button>
+            {/* Dark mode toggle removed */}
           </div>
         </div>
 
@@ -233,7 +200,7 @@ export default function AdminShell({
                 <div className="nav-section-links">
                   {section.links.map((link) => (
                     <NavLink key={link.href} href={link.href}>
-                      <span className="material-symbols-rounded nav-icon" style={{ fontSize: 18 }}>{link.icon}</span>
+                      <span className="nav-icon" style={{ fontSize: 18 }}>{link.icon}</span>
                       {link.label}
                       {link.href === '/system/approvals' && pendingApprovals > 0 && (
                         <span className="approval-badge">
@@ -258,7 +225,7 @@ export default function AdminShell({
           </div>
 
           <NavLink href="/client/dashboard">
-            <span className="material-symbols-rounded nav-icon" style={{ fontSize: 18 }}>link</span>
+            <span className="nav-icon" style={{ fontSize: 18 }}>🔗</span>
             Espace Client
           </NavLink>
           <div className="sidebar-user-row">
@@ -288,7 +255,29 @@ export default function AdminShell({
         </div>
       </div>
 
-      {/* Bottom tab bar removed — hamburger menu in top-right only */}
+      {/* Bottom Tab Bar — mobile only */}
+      <nav className="admin-bottom-tab-bar">
+        <Link href="/admin" className={`admin-tab-item${pathname === '/admin' ? ' active' : ''}`}>
+          <span className="admin-tab-icon">📊</span>
+          <span>Accueil</span>
+        </Link>
+        <Link href="/admin/users" className={`admin-tab-item${pathname.startsWith('/admin/users') ? ' active' : ''}`}>
+          <span className="admin-tab-icon">👥</span>
+          <span>Users</span>
+        </Link>
+        <Link href="/infra/health" className={`admin-tab-item${pathname.startsWith('/infra') ? ' active' : ''}`}>
+          <span className="admin-tab-icon">❤️</span>
+          <span>Sante</span>
+        </Link>
+        <Link href="/admin/billing" className={`admin-tab-item${pathname.startsWith('/admin/billing') ? ' active' : ''}`}>
+          <span className="admin-tab-icon">💳</span>
+          <span>Billing</span>
+        </Link>
+        <button className="admin-tab-item" onClick={() => setSidebarOpen(o => !o)}>
+          <span className="admin-tab-icon">☰</span>
+          <span>Menu</span>
+        </button>
+      </nav>
     </div>
   );
 }

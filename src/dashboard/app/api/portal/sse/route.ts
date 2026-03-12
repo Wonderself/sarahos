@@ -3,12 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
 /**
- * GET /api/portal/sse?token=<jwt>
+ * GET /api/portal/sse
  * Proxies the SSE notification stream from the backend.
- * Token is passed as a query param (EventSource cannot set custom headers).
+ * Auth: cookie (fz-token) preferred, query param fallback for EventSource.
  */
 export async function GET(req: NextRequest) {
-  const token = req.nextUrl.searchParams.get('token');
+  // Prefer cookie over query param (EventSource can't set headers, but cookies are sent automatically)
+  const cookieToken = req.cookies.get('fz-token')?.value;
+  const queryToken = req.nextUrl.searchParams.get('token');
+  const token = cookieToken || queryToken;
 
   if (!token || typeof token !== 'string' || token.length < 10) {
     return NextResponse.json({ error: 'Missing or invalid token' }, { status: 401 });

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META, REVEIL_MODE_EMOJIS } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
 
 // ═══════════════════════════════════════════════════════
 //  Freenzy.io — Reveil Intelligent (Smart Alarm)
@@ -229,6 +231,15 @@ function getNextAlarmLabel(alarm: AlarmConfig | null): string {
 // ═══════════════════════════════════════════════════════
 
 export default function ReveilPage() {
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
+
+  // ─── Visitor draft — persist key fields to localStorage for visitors ───
+  const { draft: visitorDraft, updateDraft: updateVisitorDraft, clearDraft: clearVisitorDraft } = useVisitorDraftObject('reveil', {
+    time: '07:00',
+    mode: 'doux',
+    phone: '',
+  });
+
   // ─── State ───
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -326,20 +337,27 @@ export default function ReveilPage() {
   }, []);
 
   function updateAlarm(partial: Partial<AlarmConfig>) {
+    // Also persist key fields to visitor draft (for pre-login visitors)
+    const draftPatch: Partial<typeof visitorDraft> = {};
+    if ('time' in partial && partial.time !== undefined) draftPatch.time = partial.time;
+    if ('mode' in partial && partial.mode !== undefined) draftPatch.mode = partial.mode;
+    if ('phone' in partial && partial.phone !== undefined) draftPatch.phone = partial.phone;
+    if (Object.keys(draftPatch).length > 0) updateVisitorDraft(draftPatch);
+
     setAlarm(prev => {
       if (!prev) {
-        // Create new alarm with defaults
+        // Create new alarm with defaults (restore visitor draft values)
         const newAlarm: AlarmConfig = {
           id: '',
           enabled: false,
-          time: '07:00',
+          time: visitorDraft.time || '07:00',
           days: [1, 2, 3, 4, 5],
           timezone: 'Europe/Paris',
-          mode: 'doux',
+          mode: visitorDraft.mode || 'doux',
           rubrics: ['bonne_humeur', 'meteo', 'citation'],
           voice: 'sarah',
           delivery: 'call',
-          phone: '',
+          phone: visitorDraft.phone || '',
           birthDate: '',
           customAnnouncement: '',
           contentModules: getDefaultContentModules(),
@@ -356,6 +374,7 @@ export default function ReveilPage() {
   }
 
   async function saveAlarm(config: AlarmConfig) {
+    if (!requireAuth('Connectez-vous pour configurer votre reveil')) return;
     const session = getSession();
     if (!session.token) return;
 
@@ -391,6 +410,7 @@ export default function ReveilPage() {
         if (saved.id && !config.id) {
           setAlarm(prev => prev ? { ...prev, id: saved.id } : prev);
         }
+        clearVisitorDraft();
         setSuccess('Sauvegarde');
         setTimeout(() => setSuccess(''), 2000);
       } else {
@@ -408,6 +428,7 @@ export default function ReveilPage() {
 
   // ─── Test alarm ───
   async function testAlarm() {
+    if (!requireAuth('Connectez-vous pour tester votre reveil')) return;
     if (!alarm?.id) {
       setError('Sauvegardez d\'abord votre reveil avant de le tester');
       setTimeout(() => setError(''), 3000);
@@ -659,7 +680,7 @@ export default function ReveilPage() {
         <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Mode du reveil</div>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(160px, 100%), 1fr))',
           gap: 10,
         }}>
           {ALARM_MODES.map(mode => {
@@ -718,7 +739,7 @@ export default function ReveilPage() {
         </div>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
           gap: 8,
         }}>
           {RUBRICS.map(rubric => {
@@ -826,7 +847,7 @@ export default function ReveilPage() {
         <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
           Profil de reveil
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 10 }}>
           {PRESETS.map(p => {
             const isSelected = (alarm?.preset ?? 'custom') === p.id;
             return (
@@ -874,7 +895,7 @@ export default function ReveilPage() {
             {computeEstimatedDuration(alarm?.contentModules ?? getDefaultContentModules())}
           </span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: 10 }}>
           {CONTENT_MODULES.map(mod => {
             const modules = alarm?.contentModules ?? getDefaultContentModules();
             const modConfig = modules[mod.id];
@@ -1597,6 +1618,7 @@ export default function ReveilPage() {
           ))}
         </div>
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

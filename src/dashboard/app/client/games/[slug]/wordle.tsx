@@ -291,7 +291,7 @@ export default function WordleGame() {
             href="/client/games"
             style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+            <span style={{ fontSize: 16 }}>←</span>
             Arcade
           </Link>
         </div>

@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Connexion — Accédez à Flashboard | Freenzy.io',
-  description: 'Connectez-vous à Flashboard ou créez votre compte gratuit. 82 agents IA disponibles immédiatement, sans carte bancaire.',
+  title: 'Connexion — Freenzy.io | Accédez à Votre Dashboard IA Multi-Agents',
+  description: 'Connectez-vous à votre espace Freenzy.io pour accéder à vos 100 agents IA, votre répondeur intelligent, vos documents générés et votre calendrier éditorial. Inscription gratuite avec 50 crédits offerts. Choisissez votre agent d\'accueil personnalisé.',
   keywords: [
     'connexion Freenzy', 'login Flashboard', 'créer compte IA PME',
     'inscription Freenzy gratuit', 'compte IA entreprise', 's\'inscrire Flashboard',
+    'dashboard IA multi-agents', 'agents IA gratuit', 'répondeur intelligent IA',
   ],
   openGraph: {
-    title: 'Se connecter à Flashboard | Freenzy.io',
-    description: 'Créez votre compte gratuit — sans carte bancaire. 82 agents IA disponibles immédiatement.',
+    title: 'Connexion — Freenzy.io | Accédez à Votre Dashboard IA Multi-Agents',
+    description: 'Connectez-vous à votre espace Freenzy.io pour accéder à vos 100 agents IA. Inscription gratuite avec 50 crédits offerts.',
     type: 'website',
     url: 'https://freenzy.io/login',
     locale: 'fr_FR',
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   },
   robots: {
     index: true,
-    follow: false, // Don't follow links from auth page
+    follow: true,
   },
   alternates: { canonical: 'https://freenzy.io/login' },
 };

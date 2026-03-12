@@ -10,6 +10,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import PageExplanation from '../../../components/PageExplanation';
 import { QUICK_ACTIONS, FEATURE_SECTIONS, PAGE_META } from '../../../lib/emoji-map';
+import { isAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
 
 // ─── Types ───
 
@@ -164,8 +165,10 @@ export default function ClientDashboard() {
   const [briefingLoaded, setBriefingLoaded] = useState(false);
   const [briefingTime, setBriefingTime] = useState('');
   const [showBriefing, setShowBriefing] = useState(true);
+  const [isVisitor, setIsVisitor] = useState(false);
 
   useEffect(() => {
+    if (!isAuthenticated()) { setIsVisitor(true); return; }
     loadStats();
     loadWallet();
     setActiveAgentIds(getActiveAgentIds());
@@ -380,6 +383,77 @@ export default function ClientDashboard() {
   const todosDone = todos.filter(t => t.done).length;
   const todosTotal = todos.length;
 
+  if (isVisitor) {
+    return (
+      <div style={{ padding: isMobile ? '16px 12px 32px' : '24px 32px 40px', maxWidth: 1100, margin: '0 auto' }}>
+        <VisitorEmptyState
+          icon="🚀"
+          title="Bienvenue sur Freenzy.io"
+          description="Votre OS d'entreprise propulsé par l'intelligence artificielle. Gérez vos agents IA, documents, communications et bien plus depuis un seul dashboard."
+          features={[
+            { icon: '🤖', label: 'Agents IA', desc: '100+ assistants spécialisés pour chaque besoin' },
+            { icon: '📄', label: 'Documents', desc: 'Génération automatique de contrats, emails, rapports' },
+            { icon: '💬', label: 'Chat IA', desc: 'Conversations intelligentes avec contexte métier' },
+            { icon: '📞', label: 'Répondeur IA', desc: 'Gestion automatisée de vos appels entrants' },
+            { icon: '📊', label: 'Analytics', desc: 'Tableaux de bord et suivi de performance' },
+            { icon: '🎮', label: 'Arcade', desc: 'Gamification et récompenses intégrées' },
+          ]}
+        />
+
+        {/* Feature Sections Grid — visible to visitors */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <span style={{ fontSize: 16 }}>🧭</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>Explorez les fonctionnalités</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {FEATURE_SECTIONS.map(section => (
+              <div key={section.id} style={{
+                background: '#fff',
+                border: '1px solid #E5E5E5',
+                borderRadius: 8,
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '12px 16px',
+                  borderBottom: '1px solid #E5E5E5',
+                  background: '#F7F7F7',
+                }}>
+                  <span style={{ fontSize: 16 }}>{section.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{section.title}</div>
+                    <div style={{ fontSize: 12, color: '#9B9B9B' }}>{section.subtitle}</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(160px, 1fr))',
+                  gap: 0,
+                }}>
+                  {section.items.map(item => (
+                    <div key={item.id} style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '12px 16px',
+                      borderBottom: '1px solid #E5E5E5',
+                      opacity: 0.7,
+                    }}>
+                      <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{item.label}</div>
+                        <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 1 }}>{item.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: isMobile ? '16px 12px 32px' : '24px 32px 40px', maxWidth: 1100, margin: '0 auto' }}>
       {showWelcome && (
@@ -419,8 +493,8 @@ export default function ClientDashboard() {
       {/* ── KPI Cards ── */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
-        gap: 12,
+        gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)',
+        gap: isMobile ? 8 : 12,
         marginBottom: 16,
       }}>
         <Link href="/client/account" style={{
@@ -656,7 +730,7 @@ export default function ClientDashboard() {
               </div>
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(160px, 1fr))',
                 gap: 0,
               }}>
                 {section.items.map(item => (

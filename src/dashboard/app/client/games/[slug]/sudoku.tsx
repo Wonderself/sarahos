@@ -184,8 +184,8 @@ export default function SudokuGame() {
       {/* Stats bar */}
       <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
-            timer
+          <span style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
+            ⏱️
           </span>
           {formatTime(timer)}
         </div>
@@ -294,7 +294,7 @@ export default function SudokuGame() {
             justifyContent: 'center',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>backspace</span>
+          <span style={{ fontSize: 18 }}>⌫</span>
         </button>
       </div>
 
@@ -328,7 +328,7 @@ export default function SudokuGame() {
             href="/client/games"
             style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+            <span style={{ fontSize: 16 }}>←</span>
             Arcade
           </Link>
         )}

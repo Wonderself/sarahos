@@ -256,7 +256,7 @@ export default function LandingPageSimplicite() {
                 <span className="fz-accent-word">3 etapes</span>. C&apos;est tout.
               </h2>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 800, margin: '0 auto' }} className="lp-scenario-steps">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 800, margin: '0 auto' }} className="lp-scenario-steps lp-steps-3col">
               {[
                 { num: '1', icon: 'edit', title: 'Ecrivez un message', desc: 'Sur WhatsApp ou dans le dashboard. En francais, comme a un collegue.' },
                 { num: '2', icon: 'psychology', title: 'L\'IA comprend', desc: 'Contexte, ton, intention. Votre agent sait exactement quoi faire.' },
@@ -663,8 +663,8 @@ export default function LandingPageSimplicite() {
             pointerEvents: 'none',
           }} />
           <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <p className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 12, letterSpacing: 4, marginBottom: 16, opacity: 0.4 }}>
-              freenzy.io
+            <p className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 12, letterSpacing: 4, marginBottom: 16, opacity: 0.4, display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6 }}>
+              freenzy.io <span style={{ fontSize: 8, fontStyle: 'italic', letterSpacing: 0, fontWeight: 400 }}>Beta Test 1</span>
             </p>
             <h2 style={{
               fontSize: 'clamp(28px, 5vw, 56px)',

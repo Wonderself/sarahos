@@ -6,6 +6,8 @@ import { CATEGORIES, CATEGORY_COLORS, type Category } from '../../../../lib/mark
 import { ALL_AGENTS } from '../../../../lib/agent-config';
 import { saveUserTemplate, type UserTemplate } from '../../../../lib/marketplace-ratings';
 import { useToast } from '../../../../components/Toast';
+import { useAuthGuard } from '../../../../lib/useAuthGuard';
+import { useVisitorDraftObject } from '../../../../lib/useVisitorDraft';
 
 // ═══════════════════════════════════════════════════
 //   FREENZY.IO — Marketplace: Creer & Partager
@@ -25,15 +27,28 @@ type PersonalityKey = (typeof PERSONALITY_SLIDERS)[number]['key'];
 
 export default function MarketplaceCreatePage() {
   const router = useRouter();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const { showSuccess, showError } = useToast();
 
+  // ─── Visitor draft — persist key fields to localStorage for visitors
+  const { draft: tplDraft, updateField: updateTplField, clearDraft: clearTplDraft } = useVisitorDraftObject('marketplace_create', {
+    name: '',
+    description: '',
+    systemPrompt: '',
+    welcomeMessage: '',
+  });
+
   // ─── Form state
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, _setName] = useState(tplDraft.name);
+  const setName = (v: string) => { _setName(v); updateTplField('name', v); };
+  const [description, _setDescription] = useState(tplDraft.description);
+  const setDescription = (v: string) => { _setDescription(v); updateTplField('description', v); };
   const [category, setCategory] = useState<Category>('Productivite');
-  const [agentBase, setAgentBase] = useState(ALL_AGENTS[0]?.id ?? '');
-  const [systemPrompt, setSystemPrompt] = useState('');
-  const [welcomeMessage, setWelcomeMessage] = useState('');
+  const [agentBase, setAgentBase] = useState<string>(ALL_AGENTS[0]?.id ?? '');
+  const [systemPrompt, _setSystemPrompt] = useState(tplDraft.systemPrompt);
+  const setSystemPrompt = (v: string) => { _setSystemPrompt(v); updateTplField('systemPrompt', v); };
+  const [welcomeMessage, _setWelcomeMessage] = useState(tplDraft.welcomeMessage);
+  const setWelcomeMessage = (v: string) => { _setWelcomeMessage(v); updateTplField('welcomeMessage', v); };
   const [personality, setPersonality] = useState<Record<PersonalityKey, number>>({
     formality: 50,
     creativity: 50,
@@ -60,6 +75,7 @@ export default function MarketplaceCreatePage() {
 
   // ─── Publish handler
   const handlePublish = () => {
+    if (!requireAuth('Connectez-vous pour publier un template')) return;
     if (!name.trim()) {
       showError('Veuillez saisir un nom pour votre template');
       return;
@@ -93,6 +109,7 @@ export default function MarketplaceCreatePage() {
       };
 
       saveUserTemplate(template);
+      clearTplDraft();
       showSuccess('Template publie avec succes !');
 
       setTimeout(() => {
@@ -212,7 +229,7 @@ export default function MarketplaceCreatePage() {
               </label>
 
               {/* Category + Agent base row */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 14 }}>
                 {/* Category */}
                 <label>
                   <span style={{ fontSize: 12, color: 'var(--fz-text-muted)', display: 'block', marginBottom: 6 }}>
@@ -235,7 +252,7 @@ export default function MarketplaceCreatePage() {
                     }}
                   >
                     {categoryOptions.map((c) => (
-                      <option key={c} value={c} style={{ background: '#1a1a2e', color: 'var(--fz-text, #1E293B)' }}>
+                      <option key={c} value={c} style={{ background: '#fff', color: '#1A1A1A' }}>
                         {c}
                       </option>
                     ))}
@@ -264,7 +281,7 @@ export default function MarketplaceCreatePage() {
                     }}
                   >
                     {ALL_AGENTS.map((a) => (
-                      <option key={a.id} value={a.id} style={{ background: '#1a1a2e', color: 'var(--fz-text, #1E293B)' }}>
+                      <option key={a.id} value={a.id} style={{ background: '#fff', color: '#1A1A1A' }}>
                         {a.name}
                       </option>
                     ))}
@@ -441,7 +458,7 @@ export default function MarketplaceCreatePage() {
                   }}
                 >
                   <span style={{ fontSize: 22, color: catColor }}>
-                    {selectedAgent?.icon || 'smart_toy'}
+                    {selectedAgent?.emoji || 'smart_toy'}
                   </span>
                 </div>
                 <div>
@@ -550,6 +567,7 @@ export default function MarketplaceCreatePage() {
           </div>
         </div>
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

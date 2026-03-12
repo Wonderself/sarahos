@@ -78,7 +78,7 @@ export default function UserPreferencesTab({ userId, prefs, loading, showToast, 
       <div style={styles.grid2}>
         {/* Display Preferences */}
         <div style={styles.card}>
-          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>palette</span> Affichage</div>
+          <div style={styles.cardTitle}>🎨 Affichage</div>
           <div style={styles.toggleRow}>
             <span style={{ fontSize: 14 }}>Mode sombre</span>
             <Toggle value={form.darkMode} onChange={v => setForm(f => ({ ...f, darkMode: v }))} />
@@ -101,7 +101,7 @@ export default function UserPreferencesTab({ userId, prefs, loading, showToast, 
 
         {/* Notification Preferences */}
         <div style={styles.card}>
-          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>notifications</span> Notifications</div>
+          <div style={styles.cardTitle}>🔔 Notifications</div>
           <div style={styles.toggleRow}>
             <span style={{ fontSize: 14 }}>Email</span>
             <Toggle value={form.notifyEmail} onChange={v => setForm(f => ({ ...f, notifyEmail: v }))} />
@@ -135,7 +135,7 @@ export default function UserPreferencesTab({ userId, prefs, loading, showToast, 
 
       {/* Voice & Agent Settings */}
       <div style={styles.card}>
-        <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>record_voice_over</span> Voix et agent</div>
+        <div style={styles.cardTitle}>🎙️ Voix et agent</div>
         <div style={styles.grid3}>
           <div>
             <div style={styles.toggleRow}>
@@ -171,7 +171,7 @@ export default function UserPreferencesTab({ userId, prefs, loading, showToast, 
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? 'Sauvegarde...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>save</span> Sauvegarder les preferences</>}
+            {saving ? 'Sauvegarde...' : <>💾 Sauvegarder les preferences</>}
           </button>
         </div>
       </div>

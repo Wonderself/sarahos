@@ -512,7 +512,7 @@ export default function EcrivainPage() {
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Titre</label>
                 <input className="input" placeholder="Titre de votre projet..." value={projectForm.title} onChange={e => setProjectForm(p => ({ ...p, title: e.target.value }))} autoFocus />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Type</label>
                   <select className="input" value={projectForm.type} onChange={e => setProjectForm(p => ({ ...p, type: e.target.value as ProjectType }))}>

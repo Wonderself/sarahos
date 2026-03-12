@@ -29,7 +29,14 @@ export type PersonalAgentTypeId =
   | 'fz-immobilier' | 'fz-assurance' | 'fz-succession' | 'fz-retraite' | 'fz-droit-conso'
   | 'fz-demenagement' | 'fz-animaux' | 'fz-auto' | 'fz-tech-perso' | 'fz-organisation' | 'fz-gratitude';
 
-export type AgentTypeId = BusinessAgentTypeId | PersonalAgentTypeId;
+// Extended tools agents
+export type ToolsAgentTypeId =
+  | 'fz-calendrier' | 'fz-email' | 'fz-facturation' | 'fz-veille'
+  | 'fz-qrcode' | 'fz-signature' | 'fz-meteo' | 'fz-photos'
+  | 'fz-focus' | 'fz-notes' | 'fz-habitudes' | 'fz-journal'
+  | 'fz-landing' | 'fz-templates' | 'fz-kanban' | 'fz-wellness';
+
+export type AgentTypeId = BusinessAgentTypeId | PersonalAgentTypeId | ToolsAgentTypeId;
 
 export type AgentGender = 'M' | 'F';
 
@@ -1944,10 +1951,12 @@ REGLES D'OR :
 import { BUSINESS_AGENTS_1 } from './agents-extended-business1';
 import { BUSINESS_AGENTS_2 } from './agents-extended-business2';
 import { EXTENDED_PERSONAL_AGENTS } from './agents-extended-personal';
+import { EXTENDED_TOOLS_AGENTS } from './agents-extended-tools';
 
 export const ALL_AGENTS: DefaultAgentDef[] = [
   ...DEFAULT_AGENTS, ...PERSONAL_AGENTS,
   ...BUSINESS_AGENTS_1, ...BUSINESS_AGENTS_2, ...EXTENDED_PERSONAL_AGENTS,
+  ...EXTENDED_TOOLS_AGENTS,
 ];
 
 // ─── Options ───

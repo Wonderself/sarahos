@@ -296,7 +296,7 @@ export default function FormationsPage() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))',
           gap: 20,
         }}>
           {filteredFormations.length === 0 && (
@@ -442,7 +442,7 @@ export default function FormationsPage() {
                 <button
                   onClick={() => toggleDone(f.id)}
                   style={{
-                    width: '100%', padding: '8px 0', fontSize: 12, fontWeight: 600,
+                    width: '100%', padding: '8px 0', fontSize: 12, fontWeight: 600, minHeight: 44,
                     borderRadius: 8, border: `1px solid ${doneIds.has(f.id) ? '#22c55e' : '#e5e7eb'}`,
                     background: doneIds.has(f.id) ? '#f0fdf4' : 'transparent',
                     color: doneIds.has(f.id) ? '#16a34a' : '#9ca3af',
@@ -593,6 +593,7 @@ export default function FormationsPage() {
                           gap: 10,
                           padding: '10px 14px',
                           borderRadius: 10,
+                          minHeight: 44,
                           border: `1.5px solid ${selected ? accent : 'var(--fz-border, #E2E8F0)'}`,
                           background: selected ? `${accent}08` : '#fff',
                           cursor: 'pointer',
@@ -661,6 +662,7 @@ export default function FormationsPage() {
                   fontSize: 15,
                   fontWeight: 700,
                   border: 'none',
+                  minHeight: 44,
                   background: '#1A1A1A',
                   color: '#fff',
                   cursor: 'pointer',

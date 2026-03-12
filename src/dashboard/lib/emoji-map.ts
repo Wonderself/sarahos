@@ -5,13 +5,21 @@
 // ─── Section Emojis ──────────────────────────────────────────────────────────
 
 export const SECTION_EMOJIS: Record<string, string> = {
-  workspace: '📋',
+  quotidien: '⚡',
+  creation: '🎨',
+  communication: '📞',
+  assistants: '🤖',
+  productivite: '📋',
+  business: '💼',
+  bienetre: '🌿',
   moi: '👤',
   'agents-perso': '🧠',
   discussions: '💭',
   divertissement: '🎮',
   entreprise: '🏢',
   developpeur: '🔧',
+  // legacy alias
+  workspace: '📋',
 };
 
 // ─── Navigation Item Emojis ──────────────────────────────────────────────────
@@ -72,6 +80,25 @@ export const NAV_EMOJIS: Record<string, string> = {
 
   // Developpeur
   widget: '💻',
+
+  // Nouvelles pages outils
+  notes: '📝',
+  pomodoro: '🍅',
+  calendrier: '📅',
+  email: '✉️',
+  signatures: '✒️',
+  'email-templates': '📧',
+  facturation: '🧾',
+  crm: '🤝',
+  seo: '🔍',
+  veille: '📰',
+  'landing-builder': '🏗️',
+  kanban: '📋',
+  traduction: '🌐',
+  qrcode: '🔳',
+  photos: '🖼️',
+  habitudes: '✅',
+  journal: '📓',
 
   // Extras
   briefing: '☀️',
@@ -379,6 +406,109 @@ export const PAGE_META: Record<string, PageMeta> = {
     title: 'Chat d\'équipe',
     subtitle: 'Messagerie collaborative',
     helpText: 'Échangez avec votre équipe dans des channels, DMs et fils de discussion.',
+  },
+  // ─── Nouvelles pages outils (Sprint Mars 2026) ──────────────────────────────
+  notes: {
+    emoji: '📝',
+    title: 'Notes rapides',
+    subtitle: 'Capturez vos idées',
+    helpText: 'Prenez des notes rapidement, organisez-les par tags et couleurs. Recherche instantanée, export Markdown.',
+  },
+  pomodoro: {
+    emoji: '🍅',
+    title: 'Focus / Pomodoro',
+    subtitle: 'Boostez votre concentration',
+    helpText: 'Timer Pomodoro (25min travail / 5min pause), statistiques de sessions, streaks de productivité.',
+  },
+  calendrier: {
+    emoji: '📅',
+    title: 'Calendrier',
+    subtitle: 'Organisez votre temps',
+    helpText: 'Vue jour/semaine/mois, ajoutez des événements, rappels et deadlines. Prêt à connecter Google Calendar.',
+  },
+  email: {
+    emoji: '✉️',
+    title: 'Email IA',
+    subtitle: 'Rédigez des emails parfaits',
+    helpText: 'L\'IA rédige vos emails professionnels et personnels. Choisissez le ton, la langue et le style.',
+  },
+  signatures: {
+    emoji: '✒️',
+    title: 'Signatures Email',
+    subtitle: 'Créez votre signature pro',
+    helpText: 'Générez des signatures email HTML élégantes avec photo, logo, liens sociaux. Copiez le code HTML.',
+  },
+  'email-templates': {
+    emoji: '📧',
+    title: 'Templates Email',
+    subtitle: 'Modèles prêts à l\'emploi',
+    helpText: 'Bibliothèque de templates email pour vos campagnes : newsletter, promo, bienvenue, relance...',
+  },
+  facturation: {
+    emoji: '🧾',
+    title: 'Facturation',
+    subtitle: 'Devis et factures en 30s',
+    helpText: 'Créez des devis et factures professionnels, suivez les paiements, calculez la TVA automatiquement.',
+  },
+  crm: {
+    emoji: '🤝',
+    title: 'CRM',
+    subtitle: 'Gérez vos contacts',
+    helpText: 'Pipeline de ventes visuel, fiches contacts détaillées, suivi des relances et historique des interactions.',
+  },
+  seo: {
+    emoji: '🔍',
+    title: 'SEO Tracker',
+    subtitle: 'Optimisez votre visibilité',
+    helpText: 'Analysez le SEO de vos pages, recherchez des mots-clés stratégiques, suivez vos positions.',
+  },
+  veille: {
+    emoji: '📰',
+    title: 'Veille',
+    subtitle: 'Restez informé',
+    helpText: 'Surveillez vos flux RSS, les tendances sectorielles et l\'actualité de vos concurrents.',
+  },
+  'landing-builder': {
+    emoji: '🏗️',
+    title: 'Landing Builder',
+    subtitle: 'Créez des pages de vente',
+    helpText: 'Choisissez un template, personnalisez le contenu et les couleurs, prévisualisez et copiez le HTML.',
+  },
+  kanban: {
+    emoji: '📋',
+    title: 'Kanban',
+    subtitle: 'Gérez vos tâches visuellement',
+    helpText: 'Tableaux Kanban style Trello : colonnes personnalisables, drag & drop, étiquettes et deadlines.',
+  },
+  traduction: {
+    emoji: '🌐',
+    title: 'Traduction',
+    subtitle: 'Traduisez en 50+ langues',
+    helpText: 'Traduction instantanée de textes avec nuances culturelles. Supportez français, anglais, espagnol, arabe, hébreu...',
+  },
+  qrcode: {
+    emoji: '🔳',
+    title: 'QR Codes',
+    subtitle: 'Générez des QR codes',
+    helpText: 'Créez des QR codes pour URLs, cartes de visite, WiFi, événements. Téléchargez en PNG ou SVG.',
+  },
+  photos: {
+    emoji: '🖼️',
+    title: 'Banque d\'images',
+    subtitle: 'Trouvez l\'image parfaite',
+    helpText: 'Recherchez parmi des millions d\'images gratuites (Unsplash). Prêt à connecter l\'API Unsplash.',
+  },
+  habitudes: {
+    emoji: '✅',
+    title: 'Habitudes',
+    subtitle: 'Construisez des routines',
+    helpText: 'Suivez vos habitudes quotidiennes, maintenez des streaks, visualisez votre progression.',
+  },
+  journal: {
+    emoji: '📓',
+    title: 'Journal Perso',
+    subtitle: 'Écrivez pour vous comprendre',
+    helpText: 'Journal intime avec prompts guidés, analyse des émotions par l\'IA et bilans périodiques.',
   },
 };
 

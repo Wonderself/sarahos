@@ -5,6 +5,8 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
 
 // Pre-built marketplace modules
 const MARKETPLACE_MODULES = [
@@ -37,6 +39,7 @@ const meta = PAGE_META['custom-creation'];
 
 export default function ModulesSurMesurePage() {
   const isMobile = useIsMobile();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const [activeTab, setActiveTab] = useState<'marketplace' | 'custom'>('marketplace');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tous');
@@ -45,7 +48,13 @@ export default function ModulesSurMesurePage() {
   });
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [selectedService, setSelectedService] = useState('');
-  const [orderForm, setOrderForm] = useState({ contactName: '', email: '', phone: '', description: '', budget: '', urgency: 'standard' });
+  const { draft: orderForm, updateDraft: updateOrderForm, clearDraft: clearOrderDraft } = useVisitorDraftObject('custom_creation', {
+    contactName: '', email: '', phone: '', description: '', budget: '', urgency: 'standard',
+  });
+  const setOrderForm = (updater: (prev: typeof orderForm) => typeof orderForm) => {
+    const next = updater(orderForm);
+    updateOrderForm(next);
+  };
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -71,6 +80,7 @@ export default function ModulesSurMesurePage() {
   }
 
   async function handleSubmitOrder() {
+    if (!requireAuth('Connectez-vous pour passer une commande')) return;
     if (!orderForm.contactName || !orderForm.email || !orderForm.description) {
       setError('Veuillez remplir tous les champs obligatoires.');
       return;
@@ -95,11 +105,13 @@ export default function ModulesSurMesurePage() {
         existing.push({ ...orderForm, projectType: selectedService, createdAt: new Date().toISOString(), status: 'pending' });
         localStorage.setItem('fz_custom_quotes', JSON.stringify(existing));
       }
+      clearOrderDraft();
       setSubmitted(true);
     } catch {
       let existing: unknown[] = [];
       try { existing = JSON.parse(localStorage.getItem('fz_custom_quotes') ?? '[]'); } catch { /* */ }
       existing.push({ ...orderForm, projectType: selectedService, createdAt: new Date().toISOString(), status: 'pending' });
+      clearOrderDraft();
       setSubmitted(true);
     } finally {
       setSubmitting(false);
@@ -118,7 +130,7 @@ export default function ModulesSurMesurePage() {
           Vous recevrez une notification dans votre tableau de bord.
         </p>
         <button
-          onClick={() => { setSubmitted(false); setShowOrderForm(false); setOrderForm({ contactName: '', email: '', phone: '', description: '', budget: '', urgency: 'standard' }); }}
+          onClick={() => { setSubmitted(false); setShowOrderForm(false); clearOrderDraft(); }}
           className="btn btn-primary"
         >
           Retour aux modules
@@ -156,9 +168,9 @@ export default function ModulesSurMesurePage() {
             onClick={() => setActiveTab(tab.id)}
             style={{
               padding: isMobile ? '10px 14px' : '12px 24px', fontSize: isMobile ? 13 : 14, fontWeight: activeTab === tab.id ? 700 : 500,
-              color: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
+              color: activeTab === tab.id ? '#1A1A1A' : '#6B6B6B',
               background: 'none', border: 'none', cursor: 'pointer',
-              borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
+              borderBottom: activeTab === tab.id ? '2px solid #1A1A1A' : '2px solid transparent',
               marginBottom: -2, fontFamily: 'var(--font-sans)',
               transition: 'all 0.15s',
             }}
@@ -179,10 +191,10 @@ export default function ModulesSurMesurePage() {
             <div className="badge badge-success" style={{ padding: '6px 12px' }}>
               {installedModules.length} module{installedModules.length > 1 ? 's' : ''} installé{installedModules.length > 1 ? 's' : ''}
             </div>
-            <div className="badge" style={{ padding: '6px 12px', background: 'var(--accent-muted)', color: 'var(--accent)' }}>
+            <div className="badge" style={{ padding: '6px 12px', background: '#F0F0F0', color: '#1A1A1A' }}>
               {MARKETPLACE_MODULES.length} modules disponibles
             </div>
-            <div className="badge" style={{ padding: '6px 12px', background: '#16a34a15', color: '#16a34a' }}>
+            <div className="badge" style={{ padding: '6px 12px', background: '#F0F0F0', color: '#1A1A1A' }}>
               100% Gratuit
             </div>
           </div>
@@ -207,9 +219,9 @@ export default function ModulesSurMesurePage() {
                 style={{
                   padding: '5px 14px',
                   fontWeight: activeCategory === cat ? 700 : 500,
-                  background: activeCategory === cat ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                  color: activeCategory === cat ? '#fff' : 'var(--fz-text-secondary, #64748B)',
-                  border: 'none', fontFamily: 'var(--font-sans)',
+                  background: activeCategory === cat ? '#1A1A1A' : '#fff',
+                  color: activeCategory === cat ? '#fff' : '#6B6B6B',
+                  border: '1px solid #E5E5E5', fontFamily: 'var(--font-sans)',
                   transition: 'all 0.15s',
                 }}
               >
@@ -232,8 +244,8 @@ export default function ModulesSurMesurePage() {
                       <div className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{mod.category}</div>
                     </div>
                     <div style={{
-                      padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 800,
-                      background: '#16a34a15', color: '#16a34a',
+                      padding: '3px 10px', borderRadius: 8, fontSize: 12, fontWeight: 800,
+                      background: '#F0F0F0', color: '#1A1A1A',
                     }}>
                       Gratuit
                     </div>
@@ -276,8 +288,8 @@ export default function ModulesSurMesurePage() {
           {/* Become a creator CTA */}
           <div className="card mt-24" style={{
             padding: 24, textAlign: 'center',
-            background: 'linear-gradient(135deg, var(--accent-muted), #06b6d415)',
-            border: '1px solid var(--accent)',
+            background: '#F7F7F7',
+            border: '1px solid #E5E5E5',
           }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>💡</div>
             <div className="text-lg font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>Devenez créateur de modules</div>
@@ -301,12 +313,12 @@ export default function ModulesSurMesurePage() {
           {/* AI advantage banner */}
           <div className="card mb-20" style={{
             padding: 20,
-            background: 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)',
-            border: '1px solid var(--accent)',
+            background: '#F7F7F7',
+            border: '1px solid #E5E5E5',
           }}>
             <div className="flex items-center gap-8 mb-8">
               <span style={{ fontSize: 24 }}>⚡</span>
-              <div className="text-md font-bold" style={{ color: 'var(--accent)' }}>
+              <div className="text-md font-bold" style={{ color: '#1A1A1A' }}>
                 Pourquoi nous sommes différents
               </div>
             </div>
@@ -326,8 +338,8 @@ export default function ModulesSurMesurePage() {
                 className="card"
                 style={{
                   padding: 20, textAlign: 'left', cursor: 'pointer',
-                  border: selectedService === service.id ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
-                  background: selectedService === service.id ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
+                  border: selectedService === service.id ? '2px solid #1A1A1A' : '1px solid #E5E5E5',
+                  background: selectedService === service.id ? '#F7F7F7' : '#fff',
                   fontFamily: 'var(--font-sans)',
                   transition: 'all 0.15s',
                 }}
@@ -348,10 +360,10 @@ export default function ModulesSurMesurePage() {
           {/* Comparison table */}
           <div className="card" style={{ padding: 20, marginBottom: 24 }}>
             <div className="text-md font-bold mb-16" style={{ color: 'var(--fz-text, #1E293B)' }}>Pourquoi choisir Freenzy.io ?</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, fontSize: 13 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: isMobile ? 8 : 12, fontSize: 13 }}>
               <div style={{ fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)' }}></div>
               <div style={{ fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center' }}>Marché traditionnel</div>
-              <div style={{ fontWeight: 700, color: 'var(--accent)', textAlign: 'center' }}>Freenzy.io</div>
+              <div style={{ fontWeight: 700, color: '#1A1A1A', textAlign: 'center' }}>Freenzy.io</div>
 
               <div className="text-sm" style={{ color: 'var(--fz-text, #1E293B)' }}>Site web</div>
               <div className="text-sm" style={{ textAlign: 'center', color: 'var(--fz-text-muted, #94A3B8)' }}>2 000 - 10 000€</div>
@@ -403,8 +415,8 @@ export default function ModulesSurMesurePage() {
           padding: 24,
         }}>
           <div style={{
-            background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, maxWidth: 560, width: '100%',
-            maxHeight: '90vh', overflow: 'auto', padding: '28px 24px',
+            background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, maxWidth: isMobile ? 'calc(100vw - 32px)' : 560, width: '100%',
+            maxHeight: isMobile ? '95vh' : '90vh', overflow: 'auto', padding: isMobile ? '16px 16px' : '28px 24px',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--fz-text, #1E293B)', margin: 0 }}>
@@ -487,9 +499,9 @@ export default function ModulesSurMesurePage() {
                       style={{
                         padding: '6px 16px',
                         fontWeight: orderForm.urgency === u.id ? 700 : 500,
-                        background: orderForm.urgency === u.id ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                        color: orderForm.urgency === u.id ? '#fff' : 'var(--fz-text-secondary, #64748B)',
-                        border: 'none', fontFamily: 'var(--font-sans)',
+                        background: orderForm.urgency === u.id ? '#1A1A1A' : '#fff',
+                        color: orderForm.urgency === u.id ? '#fff' : '#6B6B6B',
+                        border: '1px solid #E5E5E5', fontFamily: 'var(--font-sans)',
                       }}
                     >
                       {u.label}
@@ -520,6 +532,7 @@ export default function ModulesSurMesurePage() {
           </div>
         </div>
       )}
+      {LoginModalComponent}
     </div>
   );
 }

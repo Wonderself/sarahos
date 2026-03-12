@@ -105,13 +105,13 @@ export default function BriefingTab() {
 
     if (day === 1) {
       localInsights.push({
-        icon: 'target', title: 'Début de semaine',
+        icon: '🎯', title: 'Début de semaine',
         content: 'C\'est lundi ! Commencez par définir vos 3 objectifs clés de la semaine. Priorisez les tâches à fort impact.',
         type: 'info',
       });
     } else if (day === 5) {
       localInsights.push({
-        icon: 'bar_chart', title: 'Bilan hebdomadaire',
+        icon: '📊', title: 'Bilan hebdomadaire',
         content: 'Vendredi ! Prenez 15 minutes pour faire le bilan de la semaine. Qu\'avez-vous accompli ? Que reporter ?',
         type: 'info',
       });
@@ -119,12 +119,12 @@ export default function BriefingTab() {
 
     localInsights.push(
       {
-        icon: 'lightbulb', title: 'Conseil productivité',
+        icon: '💡', title: 'Conseil productivité',
         content: 'Bloquez 90 minutes sans interruption pour votre tâche la plus importante. Le deep work multiplie votre efficacité par 3.',
         type: 'success',
       },
       {
-        icon: 'trending_up', title: 'Tendance du jour',
+        icon: '📈', title: 'Tendance du jour',
         content: 'Les entreprises qui utilisent l\'IA pour automatiser leurs tâches répétitives gagnent en moyenne 6h par semaine.',
         type: 'info',
       },
@@ -297,7 +297,7 @@ Réponds en JSON STRICT avec ce format:
           <p className="page-subtitle">{currentDate}</p>
           {generatedAt && (
             <p className="text-xs text-accent" style={{ marginTop: 4 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 18 }}>auto_awesome</span> Briefing généré à {generatedAt}
+              ✨ Briefing généré à {generatedAt}
             </p>
           )}
         </div>
@@ -309,7 +309,7 @@ Réponds en JSON STRICT avec ce format:
           {aiLoading ? (
             <span className="animate-pulse">Analyse en cours...</span>
           ) : (
-            <><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{generatedAt ? 'refresh' : 'auto_awesome'}</span> {generatedAt ? 'Rafraîchir' : 'Briefing IA'}</>
+            <><span style={{ fontSize: 18 }}>{generatedAt ? '🔄' : '✨'}</span> {generatedAt ? 'Rafraîchir' : 'Briefing IA'}</>
           )}
         </button>
       </div>
@@ -357,7 +357,7 @@ Réponds en JSON STRICT avec ce format:
                 }`,
               }}>
                 <div className="flex gap-8" style={{ alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: 24 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{insight.icon}</span></span>
+                  <span style={{ fontSize: 24 }}><span style={{ fontSize: 24 }}>{insight.icon}</span></span>
                   <div>
                     <div className="text-base font-bold mb-4">{insight.title}</div>
                     <div className="text-md text-secondary" style={{ lineHeight: 1.6 }}>{insight.content}</div>
@@ -379,8 +379,8 @@ Réponds en JSON STRICT avec ce format:
               className={focusActive ? 'btn btn-danger btn-sm' : 'btn btn-secondary btn-sm'}
             >
               {focusActive
-                ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>timer</span> {Math.floor(focusTime / 60)}:{String(focusTime % 60).padStart(2, '0')} — Stop</>
-                : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>local_fire_department</span> Focus 25min</>}
+                ? <>⏱️ {Math.floor(focusTime / 60)}:{String(focusTime % 60).padStart(2, '0')} — Stop</>
+                : <>🔥 Focus 25min</>}
             </button>
             <button onClick={() => setShowAddTask(!showAddTask)} className="btn btn-primary btn-sm">
               + Ajouter
@@ -430,7 +430,7 @@ Réponds en JSON STRICT avec ce format:
         {/* Empty state */}
         {pendingTasks.length === 0 && doneTasks.length === 0 && (
           <div className="card text-center text-muted" style={{ padding: 32 }}>
-            <div className="mb-12" style={{ fontSize: 40 }}><span className="material-symbols-rounded" style={{ fontSize: 40 }}>assignment</span></div>
+            <div className="mb-12" style={{ fontSize: 40 }}>📋</div>
             <div className="font-semibold mb-4" style={{ fontSize: 15 }}>Aucune tâche</div>
             <div className="text-md">
               Ajoutez des tâches manuellement ou cliquez sur &quot;Briefing IA&quot; pour des suggestions.
@@ -469,7 +469,7 @@ Réponds en JSON STRICT avec ce format:
                     <span className="text-xs rounded-sm" style={{
                       padding: '2px 6px', background: 'var(--accent-muted)', color: 'var(--accent)',
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18 }}>auto_awesome</span> Suggestion IA
+                      ✨ Suggestion IA
                     </span>
                   )}
                   {task.category !== 'Manuel' && (
@@ -485,7 +485,7 @@ Réponds en JSON STRICT avec ce format:
                 onClick={() => deleteTask(task.id)}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 14 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
+                ✕
               </button>
             </div>
           ))}
@@ -506,7 +506,7 @@ Réponds en JSON STRICT avec ce format:
                     background: 'var(--success)', flexShrink: 0, color: 'white', fontSize: 12, cursor: 'pointer',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 12 }}>check</span>
+                  ✅
                 </button>
                 <div className="flex-1 text-md text-muted" style={{ textDecoration: 'line-through' }}>
                   {task.title}
@@ -515,7 +515,7 @@ Réponds en JSON STRICT avec ce format:
                   onClick={() => deleteTask(task.id)}
                   style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 14 }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
+                  ✕
                 </button>
               </div>
             ))}
@@ -528,17 +528,17 @@ Réponds en JSON STRICT avec ce format:
         <div className="section-title">Actions rapides</div>
         <div className="grid-3" style={{ gap: 10 }}>
           {[
-            { icon: 'chat', label: 'Demander conseil à Freenzy', href: '/client/chat' },
-            { icon: 'group', label: 'Lancer une réunion', href: '/client/meeting' },
-            { icon: 'description', label: 'Générer un document', href: '/client/documents' },
-            { icon: 'bar_chart', label: 'Voir mon dashboard', href: '/client/dashboard' },
-            { icon: 'palette', label: 'Personnaliser mes agents', href: '/client/agents/customize' },
-            { icon: 'bolt', label: 'Gérer mon équipe', href: '/client/team' },
+            { icon: '💬', label: 'Demander conseil à Freenzy', href: '/client/chat' },
+            { icon: '👥', label: 'Lancer une réunion', href: '/client/meeting' },
+            { icon: '📄', label: 'Générer un document', href: '/client/documents' },
+            { icon: '📊', label: 'Voir mon dashboard', href: '/client/dashboard' },
+            { icon: '🎨', label: 'Personnaliser mes agents', href: '/client/agents/customize' },
+            { icon: '⚡', label: 'Gérer mon équipe', href: '/client/team' },
           ].map(action => (
             <Link key={action.label} href={action.href} className="card flex items-center gap-8 pointer p-12" style={{
               textDecoration: 'none', color: 'inherit',
             }}>
-              <span style={{ fontSize: 22 }}><span className="material-symbols-rounded" style={{ fontSize: 22 }}>{action.icon}</span></span>
+              <span style={{ fontSize: 22 }}><span style={{ fontSize: 22 }}>{action.icon}</span></span>
               <span className="text-md font-medium">{action.label}</span>
             </Link>
           ))}

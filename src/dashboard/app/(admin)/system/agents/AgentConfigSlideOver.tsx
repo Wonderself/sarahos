@@ -26,7 +26,7 @@ export function AgentConfigButton({ agentId, agentName }: { agentId: string; age
   return (
     <>
       <button className="btn btn-ghost btn-xs" onClick={() => setOpen(true)} style={{ marginLeft: 4 }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>settings</span> Config
+        ⚙️ Config
       </button>
       {open && <AgentConfigSlideOver agentId={agentId} agentName={agentName} onClose={() => setOpen(false)} />}
     </>
@@ -97,12 +97,12 @@ function AgentConfigSlideOver({ agentId, agentName, onClose }: { agentId: string
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border-primary)' }}>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 15 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>settings</span> Config — {agentName}</div>
+            <div style={{ fontWeight: 700, fontSize: 15 }}>⚙️ Config — {agentName}</div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
               ID: <code>{agentId}</code>
             </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-muted)', padding: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>close</span></button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--text-muted)', padding: 4 }}>✕</button>
         </div>
 
         {/* Body */}
@@ -188,10 +188,10 @@ function AgentConfigSlideOver({ agentId, agentName, onClose }: { agentId: string
         {/* Footer */}
         <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border-primary)', display: 'flex', gap: 10, alignItems: 'center' }}>
           <button className="btn btn-primary" onClick={save} disabled={saving || loading}>
-            {saving ? 'Sauvegarde…' : saved ? <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Sauvegardé</> : 'Sauvegarder'}
+            {saving ? 'Sauvegarde…' : saved ? <>✅ Sauvegardé</> : 'Sauvegarder'}
           </button>
           <button className="btn btn-ghost" onClick={onClose}>Annuler</button>
-          {error && <span style={{ fontSize: 12, color: 'var(--danger)' }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> {error}</span>}
+          {error && <span style={{ fontSize: 12, color: 'var(--danger)' }}>⚠️ {error}</span>}
         </div>
       </div>
     </>

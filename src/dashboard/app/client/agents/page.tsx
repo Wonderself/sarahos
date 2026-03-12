@@ -150,7 +150,7 @@ export default function AgentsPage() {
           <div style={{ flex: 1 }} />
           <Link href="/client/agents/create" style={{
             ...CU.btn, ...CU.btnPrimary,
-            fontSize: 12, height: 30, padding: '0 10px',
+            fontSize: 12, height: isMobile ? 40 : 30, padding: '0 10px',
             textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4,
           }}>
             ➕ Nouveau
@@ -178,7 +178,7 @@ export default function AgentsPage() {
             </Link>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12 }}>
             {customAgents.map(agent => (
               <div key={agent.id} style={{
                 ...CU.card, padding: 16, display: 'flex', flexDirection: 'column' as const, gap: 10,
@@ -214,7 +214,7 @@ export default function AgentsPage() {
 
                 <div style={{ display: 'flex', gap: 6, marginTop: 'auto' }}>
                   <Link href={`/client/agents/create?edit=${agent.id}`} style={{
-                    flex: 1, height: 32, borderRadius: 8, border: '1px solid #E5E5E5',
+                    flex: 1, height: isMobile ? 44 : 32, borderRadius: 8, border: '1px solid #E5E5E5',
                     background: '#fff', color: CU.textSec,
                     fontSize: 12, fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer', transition: 'all 0.15s',
@@ -225,7 +225,7 @@ export default function AgentsPage() {
                     onClick={() => deleteAgent(agent.id, agent.name)}
                     disabled={deleting === agent.id}
                     style={{
-                      height: 32, padding: '0 10px', borderRadius: 6, border: '1px solid rgba(0,0,0,0.08)',
+                      height: isMobile ? 44 : 32, padding: '0 10px', borderRadius: 6, border: '1px solid rgba(0,0,0,0.08)',
                       background: 'var(--fz-bg, #fff)', color: 'var(--danger, #ef4444)', fontSize: 12, cursor: 'pointer',
                       transition: 'all 0.15s',
                     }}
@@ -258,7 +258,7 @@ export default function AgentsPage() {
                 <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                height: 28, padding: '0 8px', borderRadius: 8, border: '1px solid #E5E5E5',
+                height: isMobile ? 36 : 28, padding: isMobile ? '0 12px' : '0 8px', borderRadius: 8, border: '1px solid #E5E5E5',
                 background: '#fff',
                 fontSize: 11, fontWeight: 500, color: CU.textSec, textDecoration: 'none', flexShrink: 0,
                 display: 'inline-flex', alignItems: 'center', transition: 'all 0.15s',
@@ -289,7 +289,7 @@ export default function AgentsPage() {
                 <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                height: 28, padding: '0 8px', borderRadius: 8, border: '1px solid #E5E5E5',
+                height: isMobile ? 36 : 28, padding: isMobile ? '0 12px' : '0 8px', borderRadius: 8, border: '1px solid #E5E5E5',
                 background: '#fff',
                 fontSize: 11, fontWeight: 500, color: CU.textSec, textDecoration: 'none', flexShrink: 0,
                 display: 'inline-flex', alignItems: 'center', transition: 'all 0.15s',

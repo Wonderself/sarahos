@@ -36,7 +36,7 @@ export default function WorkflowStepper({ steps, currentStep, onStepClick }: Wor
             }}
           >
             <div style={{ fontSize: 10, marginBottom: 2 }}>
-              {isDone ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> : isRoadmap ? <span className="material-symbols-rounded" style={{ fontSize: 10 }}>hourglass_empty</span> : `${i + 1}`}
+              {isDone ? '✅' : isRoadmap ? '⏳' : `${i + 1}`}
             </div>
             <div>{step.title}</div>
           </button>

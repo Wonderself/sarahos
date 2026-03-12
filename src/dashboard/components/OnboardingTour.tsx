@@ -15,56 +15,56 @@ interface TourStep {
 
 const TOUR_STEPS: TourStep[] = [
   {
-    emoji: 'home',
+    emoji: '\uD83C\uDFE0',
     title: 'Votre tableau de bord',
     description: 'C\'est votre quartier général. Briefing du jour, crédits, activité récente et résumé de vos assistants — tout en un coup d\'œil.',
     href: '/client/dashboard',
     cta: 'Voir mon dashboard',
   },
   {
-    emoji: 'chat',
+    emoji: '\uD83D\uDCAC',
     title: 'Discutez avec vos assistants',
     description: 'Le Chat est le cœur de Freenzy. Choisissez un assistant et posez-lui n\'importe quelle question — il répond en temps réel.',
     href: '/client/chat',
     cta: 'Ouvrir le Chat',
   },
   {
-    emoji: 'group',
+    emoji: '\uD83D\uDC65',
     title: 'Votre équipe d\'assistants',
     description: '34 assistants IA spécialisés (22 business + 12 personnels). Activez ou désactivez ceux qui correspondent à vos besoins, explorez le marketplace pour en ajouter.',
     href: '/client/personal',
     cta: 'Gérer mes assistants',
   },
   {
-    emoji: 'palette',
+    emoji: '\uD83C\uDFA8',
     title: 'Personnalisez vos assistants',
     description: 'Ajustez la personnalité, les instructions et le style de chaque assistant. Plus ils sont configurés, plus ils sont efficaces.',
     href: '/client/agents/customize',
     cta: 'Personnaliser',
   },
   {
-    emoji: 'description',
+    emoji: '\uD83D\uDCC4',
     title: 'Partagez vos documents',
     description: 'Uploadez vos documents d\'entreprise — vos assistants les utilisent pour contextualiser leurs réponses. Jusqu\'à 50 MB.',
     href: '/client/documents',
     cta: 'Uploader un document',
   },
   {
-    emoji: 'call',
+    emoji: '\uD83D\uDCDE',
     title: 'Répondeur Intelligent',
     description: 'Votre secrétaire IA répond à vos appels, SMS et WhatsApp. Configurez les plages horaires et les règles de réponse.',
     href: '/client/repondeur',
     cta: 'Configurer le Répondeur',
   },
   {
-    emoji: 'person',
+    emoji: '\uD83D\uDC64',
     title: 'Votre compte & crédits',
     description: 'Gérez votre solde de crédits, configurez la recharge automatique, et invitez des amis pour gagner de la commission.',
     href: '/client/account',
     cta: 'Voir mon compte',
   },
   {
-    emoji: 'storefront',
+    emoji: '\uD83C\uDFEA',
     title: 'Le Marketplace',
     description: '50 templates d\'assistants prêts à l\'emploi. Installez en 1 clic les assistants adaptés à votre secteur d\'activité.',
     href: '/client/marketplace',
@@ -167,7 +167,7 @@ export default function OnboardingTour() {
         </div>
 
         {/* Emoji */}
-        <div style={{ textAlign: 'center', fontSize: 52, marginBottom: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 52 }}>{current.emoji}</span></div>
+        <div style={{ textAlign: 'center', fontSize: 52, marginBottom: 20 }}><span style={{ fontSize: 52 }}>{current.emoji}</span></div>
 
         {/* Title */}
         <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: 'center', marginBottom: 12, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
@@ -195,7 +195,7 @@ export default function OnboardingTour() {
             {current.cta} →
           </Link>
           <button onClick={next} className="btn btn-ghost" style={{ flex: 1, fontSize: 14 }}>
-            {isLast ? <><span>Terminer </span><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span></> : 'Suivant →'}
+            {isLast ? <><span>Terminer </span>✅</> : 'Suivant →'}
           </button>
         </div>
 
@@ -219,7 +219,7 @@ export function TourRestartButton() {
   }
   return (
     <button onClick={restart} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-      <span className="material-symbols-rounded" style={{ fontSize: 12 }}>map</span> Reprendre le tour
+      🗺️ Reprendre le tour
     </button>
   );
 }

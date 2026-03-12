@@ -61,7 +61,7 @@ export default async function ProjectsPage() {
         <div className="section-title">Tous les projets ({projects.length})</div>
         {projects.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>folder</span></div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>📁</div>
             <div>Aucun projet enregistré pour l&apos;instant.</div>
           </div>
         ) : (

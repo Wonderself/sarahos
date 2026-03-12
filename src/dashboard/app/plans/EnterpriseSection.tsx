@@ -62,7 +62,7 @@ export default function EnterpriseSection() {
         </div>
 
         <div className="lp-enterprise-grid" style={{
-          display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
           gap: 10, marginBottom: 36,
         }}>
           {FEATURES.map(f => (

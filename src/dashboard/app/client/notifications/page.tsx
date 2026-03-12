@@ -6,6 +6,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import AuthRequired from '../../../components/AuthRequired';
 
 const NOTIF_READ_KEY = 'fz_notif_read';
 
@@ -270,6 +271,7 @@ export default function NotificationsPage() {
   const pageMeta = PAGE_META.notifications;
 
   return (
+    <AuthRequired pageName="Notifications">
     <div className="client-page-scrollable">
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: isMobile ? 8 : 12 }}>
@@ -403,14 +405,14 @@ export default function NotificationsPage() {
 
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                       {notif.actionLabel && notif.actionHref && (
-                        <Link href={notif.actionHref} style={{ ...CU.btnPrimary, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', height: 30, fontSize: 12 }}>
+                        <Link href={notif.actionHref} style={{ ...CU.btnPrimary, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', height: isMobile ? 40 : 30, fontSize: 12 }}>
                           {notif.actionLabel}
                         </Link>
                       )}
                       {!notif.read && (
                         <button
                           onClick={() => handleDismiss(notif.id)}
-                          style={{ ...CU.btnGhost, height: 30, fontSize: 12 }}
+                          style={{ ...CU.btnGhost, height: isMobile ? 40 : 30, fontSize: 12 }}
                         >
                           Ignorer
                         </button>
@@ -446,5 +448,6 @@ export default function NotificationsPage() {
         </div>
       )}
     </div>
+    </AuthRequired>
   );
 }

@@ -4,8 +4,8 @@ const PRODUCT_LINKS = [
   { href: '/demo', label: 'Demo' },
   { href: '/plans', label: 'Tarifs' },
   { href: '/tarifs-api', label: 'API' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/login', label: 'Se connecter' },
+  { href: '/client/dashboard', label: 'Acceder au Dashboard' },
+  { href: '/login', label: 'Ouvrir un compte' },
 ];
 
 const FEATURE_LINKS = [
@@ -45,7 +45,7 @@ export default function PublicFooter() {
       {/* Band 0: Multi-column links */}
       <div style={{
         maxWidth: 1120, margin: '0 auto', padding: '48px 24px 32px',
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 32,
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(150px, 100%), 1fr))', gap: 32,
       }}>
         {/* Fonctionnalités column */}
         <div>
@@ -107,6 +107,7 @@ export default function PublicFooter() {
           <span className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 18 }}>
             freenzy.io
           </span>
+          <span style={{ fontSize: 8, fontStyle: 'italic', color: 'rgba(255,255,255,0.3)', fontWeight: 400, alignSelf: 'flex-end', marginBottom: 2 }}>Beta Test 1</span>
         </Link>
         <nav className="lp-footer-band1-links">
           {PRODUCT_LINKS.map(l => (

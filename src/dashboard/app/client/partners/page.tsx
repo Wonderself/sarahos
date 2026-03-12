@@ -154,7 +154,7 @@ export default function PartnersPage() {
           </button>
 
           {expandedCategory === catIdx && (
-            <div style={{ display: 'grid', gridTemplateColumns: cat.partners.length === 1 ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))', gap: 12, marginTop: 12, paddingLeft: 8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: cat.partners.length === 1 ? '1fr' : 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: 12, marginTop: 12, paddingLeft: 8 }}>
               {cat.partners.map(partner => (
                 <div key={partner.name} style={{
                   padding: '20px', borderRadius: 12,

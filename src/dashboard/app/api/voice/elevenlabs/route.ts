@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '@/lib/api-auth';
 
 const ELEVENLABS_API_KEY = process.env['ELEVENLABS_API_KEY'];
 const DEEPGRAM_API_KEY = process.env['DEEPGRAM_API_KEY'];
@@ -47,6 +48,9 @@ async function fallbackToDeepgram(text: string, gender?: string): Promise<NextRe
 }
 
 export async function POST(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   try {
     const body = await req.json();
     const {

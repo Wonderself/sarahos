@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import AuthRequired from '../../../../components/AuthRequired';
 
 function getToken(): string {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}').token ?? ''; }
@@ -12,6 +14,7 @@ const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 type AgentMode = 'pro' | 'eco';
 
 export default function AgentModePage() {
+  const isMobile = useIsMobile();
   const [mode, setMode] = useState<AgentMode>('pro');
   const [loading, setLoading] = useState(true);
   const [switching, setSwitching] = useState(false);
@@ -56,7 +59,7 @@ export default function AgentModePage() {
     setSwitching(false);
   };
 
-  if (loading) return <div style={{ padding: 48, textAlign: 'center', color: '#9B9B9B' }}>Chargement...</div>;
+  if (loading) return <AuthRequired pageName="Parametres"><div style={{ padding: 48, textAlign: 'center', color: '#9B9B9B' }}>Chargement...</div></AuthRequired>;
 
   const cardStyle: React.CSSProperties = {
     background: '#fff', borderRadius: 8, padding: 24,
@@ -69,6 +72,7 @@ export default function AgentModePage() {
   };
 
   return (
+    <AuthRequired pageName="Parametres">
     <div className="client-page-scrollable" style={{ maxWidth: 640, margin: '0 auto', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
         <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1A1A1A' }}>Mode de fonctionnement</h1>
@@ -77,12 +81,12 @@ export default function AgentModePage() {
 
       {/* Toggle */}
       <div style={cardStyle}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 8 : 12 }}>
           <button
             onClick={() => mode !== 'pro' ? setShowConfirm('pro') : null}
             disabled={switching}
             style={{
-              padding: 16, borderRadius: 8, textAlign: 'left', cursor: 'pointer',
+              padding: isMobile ? 12 : 16, borderRadius: 8, textAlign: 'left', cursor: 'pointer',
               border: mode === 'pro' ? '2px solid #1A1A1A' : '1px solid #E5E5E5',
               background: mode === 'pro' ? 'rgba(0,0,0,0.02)' : '#fff',
             }}
@@ -95,7 +99,7 @@ export default function AgentModePage() {
             onClick={() => mode !== 'eco' ? setShowConfirm('eco') : null}
             disabled={switching}
             style={{
-              padding: 16, borderRadius: 8, textAlign: 'left', cursor: 'pointer',
+              padding: isMobile ? 12 : 16, borderRadius: 8, textAlign: 'left', cursor: 'pointer',
               border: mode === 'eco' ? '2px solid #1A1A1A' : '1px solid #E5E5E5',
               background: mode === 'eco' ? 'rgba(0,0,0,0.02)' : '#fff',
             }}
@@ -204,7 +208,8 @@ export default function AgentModePage() {
       {/* Specs comparison */}
       <div style={cardStyle}>
         <h3 style={{ fontWeight: 600, color: '#1A1A1A', marginBottom: 16 }}>Comparaison technique</h3>
-        <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse', minWidth: 500 }}>
           <thead>
             <tr style={{ color: '#9B9B9B', borderBottom: '1px solid #E5E5E5' }}>
               <th style={{ padding: '8px 0', textAlign: 'left' }}>Paramètre</th>
@@ -240,6 +245,7 @@ export default function AgentModePage() {
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Current Limits */}
@@ -273,5 +279,6 @@ export default function AgentModePage() {
         )}
       </div>
     </div>
+    </AuthRequired>
   );
 }

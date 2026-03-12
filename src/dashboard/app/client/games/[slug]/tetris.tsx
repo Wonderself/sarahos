@@ -372,7 +372,7 @@ export default function TetrisGame() {
             href="/client/games"
             style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+            <span style={{ fontSize: 16 }}>←</span>
             Arcade
           </Link>
         </div>
@@ -391,7 +391,7 @@ export default function TetrisGame() {
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>rotate_right</span>
+            <span style={{ fontSize: 18 }}>🔃</span>
           </button>
           <div style={{ display: 'flex', gap: 8 }}>
             <button
@@ -404,7 +404,7 @@ export default function TetrisGame() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>chevron_left</span>
+              <span style={{ fontSize: 20 }}>◀</span>
             </button>
             <button
               onTouchStart={(e) => { e.preventDefault(); tick(); }}
@@ -416,7 +416,7 @@ export default function TetrisGame() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>keyboard_arrow_down</span>
+              <span style={{ fontSize: 20 }}>▼</span>
             </button>
             <button
               onTouchStart={(e) => { e.preventDefault(); move(1); }}
@@ -428,7 +428,7 @@ export default function TetrisGame() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>chevron_right</span>
+              <span style={{ fontSize: 20 }}>▶</span>
             </button>
           </div>
           <button
@@ -441,7 +441,7 @@ export default function TetrisGame() {
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>vertical_align_bottom</span>
+            <span style={{ fontSize: 16 }}>⬇️</span>
             Poser
           </button>
         </div>

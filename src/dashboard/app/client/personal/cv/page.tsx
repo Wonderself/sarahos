@@ -273,7 +273,7 @@ export default function CVPage() {
 
       {/* Sections */}
       <AccordionSection id="info" title="Informations personnelles" icon="👤">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
           {[
             { key: 'first_name', label: 'Prénom', placeholder: 'Jean' },
             { key: 'last_name', label: 'Nom', placeholder: 'Dupont' },
@@ -331,7 +331,7 @@ export default function CVPage() {
           {(profile.experiences ?? []).map((e, i) => (
             <div key={i} style={{ padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, position: 'relative' }}>
               <button onClick={() => removeExperience(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10 }}>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>POSTE</label>
                   <input className="input" placeholder="Développeur Senior" value={e.title} onChange={ev => updateExperience(i, { title: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
@@ -370,7 +370,7 @@ export default function CVPage() {
           {(profile.education ?? []).map((e, i) => (
             <div key={i} style={{ padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, position: 'relative' }}>
               <button onClick={() => removeEducation(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10 }}>
                 <div>
                   <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DIPLÔME</label>
                   <input className="input" placeholder="Master, Licence..." value={e.degree} onChange={ev => updateEducation(i, { degree: ev.target.value })} onBlur={() => update({ education: profile.education })} />

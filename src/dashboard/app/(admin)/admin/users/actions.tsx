@@ -152,7 +152,7 @@ export function CreateUserButton() {
           </div>
 
           <div className="alert alert-info" style={{ marginTop: 16, fontSize: 12 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>info</span> Un email de bienvenue avec les identifiants sera envoye automatiquement.
+            ℹ️ Un email de bienvenue avec les identifiants sera envoye automatiquement.
           </div>
         </form>
       </SlideOver>
@@ -200,7 +200,7 @@ export function DepositButton({ userId, userName }: { userId: string; userName?:
   return (
     <>
       <button className="btn btn-primary btn-xs" onClick={() => setIsOpen(true)}>
-        <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer
+        💰 Deposer
       </button>
 
       <SlideOver
@@ -218,7 +218,7 @@ export function DepositButton({ userId, userName }: { userId: string; userName?:
               type="submit"
               disabled={loading || !amount || parseFloat(amount) <= 0}
             >
-              {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer</>}
+              {loading ? 'En cours...' : <>💰 Deposer</>}
             </button>
           </>
         }

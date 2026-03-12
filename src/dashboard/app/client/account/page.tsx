@@ -8,6 +8,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import AuthRequired from '../../../components/AuthRequired';
 
 interface WalletData {
   balance: number;
@@ -368,6 +369,7 @@ export default function AccountPage() {
   const badgeColor = '#1A1A1A';
 
   return (
+    <AuthRequired pageName="Mon Compte">
     <div className="client-page-scrollable">
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
@@ -386,8 +388,8 @@ export default function AccountPage() {
       <div style={{ marginBottom: 20 }}>
         <h2 style={CU.sectionTitle}>Mon statut</h2>
         <div style={{ ...CU.sectionCard, borderLeft: `3px solid ${badgeColor}`, background: badgeColor + '06' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' as const : 'row' as const, alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: isMobile ? 10 : 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16 }}>
               <div style={{
                 width: 52, height: 52, borderRadius: 12,
                 background: badgeColor + '18', border: `2px solid ${badgeColor}33`,
@@ -866,5 +868,6 @@ export default function AccountPage() {
         </div>
       )}
     </div>
+    </AuthRequired>
   );
 }

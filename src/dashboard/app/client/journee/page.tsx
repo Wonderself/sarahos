@@ -297,11 +297,11 @@ const DEFAULT_HABITS: HabitItem[] = [
 ];
 
 const MOOD_OPTIONS = [
-  { emoji: '😫', label: 'Terrible', color: '#dc2626' },
-  { emoji: '😕', label: 'Pas top', color: '#f97316' },
-  { emoji: '😐', label: 'Neutre', color: '#eab308' },
-  { emoji: '😊', label: 'Bien', color: '#22c55e' },
-  { emoji: '🤩', label: 'Super !', color: 'var(--fz-accent, #0EA5E9)' },
+  { emoji: '😫', label: 'Terrible', color: '#1A1A1A' },
+  { emoji: '😕', label: 'Pas top', color: '#6B6B6B' },
+  { emoji: '😐', label: 'Neutre', color: '#1A1A1A' },
+  { emoji: '😊', label: 'Bien', color: '#1A1A1A' },
+  { emoji: '🤩', label: 'Super !', color: '#1A1A1A' },
 ];
 
 const NEWS_TABS = [
@@ -392,7 +392,7 @@ function getDefaultData(): JourneeData {
 // ─── Shared styles ───
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--fz-bg, #FFFFFF)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+  background: 'var(--fz-bg, #fff)', border: '1px solid var(--border-primary, #E5E5E5)',
   borderRadius: 12, overflow: 'hidden', transition: 'box-shadow 0.2s',
 };
 const cardHeaderStyle: React.CSSProperties = {
@@ -401,12 +401,12 @@ const cardHeaderStyle: React.CSSProperties = {
   border: 'none', width: '100%', fontFamily: 'inherit', textAlign: 'left',
 };
 const cardBodyStyle: React.CSSProperties = {
-  padding: '0 16px 14px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
+  padding: '0 16px 14px', borderTop: '1px solid var(--fz-border, #E5E5E5)',
 };
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 13,
-  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg-secondary, #F8FAFC)',
-  color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none',
+  border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)',
+  color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit', outline: 'none',
 };
 const btnSmStyle: React.CSSProperties = {
   padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
@@ -414,10 +414,10 @@ const btnSmStyle: React.CSSProperties = {
   background: 'var(--accent)', color: '#fff',
 };
 const btnGhostStyle: React.CSSProperties = {
-  ...btnSmStyle, background: 'var(--fz-bg-hover, #F1F5F9)', color: 'var(--fz-text, #1E293B)',
+  ...btnSmStyle, background: 'var(--fz-bg-hover, #F0F0F0)', color: 'var(--fz-text, #1A1A1A)',
 };
 const progressBarOuter: React.CSSProperties = {
-  width: '100%', height: 6, borderRadius: 3, background: 'var(--fz-bg-hover, #F1F5F9)', overflow: 'hidden',
+  width: '100%', height: 6, borderRadius: 3, background: 'var(--fz-bg-hover, #F0F0F0)', overflow: 'hidden',
 };
 
 // ═══════════════════════════════════════════════════════
@@ -595,9 +595,9 @@ export default function JourneePage() {
         <button onClick={() => toggleCollapse(id)} style={cardHeaderStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 16 }}>{meta.emoji}</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{meta.label}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{meta.label}</span>
           </div>
-          <span style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', transform: isCol ? 'rotate(-90deg)' : 'rotate(0)', transition: 'transform 0.2s', display: 'inline-block' }}>{isCol ? '▸' : '▾'}</span>
+          <span style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', transform: isCol ? 'rotate(-90deg)' : 'rotate(0)', transition: 'transform 0.2s', display: 'inline-block' }}>{isCol ? '▸' : '▾'}</span>
         </button>
         {!isCol && <div style={cardBodyStyle}>{children}</div>}
       </div>
@@ -621,14 +621,14 @@ export default function JourneePage() {
         </div>
         {total > 0 && <>
           <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: 'var(--accent)', width: `${total ? (doneCount/total)*100 : 0}%`, transition: 'width 0.3s' }} /></div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4, marginBottom: 8 }}>{doneCount}/{total} terminées</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4, marginBottom: 8 }}>{doneCount}/{total} terminées</div>
         </>}
         {data.todos.map(t => (
-          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
             <input type="checkbox" checked={t.done} onChange={() => updateData({ todos: data.todos.map(x => x.id === t.id ? { ...x, done: !x.done } : x) })}
               style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }} />
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)', textDecoration: t.done ? 'line-through' : 'none', opacity: t.done ? 0.5 : 1 }}>{t.text}</span>
-            <button onClick={() => updateData({ todos: data.todos.filter(x => x.id !== t.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>✕</button>
+            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)', textDecoration: t.done ? 'line-through' : 'none', opacity: t.done ? 0.5 : 1 }}>{t.text}</span>
+            <button onClick={() => updateData({ todos: data.todos.filter(x => x.id !== t.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 14 }}>✕</button>
           </div>
         ))}
         {total > 0 && <button onClick={() => updateData({ todos: [] })} style={{ ...btnGhostStyle, marginTop: 8, fontSize: 11 }}>Tout effacer</button>}
@@ -639,13 +639,13 @@ export default function JourneePage() {
   // ── W02: Objectifs ──
   function renderObjectifs() {
     const doneCount = data.objectifs.filter(o => o.done).length;
-    const colors = ['#eab308', '#94a3b8', '#cd7f32'];
+    const colors = ['#1A1A1A', '#9B9B9B', '#6B6B6B'];
     return (
       <W id="objectifs">
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 8 }}>{doneCount}/3 objectifs atteints</div>
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>{doneCount}/3 objectifs atteints</div>
         {data.objectifs.map((o, i) => (
           <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: o.done ? colors[i] : 'var(--fz-bg-hover, #F1F5F9)', color: o.done ? '#fff' : 'var(--fz-text-muted, #94A3B8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: o.done ? colors[i] : 'var(--fz-bg-hover, #F0F0F0)', color: o.done ? '#fff' : 'var(--fz-text-muted, #9B9B9B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
             <input style={{ ...inputStyle, flex: 1, textDecoration: o.done ? 'line-through' : 'none' }} placeholder={`Objectif ${i + 1}...`} value={o.text}
               onChange={e => { const next = [...data.objectifs]; next[i] = { ...next[i], text: e.target.value }; updateData({ objectifs: next }); }} />
             <input type="checkbox" checked={o.done} onChange={() => { const next = [...data.objectifs]; next[i] = { ...next[i], done: !next[i].done }; updateData({ objectifs: next }); }}
@@ -687,7 +687,7 @@ export default function JourneePage() {
       <W id="notes">
         <textarea style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }} placeholder="Vos notes rapides..." value={data.notes}
           onChange={e => updateData({ notes: e.target.value.slice(0, 5000) })} />
-        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4, textAlign: 'right' }}>{data.notes.length}/5000</div>
+        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4, textAlign: 'right' }}>{data.notes.length}/5000</div>
       </W>
     );
   }
@@ -695,14 +695,14 @@ export default function JourneePage() {
   // ── W05: Pomodoro ──
   function renderPomodoro() {
     const isWork = data.pomodoroMode === 'work';
-    const accentCol = isWork ? 'var(--accent)' : '#22c55e';
+    const accentCol = isWork ? '#1A1A1A' : '#6B6B6B';
     return (
       <W id="pomodoro">
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: accentCol, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>
             {isWork ? 'Travail' : 'Pause'}
           </div>
-          <div style={{ fontSize: 48, fontWeight: 200, color: 'var(--fz-text, #1E293B)', letterSpacing: -2, fontFamily: 'monospace' }}>
+          <div style={{ fontSize: 48, fontWeight: 200, color: 'var(--fz-text, #1A1A1A)', letterSpacing: -2, fontFamily: 'monospace' }}>
             {fmtTime(data.pomodoroTimeLeft)}
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12 }}>
@@ -715,7 +715,7 @@ export default function JourneePage() {
               updateData({ pomodoroMode: nextMode, pomodoroTimeLeft: nextMode === 'work' ? 25*60 : 5*60, pomodoroRunning: false });
             }}>Skip ⏭️</button>
           </div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 10 }}>Sessions : {data.pomodoroSessions}/4</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 10 }}>Sessions : {data.pomodoroSessions}/4</div>
         </div>
       </W>
     );
@@ -729,10 +729,10 @@ export default function JourneePage() {
     return (
       <W id="focus">
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, fontWeight: 200, color: 'var(--fz-text, #1E293B)', fontFamily: 'monospace' }}>{mins} min</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 8 }}>Objectif : {goal} min</div>
+          <div style={{ fontSize: 36, fontWeight: 200, color: 'var(--fz-text, #1A1A1A)', fontFamily: 'monospace' }}>{mins} min</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>Objectif : {goal} min</div>
           <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: 'var(--accent)', width: `${pct}%`, transition: 'width 0.5s' }} /></div>
-          <button style={{ ...btnSmStyle, marginTop: 12, background: data.focusRunning ? '#dc2626' : 'var(--accent)' }}
+          <button style={{ ...btnSmStyle, marginTop: 12, background: data.focusRunning ? '#1A1A1A' : '#1A1A1A' }}
             onClick={() => updateData({ focusRunning: !data.focusRunning, focusStartedAt: data.focusRunning ? 0 : Date.now() })}>
             {data.focusRunning ? <><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#fff', marginRight: 6, animation: 'pulse 1s infinite' }} />Stop</> : <>▶️ Démarrer focus</>}
           </button>
@@ -750,7 +750,7 @@ export default function JourneePage() {
         <div style={{ maxHeight: 300, overflowY: 'auto' }}>
           {hours.map(h => (
             <div key={h} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', borderLeft: h === currentHour ? '3px solid var(--accent)' : '3px solid transparent', paddingLeft: 8 }}>
-              <span style={{ fontSize: 12, color: h === currentHour ? 'var(--accent)' : 'var(--fz-text-muted, #94A3B8)', fontWeight: h === currentHour ? 700 : 400, width: 40, flexShrink: 0 }}>{String(h).padStart(2, '0')}:00</span>
+              <span style={{ fontSize: 12, color: h === currentHour ? 'var(--accent)' : 'var(--fz-text-muted, #9B9B9B)', fontWeight: h === currentHour ? 700 : 400, width: 40, flexShrink: 0 }}>{String(h).padStart(2, '0')}:00</span>
               <input style={{ ...inputStyle, padding: '4px 8px', fontSize: 12 }} placeholder="—" value={data.schedule[h] || ''}
                 onChange={e => updateData({ schedule: { ...data.schedule, [h]: e.target.value } })} />
             </div>
@@ -768,14 +768,14 @@ export default function JourneePage() {
       <W id="calendrier">
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--accent)' }}>{d.getDate()}</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', textTransform: 'capitalize' }}>{formatFrenchDate(d)}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', textTransform: 'capitalize' }}>{formatFrenchDate(d)}</div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 12, margin: '12px 0' }}>
             {dayNames.map((name, i) => {
               const isToday = (d.getDay() + 6) % 7 === i;
-              return <div key={i} style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: isToday ? 700 : 400, background: isToday ? 'var(--accent)' : 'transparent', color: isToday ? '#fff' : 'var(--fz-text-muted, #94A3B8)' }}>{name}</div>;
+              return <div key={i} style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: isToday ? 700 : 400, background: isToday ? 'var(--accent)' : 'transparent', color: isToday ? '#fff' : 'var(--fz-text-muted, #9B9B9B)' }}>{name}</div>;
             })}
           </div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Jour {dayOfYear()}/365 — Semaine {weekNumber()}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>Jour {dayOfYear()}/365 — Semaine {weekNumber()}</div>
         </div>
       </W>
     );
@@ -790,12 +790,12 @@ export default function JourneePage() {
           <input type="time" style={{ ...inputStyle, width: 100 }} value={newReunionTime} onChange={e => setNewReunionTime(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newReunionTitle.trim()) { updateData({ reunions: [...data.reunions, { id: uid(), title: newReunionTitle.trim(), time: newReunionTime || '09:00', duration: '30 min', participants: '' }] }); setNewReunionTitle(''); setNewReunionTime(''); } }}>+</button>
         </div>
-        {data.reunions.length === 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', padding: 16 }}>Aucune réunion aujourd'hui</div>}
+        {data.reunions.length === 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', textAlign: 'center', padding: 16 }}>Aucune réunion aujourd'hui</div>}
         {data.reunions.sort((a, b) => a.time.localeCompare(b.time)).map(r => (
-          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', width: 45, flexShrink: 0 }}>{r.time}</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>{r.title}</span>
-            <button onClick={() => updateData({ reunions: data.reunions.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>
+            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{r.title}</span>
+            <button onClick={() => updateData({ reunions: data.reunions.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
           </div>
         ))}
       </W>
@@ -813,14 +813,14 @@ export default function JourneePage() {
           <input type="time" style={{ ...inputStyle, width: 90 }} value={newRappelTime} onChange={e => setNewRappelTime(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newRappelText.trim()) { updateData({ rappels: [...data.rappels, { id: uid(), text: newRappelText.trim(), time: newRappelTime, done: false }] }); setNewRappelText(''); setNewRappelTime(''); } }}>+</button>
         </div>
-        {pending > 0 && <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 6 }}>{pending} rappel{pending > 1 ? 's' : ''} en attente</div>}
+        {pending > 0 && <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 6 }}>{pending} rappel{pending > 1 ? 's' : ''} en attente</div>}
         {[...data.rappels].sort((a, b) => Number(a.done) - Number(b.done)).map(r => (
-          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
             <input type="checkbox" checked={r.done} onChange={() => updateData({ rappels: data.rappels.map(x => x.id === r.id ? { ...x, done: !x.done } : x) })}
               style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }} />
             {r.time && <span style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 600 }}>{r.time}</span>}
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)', textDecoration: r.done ? 'line-through' : 'none', opacity: r.done ? 0.5 : 1 }}>{r.text}</span>
-            <button onClick={() => updateData({ rappels: data.rappels.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>
+            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)', textDecoration: r.done ? 'line-through' : 'none', opacity: r.done ? 0.5 : 1 }}>{r.text}</span>
+            <button onClick={() => updateData({ rappels: data.rappels.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
           </div>
         ))}
       </W>
@@ -829,7 +829,7 @@ export default function JourneePage() {
 
   // ── W11: Échéances ──
   function renderEcheances() {
-    const prioColor = { haute: '#dc2626', moyenne: '#f97316', basse: '#3b82f6' };
+    const prioColor = { haute: '#1A1A1A', moyenne: '#6B6B6B', basse: '#9B9B9B' };
     const today = new Date().toISOString().slice(0, 10);
     return (
       <W id="echeances">
@@ -844,11 +844,11 @@ export default function JourneePage() {
         {[...data.echeances].sort((a, b) => a.date.localeCompare(b.date)).map(e => {
           const overdue = e.date < today;
           return (
-            <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)', background: overdue ? 'rgba(220,38,38,0.05)' : 'transparent' }}>
-              <span style={{ fontSize: 11, color: overdue ? '#dc2626' : 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, width: 75, flexShrink: 0 }}>{e.date}</span>
+            <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)', background: overdue ? 'rgba(0,0,0,0.03)' : 'transparent' }}>
+              <span style={{ fontSize: 11, color: overdue ? '#1A1A1A' : 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, width: 75, flexShrink: 0 }}>{e.date}</span>
               <span style={{ padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600, color: '#fff', background: prioColor[e.priority], flexShrink: 0 }}>{e.priority}</span>
-              <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>{e.text}</span>
-              <button onClick={() => updateData({ echeances: data.echeances.filter(x => x.id !== e.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>
+              <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{e.text}</span>
+              <button onClick={() => updateData({ echeances: data.echeances.filter(x => x.id !== e.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
             </div>
           );
         })}
@@ -864,9 +864,9 @@ export default function JourneePage() {
       <W id="semaine">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
           {dayNames.map((name, i) => (
-            <div key={i} style={{ textAlign: 'center', padding: '8px 2px', borderRadius: 8, background: i === todayIdx ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', color: i === todayIdx ? '#fff' : 'var(--fz-text, #1E293B)' }}>
+            <div key={i} style={{ textAlign: 'center', padding: '8px 2px', borderRadius: 8, background: i === todayIdx ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: i === todayIdx ? '#fff' : 'var(--fz-text, #1A1A1A)' }}>
               <div style={{ fontSize: 11, fontWeight: 600 }}>{name}</div>
-              <div style={{ fontSize: 18, marginTop: 2 }}>{i === todayIdx ? '📍' : '·'}</div>
+              <div style={{ fontSize: 18, marginTop: 2 }}>{i === todayIdx ? '📍' : '\u00B7'}</div>
             </div>
           ))}
         </div>
@@ -906,8 +906,8 @@ export default function JourneePage() {
             }}><span style={{ fontSize: 24 }}>💧</span></button>
           ))}
         </div>
-        <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: '#3b82f6', width: `${Math.min(100, (data.waterCount / glasses) * 100)}%`, transition: 'width 0.3s' }} /></div>
-        <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>{data.waterCount}/{glasses} verres ({(data.waterCount * 0.25).toFixed(1)}L)</div>
+        <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: '#1A1A1A', width: `${Math.min(100, (data.waterCount / glasses) * 100)}%`, transition: 'width 0.3s' }} /></div>
+        <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>{data.waterCount}/{glasses} verres ({(data.waterCount * 0.25).toFixed(1)}L)</div>
       </W>
     );
   }
@@ -924,11 +924,11 @@ export default function JourneePage() {
         {data.exercises.map(ex => (
           <div key={ex.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
             <span style={{ fontSize: 14 }}>🏃</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>{ex.text}</span>
-            <button onClick={() => updateData({ exercises: data.exercises.filter(x => x.id !== ex.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>
+            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{ex.text}</span>
+            <button onClick={() => updateData({ exercises: data.exercises.filter(x => x.id !== ex.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
           </div>
         ))}
-        {data.exercises.length === 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center' }}>Aucune activité enregistrée</div>}
+        {data.exercises.length === 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', textAlign: 'center' }}>Aucune activité enregistrée</div>}
       </W>
     );
   }
@@ -942,16 +942,16 @@ export default function JourneePage() {
           <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 12 }}>
             {presets.map(p => (
               <button key={p} onClick={() => updateData({ meditationPreset: p, meditationTimeLeft: p * 60, meditationRunning: false })}
-                style={{ ...btnGhostStyle, background: data.meditationPreset === p ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', color: data.meditationPreset === p ? '#fff' : 'var(--fz-text, #1E293B)' }}>{p} min</button>
+                style={{ ...btnGhostStyle, background: data.meditationPreset === p ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: data.meditationPreset === p ? '#fff' : 'var(--fz-text, #1A1A1A)' }}>{p} min</button>
             ))}
           </div>
-          <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text, #1E293B)', fontFamily: 'monospace' }}>{fmtTime(data.meditationTimeLeft)}</div>
-          {data.meditationRunning && <div style={{ fontSize: 14, color: '#22c55e', marginTop: 6 }}>Respirez...</div>}
-          <button style={{ ...btnSmStyle, marginTop: 12, background: data.meditationRunning ? '#dc2626' : '#22c55e', minWidth: 100 }}
+          <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text, #1A1A1A)', fontFamily: 'monospace' }}>{fmtTime(data.meditationTimeLeft)}</div>
+          {data.meditationRunning && <div style={{ fontSize: 14, color: '#1A1A1A', marginTop: 6 }}>Respirez...</div>}
+          <button style={{ ...btnSmStyle, marginTop: 12, background: data.meditationRunning ? '#1A1A1A' : '#1A1A1A', minWidth: 100 }}
             onClick={() => updateData({ meditationRunning: !data.meditationRunning })}>
             {data.meditationRunning ? <>⏸️ Stop</> : <>🧘 Méditer</>}
           </button>
-          {data.meditationTotal > 0 && <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 8 }}>Total aujourd'hui : {data.meditationTotal} min</div>}
+          {data.meditationTotal > 0 && <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 8 }}>Total aujourd'hui : {data.meditationTotal} min</div>}
         </div>
       </W>
     );
@@ -960,7 +960,7 @@ export default function JourneePage() {
   // ── W17: Sommeil ──
   function renderSommeil() {
     const h = data.sleepHours;
-    const col = h < 6 ? '#dc2626' : h < 7 ? '#f97316' : h <= 9 ? '#22c55e' : '#eab308';
+    const col = h < 6 ? '#1A1A1A' : h < 7 ? '#6B6B6B' : h <= 9 ? '#1A1A1A' : '#6B6B6B';
     const sleepIcon = h < 5 ? '😴' : h < 7 ? '🌙' : h <= 9 ? '😊' : '💤';
     return (
       <W id="sommeil">
@@ -969,7 +969,7 @@ export default function JourneePage() {
           <div style={{ fontSize: 24, fontWeight: 600, color: col, margin: '6px 0' }}>{h}h</div>
           <input type="range" min={0} max={12} step={0.5} value={h} onChange={e => updateData({ sleepHours: parseFloat(e.target.value) })}
             style={{ width: '100%', accentColor: col }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}><span>0h</span><span>6h</span><span>8h</span><span>12h</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)' }}><span>0h</span><span>6h</span><span>8h</span><span>12h</span></div>
         </div>
       </W>
     );
@@ -980,7 +980,7 @@ export default function JourneePage() {
     const filled = data.gratitude.filter(g => g.trim()).length;
     return (
       <W id="gratitude">
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 8 }}>{filled}/3 gratitudes</div>
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>{filled}/3 gratitudes</div>
         {data.gratitude.map((g, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ fontSize: 14 }}>❤️</span>
@@ -998,9 +998,9 @@ export default function JourneePage() {
     const text = data.affirmation || AFFIRMATIONS[idx];
     return (
       <W id="affirmation">
-        <div style={{ background: 'linear-gradient(135deg, rgba(91,108,247,0.08), rgba(168,85,247,0.08))', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+        <div style={{ background: 'rgba(0,0,0,0.03)', borderRadius: 8, padding: 16, textAlign: 'center' }}>
           <div style={{ fontSize: 24, marginBottom: 8 }}>✨</div>
-          <div style={{ fontSize: 15, fontStyle: 'italic', color: 'var(--fz-text, #1E293B)', lineHeight: 1.5 }}>{text}</div>
+          <div style={{ fontSize: 15, fontStyle: 'italic', color: 'var(--fz-text, #1A1A1A)', lineHeight: 1.5 }}>{text}</div>
         </div>
         <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
           <button style={btnGhostStyle} onClick={() => updateData({ affirmationIndex: (data.affirmationIndex + 1) % AFFIRMATIONS.length, affirmation: '' })}>Nouvelle affirmation</button>
@@ -1021,9 +1021,9 @@ export default function JourneePage() {
           <div style={{ fontSize: 48 }}>{weatherIcon}</div>
           <input style={{ ...inputStyle, textAlign: 'center', maxWidth: 200, margin: '8px auto' }} placeholder="Votre ville..." value={data.weatherCity}
             onChange={e => updateData({ weatherCity: e.target.value })} />
-          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>Données météo simulées pour {data.weatherCity || '...'}</div>
-          <div style={{ fontSize: 28, fontWeight: 300, color: 'var(--fz-text, #1E293B)', marginTop: 4 }}>22°C</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>Partiellement nuageux</div>
+          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>Données météo simulées pour {data.weatherCity || '...'}</div>
+          <div style={{ fontSize: 28, fontWeight: 300, color: 'var(--fz-text, #1A1A1A)', marginTop: 4 }}>22°C</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #6B6B6B)' }}>Partiellement nuageux</div>
         </div>
       </W>
     );
@@ -1036,7 +1036,7 @@ export default function JourneePage() {
     return (
       <W id="citation">
         <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: 14 }}>
-          <div style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--fz-text, #1E293B)', lineHeight: 1.6 }}>&laquo; {q.text} &raquo;</div>
+          <div style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--fz-text, #1A1A1A)', lineHeight: 1.6 }}>&laquo; {q.text} &raquo;</div>
           <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginTop: 8 }}>— {q.author}</div>
         </div>
         <button style={{ ...btnGhostStyle, marginTop: 10, fontSize: 11 }} onClick={() => updateData({ quoteIndex: (data.quoteIndex + 1) % FRENCH_QUOTES.length })}>Autre citation</button>
@@ -1053,15 +1053,15 @@ export default function JourneePage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', marginBottom: 10 }}>
           {ZODIAC_SIGNS.map(z => (
             <button key={z.id} onClick={() => updateData({ horoscopeSign: z.id })} style={{
-              padding: '4px 8px', borderRadius: 8, fontSize: 12, border: data.horoscopeSign === z.id ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
-              background: data.horoscopeSign === z.id ? 'rgba(91,108,247,0.1)' : 'var(--fz-bg-hover, #F1F5F9)', cursor: 'pointer', color: 'var(--fz-text, #1E293B)',
+              padding: '4px 8px', borderRadius: 8, fontSize: 12, border: data.horoscopeSign === z.id ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E5E5E5)',
+              background: data.horoscopeSign === z.id ? 'rgba(0,0,0,0.04)' : 'var(--fz-bg-hover, #F0F0F0)', cursor: 'pointer', color: 'var(--fz-text, #1A1A1A)',
             }}>{z.emoji} {z.label}</button>
           ))}
         </div>
-        {sign && <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+        {sign && <div style={{ background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
           <div style={{ fontSize: 28 }}>{sign.emoji}</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{sign.label}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{sign.dates}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{sign.label}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{sign.dates}</div>
           <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginTop: 8, lineHeight: 1.5 }}>{ZODIAC_MESSAGES[signIdx >= 0 ? signIdx : 0]}</div>
         </div>}
       </W>
@@ -1076,16 +1076,16 @@ export default function JourneePage() {
         <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
           {NEWS_TABS.map(t => (
             <button key={t.id} onClick={() => updateData({ newsTab: t.id })} style={{
-              ...btnGhostStyle, background: data.newsTab === t.id ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', color: data.newsTab === t.id ? '#fff' : 'var(--fz-text, #1E293B)', fontSize: 11, flex: 1,
+              ...btnGhostStyle, background: data.newsTab === t.id ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: data.newsTab === t.id ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11, flex: 1,
             }}>{t.label}</button>
           ))}
         </div>
         {tab.items.map((item, i) => (
-          <div key={i} style={{ padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)', fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>
+          <div key={i} style={{ padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)', fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>
             📰 {item}
           </div>
         ))}
-        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 6, fontStyle: 'italic' }}>Actualités simulées</div>
+        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 6, fontStyle: 'italic' }}>Actualités simulées</div>
       </W>
     );
   }
@@ -1101,15 +1101,15 @@ export default function JourneePage() {
           <input type="date" style={{ ...inputStyle, width: 130 }} value={newBdayDate} onChange={e => setNewBdayDate(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newBdayName.trim() && newBdayDate) { updateData({ birthdays: [...data.birthdays, { id: uid(), name: newBdayName.trim(), date: newBdayDate }] }); setNewBdayName(''); setNewBdayDate(''); } }}>+</button>
         </div>
-        {todayBdays.length > 0 && <div style={{ background: 'rgba(234,179,8,0.1)', borderRadius: 8, padding: 10, marginBottom: 8 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#eab308' }}>🎂 Aujourd'hui !</div>
-          {todayBdays.map(b => <div key={b.id} style={{ fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>{b.name}</div>)}
+        {todayBdays.length > 0 && <div style={{ background: 'rgba(0,0,0,0.04)', borderRadius: 8, padding: 10, marginBottom: 8 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>🎂 Aujourd'hui !</div>
+          {todayBdays.map(b => <div key={b.id} style={{ fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{b.name}</div>)}
         </div>}
         {data.birthdays.map(b => (
           <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 13 }}>
-            <span style={{ color: 'var(--fz-text, #1E293B)' }}>{b.name}</span>
-            <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{b.date}</span>
-            <button onClick={() => updateData({ birthdays: data.birthdays.filter(x => x.id !== b.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, marginLeft: 'auto' }}>✕</button>
+            <span style={{ color: 'var(--fz-text, #1A1A1A)' }}>{b.name}</span>
+            <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{b.date}</span>
+            <button onClick={() => updateData({ birthdays: data.birthdays.filter(x => x.id !== b.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13, marginLeft: 'auto' }}>✕</button>
           </div>
         ))}
       </W>
@@ -1125,10 +1125,10 @@ export default function JourneePage() {
       <W id="ephemeride">
         <div style={{ marginBottom: 8 }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}>📖 Ce jour dans l'histoire</div>
-          {events.map((ev, i) => <div key={i} style={{ fontSize: 13, color: 'var(--fz-text, #1E293B)', padding: '3px 0' }}>{'•'} {ev}</div>)}
+          {events.map((ev, i) => <div key={i} style={{ fontSize: 13, color: 'var(--fz-text, #1A1A1A)', padding: '3px 0' }}>{'\u2022'} {ev}</div>)}
         </div>
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', borderTop: '1px solid var(--fz-border, #E2E8F0)', paddingTop: 8 }}>
-          Saint du jour : <strong style={{ color: 'var(--fz-text, #1E293B)' }}>{saint}</strong>
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', borderTop: '1px solid var(--fz-border, #E5E5E5)', paddingTop: 8 }}>
+          Saint du jour : <strong style={{ color: 'var(--fz-text, #1A1A1A)' }}>{saint}</strong>
         </div>
       </W>
     );
@@ -1137,12 +1137,12 @@ export default function JourneePage() {
   // ── W26: Crédits ──
   function renderCredits() {
     const credits = walletBalance != null ? walletBalance / 1000000 : null;
-    const col = credits == null ? 'var(--fz-text-muted, #94A3B8)' : credits > 50 ? '#22c55e' : credits > 10 ? '#f97316' : '#dc2626';
+    const col = credits == null ? 'var(--fz-text-muted, #9B9B9B)' : credits > 50 ? '#1A1A1A' : credits > 10 ? '#6B6B6B' : '#1A1A1A';
     return (
       <W id="credits">
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 32, fontWeight: 600, color: col }}>{credits != null ? `${credits.toFixed(1)}` : '...'}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>crédits restants</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>crédits restants</div>
         </div>
       </W>
     );
@@ -1155,7 +1155,7 @@ export default function JourneePage() {
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 28 }}>🤖</div>
           <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--accent)' }}>28</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>agents disponibles</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>agents disponibles</div>
         </div>
       </W>
     );
@@ -1167,8 +1167,8 @@ export default function JourneePage() {
       <W id="messagesNonLus">
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 28 }}>{notifCount > 0 ? '🔔' : '✅'}</div>
-          <div style={{ fontSize: 20, fontWeight: 600, color: notifCount > 0 ? '#f97316' : '#22c55e' }}>{notifCount}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{notifCount > 0 ? 'messages non lus' : 'Aucun message non lu'}</div>
+          <div style={{ fontSize: 20, fontWeight: 600, color: notifCount > 0 ? '#1A1A1A' : '#6B6B6B' }}>{notifCount}</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{notifCount > 0 ? 'messages non lus' : 'Aucun message non lu'}</div>
         </div>
       </W>
     );
@@ -1181,7 +1181,7 @@ export default function JourneePage() {
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 28 }}>📁</div>
           <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--accent)' }}>{projectCount}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>projets actifs</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>projets actifs</div>
         </div>
       </W>
     );
@@ -1191,17 +1191,17 @@ export default function JourneePage() {
   function renderKpis() {
     return (
       <W id="kpis">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 8 }}>
           {[
             { label: 'Messages', value: '0', emoji: '💬' },
             { label: 'Documents', value: '0', emoji: '📄' },
             { label: 'Connexion', value: `${Math.floor((Date.now() - (data.focusStartedAt || Date.now())) / 60000)} min`, emoji: '⏱️' },
             { label: 'Crédits', value: walletBalance != null ? `${(walletBalance / 1000000).toFixed(1)}` : '...', emoji: '💳' },
           ].map((kpi, i) => (
-            <div key={i} style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
+            <div key={i} style={{ background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
               <div style={{ fontSize: 16 }}>{kpi.emoji}</div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{kpi.value}</div>
-              <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{kpi.label}</div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{kpi.value}</div>
+              <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)' }}>{kpi.label}</div>
             </div>
           ))}
         </div>
@@ -1222,13 +1222,13 @@ export default function JourneePage() {
   // ── W32: Budget ──
   function renderBudget() {
     const pct = data.budgetLimit > 0 ? Math.min(100, (data.budgetSpent / data.budgetLimit) * 100) : 0;
-    const col = pct < 50 ? '#22c55e' : pct < 80 ? '#f97316' : '#dc2626';
+    const col = pct < 50 ? '#1A1A1A' : pct < 80 ? '#6B6B6B' : '#1A1A1A';
     return (
       <W id="budget">
         <div style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>Limite :</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', flexShrink: 0 }}>Limite :</div>
           <input type="number" style={{ ...inputStyle, width: 80 }} value={data.budgetLimit} onChange={e => updateData({ budgetLimit: parseFloat(e.target.value) || 0 })} />
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>Dépensé :</div>
+          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', flexShrink: 0 }}>Dépensé :</div>
           <input type="number" style={{ ...inputStyle, width: 80 }} value={data.budgetSpent} onChange={e => updateData({ budgetSpent: parseFloat(e.target.value) || 0 })} />
         </div>
         <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: col, width: `${pct}%`, transition: 'width 0.3s' }} /></div>
@@ -1250,7 +1250,7 @@ export default function JourneePage() {
         {meals.map(m => (
           <div key={m.key} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ fontSize: 16 }}>{m.emoji}</span>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', width: 90, flexShrink: 0 }}>{m.label}</div>
+            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', width: 90, flexShrink: 0 }}>{m.label}</div>
             <input style={{ ...inputStyle, flex: 1, fontSize: 12 }} placeholder="..." value={data[m.key]}
               onChange={e => updateData({ [m.key]: e.target.value } as Partial<JourneeData>)} />
           </div>
@@ -1266,7 +1266,7 @@ export default function JourneePage() {
         <input style={{ ...inputStyle, marginBottom: 8 }} placeholder="Titre du livre ou article..." value={data.currentBook}
           onChange={e => updateData({ currentBook: e.target.value })} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>Progression</span>
+          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>Progression</span>
           <input type="range" min={0} max={100} value={data.bookProgress} onChange={e => updateData({ bookProgress: parseInt(e.target.value) })}
             style={{ flex: 1, accentColor: 'var(--accent)' }} />
           <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>{data.bookProgress}%</span>
@@ -1281,17 +1281,17 @@ export default function JourneePage() {
     return (
       <W id="habitudes">
         {data.habits.map(h => (
-          <div key={h.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div key={h.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
             <span style={{ fontSize: 14 }}>{h.emoji}</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>{h.label}</span>
-            {h.streak > 0 && <span style={{ fontSize: 11, color: '#f97316', fontWeight: 600 }}>🔥{h.streak}j</span>}
+            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{h.label}</span>
+            {h.streak > 0 && <span style={{ fontSize: 11, color: '#6B6B6B', fontWeight: 600 }}>🔥{h.streak}j</span>}
             <button onClick={() => {
               const next = data.habits.map(x => x.id === h.id ? { ...x, doneToday: !x.doneToday, streak: !x.doneToday ? x.streak + 1 : Math.max(0, x.streak - 1) } : x);
               updateData({ habits: next });
-            }} style={{ height: 36, padding: '0 12px', borderRadius: 8, fontSize: 12, border: 'none', cursor: 'pointer', background: h.doneToday ? '#22c55e' : 'var(--fz-bg-hover, #F1F5F9)', color: h.doneToday ? '#fff' : 'var(--fz-text, #1E293B)', fontWeight: 600 }}>
+            }} style={{ height: 36, padding: '0 12px', borderRadius: 8, fontSize: 12, border: 'none', cursor: 'pointer', background: h.doneToday ? '#1A1A1A' : 'var(--fz-bg-hover, #F0F0F0)', color: h.doneToday ? '#fff' : 'var(--fz-text, #1A1A1A)', fontWeight: 600 }}>
               {h.doneToday ? '✅' : 'Fait'}
             </button>
-            <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 12 }}>✕</button>
+            <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 12 }}>✕</button>
           </div>
         ))}
         <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
@@ -1312,11 +1312,11 @@ export default function JourneePage() {
           <button style={btnSmStyle} onClick={() => { if (newContactName.trim()) { updateData({ contacts: [...data.contacts, { id: uid(), name: newContactName.trim(), phone: newContactPhone, emoji: 'person' }] }); setNewContactName(''); setNewContactPhone(''); } }}>+</button>
         </div>
         {data.contacts.map(c => (
-          <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
             <span style={{ fontSize: 14 }}>{c.emoji === 'person' ? '👤' : c.emoji}</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>{c.name}</span>
-            <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{c.phone}</span>
-            <button onClick={() => updateData({ contacts: data.contacts.filter(x => x.id !== c.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>
+            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{c.name}</span>
+            <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{c.phone}</span>
+            <button onClick={() => updateData({ contacts: data.contacts.filter(x => x.id !== c.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
           </div>
         ))}
       </W>
@@ -1330,7 +1330,7 @@ export default function JourneePage() {
         <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
           {Object.entries(PLAYLIST_PRESETS).map(([key, _]) => (
             <button key={key} onClick={() => updateData({ playlistPreset: key, playlistNote: PLAYLIST_PRESETS[key] })}
-              style={{ ...btnGhostStyle, background: data.playlistPreset === key ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', color: data.playlistPreset === key ? '#fff' : 'var(--fz-text, #1E293B)', fontSize: 11, textTransform: 'capitalize' }}>
+              style={{ ...btnGhostStyle, background: data.playlistPreset === key ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: data.playlistPreset === key ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11, textTransform: 'capitalize' }}>
               {key}
             </button>
           ))}
@@ -1348,7 +1348,7 @@ export default function JourneePage() {
       <W id="journal">
         <textarea style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }} placeholder="Écrivez librement... Cet espace est privé."
           value={data.journal} onChange={e => updateData({ journal: e.target.value.slice(0, 10000) })} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
           <span>{words} mot{words > 1 ? 's' : ''}</span>
           <span>{data.journal.length}/10000</span>
         </div>
@@ -1364,31 +1364,31 @@ export default function JourneePage() {
     if (!showConfig) return null;
     const filtered = configFilter === 'all' ? WIDGETS : WIDGETS.filter(w => w.category === configFilter);
     return (
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', border: 'none', borderRadius: 8, boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', padding: 16, marginBottom: 20 }}>
+      <div style={{ background: 'var(--fz-bg, #fff)', borderRadius: 8, border: '1px solid var(--border-primary, #E5E5E5)', padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Configurer mes widgets</span>
-          <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)' }}>✕</button>
+          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>Configurer mes widgets</span>
+          <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)' }}>✕</button>
         </div>
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 12 }}>
-          <button onClick={() => setConfigFilter('all')} style={{ ...btnGhostStyle, background: configFilter === 'all' ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', color: configFilter === 'all' ? '#fff' : 'var(--fz-text, #1E293B)', fontSize: 11 }}>Tous</button>
+          <button onClick={() => setConfigFilter('all')} style={{ ...btnGhostStyle, background: configFilter === 'all' ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: configFilter === 'all' ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11 }}>Tous</button>
           {CATEGORIES.map(c => (
-            <button key={c.id} onClick={() => setConfigFilter(c.id)} style={{ ...btnGhostStyle, background: configFilter === c.id ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', color: configFilter === c.id ? '#fff' : 'var(--fz-text, #1E293B)', fontSize: 11 }}>
+            <button key={c.id} onClick={() => setConfigFilter(c.id)} style={{ ...btnGhostStyle, background: configFilter === c.id ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: configFilter === c.id ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11 }}>
               {c.emoji} {c.label}
             </button>
           ))}
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 8, marginBottom: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 8, marginBottom: 12 }}>
           {filtered.map(w => (
             <button key={w.id} onClick={() => toggleVisibility(w.id)} style={{
               display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 8,
-              border: isVisible(w.id) ? '1px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
-              background: isVisible(w.id) ? 'rgba(91,108,247,0.08)' : 'var(--fz-bg-secondary, #F8FAFC)',
+              border: isVisible(w.id) ? '1px solid var(--accent)' : '1px solid var(--fz-border, #E5E5E5)',
+              background: isVisible(w.id) ? 'rgba(0,0,0,0.03)' : 'var(--fz-bg-secondary, #F7F7F7)',
               cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
             }}>
               <span style={{ fontSize: 14 }}>{w.emoji}</span>
-              <span style={{ fontSize: 12, color: 'var(--fz-text, #1E293B)', flex: 1 }}>{w.label}</span>
-              <div style={{ width: 32, height: 18, borderRadius: 9, background: isVisible(w.id) ? 'var(--accent)' : 'var(--fz-bg-hover, #F1F5F9)', position: 'relative', transition: 'background 0.2s' }}>
-                <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: isVisible(w.id) ? 16 : 2, transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+              <span style={{ fontSize: 12, color: 'var(--fz-text, #1A1A1A)', flex: 1 }}>{w.label}</span>
+              <div style={{ width: 32, height: 18, borderRadius: 9, background: isVisible(w.id) ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', position: 'relative', transition: 'background 0.2s' }}>
+                <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: isVisible(w.id) ? 16 : 2, transition: 'left 0.2s',  }} />
               </div>
             </button>
           ))}
@@ -1438,13 +1438,13 @@ export default function JourneePage() {
       <PageExplanation pageId="journee" text={PAGE_META.journee?.helpText} />
       {/* Clock & Greeting */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text-muted, #94A3B8)', letterSpacing: '-0.03em', fontFamily: 'monospace' }}>
+        <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text-muted, #9B9B9B)', letterSpacing: '-0.03em', fontFamily: 'monospace' }}>
           {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
         </div>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)', margin: '8px 0 4px', letterSpacing: '-0.02em' }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', margin: '8px 0 4px', letterSpacing: '-0.02em' }}>
           {getGreeting()}{session.displayName ? `, ${session.displayName}` : ''} !
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', textTransform: 'capitalize', margin: '0 0 4px' }}><span className="fz-logo-word">{formatFrenchDate()}</span></p>
+        <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #6B6B6B)', textTransform: 'capitalize', margin: '0 0 4px' }}><span className="fz-logo-word">{formatFrenchDate()}</span></p>
         <p style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500 }}>Votre journée <span className="fz-logo-word">intelligente</span> en un coup d&apos;œil</p>
       </div>
 
@@ -1459,9 +1459,9 @@ export default function JourneePage() {
             onClick={() => setActiveTab(tab.id as 'briefing' | 'widgets')}
             style={{
               padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600,
-              border: activeTab === tab.id ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
-              background: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: activeTab === tab.id ? '#fff' : 'var(--fz-text-secondary, #64748B)',
+              border: activeTab === tab.id ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E5E5E5)',
+              background: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
+              color: activeTab === tab.id ? '#fff' : 'var(--fz-text-secondary, #6B6B6B)',
               cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
@@ -1478,7 +1478,7 @@ export default function JourneePage() {
       {activeTab === 'widgets' && <>
         {/* Config button */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-          <button onClick={() => setShowConfig(!showConfig)} style={{ ...btnSmStyle, background: showConfig ? '#dc2626' : 'var(--accent)', fontSize: 13, padding: '8px 20px' }}>
+          <button onClick={() => setShowConfig(!showConfig)} style={{ ...btnSmStyle, background: showConfig ? '#1A1A1A' : '#1A1A1A', fontSize: 13, padding: '8px 20px' }}>
             {showConfig ? <>✕ Fermer</> : <>⚙️ Configurer mes widgets ({visibleCount}/{WIDGETS.length})</>}
           </button>
         </div>
@@ -1493,10 +1493,10 @@ export default function JourneePage() {
             <div key={cat.id} style={{ marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 16 }}>{cat.emoji}</span>
-                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{cat.label}</span>
-                <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{catWidgets.length} widget{catWidgets.length > 1 ? 's' : ''}</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{cat.label}</span>
+                <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{catWidgets.length} widget{catWidgets.length > 1 ? 's' : ''}</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(340px, 100%), 1fr))', gap: 12 }}>
                 {catWidgets.map(w => {
                   const renderer = widgetRenderers[w.id];
                   return renderer ? <div key={w.id}>{renderer()}</div> : null;
@@ -1507,7 +1507,7 @@ export default function JourneePage() {
         })}
 
         {visibleCount === 0 && (
-          <div style={{ textAlign: 'center', padding: 60, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <div style={{ textAlign: 'center', padding: 60, color: 'var(--fz-text-muted, #9B9B9B)' }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>💬</div>
             <div style={{ fontSize: 15 }}>Aucun widget actif. Cliquez sur &quot;Configurer&quot; pour en activer.</div>
           </div>

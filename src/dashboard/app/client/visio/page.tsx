@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ALL_AGENTS } from '../../../lib/agent-config';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useAuthGuard } from '../../../lib/useAuthGuard';
 
 const VISIO_AGENTS = ALL_AGENTS.map(a => ({
   id: a.id,
@@ -40,6 +42,8 @@ function formatDuration(sec: number): string {
 const meta = PAGE_META.visio;
 
 export default function VisioPage() {
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
+  const router = useRouter();
   const [callHistory, setCallHistory] = useState<CallRecord[]>([]);
   const [activeSection, setActiveSection] = useState<'agents' | 'history'>('agents');
 
@@ -71,8 +75,8 @@ export default function VisioPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 28 }}>{meta.emoji}</span>
           <div>
-            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{meta.title}</h1>
-            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+            <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>{meta.title}</h1>
+            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
               Parlez face-à-face avec vos assistants IA en <span className="fz-logo-word">temps réel</span>. Micro + synthèse vocale pour une expérience naturelle.
             </p>
           </div>
@@ -80,8 +84,8 @@ export default function VisioPage() {
         </div>
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
-          padding: '6px 12px', borderRadius: 8, background: '#fef3c720', border: '1px solid #fcd34d40',
-          fontSize: 11, color: '#b45309',
+          padding: '6px 12px', borderRadius: 8, background: '#F0F0F0', border: '1px solid #E5E5E5',
+          fontSize: 11, color: '#6B6B6B',
         }}>
           ⚡ Consomme ~3x plus de crédits qu&apos;un chat texte (<span className="fz-logo-word">STT + LLM + TTS</span>)
         </div>
@@ -93,14 +97,14 @@ export default function VisioPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
           {[
             { label: 'Appels au total', value: String(totalCalls), icon: '📞', color: 'var(--accent)' },
-            { label: 'Ce mois', value: String(thisMonth.length), icon: '📅', color: '#3b82f6' },
-            { label: 'Durée ce mois', value: formatDuration(totalDurationMonth), icon: '⏱️', color: '#f59e0b' },
-            { label: 'Assistant favori', value: topAgent?.name ?? '—', icon: '🤖', color: '#22c55e' },
+            { label: 'Ce mois', value: String(thisMonth.length), icon: '📅', color: '#1A1A1A' },
+            { label: 'Durée ce mois', value: formatDuration(totalDurationMonth), icon: '⏱️', color: '#1A1A1A' },
+            { label: 'Assistant favori', value: topAgent?.name ?? '—', icon: '🤖', color: '#1A1A1A' },
           ].map(s => (
-            <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
+            <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}>
               <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -114,9 +118,10 @@ export default function VisioPage() {
             onClick={() => setActiveSection(t as 'agents' | 'history')}
             style={{
               padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              border: activeSection === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
-              background: activeSection === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: activeSection === t ? '#fff' : 'var(--fz-text, #1E293B)',
+              minHeight: 44,
+              border: activeSection === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E5E5E5)',
+              background: activeSection === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
+              color: activeSection === t ? '#fff' : 'var(--fz-text, #1A1A1A)',
             }}
           >
             {icon} {l}
@@ -126,52 +131,53 @@ export default function VisioPage() {
 
       {/* Agents grid */}
       {activeSection === 'agents' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(220px, 100%), 1fr))', gap: 16 }}>
           {VISIO_AGENTS.map(agent => (
-            <Link
+            <div
               key={agent.id}
-              href={`/client/visio/${agent.id}`}
-              style={{ textDecoration: 'none', color: 'inherit' }}
+              onClick={() => {
+                if (!requireAuth('Connectez-vous pour demarrer un appel')) return;
+                router.push(`/client/visio/${agent.id}`);
+              }}
+              style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
             >
               <div
-                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}
+                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s', borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = agent.color;
-                  e.currentTarget.style.boxShadow = `0 4px 12px ${agent.color}20`;
+                  e.currentTarget.style.borderColor = '#1A1A1A';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)';
-                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'var(--fz-border, #E5E5E5)';
                   e.currentTarget.style.transform = 'none';
                 }}
               >
                 <div style={{
                   width: 64, height: 64, borderRadius: '50%', margin: '0 auto 12px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: `${agent.color}15`, border: `2px solid ${agent.color}40`,
+                  background: '#F0F0F0', border: '2px solid #E5E5E5',
                   fontSize: 28,
                 }}>
                   🤖
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{agent.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{agent.role}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{agent.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 2 }}>{agent.role}</div>
                   {agentFreq[agent.id] && (
-                    <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+                    <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
                       {agentFreq[agent.id]} appel{agentFreq[agent.id] > 1 ? 's' : ''}
                     </div>
                   )}
                   <div style={{
-                    marginTop: 10, fontSize: 11, fontWeight: 600, color: agent.color,
-                    height: 36, padding: '0 12px', borderRadius: 6, background: `${agent.color}10`,
+                    marginTop: 10, fontSize: 11, fontWeight: 600, color: '#1A1A1A',
+                    height: 36, padding: '0 12px', borderRadius: 6, background: 'rgba(0,0,0,0.03)',
                     display: 'inline-block',
                   }}>
                     Appeler 📞
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
@@ -179,10 +185,10 @@ export default function VisioPage() {
       {/* Call history */}
       {activeSection === 'history' && (
         callHistory.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
+          <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}>
             <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel pour le moment</div>
-            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1A1A1A)' }}>Aucun appel pour le moment</div>
+            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)' }}>
               Vos appels avec les assistants apparaîtront ici après chaque conversation visio
             </div>
           </div>
@@ -190,20 +196,20 @@ export default function VisioPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {callHistory.map((call, i) => {
               const agent = VISIO_AGENTS.find(a => a.id === call.agentId);
-              const statusColor = call.status === 'completed' ? '#22c55e' : call.status === 'missed' ? '#f59e0b' : '#ef4444';
+              const statusColor = call.status === 'completed' ? '#1A1A1A' : call.status === 'missed' ? '#9B9B9B' : '#1A1A1A';
               const statusLabel = call.status === 'completed' ? 'Terminé' : call.status === 'missed' ? 'Manqué' : 'Erreur';
               return (
-                <div key={i} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={i} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}>
                   <div style={{
                     width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: (agent?.color ?? 'var(--fz-accent, #0EA5E9)') + '15', fontSize: 18,
+                    background: '#F0F0F0', fontSize: 18,
                   }}>
                     🤖
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>{call.agentName}</div>
-                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1A1A1A)' }}>{call.agentName}</div>
+                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 2 }}>
                       {new Date(call.startedAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       {call.durationSeconds > 0 && ` · ${formatDuration(call.durationSeconds)}`}
                     </div>
@@ -213,7 +219,7 @@ export default function VisioPage() {
                   </span>
                   <Link
                     href={`/client/visio/${call.agentId}`}
-                    style={{ fontSize: 12, fontWeight: 600, padding: '6px 12px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', flexShrink: 0 }}
+                    style={{ fontSize: 12, fontWeight: 600, padding: '6px 12px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', flexShrink: 0, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}
                   >
                     Rappeler
                   </Link>
@@ -225,15 +231,16 @@ export default function VisioPage() {
       )}
 
       {/* Audio diagnostic */}
-      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Problèmes audio ?</div>
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 8 }}>
+      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)' }}>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>Problèmes audio ?</div>
+        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>
           Testez votre micro et vos haut-parleurs pour vérifier que tout fonctionne.
         </div>
         <Link href="/client/visio/diagnostic" style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
           Lancer le diagnostic audio →
         </Link>
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

@@ -65,14 +65,14 @@ export default function CookieConsent() {
           background: '#fff',
           color: 'var(--text-primary)',
           borderRadius: 8,
-          padding: '28px 28px 24px',
-          maxWidth: 440,
+          padding: '24px 20px 20px',
+          maxWidth: 'min(440px, calc(100vw - 32px))',
           width: '100%',
           border: '1px solid #E5E5E5',
         }}>
           {/* Icon + Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 22, color: 'var(--text-primary)' }}>cookie</span>
+            🍪
             <h3 style={{
               margin: 0, fontSize: 16, fontWeight: 700,
               fontFamily: 'var(--font-display)',
@@ -96,12 +96,13 @@ export default function CookieConsent() {
           </p>
 
           {/* Buttons */}
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <button
               onClick={refuse}
               style={{
                 flex: 1,
                 padding: '11px 20px',
+                minHeight: 44,
                 background: '#fff',
                 border: '1px solid #E5E5E5',
                 color: 'var(--text-secondary)',
@@ -119,6 +120,7 @@ export default function CookieConsent() {
               style={{
                 flex: 1,
                 padding: '11px 20px',
+                minHeight: 44,
                 background: 'var(--text-primary)',
                 border: '1px solid var(--text-primary)',
                 color: '#fff',

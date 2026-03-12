@@ -126,7 +126,7 @@ export default function GuardrailsPage() {
         {/* Token Budget */}
         <div className="stat-card">
           <div className="flex items-center gap-8 mb-8">
-            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>savings</span>
+            💰
             <span className="stat-label">Tokens (cette heure)</span>
           </div>
           <span className="stat-value stat-value-sm">{(s.tokenBudget.globalHourlyTokens / 1000).toFixed(0)}K</span>
@@ -140,7 +140,7 @@ export default function GuardrailsPage() {
         {/* Circuit Breakers */}
         <div className="stat-card">
           <div className="flex items-center gap-8 mb-8">
-            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>shield</span>
+            🛡️
             <span className="stat-label">Circuit Breakers</span>
           </div>
           <span className={`stat-value stat-value-sm ${LEVEL_COLORS[s.circuitBreakers.level]}`}>
@@ -155,7 +155,7 @@ export default function GuardrailsPage() {
         {/* Model Distribution */}
         <div className="stat-card">
           <div className="flex items-center gap-8 mb-8">
-            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>smart_toy</span>
+            🤖
             <span className="stat-label">Distribution modèles</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -187,7 +187,7 @@ export default function GuardrailsPage() {
         {/* Chains & Loops */}
         <div className="stat-card">
           <div className="flex items-center gap-8 mb-8">
-            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>link</span>
+            🔗
             <span className="stat-label">Chaînes inter-agents</span>
           </div>
           <span className="stat-value stat-value-sm">{s.activeChains}</span>
@@ -246,19 +246,19 @@ export default function GuardrailsPage() {
         <div className="section-title">Modules de protection</div>
         <div className="grid-auto">
           {[
-            { name: 'Token Budget', icon: 'savings', status: 'active' },
-            { name: 'Circuit Breakers', icon: 'shield', status: 'active' },
-            { name: 'Loop Detector', icon: 'link', status: 'active' },
-            { name: 'Memory Optimizer', icon: 'psychology', status: 'active' },
-            { name: 'Model Router', icon: 'smart_toy', status: 'active' },
-            { name: 'Credit Guard', icon: 'credit_card', status: 'active' },
-            { name: 'Security', icon: 'lock', status: 'active' },
-            { name: 'Fallback Manager', icon: 'refresh', status: 'active' },
-            { name: 'Alert System', icon: 'notifications', status: 'active' },
-            { name: 'Mode Toggle', icon: 'bolt', status: 'active' },
+            { name: 'Token Budget', icon: '💰', status: 'active' },
+            { name: 'Circuit Breakers', icon: '🛡️', status: 'active' },
+            { name: 'Loop Detector', icon: '🔗', status: 'active' },
+            { name: 'Memory Optimizer', icon: '🧠', status: 'active' },
+            { name: 'Model Router', icon: '🤖', status: 'active' },
+            { name: 'Credit Guard', icon: '💳', status: 'active' },
+            { name: 'Security', icon: '🔒', status: 'active' },
+            { name: 'Fallback Manager', icon: '🔄', status: 'active' },
+            { name: 'Alert System', icon: '🔔', status: 'active' },
+            { name: 'Mode Toggle', icon: '⚡', status: 'active' },
           ].map(m => (
             <div key={m.name} className="card card-compact text-center">
-              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{m.icon}</span>
+              {m.icon}
               <div className="text-xs font-semibold" style={{ marginTop: 4 }}>{m.name}</div>
               <div className="text-xs text-success" style={{ marginTop: 2 }}>Actif</div>
             </div>

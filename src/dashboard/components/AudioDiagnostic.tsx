@@ -166,10 +166,10 @@ export default function AudioDiagnostic() {
 
   const statusIcon = (s: DiagStep['status']) => {
     switch (s) {
-      case 'ok': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#1A1A1A' }}>check_circle</span>;
-      case 'error': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#dc2626' }}>close</span>;
-      case 'running': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#9B9B9B' }}>hourglass_empty</span>;
-      default: return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#d1d5db' }}>check_box_outline_blank</span>;
+      case 'ok': return '✅';
+      case 'error': return '✕';
+      case 'running': return '⏳';
+      default: return '⬜';
     }
   };
 

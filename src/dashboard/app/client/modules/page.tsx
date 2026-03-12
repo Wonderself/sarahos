@@ -193,11 +193,11 @@ export default function ModulesPage() {
                 </div>
 
                 {/* Footer */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: 4, flexWrap: 'wrap' as const, gap: 6 }}>
                   <span style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
                     Modifié {timeAgo(mod.updated_at)}
                   </span>
-                  <div style={{ display: 'flex', gap: 6 }}>
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
                     {/* Open */}
                     <Link
                       href={`/client/modules/${mod.slug}`}
@@ -243,7 +243,7 @@ export default function ModulesPage() {
       {/* ── Confirm delete modal ── */}
       {confirmDelete && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, padding: isMobile ? 20 : 32, width: isMobile ? '90vw' : 400, maxWidth: '90vw', border: 'none', boxShadow: 'none' }}>
+          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, padding: isMobile ? 20 : 32, width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, border: 'none', boxShadow: 'none' }}>
             <h3 style={{ fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Supprimer le module ?</h3>
             <p style={{ color: 'var(--fz-text-secondary, #64748B)', marginBottom: 24 }}>
               Le module <strong>{confirmDelete.name}</strong> et tous ses enregistrements ({confirmDelete.record_count}) seront définitivement supprimés.

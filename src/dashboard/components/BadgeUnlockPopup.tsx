@@ -68,12 +68,13 @@ export default function BadgeUnlockPopup() {
           background: '#fff',
           border: '1px solid #E5E5E5',
           borderRadius: 8,
-          padding: '32px 40px',
+          padding: '28px 24px',
           textAlign: 'center',
           transform: visible ? 'scale(1)' : 'scale(0.5)',
           opacity: visible ? 1 : 0,
           transition: 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease',
-          maxWidth: 320,
+          maxWidth: 'min(320px, calc(100vw - 32px))',
+          width: '100%',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -90,9 +91,7 @@ export default function BadgeUnlockPopup() {
             margin: '0 auto 16px',
           }}
         >
-          <span
-            className="material-symbols-rounded"
-            style={{ fontSize: 48, color: 'var(--text-primary)' }}
+          <span style={{ fontSize: 48, color: 'var(--text-primary)' }}
           >
             {currentBadge.icon}
           </span>

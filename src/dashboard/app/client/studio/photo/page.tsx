@@ -16,6 +16,8 @@ import WorkflowStepper from '../../../../components/studio/WorkflowStepper';
 import RoadmapBadge from '../../../../components/studio/RoadmapBadge';
 import AgentRequestQueue from '../../../../components/studio/AgentRequestQueue';
 import StudioPhotoGallery from '../../../../components/studio/StudioPhotoGallery';
+import { useAuthGuard } from '../../../../lib/useAuthGuard';
+import { useVisitorDraft } from '../../../../lib/useVisitorDraft';
 
 function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
@@ -25,14 +27,15 @@ type Mode = 'free' | 'request';
 
 function PhotoStudioContent() {
   const searchParams = useSearchParams();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const defaultWorkflow = searchParams.get('workflow') ?? 'photo-direction';
 
   const [selectedWorkflowId, setSelectedWorkflowId] = useState(defaultWorkflow);
   const workflow = PHOTO_WORKFLOWS.find(w => w.id === selectedWorkflowId) ?? PHOTO_WORKFLOWS[0]!;
 
-  // Workspace state
+  // Workspace state — prompt persisted for visitors via localStorage
   const [currentStep, setCurrentStep] = useState(0);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt, clearPromptDraft] = useVisitorDraft('studio_photo', 'prompt', '');
   const [negativePrompt, setNegativePrompt] = useState('');
   const [style, setStyle] = useState('realistic');
   const [dimensions, setDimensions] = useState('square');
@@ -113,6 +116,7 @@ function PhotoStudioContent() {
 
   const handleGenerate = useCallback(async () => {
     if (!prompt.trim() || !costConfirmed) return;
+    if (!requireAuth('Connectez-vous pour generer une photo')) return;
     setGenerating(true);
     setImageUrl(null);
     setGenerationId(null);
@@ -128,13 +132,14 @@ function PhotoStudioContent() {
       if (data.imageUrl && data.status === 'completed') {
         setImageUrl(data.imageUrl);
         setCurrentStep(4);
+        clearPromptDraft();
         saveGeneration({ imageUrl: data.imageUrl, prompt, style, dimensions, workflow: workflow.label });
       } else if (data.id) {
         setGenerationId(data.id);
       }
     } catch { /* error handled in PhotoPreview */ }
     finally { setGenerating(false); }
-  }, [prompt, negativePrompt, style, dimensions, costConfirmed, buildEnrichedPrompt, workflow.label]);
+  }, [prompt, negativePrompt, style, dimensions, costConfirmed, buildEnrichedPrompt, workflow.label, requireAuth, clearPromptDraft]);
 
   const handleReset = () => {
     setPrompt('');
@@ -341,7 +346,7 @@ function PhotoStudioContent() {
 
                   {advancedOpen && (
                     <div style={{
-                      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10,
+                      display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10,
                       padding: 14, background: 'white', borderRadius: 10,
                       border: '1px solid #e5e7eb',
                     }}>
@@ -487,6 +492,7 @@ function PhotoStudioContent() {
           onReusePrompt={(p, s) => { setPrompt(p); setStyle(s); setCurrentStep(1); }}
         />
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

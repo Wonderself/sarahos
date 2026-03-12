@@ -39,13 +39,13 @@ interface Note {
 }
 
 const DEFAULT_FOLDERS = [
-  { id: 'marketing', name: 'Marketing', icon: 'campaign', color: 'blue' },
-  { id: 'finance', name: 'Finance', icon: 'savings', color: 'green' },
-  { id: 'tech', name: 'Tech', icon: 'terminal', color: 'purple' },
-  { id: 'commercial', name: 'Commercial', icon: 'handshake', color: 'yellow' },
-  { id: 'rh', name: 'RH', icon: 'group', color: 'pink' },
-  { id: 'juridique', name: 'Juridique', icon: 'balance', color: 'red' },
-  { id: 'operations', name: 'Opérations', icon: 'settings', color: 'orange' },
+  { id: 'marketing', name: 'Marketing', icon: '📢', color: 'blue' },
+  { id: 'finance', name: 'Finance', icon: '💰', color: 'green' },
+  { id: 'tech', name: 'Tech', icon: '💻', color: 'purple' },
+  { id: 'commercial', name: 'Commercial', icon: '🤝', color: 'yellow' },
+  { id: 'rh', name: 'RH', icon: '👥', color: 'pink' },
+  { id: 'juridique', name: 'Juridique', icon: '⚖️', color: 'red' },
+  { id: 'operations', name: 'Opérations', icon: '⚙️', color: 'orange' },
   { id: 'divers', name: 'Divers', icon: 'inventory_2', color: 'gray' },
 ];
 
@@ -207,11 +207,11 @@ export default function MyStrategyPage() {
             if (folderActions.length === 0) return null;
             return (
               <div key={folder.id} className="bg-[#F7F7F7] rounded-xl p-4 border border-[rgba(0,0,0,0.08)]">
-                <h3 className="text-white font-medium mb-2"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{folder.icon}</span> {folder.name} ({folderActions.filter(a => !a.done).length}/{folderActions.length})</h3>
+                <h3 className="text-white font-medium mb-2">{folder.icon} {folder.name} ({folderActions.filter(a => !a.done).length}/{folderActions.length})</h3>
                 {folderActions.map(a => (
                   <div key={a.id} className="flex items-center gap-2 py-1">
                     <button onClick={() => toggleAction(a.id)} className={`w-5 h-5 rounded border ${a.done ? 'bg-[#1A1A1A] border-[#1A1A1A]' : 'border-[rgba(0,0,0,0.08)]'} flex items-center justify-center text-xs text-white`}>
-                      {a.done ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
+                      {a.done ? '✅' : ''}
                     </button>
                     <span className={`text-sm ${a.done ? 'text-gray-500 line-through' : 'text-gray-300'}`}>{a.title}</span>
                     <button onClick={() => { const upd = actions.filter(x => x.id !== a.id); setActions(upd); save(undefined, upd); }} className="ml-auto text-red-500 text-xs hover:text-red-400">×</button>

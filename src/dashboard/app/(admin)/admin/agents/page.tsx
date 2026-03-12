@@ -75,7 +75,7 @@ export default function AdminAgentsPage() {
                 background: agent.color + '22', border: `1px solid ${agent.color}44`,
                 fontSize: 22,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 22, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+                {agent.materialIcon}
               </div>
 
               {/* Name input */}

@@ -66,7 +66,7 @@ export default function VisioControls({
         }}
         title={isMuted ? 'Activer le micro' : 'Couper le micro'}
       >
-        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{isMuted ? 'volume_off' : 'mic'}</span>
+        <span style={{ fontSize: 18 }}>{isMuted ? '\uD83D\uDD07' : '\uD83C\uDF99\uFE0F'}</span>
       </button>
 
       {/* Mode toggle */}
@@ -80,7 +80,7 @@ export default function VisioControls({
         }}
         title={isTextMode ? 'Mode voix' : 'Mode texte'}
       >
-        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{isTextMode ? 'keyboard' : 'forum'}</span>
+        <span style={{ fontSize: 18 }}>{isTextMode ? '\u2328\uFE0F' : '\uD83D\uDCAC'}</span>
       </button>
 
       {/* Hangup */}
@@ -94,7 +94,7 @@ export default function VisioControls({
         }}
         title="Raccrocher"
       >
-        <span className="material-symbols-rounded" style={{ fontSize: 18 }}>call</span>
+        📞
       </button>
     </div>
   );

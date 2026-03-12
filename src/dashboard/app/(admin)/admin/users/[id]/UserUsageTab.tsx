@@ -61,7 +61,7 @@ export default function UserUsageTab({ data, loading }: {
       {/* By Model Breakdown */}
       {modelEntries.length > 0 && (
         <div style={styles.card}>
-          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>bar_chart</span> Ventilation par modele</div>
+          <div style={styles.cardTitle}>📊 Ventilation par modele</div>
           <div style={{ overflowX: 'auto' }}>
             <table style={styles.table}>
               <thead>

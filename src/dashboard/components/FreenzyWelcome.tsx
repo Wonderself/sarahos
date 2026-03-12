@@ -12,10 +12,10 @@ interface FreenzyWelcomeProps {
 const dgAgent = DEFAULT_AGENTS.find(a => a.id === 'fz-dg') ?? { name: 'Freenzy', materialIcon: 'verified' };
 
 const QUICK_ACTIONS: Array<{ icon: string; label: string; desc: string; href: string }> = [
-  { icon: 'chat', label: `Discuter avec ${dgAgent.name}`, desc: `${DEFAULT_AGENTS.length} assistants prets`, href: '/client/chat' },
-  { icon: 'groups', label: 'Reunion strategique', desc: 'Reunissez vos assistants', href: '/client/meeting' },
-  { icon: 'tune', label: 'Agent Studio', desc: 'Personnalisez vos assistants', href: '/client/agents/customize' },
-  { icon: 'wb_sunny', label: 'Briefing du jour', desc: 'Taches et insights', href: '/client/briefing' },
+  { icon: '\uD83D\uDCAC', label: `Discuter avec ${dgAgent.name}`, desc: `${DEFAULT_AGENTS.length} assistants prets`, href: '/client/chat' },
+  { icon: '\uD83D\uDC65', label: 'Reunion strategique', desc: 'Reunissez vos assistants', href: '/client/meeting' },
+  { icon: '\uD83C\uDF9B\uFE0F', label: 'Agent Studio', desc: 'Personnalisez vos assistants', href: '/client/agents/customize' },
+  { icon: '\u2600\uFE0F', label: 'Briefing du jour', desc: 'Taches et insights', href: '/client/briefing' },
 ];
 
 export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWelcomeProps) {
@@ -36,8 +36,11 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
       <div className="welcome-card" onClick={e => e.stopPropagation()}>
         {/* Logo + Greeting — compact */}
         <div style={{ textAlign: 'center', marginBottom: 12 }}>
-          <div className="fz-logo-text" style={{ fontSize: 18, margin: '0 auto 6px', color: 'var(--accent)' }}>
-            freenzy.io
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 5 }}>
+            <div className="fz-logo-text" style={{ fontSize: 18, color: 'var(--accent)' }}>
+              freenzy.io
+            </div>
+            <span style={{ fontSize: 8, fontStyle: 'italic', color: 'var(--text-secondary)', opacity: 0.5 }}>Beta Test 1</span>
           </div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 2 }}>
             {greeting}, {userName || 'cher client'} !
@@ -55,7 +58,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
               background: '#F7F7F7', border: '1px solid #E5E5E5',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 13, color: 'var(--text-primary)' }}>{a.materialIcon}</span>
+              <span style={{ fontSize: 13, color: 'var(--text-primary)' }}>{a.materialIcon}</span>
             </div>
           ))}
           {agentDetails.length > 10 && (
@@ -94,7 +97,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
         <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
           Que souhaitez-vous faire ?
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(140px, 100%), 1fr))', gap: 5, marginBottom: 10 }}>
           {QUICK_ACTIONS.map(action => (
             <Link
               key={action.label}
@@ -107,7 +110,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
                 transition: 'border-color 0.15s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--text-primary)', flexShrink: 0 }}>{action.icon}</span>
+              <span style={{ fontSize: 18, color: 'var(--text-primary)', flexShrink: 0 }}>{action.icon}</span>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{action.label}</div>
                 <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>{action.desc}</div>

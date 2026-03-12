@@ -362,7 +362,7 @@ export default function AdminChatPage() {
                 }}
                 title={agent.description}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)', flexShrink: 0 }}>{agent.materialIcon}</span>
+                {agent.materialIcon}
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
               </button>
             ))}
@@ -387,7 +387,7 @@ export default function AdminChatPage() {
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: 12, color: '#1A1A1A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{conv.agentMaterialIcon}</span> {conv.title}
+                  {conv.agentMaterialIcon} {conv.title}
                 </span>
                 <button
                   onClick={e => { e.stopPropagation(); deleteConversation(conv.id); }}
@@ -457,10 +457,10 @@ export default function AdminChatPage() {
                 onClick={() => setChatSidebarOpen(true)}
                 style={{ background: 'none', border: 'none', color: '#9B9B9B', cursor: 'pointer', padding: 4, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>menu</span>
+                ☰
               </button>
             )}
-            <span className="material-symbols-rounded" style={{ fontSize: 20, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span>
+            {selectedAgent.materialIcon}
             <div>
               <h2 style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', margin: 0 }}>{selectedAgent.name}</h2>
               <p style={{ fontSize: 10, color: '#9B9B9B', margin: 0 }}>{selectedAgent.role} &middot; {selectedAgent.model}</p>
@@ -490,7 +490,7 @@ export default function AdminChatPage() {
         <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px 8px' : '16px 16px' }}>
           {messages.length === 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: isMobile ? 16 : 0 }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 48, color: selectedAgent.color || 'var(--accent)', marginBottom: 16 }}>{selectedAgent.materialIcon}</span>
+              {selectedAgent.materialIcon}
               <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1A1A1A', marginBottom: 4 }}>
                 Chat avec {selectedAgent.name}
               </h3>
@@ -523,7 +523,7 @@ export default function AdminChatPage() {
               >
                 {msg.role === 'assistant' && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 14, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span>
+                    {selectedAgent.materialIcon}
                     <span style={{ fontSize: 10, fontWeight: 500, color: '#9B9B9B' }}>{selectedAgent.name}</span>
                   </div>
                 )}
@@ -565,7 +565,7 @@ export default function AdminChatPage() {
           {streaming && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ fontSize: 12, color: '#1A1A1A' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span> {selectedAgent.name} repond...
+                {selectedAgent.materialIcon} {selectedAgent.name} repond...
               </span>
               <button
                 onClick={stopStreaming}
@@ -605,7 +605,7 @@ export default function AdminChatPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
             <span style={{ fontSize: 10, color: '#9B9B9B' }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 12, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span> {selectedAgent.name} &middot; {selectedAgent.model}
+              {selectedAgent.materialIcon} {selectedAgent.name} &middot; {selectedAgent.model}
             </span>
             <span style={{ fontSize: 10, color: '#9B9B9B' }}>
               {messages.filter(m => m.role === 'user').length} messages envoyes

@@ -271,7 +271,7 @@ export default function PersonalAgentsPage() {
         <button
           onClick={() => setActiveTab('equipe')}
           style={{
-            flex: 1, textAlign: 'center', height: 36, padding: isMobile ? '0 8px' : '0 16px', borderRadius: 6,
+            flex: 1, textAlign: 'center', height: isMobile ? 44 : 36, padding: isMobile ? '0 8px' : '0 16px', borderRadius: 6,
             fontSize: isMobile ? 12 : 13, fontWeight: activeTab === 'equipe' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
             background: activeTab === 'equipe' ? CU.bg : 'transparent',
@@ -284,7 +284,7 @@ export default function PersonalAgentsPage() {
         <button
           onClick={() => setActiveTab('marketplace')}
           style={{
-            flex: 1, textAlign: 'center', height: 36, padding: isMobile ? '0 8px' : '0 16px', borderRadius: 6,
+            flex: 1, textAlign: 'center', height: isMobile ? 44 : 36, padding: isMobile ? '0 8px' : '0 16px', borderRadius: 6,
             fontSize: isMobile ? 12 : 13, fontWeight: activeTab === 'marketplace' ? 600 : 400,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
             background: activeTab === 'marketplace' ? CU.bg : 'transparent',
@@ -567,7 +567,7 @@ export default function PersonalAgentsPage() {
                   key={s.key}
                   onClick={() => setMpSort(s.key)}
                   style={{
-                    height: 30, padding: '0 12px', borderRadius: 6, border: 'none',
+                    height: isMobile ? 36 : 30, padding: isMobile ? '0 10px' : '0 12px', borderRadius: 6, border: 'none',
                     background: mpSort === s.key ? CU.accent : CU.bgSecondary,
                     color: mpSort === s.key ? '#fff' : CU.textSecondary,
                     fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
@@ -580,7 +580,7 @@ export default function PersonalAgentsPage() {
           </div>
 
           {/* Agent grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '260px' : '320px'}, 1fr))`, gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))', gap: 12 }}>
             {mpFiltered.map(agent => {
               const catColor = CATEGORY_COLORS[agent.category] || CU.accent;
               const isInstalled = mpInstalled.has(agent.id);
@@ -634,7 +634,7 @@ export default function PersonalAgentsPage() {
                       onClick={() => handleMpToggleInstall(agent.id)}
                       disabled={isInstallingThis}
                       style={{
-                        height: 36, padding: '0 16px', borderRadius: 6,
+                        height: isMobile ? 44 : 36, padding: '0 16px', borderRadius: 6,
                         border: isInstalled ? `1px solid ${CU.border}` : 'none',
                         background: isInstalled ? CU.bg : CU.accent,
                         color: isInstalled ? CU.textSecondary : '#fff',
@@ -702,6 +702,7 @@ export default function PersonalAgentsPage() {
 function BusinessAgentCard({ agent, isActive, onToggle }: {
   agent: TeamAgent; isActive: boolean; onToggle: () => void;
 }) {
+  const isMobile = useIsMobile();
   return (
     <div
       style={{
@@ -771,7 +772,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
         <button
           onClick={onToggle}
           style={{
-            position: 'relative', width: 40, height: 22, borderRadius: 11,
+            position: 'relative', width: isMobile ? 48 : 40, height: isMobile ? 26 : 22, borderRadius: isMobile ? 13 : 11,
             background: isActive ? agent.color : CU.bgSecondary,
             border: 'none', cursor: 'pointer', transition: 'background 0.2s',
             flexShrink: 0,
@@ -865,6 +866,7 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
 // ─── Personal Active Card (expanded with details) ───
 
 function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onToggle: () => void }) {
+  const isMobile = useIsMobile();
   return (
     <div
       style={{
@@ -894,7 +896,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
           <button
             onClick={onToggle}
             style={{
-              position: 'relative', width: 40, height: 22, borderRadius: 11,
+              position: 'relative', width: isMobile ? 48 : 40, height: isMobile ? 26 : 22, borderRadius: isMobile ? 13 : 11,
               background: agent.color, border: 'none', cursor: 'pointer',
               transition: 'background 0.2s', flexShrink: 0,
             }}
@@ -954,6 +956,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
 // ─── Personal Inactive Card (compact, greyed) ───
 
 function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onToggle: () => void }) {
+  const isMobile = useIsMobile();
   return (
     <div
       style={{
@@ -978,7 +981,7 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
         <button
           onClick={onToggle}
           style={{
-            position: 'relative', width: 40, height: 22, borderRadius: 11,
+            position: 'relative', width: isMobile ? 48 : 40, height: isMobile ? 26 : 22, borderRadius: isMobile ? 13 : 11,
             background: CU.bgSecondary, border: 'none', cursor: 'pointer',
             transition: 'background 0.2s', flexShrink: 0,
           }}

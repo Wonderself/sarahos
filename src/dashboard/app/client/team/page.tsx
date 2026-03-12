@@ -6,6 +6,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import AuthRequired from '../../../components/AuthRequired';
 import {
   DEFAULT_AGENTS,
   loadAgentConfigs,
@@ -382,6 +383,7 @@ export default function TeamPage() {
   const lockedAgents = agents.filter(a => !a.isAvailable);
 
   return (
+    <AuthRequired pageName="Gestion d'Equipe">
     <div className="client-page-scrollable">
       {/* Error banner */}
       {error && (
@@ -404,20 +406,20 @@ export default function TeamPage() {
       <PageExplanation pageId="team" text={PAGE_META.team?.helpText} />
 
       {/* Tabs */}
-      <div className="cu-tabs">
-        <button className={`cu-tab ${activeTab === 'agents' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('agents')}>
+      <div className="cu-tabs" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', flexWrap: 'nowrap' }}>
+        <button className={`cu-tab ${activeTab === 'agents' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('agents')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
           <span style={{ fontSize: 14 }}>🤖</span> Équipe IA
         </button>
-        <button className={`cu-tab ${activeTab === 'members' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('members')}>
+        <button className={`cu-tab ${activeTab === 'members' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('members')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
           <span style={{ fontSize: 14 }}>👤</span> Membres
         </button>
-        <button className={`cu-tab ${activeTab === 'groups' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('groups')}>
+        <button className={`cu-tab ${activeTab === 'groups' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('groups')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
           <span style={{ fontSize: 14 }}>🏘️</span> Groupes
         </button>
-        <button className={`cu-tab ${activeTab === 'communities' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('communities')}>
+        <button className={`cu-tab ${activeTab === 'communities' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('communities')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
           <span style={{ fontSize: 14 }}>🌐</span> Communautés
         </button>
-        <button className={`cu-tab ${activeTab === 'activity' ? 'cu-tab-active' : ''}`} onClick={() => {
+        <button className={`cu-tab ${activeTab === 'activity' ? 'cu-tab-active' : ''}`} style={{ whiteSpace: 'nowrap', minHeight: 44 }} onClick={() => {
           setActiveTab('activity');
           if (activeWorkspace) loadWorkspaceData(activeWorkspace);
         }}>
@@ -587,7 +589,7 @@ export default function TeamPage() {
       {activeTab === 'members' && (
         <div>
           {/* Header */}
-          <div className="cu-section-header">
+          <div className="cu-section-header" style={{ flexWrap: 'wrap', gap: 8 }}>
             <div className="cu-section-header-title">
               <span style={{ fontSize: 16 }}>👤</span> Membres ({membersLocal.length})
             </div>
@@ -600,13 +602,13 @@ export default function TeamPage() {
                 padding: '6px 12px', fontSize: 13, borderRadius: 8,
                 border: '1px solid var(--fz-border, #E2E8F0)',
                 background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                width: 180,
+                width: isMobile ? '100%' : 180, minWidth: 0,
               }}
             />
             <button
               className="cu-section-header-action"
               onClick={() => setShowInviteModal(true)}
-              style={{ marginLeft: 8 }}
+              style={{ marginLeft: 8, whiteSpace: 'nowrap', minHeight: 44 }}
             >
               Inviter +
             </button>
@@ -652,12 +654,12 @@ export default function TeamPage() {
                     <div style={{ position: 'relative' }}>
                       <button
                         onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 4 }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 8, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >⚙️</button>
                       {memberActionId === member.id && (
                         <div style={{
                           position: 'absolute', right: 0, top: '100%', zIndex: 50,
-                          background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E2E8F0)',
+                          background: 'var(--fz-bg, #fff)',
                           borderRadius: 8, padding: 8, minWidth: 160, border: '1px solid #E5E5E5',
                         }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
@@ -730,12 +732,12 @@ export default function TeamPage() {
                     <div style={{ position: 'relative' }}>
                       <button
                         onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 4 }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 8, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >⚙️</button>
                       {memberActionId === member.id && (
                         <div style={{
                           position: 'absolute', right: 0, top: '100%', zIndex: 50,
-                          background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E2E8F0)',
+                          background: 'var(--fz-bg, #fff)',
                           borderRadius: 8, padding: 8, minWidth: 160, border: '1px solid #E5E5E5',
                         }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
@@ -800,7 +802,7 @@ export default function TeamPage() {
           {/* Invite Modal */}
           {showInviteModal && (
             <div className="cu-modal-overlay" onClick={() => setShowInviteModal(false)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
                 <div className="cu-modal-header">
                   <div className="cu-modal-title">Inviter un membre</div>
                 </div>
@@ -952,7 +954,7 @@ export default function TeamPage() {
           {/* Edit group modal */}
           {editingGroup && (
             <div className="cu-modal-overlay" onClick={() => setEditingGroup(null)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
                 <div className="cu-modal-header">
                   <div className="cu-modal-title">Modifier le groupe</div>
                 </div>
@@ -969,8 +971,8 @@ export default function TeamPage() {
                       }}
                     />
                   </div>
-                  <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
-                    <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: isMobile ? '100%' : 80 }}>
                       <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
                       <input
                         value={editingGroup.emoji}
@@ -982,9 +984,9 @@ export default function TeamPage() {
                         }}
                       />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: isMobile ? '100%' : 120 }}>
                       <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Couleur</label>
-                      <div style={{ display: 'flex', gap: 6 }}>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {GROUP_COLORS.map(c => (
                           <button
                             key={c}
@@ -1088,7 +1090,7 @@ export default function TeamPage() {
           {/* Create group modal */}
           {showCreateGroup && (
             <div className="cu-modal-overlay" onClick={() => setShowCreateGroup(false)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
                 <div className="cu-modal-header">
                   <div className="cu-modal-title">Nouveau groupe</div>
                 </div>
@@ -1177,7 +1179,7 @@ export default function TeamPage() {
       {activeTab === 'communities' && (
         <div>
           {/* Header */}
-          <div className="cu-section-header">
+          <div className="cu-section-header" style={{ flexWrap: 'wrap', gap: 8 }}>
             <div className="cu-section-header-title">
               <span style={{ fontSize: 16 }}>🌐</span> Communautés
             </div>
@@ -1190,13 +1192,13 @@ export default function TeamPage() {
                 padding: '6px 12px', fontSize: 13, borderRadius: 8,
                 border: '1px solid var(--fz-border, #E2E8F0)',
                 background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                width: 180,
+                width: isMobile ? '100%' : 180, minWidth: 0,
               }}
             />
             <button
               className="cu-section-header-action"
               onClick={() => setShowCreateCommunity(true)}
-              style={{ marginLeft: 8 }}
+              style={{ marginLeft: 8, whiteSpace: 'nowrap', minHeight: 44 }}
             >
               Créer +
             </button>
@@ -1286,7 +1288,7 @@ export default function TeamPage() {
           {/* Create community modal */}
           {showCreateCommunity && (
             <div className="cu-modal-overlay" onClick={() => setShowCreateCommunity(false)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()}>
+              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
                 <div className="cu-modal-header">
                   <div className="cu-modal-title">Nouvelle communauté</div>
                 </div>
@@ -1433,5 +1435,6 @@ export default function TeamPage() {
         </div>
       )}
     </div>
+    </AuthRequired>
   );
 }

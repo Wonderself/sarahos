@@ -7,6 +7,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import AuthRequired from '../../../components/AuthRequired';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -154,6 +155,7 @@ export default function ProjectsPage() {
   const meta = PAGE_META.projects;
 
   return (
+    <AuthRequired pageName="Projets">
     <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto', padding: isMobile ? '0 12px 48px' : '0 0 48px' }}>
 
       {/* Header */}
@@ -206,7 +208,7 @@ export default function ProjectsPage() {
           onAction={() => setShowModal(true)}
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 16 }}>
           {projects.map(project => {
             const isActive = project.id === activeProjectId;
             return (
@@ -279,7 +281,7 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 440, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
+          <div className="card" style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 440, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
             <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>📁 Nouveau projet</h3>
 
             <div style={{ marginBottom: 14 }}>
@@ -325,7 +327,7 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setRenameProject(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
+          <div className="card" style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
             <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>✏️ Renommer le projet</h3>
             <input
               className="input"
@@ -355,7 +357,7 @@ export default function ProjectsPage() {
           onClick={e => { if (e.target === e.currentTarget) setDeleteProject(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div className="card" style={{ width: '100%', maxWidth: 400, padding: 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
+          <div className="card" style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
             <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🗑️ Supprimer le projet</h3>
             <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 20 }}>
               Êtes-vous sûr de vouloir supprimer <strong>"{deleteProject.name}"</strong> ? Cette action est irréversible.
@@ -375,5 +377,6 @@ export default function ProjectsPage() {
         </div>
       )}
     </div>
+    </AuthRequired>
   );
 }

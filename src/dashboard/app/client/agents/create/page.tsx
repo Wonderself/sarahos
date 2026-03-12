@@ -2,6 +2,8 @@
 
 import { useState, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useAuthGuard } from '../../../../lib/useAuthGuard';
+import { useVisitorDraftObject } from '../../../../lib/useVisitorDraft';
 
 const EMOJIS = ['smart_toy','psychology','lightbulb','bolt','target','rocket_launch','work','bar_chart','build','palette','chat','edit_note','search','trophy','diamond','auto_awesome','star','local_fire_department','theater_comedy','handshake','phone_iphone','terminal','language','trending_up','attractions','military_tech','school','mystery','extension','casino'];
 
@@ -61,28 +63,53 @@ Tu réponds toujours en français sauf si l'utilisateur s'adresse à toi dans un
 function CreateAgentContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const editId = searchParams.get('edit');
 
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
+  // Visitor draft — persist key creation fields to localStorage for visitors
+  const { draft: agentDraft, updateField: updateAgentField, clearDraft: clearAgentDraft } = useVisitorDraftObject('agent_create', {
+    name: '',
+    role: '',
+    emoji: 'smart_toy',
+    color: '#1A1A1A',
+    domain: '',
+    capabilities: [] as string[],
+    autonomy: 50,
+    tone: 'professional',
+    companyContext: '',
+  });
+
   // Step 1 — Identity
-  const [name, setName] = useState('');
-  const [role, setRole] = useState('');
-  const [emoji, setEmoji] = useState('smart_toy');
-  const [color, setColor] = useState('#1A1A1A');
+  const [name, _setName] = useState(agentDraft.name);
+  const setName = (v: string) => { _setName(v); updateAgentField('name', v); };
+  const [role, _setRole] = useState(agentDraft.role);
+  const setRole = (v: string) => { _setRole(v); updateAgentField('role', v); };
+  const [emoji, _setEmoji] = useState(agentDraft.emoji);
+  const setEmoji = (v: string) => { _setEmoji(v); updateAgentField('emoji', v); };
+  const [color, _setColor] = useState(agentDraft.color);
+  const setColor = (v: string) => { _setColor(v); updateAgentField('color', v); };
 
   // Step 2 — Domain & capabilities
-  const [domain, setDomain] = useState('');
-  const [capabilities, setCapabilities] = useState<string[]>([]);
-  const [autonomy, setAutonomy] = useState(50);
+  const [domain, _setDomain] = useState(agentDraft.domain);
+  const setDomain = (v: string) => { _setDomain(v); updateAgentField('domain', v); };
+  const [capabilities, _setCapabilities] = useState<string[]>(agentDraft.capabilities);
+  const setCapabilities = (v: string[] | ((prev: string[]) => string[])) => {
+    _setCapabilities(prev => { const next = typeof v === 'function' ? v(prev) : v; updateAgentField('capabilities', next); return next; });
+  };
+  const [autonomy, _setAutonomy] = useState(agentDraft.autonomy);
+  const setAutonomy = (v: number) => { _setAutonomy(v); updateAgentField('autonomy', v); };
 
   // Step 3 — Behavior
-  const [tone, setTone] = useState('professional');
+  const [tone, _setTone] = useState(agentDraft.tone);
+  const setTone = (v: string) => { _setTone(v); updateAgentField('tone', v); };
   const [alwaysDo, setAlwaysDo] = useState<string[]>([]);
   const [neverDo, setNeverDo] = useState<string[]>([]);
-  const [companyContext, setCompanyContext] = useState('');
+  const [companyContext, _setCompanyContext] = useState(agentDraft.companyContext);
+  const setCompanyContext = (v: string) => { _setCompanyContext(v); updateAgentField('companyContext', v); };
   const [newAlways, setNewAlways] = useState('');
   const [newNever, setNewNever] = useState('');
 
@@ -106,6 +133,7 @@ function CreateAgentContent() {
 
   const sendTest = async () => {
     if (!testMessage.trim()) return;
+    if (!requireAuth('Connectez-vous pour tester votre assistant')) return;
     setTesting(true);
     try {
       const session = getSession();
@@ -132,6 +160,7 @@ function CreateAgentContent() {
   };
 
   const saveAgent = async () => {
+    if (!requireAuth('Connectez-vous pour creer un assistant')) return;
     setSaving(true);
     setError('');
     try {
@@ -157,6 +186,7 @@ function CreateAgentContent() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Erreur');
+      clearAgentDraft();
       router.push('/client/agents');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur de sauvegarde');
@@ -530,6 +560,7 @@ function CreateAgentContent() {
           </button>
         )}
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

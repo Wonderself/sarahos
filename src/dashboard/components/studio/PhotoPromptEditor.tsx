@@ -4,38 +4,38 @@ import { useState } from 'react';
 
 const STYLE_PRESETS = [
   // ─── Classiques ───
-  { id: 'realistic', label: 'Realiste', icon: 'photo_camera', desc: 'Photo haute definition' },
-  { id: 'cinematic', label: 'Cinematique', icon: 'movie', desc: 'Eclairage dramatique' },
-  { id: 'portrait', label: 'Portrait', icon: 'person', desc: 'Photo portrait studio' },
-  { id: 'bw', label: 'Noir et Blanc', icon: 'contrast', desc: 'Monochrome contrastes' },
-  { id: 'film-grain', label: 'Argentique', icon: 'film_reel', desc: 'Grain et teintes film' },
-  { id: 'polaroid', label: 'Polaroid', icon: 'photo_camera_back', desc: 'Photo instantanee retro' },
-  { id: 'vintage', label: 'Vintage', icon: 'history', desc: 'Photo ancienne, tons sepia' },
+  { id: 'realistic', label: 'Realiste', icon: '📷', desc: 'Photo haute definition' },
+  { id: 'cinematic', label: 'Cinematique', icon: '🎬', desc: 'Eclairage dramatique' },
+  { id: 'portrait', label: 'Portrait', icon: '👤', desc: 'Photo portrait studio' },
+  { id: 'bw', label: 'Noir et Blanc', icon: '🌓', desc: 'Monochrome contrastes' },
+  { id: 'film-grain', label: 'Argentique', icon: '🎞️', desc: 'Grain et teintes film' },
+  { id: 'polaroid', label: 'Polaroid', icon: '📸', desc: 'Photo instantanee retro' },
+  { id: 'vintage', label: 'Vintage', icon: '🕰️', desc: 'Photo ancienne, tons sepia' },
   // ─── Artistiques ───
-  { id: 'illustration', label: 'Illustration', icon: 'palette', desc: 'Illustration digitale' },
-  { id: 'watercolor', label: 'Aquarelle', icon: 'brush', desc: 'Peinture douce' },
-  { id: 'oil-painting', label: 'Peinture huile', icon: 'image', desc: 'Style classique peinture' },
-  { id: 'pencil-sketch', label: 'Crayon', icon: 'edit', desc: 'Dessin au crayon' },
-  { id: 'impressionist', label: 'Impressionniste', icon: 'filter_vintage', desc: 'Style Monet, touches' },
-  { id: 'surrealist', label: 'Surrealiste', icon: 'auto_awesome', desc: 'Style Dali, onirique' },
-  { id: 'pop-art', label: 'Pop Art', icon: 'color_lens', desc: 'Style Warhol, vif' },
+  { id: 'illustration', label: 'Illustration', icon: '🎨', desc: 'Illustration digitale' },
+  { id: 'watercolor', label: 'Aquarelle', icon: '🖌️', desc: 'Peinture douce' },
+  { id: 'oil-painting', label: 'Peinture huile', icon: '🖼️', desc: 'Style classique peinture' },
+  { id: 'pencil-sketch', label: 'Crayon', icon: '✏️', desc: 'Dessin au crayon' },
+  { id: 'impressionist', label: 'Impressionniste', icon: '🌸', desc: 'Style Monet, touches' },
+  { id: 'surrealist', label: 'Surrealiste', icon: '✨', desc: 'Style Dali, onirique' },
+  { id: 'pop-art', label: 'Pop Art', icon: '🎯', desc: 'Style Warhol, vif' },
   // ─── Digital & Design ───
-  { id: 'flat-design', label: 'Flat Design', icon: 'dashboard', desc: 'Design plat vectoriel' },
-  { id: '3d-render', label: '3D Render', icon: 'view_in_ar', desc: 'Rendu 3D cinema' },
-  { id: 'minimalist', label: 'Minimaliste', icon: 'crop_square', desc: 'Simple et epure' },
-  { id: 'pixel-art', label: 'Pixel Art', icon: 'grid_on', desc: 'Retro gaming pixels' },
-  { id: 'comics', label: 'Comics / BD', icon: 'bolt', desc: 'Bande dessinee' },
+  { id: 'flat-design', label: 'Flat Design', icon: '📊', desc: 'Design plat vectoriel' },
+  { id: '3d-render', label: '3D Render', icon: '🧊', desc: 'Rendu 3D cinema' },
+  { id: 'minimalist', label: 'Minimaliste', icon: '⬜', desc: 'Simple et epure' },
+  { id: 'pixel-art', label: 'Pixel Art', icon: '👾', desc: 'Retro gaming pixels' },
+  { id: 'comics', label: 'Comics / BD', icon: '⚡', desc: 'Bande dessinee' },
   // ─── Ambiances ───
-  { id: 'neon-cyberpunk', label: 'Cyberpunk', icon: 'electric_bolt', desc: 'Neons futuristes' },
-  { id: 'anime', label: 'Anime', icon: 'spa', desc: 'Style japonais anime' },
-  { id: 'movie-poster', label: 'Affiche Film', icon: 'film_reel', desc: 'Style poster cinema' },
-  { id: 'gothic', label: 'Gothique', icon: 'dark_mode', desc: 'Dark et atmospherique' },
-  { id: 'art-deco', label: 'Art Deco', icon: 'account_balance', desc: 'Style annees 1920' },
-  { id: 'vaporwave', label: 'Vaporwave', icon: 'beach_access', desc: 'Esthetique 80s/90s' },
+  { id: 'neon-cyberpunk', label: 'Cyberpunk', icon: '🔮', desc: 'Neons futuristes' },
+  { id: 'anime', label: 'Anime', icon: '🌺', desc: 'Style japonais anime' },
+  { id: 'movie-poster', label: 'Affiche Film', icon: '🎞️', desc: 'Style poster cinema' },
+  { id: 'gothic', label: 'Gothique', icon: '🌑', desc: 'Dark et atmospherique' },
+  { id: 'art-deco', label: 'Art Deco', icon: '🏛️', desc: 'Style annees 1920' },
+  { id: 'vaporwave', label: 'Vaporwave', icon: '🏖️', desc: 'Esthetique 80s/90s' },
   // ─── Specialises ───
-  { id: 'food-photo', label: 'Food Photo', icon: 'restaurant', desc: 'Photo culinaire pro' },
-  { id: 'architecture', label: 'Architecture', icon: 'home', desc: 'Photo immobiliere' },
-  { id: 'cartoon-avatar', label: 'Cartoon', icon: 'face', desc: 'Avatar cartoon moderne' },
+  { id: 'food-photo', label: 'Food Photo', icon: '🍽️', desc: 'Photo culinaire pro' },
+  { id: 'architecture', label: 'Architecture', icon: '🏠', desc: 'Photo immobiliere' },
+  { id: 'cartoon-avatar', label: 'Cartoon', icon: '😊', desc: 'Avatar cartoon moderne' },
 ];
 
 const PROMPT_TEMPLATES: Record<string, string> = {
@@ -202,7 +202,7 @@ export default function PhotoPromptEditor({
                 transition: 'all 0.15s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{s.icon}</span>
+              <span style={{ fontSize: 16 }}>{s.icon}</span>
               <span style={{ fontSize: 9, fontWeight: 600, color: '#1d1d1f', textAlign: 'center', lineHeight: 1.2 }}>
                 {s.label}
               </span>

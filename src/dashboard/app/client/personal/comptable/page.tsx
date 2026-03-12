@@ -412,7 +412,7 @@ export default function ComptablePage() {
           <div className="card" style={{ width: '100%', maxWidth: 460, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Nouvel enregistrement</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Type</label>
                   <select className="input" value={recordForm.type} onChange={e => setRecordForm(p => ({ ...p, type: e.target.value as RecordType }))}>
@@ -430,7 +430,7 @@ export default function ComptablePage() {
                 <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Libellé</label>
                 <input className="input" placeholder="Ex: Facture client X..." value={recordForm.label} onChange={e => setRecordForm(p => ({ ...p, label: e.target.value }))} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Montant (€)</label>
                   <input className="input" type="number" placeholder="0.00" value={recordForm.amount} onChange={e => setRecordForm(p => ({ ...p, amount: e.target.value }))} />

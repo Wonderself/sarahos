@@ -19,29 +19,20 @@ import {
   DISCUSSION_HIGHLIGHTS, DISCUSSION_CATEGORIES,
   PERSONAL_AGENTS_LANDING,
   STUDIO_FEATURES, STUDIO_CATEGORIES,
-  ARCADE_GAMES_PREVIEW, ARCADE_BADGES_PREVIEW, ARCADE_STATS,
   REWARDS_CHIPS,
 } from '../lib/landing-data';
 
 const totalAgents = TOTAL_AGENTS_DISPLAY;
 
+/** Visually hidden but crawlable by search engines — equivalent to sr-only */
+const srOnly: React.CSSProperties = {
+  position: 'absolute', width: 1, height: 1, padding: 0, margin: -1,
+  overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0,
+};
+
 /* ═══════════════════════════════════════════════════════════
    CAROUSEL COMPONENT
    ═══════════════════════════════════════════════════════════ */
-
-function useVisibleCount() {
-  const [count, setCount] = useState(4);
-  useEffect(() => {
-    function update() {
-      const w = window.innerWidth;
-      setCount(w <= 480 ? 1 : w <= 768 ? 2 : 4);
-    }
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-  return count;
-}
 
 function Carousel({ items, renderItem, autoPlay = 4000 }: {
   items: any[];
@@ -51,7 +42,6 @@ function Carousel({ items, renderItem, autoPlay = 4000 }: {
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const len = items.length;
-  const visibleCount = useVisibleCount();
 
   useEffect(() => {
     if (paused || !autoPlay) return;
@@ -59,6 +49,8 @@ function Carousel({ items, renderItem, autoPlay = 4000 }: {
     return () => clearInterval(t);
   }, [paused, autoPlay, len]);
 
+  // Show 4 on desktop, wrap around
+  const visibleCount = 4;
   const visible: number[] = [];
   for (let i = 0; i < visibleCount; i++) visible.push((idx + i) % len);
 
@@ -68,17 +60,18 @@ function Carousel({ items, renderItem, autoPlay = 4000 }: {
       onMouseLeave={() => setPaused(false)}
       style={{ position: 'relative' }}
     >
-      <div className="lp-carousel-grid" style={{
-        display: 'grid', gap: 12,
+      {/* Desktop: 4-column grid, Mobile: horizontal scroll-snap */}
+      <div className="lp-carousel-scroll" style={{
+        gap: 12,
       }}>
         {visible.map((vi, i) => (
-          <div key={`${vi}-${i}`} style={{ animation: 'lp-fade-in 0.4s ease' }}>
+          <div key={`${vi}-${i}`} className="lp-carousel-scroll-item" style={{ animation: 'lp-fade-in 0.4s ease' }}>
             {renderItem(items[vi], vi)}
           </div>
         ))}
       </div>
       {/* Dots */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 16 }}>
+      <div className="lp-carousel-dots" style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 16 }}>
         {items.map((_, i) => (
           <button
             key={i}
@@ -86,7 +79,7 @@ function Carousel({ items, renderItem, autoPlay = 4000 }: {
             aria-label={`Voir exemple ${i + 1}`}
             style={{
               width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
-              background: idx === i ? '#0EA5E9' : '#d1d5db', cursor: 'pointer',
+              background: idx === i ? '#1A1A1A' : '#E5E5E5', cursor: 'pointer',
               transition: 'all 0.3s', padding: 0,
               boxSizing: 'content-box' as const, paddingBlock: 18, paddingInline: 10,
               margin: '-18px -4px', backgroundClip: 'content-box',
@@ -113,25 +106,26 @@ function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
 
   return (
     <div>
-      <div className="lp-scenario-steps" style={{ gap: 14 }}>
+      <div className="lp-carousel-scroll lp-tech-carousel" style={{ gap: 14 }}>
         {items.map((t, i) => (
-          <div key={i} style={{
+          <div key={i} className="lp-carousel-scroll-item" style={{
             padding: '20px 22px', borderRadius: 16,
-            background: 'rgba(255,255,255,0.04)', border: `1px solid ${i === idx ? `${t.color}33` : 'rgba(255,255,255,0.06)'}`,
+            background: '#F7F7F7', border: `1px solid ${i === idx ? '#1A1A1A' : '#E5E5E5'}`,
             opacity: i === idx ? 1 : 0.6,
             transform: i === idx ? 'scale(1.02)' : 'scale(1)',
             transition: 'all 0.3s ease',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.color, flexShrink: 0 }} />
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#fff' }}>{t.title}</h3>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1A1A1A', flexShrink: 0 }} />
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{t.title}</h3>
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
+            <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.6, marginBottom: 10 }}>{t.desc}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {t.points.map((p, j) => (
                 <span key={j} style={{
-                  fontSize: 11, color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.06)',
+                  fontSize: 11, color: '#6B6B6B', background: '#F7F7F7',
                   padding: '3px 10px', borderRadius: 20,
+                  border: '1px solid #E5E5E5',
                 }}>
                   {p}
                 </span>
@@ -141,7 +135,7 @@ function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
         ))}
       </div>
       {/* Dots */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 14 }}>
+      <div className="lp-carousel-dots" style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 14 }}>
         {items.map((t, i) => (
           <button
             key={i}
@@ -149,7 +143,7 @@ function TechCarousel({ items }: { items: typeof TECH_FEATURES }) {
             aria-label={`Technologie ${t.title}`}
             style={{
               width: idx === i ? 20 : 8, height: 8, borderRadius: 4, border: 'none',
-              background: idx === i ? t.color : 'rgba(255,255,255,0.15)', cursor: 'pointer',
+              background: idx === i ? '#1A1A1A' : '#E5E5E5', cursor: 'pointer',
               transition: 'all 0.3s', padding: 0,
               boxSizing: 'content-box' as const, paddingBlock: 18, paddingInline: 10,
               margin: '-18px -4px', backgroundClip: 'content-box',
@@ -190,33 +184,6 @@ export default function LandingPage() {
   // Page view on mount
   useEffect(() => { trackPageView('/', 'main', audience); }, [audience]);
 
-  // Gradient text style helper
-  const gradientTextStyle: React.CSSProperties = {
-    background: 'linear-gradient(135deg, #0EA5E9, #0369A1)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-  };
-
-  // Glassmorphism card style helper
-  const glassCard: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.05)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: 16,
-    boxShadow: '0 0 40px rgba(14,165,233,0.15)',
-    transition: 'all 0.3s',
-  };
-
-  // Gradient dot helper
-  const gradientDot = (size = 8): React.CSSProperties => ({
-    width: size,
-    height: size,
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #0EA5E9, #0369A1)',
-    display: 'inline-block',
-    flexShrink: 0,
-  });
-
   const demo = DEMO_SCENARIOS[demoTab];
 
   // Audience-aware
@@ -229,35 +196,29 @@ export default function LandingPage() {
   return (
     <>
       <PublicNav />
-      <AudienceStickyBar audience={audience} onChange={setAudience} variant="dark" />
+      <AudienceStickyBar audience={audience} onChange={setAudience} variant="light" />
       <main style={{ paddingTop: 0 }}>
 
         {/* ══ HERO + TICKERS viewport wrapper ═══════════════ */}
         <div className="lp-hero-viewport">
 
-        {/* ══ HERO ═══════════════════════════════════════════ */}
-        <section ref={heroRef} style={{
-          background: 'linear-gradient(170deg, #0f0720 0%, #1a0e3a 100%)',
+        {/* ══ 1. HERO ═══════════════════════════════════════════ */}
+        <header>
+        <section ref={heroRef} aria-label="Presentation principale de Freenzy.io, plateforme IA multi-agents pour entreprise" style={{
+          background: '#FFFFFF',
           padding: 'clamp(16px, 3vw, 48px) 24px clamp(12px, 2vw, 36px)',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
           flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
         }}>
-          <div className="lp-hero-glow-anim" style={{
-            position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-            width: '100%', maxWidth: 600, height: 350,
-            background: 'radial-gradient(ellipse, rgba(14,165,233,0.2) 0%, rgba(3,105,161,0.08) 40%, transparent 68%)',
-            pointerEvents: 'none',
-          }} />
-
           <div style={{ maxWidth: 700, margin: '0 auto', position: 'relative', zIndex: 1 }}>
             <div style={{ marginBottom: 'clamp(4px, 1vw, 10px)', marginTop: -8 }}>
               <span className="lp-hero-badge" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 7,
-                background: 'rgba(14,165,233,0.12)', border: '1px solid rgba(14,165,233,0.22)',
-                color: '#7dd3fc', padding: '5px 16px', borderRadius: 40,
+                background: '#F7F7F7', border: '1px solid #E5E5E5',
+                color: '#1A1A1A', padding: '5px 16px', borderRadius: 40,
                 fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap',
               }}>
-                <span style={gradientDot(6)} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1A1A1A', display: 'inline-block', flexShrink: 0 }} role="img" aria-label="Indicateur actif montrant que la plateforme Freenzy.io est en ligne et operationnelle" />
                 <span className="lp-green-badge-full">{heroBadge || 'Pro & Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet'}</span>
                 <span className="lp-green-badge-mobile">{heroBadge || 'Pros & Particuliers · 0% frais · Personnalisable 100% · Simple et complet'}</span>
               </span>
@@ -269,13 +230,15 @@ export default function LandingPage() {
               fontWeight: 700, lineHeight: 0.92,
               marginBottom: 'clamp(8px, 1.5vw, 14px)', letterSpacing: -4,
               textTransform: heroHeadline ? 'none' : 'uppercase',
+              color: '#1A1A1A',
             }}>
               {heroHeadline ? heroHeadline : <>Utilisez<br />vraiment l&apos;IA.</>}
+              <span style={srOnly}>Freenzy.io — Plateforme IA multi-agents francaise pour automatiser votre entreprise avec plus de 100 agents intelligents specialises en marketing, finance, commercial, RH, juridique, communication, video et photo</span>
             </h1>
 
             <p style={{
               fontFamily: 'var(--font-display)', fontSize: 'clamp(13px, 1.6vw, 15px)',
-              color: '#0EA5E9', fontWeight: 600,
+              color: '#6B6B6B', fontWeight: 600,
               letterSpacing: 2, textTransform: 'uppercase',
               marginBottom: 8,
             }}>
@@ -284,99 +247,96 @@ export default function LandingPage() {
 
             <p style={{
               fontSize: 'clamp(14px, 1.8vw, 17px)',
-              color: 'rgba(255,255,255,0.44)',
+              color: '#6B6B6B',
               lineHeight: 1.6, maxWidth: 480, margin: '0 auto', marginBottom: 'clamp(12px, 2vw, 24px)',
             }}>
               {heroSub ? (
-                <span style={{ color: 'rgba(255,255,255,0.75)' }}>{heroSub}</span>
+                <span style={{ color: '#1A1A1A' }}>{heroSub}</span>
               ) : (
-                <><span style={{ color: '#7dd3fc', fontWeight: 700 }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: 'rgba(255,255,255,0.75)' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
+                <><span style={{ fontWeight: 700, color: '#1A1A1A' }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: '#1A1A1A' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
               )}
+            </p>
+
+            <p style={{
+              fontSize: 13, color: '#1A1A1A', fontWeight: 600, marginBottom: 12,
+              letterSpacing: 0.2,
+            }}>
+              Explorez le dashboard gratuitement, sans inscription.
             </p>
 
             {/* Bonus message per audience */}
             {config?.bonusMessage && (
               <p style={{
-                fontSize: 12, color: '#86efac', fontWeight: 600, marginBottom: 16,
-                background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.18)',
+                fontSize: 12, color: '#1A1A1A', fontWeight: 600, marginBottom: 16,
+                background: '#F7F7F7', border: '1px solid #E5E5E5',
                 display: 'inline-block', padding: '5px 16px', borderRadius: 20,
               }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>redeem</span>
+                <span role="img" aria-label="Cadeau de bienvenue offert aux nouveaux utilisateurs de Freenzy.io" style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>🎁</span>
                 {config.bonusMessage}
               </p>
             )}
 
-            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+            <nav aria-label="Actions principales pour commencer avec Freenzy.io" style={{ textAlign: 'center', marginBottom: 16 }}>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('hero_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
-                padding: '12px 20px', background: '#0EA5E9', boxShadow: '0 2px 8px rgba(14,165,233,0.3)', color: '#fff',
+              <Link href="/client/dashboard" className="lp-cta-primary" title="Accedez au dashboard Freenzy.io gratuitement — explorez 100 agents IA sans inscription" onClick={() => trackCtaClick('hero_cta', '/client/dashboard', audience, '/')} style={{
+                padding: '12px 20px', background: '#1A1A1A', color: '#fff',
                 borderRadius: 8, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(12px, 3.2vw, 15px)', textDecoration: 'none',
                 minHeight: 44, whiteSpace: 'nowrap',
               }}>
-                {heroCta?.label || 'Commencer gratuitement'}
+                {'Acceder a Freenzy \u2192'}
               </Link>
-              <Link href="/plans" style={{
+              <Link href="/plans" title="Decouvrez les tarifs Freenzy.io — 0% commission, paiement a l'usage, sans abonnement" style={{
                 padding: '12px 16px', minHeight: 44, whiteSpace: 'nowrap',
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.11)',
-                backdropFilter: 'blur(8px)',
-                color: 'rgba(255,255,255,0.68)', borderRadius: 10, fontWeight: 600,
+                background: '#F7F7F7', border: '1px solid #E5E5E5',
+                color: '#1A1A1A', borderRadius: 10, fontWeight: 600,
                 fontSize: 'clamp(11px, 3vw, 14px)', textDecoration: 'none',
               }}>
-                Voir les tarifs
+                Voir les tarifs Freenzy.io
               </Link>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 'clamp(8px, 1.5vw, 16px)' }}>
-                <div style={{ display: 'flex' }}>
-                  {[
-                    { icon: 'person', color: '#0EA5E9' },
-                    { icon: 'business_center', color: '#7c3aed' },
-                    { icon: 'restaurant', color: '#f97316' },
-                  ].map((a, i) => (
-                    <div key={i} style={{
-                      width: 28, height: 28, borderRadius: '50%',
-                      background: `${a.color}22`, border: `2px solid ${a.color}`,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      marginLeft: i > 0 ? -8 : 0,
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-                    }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 14, color: a.color }}>{a.icon}</span>
-                    </div>
+                <div className="lp-hero-avatars" style={{ display: 'flex' }}>
+                  {['��‍��', '��‍��', '��‍��'].map((e, i) => (
+                    <span key={i} style={{ fontSize: 18, marginLeft: i > 0 ? -6 : 0, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>{e}</span>
                   ))}
                 </div>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
-                  Rejoint par <strong style={{ color: 'rgba(255,255,255,0.62)' }}>500+ professionnels</strong> ce mois-ci
+                <span className="lp-hero-social-proof" style={{ fontSize: 13, color: '#9B9B9B' }}>
+                  Rejoint par <strong style={{ color: '#1A1A1A' }}>500+ professionnels</strong> ce mois-ci
                 </span>
               </div>
-            </div>
+            </nav>
+
+            <span style={srOnly}>Freenzy.io est la plateforme francaise d&apos;intelligence artificielle multi-agents qui automatise la gestion d&apos;entreprise. Repondeur telephonique IA disponible 24 heures sur 24, generation automatique de documents professionnels, gestion intelligente des reseaux sociaux, reveil personnalise avec briefing matinal, discussions approfondies avec Claude Opus. Propulse par Claude Anthropic, GPT-4 OpenAI, Gemini Google, Mistral et Llama Meta. Zero pour cent de commission pour les 5000 premiers utilisateurs. 50 credits offerts a l&apos;inscription. Sans abonnement ni engagement.</span>
 
           </div>
         </section>
+        </header>
 
-        {/* ══ LIVE ACTIVITY TICKER ══════════════════════════════ */}
-        <div style={{ background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
+        {/* ══ 2. LIVE ACTIVITY TICKER ══════════════════════════════ */}
+        <div aria-label="Fil d'activite en temps reel montrant les actions des agents IA Freenzy.io" role="marquee" style={{ background: '#F7F7F7', borderBottom: '1px solid #E5E5E5', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker">
               {[...ACTIVITY, ...ACTIVITY].map((item, i) => (
                 <div key={i} className="lp-ticker-item lp-activity-chip" style={{ gap: 8, padding: '6px 14px' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 13 }}>{item.icon}</span>
-                  <span style={{ color: item.color, fontWeight: 700, fontSize: 11 }}>{item.agent}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11 }}>{item.text}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: 10 }}>· {item.ago}</span>
+                  <span style={{ fontSize: 13 }}>{item.emoji}</span>
+                  <span style={{ color: '#1A1A1A', fontWeight: 700, fontSize: 11 }}>{item.agent}</span>
+                  <span style={{ color: '#6B6B6B', fontSize: 11 }}>{item.text}</span>
+                  <span style={{ color: '#9B9B9B', fontSize: 10 }}>· {item.ago}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* ══ STATS REVERSE TICKER ═════════════════════════════ */}
-        <div style={{ background: '#0f0720', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '10px 0', flexShrink: 0 }}>
+        {/* ══ 3. STATS REVERSE TICKER ═════════════════════════════ */}
+        <div aria-label="Statistiques cles de la plateforme Freenzy.io — agents IA, utilisateurs, modeles disponibles" role="marquee" style={{ background: '#F7F7F7', borderBottom: '1px solid #E5E5E5', padding: '10px 0', flexShrink: 0 }}>
           <div className="lp-ticker-wrap">
             <div className="lp-ticker-reverse">
               {[...STATS_BADGES, ...STATS_BADGES].map((s, i) => (
-                <div key={i} className="lp-stats-badge">
-                  <span className="lp-stats-badge-icon material-symbols-rounded">{s.icon}</span>
-                  <span className="lp-stats-badge-value">{s.value}</span>
-                  <span className="lp-stats-badge-label">{s.label}</span>
+                <div key={i} className="lp-stats-badge" style={{ background: '#fff', border: '1px solid #E5E5E5' }}>
+                  <span className="lp-stats-badge-icon" style={{ color: '#1A1A1A' }}>{s.emoji}</span>
+                  <span className="lp-stats-badge-value" style={{ color: '#1A1A1A' }}>{s.value}</span>
+                  <span className="lp-stats-badge-label" style={{ color: '#9B9B9B' }}>{s.label}</span>
                 </div>
               ))}
             </div>
@@ -385,149 +345,18 @@ export default function LandingPage() {
 
         </div>{/* end .lp-hero-viewport */}
 
-        {/* ══ AVANT / APRÈS ════════════════════════════════════════ */}
-        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 72px) 24px' }}>
-          <div style={{ maxWidth: 900, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7dd3fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Transformation</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 8 }}>
-                Avant Freenzy <span style={{ color: 'rgba(255,255,255,0.35)' }}>vs</span> Avec Freenzy
-              </h2>
-              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, maxWidth: 520, margin: '0 auto' }}>
-                {`D\u00e9couvrez comment nos fonctionnalit\u00e9s transforment votre quotidien`}
-              </p>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), 1fr))', gap: 16 }}>
-              {[
-                { before: 'Appels manqu\u00e9s pendant les r\u00e9unions', after: 'R\u00e9pondeur IA traite 100% des appels 24/7', icon: 'call' },
-                { before: '3 heures pour r\u00e9diger un contrat', after: 'Document g\u00e9n\u00e9r\u00e9 en 30 secondes par l\u2019IA', icon: 'description' },
-                { before: 'Posts sociaux irr\u00e9guliers et oubli\u00e9s', after: 'Calendrier \u00e9ditorial IA automatis\u00e9', icon: 'calendar_month' },
-                { before: 'R\u00e9veil chaotique, journ\u00e9e non planifi\u00e9e', after: 'Briefing matinal personnalis\u00e9 chaque jour', icon: 'alarm' },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  display: 'flex', borderRadius: 14, overflow: 'hidden',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(255,255,255,0.03)',
-                }}>
-                  {/* Before */}
-                  <div style={{
-                    flex: 1, padding: '18px 16px',
-                    background: 'rgba(239,68,68,0.06)',
-                    borderRight: '1px solid rgba(255,255,255,0.06)',
-                    display: 'flex', flexDirection: 'column', gap: 8,
-                  }}>
-                    <span style={{ fontSize: 18 }}>{'\u274C'}</span>
-                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>{item.before}</span>
-                  </div>
-
-                  {/* Arrow */}
-                  <div style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    padding: '0 2px', background: 'rgba(255,255,255,0.03)', flexShrink: 0,
-                  }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#0EA5E9' }}>arrow_forward</span>
-                  </div>
-
-                  {/* After */}
-                  <div style={{
-                    flex: 1, padding: '18px 16px',
-                    background: 'rgba(34,197,94,0.06)',
-                    display: 'flex', flexDirection: 'column', gap: 8,
-                  }}>
-                    <span style={{ fontSize: 18 }}>{'\u2705'}</span>
-                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, fontWeight: 600 }}>{item.after}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* RÉSULTATS CONCRETS */}
-        <section style={{ background: '#1a0e3a', padding: 'clamp(40px, 5vw, 80px) 24px' }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <h2 style={{
-            textAlign: 'center', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700,
-            color: '#fff', marginBottom: 12
-          }}>
-            Des résultats mesurables
-          </h2>
-          <p style={{ textAlign: 'center', fontSize: 16, color: 'rgba(255,255,255,0.6)', marginBottom: 48, maxWidth: 600, margin: '0 auto 48px' }}>
-            Ce que nos utilisateurs constatent dès la première semaine
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: 20 }}>
-            {[
-              { value: '15h', label: 'récupérées par semaine', sub: 'en moyenne par utilisateur', icon: 'schedule' },
-              { value: '200+', label: 'messages gérés / mois', sub: 'par le Répondeur IA', icon: 'chat' },
-              { value: '30s', label: 'pour générer un document', sub: 'au lieu de 45 minutes', icon: 'description' },
-              { value: '0€', label: 'de commission sur vos revenus', sub: 'pour les 5000 premiers', icon: 'payments' },
-            ].map((stat, i) => (
-              <div key={i} style={{
-                ...glassCard,
-                padding: '28px 24px',
-                textAlign: 'center',
-              }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#0EA5E9', marginBottom: 12, display: 'block' }}>{stat.icon}</span>
-                <div style={{ fontSize: 'clamp(32px, 5vw, 44px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{stat.value}</div>
-                <div style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginTop: 8 }}>{stat.label}</div>
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{stat.sub}</div>
-              </div>
-            ))}
-          </div>
-          </div>
-        </section>
-
-        {/* TÉMOIGNAGES */}
-        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 60px) 24px' }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, color: '#fff', marginBottom: 40 }}>
-            Ils utilisent Freenzy au quotidien
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: 20 }}>
-            {[
-              { name: 'Marie D.', role: 'Restauratrice, Lyon', quote: "J'ai récupéré 15h par semaine. Le Répondeur gère les réservations, l'agent RH fait les plannings.", icon: 'restaurant', color: '#f97316' },
-              { name: 'Thomas R.', role: 'Agent immobilier, Paris', quote: "Mes documents juridiques sont générés en 30 secondes. Avant, ça me prenait une demi-journée.", icon: 'home', color: '#3b82f6' },
-              { name: 'Sophie L.', role: 'Expert-comptable, Bordeaux', quote: "Le briefing matinal me donne tout ce que je dois savoir avant même d'ouvrir mon cabinet.", icon: 'bar_chart', color: '#22c55e' },
-            ].map((t, i) => (
-              <div key={i} style={{
-                ...glassCard,
-                padding: '24px',
-              }}>
-                <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, fontStyle: 'italic', marginBottom: 16 }}>
-                  &ldquo;{t.quote}&rdquo;
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{
-                    width: 40, height: 40, borderRadius: '50%',
-                    background: `${t.color}18`, border: `1px solid ${t.color}33`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 20, color: t.color }}>{t.icon}</span>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          </div>
-        </section>
-
-        {/* ══ OUTILS UTILISATEURS ═════════════════════════════════ */}
-        <section style={{ background: '#FAFBFC', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        {/* ══ 4. OUTILS UTILISATEURS ═════════════════════════════════ */}
+        <section aria-label="Outils IA integres dans la plateforme Freenzy.io pour automatiser telephonie, documents, reseaux sociaux et plus" style={{ background: '#FFFFFF', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#0EA5E9', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, ...gradientTextStyle }}>
-                Vos outils, prêts à l&apos;emploi.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils IA pour entreprise</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, color: '#1A1A1A' }}>
+                Vos outils IA, prets a l&apos;emploi.
               </h2>
-              <p style={{ color: '#86868b', fontSize: 14 }}>Tout ce dont vous avez besoin, activé en <span className="fz-accent-word">un clic</span>.</p>
+              <p style={{ color: '#6B6B6B', fontSize: 14 }}>Tout ce dont vous avez besoin pour automatiser votre entreprise, active en <strong style={{ color: '#1A1A1A' }}>un clic</strong>.</p>
             </div>
 
-            <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="lp-tools-tabs" style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               {TOOL_CATEGORIES.map((cat, i) => (
                 <button
                   key={cat.id}
@@ -537,65 +366,113 @@ export default function LandingPage() {
                   style={{
                     padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700,
                     border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
-                    background: toolTab === i ? '#0EA5E9' : '#F0F2F5',
-                    color: toolTab === i ? '#fff' : '#6b7280',
-                    boxShadow: toolTab === i ? '0 2px 12px rgba(14,165,233,0.25)' : 'none',
+                    background: toolTab === i ? '#1A1A1A' : '#F7F7F7',
+                    color: toolTab === i ? '#fff' : '#6B6B6B',
                     transition: 'all 0.2s',
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 15 }}>{cat.icon}</span>
+                  <span style={{ fontSize: 15 }}>{cat.emoji}</span>
                   {cat.label}
                 </button>
               ))}
             </div>
 
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14,
+            <div role="list" aria-label="Liste des outils IA disponibles dans la categorie selectionnee" style={{
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: 14,
             }} className="lp-tools-grid">
               {TOOL_CATEGORIES[toolTab].tools.map((tool, i) => (
-                <div key={i} className="lp-app-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 18px' }}>
+                <div key={i} role="listitem" className="lp-app-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '20px 18px', background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12 }}>
                   <div style={{
                     width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                    background: '#F0F2F5', border: '1px solid #E8EAED',
+                    background: '#F7F7F7', border: '1px solid #E5E5E5',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{tool.icon}</span>
+                    <span role="img" aria-label={`Icone de l'outil IA ${tool.name}`} style={{ fontSize: 22 }}>{tool.emoji}</span>
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                      <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{tool.name}</span>
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{tool.name}</span>
                       <span style={{
-                        fontSize: 10, fontWeight: 700, color: '#06b6d4',
-                        background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)',
+                        fontSize: 10, fontWeight: 700, color: '#6B6B6B',
+                        background: '#F7F7F7', border: '1px solid #E5E5E5',
                         padding: '2px 8px', borderRadius: 20,
                       }}>Inclus</span>
                     </div>
-                    <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.55 }}>{tool.desc}</p>
+                    <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.55 }}>{tool.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div style={{ textAlign: 'center', marginTop: 24 }}>
-              <span style={{ fontSize: 12, color: '#9ca3af' }}>
-                {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils inclus dans tous les plans
+              <span style={{ fontSize: 12, color: '#9B9B9B' }}>
+                {TOOL_CATEGORIES.reduce((acc, c) => acc + c.tools.length, 0)} outils IA inclus dans tous les plans Freenzy.io
               </span>
+            </div>
+            <span style={srOnly}>Freenzy.io inclut des dizaines d&apos;outils IA pour automatiser la telephonie avec un repondeur intelligent, generer des documents professionnels, gerer les reseaux sociaux automatiquement, piloter votre entreprise depuis WhatsApp, creer des photos et videos par IA, et bien plus encore. Tous les outils sont inclus sans frais supplementaires.</span>
+          </div>
+        </section>
+
+        {/* ══ 5. WHATSAPP ══════════════════════════════════════════ */}
+        <section aria-label="Integration WhatsApp Business avec les agents IA Freenzy.io pour piloter votre entreprise par messagerie instantanee" style={{ background: '#F7F7F7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
+            <div className="lp-whatsapp-grid">
+              <div>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>WhatsApp IA Business</p>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1.5, marginBottom: 12 }}>
+                  Pilotez vos agents IA sur <strong>WhatsApp</strong>.
+                </h2>
+                <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 20 }}>
+                  Recevez les résumés, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents répondent en <strong style={{ color: '#1A1A1A' }}>temps réel</strong>.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#6B6B6B' }}>
+                      <span role="img" aria-label="Fonctionnalite incluse" style={{ fontSize: 16 }}>✅</span> {f}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="lp-wa-mockup" style={{
+                background: '#F7F7F7', border: '1px solid #E5E5E5', borderRadius: 20, padding: '20px 16px',
+                maxWidth: 340, width: '100%', position: 'relative',
+              }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '20px 20px 0 0', background: '#25D366' }} />
+                <div style={{ textAlign: 'center', marginBottom: 14 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>Freenzy Assistant</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {WA_MESSAGES.map((msg, i) => (
+                    <div key={i} style={{
+                      alignSelf: msg.from === 'user' ? 'flex-end' : 'flex-start',
+                      background: msg.from === 'user' ? '#dcf8c6' : '#fff',
+                      color: '#1A1A1A', borderRadius: 10, padding: '8px 12px',
+                      maxWidth: '85%', fontSize: 12, lineHeight: 1.5,
+                      whiteSpace: 'pre-line',
+                      border: '1px solid #E5E5E5',
+                    }}>
+                      {msg.text}
+                      <div style={{ fontSize: 10, color: '#9B9B9B', textAlign: 'right', marginTop: 3 }}>{msg.time}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ══ DEMO INTERACTIVE ══════════════════════════════════ */}
-        <section style={{ background: '#1a0e3a', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        {/* ══ 6. DEMO INTERACTIVE ══════════════════════════════════ */}
+        <section aria-label="Demonstration interactive des agents IA Freenzy.io en action — exemples concrets d'automatisation" style={{ background: '#F7F7F7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 860, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7dd3fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>En action</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, ...gradientTextStyle }}>
-                Vos agents au travail.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Demonstration IA en action</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, color: '#1A1A1A' }}>
+                Vos agents IA au travail.
               </h2>
             </div>
 
-            <div role="tablist" style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 2 }}>
+            <div role="tablist" className="lp-demo-tabs" style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 2 }}>
               {DEMO_SCENARIOS.map((s, i) => (
                 <button
                   key={i}
@@ -605,31 +482,31 @@ export default function LandingPage() {
                   aria-selected={demoTab === i}
                   style={{
                     padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 700,
-                    border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
-                    background: demoTab === i ? s.color : 'rgba(255,255,255,0.06)',
-                    color: demoTab === i ? '#fff' : 'rgba(255,255,255,0.5)',
-                    boxShadow: demoTab === i ? `0 0 20px ${s.color}44` : 'none',
+                    border: demoTab === i ? 'none' : '1px solid #E5E5E5', cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44,
+                    background: demoTab === i ? '#1A1A1A' : '#fff',
+                    color: demoTab === i ? '#fff' : '#6B6B6B',
                     transition: 'all 0.2s',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, marginRight: 6 }}>{s.tabIcon}</span>
+                  <span style={{ fontSize: 16, marginRight: 6 }}>{s.tabEmoji}</span>
                   {s.tab}
                 </button>
               ))}
             </div>
 
             <div style={{
-              ...glassCard, overflow: 'hidden',
+              background: '#fff', border: '1px solid #E5E5E5', borderRadius: 16, overflow: 'hidden',
+              transition: 'all 0.3s',
             }}>
               <div style={{
-                background: 'rgba(255,255,255,0.03)', padding: '9px 16px',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                background: '#F7F7F7', padding: '9px 16px',
+                borderBottom: '1px solid #E5E5E5',
                 display: 'flex', alignItems: 'center', gap: 7,
               }}>
-                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
-                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ffbe2e', display: 'inline-block' }} />
-                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840', display: 'inline-block' }} />
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.22)', marginLeft: 6 }}>
+                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#E5E5E5', display: 'inline-block' }} />
+                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#E5E5E5', display: 'inline-block' }} />
+                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#E5E5E5', display: 'inline-block' }} />
+                <span style={{ fontSize: 11, color: '#9B9B9B', marginLeft: 6 }}>
                   Flashboard · Agent {demo.tab}
                 </span>
               </div>
@@ -637,13 +514,13 @@ export default function LandingPage() {
                 <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                    background: 'rgba(255,255,255,0.07)',
+                    background: '#F7F7F7',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}><span className="material-symbols-rounded" style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>person</span></div>
+                  }}><span style={{ fontSize: 14 }}>👤</span></div>
                   <div style={{
-                    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)',
+                    background: '#F7F7F7', border: '1px solid #E5E5E5',
                     borderRadius: '0 12px 12px 12px', padding: '9px 13px',
-                    fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55, maxWidth: 520,
+                    fontSize: 13, color: '#6B6B6B', lineHeight: 1.55, maxWidth: 520,
                   }}>
                     {demo.prompt}
                   </div>
@@ -651,37 +528,37 @@ export default function LandingPage() {
                 <div style={{ display: 'flex', gap: 10 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                    background: `${demo.color}1a`, border: `1px solid ${demo.color}44`,
+                    background: '#F7F7F7', border: '1px solid #E5E5E5',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span></div>
+                  }}><span style={{ fontSize: 14 }}>⚡</span></div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                      <span style={{ fontSize: 11, color: demo.color, fontWeight: 700, letterSpacing: 0.5 }}>
+                      <span style={{ fontSize: 11, color: '#1A1A1A', fontWeight: 700, letterSpacing: 0.5 }}>
                         {demo.tab.toUpperCase()} · TERMINÉ
                       </span>
                       <span style={{
                         display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
-                        background: demo.color,
+                        background: '#1A1A1A',
                         animation: 'lp-cursor-blink 1.2s step-end infinite',
                       }} />
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       {demo.lines.map((line, j) => (
-                        <div key={j} style={{
-                          background: 'rgba(255,255,255,0.03)',
-                          border: '1px solid rgba(255,255,255,0.06)',
-                          borderLeft: `2px solid ${demo.color}55`,
+                        <div key={j} className="lp-demo-line" style={{
+                          background: '#F7F7F7',
+                          border: '1px solid #E5E5E5',
+                          borderLeft: '2px solid #E5E5E5',
                           borderRadius: '0 8px 8px 0', padding: '7px 11px',
                           display: 'flex', gap: 10, alignItems: 'baseline',
                         }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase', letterSpacing: 0.4, flexShrink: 0, minWidth: 58 }}>
+                          <span className="lp-demo-label" style={{ fontSize: 10, fontWeight: 700, color: '#9B9B9B', textTransform: 'uppercase', letterSpacing: 0.4, flexShrink: 0, minWidth: 58 }}>
                             {line.label}
                           </span>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.68)' }}>{line.text}</span>
+                          <span style={{ fontSize: 12, color: '#1A1A1A' }}>{line.text}</span>
                         </div>
                       ))}
                     </div>
-                    <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>{demo.model}</div>
+                    <div style={{ marginTop: 8, fontSize: 11, color: '#9B9B9B' }}>{demo.model}</div>
                   </div>
                 </div>
               </div>
@@ -689,123 +566,34 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ DISCUSSIONS APPROFONDIES ═══════════════════════════════ */}
-        <section style={{ background: '#FAFBFC', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
-          <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div className="lp-discussions-grid">
-              <div>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#0EA5E9', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                  Réflexion profonde
-                </p>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
-                  Explorez les <span className="fz-accent-word">grandes questions</span> avec l&apos;IA.
-                </h2>
-                <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.65, marginBottom: 24 }}>
-                  85+ templates de discussion guidée, 16 catégories, pensée étendue avec Claude Opus. L&apos;IA ne se contente pas de répondre — elle <span className="fz-accent-word">réfléchit profondément</span> avec vous.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-                  {DISCUSSION_HIGHLIGHTS.map((h, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#0EA5E9' }}>{h.icon}</span>
-                      <span style={{ fontSize: 13, color: '#4b5563' }}>{h.text}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
-                  {DISCUSSION_CATEGORIES.map((cat, i) => (
-                    <span key={i} style={{
-                      fontSize: 11, padding: '4px 10px', borderRadius: 100,
-                      background: i < DISCUSSION_CATEGORIES.length - 1 ? 'rgba(14,165,233,0.08)' : 'transparent',
-                      color: '#0EA5E9', fontWeight: 500,
-                    }}>{cat}</span>
-                  ))}
-                </div>
-                <Link href="/login?mode=register" className="lp-cta-primary" style={{
-                  display: 'inline-block', padding: '12px 28px',
-                  background: '#0EA5E9', boxShadow: '0 2px 8px rgba(14,165,233,0.3)', color: '#fff',
-                  borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                }}>
-                  Explorer les discussions
-                </Link>
-              </div>
-              {/* Discussion mockup card */}
-              <div style={{
-                background: '#0f0720', borderRadius: 16, padding: 0, overflow: 'hidden',
-                border: '1px solid #d1d5db',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
-              }}>
-                {/* macOS-style chrome */}
-                <div style={{ padding: '10px 14px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
-                </div>
-                <div style={{ padding: '18px 18px 14px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                    <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, background: 'rgba(14,165,233,0.2)', color: '#7dd3fc', fontWeight: 600 }}>Philosophie</span>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>Extended Thinking</span>
-                  </div>
-                  <p style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginBottom: 16 }}>Le bonheur est-il un choix ?</p>
-                  {/* User bubble */}
-                  <div style={{
-                    background: 'rgba(14,165,233,0.15)', borderRadius: '12px 12px 4px 12px',
-                    padding: '10px 14px', marginBottom: 10, maxWidth: '85%', marginLeft: 'auto',
-                  }}>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', lineHeight: 1.5, margin: 0 }}>
-                      Est-ce que le bonheur dépend de nos circonstances ou de notre attitude intérieure ?
-                    </p>
-                  </div>
-                  {/* AI bubble */}
-                  <div style={{
-                    background: 'rgba(255,255,255,0.05)', borderRadius: '12px 12px 12px 4px',
-                    padding: '10px 14px', maxWidth: '90%',
-                  }}>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5, margin: 0 }}>
-                      Cette question touche au cœur de la philosophie stoïcienne. Épictète distinguait les choses qui dépendent de nous de celles qui n&apos;en dépendent pas...
-                    </p>
-                  </div>
-                  {/* Depth bar */}
-                  <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ flex: 1, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
-                      <div style={{ width: '25%', height: '100%', borderRadius: 2, background: 'linear-gradient(90deg, #0EA5E9, #7dd3fc)' }} />
-                    </div>
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Profondeur 3/20</span>
-                  </div>
-                </div>
-                <div style={{ padding: '8px 18px 12px', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>85+ sujets disponibles</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ COMMENT ÇA MARCHE — scenarios + technologies ═════════ */}
-        <section style={{ background: '#1a0e3a', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        {/* ══ 7. COMMENT ÇA MARCHE — scenarios + technologies ═════════ */}
+        <section aria-label="Comment fonctionne Freenzy.io — scenarios d'automatisation IA et technologies utilisees" style={{ background: '#FFFFFF', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7dd3fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ça marche</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, ...gradientTextStyle }}>
-                Concret. Automatisé. Instantané.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment fonctionne l&apos;automatisation IA</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, color: '#1A1A1A' }}>
+                Automatisation IA concrete et instantanee.
               </h2>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>Vos agents traitent tout, <span className="fz-accent-word">24h/24</span>. Voici ce que ça donne.</p>
+              <p style={{ color: '#6B6B6B', fontSize: 14 }}>Vos agents IA traitent tout, <strong style={{ color: '#1A1A1A' }}>24h/24</strong>. Voici ce que ca donne concretement.</p>
             </div>
 
             {/* Scenarios concrets */}
             <div className="lp-scenario-steps" style={{ gap: 16, marginBottom: 40 }}>
               {SCENARIOS.map((s, i) => (
                 <div key={i} style={{
-                  ...glassCard, padding: 'clamp(16px, 2.5vw, 24px)',
+                  background: '#F7F7F7', border: '1px solid #E5E5E5', borderRadius: 16,
+                  padding: 'clamp(16px, 2.5vw, 24px)', transition: 'all 0.3s',
                 }}>
-                  <div style={{ ...gradientDot(8), marginBottom: 14 }} />
-                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{s.title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1A1A1A', display: 'inline-block', flexShrink: 0, marginBottom: 14 }} />
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#1A1A1A', marginBottom: 8 }}>{s.title}</h3>
+                  <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.6, marginBottom: 16 }}>{s.desc}</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {s.steps.map((step, j) => (
-                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
+                      <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#6B6B6B' }}>
                         <span style={{
                           width: 20, height: 20, borderRadius: '50%',
-                          background: `${s.color}22`, color: s.color,
+                          background: '#F7F7F7', color: '#1A1A1A',
+                          border: '1px solid #E5E5E5',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           fontSize: 10, fontWeight: 800, flexShrink: 0,
                         }}>{j + 1}</span>
@@ -813,143 +601,91 @@ export default function LandingPage() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 14, fontSize: 11, color: 'rgba(255,255,255,0.18)' }}>{s.tech}</div>
+                  <div style={{ marginTop: 14, fontSize: 11, color: '#9B9B9B' }}>{s.tech}</div>
                 </div>
               ))}
             </div>
 
             {/* Technologies intégrées — carousel */}
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.22)', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
             </div>
             <TechCarousel items={TECH_FEATURES} />
           </div>
         </section>
 
-        {/* ══ WHATSAPP ══════════════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
-          <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div className="lp-whatsapp-grid">
-              <div>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#06b6d4', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>WhatsApp</p>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
-                  Vos agents sur <span className="fz-accent-word" style={{ color: '#06b6d4' }}>WhatsApp</span>.
-                </h2>
-                <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.65, marginBottom: 20 }}>
-                  Recevez les résumés, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents répondent en <span className="fz-accent-word" style={{ color: '#06b6d4' }}>temps réel</span>.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#6b7280' }}>
-                      <span className="material-symbols-rounded" style={{ color: '#06b6d4', fontSize: 16 }}>check_circle</span> {f}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{
-                background: '#075e54', borderRadius: 20, padding: '20px 16px',
-                maxWidth: 340, width: '100%',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
-              }}>
-                <div style={{ textAlign: 'center', marginBottom: 14 }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.8)' }}>Freenzy Assistant</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {WA_MESSAGES.map((msg, i) => (
-                    <div key={i} style={{
-                      alignSelf: msg.from === 'user' ? 'flex-end' : 'flex-start',
-                      background: msg.from === 'user' ? '#dcf8c6' : '#fff',
-                      color: '#1d1d1f', borderRadius: 10, padding: '8px 12px',
-                      maxWidth: '85%', fontSize: 12, lineHeight: 1.5,
-                      whiteSpace: 'pre-line',
-                    }}>
-                      {msg.text}
-                      <div style={{ fontSize: 10, color: '#888', textAlign: 'right', marginTop: 3 }}>{msg.time}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ AGENTS PERSONNELS B2C ══════════════════════════════ */}
-        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+        {/* ══ 8. AGENTS PERSONNELS B2C ══════════════════════════════ */}
+        <section aria-label="Agents IA personnels pour la vie quotidienne — budget, impots, coaching, ecriture et bien-etre" style={{ background: '#F7F7F7', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#ec4899', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                Votre vie personnelle
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Agents IA pour votre vie personnelle
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 12 }}>
-                Des agents IA pour <span className="fz-accent-word" style={{ color: '#ec4899' }}>VOUS</span>, pas juste votre entreprise.
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1.5, marginBottom: 12 }}>
+                Des agents IA personnels pour <strong>VOUS</strong>, pas juste votre entreprise.
               </h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
-                Budget, impôts, immobilier, coaching, écriture... <span style={{ color: '#ec4899', fontWeight: 600 }}>12 agents personnels</span>, inclus gratuitement dans chaque compte.
+              <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
+                Budget, impôts, immobilier, coaching, écriture... <span style={{ color: '#1A1A1A', fontWeight: 600 }}>12 agents personnels</span>, inclus gratuitement dans chaque compte.
               </p>
             </div>
-            <div className="lp-personal-grid">
+            <div className="lp-personal-grid" role="list" aria-label="Liste des 12 agents IA personnels inclus gratuitement">
               {PERSONAL_AGENTS_LANDING.map((agent, i) => (
-                <div key={i} style={{
-                  background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                <div key={i} role="listitem" style={{
+                  background: '#fff',
+                  border: '1px solid #E5E5E5',
                   borderRadius: 14, padding: '16px 18px',
-                  borderLeft: `3px solid ${agent.color}`,
-                  boxShadow: '0 0 40px rgba(14,165,233,0.15)', transition: 'all 0.3s',
+                  borderLeft: '3px solid #E5E5E5',
+                  transition: 'all 0.3s',
                   display: 'flex', gap: 14, alignItems: 'flex-start',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 24, color: agent.color, flexShrink: 0, width: 28, height: 28, overflow: 'hidden', marginTop: 2 }}>{agent.icon}</span>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 3 }}>{agent.name}</p>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.4, margin: 0 }}>{agent.desc}</p>
+                  <span role="img" aria-label={`Icone de l'agent IA personnel ${agent.name}`} style={{ fontSize: 22, flexShrink: 0, marginTop: 2 }}>{agent.emoji}</span>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', marginBottom: 3 }}>{agent.name}</p>
+                    <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.4, margin: 0 }}>{agent.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
             <div style={{ textAlign: 'center', marginTop: 28 }}>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>+ Coach, Contradicteur, Cinéaste, Déconnexion et bien d&apos;autres...</span>
+              <span style={{ fontSize: 12, color: '#9B9B9B' }}>+ Coach, Contradicteur, Cinéaste, Déconnexion et bien d&apos;autres...</span>
             </div>
           </div>
         </section>
 
-        {/* ══ STUDIO CRÉATIF ══════════════════════════════════════ */}
-        <section style={{ background: '#fff', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+        {/* ══ 9. STUDIO CRÉATIF ══════════════════════════════════════ */}
+        <section aria-label="Studio creatif IA — generation de photos, videos et avatars par intelligence artificielle avec fal.ai et D-ID" style={{ background: '#FFFFFF', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9333ea', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                Studio créatif
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Studio creatif IA
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1.5, marginBottom: 12 }}>
-                Photos, vidéos, avatars — <span className="fz-accent-word">générés par l&apos;IA</span>.
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1.5, marginBottom: 12 }}>
+                Photos, videos, avatars — <strong>generes par l&apos;intelligence artificielle</strong>.
               </h2>
-              <p style={{ fontSize: 14, color: '#6b7280', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
+              <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
                 Créez du contenu visuel professionnel en quelques secondes. Intégré directement dans votre dashboard.
               </p>
             </div>
             <div className="lp-studio-bento">
               {/* Main card — Photo */}
               <div style={{
-                background: 'linear-gradient(145deg, #f5f0ff 0%, #ede9fe 100%)',
+                background: '#F7F7F7',
                 borderRadius: 18, padding: 'clamp(20px, 3vw, 32px)', position: 'relative', overflow: 'hidden',
-                border: '1px solid rgba(147,51,234,0.12)',
+                border: '1px solid #E5E5E5',
                 minHeight: 220,
               }}>
-                <div style={{
-                  position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                  width: 120, height: 120, borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(147,51,234,0.15) 0%, transparent 70%)',
-                }} />
-                <span className="material-symbols-rounded" style={{ fontSize: 40, color: '#9333ea', marginBottom: 14, display: 'block', position: 'relative' }}>photo_camera</span>
-                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', marginBottom: 6, position: 'relative' }}>{STUDIO_FEATURES[0].title}</h3>
-                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5, marginBottom: 14, position: 'relative' }}>{STUDIO_FEATURES[0].desc}</p>
+                <span style={{ fontSize: 36, marginBottom: 14, display: 'block', position: 'relative' }}>{STUDIO_FEATURES[0].emoji}</span>
+                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A1A', marginBottom: 6, position: 'relative' }}>{STUDIO_FEATURES[0].title}</h3>
+                <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.5, marginBottom: 14, position: 'relative' }}>{STUDIO_FEATURES[0].desc}</p>
                 <div style={{ display: 'flex', gap: 8, position: 'relative' }}>
-                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(147,51,234,0.1)', color: '#9333ea', fontWeight: 600 }}>{STUDIO_FEATURES[0].badge}</span>
-                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(147,51,234,0.06)', color: '#9333ea' }}>{STUDIO_FEATURES[0].credits}</span>
+                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: '#F7F7F7', color: '#6B6B6B', fontWeight: 600, border: '1px solid #E5E5E5' }}>{STUDIO_FEATURES[0].badge}</span>
+                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: '#F7F7F7', color: '#6B6B6B', border: '1px solid #E5E5E5' }}>{STUDIO_FEATURES[0].credits}</span>
                 </div>
                 {/* Prompt mockup */}
                 <div style={{
                   marginTop: 16, padding: '10px 14px', borderRadius: 10,
-                  background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.06)',
-                  fontSize: 11, color: '#888', fontStyle: 'italic', position: 'relative',
+                  background: '#fff', border: '1px solid #E5E5E5',
+                  fontSize: 11, color: '#9B9B9B', fontStyle: 'italic', position: 'relative',
                 }}>
                   &quot;Photo produit minimaliste pour e-commerce, fond blanc, éclairage studio&quot;
                 </div>
@@ -958,59 +694,59 @@ export default function LandingPage() {
               <div className="lp-studio-bento-right">
                 {STUDIO_FEATURES.slice(1).map((f, i) => (
                   <div key={i} style={{
-                    background: '#fafafa', borderRadius: 16, padding: 'clamp(16px, 2vw, 24px)',
-                    border: '1px solid rgba(0,0,0,0.06)', flex: 1,
+                    background: '#F7F7F7', borderRadius: 16, padding: 'clamp(16px, 2vw, 24px)',
+                    border: '1px solid #E5E5E5', flex: 1,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 28, color: f.color, marginBottom: 10, display: 'block' }}>{f.icon}</span>
-                    <h4 style={{ fontSize: 16, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{f.title}</h4>
-                    <p style={{ fontSize: 12, color: '#86868b', lineHeight: 1.4, marginBottom: 10, margin: 0 }}>{f.desc}</p>
+                    <span style={{ fontSize: 26, marginBottom: 10, display: 'block' }}>{f.emoji}</span>
+                    <h4 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', marginBottom: 4 }}>{f.title}</h4>
+                    <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.4, marginBottom: 10, margin: 0 }}>{f.desc}</p>
                     <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-                      <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: `${f.color}12`, color: f.color, fontWeight: 600 }}>{f.badge}</span>
-                      <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: `${f.color}08`, color: f.color }}>{f.credits}</span>
+                      <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: '#F7F7F7', color: '#6B6B6B', fontWeight: 600, border: '1px solid #E5E5E5' }}>{f.badge}</span>
+                      <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: '#F7F7F7', color: '#6B6B6B', border: '1px solid #E5E5E5' }}>{f.credits}</span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             {/* Category pills */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 24 }}>
+            <div className="lp-category-pills" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 24 }}>
               {STUDIO_CATEGORIES.map((cat, i) => (
                 <span key={i} style={{
                   fontSize: 12, padding: '6px 14px', borderRadius: 100,
-                  background: '#f0f9ff', color: '#0EA5E9', fontWeight: 500,
-                  border: '1px solid rgba(14,165,233,0.1)',
+                  background: '#F7F7F7', color: '#1A1A1A', fontWeight: 500,
+                  border: '1px solid #E5E5E5',
                 }}>{cat}</span>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ══ CRÉATION SUR MESURE ═════════════════════════════════ */}
-        <section style={{ background: '#FAFBFC', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        {/* ══ 10. CRÉATION SUR MESURE ═════════════════════════════════ */}
+        <section aria-label="Creation de modules IA sur mesure — personnalisez vos agents et workflows d'automatisation" style={{ background: '#F7F7F7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#0EA5E9', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                Sur mesure
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Modules IA sur mesure
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 12, ...gradientTextStyle }}>
-                Créez vos propres modules.
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 12, color: '#1A1A1A' }}>
+                Creez vos propres modules IA personnalises.
               </h2>
-              <p style={{ fontSize: 15, color: '#6b7280', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
-                Chaque entreprise est <span className="fz-accent-word" style={{ color: '#0EA5E9' }}>unique</span>. Créez des modules IA adaptés à votre métier, ou confiez-nous leur conception.
+              <p style={{ fontSize: 15, color: '#6B6B6B', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
+                Chaque entreprise est <strong style={{ color: '#1A1A1A' }}>unique</strong>. Créez des modules IA adaptés à votre métier, ou confiez-nous leur conception.
               </p>
             </div>
 
             <div className="lp-custom-grid" style={{
-              display: 'grid', gap: 20,
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: 20,
               marginBottom: 32,
             }}>
               {/* Self-service */}
-              <div className="lp-app-card" style={{ padding: '32px 28px' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 32, marginBottom: 16, display: 'block' }}>build</span>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
-                  Vous créez
+              <div style={{ background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12, padding: '32px 28px' }}>
+                <span role="img" aria-label="Outils de creation de modules IA personnalises en libre-service" style={{ fontSize: 28, marginBottom: 16, display: 'block' }}>🛠️</span>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1A1A1A', marginBottom: 8 }}>
+                  Vous creez vos agents IA
                 </h3>
-                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.65, marginBottom: 18 }}>
+                <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 18 }}>
                   Depuis votre tableau de bord, définissez un agent personnalisé en quelques minutes : nom, rôle, instructions, ton, et outils connectés.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1020,20 +756,20 @@ export default function LandingPage() {
                     'Connectez vos outils (email, CRM, WhatsApp…)',
                     'Testez et déployez instantanément',
                   ].map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <span className="material-symbols-rounded" style={{ color: '#0EA5E9', fontSize: 14 }}>check_circle</span> {p}
+                    <div key={i} style={{ fontSize: 12, color: '#6B6B6B', display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <span role="img" aria-label="Fonctionnalite incluse et disponible" style={{ fontSize: 14 }}>✅</span> {p}
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* On-demand */}
-              <div className="lp-app-card" style={{ padding: '32px 28px' }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 32, marginBottom: 16, display: 'block' }}>target</span>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
-                  On crée pour vous
+              <div style={{ background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12, padding: '32px 28px' }}>
+                <span role="img" aria-label="Service de creation de modules IA sur mesure par l'equipe Freenzy.io" style={{ fontSize: 28, marginBottom: 16, display: 'block' }}>🎯</span>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1A1A1A', marginBottom: 8 }}>
+                  On cree vos modules IA pour vous
                 </h3>
-                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.65, marginBottom: 18 }}>
+                <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 18 }}>
                   Besoin d&apos;un module complexe ou spécifique à votre secteur ? Notre équipe le conçoit, le configure et le déploie dans votre espace.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1043,8 +779,8 @@ export default function LandingPage() {
                     'Intégrations personnalisées (API, bases de données)',
                     'Formation et accompagnement inclus',
                   ].map((p, i) => (
-                    <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <span className="material-symbols-rounded" style={{ color: '#0EA5E9', fontSize: 14 }}>check_circle</span> {p}
+                    <div key={i} style={{ fontSize: 12, color: '#6B6B6B', display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <span role="img" aria-label="Fonctionnalite incluse et disponible" style={{ fontSize: 14 }}>✅</span> {p}
                     </div>
                   ))}
                 </div>
@@ -1052,8 +788,8 @@ export default function LandingPage() {
             </div>
 
             {/* Examples — CAROUSEL */}
-            <div className="lp-app-card" style={{ padding: '24px 28px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
+            <div style={{ background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12, padding: '24px 28px' }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#9B9B9B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
                 Exemples de modules créés par nos utilisateurs
               </p>
               <Carousel
@@ -1062,12 +798,12 @@ export default function LandingPage() {
                 renderItem={(ex: typeof CUSTOM_EXAMPLES[0]) => (
                   <div style={{
                     padding: '16px 14px', borderRadius: 12,
-                    background: '#FFFFFF', border: '1px solid #E8EAED',
+                    background: '#fff', border: '1px solid #E5E5E5',
                     minHeight: 120,
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 22, marginBottom: 8, display: 'block' }}>{ex.icon}</span>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f', marginBottom: 4 }}>{ex.name}</div>
-                    <div style={{ fontSize: 11, color: '#6b7280', lineHeight: 1.55 }}>{ex.desc}</div>
+                    <span style={{ fontSize: 20, marginBottom: 8, display: 'block' }}>{ex.emoji}</span>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', marginBottom: 4 }}>{ex.name}</div>
+                    <div style={{ fontSize: 11, color: '#6B6B6B', lineHeight: 1.55 }}>{ex.desc}</div>
                   </div>
                 )}
               />
@@ -1075,107 +811,135 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ ARCADE & GAMIFICATION ══════════════════════════════ */}
-        <section style={{ background: '#0f0720', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
+        {/* ══ 11. DISCUSSIONS APPROFONDIES ═══════════════════════════════ */}
+        <section aria-label="Discussions approfondies avec intelligence artificielle — 85 templates de reflexion philosophique et pensee etendue avec Claude Opus" style={{ background: '#FFFFFF', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7c3aed', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                Arcade Freenzy
-              </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', letterSpacing: -1.5, marginBottom: 12 }}>
-                <span className="fz-accent-word">Jouez</span>. Progressez. <span className="fz-accent-word">Gagnez des crédits</span>.
-              </h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, maxWidth: 520, margin: '0 auto' }}>
-                10 jeux intégrés, 50 niveaux, 20 badges à débloquer. Plus vous jouez, plus vous gagnez.
-              </p>
-            </div>
-
-            {/* Games strip */}
-            <div className="lp-arcade-strip" style={{ marginBottom: 28 }}>
-              {ARCADE_GAMES_PREVIEW.map((game, i) => (
-                <div key={i} style={{
-                  minWidth: 110, padding: '14px 16px', borderRadius: 14,
-                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-                  textAlign: 'center', flexShrink: 0,
-                }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 26, color: game.color, display: 'block', marginBottom: 6 }}>{game.icon}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{game.name}</span>
+            <div className="lp-discussions-grid">
+              <div>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                  Réflexion profonde
+                </p>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1.5, marginBottom: 12 }}>
+                  Explorez les <strong>grandes questions</strong> avec l&apos;intelligence artificielle.
+                </h2>
+                <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 24 }}>
+                  85+ templates de discussion guidée, 16 catégories, pensée étendue avec Claude Opus. L&apos;IA ne se contente pas de répondre — elle <strong style={{ color: '#1A1A1A' }}>réfléchit profondément</strong> avec vous.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                  {DISCUSSION_HIGHLIGHTS.map((h, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                      <span style={{ fontSize: 18 }}>{h.emoji}</span>
+                      <span style={{ fontSize: 13, color: '#6B6B6B' }}>{h.text}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            {/* Stats */}
-            <div className="lp-arcade-stats" style={{ marginBottom: 28 }}>
-              {ARCADE_STATS.map((stat, i) => (
-                <div key={i} style={{
-                  background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)',
-                  borderRadius: 14, padding: '20px 16px', textAlign: 'center',
-                }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 28, color: '#7c3aed', display: 'block', marginBottom: 6 }}>{stat.icon}</span>
-                  <div style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 2 }}>{stat.value}</div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{stat.label}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+                  {DISCUSSION_CATEGORIES.map((cat, i) => (
+                    <span key={i} style={{
+                      fontSize: 11, padding: '4px 10px', borderRadius: 100,
+                      background: i < DISCUSSION_CATEGORIES.length - 1 ? '#F7F7F7' : 'transparent',
+                      color: '#1A1A1A', fontWeight: 500,
+                    }}>{cat}</span>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            {/* Badges preview */}
-            <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>Badges à débloquer</p>
-            </div>
-            <div className="lp-arcade-badges">
-              {ARCADE_BADGES_PREVIEW.map((badge, i) => (
-                <div key={i} style={{
-                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
-                  borderRadius: 12, padding: '12px 14px',
-                  display: 'flex', gap: 10, alignItems: 'center',
+                <Link href="/client/dashboard" className="lp-cta-primary" title="Accedez au dashboard pour explorer les 85 templates de discussions approfondies avec Claude Opus" style={{
+                  display: 'inline-block', padding: '12px 28px',
+                  background: '#1A1A1A', color: '#fff',
+                  borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: 'none',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#f59e0b', flexShrink: 0 }}>{badge.icon}</span>
-                  <div>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0 }}>{badge.name}</p>
-                    <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', margin: 0 }}>{badge.desc}</p>
+                  Explorer les discussions approfondies avec l&apos;IA
+                </Link>
+              </div>
+              {/* Discussion mockup card */}
+              <div style={{
+                background: '#F7F7F7', borderRadius: 16, padding: 0, overflow: 'hidden',
+                border: '1px solid #E5E5E5',
+              }}>
+                {/* macOS-style chrome */}
+                <div style={{ padding: '10px 14px', display: 'flex', gap: 6, borderBottom: '1px solid #E5E5E5' }}>
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#E5E5E5' }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#E5E5E5' }} />
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#E5E5E5' }} />
+                </div>
+                <div style={{ padding: '18px 18px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                    <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, background: '#F7F7F7', border: '1px solid #E5E5E5', color: '#1A1A1A', fontWeight: 600 }}>Philosophie</span>
+                    <span style={{ fontSize: 11, color: '#9B9B9B' }}>Extended Thinking</span>
+                  </div>
+                  <p style={{ fontSize: 15, fontWeight: 600, color: '#1A1A1A', marginBottom: 16 }}>Le bonheur est-il un choix ?</p>
+                  {/* User bubble */}
+                  <div style={{
+                    background: '#fff', border: '1px solid #E5E5E5', borderRadius: '12px 12px 4px 12px',
+                    padding: '10px 14px', marginBottom: 10, maxWidth: '85%', marginLeft: 'auto',
+                  }}>
+                    <p style={{ fontSize: 12, color: '#1A1A1A', lineHeight: 1.5, margin: 0 }}>
+                      Est-ce que le bonheur dépend de nos circonstances ou de notre attitude intérieure ?
+                    </p>
+                  </div>
+                  {/* AI bubble */}
+                  <div style={{
+                    background: '#fff', border: '1px solid #E5E5E5', borderRadius: '12px 12px 12px 4px',
+                    padding: '10px 14px', maxWidth: '90%',
+                  }}>
+                    <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.5, margin: 0 }}>
+                      Cette question touche au cœur de la philosophie stoïcienne. Épictète distinguait les choses qui dépendent de nous de celles qui n&apos;en dépendent pas...
+                    </p>
+                  </div>
+                  {/* Depth bar */}
+                  <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#E5E5E5' }}>
+                      <div style={{ width: '25%', height: '100%', borderRadius: 2, background: '#1A1A1A' }} />
+                    </div>
+                    <span style={{ fontSize: 10, color: '#9B9B9B' }}>Profondeur 3/20</span>
                   </div>
                 </div>
-              ))}
+                <div style={{ padding: '8px 18px 12px', borderTop: '1px solid #E5E5E5', textAlign: 'center' }}>
+                  <span style={{ fontSize: 11, color: '#9B9B9B' }}>85+ sujets disponibles</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ══ POURQUOI FREENZY ═════════════════════════════════ */}
-        <section style={{ background: '#0f0720', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        {/* ══ 12. POURQUOI FREENZY ═════════════════════════════════ */}
+        <section aria-label="Pourquoi choisir Freenzy.io — plateforme IA gratuite, sans abonnement, 0% commission, accessible a tous" style={{ background: '#F7F7F7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#7dd3fc', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                Free &amp; Easy
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
+                Free &amp; Easy — L&apos;IA sans complexite
               </p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, ...gradientTextStyle }}>
-                L&apos;IA accessible à tous.
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, color: '#1A1A1A' }}>
+                L&apos;intelligence artificielle accessible a tous.
               </h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
-                Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <span className="fz-accent-word" style={{ color: '#7dd3fc' }}>complète</span>, <span className="fz-accent-word" style={{ color: '#7dd3fc' }}>gratuite</span>, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous.
+              <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
+                Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <strong style={{ color: '#1A1A1A' }}>complète</strong>, <strong style={{ color: '#1A1A1A' }}>gratuite</strong>, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous.
               </p>
             </div>
             <div className="lp-scenario-steps" style={{ gap: 16 }}>
               {WHY_FREENZY.map((item, i) => (
-                <div key={i} style={{ ...glassCard, padding: '24px 22px' }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block' }}>{item.icon}</span>
-                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{item.title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>{item.desc}</p>
+                <div key={i} style={{
+                  background: '#fff', border: '1px solid #E5E5E5', borderRadius: 16,
+                  padding: '24px 22px', transition: 'all 0.3s',
+                }}>
+                  <span role="img" aria-label={`Avantage Freenzy.io : ${item.title}`} style={{ fontSize: 26, marginBottom: 12, display: 'block' }}>{item.emoji}</span>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#1A1A1A', marginBottom: 8 }}>{item.title}</h3>
+                  <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.65 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
 
             {/* Trust badges strip */}
-            <div style={{
+            <div className="lp-trust-strip" role="list" aria-label="Badges de confiance et garanties Freenzy.io" style={{
               display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap',
               marginTop: 40, paddingTop: 32,
-              borderTop: '1px solid rgba(255,255,255,0.06)',
+              borderTop: '1px solid #E5E5E5',
             }}>
               {TRUST_BADGES.map((badge, i) => (
-                <div key={i} style={{
+                <div key={i} role="listitem" style={{
                   display: 'flex', alignItems: 'center', gap: 7,
-                  fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.28)',
+                  fontSize: 11, fontWeight: 600, color: '#9B9B9B',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 15 }}>{badge.icon}</span>
+                  <span role="img" aria-label={`Garantie : ${badge.text}`} style={{ fontSize: 15 }}>{badge.emoji}</span>
                   {badge.text}
                 </div>
               ))}
@@ -1183,22 +947,22 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ ENTERPRISE (visible si audience null ou entreprise) ══ */}
+        {/* ══ 13. ENTERPRISE (visible si audience null ou entreprise) ══ */}
         {(!audience || audience === 'entreprise') && (
-          <section ref={enterpriseRef} id="enterprise" style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+          <section ref={enterpriseRef} id="enterprise" aria-label="Offre entreprise Freenzy.io — solutions IA sur mesure pour grandes entreprises et ETI" style={{ background: '#fff', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
             <EnterpriseSection />
           </section>
         )}
 
-        {/* ══ FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
-        <section ref={faqRef} id="faq" style={{ background: '#FAFBFC', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
+        {/* ══ 14. FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
+        <section ref={faqRef} id="faq" aria-label="Questions frequentes sur Freenzy.io — plus de 100 reponses sur les agents IA, les tarifs, les fonctionnalites et la securite" style={{ background: '#FFFFFF', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#f97316', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>FAQ</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1d1d1f', letterSpacing: -1 }}>
-                <span className="fz-accent-word" style={{ color: '#f97316' }}>{TOTAL_FAQ_COUNT}</span> réponses à vos questions.
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>FAQ — Questions frequentes</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1 }}>
+                <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{TOTAL_FAQ_COUNT}</span> reponses a vos questions sur l&apos;IA.
               </h2>
-              <p style={{ fontSize: 14, color: '#86868b', marginTop: 8 }}>
+              <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>
                 Tout ce que vous devez savoir sur Freenzy.io, classé par thème.
               </p>
             </div>
@@ -1218,9 +982,8 @@ export default function LandingPage() {
                     display: 'flex', alignItems: 'center', gap: 5,
                     padding: '10px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700, minHeight: 44,
                     border: 'none', cursor: 'pointer',
-                    background: faqCat === ci ? cat.color : '#fff',
-                    color: faqCat === ci ? '#fff' : '#6b7280',
-                    boxShadow: faqCat === ci ? `0 2px 12px ${cat.color}33` : '0 1px 3px rgba(0,0,0,0.04)',
+                    background: faqCat === ci ? '#1A1A1A' : '#F7F7F7',
+                    color: faqCat === ci ? '#fff' : '#6B6B6B',
                     transition: 'all 0.2s',
                   }}
                 >
@@ -1240,14 +1003,14 @@ export default function LandingPage() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
               padding: '10px 16px', borderRadius: 10,
-              background: `${orderedFaq[faqCat].color}08`,
-              border: `1px solid ${orderedFaq[faqCat].color}18`,
+              background: '#F7F7F7',
+              border: '1px solid #E5E5E5',
             }}>
               <span style={{ fontSize: 18 }}>{orderedFaq[faqCat].icon}</span>
-              <span style={{ fontSize: 14, fontWeight: 800, color: orderedFaq[faqCat].color }}>
+              <span style={{ fontSize: 14, fontWeight: 800, color: '#1A1A1A' }}>
                 {orderedFaq[faqCat].label}
               </span>
-              <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>
+              <span style={{ fontSize: 12, color: '#9B9B9B', marginLeft: 'auto' }}>
                 {orderedFaq[faqCat].questions.length} questions
               </span>
             </div>
@@ -1256,7 +1019,6 @@ export default function LandingPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {orderedFaq[faqCat].questions.map((faq, i) => {
                 const isOpen = openFaq === i;
-                const catColor = orderedFaq[faqCat].color;
                 return (
                   <div
                     key={`${faqCat}-${i}`}
@@ -1276,20 +1038,20 @@ export default function LandingPage() {
                       }
                     }}
                     style={{
-                      background: isOpen ? '#f0f9ff' : '#fff',
-                      border: isOpen ? `1.5px solid ${catColor}40` : '1px solid #ebebeb',
-                      borderLeft: `3px solid ${isOpen ? catColor : '#d1d5db'}`,
+                      background: isOpen ? '#F7F7F7' : '#fff',
+                      border: '1px solid #E5E5E5',
+                      borderLeft: `3px solid ${isOpen ? '#1A1A1A' : '#E5E5E5'}`,
                       borderRadius: 11, padding: '16px 18px',
                       transition: 'all 0.2s', cursor: 'pointer',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#1d1d1f' }}>{faq.q}</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{faq.q}</div>
                       <div style={{
                         width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
-                        background: isOpen ? '#0EA5E9' : '#f0f0f0',
+                        background: isOpen ? '#1A1A1A' : '#F7F7F7',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
+                        fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9B9B9B',
                         transition: 'all 0.2s',
                       }}>
                         {isOpen ? '−' : '+'}
@@ -1297,7 +1059,7 @@ export default function LandingPage() {
                     </div>
                     {isOpen && (
                       <div className="lp-faq-answer" style={{
-                        borderTop: `1px solid ${catColor}12`,
+                        borderTop: '1px solid #E5E5E5',
                       }}>
                         {faq.a}
                       </div>
@@ -1309,57 +1071,53 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ CTA FINAL ════════════════════════════════════════ */}
-        <section ref={ctaRef} style={{
-          background: 'linear-gradient(165deg, #0f0720 0%, #1a0e3a 50%, #0f0720 100%)',
+        {/* ══ 15. CTA FINAL ════════════════════════════════════════ */}
+        <section ref={ctaRef} aria-label="Accedez a Freenzy.io gratuitement — explorez le dashboard sans inscription, 0% commission" style={{
+          background: '#F7F7F7',
           padding: 'clamp(56px, 8vw, 96px) 24px',
           textAlign: 'center', position: 'relative', overflow: 'hidden',
         }}>
-          <div style={{
-            position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
-            width: '100%', maxWidth: 500, height: 300,
-            background: 'radial-gradient(ellipse, rgba(14,165,233,0.14) 0%, rgba(3,105,161,0.06) 40%, transparent 68%)',
-            pointerEvents: 'none',
-          }} />
           <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <p className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 12, letterSpacing: 4, marginBottom: 16, opacity: 0.4 }}>
-              freenzy.io
+            <p style={{ fontSize: 12, letterSpacing: 4, marginBottom: 16, color: '#9B9B9B', display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6 }}>
+              <span className="fz-logo-text">freenzy.io</span>
+              <span style={{ fontSize: 8, fontStyle: 'italic', letterSpacing: 0, fontWeight: 400 }}>Beta Test 1</span>
             </p>
             <h2 style={{
               fontSize: 'clamp(28px, 5vw, 56px)',
               fontFamily: 'var(--font-display)', fontWeight: 700,
               letterSpacing: -2.5, lineHeight: 1.05, marginBottom: 14,
-              ...gradientTextStyle,
+              color: '#1A1A1A',
             }}>
-              Votre équipe IA<br />
-              vous attend.
+              Accedez a Freenzy maintenant<br />
+              c&apos;est gratuit, sans inscription.
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.36)', marginBottom: 24 }}>
-              <span style={{ color: '#7dd3fc', fontWeight: 700 }}>{totalAgents}+ agents IA</span>. Toutes les IA du marché. <span style={{ color: '#7dd3fc', fontWeight: 700 }}>0% de commission</span>. Sans carte bancaire.
+            <p style={{ fontSize: 15, color: '#6B6B6B', marginBottom: 24 }}>
+              <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{totalAgents}+ agents IA</span>. Toutes les IA du marche. <span style={{ fontWeight: 700, color: '#1A1A1A' }}>0% de commission</span>. Acces libre, sans inscription.
             </p>
             {/* Rewards chips */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 28 }}>
+            <div className="lp-rewards-chips" role="list" aria-label="Avantages et recompenses offerts aux utilisateurs Freenzy.io" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 28 }}>
               {REWARDS_CHIPS.map((chip, i) => (
-                <div key={i} style={{
+                <div key={i} role="listitem" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '6px 14px', borderRadius: 100,
-                  background: `${chip.color}14`, border: `1px solid ${chip.color}30`,
+                  background: '#fff', border: '1px solid #E5E5E5',
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 15, color: chip.color }}>{chip.icon}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: chip.color }}>{chip.text}</span>
+                  <span role="img" aria-label={`Recompense : ${chip.text}`} style={{ fontSize: 15 }}>{chip.emoji}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#1A1A1A' }}>{chip.text}</span>
                 </div>
               ))}
             </div>
-            <Link href={heroCta?.href || '/login?mode=register'} className="lp-cta-primary" onClick={() => trackCtaClick('final_cta', heroCta?.href || '/login?mode=register', audience, '/')} style={{
+            <span style={srOnly}>Rejoignez les 500 professionnels qui utilisent deja Freenzy.io pour automatiser leur entreprise. Inscription gratuite, sans carte bancaire, avec 50 credits offerts et 0 pour cent de commission a vie pour les premiers utilisateurs. Accedez immediatement a plus de 100 agents IA specialises.</span>
+            <Link href="/client/dashboard" className="lp-cta-primary" title="Accedez au dashboard Freenzy.io gratuitement — explorez tous les agents IA sans inscription" onClick={() => trackCtaClick('final_cta', '/client/dashboard', audience, '/')} style={{
               display: 'inline-block', padding: '15px 40px',
-              background: '#0EA5E9', boxShadow: '0 2px 8px rgba(14,165,233,0.3)', color: '#fff',
+              background: '#1A1A1A', color: '#fff',
               borderRadius: 8, fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16,
               textDecoration: 'none',
             }}>
-              {heroCta?.label || 'Commencer gratuitement'}
+              Acceder au Dashboard
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
-              <Link href="/plans" style={{ color: 'rgba(255,255,255,0.28)', textDecoration: 'none' }}>Tarifs détaillés →</Link>
+              <Link href="/plans" title="Consultez les tarifs detailles de Freenzy.io — paiement a l'usage, 0% commission" style={{ color: '#9B9B9B', textDecoration: 'none' }}>Voir les tarifs detailles de Freenzy.io →</Link>
             </div>
           </div>
         </section>

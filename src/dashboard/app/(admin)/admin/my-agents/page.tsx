@@ -64,7 +64,7 @@ export default function MyAgentsPage() {
               onClick={() => setSelected(agent.id)}
               className={`p-4 rounded-xl border text-left transition-all hover:border-neutral-400/50 ${selected === agent.id ? 'bg-neutral-200/10 border-neutral-400' : 'bg-[#F7F7F7] border-neutral-200'}`}
             >
-              <div className="mb-2"><span className="material-symbols-rounded" style={{ fontSize: 28, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
+              <div className="mb-2">{agent.materialIcon}</div>
               <h3 className="text-neutral-900 font-medium text-sm">{agent.name}</h3>
               <p className="text-neutral-500 text-xs mt-1 line-clamp-2">{agent.description}</p>
               <div className="flex items-center gap-2 mt-3">
@@ -80,7 +80,7 @@ export default function MyAgentsPage() {
         {/* Detail panel */}
         {selectedAgent && (
           <div className="w-80 bg-[#F7F7F7] rounded-xl border border-neutral-200 p-6 sticky top-4 self-start">
-            <div className="mb-3"><span className="material-symbols-rounded" style={{ fontSize: 40, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span></div>
+            <div className="mb-3">{selectedAgent.materialIcon}</div>
             <h2 className="text-xl font-bold text-neutral-900">{selectedAgent.name}</h2>
             <p className="text-neutral-500 text-sm mt-2">{selectedAgent.description}</p>
             <div className="mt-4 space-y-3">

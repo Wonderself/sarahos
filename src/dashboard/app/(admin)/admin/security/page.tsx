@@ -91,7 +91,7 @@ export default function SecurityPage() {
       {/* Status card */}
       <div className="card section">
         <div className="flex items-center" style={{ gap: 12, marginBottom: 16 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 28, flexShrink: 0 }}>{totpEnabled ? 'lock' : 'lock_open'}</span>
+          {totpEnabled ? 'lock' : 'lock_open'}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 600, fontSize: 15, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               Authentification 2FA
@@ -110,7 +110,7 @@ export default function SecurityPage() {
         {/* IDLE */}
         {step === 'idle' && !totpEnabled && (
           <button className="btn btn-primary" onClick={startSetup} disabled={working}>
-            {working ? 'Génération…' : <><span className="material-symbols-rounded" style={{ fontSize: 14 }}>lock</span> Activer la 2FA</>}
+            {working ? 'Génération…' : <>🔒 Activer la 2FA</>}
           </button>
         )}
         {step === 'idle' && totpEnabled && (
@@ -166,7 +166,7 @@ export default function SecurityPage() {
         {/* DONE — backup codes */}
         {step === 'done' && (
           <div>
-            <div style={{ color: 'var(--success)', fontWeight: 600, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>check_circle</span> 2FA activée avec succès !</div>
+            <div style={{ color: 'var(--success)', fontWeight: 600, marginBottom: 12 }}>✅ 2FA activée avec succès !</div>
             <p style={{ fontSize: 13, marginBottom: 8 }}>
               Sauvegardez ces <strong>8 codes de secours</strong> (chacun utilisable une fois si vous perdez votre téléphone) :
             </p>
@@ -212,7 +212,7 @@ export default function SecurityPage() {
         )}
 
         {error && (
-          <div className="alert alert-danger" style={{ marginTop: 12, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> {error}</div>
+          <div className="alert alert-danger" style={{ marginTop: 12, fontSize: 13 }}>⚠️ {error}</div>
         )}
       </div>
 

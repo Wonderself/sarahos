@@ -103,7 +103,7 @@ export default async function CampaignsPage() {
         <div className="section-title">Toutes les campagnes ({campaigns.length})</div>
         {campaigns.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>campaign</span></div>
+            <div style={{ marginBottom: 8 }}>📢</div>
             <div>Aucune campagne enregistrée pour l&apos;instant.</div>
           </div>
         ) : (

@@ -10,6 +10,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import AuthRequired from '../../../components/AuthRequired';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -70,7 +71,6 @@ const CU = {
   card: {
     background: '#fff',
     border: '1px solid #E5E5E5' as const,
-    border: '1px solid #E5E5E5',
     borderRadius: 8,
   },
   text: 'var(--fz-text, #1A1D23)',
@@ -220,14 +220,17 @@ export default function FinancesPage() {
 
   if (loading) {
     return (
+      <AuthRequired pageName="Finances & Credits">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
         <div style={{ fontSize: 40 }}>💳</div>
         <div style={{ fontSize: 13, color: '#9B9B9B' }} className="animate-pulse">Chargement des finances...</div>
       </div>
+      </AuthRequired>
     );
   }
 
   return (
+    <AuthRequired pageName="Finances & Credits">
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
 
       {/* Header */}
@@ -476,8 +479,8 @@ export default function FinancesPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ ...CU.card, padding: 24 }}>
             <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>💲 Grille de prix par modèle</h3>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <table style={{ width: '100%', minWidth: 500, borderCollapse: 'collapse', fontSize: isMobile ? 11 : 13 }}>
                 <thead>
                   <tr style={{ borderBottom: `2px solid ${'#E5E5E5'}` }}>
                     {['Modèle', 'Input / 1M tokens', 'Output / 1M tokens', 'Coût moyen / 1M', 'Equivalent crédits'].map(h => (
@@ -533,7 +536,6 @@ export default function FinancesPage() {
                 <div key={c.model} style={{
                   padding: 18, borderRadius: 8,
                   background: '#F7F7F7', border: '1px solid #E5E5E5',
-                  border: '1px solid #E5E5E5',
                 }}>
                   <div style={{ fontSize: 12, fontWeight: 500, color: '#1A1A1A', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>{c.icon} {c.model}</div>
                   <div style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', marginBottom: 4 }}>~{c.cost} cr/mois</div>
@@ -545,5 +547,6 @@ export default function FinancesPage() {
         </div>
       )}
     </div>
+    </AuthRequired>
   );
 }

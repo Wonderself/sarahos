@@ -151,7 +151,7 @@ export default function WidgetPage() {
           </div>
 
           {/* Size */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, marginBottom: 16 }}>
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Largeur (px)</label>
               <input
@@ -316,6 +316,7 @@ export default function WidgetPage() {
               background: '#1A1A1A', color: '#fff',
               fontSize: 12, fontWeight: 700, cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: 4,
+              minHeight: 44,
             }}
           >
             {copied ? '✅' : '📋'}

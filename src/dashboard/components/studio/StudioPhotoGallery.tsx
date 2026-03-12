@@ -83,7 +83,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>image</span>
+          <span style={{ fontSize: 14 }}>🖼️</span>
           <span style={{ fontSize: 12, fontWeight: 700, color: '#1d1d1f' }}>
             Mes créations
           </span>
@@ -103,7 +103,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
 
       {expanded && entries.length === 0 && (
         <div style={{ padding: '24px 16px', textAlign: 'center' }}>
-          <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>palette</span></div>
+          <div style={{ fontSize: 28, marginBottom: 8 }}>🎨</div>
           <div style={{ fontSize: 12, color: '#9B9B9B' }}>
             Vos photos générées apparaîtront ici
           </div>
@@ -159,7 +159,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                       background: '#1A1A1A', borderRadius: '50%',
                       width: 14, height: 14, display: 'flex', alignItems: 'center',
                       justifyContent: 'center', fontSize: 8, color: 'white', fontWeight: 700,
-                    }}><span className="material-symbols-rounded" style={{ fontSize: 8 }}>check</span></div>
+                    }}>✅</div>
                   )}
                 </div>
                 <div style={{ fontSize: 9, color: '#9B9B9B', marginTop: 2, textAlign: 'center' }}>
@@ -241,7 +241,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                           cursor: 'pointer', fontWeight: 600,
                         }}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 10, verticalAlign: 'middle' }}>undo</span> Réutiliser
+                        <span style={{ fontSize: 10, verticalAlign: 'middle' }}>↩️</span> Réutiliser
                       </button>
                     )}
                     <a
@@ -256,7 +256,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                         display: 'inline-block',
                       }}
                     >
-                      <span className="material-symbols-rounded" style={{ fontSize: 10, verticalAlign: 'middle' }}>download</span> Télécharger
+                      📥 Télécharger
                     </a>
                     <button
                       onClick={() => handleCopyUrl(expandedEntry.imageUrl, expandedEntry.id)}
@@ -266,7 +266,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                         background: 'white', cursor: 'pointer', fontWeight: 600,
                       }}
                     >
-                      {copied === expandedEntry.id ? <><span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> Copié</> : <><span className="material-symbols-rounded" style={{ fontSize: 10 }}>link</span> URL</>}
+                      {copied === expandedEntry.id ? <>✅ Copié</> : <>🔗 URL</>}
                     </button>
                     <button
                       onClick={() => handleDelete(expandedEntry.id)}

@@ -69,7 +69,7 @@ export default async function ReferralsPage() {
 
       {/* Info box */}
       <div className="alert alert-info section" style={{ fontSize: 12 }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>target</span> <strong>Politique Freenzy.io :</strong> Les 5 000 premiers utilisateurs bénéficient d'une commission à <strong>0%</strong> à vie (verrouillée à l'inscription). Après le 5 000ème user, le taux passe à 5%.
+        🎯 <strong>Politique Freenzy.io :</strong> Les 5 000 premiers utilisateurs bénéficient d'une commission à <strong>0%</strong> à vie (verrouillée à l'inscription). Après le 5 000ème user, le taux passe à 5%.
       </div>
 
       {/* Top referrers */}
@@ -115,7 +115,7 @@ export default async function ReferralsPage() {
         <div className="section-title">Tous les parrainages ({referrals.length})</div>
         {referrals.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>handshake</span></div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🤝</div>
             <div>Aucun parrainage enregistré pour l'instant.</div>
           </div>
         ) : (

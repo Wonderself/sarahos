@@ -20,10 +20,10 @@ interface Referral {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string; emoji: string }> = {
-  pending: { label: 'En attente', color: '#f59e0b', emoji: '⏳' },
-  month1_ok: { label: 'Mois 1 valide', color: '#3b82f6', emoji: '✅' },
-  qualified: { label: 'Qualifie', color: '#22c55e', emoji: '🎉' },
-  rewarded: { label: 'Recompense', color: '#22c55e', emoji: '💰' },
+  pending: { label: 'En attente', color: '#1A1A1A', emoji: '⏳' },
+  month1_ok: { label: 'Mois 1 valide', color: '#1A1A1A', emoji: '✅' },
+  qualified: { label: 'Qualifie', color: '#1A1A1A', emoji: '🎉' },
+  rewarded: { label: 'Recompense', color: '#1A1A1A', emoji: '💰' },
   failed: { label: 'Non qualifie', color: '#ef4444', emoji: '❌' },
 };
 
@@ -96,7 +96,7 @@ export default function ReferralsPage() {
   useEffect(() => {
     if (!referralCode || !qrCanvasRef.current) return;
     const url = `${window.location.origin}/login?ref=${referralCode}`;
-    generateQR(url, qrCanvasRef.current, { size: 200, foreground: 'var(--fz-accent, #0EA5E9)', background: '#0f0720' });
+    generateQR(url, qrCanvasRef.current, { size: 200, foreground: 'var(--fz-accent, #0EA5E9)', background: '#FFFFFF' });
   }, [referralCode]);
 
   const downloadQR = useCallback(() => {
@@ -135,13 +135,13 @@ export default function ReferralsPage() {
       <div style={{
         display: 'flex', alignItems: 'center', gap: 14,
         marginBottom: 24, padding: '0 0 16px 0',
-        borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+        borderBottom: '1px solid #E5E5E5',
       }}>
         <span style={{ fontSize: 32 }}>{meta.emoji}</span>
         <div style={{ flex: 1 }}>
           <h1 style={{
             fontSize: 22, fontWeight: 800, margin: 0,
-            color: 'var(--fz-text, #1E293B)',
+            color: '#1A1A1A',
             display: 'flex', alignItems: 'center', gap: 6,
           }}>
             {meta.title}
@@ -149,7 +149,7 @@ export default function ReferralsPage() {
           </h1>
           <p style={{
             margin: '4px 0 0', fontSize: 14,
-            color: 'var(--fz-text-secondary, #64748B)',
+            color: '#6B6B6B',
           }}>
             {meta.subtitle}
           </p>
@@ -159,19 +159,19 @@ export default function ReferralsPage() {
 
       {/* Hero */}
       <div className="card section" style={{
-        background: 'linear-gradient(135deg, rgba(14,165,233,0.05), rgba(6,182,212,0.03))',
-        border: '2px solid rgba(14,165,233,0.19)', padding: '24px 20px',
-        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(14,165,233,0.15)',
+        background: '#F7F7F7',
+        border: '1px solid #E5E5E5', padding: '24px 20px',
+        backdropFilter: 'none',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
           <span style={{ fontSize: 48 }}>{'🎁'}</span>
           <div className="flex-1" style={{ minWidth: 0 }}>
-            <div className="font-bold" style={{ fontSize: 20, marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>
+            <div className="font-bold" style={{ fontSize: 20, marginBottom: 6, color: '#1A1A1A' }}>
               Gagnez 20 EUR de crédits <span className="fz-logo-word">gratuits</span> !
             </div>
-            <div className="text-md" style={{ lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
+            <div className="text-md" style={{ lineHeight: 1.6, color: '#6B6B6B' }}>
               Partagez votre lien d&apos;invitation. Pour chaque filleul qualifié, vous recevez
-              <strong style={{ color: 'var(--accent)' }}> 20 EUR de crédits </strong>
+              <strong style={{ color: '#1A1A1A' }}> 20 EUR de crédits </strong>
               (10 EUR/mois sur 2 mois).
             </div>
           </div>
@@ -180,11 +180,11 @@ export default function ReferralsPage() {
 
       {/* Referral Code & Link */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Votre lien de parrainage</div>
+        <div className="section-title" style={{ marginBottom: 12, color: '#1A1A1A' }}>Votre lien de parrainage</div>
         <div className="flex items-center gap-8 flex-wrap">
           <div className="flex-1" style={{
-            background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-            borderRadius: 10, padding: '10px 14px', fontFamily: 'var(--font-mono, monospace)',
+            background: '#F7F7F7', border: '1px solid #E5E5E5',
+            borderRadius: 8, padding: '10px 14px', fontFamily: 'var(--font-mono, monospace)',
             fontSize: 12, color: 'var(--fz-text-muted)', minWidth: isMobile ? 0 : 200, wordBreak: 'break-all',
             width: isMobile ? '100%' : undefined,
           }}>
@@ -199,19 +199,19 @@ export default function ReferralsPage() {
             </button>
           )}
         </div>
-        <div className="text-xs" style={{ marginTop: 8, color: 'var(--fz-text-muted, #94A3B8)' }}>
-          Code : <strong style={{ color: 'var(--accent)' }}>{referralCode || '...'}</strong>
+        <div className="text-xs" style={{ marginTop: 8, color: '#9B9B9B' }}>
+          Code : <strong style={{ color: '#1A1A1A' }}>{referralCode || '...'}</strong>
         </div>
       </div>
 
       {/* QR Code & Social Share */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>QR Code & Partage</div>
-        <div style={{ display: 'flex', gap: isMobile ? 12 : 24, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="section-title" style={{ marginBottom: 16, color: '#1A1A1A' }}>QR Code & Partage</div>
+        <div style={{ display: 'flex', gap: isMobile ? 12 : 24, alignItems: isMobile ? 'stretch' : 'center', flexWrap: 'wrap', flexDirection: isMobile ? 'column' as const : 'row' as const }}>
           <div style={{ textAlign: 'center' }}>
             <canvas
               ref={qrCanvasRef}
-              style={{ borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}
+              style={{ borderRadius: 8, border: '1px solid #E5E5E5' }}
               width={200}
               height={200}
             />
@@ -225,21 +225,21 @@ export default function ReferralsPage() {
             </button>
           </div>
           <div style={{ flex: 1, minWidth: isMobile ? 0 : 200 }}>
-            <div className="text-sm font-bold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>Partagez sur les réseaux</div>
+            <div className="text-sm font-bold mb-8" style={{ color: '#1A1A1A' }}>Partagez sur les réseaux</div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {[
-                { id: 'twitter', emoji: '💬', label: 'Twitter / X', color: '#1da1f2' },
-                { id: 'linkedin', emoji: '💼', label: 'LinkedIn', color: '#0077b5' },
-                { id: 'whatsapp', emoji: '📱', label: 'WhatsApp', color: '#25d366' },
-                { id: 'email', emoji: '✉️', label: 'Email', color: '#8b5cf6' },
+                { id: 'twitter', emoji: '💬', label: 'Twitter / X' },
+                { id: 'linkedin', emoji: '💼', label: 'LinkedIn' },
+                { id: 'whatsapp', emoji: '📱', label: 'WhatsApp' },
+                { id: 'email', emoji: '✉️', label: 'Email' },
               ].map(p => (
                 <button
                   key={p.id}
                   onClick={() => shareToSocial(p.id)}
                   className="btn btn-sm"
                   style={{
-                    background: `${p.color}18`, border: `1px solid ${p.color}33`,
-                    color: p.color, fontSize: 12, fontWeight: 600,
+                    background: '#fff', border: '1px solid #E5E5E5',
+                    color: '#1A1A1A', fontSize: 12, fontWeight: 600,
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}
                   disabled={!referralCode}
@@ -249,7 +249,7 @@ export default function ReferralsPage() {
                 </button>
               ))}
             </div>
-            <div className="text-xs" style={{ marginTop: 12, lineHeight: 1.6, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div className="text-xs" style={{ marginTop: 12, lineHeight: 1.6, color: '#9B9B9B' }}>
               Scannez le QR code ou utilisez les boutons pour partager votre lien de parrainage.
             </div>
           </div>
@@ -259,25 +259,25 @@ export default function ReferralsPage() {
       {/* Stats */}
       <div className="grid-3 section" style={{ gap: 10 }}>
         <div className="stat-card">
-          <span className="stat-label" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Filleuls inscrits</span>
-          <span className="stat-value" style={{ color: 'var(--fz-text, #1E293B)' }}>{totalReferrals}</span>
+          <span className="stat-label" style={{ color: '#9B9B9B' }}>Filleuls inscrits</span>
+          <span className="stat-value" style={{ color: '#1A1A1A' }}>{totalReferrals}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Filleuls qualifies</span>
-          <span className="stat-value" style={{ color: '#22c55e' }}>{qualifiedReferrals}</span>
+          <span className="stat-label" style={{ color: '#9B9B9B' }}>Filleuls qualifies</span>
+          <span className="stat-value" style={{ color: '#1A1A1A' }}>{qualifiedReferrals}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Crédits gagnés</span>
-          <span className="stat-value" style={{ color: 'var(--accent)' }}>
+          <span className="stat-label" style={{ color: '#9B9B9B' }}>Crédits gagnés</span>
+          <span className="stat-value" style={{ color: '#1A1A1A' }}>
             {totalRewards > 0 ? (totalRewards / 1_000_000).toFixed(0) : '0'}
           </span>
-          <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>crédits</span>
+          <span className="text-xs" style={{ color: '#9B9B9B' }}>crédits</span>
         </div>
       </div>
 
       {/* How it works */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Comment ça marche</div>
+        <div className="section-title" style={{ marginBottom: 16, color: '#1A1A1A' }}>Comment ça marche</div>
         <div className="grid-4" style={{ gap: 12, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : undefined }}>
           {[
             { step: '1', emoji: '🔗', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
@@ -293,18 +293,18 @@ export default function ReferralsPage() {
               }}>
                 <span style={{ fontSize: 20 }}>{s.emoji}</span>
               </div>
-              <div className="text-sm font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>{s.title}</div>
-              <div className="text-xs" style={{ lineHeight: 1.5, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.desc}</div>
+              <div className="text-sm font-bold mb-4" style={{ color: '#1A1A1A' }}>{s.title}</div>
+              <div className="text-xs" style={{ lineHeight: 1.5, color: '#9B9B9B' }}>{s.desc}</div>
             </div>
           ))}
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)',
-          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: '#F7F7F7',
+          border: '1px solid #E5E5E5',
           borderRadius: 8, marginTop: 16, padding: '10px 14px',
         }}>
-          <div className="text-xs" style={{ lineHeight: 1.6, color: 'var(--fz-text-muted, #94A3B8)' }}>
-            <strong style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Condition :</strong> Votre filleul doit dépenser au moins 9 EUR
+          <div className="text-xs" style={{ lineHeight: 1.6, color: '#9B9B9B' }}>
+            <strong style={{ color: '#6B6B6B' }}>Condition :</strong> Votre filleul doit dépenser au moins 9 EUR
             de tokens pendant 2 mois consécutifs pour que la récompense soit validée.
           </div>
         </div>
@@ -312,16 +312,16 @@ export default function ReferralsPage() {
 
       {/* Referral List */}
       <div className="section">
-        <div className="section-title" style={{ color: 'var(--fz-text, #1E293B)' }}>Mes filleuls</div>
+        <div className="section-title" style={{ color: '#1A1A1A' }}>Mes filleuls</div>
         {loading ? (
-          <div className="card"><div className="animate-pulse" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div></div>
+          <div className="card"><div className="animate-pulse" style={{ color: '#9B9B9B' }}>Chargement...</div></div>
         ) : referrals.length === 0 ? (
           <div className="card text-center" style={{ padding: '32px 20px' }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>{'👥'}</div>
-            <div className="text-md" style={{ marginBottom: 16, color: 'var(--fz-text-secondary, #64748B)' }}>
+            <div className="text-md" style={{ marginBottom: 16, color: '#6B6B6B' }}>
               Vous n&apos;avez pas encore de filleul.
             </div>
-            <div className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div className="text-sm" style={{ color: '#9B9B9B' }}>
               Partagez votre lien pour commencer à gagner des crédits !
             </div>
           </div>
@@ -344,22 +344,22 @@ export default function ReferralsPage() {
                   const st = STATUS_LABELS[ref.status] ?? STATUS_LABELS.pending;
                   return (
                     <tr key={ref.id}>
-                      <td className="font-semibold" style={{ color: 'var(--fz-text, #1E293B)' }}>{ref.referredEmail}</td>
+                      <td className="font-semibold" style={{ color: '#1A1A1A' }}>{ref.referredEmail}</td>
                       <td className="text-center">
                         <span style={{ color: st.color, fontWeight: 600, fontSize: 12 }}>
                           <span style={{ fontSize: 16, marginRight: 4, verticalAlign: 'middle' }}>{st.emoji}</span> {st.label}
                         </span>
                       </td>
-                      <td className="text-center text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                      <td className="text-center text-sm" style={{ color: '#6B6B6B' }}>
                         {ref.month1Spend > 0 ? `${(ref.month1Spend / 1_000_000).toFixed(0)} cr` : '—'}
                       </td>
-                      <td className="text-center text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                      <td className="text-center text-sm" style={{ color: '#6B6B6B' }}>
                         {ref.month2Spend > 0 ? `${(ref.month2Spend / 1_000_000).toFixed(0)} cr` : '—'}
                       </td>
-                      <td className="text-center text-sm font-bold" style={{ color: ref.rewardCredited ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)' }}>
+                      <td className="text-center text-sm font-bold" style={{ color: ref.rewardCredited ? '#1A1A1A' : '#9B9B9B' }}>
                         {ref.rewardCredited ? `${(ref.rewardAmount / 1_000_000).toFixed(0)} cr` : '—'}
                       </td>
-                      <td className="text-center text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
+                      <td className="text-center text-xs" style={{ color: '#9B9B9B' }}>
                         {new Date(ref.createdAt).toLocaleDateString('fr-FR')}
                       </td>
                     </tr>

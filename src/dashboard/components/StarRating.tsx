@@ -21,7 +21,6 @@ export default function StarRating({ value, onChange, size = 20, readonly = fals
         return (
           <span
             key={star}
-            className="material-symbols-rounded"
             onMouseEnter={() => !readonly && setHovered(star)}
             onMouseLeave={() => !readonly && setHovered(0)}
             onClick={() => !readonly && onChange?.(star)}
@@ -33,7 +32,7 @@ export default function StarRating({ value, onChange, size = 20, readonly = fals
               transform: hovered === star ? 'scale(1.2)' : 'scale(1)',
             }}
           >
-            {filled ? 'star' : 'star'}
+            {filled ? '⭐' : '☆'}
           </span>
         );
       })}

@@ -1008,8 +1008,8 @@ export default function LandingPage() {
             pointerEvents: 'none',
           }} />
           <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <p className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 12, letterSpacing: 4, marginBottom: 16, opacity: 0.4 }}>
-              freenzy.io
+            <p className="fz-logo-text fz-logo-text-dark" style={{ fontSize: 12, letterSpacing: 4, marginBottom: 16, opacity: 0.4, display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6 }}>
+              freenzy.io <span style={{ fontSize: 8, fontStyle: 'italic', letterSpacing: 0, fontWeight: 400 }}>Beta Test 1</span>
             </p>
             <h2 style={{
               fontSize: 'clamp(28px, 5vw, 56px)',

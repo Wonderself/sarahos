@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '@/lib/api-auth';
 
 const FAL_KEY = process.env['FAL_KEY'];
 const DID_API_KEY = process.env['DID_API_KEY'];
@@ -7,6 +8,9 @@ const DID_API_KEY = process.env['DID_API_KEY'];
 // - If sourceUrl provided + DID_API_KEY configured → D-ID talking head
 // - Otherwise → fal.ai LTX Video (text-to-video)
 export async function POST(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   try {
     const body = await req.json();
     // Support both `script` (sent by video page) and `text` (legacy)
@@ -98,6 +102,9 @@ export async function POST(req: NextRequest) {
 
 // GET: poll video generation status
 export async function GET(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   const videoId = req.nextUrl.searchParams.get('id') ?? '';
 
   if (!videoId) {

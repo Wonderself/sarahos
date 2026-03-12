@@ -249,7 +249,7 @@ export default function TypingGame() {
                 gap: 4,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+              <span style={{ fontSize: 16 }}>←</span>
               Arcade
             </Link>
           </div>

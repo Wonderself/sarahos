@@ -61,7 +61,7 @@ export default function UserFeatureFlagsTab({ userId, showToast }: {
 
   return (
     <div style={styles.card}>
-      <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18 }}>flag</span> Feature Flags — accès individuel</div>
+      <div style={styles.cardTitle}>🚩 Feature Flags — accès individuel</div>
       <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16 }}>
         Les features non définies ici suivent les règles par défaut du tier de l&apos;utilisateur.
       </p>

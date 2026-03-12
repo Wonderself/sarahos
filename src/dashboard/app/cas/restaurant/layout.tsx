@@ -1,19 +1,16 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'IA pour Restaurant — Réservations, Avis Google, Réseaux Sociaux | Freenzy.io',
-  description: 'Comment un restaurant automatise 80% de sa gestion avec l\'IA : réservations 24/7, réponses aux avis Google, posts Instagram automatiques.',
-  keywords: 'IA restaurant, réservation automatique, avis Google IA, restaurant automatisation',
-  alternates: { canonical: 'https://freenzy.io/cas/restaurant' },
+  title: 'Freenzy.io pour Restaurants — Automatisez Reservations, Commandes et Service Client avec l\'IA',
+  description: 'Comment les restaurants utilisent Freenzy.io pour automatiser les reservations telephoniques, gerer les commandes, repondre aux avis clients et optimiser leur presence en ligne. Repondeur IA qui prend les reservations 24h/24, generation automatique de menus et cartes, gestion des avis Google et TripAdvisor. Etude de cas complete avec resultats chiffres. ROI moyen : 340%.',
   openGraph: {
-    title: 'IA pour Restaurant — Réservations, Avis Google, Réseaux Sociaux',
-    description: 'Comment un restaurant automatise 80% de sa gestion avec l\'IA : réservations 24/7, réponses aux avis Google, posts Instagram automatiques.',
-    url: 'https://freenzy.io/cas/restaurant',
+    title: 'Freenzy.io pour Restaurants — Automatisez Reservations, Commandes et Service Client avec l\'IA',
+    description: 'Comment les restaurants utilisent Freenzy.io pour automatiser les reservations telephoniques, gerer les commandes, repondre aux avis clients et optimiser leur presence en ligne. ROI moyen : 340%.',
+    type: 'article',
     siteName: 'Freenzy.io',
-    type: 'website',
   },
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function CasRestaurantLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

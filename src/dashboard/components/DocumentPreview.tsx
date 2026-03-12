@@ -83,16 +83,16 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
       </div>
 
       {/* Section selection buttons */}
-      <div style={{ padding: '8px 16px', display: 'flex', gap: 8, borderBottom: '1px solid #e5e7eb' }}>
+      <div style={{ padding: '8px 16px', display: 'flex', gap: 8, borderBottom: '1px solid #e5e7eb', flexWrap: 'wrap' }}>
         <button onClick={selectAll} style={{
-          fontSize: 11, padding: '4px 10px', borderRadius: 6, border: '1px solid #e5e7eb',
-          background: 'white', cursor: 'pointer', color: '#4b5563',
+          fontSize: 12, padding: '10px 14px', borderRadius: 6, border: '1px solid #e5e7eb',
+          background: 'white', cursor: 'pointer', color: '#4b5563', minHeight: 44,
         }}>
           Tout selectionner
         </button>
         <button onClick={selectNone} style={{
-          fontSize: 11, padding: '4px 10px', borderRadius: 6, border: '1px solid #e5e7eb',
-          background: 'white', cursor: 'pointer', color: '#4b5563',
+          fontSize: 12, padding: '10px 14px', borderRadius: 6, border: '1px solid #e5e7eb',
+          background: 'white', cursor: 'pointer', color: '#4b5563', minHeight: 44,
         }}>
           Tout deselectionner
         </button>
@@ -119,8 +119,9 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
               <button
                 onClick={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
                 style={{
-                  fontSize: 10, color: '#1A1A1A', background: 'none', border: 'none',
-                  cursor: 'pointer', padding: '2px 6px',
+                  fontSize: 12, color: '#1A1A1A', background: 'none', border: 'none',
+                  cursor: 'pointer', padding: '10px 12px', minHeight: 44, minWidth: 44,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
                 {expandedIdx === idx ? 'Masquer' : 'Apercu'}
@@ -145,17 +146,18 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
       <div style={{
         padding: '12px 16px', background: '#f8fafc', borderTop: '1px solid #e5e7eb',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        flexWrap: 'wrap', gap: 8,
       }}>
         <span style={{ fontSize: 12, color: '#6b7280' }}>
           {selected.size}/{sections.length} sections selectionnees
         </span>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button
             onClick={onCancel}
             style={{
-              padding: '8px 16px', borderRadius: 8, border: '1px solid #e5e7eb',
-              background: 'white', color: '#6b7280', fontSize: 12, fontWeight: 600,
-              cursor: 'pointer',
+              padding: '10px 16px', borderRadius: 8, border: '1px solid #e5e7eb',
+              background: 'white', color: '#6b7280', fontSize: 13, fontWeight: 600,
+              cursor: 'pointer', minHeight: 44,
             }}
           >
             Annuler
@@ -164,9 +166,9 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
             onClick={() => onConfirm(Array.from(selected))}
             disabled={selected.size === 0}
             style={{
-              padding: '8px 16px', borderRadius: 8, border: 'none',
+              padding: '10px 16px', borderRadius: 8, border: 'none',
               background: selected.size > 0 ? '#1A1A1A' : '#9B9B9B',
-              color: 'white', fontSize: 12, fontWeight: 600,
+              color: 'white', fontSize: 13, fontWeight: 600, minHeight: 44,
               cursor: selected.size > 0 ? 'pointer' : 'not-allowed',
             }}
           >

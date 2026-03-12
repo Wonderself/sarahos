@@ -25,7 +25,7 @@ const GOALS: GoalOption[] = [
   {
     id: 'productivity',
     label: 'Productivité',
-    icon: 'speed',
+    icon: '⚡',
     color: '#1a1a1a',
     agentId: 'fz-assistante',
     description: 'Organisez votre temps, vos tâches et vos projets efficacement.',
@@ -33,7 +33,7 @@ const GOALS: GoalOption[] = [
   {
     id: 'sales',
     label: 'Ventes & Commercial',
-    icon: 'trending_up',
+    icon: '📈',
     color: '#1a1a1a',
     agentId: 'fz-commercial',
     description: 'Boostez vos ventes, prospectez et concluez plus de deals.',
@@ -41,7 +41,7 @@ const GOALS: GoalOption[] = [
   {
     id: 'creation',
     label: 'Création & Communication',
-    icon: 'palette',
+    icon: '🎨',
     color: '#1a1a1a',
     agentId: 'fz-communication',
     description: 'Créez du contenu percutant et gérez votre image de marque.',
@@ -49,7 +49,7 @@ const GOALS: GoalOption[] = [
   {
     id: 'personal',
     label: 'Gestion Personnelle',
-    icon: 'person',
+    icon: '👤',
     color: '#1a1a1a',
     agentId: 'fz-budget',
     description: 'Gérez votre budget, vos finances et votre vie quotidienne.',
@@ -331,7 +331,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 Choisissez ce qui vous correspond le mieux. On vous suggérera l&apos;assistant idéal.
               </p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 14 }}>
                 {GOALS.map(goal => (
                   <button
                     key={goal.id}
@@ -366,7 +366,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 24, color: 'var(--text-primary)' }}>
+                      <span style={{ fontSize: 24, color: 'var(--text-primary)' }}>
                         {goal.icon}
                       </span>
                     </div>
@@ -425,7 +425,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     justifyContent: 'center',
                     border: '1px solid #E5E5E5',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 28, color: 'var(--text-primary)' }}>
+                    <span style={{ fontSize: 28, color: 'var(--text-primary)' }}>
                       {agent.materialIcon}
                     </span>
                   </div>
@@ -491,7 +491,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
               >
                 Commencer à discuter
-                <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
+                →
               </button>
 
               {/* Back link */}
@@ -572,7 +572,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                           justifyContent: 'center',
                           flexShrink: 0,
                         }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--text-primary)' }}>
+                          <span style={{ fontSize: 18, color: 'var(--text-primary)' }}>
                             {agent.materialIcon}
                           </span>
                         </div>
@@ -605,7 +605,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       justifyContent: 'center',
                       flexShrink: 0,
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--text-primary)' }}>
+                      <span style={{ fontSize: 18, color: 'var(--text-primary)' }}>
                         {agent.materialIcon}
                       </span>
                     </div>
@@ -677,7 +677,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
                   >
                     Accéder au tableau de bord
-                    <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
+                    →
                   </button>
                 </div>
               )}
@@ -725,12 +725,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       transition: 'background 0.2s',
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{
-                      fontSize: 20,
-                      color: inputText.trim() && !hasReplied && !isTyping ? '#fff' : 'var(--text-tertiary)',
-                    }}>
-                      send
-                    </span>
+                    📤
                   </button>
                 </div>
               )}

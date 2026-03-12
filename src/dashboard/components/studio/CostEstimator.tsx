@@ -63,7 +63,7 @@ export default function CostEstimator({ costSteps, onConfirm, confirmed }: CostE
         <div style={{
           textAlign: 'center', padding: 8, fontSize: 12, color: '#1A1A1A', fontWeight: 600,
         }}>
-          Cout confirme <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span>
+          Cout confirme ✅
         </div>
       )}
     </div>

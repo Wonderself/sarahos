@@ -146,7 +146,7 @@ export default function QuizGame() {
     const score = correctRef.current * 100 + speedBonus;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 48, color: '#f59e0b' }}>emoji_events</span>
+        🏆
         <h2 style={{ color: '#fff', margin: 0 }}>Quiz terminé !</h2>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
           {correct}/{questions.length} bonnes réponses
@@ -174,7 +174,7 @@ export default function QuizGame() {
           href="/client/games"
           style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+          ←
           Arcade
         </Link>
       </div>

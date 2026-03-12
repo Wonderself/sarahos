@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DEFAULT_AGENTS } from '../../lib/agent-config';
 import PublicNav from '../../components/PublicNav';
@@ -16,34 +15,19 @@ function WaIcon({ size = 24, color = '#25D366' }: { size?: number; color?: strin
 }
 
 export default function WhatsAppPage() {
-  const [dark, setDark] = useState(false);
-  useEffect(() => {
-    const isDark = localStorage.getItem('fz_dark_mode') === 'true';
-    setDark(isDark);
-    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
-  }, []);
-
-  const txt = dark ? '#e4e6eb' : '#1a0e3a';
-  const txtSub = dark ? '#a0a4b0' : '#86868b';
-  const bg = dark ? '#0f0720' : '#fff';
-  const bgSurface = dark ? '#1a0e3a' : '#f5f5f7';
-  const bgCard = dark ? 'rgba(255,255,255,0.05)' : '#fff';
-  const btnBg = dark ? '#7c3aed' : '#1a0e3a';
-
   return (
-    <div style={{ background: bg, color: txt, minHeight: '100vh' }}>
+    <main aria-label="Agents IA Freenzy.io sur WhatsApp Business" style={{ background: '#fff', color: '#1a0e3a', minHeight: '100vh' }}>
 
       <PublicNav />
 
       {/* ── Hero ── */}
-      <section style={{
-        paddingTop: 88, paddingBottom: 40,
+      <section className="wa-hero" aria-label="Présentation de l'intégration WhatsApp Business" style={{
         textAlign: 'center', maxWidth: 700, margin: '0 auto', padding: '88px 24px 40px',
       }}>
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
           padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
-          background: bgSurface, color: txtSub,
+          background: '#f5f5f7', color: '#86868b',
           marginBottom: 28,
         }}>
           <WaIcon size={15} color="#86868b" /> WhatsApp Business
@@ -51,7 +35,7 @@ export default function WhatsAppPage() {
 
         <h1 style={{
           fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 700, letterSpacing: '-0.03em',
-          lineHeight: 1.08, marginBottom: 20, color: txt,
+          lineHeight: 1.08, marginBottom: 20, color: '#1a0e3a',
         }}>
           Vos agents IA, directement
           <br />
@@ -59,7 +43,7 @@ export default function WhatsAppPage() {
         </h1>
 
         <p style={{
-          fontSize: 17, lineHeight: 1.6, color: txtSub,
+          fontSize: 17, lineHeight: 1.6, color: '#86868b',
           maxWidth: 520, margin: '0 auto 32px',
         }}>
           Envoyez un message texte ou une note vocale a n&apos;importe lequel de vos {DEFAULT_AGENTS.length} agents IA.
@@ -67,16 +51,16 @@ export default function WhatsAppPage() {
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginBottom: 36 }}>
-          <Link href="/login?mode=register" style={{
+          <Link href="/client/dashboard" title="Accedez au dashboard Freenzy.io avec WhatsApp Business inclus" style={{
             padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
-            background: btnBg, color: '#fff', textDecoration: 'none',
+            background: '#1a0e3a', color: '#fff', textDecoration: 'none',
             display: 'inline-block', transition: 'opacity 0.2s',
           }}>
-            Essayer gratuitement
+            Acceder a Freenzy
           </Link>
-          <Link href="/demo" style={{
+          <Link href="/demo" title="Voir la démonstration des agents IA sur WhatsApp" style={{
             padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
-            background: bgSurface, color: txt, textDecoration: 'none',
+            background: '#f5f5f7', color: '#1a0e3a', textDecoration: 'none',
             display: 'inline-block', transition: 'opacity 0.2s',
           }}>
             Voir la demo
@@ -86,27 +70,32 @@ export default function WhatsAppPage() {
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
           {['WhatsApp inclus', 'Notes vocales', 'Repondeur IA', `${DEFAULT_AGENTS.length} agents`].map(t => (
             <span key={t} style={{
-              fontSize: 13, color: txtSub, display: 'flex', alignItems: 'center', gap: 5,
+              fontSize: 13, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5,
             }}>
-              <span className="material-symbols-rounded" style={{ color: txt, fontSize: 11 }}>check</span> {t}
+              <span style={{ fontSize: 11 }}>✅</span> {t}
             </span>
           ))}
         </div>
       </section>
 
+      {/* sr-only SEO text */}
+      <div className="sr-only" aria-hidden="false">
+        <p>Freenzy.io permet de déployer vos agents IA directement sur WhatsApp Business. Envoyez un message texte ou une note vocale à n&apos;importe lequel de vos 34 agents IA spécialisés. Le pipeline vocal intégré utilise Deepgram Nova-2 pour la transcription avec 98% de précision, Claude AI d&apos;Anthropic pour la compréhension contextuelle, et ElevenLabs Flash v2.5 pour les réponses vocales. Fonctionnalités incluses : répondeur IA 24/7, briefing quotidien automatique, alertes en temps réel, multi-agents, pipeline commercial. Intégration Twilio certifiée. Conforme RGPD, chiffrement de bout en bout.</p>
+      </div>
+
       {/* ── Content wrapper ── */}
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
 
         {/* ── Comment ca marche ── */}
-        <section style={{ padding: '48px 0' }}>
+        <section aria-label="Comment utiliser les agents IA sur WhatsApp en 3 étapes" style={{ padding: '48px 0' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnement</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: txt, marginBottom: 8 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnement</div>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 8 }}>
               Comment ca marche
             </h2>
-            <p style={{ fontSize: 15, color: txtSub }}>3 etapes, 2 minutes</p>
+            <p style={{ fontSize: 15, color: '#86868b' }}>3 etapes, 2 minutes</p>
           </div>
-          <div style={{
+          <div className="wa-steps-grid" style={{
             display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
           }}>
             {[
@@ -116,61 +105,61 @@ export default function WhatsAppPage() {
             ].map(s => (
               <div key={s.step} style={{
                 padding: 28, borderRadius: 12,
-                background: bgSurface,
+                background: '#f5f5f7',
                 textAlign: 'center',
               }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 14 }}>{s.step}</div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: txt, marginBottom: 8 }}>{s.title}</div>
-                <div style={{ fontSize: 14, color: txtSub, lineHeight: 1.65 }}>{s.desc}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 14 }}>{s.step}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: '#1a0e3a', marginBottom: 8 }}>{s.title}</div>
+                <div style={{ fontSize: 14, color: '#86868b', lineHeight: 1.65 }}>{s.desc}</div>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Fonctionnalites ── */}
-        <section style={{ padding: '48px 0' }}>
+        <section aria-label="Fonctionnalités WhatsApp Business — messages, notes vocales, alertes" style={{ padding: '48px 0' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnalites</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: txt }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Fonctionnalites</div>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a' }}>
               Tout ce que vous pouvez faire
             </h2>
           </div>
-          <div style={{
+          <div className="wa-features-grid" style={{
             display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
           }}>
             {[
-              { icon: 'chat', title: 'Messages texte', desc: 'Ecrivez naturellement a n\'importe quel agent. Il comprend le contexte de votre entreprise.' },
-              { icon: 'mic', title: 'Notes vocales', desc: 'Enregistrez une note vocale. Deepgram la transcrit instantanement, l\'agent agit.' },
-              { icon: 'wb_sunny', title: 'Briefing quotidien', desc: 'Chaque matin a 8h, recevez un resume de vos taches, alertes et insights dans WhatsApp.' },
-              { icon: 'notifications', title: 'Alertes en temps reel', desc: 'Prospect chaud, facture en retard, deadline proche... vos agents vous alertent proactivement.' },
-              { icon: 'group', title: 'Multi-agents', desc: 'Parlez a Lea pour un email, Thomas pour une offre, Manon pour un post social. Tout dans WhatsApp.' },
-              { icon: 'call', title: 'Repondeur IA', desc: 'Ne manquez plus un appel. Le repondeur intelligent qualifie et transmet les messages sur WhatsApp.' },
+              { icon: '💬', title: 'Messages texte', desc: 'Ecrivez naturellement a n\'importe quel agent. Il comprend le contexte de votre entreprise.' },
+              { icon: '🎤', title: 'Notes vocales', desc: 'Enregistrez une note vocale. Deepgram la transcrit instantanement, l\'agent agit.' },
+              { icon: '☀️', title: 'Briefing quotidien', desc: 'Chaque matin a 8h, recevez un resume de vos taches, alertes et insights dans WhatsApp.' },
+              { icon: '🔔', title: 'Alertes en temps reel', desc: 'Prospect chaud, facture en retard, deadline proche... vos agents vous alertent proactivement.' },
+              { icon: '👥', title: 'Multi-agents', desc: 'Parlez a Lea pour un email, Thomas pour une offre, Manon pour un post social. Tout dans WhatsApp.' },
+              { icon: '📞', title: 'Repondeur IA', desc: 'Ne manquez plus un appel. Le repondeur intelligent qualifie et transmet les messages sur WhatsApp.' },
             ].map(f => (
               <div key={f.title} style={{
                 padding: 24, borderRadius: 12,
                 border: '1px solid #f5f5f7',
                 textAlign: 'center',
               }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{f.icon}</span></div>
-                <div style={{ fontSize: 15, fontWeight: 600, color: txt, marginBottom: 6 }}>{f.title}</div>
-                <div style={{ fontSize: 14, color: txtSub, lineHeight: 1.65 }}>{f.desc}</div>
+                <div role="img" aria-label={f.title} style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#1a0e3a', marginBottom: 6 }}>{f.title}</div>
+                <div style={{ fontSize: 14, color: '#86868b', lineHeight: 1.65 }}>{f.desc}</div>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Agents disponibles ── */}
-        <section style={{ padding: '48px 0' }}>
+        <section aria-label="Liste des agents IA disponibles sur WhatsApp" style={{ padding: '48px 0' }}>
           <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Agents</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: txt, marginBottom: 8 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Agents</div>
+            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 8 }}>
               {DEFAULT_AGENTS.length} agents disponibles sur WhatsApp
             </h2>
-            <p style={{ fontSize: 15, color: txtSub }}>
+            <p style={{ fontSize: 15, color: '#86868b' }}>
               Chaque agent est expert dans son domaine et propulse par Claude AI d&apos;Anthropic
             </p>
           </div>
-          <div style={{
+          <div className="wa-agents-grid" style={{
             display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12,
             maxWidth: 700, margin: '0 auto',
           }}>
@@ -182,15 +171,15 @@ export default function WhatsAppPage() {
               }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: 10,
-                  background: bgSurface,
+                  background: '#f5f5f7',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 20, flexShrink: 0,
                 }}>
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span>
+                  {agent.emoji || '🤖'}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: txt }}>{agent.name}</div>
-                  <div style={{ fontSize: 13, color: txtSub }}>{agent.role}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a' }}>{agent.name}</div>
+                  <div style={{ fontSize: 13, color: '#86868b' }}>{agent.role}</div>
                 </div>
                 <div style={{ opacity: 0.3, flexShrink: 0 }}>
                   <WaIcon size={16} color="#86868b" />
@@ -201,23 +190,23 @@ export default function WhatsAppPage() {
         </section>
 
         {/* ── Notes vocales & Pipeline ── */}
-        <section style={{ padding: '48px 0' }}>
-          <div style={{
+        <section aria-label="Pipeline vocal — notes vocales WhatsApp transcrites par Deepgram" style={{ padding: '48px 0' }}>
+          <div className="wa-vocal-grid" style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start',
           }}>
             <div>
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
-                background: bgSurface, color: txtSub,
+                background: '#f5f5f7', color: '#86868b',
                 marginBottom: 18,
               }}>
                 <WaIcon size={14} color="#86868b" /> Notes vocales
               </div>
-              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: txt, marginBottom: 14 }}>
+              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 14 }}>
                 Parlez, vos agents comprennent
               </h2>
-              <p style={{ fontSize: 15, color: txtSub, lineHeight: 1.65, marginBottom: 24 }}>
+              <p style={{ fontSize: 15, color: '#86868b', lineHeight: 1.65, marginBottom: 24 }}>
                 Enregistrez une note vocale WhatsApp comme vous le feriez avec un collegue.
                 Notre pipeline vocal transforme votre voix en action.
               </p>
@@ -231,31 +220,31 @@ export default function WhatsAppPage() {
                   <div key={item.label} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <div style={{
                       width: 6, height: 6, borderRadius: '50%', marginTop: 8, flexShrink: 0,
-                      background: btnBg,
+                      background: '#1a0e3a',
                     }} />
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: txt }}>{item.label}</div>
-                      <div style={{ fontSize: 13, color: txtSub, lineHeight: 1.5 }}>{item.desc}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a' }}>{item.label}</div>
+                      <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.5 }}>{item.desc}</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             <div style={{
-              background: bgSurface, borderRadius: 12, padding: 32,
+              background: '#f5f5f7', borderRadius: 12, padding: 32,
               display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'center', justifyContent: 'center',
               minHeight: 320,
             }}>
-              <div style={{ fontSize: 48, lineHeight: 1 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>mic</span></div>
-              <div style={{ fontSize: 15, fontWeight: 600, color: txt, textAlign: 'center' }}>Pipeline vocal</div>
+              <div style={{ fontSize: 48, lineHeight: 1 }}>🎤</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#1a0e3a', textAlign: 'center' }}>Pipeline vocal</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
                 {['Voix', 'Deepgram', 'Claude AI', 'Action'].map((step, i) => (
                   <div key={step} style={{
                     display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '10px 14px', borderRadius: 8, background: bgCard,
+                    padding: '10px 14px', borderRadius: 8, background: '#fff',
                   }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: txtSub, width: 20 }}>{i + 1}</span>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: txt }}>{step}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#86868b', width: 20 }}>{i + 1}</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: '#1a0e3a' }}>{step}</span>
                   </div>
                 ))}
               </div>
@@ -264,41 +253,41 @@ export default function WhatsAppPage() {
         </section>
 
         {/* ── Repondeur IA ── */}
-        <section style={{ padding: '48px 0' }}>
-          <div style={{
-            padding: 40, borderRadius: 12, background: bgSurface,
+        <section aria-label="Répondeur IA intelligent 24/7 avec notifications WhatsApp" style={{ padding: '48px 0' }}>
+          <div className="wa-repondeur-box" style={{
+            padding: 40, borderRadius: 12, background: '#f5f5f7',
           }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
               <div style={{
                 display: 'inline-block', padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
-                background: bgCard, color: txtSub,
+                background: '#fff', color: '#86868b',
                 marginBottom: 16,
               }}>
                 Nouveau : Repondeur IA
               </div>
-              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: txt, marginBottom: 10 }}>
+              <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a', marginBottom: 10 }}>
                 Ne manquez plus aucun appel
               </h2>
-              <p style={{ fontSize: 15, color: txtSub, maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 15, color: '#86868b', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
                 Le repondeur intelligent de Freenzy.io repond a vos appels manques, qualifie les prospects
                 et vous transmet un resume structure directement sur WhatsApp.
               </p>
             </div>
-            <div style={{
+            <div className="wa-repondeur-grid" style={{
               display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
               maxWidth: 640, margin: '0 auto',
             }}>
               {[
-                { icon: 'call', title: 'Repond 24/7', desc: 'Jamais d\'appel manque, meme la nuit et le week-end' },
-                { icon: 'target', title: 'Qualifie', desc: 'Identifie le besoin, le budget et l\'urgence du prospect' },
-                { icon: 'phone_iphone', title: 'Notifie sur WhatsApp', desc: 'Resume structure envoye instantanement sur votre WhatsApp' },
+                { icon: '📞', title: 'Repond 24/7', desc: 'Jamais d\'appel manque, meme la nuit et le week-end' },
+                { icon: '🎯', title: 'Qualifie', desc: 'Identifie le besoin, le budget et l\'urgence du prospect' },
+                { icon: '📱', title: 'Notifie sur WhatsApp', desc: 'Resume structure envoye instantanement sur votre WhatsApp' },
               ].map(s => (
                 <div key={s.title} style={{
-                  textAlign: 'center', padding: 20, borderRadius: 10, background: bgCard,
+                  textAlign: 'center', padding: 20, borderRadius: 10, background: '#fff',
                 }}>
-                  <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 4 }}>{s.title}</div>
-                  <div style={{ fontSize: 13, color: txtSub, lineHeight: 1.5 }}>{s.desc}</div>
+                  <div role="img" aria-label={s.title} style={{ fontSize: 24, marginBottom: 10 }}>{s.icon}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a', marginBottom: 4 }}>{s.title}</div>
+                  <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.5 }}>{s.desc}</div>
                 </div>
               ))}
             </div>
@@ -306,67 +295,86 @@ export default function WhatsAppPage() {
         </section>
 
         {/* ── Securite ── */}
-        <section style={{ padding: '48px 0', maxWidth: 700, margin: '0 auto' }}>
+        <section aria-label="Sécurité et confidentialité WhatsApp — RGPD et chiffrement" style={{ padding: '48px 0', maxWidth: 700, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: txtSub, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Confiance</div>
-            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: txt }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#86868b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Confiance</div>
+            <h2 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#1a0e3a' }}>
               Securite et confidentialite
             </h2>
           </div>
-          <div style={{
+          <div className="wa-security-grid" style={{
             display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
           }}>
             {[
-              { icon: 'lock', title: 'Chiffrement', desc: 'WhatsApp chiffre vos messages de bout en bout. Vos donnees sont protegees en transit.' },
-              { icon: 'flag', title: 'RGPD', desc: 'Conforme au RGPD. Vos donnees sont hebergees en Europe. Droit a l\'oubli garanti.' },
-              { icon: 'mic', title: 'Pas de stockage vocal', desc: 'Vos notes vocales sont transcrites puis supprimees. Aucun enregistrement conserve.' },
+              { icon: '🔒', title: 'Chiffrement', desc: 'WhatsApp chiffre vos messages de bout en bout. Vos donnees sont protegees en transit.' },
+              { icon: '🏴', title: 'RGPD', desc: 'Conforme au RGPD. Vos donnees sont hebergees en Europe. Droit a l\'oubli garanti.' },
+              { icon: '🎤', title: 'Pas de stockage vocal', desc: 'Vos notes vocales sont transcrites puis supprimees. Aucun enregistrement conserve.' },
             ].map(s => (
               <div key={s.title} style={{
                 padding: 24, borderRadius: 12,
                 border: '1px solid #f5f5f7',
                 textAlign: 'center',
               }}>
-                <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{s.icon}</span></div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 6 }}>{s.title}</div>
-                <div style={{ fontSize: 13, color: txtSub, lineHeight: 1.65 }}>{s.desc}</div>
+                <div role="img" aria-label={s.title} style={{ fontSize: 24, marginBottom: 10 }}>{s.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#1a0e3a', marginBottom: 6 }}>{s.title}</div>
+                <div style={{ fontSize: 13, color: '#86868b', lineHeight: 1.65 }}>{s.desc}</div>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── CTA Final ── */}
-        <section style={{
+        <section aria-label="Inscription gratuite pour utiliser les agents IA sur WhatsApp" style={{
           padding: '48px 24px', textAlign: 'center',
           marginBottom: 48,
         }}>
           <WaIcon size={36} color="#86868b" />
           <h2 style={{
             fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: 700, letterSpacing: '-0.03em',
-            color: txt, marginTop: 16, marginBottom: 12,
+            color: '#1a0e3a', marginTop: 16, marginBottom: 12,
           }}>
             Pret a parler a vos agents sur WhatsApp ?
           </h2>
-          <p style={{ fontSize: 15, color: txtSub, maxWidth: 420, margin: '0 auto 24px' }}>
+          <p style={{ fontSize: 15, color: '#86868b', maxWidth: 420, margin: '0 auto 24px' }}>
             Accès gratuit — 0% de commission sur toutes vos actions
           </p>
-          <Link href="/login?mode=register" style={{
+          <Link href="/client/dashboard" style={{
             display: 'inline-block', padding: '12px 28px', fontSize: 15, fontWeight: 600, borderRadius: 12,
-            background: btnBg, color: '#fff', textDecoration: 'none',
+            background: '#1a0e3a', color: '#fff', textDecoration: 'none',
             transition: 'opacity 0.2s',
           }}>
-            Essayer gratuitement
+            Explorer le Dashboard
           </Link>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, marginTop: 18 }}>
             {['WhatsApp inclus', 'Notes vocales', 'Repondeur IA', `${DEFAULT_AGENTS.length} agents`].map(t => (
-              <span key={t} style={{ fontSize: 13, color: txtSub, display: 'flex', alignItems: 'center', gap: 5 }}>
-                <span className="material-symbols-rounded" style={{ color: txt, fontSize: 11 }}>check</span> {t}
+              <span key={t} style={{ fontSize: 13, color: '#86868b', display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span style={{ fontSize: 11 }}>✅</span> {t}
               </span>
             ))}
           </div>
         </section>
       </div>
 
+      {/* Internal links SEO */}
+      <nav aria-label="Pages associées à WhatsApp Business" style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px 48px', borderTop: '1px solid #f2f2f2' }}>
+        <div className="sr-only"><h2>Liens utiles</h2></div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center' }}>
+          <Link href="/plans" title="Voir les tarifs détaillés et crédits IA de Freenzy.io" style={{ fontSize: 13, color: '#7c3aed', textDecoration: 'none' }}>
+            Tarifs et crédits
+          </Link>
+          <Link href="/vs-alternatives" title="Comparer Freenzy.io avec ChatGPT Plus, Make, Zapier et les agences" style={{ fontSize: 13, color: '#7c3aed', textDecoration: 'none' }}>
+            Freenzy vs Alternatives
+          </Link>
+          <Link href="/claude" title="Découvrir la technologie Claude AI d'Anthropic utilisée par Freenzy.io" style={{ fontSize: 13, color: '#7c3aed', textDecoration: 'none' }}>
+            Technologie Claude AI
+          </Link>
+          <Link href="/fonctionnalites/repondeur" title="Découvrir le répondeur IA intelligent de Freenzy.io" style={{ fontSize: 13, color: '#7c3aed', textDecoration: 'none' }}>
+            Répondeur IA
+          </Link>
+        </div>
+      </nav>
+
       <PublicFooter />
-    </div>
+    </main>
   );
 }

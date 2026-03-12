@@ -67,7 +67,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
         padding: 40, textAlign: 'center', border: '2px dashed #1A1A1A',
         borderRadius: 12, background: '#F7F7F7',
       }}>
-        <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>movie</span></div>
+        <div style={{ fontSize: 28, marginBottom: 12 }}>🎬</div>
         <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 8 }}>
           Generation en cours...
         </div>

@@ -71,7 +71,7 @@ export default async function CustomAgentsPage() {
         <div className="section-title">Agents personnalises</div>
         {agents.length === 0 ? (
           <div className="card" style={{ padding: 48, textAlign: 'center' }}>
-            <div style={{ marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 48 }}>build</span></div>
+            <div style={{ marginBottom: 12 }}>🔧</div>
             <p className="text-muted">Aucun agent custom cree pour le moment.</p>
             <p className="text-sm text-muted" style={{ marginTop: 8 }}>
               Les agents apparaitront ici quand les utilisateurs en creeront depuis leur espace.
@@ -101,7 +101,7 @@ export default async function CustomAgentsPage() {
                       <div className="text-xs text-muted">{a.email}</div>
                     </td>
                     <td>
-                      <span className="material-symbols-rounded" style={{ fontSize: 16, marginRight: 6 }}>smart_toy</span>
+                      🤖
                       <span className="font-semibold">{a.name}</span>
                     </td>
                     <td className="text-sm">{a.role || '—'}</td>

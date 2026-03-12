@@ -63,7 +63,10 @@ function selectNextSpeaker(agents: Array<{id: string; name: string; role: string
 export async function POST(req: NextRequest) {
   let body: Record<string, unknown>;
   try { body = await req.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
-  const token = body.token as string;
+  // Prefer header/cookie auth, fallback to body token for backward compat
+  const authHeader = req.headers.get('Authorization')?.replace('Bearer ', '');
+  const cookieToken = req.cookies.get('fz-token')?.value;
+  const token = authHeader || cookieToken || (body.token as string);
   if (!token) return NextResponse.json({ error: 'No token' }, { status: 401 });
 
   const { topic, agentId, agentName, agentRole, previousMessages: prevMsgs, agents, companyContext, userDirection } = body;

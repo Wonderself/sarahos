@@ -276,8 +276,8 @@ export default function SnakeGame() {
               gap: 4,
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>
-              {paused ? 'play_arrow' : 'pause'}
+            <span style={{ fontSize: 16 }}>
+              {paused ? '▶️' : '⏸️'}
             </span>
             {paused ? 'Reprendre' : 'Pause'}
           </button>
@@ -312,7 +312,7 @@ export default function SnakeGame() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 24 }}>keyboard_arrow_up</span>
+            <span style={{ fontSize: 24 }}>▲</span>
           </button>
           <div style={{ display: 'flex', gap: 4 }}>
             <button
@@ -325,7 +325,7 @@ export default function SnakeGame() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>keyboard_arrow_left</span>
+              <span style={{ fontSize: 24 }}>◀</span>
             </button>
             <button
               onTouchStart={(e) => { e.preventDefault(); changeDir('DOWN'); }}
@@ -337,7 +337,7 @@ export default function SnakeGame() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>keyboard_arrow_down</span>
+              <span style={{ fontSize: 24 }}>▼</span>
             </button>
             <button
               onTouchStart={(e) => { e.preventDefault(); changeDir('RIGHT'); }}
@@ -349,7 +349,7 @@ export default function SnakeGame() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 24 }}>keyboard_arrow_right</span>
+              <span style={{ fontSize: 24 }}>▶</span>
             </button>
           </div>
         </div>
@@ -369,8 +369,8 @@ export default function SnakeGame() {
             cursor: 'pointer',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6 }}>
-            play_arrow
+          <span style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6 }}>
+            ▶️
           </span>
           Jouer
         </button>
@@ -399,7 +399,7 @@ export default function SnakeGame() {
             href="/client/games"
             style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, display: 'flex', alignItems: 'center', gap: 4 }}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+            <span style={{ fontSize: 16 }}>←</span>
             Arcade
           </Link>
         </div>

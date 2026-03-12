@@ -62,7 +62,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     return () => { timers.forEach(t => clearTimeout(t)); };
   }, []);
 
-  const ICONS: Record<ToastType, string> = { success: 'check_circle', error: 'close', info: 'info', warning: 'warning' };
+  const ICONS: Record<ToastType, string> = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
   const COLORS: Record<ToastType, { bg: string; border: string; text: string }> = {
     success: { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)' },
     error:   { bg: '#fff', border: '#E5E5E5', text: 'var(--danger, #dc2626)' },
@@ -100,7 +100,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 animation: 'toastIn 0.2s ease',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16, flexShrink: 0, lineHeight: 1.4 }}>{ICONS[toast.type]}</span>
+              <span style={{ fontSize: 16, flexShrink: 0, lineHeight: 1.4 }}>{ICONS[toast.type]}</span>
               <span style={{ flex: 1, fontSize: 13, color: c.text, lineHeight: 1.5 }}>{toast.message}</span>
               <button
                 onClick={() => removeToast(toast.id)}
@@ -112,7 +112,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
+                <span style={{ fontSize: 14 }}>✕</span>
               </button>
             </div>
           );
@@ -122,11 +122,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         @keyframes toastIn {
           from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
-        }
-        [data-theme="dark"] {
-          --toast-success-bg: rgba(0,0,0,0.04);
-          --toast-error-bg: rgba(0,0,0,0.04);
-          --toast-bg: #fff;
         }
       `}</style>
     </ToastContext.Provider>
@@ -143,9 +138,9 @@ interface ErrorBannerProps {
 
 export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerProps) {
   const COLORS = {
-    error:   { bg: '#fff', border: '#E5E5E5', text: 'var(--danger, #dc2626)', icon: 'close' },
-    warning: { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)', icon: 'warning' },
-    info:    { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)', icon: 'info' },
+    error:   { bg: '#fff', border: '#E5E5E5', text: 'var(--danger, #dc2626)', icon: '❌' },
+    warning: { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)', icon: '⚠️' },
+    info:    { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)', icon: 'ℹ️' },
   };
   const c = COLORS[type];
   return (
@@ -157,7 +152,7 @@ export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerP
         display: 'flex', alignItems: 'center', gap: 10,
       }}
     >
-      <span className="material-symbols-rounded" style={{ fontSize: 15 }}>{c.icon}</span>
+      <span style={{ fontSize: 15 }}>{c.icon}</span>
       <span style={{ flex: 1, fontSize: 13, color: c.text, lineHeight: 1.5 }}>{message}</span>
       {onDismiss && (
         <button
@@ -169,7 +164,7 @@ export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerP
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span>
+          <span style={{ fontSize: 14 }}>✕</span>
         </button>
       )}
     </div>

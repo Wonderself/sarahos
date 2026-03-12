@@ -73,7 +73,7 @@ export default function UserGamificationTab({ userId, data, loading, showToast, 
 
       {/* XP Progress to Next Level */}
       <div style={styles.card}>
-        <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>stadia_controller</span> Progression</div>
+        <div style={styles.cardTitle}>🎮 Progression</div>
         <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
           <span style={{ color: 'var(--text-secondary)' }}>Niveau {data?.level ?? 1}</span>
           <span style={{ color: 'var(--text-muted)' }}>
@@ -94,7 +94,7 @@ export default function UserGamificationTab({ userId, data, loading, showToast, 
       {/* Badges */}
       {data?.badges && data.badges.length > 0 && (
         <div style={styles.card}>
-          <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>emoji_events</span> Badges</div>
+          <div style={styles.cardTitle}>🏆 Badges</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {data.badges.map((badge, i) => (
               <span key={i} style={{
@@ -114,7 +114,7 @@ export default function UserGamificationTab({ userId, data, loading, showToast, 
 
       {/* Reset Button */}
       <div style={styles.card}>
-        <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>warning</span> Zone dangereuse</div>
+        <div style={styles.cardTitle}>⚠️ Zone dangereuse</div>
         <p style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>
           Reinitialiser la gamification remet le niveau a 1, l&apos;XP a 0, et supprime tous les badges et succes.
         </p>
@@ -123,7 +123,7 @@ export default function UserGamificationTab({ userId, data, loading, showToast, 
           onClick={handleReset}
           disabled={resetting}
         >
-          {resetting ? 'Reinitialisation...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>delete</span> Reinitialiser la gamification</>}
+          {resetting ? 'Reinitialisation...' : <>🗑️ Reinitialiser la gamification</>}
         </button>
       </div>
     </div>

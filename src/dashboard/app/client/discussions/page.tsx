@@ -5,6 +5,7 @@ import { useUserData } from '../../../lib/use-user-data';
 import { ALL_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { useAuthGuard } from '../../../lib/useAuthGuard';
 import {
   MAX_DEEP_CONTEXT,
   DEEP_DISCUSSION_MODEL,
@@ -31,6 +32,8 @@ import { SlideOver } from '../../../components/SlideOver';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { isAuthenticated as checkIsAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
+import { useVisitorDraft } from '../../../lib/useVisitorDraft';
 
 // ─── Material Icon → Emoji Mapping ──────────────────────────────────────────
 
@@ -97,13 +100,14 @@ function getDepthMilestone(depth: number): { label: string; progress: number } {
 
 export default function DiscussionsPage() {
   const isMobile = useIsMobile();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const { data: discussions, setData: setDiscussions } =
     useUserData<DeepDiscussion[]>('deep_discussions', [], 'fz_deep_discussions');
 
   const { showSuccess, showError, showWarning, showInfo } = useToast();
 
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [input, setInput] = useState('');
+  const [input, setInput, clearInputDraft] = useVisitorDraft('discussions', 'message', '');
   const [loading, setLoading] = useState(false);
   const [followUps, setFollowUps] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -116,7 +120,7 @@ export default function DiscussionsPage() {
   // Wizard state
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardStep, setWizardStep] = useState<'input' | 'analyzing' | 'ready'>('input');
-  const [wizardInput, setWizardInput] = useState('');
+  const [wizardInput, setWizardInput, clearWizardDraft] = useVisitorDraft('discussions', 'topic', '');
   const [wizardResult, setWizardResult] = useState<{
     agentId: string | null; agentName: string; agentEmoji: string;
     reasoning: string; category: DiscussionCategory; suggestedTitle: string;
@@ -252,10 +256,11 @@ export default function DiscussionsPage() {
 
   async function analyzeTopic() {
     if (!wizardInput.trim()) return;
+    if (!requireAuth('Connectez-vous pour demarrer une discussion')) return;
     setWizardStep('analyzing');
 
     const session = getSession();
-    if (!session.token) { window.location.href = '/login'; return; }
+    if (!session.token) return;
 
     try {
       const messages = buildAgentSelectionPrompt(wizardInput.trim());
@@ -358,6 +363,7 @@ export default function DiscussionsPage() {
     // [Item 2] Use pendingSendRef instead of DOM click hack
     const content = wizardInput.trim();
     setWizardInput('');
+    clearWizardDraft();
     setWizardResult(null);
     if (content) {
       pendingSendRef.current = { discussionId: newDiscussion.id, content };
@@ -391,11 +397,13 @@ export default function DiscussionsPage() {
     const currentAgentId = active.agentId;
     const currentAgentName = active.agentName;
 
+    if (!requireAuth('Connectez-vous pour envoyer un message')) return;
     const session = getSession();
-    if (!session.token) { window.location.href = '/login'; return; }
+    if (!session.token) return;
 
     setLoading(true);
     setInput('');
+    clearInputDraft();
     setFollowUps([]);
     lastUserMsgRef.current = content;
     setRetryCount(0);
@@ -821,6 +829,23 @@ export default function DiscussionsPage() {
       ? 'Analyse approfondie en cours...'
       : 'En réflexion...';
 
+  if (!checkIsAuthenticated()) {
+    return (
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto' }}>
+        <VisitorEmptyState
+          icon="🧠"
+          title="Connectez-vous pour démarrer une discussion approfondie"
+          description="Explorez des sujets complexes avec Claude Opus, le modèle IA le plus avancé. Philosophie, stratégie, éthique, science — 85+ templates dans 12 catégories."
+          features={[
+            { icon: '💡', label: '85+ templates', desc: 'Philosophie, éthique, tech, science, business' },
+            { icon: '⚡', label: 'Extended Thinking', desc: 'Claude Opus réfléchit en profondeur avant de répondre' },
+            { icon: '⚔️', label: 'Mode Challenge', desc: "L'IA joue l'avocat du diable pour aiguiser vos idées" },
+          ]}
+        />
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
 
@@ -946,9 +971,10 @@ export default function DiscussionsPage() {
                   <button
                     onClick={(e) => { e.stopPropagation(); toggleStar(d.id); }}
                     style={{
-                      background: 'none', border: 'none', cursor: 'pointer', padding: 2,
+                      background: 'none', border: 'none', cursor: 'pointer', padding: 6,
                       color: d.starred ? '#1A1A1A' : 'var(--fz-text-muted, #94A3B8)',
                       fontSize: 14, transition: 'color 0.15s',
+                      minWidth: 36, minHeight: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}
                     title={d.starred ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                   >
@@ -1068,7 +1094,7 @@ export default function DiscussionsPage() {
             {/* Tag filter pills */}
             <div style={{
               display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 12, marginBottom: 8,
-              scrollbarWidth: 'thin',
+              scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch',
             }}>
               {DISCUSSION_TAGS.map(tag => {
                 const isActive = activeTag === tag.id;
@@ -1077,8 +1103,8 @@ export default function DiscussionsPage() {
                     key={tag.id}
                     onClick={() => setActiveTag(isActive ? null : tag.id)}
                     style={{
-                      padding: '5px 12px', borderRadius: 16, fontSize: 12, cursor: 'pointer',
-                      whiteSpace: 'nowrap', fontWeight: isActive ? 600 : 400,
+                      padding: '8px 14px', borderRadius: 16, fontSize: 12, cursor: 'pointer',
+                      whiteSpace: 'nowrap', fontWeight: isActive ? 600 : 400, minHeight: 44,
                       background: isActive ? '#F0F0F0' : 'var(--fz-bg-secondary, #F8FAFC)',
                       border: `1px solid ${isActive ? '#1A1A1A' : 'var(--fz-border, #E2E8F0)'}`,
                       color: isActive ? '#1A1A1A' : 'var(--fz-text-secondary, #64748B)',
@@ -1140,13 +1166,14 @@ export default function DiscussionsPage() {
               <>
                 {/* Default agent card — compact */}
                 <div style={{
-                  display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20,
-                  padding: '16px 20px', borderRadius: 12,
+                  display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 10 : 16, marginBottom: 20,
+                  padding: isMobile ? '14px 12px' : '16px 20px', borderRadius: 12,
                   background: '#F7F7F7',
                   border: '1px solid #E5E5E5',
+                  flexWrap: isMobile ? 'wrap' : 'nowrap',
                 }}>
                   <span style={{ fontSize: 36 }}>⚖️</span>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <h3 style={{ margin: 0, fontSize: 15, color: 'var(--fz-text, #1E293B)' }}>Naël — Le Contradicteur</h3>
                     <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
                       Prêt à débattre. Méthode socratique, argumentation structurée, intelligence Opus.
@@ -1182,7 +1209,7 @@ export default function DiscussionsPage() {
                     <h2 style={{ fontSize: 15, color: 'var(--fz-text, #1E293B)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                       🕐 Reprendre une discussion
                     </h2>
-                    <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
+                    <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4, WebkitOverflowScrolling: 'touch' }}>
                       {discussions.slice(0, 4).map(d => {
                         const catInfo = DISCUSSION_CATEGORIES.find(c => c.id === d.category);
                         return (
@@ -1239,8 +1266,9 @@ export default function DiscussionsPage() {
           <>
             {/* Header */}
             <div style={{
-              padding: '12px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
-              display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0,
+              padding: isMobile ? '10px 12px' : '12px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+              display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: 12, flexShrink: 0,
+              flexWrap: isMobile ? 'wrap' : 'nowrap',
             }}>
               <span style={{ fontSize: 24 }}>{iconEmoji(active.agentEmoji)}</span>
               <div style={{ flex: 1 }}>
@@ -1284,11 +1312,11 @@ export default function DiscussionsPage() {
                     {DISCUSSION_CATEGORIES.find(c => c.id === active.category)?.label}
                   </span>
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'flex', gap: 12, marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'flex', gap: isMobile ? 6 : 12, marginTop: 2, flexWrap: 'wrap' }}>
                   <span>{active.agentName}</span>
                   <span>{active.depth} échanges</span>
-                  <span>{active.keyPoints.length} points clés</span>
-                  <span>{active.objectives.length} objectifs</span>
+                  <span>{active.keyPoints.length} pts clés</span>
+                  {!isMobile && <span>{active.objectives.length} objectifs</span>}
                   {totalTokens > 0 && <span>{totalTokens.toLocaleString()} tokens</span>}
                   {connectedPlatforms.length > 0 && (
                     <span style={{ display: 'inline-flex', gap: 3, marginLeft: 4 }}>
@@ -1303,7 +1331,7 @@ export default function DiscussionsPage() {
                   )}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 6 }}>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {active.status === 'completed' ? (
                   <span style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
@@ -1318,6 +1346,7 @@ export default function DiscussionsPage() {
                     style={{
                       padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
                       background: '#22C55E11', border: '1px solid #22C55E33', color: '#16A34A',
+                      minHeight: 44, display: 'inline-flex', alignItems: 'center',
                     }}
                     title="Conclure et obtenir un bilan"
                   >
@@ -1332,6 +1361,7 @@ export default function DiscussionsPage() {
                     background: active.challengeMode ? '#EF444422' : 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${active.challengeMode ? '#EF4444' : 'var(--fz-border, #E2E8F0)'}`,
                     color: active.challengeMode ? '#EF4444' : 'var(--fz-text-secondary, #64748B)',
+                    minHeight: 44, display: 'inline-flex', alignItems: 'center',
                   }}
                 >
                   {active.challengeMode ? <>⚔️ Challenge ON</> : <>⚔️ Challenge</>}
@@ -1343,6 +1373,7 @@ export default function DiscussionsPage() {
                     background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: '1px solid #E5E5E5',
                     color: 'var(--fz-text-secondary, #64748B)',
+                    minHeight: 44, display: 'inline-flex', alignItems: 'center',
                   }}
                 >
                   {active.status === 'active' ? <>⏸️ Pause</> : <>▶️ Reprendre</>}
@@ -1355,32 +1386,35 @@ export default function DiscussionsPage() {
                     background: messageSearchOpen ? '#F0F0F0' : 'var(--fz-bg-secondary, #F8FAFC)',
                     border: `1px solid ${messageSearchOpen ? '#1A1A1A' : 'var(--fz-border, #E2E8F0)'}`,
                     color: messageSearchOpen ? '#1A1A1A' : 'var(--fz-text-secondary, #64748B)',
+                    minHeight: 44, minWidth: 44, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   }}
                 >
                   🔍
                 </button>
-                <button
+                {!isMobile && <button
                   onClick={handleExport}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
                     background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: '1px solid #E5E5E5',
                     color: 'var(--fz-text-secondary, #64748B)',
+                    minHeight: 44, display: 'inline-flex', alignItems: 'center',
                   }}
                 >
                   ⬇️ Exporter
-                </button>
-                <button
+                </button>}
+                {!isMobile && <button
                   onClick={shareDiscussionSummary}
                   style={{
                     padding: '6px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer',
                     background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: '1px solid #E5E5E5',
                     color: 'var(--fz-text-secondary, #64748B)',
+                    minHeight: 44, display: 'inline-flex', alignItems: 'center',
                   }}
                 >
                   🔗 Partager
-                </button>
+                </button>}
                 {/* [Item 1] Delete with confirmation */}
                 <button
                   onClick={() => setConfirmDeleteId(active.id)}
@@ -1389,6 +1423,7 @@ export default function DiscussionsPage() {
                     background: 'var(--fz-bg-secondary, #F8FAFC)',
                     border: '1px solid #E5E5E5',
                     color: '#EF4444',
+                    minHeight: 44, minWidth: 44, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   }}
                 >
                   🗑️
@@ -1483,8 +1518,9 @@ export default function DiscussionsPage() {
             {/* Key Points Bar (if any) */}
             {active.keyPoints.length > 0 && (
               <div style={{
-                padding: '8px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+                padding: isMobile ? '8px 12px' : '8px 20px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
                 display: 'flex', gap: 8, overflowX: 'auto', flexShrink: 0,
+                WebkitOverflowScrolling: 'touch',
               }}>
                 <span style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', whiteSpace: 'nowrap', lineHeight: '24px' }}>
                   Points clés:
@@ -1506,7 +1542,7 @@ export default function DiscussionsPage() {
             )}
 
             {/* Messages */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px 8px' : '16px 20px' }}>
               {active.messages.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
                   <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>{iconEmoji(active.agentEmoji)}</span>
@@ -1553,7 +1589,7 @@ export default function DiscussionsPage() {
                       onMouseLeave={() => setMsgHoverIdx(-1)}
                     >
                       <div style={{
-                        maxWidth: '80%', padding: '12px 16px', borderRadius: 12, position: 'relative',
+                        maxWidth: isMobile ? '95%' : '80%', padding: isMobile ? '10px 12px' : '12px 16px', borderRadius: 12, position: 'relative',
                         background: msg.role === 'user'
                           ? '#1A1A1A'
                           : 'var(--fz-bg-secondary, #F8FAFC)',
@@ -1705,7 +1741,7 @@ export default function DiscussionsPage() {
                     key={i}
                     onClick={() => sendMessage(q)}
                     style={{
-                      padding: '10px 14px', borderRadius: 10, fontSize: 12, cursor: 'pointer',
+                      padding: '10px 14px', borderRadius: 10, fontSize: 12, cursor: 'pointer', minHeight: 44,
                       background: 'var(--fz-bg-secondary, #F8FAFC)',
                       border: '1px solid #E5E5E5', textAlign: 'left',
                       color: 'var(--fz-text, #1E293B)', transition: 'border-color 0.2s, transform 0.15s',
@@ -1737,7 +1773,7 @@ export default function DiscussionsPage() {
 
             {/* Input */}
             <div style={{
-              padding: '12px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
+              padding: isMobile ? '10px 8px' : '12px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)',
               display: 'flex', gap: 8, flexShrink: 0,
             }}>
               <textarea
@@ -2078,6 +2114,7 @@ export default function DiscussionsPage() {
         }
       `}</style>
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

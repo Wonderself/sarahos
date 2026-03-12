@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '@/lib/api-auth';
 
 const FAL_KEY = process.env['FAL_KEY'];
 
@@ -50,6 +51,9 @@ const DIMENSION_PRESETS: Record<string, { width: number; height: number }> = {
 };
 
 export async function POST(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   if (!FAL_KEY) {
     return NextResponse.json({
       error: 'fal.ai API key not configured',
@@ -95,7 +99,7 @@ export async function POST(req: NextRequest) {
         image_size: { width: dims.width, height: dims.height },
         num_inference_steps: hd ? 28 : 4,
         num_images: 1,
-        enable_safety_checker: false,
+        enable_safety_checker: true,
       }),
       signal: ctrl.signal,
     });

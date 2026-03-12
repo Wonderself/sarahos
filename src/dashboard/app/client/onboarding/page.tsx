@@ -527,18 +527,18 @@ export default function OnboardingPage() {
       </div>
 
       {/* Steps Nav */}
-      <div className="flex gap-4 mb-24" style={{ overflowX: 'auto', paddingBottom: 4 }}>
+      <div className="flex gap-4 mb-24" style={{ overflowX: 'auto', paddingBottom: isMobile ? 8 : 4, gap: isMobile ? 2 : undefined }}>
         {STEPS.map(s => (
           <button
             key={s.id}
             onClick={() => { saveProfile(); setStep(s.id); }}
             style={{
-              flex: '1 0 auto', padding: '10px 12px', borderRadius: 'var(--radius-sm)',
+              flex: '1 0 auto', padding: isMobile ? '8px 6px' : '10px 12px', borderRadius: 'var(--radius-sm)',
               background: step === s.id ? '#1A1A1A' : '#fff',
               border: `1px solid ${step === s.id ? '#1A1A1A' : '#E5E5E5'}`,
               color: step === s.id ? '#fff' : '#6B6B6B',
-              cursor: 'pointer', fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-sans)',
-              display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
+              cursor: 'pointer', fontSize: isMobile ? 10 : 12, fontWeight: 600, fontFamily: 'var(--font-sans)',
+              display: 'flex', alignItems: 'center', gap: isMobile ? 3 : 6, whiteSpace: 'nowrap',
             }}
           >
             <span style={{ fontSize: 18 }}>{STEP_EMOJIS[s.icon] ?? s.icon}</span> {s.title}

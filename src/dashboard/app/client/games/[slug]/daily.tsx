@@ -77,9 +77,7 @@ export default function DailyGame() {
   if (alreadyDone) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%', maxWidth: 500, margin: '0 auto', padding: '0 16px', boxSizing: 'border-box' }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 56, color: '#22c55e' }}>
-          check_circle
-        </span>
+        ✅
         <h2 style={{ color: '#fff', margin: 0, fontSize: 22, textAlign: 'center' }}>Défi du jour complété !</h2>
         <div
           style={{
@@ -91,9 +89,7 @@ export default function DailyGame() {
             borderRadius: 12,
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 26, color: '#ef4444' }}>
-            local_fire_department
-          </span>
+          🔥
           <span style={{ color: '#ef4444', fontWeight: 700, fontSize: 22 }}>
             {streak} jour{streak !== 1 ? 's' : ''}
           </span>
@@ -133,9 +129,7 @@ export default function DailyGame() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#ef4444', flexShrink: 0 }}>
-            today
-          </span>
+          📅
           <div style={{ minWidth: 0 }}>
             <div style={{ color: '#fff', fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Défi : {config.name}
@@ -146,9 +140,7 @@ export default function DailyGame() {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 20, color: '#ef4444' }}>
-            local_fire_department
-          </span>
+          🔥
           <span style={{ color: '#ef4444', fontWeight: 700, fontSize: 18 }}>{streak}</span>
         </div>
       </div>

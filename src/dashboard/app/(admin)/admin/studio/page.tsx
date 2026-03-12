@@ -96,10 +96,10 @@ export default function StudioAdminPage() {
             onClick={() => setTab(t)}
             className={`studio-tab${tab === t ? ' active' : ''}`}
           >
-            {t === 'overview' && <><span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle' }}>bar_chart</span> Apercu</>}
-            {t === 'models' && <><span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle' }}>tune</span> Modeles</>}
-            {t === 'history' && <><span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle' }}>assignment</span> Historique</>}
-            {t === 'lab' && <><span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle' }}>science</span> Lab</>}
+            {t === 'overview' && <>📊 Apercu</>}
+            {t === 'models' && <>🎛️ Modeles</>}
+            {t === 'history' && <>📋 Historique</>}
+            {t === 'lab' && <>🔬 Lab</>}
           </button>
         ))}
       </div>
@@ -152,13 +152,13 @@ function OverviewTab() {
                 <span>
                   Clé :{' '}
                   <span style={{ color: status.configured ? 'var(--success)' : 'var(--danger)', fontWeight: 600 }}>
-                    {status.configured ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check_circle</span> Configuree</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>error</span> Manquante</>}
+                    {status.configured ? <>✅ Configuree</> : <>❌ Manquante</>}
                   </span>
                 </span>
                 <span>
                   Connexion :{' '}
                   <span style={{ color: status.status === 'ok' ? 'var(--success)' : 'var(--danger)', fontWeight: 600 }}>
-                    {status.status === 'ok' ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check_circle</span> OK</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>error</span> {status.status}</>}
+                    {status.status === 'ok' ? <>✅ OK</> : <>❌ {status.status}</>}
                   </span>
                 </span>
                 {status.latency !== null && (
@@ -173,7 +173,7 @@ function OverviewTab() {
             )}
           </div>
           <button className="btn btn-ghost btn-sm" onClick={loadStatus} disabled={testing}>
-            {testing ? 'Test en cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>refresh</span> Tester la connexion</>}
+            {testing ? 'Test en cours...' : <>🔄 Tester la connexion</>}
           </button>
         </div>
       </div>
@@ -205,7 +205,7 @@ function OverviewTab() {
           <div className="skeleton" style={{ height: 120, borderRadius: 'var(--radius-lg)' }} />
         ) : history.length === 0 ? (
           <div className="card" style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 32 }}>palette</span></div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🎨</div>
             <div>Aucune génération. Utilisez le Lab pour tester.</div>
           </div>
         ) : (
@@ -226,7 +226,7 @@ function OverviewTab() {
                   <tr key={g.id}>
                     <td>
                       <span className={`badge ${g.type === 'photo' ? 'badge-info' : 'badge-neutral'}`} style={{ textTransform: 'capitalize' }}>
-                        {g.type === 'photo' ? <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>image</span> : <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>movie</span>} {g.type}
+                        {g.type === 'photo' ? '🖼️' : '🎬'} {g.type}
                       </span>
                     </td>
                     <td style={{ fontSize: 11, color: 'var(--text-muted)' }}>{fmtModel(g.model)}</td>
@@ -294,7 +294,7 @@ function ModelsTab() {
       {(['photo', 'video'] as const).map(type => (
         <div key={type} className="section">
           <div className="section-title">
-            {type === 'photo' ? <><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>image</span> Modeles Photo</> : <><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>movie</span> Modeles Video</>}
+            {type === 'photo' ? <>🖼️ Modeles Photo</> : <>🎬 Modeles Video</>}
           </div>
           <div className="card" style={{ padding: 0 }}>
             <table className="data-table">
@@ -337,7 +337,7 @@ function ModelsTab() {
                           className={`badge ${currentEnabled ? 'badge-success' : 'badge-neutral'}`}
                           style={{ cursor: 'pointer', border: 'none', background: 'none' }}
                         >
-                          {currentEnabled ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>check_circle</span> Active</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>pause_circle</span> Desactive</>}
+                          {currentEnabled ? <>✅ Active</> : <>⏸️ Desactive</>}
                         </button>
                       </td>
                       <td>
@@ -409,18 +409,18 @@ function HistoryTab() {
             onClick={() => setFilter(t)}
             className={`btn btn-xs ${filter === t ? 'btn-primary' : 'btn-ghost'}`}
           >
-            {t === '' ? 'Tous' : t === 'photo' ? <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>image</span> Photos</> : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>movie</span> Videos</>}
+            {t === '' ? 'Tous' : t === 'photo' ? <>🖼️ Photos</> : <>🎬 Videos</>}
           </button>
         ))}
         <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--text-muted)' }}>{total} générations</span>
-        <button className="btn btn-ghost btn-xs" onClick={() => load(filter, offset)}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>refresh</span></button>
+        <button className="btn btn-ghost btn-xs" onClick={() => load(filter, offset)}>🔄</button>
       </div>
 
       {loading ? (
         <div className="skeleton" style={{ height: 200, borderRadius: 'var(--radius-lg)' }} />
       ) : generations.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 32, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span></div>
+          <div style={{ fontSize: 32, marginBottom: 8 }}>📋</div>
           <div>Aucune génération trouvée.</div>
         </div>
       ) : (
@@ -448,7 +448,7 @@ function HistoryTab() {
                   >
                     <td>
                       <span className={`badge ${g.type === 'photo' ? 'badge-info' : 'badge-neutral'}`}>
-                        {g.type === 'photo' ? <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>image</span> : <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>movie</span>} {g.type}
+                        {g.type === 'photo' ? '🖼️' : '🎬'} {g.type}
                       </span>
                     </td>
                     <td style={{ fontSize: 11, color: 'var(--text-muted)' }}>{fmtModel(g.model)}</td>
@@ -473,7 +473,7 @@ function HistoryTab() {
                         style={{ color: 'var(--danger)' }}
                         onClick={() => { if (confirm('Supprimer ?')) deleteGen(g.id); }}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>delete</span>
+                        🗑️
                       </button>
                     </td>
                   </tr>
@@ -504,8 +504,8 @@ function HistoryTab() {
             onClick={e => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <span style={{ fontWeight: 600 }}>{preview.type === 'photo' ? '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>image</span> Photo' : '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>movie</span> Vidéo'} — {fmtModel(preview.model)}</span>
-              <button className="btn btn-ghost btn-xs" onClick={() => setPreview(null)}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span></button>
+              <span style={{ fontWeight: 600 }}>{preview.type === 'photo' ? '🖼️ Photo' : '🎬 Vidéo'} — {fmtModel(preview.model)}</span>
+              <button className="btn btn-ghost btn-xs" onClick={() => setPreview(null)}>✕</button>
             </div>
             {preview.type === 'photo' && preview.result_url && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -523,7 +523,7 @@ function HistoryTab() {
             </div>
             {preview.result_url && (
               <a href={preview.result_url} target="_blank" rel="noreferrer" className="btn btn-ghost btn-xs" style={{ marginTop: 12 }}>
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>link</span> Ouvrir l'URL
+                🔗 Ouvrir l'URL
               </a>
             )}
           </div>
@@ -581,7 +581,7 @@ function PhotoLab({ photoModels }: { photoModels: ModelConfig[] }) {
 
   return (
     <div className="card">
-      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>image</span> Test Génération Photo</div>
+      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 16 }}>🖼️ Test Génération Photo</div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div>
@@ -637,10 +637,10 @@ function PhotoLab({ photoModels }: { photoModels: ModelConfig[] }) {
           <span>Mode HD (Flux Dev, 28 steps — plus lent)</span>
         </label>
 
-        {error && <div className="alert alert-danger" style={{ fontSize: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> {error}</div>}
+        {error && <div className="alert alert-danger" style={{ fontSize: 12 }}>⚠️ {error}</div>}
 
         <button className="btn btn-primary" onClick={generate} disabled={loading || !prompt.trim()}>
-          {loading ? '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Génération en cours…' : '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>auto_awesome</span> Générer'}
+          {loading ? '⏳ Génération en cours…' : '✨ Générer'}
         </button>
       </div>
 
@@ -659,8 +659,8 @@ function PhotoLab({ photoModels }: { photoModels: ModelConfig[] }) {
             <span>{result.credits} crédits</span>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-            <a href={result.imageUrl} target="_blank" rel="noreferrer" className="btn btn-ghost btn-xs"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>link</span> URL</a>
-            <button className="btn btn-ghost btn-xs" onClick={() => { navigator.clipboard.writeText(result?.imageUrl ?? ''); }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Copier URL</button>
+            <a href={result.imageUrl} target="_blank" rel="noreferrer" className="btn btn-ghost btn-xs">🔗 URL</a>
+            <button className="btn btn-ghost btn-xs" onClick={() => { navigator.clipboard.writeText(result?.imageUrl ?? ''); }}>📋 Copier URL</button>
           </div>
         </div>
       )}
@@ -712,7 +712,7 @@ function VideoLab({ videoModels }: { videoModels: ModelConfig[] }) {
             setStatus('');
             stopPoll();
           } else {
-            setStatus(`<span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> ${poll.status}…`);
+            setStatus(`⏳ ${poll.status}…`);
           }
         } catch { /* retry next tick */ }
       }, 3000);
@@ -728,7 +728,7 @@ function VideoLab({ videoModels }: { videoModels: ModelConfig[] }) {
 
   return (
     <div className="card">
-      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 16 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>movie</span> Test Génération Vidéo</div>
+      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 16 }}>🎬 Test Génération Vidéo</div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div>
@@ -756,17 +756,17 @@ function VideoLab({ videoModels }: { videoModels: ModelConfig[] }) {
         </div>
 
         <div style={{ fontSize: 11, color: 'var(--text-muted)', background: 'var(--bg-secondary)', padding: '8px 12px', borderRadius: 6 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>bolt</span> LTX Video génère ~4s de vidéo (97 frames à 24fps). La génération prend 30–90s.
+          ⚡ LTX Video génère ~4s de vidéo (97 frames à 24fps). La génération prend 30–90s.
         </div>
 
-        {error && <div className="alert alert-danger" style={{ fontSize: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>warning</span> {error}</div>}
+        {error && <div className="alert alert-danger" style={{ fontSize: 12 }}>⚠️ {error}</div>}
         {status && !error && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{status}</div>}
 
         <button className="btn btn-primary" onClick={generate} disabled={loading || polling || !prompt.trim()}>
-          {loading ? '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Soumission…' : polling ? '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Génération en cours…' : '<span className="material-symbols-rounded" style={{ fontSize: 14 }}>movie</span> Générer'}
+          {loading ? '⏳ Soumission…' : polling ? '⏳ Génération en cours…' : '🎬 Générer'}
         </button>
         {polling && (
-          <button className="btn btn-ghost btn-xs" onClick={stopPoll}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>stop</span> Arrêter le polling</button>
+          <button className="btn btn-ghost btn-xs" onClick={stopPoll}>⏹️ Arrêter le polling</button>
         )}
       </div>
 
@@ -783,8 +783,8 @@ function VideoLab({ videoModels }: { videoModels: ModelConfig[] }) {
         <div style={{ marginTop: 16 }}>
           <video src={videoUrl} controls style={{ width: '100%', borderRadius: 8, marginBottom: 8 }} />
           <div style={{ display: 'flex', gap: 8 }}>
-            <a href={videoUrl} target="_blank" rel="noreferrer" className="btn btn-ghost btn-xs"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>link</span> URL</a>
-            <button className="btn btn-ghost btn-xs" onClick={() => { navigator.clipboard.writeText(videoUrl); }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>assignment</span> Copier URL</button>
+            <a href={videoUrl} target="_blank" rel="noreferrer" className="btn btn-ghost btn-xs">🔗 URL</a>
+            <button className="btn btn-ghost btn-xs" onClick={() => { navigator.clipboard.writeText(videoUrl); }}>📋 Copier URL</button>
           </div>
         </div>
       )}

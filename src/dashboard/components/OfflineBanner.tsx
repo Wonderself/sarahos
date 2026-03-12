@@ -71,18 +71,18 @@ export default function OfflineBanner() {
           WebkitBackdropFilter: 'blur(12px)',
           borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
           padding: '10px 20px',
+          paddingTop: 'max(10px, env(safe-area-inset-top, 0px))',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 10,
+          flexWrap: 'wrap' as const,
         }}
       >
         {/* Icon */}
-        <span
-          className="material-symbols-rounded"
-          style={{ fontSize: 20, color: '#9B9B9B', flexShrink: 0 }}
+        <span style={{ fontSize: 20, color: '#9B9B9B', flexShrink: 0 }}
         >
-          wifi_off
+          📡
         </span>
 
         {/* Text */}
@@ -92,8 +92,7 @@ export default function OfflineBanner() {
 
         {/* Queue count badge */}
         {queueCount > 0 && (
-          <span
-            style={{
+          <span style={{
               background: 'rgba(0, 0, 0, 0.1)',
               border: '1px solid rgba(0, 0, 0, 0.15)',
               borderRadius: 12,

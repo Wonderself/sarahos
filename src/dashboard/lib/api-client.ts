@@ -1,5 +1,9 @@
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
-const DASHBOARD_API_KEY = process.env['DASHBOARD_API_KEY'] ?? 'admin-key-change-me';
+const DASHBOARD_API_KEY = process.env['DASHBOARD_API_KEY'] ?? '';
+
+if (typeof process !== 'undefined' && !DASHBOARD_API_KEY && process.env.NODE_ENV === 'production') {
+  console.error('[SECURITY] DASHBOARD_API_KEY is not set — API calls will fail!');
+}
 
 // ── JWT Token Cache (server-side, survives across SSR requests) ──
 let cachedToken: string | null = null;

@@ -132,12 +132,12 @@ export default function AnalyticsHubPage() {
         <div className="section-title">Analytics par service</div>
         <div className="grid-3">
           {[
-            { href: '/admin/analytics/studio', icon: 'movie', label: 'Studio Creatif', desc: 'Videos + Photos generees' },
-            { href: '/admin/analytics/voice', icon: 'mic', label: 'Voix & Visio', desc: 'TTS, STT, Sessions visio' },
-            { href: '/admin/analytics/documents', icon: 'description', label: 'Documents', desc: 'Uploads & analyse de docs' },
+            { href: '/admin/analytics/studio', icon: '🎬', label: 'Studio Creatif', desc: 'Videos + Photos generees' },
+            { href: '/admin/analytics/voice', icon: '🎙️', label: 'Voix & Visio', desc: 'TTS, STT, Sessions visio' },
+            { href: '/admin/analytics/documents', icon: '📄', label: 'Documents', desc: 'Uploads & analyse de docs' },
           ].map(item => (
             <a key={item.href} href={item.href} className="card" style={{ textDecoration: 'none', color: 'inherit', display: 'block', padding: 16 }}>
-              <div style={{ marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{item.icon}</span></div>
+              <div style={{ marginBottom: 8 }}>{item.icon}</div>
               <div className="text-md font-semibold">{item.label}</div>
               <div className="text-xs text-muted" style={{ marginTop: 4 }}>{item.desc}</div>
             </a>

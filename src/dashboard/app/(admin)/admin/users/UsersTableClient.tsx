@@ -243,7 +243,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
             position: 'absolute', left: 10, top: '50%',
             transform: 'translateY(-50%)', fontSize: 12,
             color: 'var(--text-muted)', pointerEvents: 'none',
-          }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>search</span></span>
+          }}>🔍</span>
           <input
             className="input input-sm"
             placeholder="Rechercher par email ou nom…"
@@ -291,7 +291,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
 
         {hasFilters && (
           <button className="btn btn-ghost btn-sm" onClick={resetFilters}>
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span> Reset
+            ✕ Reset
           </button>
         )}
 
@@ -308,13 +308,13 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
           </span>
           <div className="bulk-actions">
             <button className="btn-bulk" onClick={() => openOverlay('bulk-deposit')}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer credits
+              💰 Deposer credits
             </button>
             <button className="btn-bulk" onClick={() => openOverlay('bulk-tier')}>
               Changer tier
             </button>
             <button className="btn-bulk" onClick={() => openOverlay('bulk-notify')}>
-              <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>outbox</span> Notifier
+              📤 Notifier
             </button>
           </div>
           <button
@@ -322,7 +322,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
             style={{ marginLeft: 'auto', opacity: 0.8 }}
             onClick={() => setSelectedIds(new Set())}
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 14 }}>close</span> Désélectionner
+            ✕ Désélectionner
           </button>
         </div>
       )}
@@ -338,7 +338,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                   onClick={toggleSelectAll}
                   title={allPageSelected ? 'Tout désélectionner' : 'Tout sélectionner'}
                 >
-                  {allPageSelected ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
+                  {allPageSelected ? '✅' : ''}
                 </div>
               </th>
               <SortTh field="displayName" label="Utilisateur" />
@@ -356,7 +356,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
               <tr>
                 <td colSpan={9}>
                   <div className="empty-state">
-                    <div className="empty-state-icon"><span className="material-symbols-rounded" style={{ fontSize: 32 }}>{hasFilters ? 'search' : 'group'}</span></div>
+                    <div className="empty-state-icon">{hasFilters ? '🔍' : '👥'}</div>
                     <div className="empty-state-text">
                       {hasFilters ? 'Aucun résultat pour ces filtres' : 'Aucun utilisateur'}
                     </div>
@@ -379,7 +379,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                       className={`custom-checkbox${selectedIds.has(user.id) ? ' checked' : ''}`}
                       onClick={() => toggleSelect(user.id)}
                     >
-                      {selectedIds.has(user.id) ? <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span> : ''}
+                      {selectedIds.has(user.id) ? '✅' : ''}
                     </div>
                   </td>
 
@@ -462,7 +462,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                         title="Déposer des crédits"
                         onClick={() => openOverlay('deposit', user)}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>savings</span>
+                        💰
                       </button>
                       <button
                         className="btn btn-secondary btn-xs"
@@ -481,7 +481,7 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                         title="Régénérer la clé API"
                         onClick={() => openOverlay('reset-key', user)}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>key</span>
+                        🔑
                       </button>
                       {user.isActive ? (
                         <button
@@ -732,7 +732,7 @@ function DepositSlideOver({
             type="submit"
             disabled={loading || !amount || parseFloat(amount) <= 0}
           >
-            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer</>}
+            {loading ? 'En cours...' : <>💰 Deposer</>}
           </button>
         </>
       }
@@ -960,13 +960,13 @@ function ResetKeySlideOver({
             onClick={() => onSubmit(user.id)}
             disabled={loading}
           >
-            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>key</span> Regenerer</>}
+            {loading ? 'En cours...' : <>🔑 Regenerer</>}
           </button>
         </>
       }
     >
       <div className="alert alert-warning" style={{ marginBottom: 16 }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>warning</span> L&apos;ancienne cle API sera <strong>invalidee immediatement</strong>. L'utilisateur devra mettre à jour ses intégrations.
+        ⚠️ L&apos;ancienne cle API sera <strong>invalidee immediatement</strong>. L'utilisateur devra mettre à jour ses intégrations.
       </div>
       <p className="text-sm text-secondary">
         Régénérer la clé API de <strong>{user.displayName}</strong> ({user.email}) ?
@@ -1053,7 +1053,7 @@ function BulkDepositSlideOver({
             }}
             disabled={loading || !amount || parseFloat(amount) <= 0}
           >
-            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>savings</span> Deposer pour {count} users</>}
+            {loading ? 'En cours...' : <>💰 Deposer pour {count} users</>}
           </button>
         </>
       }
@@ -1163,7 +1163,7 @@ function BulkNotifySlideOver({
             onClick={() => title && message && onSubmit(title, message)}
             disabled={loading || !title || !message}
           >
-            {loading ? 'En cours...' : <><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>outbox</span> Envoyer a {count} users</>}
+            {loading ? 'En cours...' : <>📤 Envoyer a {count} users</>}
           </button>
         </>
       }

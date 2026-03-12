@@ -156,8 +156,9 @@ export default function MarketplacePage() {
                     color: installed.has(agent.id) ? '#1A1A1A' : '#fff',
                     border: '1px solid #E5E5E5',
                     borderRadius: 8,
-                    padding: '8px 20px',
+                    padding: isMobile ? '10px 24px' : '8px 20px',
                     fontSize: 13,
+                    minHeight: isMobile ? 44 : 36,
                     fontWeight: 600,
                     cursor: installing === agent.id ? 'wait' : 'pointer',
                     transition: 'all 0.2s',
@@ -238,8 +239,9 @@ export default function MarketplacePage() {
                 key={s.key}
                 onClick={() => setSort(s.key)}
                 style={{
-                  padding: '5px 12px',
+                  padding: isMobile ? '8px 14px' : '5px 12px',
                   borderRadius: 'var(--radius-sm)',
+                  minHeight: isMobile ? 40 : 'auto',
                   border: '1px solid #E5E5E5',
                   background: sort === s.key ? '#1A1A1A' : '#fff',
                   color: sort === s.key ? '#fff' : '#6B6B6B',
@@ -333,6 +335,7 @@ function AgentCard({
   isInstalling: boolean;
   onToggle: () => void;
 }) {
+  const isMobile = useIsMobile();
   const catColor = '#1A1A1A';
 
   return (
@@ -446,8 +449,9 @@ function AgentCard({
           onClick={onToggle}
           disabled={isInstalling}
           style={{
-            padding: '7px 18px',
+            padding: isMobile ? '10px 20px' : '7px 18px',
             borderRadius: 8,
+            minHeight: isMobile ? 44 : 36,
             border: '1px solid #E5E5E5',
             background: isInstalled ? '#fff' : '#1A1A1A',
             color: isInstalled ? '#6B6B6B' : '#fff',
@@ -458,7 +462,7 @@ function AgentCard({
           }}
           onMouseEnter={(e) => {
             if (!isInstalled && !isInstalling) {
-              e.currentTarget.style.background = '#333';
+              e.currentTarget.style.background = '#F5F5F5';
             }
           }}
           onMouseLeave={(e) => {

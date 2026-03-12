@@ -6,31 +6,31 @@ import { useRouter } from 'next/navigation';
 // ─── Static page index ────────────────────────────────────────────────────────
 
 const ADMIN_PAGES = [
-  { href: '/admin', label: 'Vue d\'ensemble', icon: 'home', section: 'Pages' },
-  { href: '/admin/users', label: 'Utilisateurs', icon: 'group', section: 'Pages' },
-  { href: '/admin/analytics', label: 'Analytics — Vue globale', icon: 'bar_chart', section: 'Pages' },
-  { href: '/admin/analytics/studio', label: 'Analytics — Studio', icon: 'movie', section: 'Pages' },
-  { href: '/admin/analytics/documents', label: 'Analytics — Documents', icon: 'description', section: 'Pages' },
-  { href: '/admin/analytics/voice', label: 'Analytics — Voix & Visio', icon: 'mic', section: 'Pages' },
-  { href: '/admin/billing', label: 'Facturation', icon: 'credit_card', section: 'Pages' },
-  { href: '/admin/promo', label: 'Codes Promo', icon: 'confirmation_number', section: 'Pages' },
-  { href: '/admin/repondeur', label: 'Répondeur', icon: 'call', section: 'Pages' },
-  { href: '/admin/quotes', label: 'Devis & Entreprise', icon: 'business', section: 'Pages' },
-  { href: '/system/agents', label: 'Agents IA', icon: 'smart_toy', section: 'Pages' },
-  { href: '/system/approvals', label: 'Approbations', icon: 'check_circle', section: 'Pages' },
-  { href: '/system/tasks', label: 'Tâches', icon: 'assignment', section: 'Pages' },
-  { href: '/infra/health', label: 'Santé Système', icon: 'favorite', section: 'Pages' },
-  { href: '/infra/avatar', label: 'Avatar & TTS', icon: 'theater_comedy', section: 'Pages' },
-  { href: '/infra/metrics', label: 'Métriques', icon: 'trending_up', section: 'Pages' },
-  { href: '/system/crons', label: 'Cron Jobs', icon: 'schedule', section: 'Pages' },
-  { href: '/admin/referrals', label: 'Parrainages', icon: 'handshake', section: 'Pages' },
-  { href: '/admin/setup', label: 'Setup & Onboarding', icon: 'check_circle', section: 'Pages' },
-  { href: '/admin/security', label: 'Sécurité & 2FA', icon: 'lock', section: 'Pages' },
-  { href: '/admin/tokens', label: 'Tokens & Tarifs', icon: 'lightbulb', section: 'Pages' },
-  { href: '/admin/diagnostics', label: 'Diagnostics', icon: 'search', section: 'Pages' },
-  { href: '/admin/roadmap', label: 'Roadmap', icon: 'map', section: 'Pages' },
-  { href: '/admin/guide', label: 'Guide', icon: 'menu_book', section: 'Pages' },
-  { href: '/client/dashboard', label: 'Espace Client', icon: 'link', section: 'Pages' },
+  { href: '/admin', label: 'Vue d\'ensemble', icon: '🏠', section: 'Pages' },
+  { href: '/admin/users', label: 'Utilisateurs', icon: '👥', section: 'Pages' },
+  { href: '/admin/analytics', label: 'Analytics — Vue globale', icon: '📊', section: 'Pages' },
+  { href: '/admin/analytics/studio', label: 'Analytics — Studio', icon: '🎬', section: 'Pages' },
+  { href: '/admin/analytics/documents', label: 'Analytics — Documents', icon: '📄', section: 'Pages' },
+  { href: '/admin/analytics/voice', label: 'Analytics — Voix & Visio', icon: '🎙️', section: 'Pages' },
+  { href: '/admin/billing', label: 'Facturation', icon: '💳', section: 'Pages' },
+  { href: '/admin/promo', label: 'Codes Promo', icon: '🎟️', section: 'Pages' },
+  { href: '/admin/repondeur', label: 'Répondeur', icon: '📞', section: 'Pages' },
+  { href: '/admin/quotes', label: 'Devis & Entreprise', icon: '🏢', section: 'Pages' },
+  { href: '/system/agents', label: 'Agents IA', icon: '🤖', section: 'Pages' },
+  { href: '/system/approvals', label: 'Approbations', icon: '✅', section: 'Pages' },
+  { href: '/system/tasks', label: 'Tâches', icon: '📋', section: 'Pages' },
+  { href: '/infra/health', label: 'Santé Système', icon: '❤️', section: 'Pages' },
+  { href: '/infra/avatar', label: 'Avatar & TTS', icon: '🎭', section: 'Pages' },
+  { href: '/infra/metrics', label: 'Métriques', icon: '📈', section: 'Pages' },
+  { href: '/system/crons', label: 'Cron Jobs', icon: '⏰', section: 'Pages' },
+  { href: '/admin/referrals', label: 'Parrainages', icon: '🤝', section: 'Pages' },
+  { href: '/admin/setup', label: 'Setup & Onboarding', icon: '✅', section: 'Pages' },
+  { href: '/admin/security', label: 'Sécurité & 2FA', icon: '🔒', section: 'Pages' },
+  { href: '/admin/tokens', label: 'Tokens & Tarifs', icon: '💡', section: 'Pages' },
+  { href: '/admin/diagnostics', label: 'Diagnostics', icon: '🔍', section: 'Pages' },
+  { href: '/admin/roadmap', label: 'Roadmap', icon: '🗺️', section: 'Pages' },
+  { href: '/admin/guide', label: 'Guide', icon: '📖', section: 'Pages' },
+  { href: '/client/dashboard', label: 'Espace Client', icon: '🔗', section: 'Pages' },
 ];
 
 interface SearchResult {
@@ -113,7 +113,7 @@ export default function GlobalSearch() {
       setUserResults(data.users.map(u => ({
         href: `/admin/users/${u.id}`,
         label: u.displayName,
-        icon: 'person',
+        icon: '👤',
         section: 'Utilisateurs',
         badge: `${u.tier} · ${u.role}`,
       })));
@@ -155,8 +155,8 @@ export default function GlobalSearch() {
 
       {/* Search modal */}
       <div style={{
-        position: 'fixed', top: '15vh', left: '50%', transform: 'translateX(-50%)',
-        width: '100%', maxWidth: 560, zIndex: 10001,
+        position: 'fixed', top: '12vh', left: '50%', transform: 'translateX(-50%)',
+        width: 'calc(100% - 32px)', maxWidth: 560, zIndex: 10001,
         background: 'var(--bg-primary)',
         borderRadius: 12,
         border: '1px solid var(--border-primary)',
@@ -169,7 +169,7 @@ export default function GlobalSearch() {
           padding: '12px 16px',
           borderBottom: '1px solid var(--border-primary)',
         }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, flexShrink: 0 }}>search</span>
+          🔍
           <input
             ref={inputRef}
             type="text"
@@ -190,7 +190,7 @@ export default function GlobalSearch() {
         </div>
 
         {/* Results */}
-        <div style={{ maxHeight: 360, overflowY: 'auto' }}>
+        <div style={{ maxHeight: 'min(360px, 60vh)', overflowY: 'auto' }}>
           {allResults.length === 0 && query.length > 0 && !searching && (
             <div style={{ padding: '20px 16px', color: 'var(--text-muted)', fontSize: 13, textAlign: 'center' }}>
               Aucun résultat pour «&nbsp;{query}&nbsp;»
@@ -228,7 +228,7 @@ export default function GlobalSearch() {
                         transition: 'background 0.1s',
                       }}
                     >
-                      <span className="material-symbols-rounded" style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
+                      <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 13, fontWeight: isActive ? 600 : 400 }}>{item.label}</div>
                         {item.badge && (

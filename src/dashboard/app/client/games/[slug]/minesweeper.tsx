@@ -192,15 +192,11 @@ export default function MinesweeperGame() {
       {/* Header */}
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
-            flag
-          </span>
+          {'🚩'}{' '}
           {MINES - flags}
         </div>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>
-            timer
-          </span>
+          {'⏱️'}{' '}
           {formatTime(timer)}
         </div>
         {/* Flag mode toggle — near header for easy access */}
@@ -216,8 +212,8 @@ export default function MinesweeperGame() {
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 16 }}>
-            {flagMode ? 'flag' : 'touch_app'}
+          <span style={{ fontSize: 16 }}>
+            {flagMode ? '🚩' : '👆'}
           </span>
           {flagMode ? 'Drapeau' : 'Révéler'}
         </button>
@@ -266,9 +262,9 @@ export default function MinesweeperGame() {
               }}
             >
               {cell.flagged && !cell.revealed ? (
-                <span className="material-symbols-rounded" style={{ fontSize: 'min(4vw, 16px)', color: '#ef4444' }}>flag</span>
+                <span>🚩</span>
               ) : cell.revealed && cell.mine ? (
-                <span className="material-symbols-rounded" style={{ fontSize: 'min(4vw, 16px)', color: '#ef4444' }}>crisis_alert</span>
+                <span>💣</span>
               ) : cell.revealed && cell.neighbors > 0 ? (
                 cell.neighbors
               ) : null}
@@ -325,7 +321,7 @@ export default function MinesweeperGame() {
                 gap: 4,
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 16 }}>arrow_back</span>
+              {'←'}{' '}
               Arcade
             </Link>
           </div>

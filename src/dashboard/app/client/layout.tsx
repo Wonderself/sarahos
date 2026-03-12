@@ -14,6 +14,7 @@ import { getFavorites } from '../../lib/favorite-agents';
 import { registerServiceWorker } from '../../lib/push-notifications';
 import { NAV_EMOJIS, SECTION_EMOJIS, PAGE_META } from '../../lib/emoji-map';
 import OnboardingCopilot from '../../components/OnboardingCopilot';
+import VisitorBanner from '../../components/VisitorBanner';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -51,46 +52,111 @@ interface MenuConfig {
 
 const DEFAULT_SECTIONS: SectionConfig[] = [
   {
-    id: 'workspace',
-    title: 'Espace de travail',
+    id: 'quotidien',
+    title: 'Quotidien',
     visible: true,
     order: 0,
     items: [
       { href: '/client/dashboard', icon: 'home', label: 'Accueil', visible: true, order: 0 },
-      { href: '/client/reveil', icon: 'coffee', label: 'Réveil intelligent', visible: true, order: 1 },
-      { href: '/client/chat', icon: 'chat', label: 'Chat', visible: true, order: 2 },
-      { href: '/client/repondeur', icon: 'call', label: 'Répondeur Intelligent', visible: true, order: 4 },
-      { href: '/client/social', icon: 'share', label: 'Réseaux Sociaux', visible: true, order: 5 },
-      { href: '/client/studio', icon: 'movie', label: 'Studio Créatif', visible: true, order: 6 },
-      { href: '/client/documents', icon: 'description', label: 'Documents', visible: true, order: 7 },
-      { href: '/client/strategy', icon: 'target', label: "Plan d'attaque", visible: true, order: 8 },
-      { href: '/client/custom-creation', icon: 'extension', label: 'Modules sur mesure', visible: true, order: 9 },
-      { href: '/client/video-pro', icon: 'videocam', label: 'Vidéo Pro', visible: true, order: 10 },
-      { href: '/client/formations', icon: 'school', label: 'Formations', visible: true, order: 11 },
-      { href: '/client/personal', icon: 'person', label: 'Mes Assistants', visible: true, order: 12 },
-      { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser les Assistants', visible: true, order: 13 },
-      { href: '/client/agents', icon: 'smart_toy', label: 'Mes assistants IA', visible: true, order: 14 },
-      { href: '/client/modules', icon: 'inventory_2', label: 'Mes modules', visible: true, order: 15 },
-      { href: '/client/campaigns', icon: 'campaign', label: 'Campagnes', visible: true, order: 16 },
-      { href: '/client/telephony', icon: 'phone', label: 'Téléphonie', visible: true, order: 17 },
-      { href: '/client/projects', icon: 'folder', label: 'Projets', visible: true, order: 18 },
-      { href: '/client/actions', icon: 'bolt', label: "Centre d'actions", visible: true, order: 19 },
+      { href: '/client/chat', icon: 'chat', label: 'Chat', visible: true, order: 1 },
+      { href: '/client/reveil', icon: 'coffee', label: 'Réveil intelligent', visible: true, order: 2 },
+      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 3 },
+      { href: '/client/notes', icon: 'sticky_note_2', label: 'Notes rapides', visible: true, order: 4 },
+      { href: '/client/pomodoro', icon: 'timer', label: 'Focus / Pomodoro', visible: true, order: 5 },
+      { href: '/client/calendrier', icon: 'calendar_month', label: 'Calendrier', visible: true, order: 6 },
+      { href: '/client/actions', icon: 'bolt', label: "Centre d'actions", visible: true, order: 7 },
+    ],
+  },
+  {
+    id: 'creation',
+    title: 'Création',
+    visible: true,
+    order: 1,
+    items: [
+      { href: '/client/studio', icon: 'movie', label: 'Studio Créatif', visible: true, order: 0 },
+      { href: '/client/video-pro', icon: 'videocam', label: 'Vidéo Pro', visible: true, order: 1 },
+      { href: '/client/photos', icon: 'image_search', label: 'Banque d\'images', visible: true, order: 2 },
+      { href: '/client/social', icon: 'share', label: 'Réseaux Sociaux', visible: true, order: 3 },
+      { href: '/client/campaigns', icon: 'campaign', label: 'Campagnes', visible: true, order: 4 },
+      { href: '/client/custom-creation', icon: 'extension', label: 'Modules sur mesure', visible: true, order: 5 },
+    ],
+  },
+  {
+    id: 'communication',
+    title: 'Communication',
+    visible: true,
+    order: 2,
+    items: [
+      { href: '/client/repondeur', icon: 'call', label: 'Répondeur Intelligent', visible: true, order: 0 },
+      { href: '/client/telephony', icon: 'phone', label: 'Téléphonie', visible: true, order: 1 },
+      { href: '/client/email', icon: 'mail', label: 'Email IA', visible: true, order: 2 },
+      { href: '/client/signatures', icon: 'draw', label: 'Signatures Email', visible: true, order: 3 },
+      { href: '/client/email-templates', icon: 'mark_email_read', label: 'Templates Email', visible: true, order: 4 },
+    ],
+  },
+  {
+    id: 'assistants',
+    title: 'Assistants IA',
+    visible: true,
+    order: 3,
+    items: [
+      { href: '/client/agents', icon: 'smart_toy', label: 'Mes assistants IA', visible: true, order: 0 },
+      { href: '/client/personal', icon: 'person', label: 'Mes Assistants Perso', visible: true, order: 1 },
+      { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser', visible: true, order: 2 },
+      { href: '/client/modules', icon: 'inventory_2', label: 'Mes modules', visible: true, order: 3 },
+    ],
+  },
+  {
+    id: 'productivite',
+    title: 'Productivité',
+    visible: true,
+    order: 4,
+    items: [
+      { href: '/client/strategy', icon: 'target', label: "Plan d'attaque", visible: true, order: 0 },
+      { href: '/client/projects', icon: 'folder', label: 'Projets', visible: true, order: 1 },
+      { href: '/client/kanban', icon: 'view_kanban', label: 'Kanban', visible: true, order: 2 },
+      { href: '/client/documents', icon: 'description', label: 'Documents', visible: true, order: 3 },
+      { href: '/client/traduction', icon: 'translate', label: 'Traduction', visible: true, order: 4 },
+      { href: '/client/qrcode', icon: 'qr_code_2', label: 'QR Codes', visible: true, order: 5 },
+      { href: '/client/formations', icon: 'school', label: 'Formations', visible: true, order: 6 },
+    ],
+  },
+  {
+    id: 'business',
+    title: 'Business',
+    visible: true,
+    order: 5,
+    items: [
+      { href: '/client/facturation', icon: 'receipt_long', label: 'Facturation', visible: true, order: 0 },
+      { href: '/client/crm', icon: 'contacts', label: 'CRM', visible: true, order: 1 },
+      { href: '/client/seo', icon: 'search', label: 'SEO Tracker', visible: true, order: 2 },
+      { href: '/client/veille', icon: 'newspaper', label: 'Veille / RSS', visible: true, order: 3 },
+      { href: '/client/landing-builder', icon: 'web', label: 'Landing Builder', visible: true, order: 4 },
+    ],
+  },
+  {
+    id: 'bienetre',
+    title: 'Bien-être',
+    visible: true,
+    order: 6,
+    items: [
+      { href: '/client/habitudes', icon: 'task_alt', label: 'Habitudes', visible: true, order: 0 },
+      { href: '/client/journal', icon: 'auto_stories', label: 'Journal Perso', visible: true, order: 1 },
     ],
   },
   {
     id: 'moi',
     title: 'Moi',
     visible: true,
-    order: 1,
+    order: 7,
     items: [
       { href: '/client/account', icon: 'account_circle', label: 'Mon Compte', visible: true, order: 0 },
-      { href: '/client/analytics', icon: 'analytics', label: 'Analytics', visible: true, order: 1 },
-      { href: '/client/finances', icon: 'credit_card', label: 'Finances', visible: true, order: 2 },
-      { href: '/client/referrals', icon: 'redeem', label: 'Parrainer', visible: true, order: 3 },
-      { href: '/client/rewards', icon: 'card_giftcard', label: 'Récompenses', visible: true, order: 4 },
+      { href: '/client/rewards', icon: 'card_giftcard', label: 'Récompenses', visible: true, order: 1 },
+      { href: '/client/referrals', icon: 'redeem', label: 'Parrainer', visible: true, order: 2 },
+      { href: '/client/analytics', icon: 'analytics', label: 'Analytics', visible: true, order: 3 },
+      { href: '/client/finances', icon: 'credit_card', label: 'Finances', visible: true, order: 4 },
       { href: '/client/activity', icon: 'history', label: "Journal d'activité", visible: true, order: 5 },
       { href: '/client/timeline', icon: 'timeline', label: 'Timeline', visible: true, order: 6 },
-      { href: '/client/notifications', icon: 'notifications', label: 'Notifications', visible: true, order: 7 },
     ],
   },
 ];
@@ -239,6 +305,31 @@ function saveMenuSections(sections: SectionConfig[], desktop: boolean): void {
 
 // ─── Emoji helper ─────────────────────────────────────────────────────────────
 
+// Auth-required nav items (visitor sees lock icon)
+const AUTH_REQUIRED_HREFS = new Set([
+  '/client/account',
+  '/client/finances',
+  '/client/notifications',
+  '/client/projects',
+  '/client/strategy',
+  '/client/team',
+  '/client/onboarding',
+  '/client/activity',
+  '/client/referrals',
+  '/client/rewards',
+  '/client/analytics',
+  '/client/personal/budget',
+  '/client/personal/comptable',
+  '/client/personal/chasseur',
+  '/client/personal/cv',
+  '/client/personal/ecrivain',
+  '/client/campaigns',
+  '/client/telephony',
+  '/client/actions',
+  '/client/widget',
+  '/client/agents/customize',
+]);
+
 function getNavEmoji(href: string): string {
   const slug = href.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
   return NAV_EMOJIS[slug] || NAV_EMOJIS[slug.split('-')[0]] || '📎';
@@ -309,7 +400,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeAgentCount, setActiveAgentCount] = useState(1);
-  const [darkMode, setDarkMode] = useState(false);
+  // darkMode removed
   const [projects, setProjects] = useState<{ id: string; name: string; isDefault: boolean }[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
@@ -429,17 +520,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     refreshGamification();
     setActiveAgentCount(getActiveAgentIds().length);
 
-    try {
-      if (localStorage.getItem('fz_dark_mode') === 'true') {
-        setDarkMode(true);
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    } catch { /* */ }
+    // Dark mode removed — always light
 
     const interval = setInterval(refreshGamification, 30000);
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'fz_session' && !e.newValue) {
-        window.location.href = '/login';
+        // Session removed (explicit logout) — clear state but don't redirect
+        setSession(null);
         return;
       }
       if (e.key === 'fz_gamification') refreshGamification();
@@ -540,12 +627,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         body: JSON.stringify({ path: '/portal/wallet', token }),
       });
       if (res.status === 401) {
-        // Token expired — logout cleanly via server (clears httpOnly cookie) then redirect
+        // Token expired — clear session state but don't redirect (guest-friendly)
         localStorage.removeItem('fz_session');
         document.cookie = 'fz-token=; path=/; max-age=0';
+        setSession(null);
         fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) })
-          .catch(() => {})
-          .finally(() => { window.location.href = '/login'; });
+          .catch(() => {});
         return;
       }
       if (!res.ok) return; // Non-401 errors: stay on page, wallet just won't show
@@ -567,20 +654,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     try { localStorage.setItem('fz_low_credit_dismissed', String(Date.now())); } catch { /* */ }
   }
 
-  function toggleDarkMode() {
-    const newValue = !darkMode;
-    setDarkMode(newValue);
-    if (newValue) document.documentElement.setAttribute('data-theme', 'dark');
-    else document.documentElement.removeAttribute('data-theme');
-    try { localStorage.setItem('fz_dark_mode', String(newValue)); } catch { /* */ }
-    if (session?.token) {
-      fetch('/api/portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: '/portal/preferences', token: session.token, method: 'PATCH', data: { darkMode: newValue } }),
-      }).catch(() => {});
-    }
-  }
+  // toggleDarkMode removed — always light theme
 
   // ─── Menu customization handlers ──────────────────────────────────────────
 
@@ -772,10 +846,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     );
   }
 
-  if (!session) {
-    if (typeof window !== 'undefined') window.location.href = '/login';
-    return null;
-  }
+  // Guest mode: if no session, still render the page (no redirect)
+  // Auth-dependent features will check `session` before rendering
 
   // Check if admin is impersonating this session
   const isImpersonating = typeof window !== 'undefined' &&
@@ -818,7 +890,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {(() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
             const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-            return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <span>freenzy.io</span>;
+            return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <><span>freenzy.io</span><span style={{ fontSize: 8, fontStyle: 'italic', color: 'var(--text-secondary)', marginLeft: 4, opacity: 0.5 }}>Beta Test 1</span></>;
           })()}
         </div>
         <button
@@ -838,7 +910,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {(() => {
         const navCtx = getCurrentNavContext(pathname, visibleSections);
         return (
-          <nav className="emoji-rail">
+          <nav className={`emoji-rail${sidebarExpanded ? ' emoji-rail-hidden' : ''}`}>
             <div className="emoji-rail-top">
               <button className="emoji-rail-btn" onClick={() => setSidebarExpanded(e => !e)} title="Menu">
                 🚀
@@ -872,17 +944,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
             <div className="emoji-rail-bottom">
               <button className="emoji-rail-btn" onClick={() => setSearchOpen(true)} title="Rechercher (Ctrl+K)">🔍</button>
-              <button className="emoji-rail-btn" onClick={toggleDarkMode} title={darkMode ? 'Mode clair' : 'Mode sombre'}>
-                {darkMode ? '☀️' : '🌙'}
-              </button>
+              <Link href="/client/account" className="emoji-rail-btn" style={{ textDecoration: 'none' }} title="Mon compte">
+                ⚙️
+              </Link>
               <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => setNotifUnreadCount(0)}>
                 🔔
                 {notifUnreadCount > 0 && (
-                  <span style={{ position: 'absolute', top: 2, right: 2, minWidth: 12, height: 12, borderRadius: 6, background: '#ef4444', color: '#fff', fontSize: 8, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 2px' }}>{notifUnreadCount}</span>
+                  <span style={{ position: 'absolute', top: 0, right: 0, minWidth: 16, height: 16, borderRadius: 8, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
                 )}
               </Link>
-              <Link href="/client/account" className="emoji-rail-avatar" title={session?.displayName || 'Mon compte'} style={{ textDecoration: 'none' }}>
-                {(session?.displayName || session?.email || '?').slice(0, 2).toUpperCase()}
+              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : 'linear-gradient(135deg, #7c3aed, #5b6cf7)', color: session ? undefined : '#fff' }}>
+                {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '🎯'}
               </Link>
             </div>
           </nav>
@@ -897,29 +969,29 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }}>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
-              background: 'var(--bg-secondary)',
+              background: session ? 'var(--bg-secondary)' : 'linear-gradient(135deg, #7c3aed, #5b6cf7)',
               border: '1px solid var(--border-primary)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, flexShrink: 0,
-            }}>🚀</div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>Mon espace</span>
-            <span style={{ fontSize: 11, color: 'var(--text-muted)', marginRight: 4 }}>▾</span>
+            }}>{session ? '🚀' : '🎯'}</div>
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>{session ? 'Mon espace' : 'Mode Visiteur'}</span>
+            {session && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginRight: 4 }}>▾</span>}
             <button
-              onClick={toggleDarkMode}
-              title={darkMode ? 'Mode clair' : 'Mode sombre'}
+              onClick={() => setSidebarExpanded(false)}
+              title="Fermer le menu"
               style={{
                 width: 24, height: 24, borderRadius: '50%', border: '1px solid var(--border-primary)',
                 background: 'var(--bg-primary)', cursor: 'pointer', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
               }}
             >
-              <span style={{ fontSize: 12, lineHeight: 1 }}>{darkMode ? '☀️' : '🌙'}</span>
+              ✕
             </button>
           </div>
         </div>
 
-        {/* Project Selector */}
-        {projects.length > 0 && (
+        {/* Project Selector — auth only */}
+        {session && projects.length > 0 && (
           <div style={{ position: 'relative', margin: '0 16px 12px' }}>
             <button
               onClick={() => setShowProjectDropdown(!showProjectDropdown)}
@@ -927,7 +999,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               style={{ padding: '8px 12px', background: 'var(--bg-secondary)', fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer' }}
             >
               <span className="text-sm font-semibold truncate">
-                <span className="material-symbols-rounded" style={{ fontSize: 14 }}>folder</span> {activeProject?.name || 'Projet'}
+                📁 {activeProject?.name || 'Projet'}
               </span>
               <span style={{ fontSize: 10 }}>{showProjectDropdown ? '▲' : '▼'}</span>
             </button>
@@ -940,7 +1012,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     className="w-full text-sm"
                     style={{ display: 'block', padding: '8px 12px', textAlign: 'left', background: proj.id === activeProjectId ? 'var(--accent-muted)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
                   >
-                    {proj.isDefault && <><span className="material-symbols-rounded" style={{ fontSize: 12 }}>star</span>{' '}</>}{proj.name}
+                    {proj.isDefault && <>⭐ </>}{proj.name}
                   </button>
                 ))}
                 <div style={{ borderTop: '1px solid var(--border-primary)' }}>
@@ -957,8 +1029,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         )}
 
-        {/* Favorite agents bar */}
-        {favoriteAgents.length > 0 && (
+        {/* Favorite agents bar — auth only */}
+        {session && favoriteAgents.length > 0 && (
           <div style={{ margin: '0 16px 12px', display: 'flex', gap: 8, alignItems: 'center' }}>
             <span style={{ fontSize: 14 }}>⭐</span>
             {favoriteAgents.map(agId => {
@@ -978,9 +1050,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.15)')}
                   onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'var(--text-secondary)' }}>
-                    {ag.materialIcon || 'smart_toy'}
-                  </span>
+                  <span style={{ fontSize: 16 }}>{ag.emoji || '🤖'}</span>
                 </Link>
               );
             })}
@@ -995,7 +1065,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="customize-panel">
               <div className="customize-panel-header">
                 <span style={{ fontWeight: 700, fontSize: 13 }}>Personnaliser le menu</span>
-                <button onClick={() => setCustomizeOpen(false)} className="customize-close-btn"><span className="material-symbols-rounded" style={{ fontSize: 16 }}>close</span></button>
+                <button onClick={() => setCustomizeOpen(false)} className="customize-close-btn">✕</button>
               </div>
 
               {/* Device tabs */}
@@ -1004,13 +1074,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   className={`customize-tab${customizeTab === 'desktop' ? ' active' : ''}`}
                   onClick={() => changeCustomizeTab('desktop')}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>computer</span> Ordinateur
+                  🖥️ Ordinateur
                 </button>
                 <button
                   className={`customize-tab${customizeTab === 'mobile' ? ' active' : ''}`}
                   onClick={() => changeCustomizeTab('mobile')}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 14 }}>phone_iphone</span> Mobile
+                  📱 Mobile
                 </button>
               </div>
 
@@ -1030,8 +1100,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                         ? <span className="drag-handle" title="Glisser pour réordonner">⠿</span>
                         : (
                           <div className="flex items-center gap-2">
-                            <button className="updown-btn" onClick={() => moveSectionUp(sIdx)} disabled={sIdx === 0}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>arrow_upward</span></button>
-                            <button className="updown-btn" onClick={() => moveSectionDown(sIdx)} disabled={sIdx >= editSections.length - 1}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>arrow_downward</span></button>
+                            <button className="updown-btn" onClick={() => moveSectionUp(sIdx)} disabled={sIdx === 0}>▲</button>
+                            <button className="updown-btn" onClick={() => moveSectionDown(sIdx)} disabled={sIdx >= editSections.length - 1}>▼</button>
                           </div>
                         )}
                       {editingSectionTitle === sIdx ? (
@@ -1057,7 +1127,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                         onClick={() => toggleSectionVisible(sIdx)}
                         title={section.visible ? 'Masquer la section' : 'Afficher la section'}
                       >
-                        <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{section.visible ? 'visibility' : 'visibility_off'}</span>
+                        {section.visible ? '👁️' : '🚫'}
                       </button>
                     </div>
 
@@ -1075,8 +1145,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           ? <span className="drag-handle" style={{ fontSize: 10 }} title="Glisser">⠿</span>
                           : (
                             <div className="flex items-center gap-1">
-                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemUp(sIdx, iIdx)} disabled={iIdx === 0}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>arrow_upward</span></button>
-                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemDown(sIdx, iIdx)} disabled={iIdx >= section.items.length - 1}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>arrow_downward</span></button>
+                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemUp(sIdx, iIdx)} disabled={iIdx === 0}>▲</button>
+                              <button className="updown-btn" style={{ fontSize: 9 }} onClick={() => moveItemDown(sIdx, iIdx)} disabled={iIdx >= section.items.length - 1}>▼</button>
                             </div>
                           )}
                         <span
@@ -1085,7 +1155,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           className="emoji-edit-trigger"
                           title="Changer l'icône"
                         >
-                          <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{item.icon}</span>
+                          {getNavEmoji(item.href)}
                         </span>
                         {editingEmoji?.sIdx === sIdx && editingEmoji?.iIdx === iIdx && (
                           <>
@@ -1096,7 +1166,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                                   <button key={emoji} onClick={() => updateItemIcon(sIdx, iIdx, emoji)}
                                     className="emoji-pick-btn"
                                   >
-                                    <span className="material-symbols-rounded" style={{ fontSize: 16 }}>{emoji}</span>
+                                    {emoji}
                                   </button>
                                 ))}
                               </div>
@@ -1127,7 +1197,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           onClick={() => toggleItemVisible(sIdx, iIdx)}
                           title={item.visible ? 'Masquer' : 'Afficher'}
                         >
-                          <span className="material-symbols-rounded" style={{ fontSize: 12 }}>{item.visible ? 'visibility' : 'visibility_off'}</span>
+                          {item.visible ? '👁️' : '🚫'}
                         </button>
                       </div>
                     ))}
@@ -1164,7 +1234,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
                       onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
                       style={{
-                        height: 32, fontSize: 13, fontWeight: 400,
+                        minHeight: 32, fontSize: 13, fontWeight: 400,
                         ...(isActive ? {
                           borderLeft: '2px solid var(--text-primary)',
                           background: 'rgba(0,0,0,0.06)',
@@ -1174,6 +1244,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     >
                       <span className="nav-icon"><span style={{ fontSize: 16 }}>{getNavEmoji(item.href)}</span></span>
                       <span style={{ flex: 1 }}>{item.label}</span>
+                      {!session && AUTH_REQUIRED_HREFS.has(item.href) && (
+                        <span style={{ fontSize: 10, opacity: 0.5, marginLeft: 2 }} title="Connexion requise">🔒</span>
+                      )}
                       {isNotifications && notifUnreadCount > 0 && (
                         <span style={{
                           minWidth: 18, height: 18, borderRadius: 9, padding: '0 5px',
@@ -1202,8 +1275,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             );
           })}
 
-          {/* Dynamic — Mes assistants personnalisés */}
-          {customAgents.length > 0 && (
+          {/* Dynamic — Mes assistants personnalisés (auth only) */}
+          {session && customAgents.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
                 <span style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
@@ -1221,8 +1294,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
           )}
 
-          {/* Dynamic — Mes modules publiés */}
-          {publishedModules.length > 0 && (
+          {/* Dynamic — Mes modules publiés (auth only) */}
+          {session && publishedModules.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
                 <span style={{ fontSize: 12 }}>📦</span> Mes modules
@@ -1244,7 +1317,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
           )}
 
-          {/* Statut — hardcoded, always visible */}
+          {/* Statut — auth only */}
+          {session && (<>
           <div className="nav-section">
             <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
               <span style={{ fontSize: 12 }}>📊</span> Statut
@@ -1274,6 +1348,33 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               )}
             </Link>
           </div>
+          </>)}
+
+          {/* Visitor CTA in sidebar */}
+          {!session && (
+            <div style={{ padding: '12px 10px' }}>
+              <Link
+                href="/login"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  gap: 6, fontSize: 13, fontWeight: 600,
+                  background: '#7c3aed', color: '#fff',
+                  borderRadius: 'var(--radius-sm)', padding: '10px 12px',
+                  textDecoration: 'none', width: '100%',
+                  transition: 'opacity 0.15s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                Ouvrir un compte gratuit
+              </Link>
+              <div style={{ textAlign: 'center', marginTop: 6 }}>
+                <Link href="/login" style={{ fontSize: 11, color: 'var(--text-muted)', textDecoration: 'none' }}>
+                  Déjà un compte ? Se connecter
+                </Link>
+              </div>
+            </div>
+          )}
 
           {/* Hidden sections — at the very bottom, greyed out */}
           {hiddenSections.length > 0 && (
@@ -1294,7 +1395,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
           )}
 
-          {/* Customize button */}
+          {/* Customize button — auth only */}
+          {session && (
           <div style={{ padding: '8px 10px 4px' }}>
             <button
               onClick={openCustomize}
@@ -1309,26 +1411,52 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               ⚙️ Personnaliser le menu
             </button>
           </div>
+          )}
         </div>
 
-        {/* Footer compact — avatar + name + settings + logout */}
+        {/* Footer compact — avatar + name + settings + logout (or login link for guests) */}
         <div className="sidebar-footer-compact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
-          <div style={{
-            width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-primary)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 11, fontWeight: 700, color: 'var(--text-primary)',
-          }}>
-            {(session.displayName || session.email || '?').slice(0, 2).toUpperCase()}
-          </div>
-          <span className="sidebar-footer-text" style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {session.displayName}
-          </span>
-          <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }}>⚙️</Link>
-          <button onClick={logout} className="sidebar-footer-logout" title="Déconnexion" style={{ flexShrink: 0 }}>
-            ⏻
-          </button>
+          {session ? (
+            <>
+              <div style={{
+                width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 11, fontWeight: 700, color: 'var(--text-primary)',
+              }}>
+                {(session.displayName || session.email || '?').slice(0, 2).toUpperCase()}
+              </div>
+              <span className="sidebar-footer-text" style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {session.displayName}
+              </span>
+              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }}>⚙️</Link>
+              <button onClick={logout} className="sidebar-footer-logout" title="Déconnexion" style={{ flexShrink: 0 }}>
+                ⏻
+              </button>
+            </>
+          ) : (
+            <>
+              <div style={{
+                width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                background: 'linear-gradient(135deg, #7c3aed, #5b6cf7)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 12, color: '#fff',
+              }}>🎯</div>
+              <Link
+                href="/login"
+                style={{
+                  fontSize: 12, fontWeight: 600, color: '#7c3aed',
+                  textDecoration: 'none', flex: 1,
+                }}
+              >
+                Ouvrir un compte
+              </Link>
+              <Link href="/login" style={{ fontSize: 11, color: 'var(--text-muted)', textDecoration: 'none', flexShrink: 0 }}>
+                Connexion
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -1337,9 +1465,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', fontSize: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', fontSize: 12, flexWrap: 'wrap', gap: 4 }}>
             <span style={{ color: 'var(--text-secondary)' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
-            <a href="/client/onboarding" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12 }}>
+            <a href="/client/onboarding" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
               Compléter →
             </a>
           </div>
@@ -1357,7 +1485,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <Link href="/client/account" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
                 Recharger →
               </Link>
-              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer', color: 'var(--text-muted)' }}>×</button>
+              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '10px', minWidth: 44, minHeight: 44, cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
             </div>
           </div>
         )}
@@ -1369,7 +1497,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             return meta ? <><span style={{ color: 'var(--text-muted)' }}>›</span><span>{meta.title}</span></> : null;
           })()}
         </div>
-        <div className="page-container">{children}</div>
+        <div className="page-container">
+          {!session && !loading && <VisitorBanner />}
+          {children}
+        </div>
       </div>
 
       {/* Bottom Tab Bar removed — emoji rail replaces it */}
@@ -1407,7 +1538,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   href={link.href}
                   onClick={() => setSearchOpen(false)}
                   className="flex items-center gap-8 text-base"
-                  style={{ padding: '8px 16px', textDecoration: 'none', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-primary)' }}
+                  style={{ padding: '12px 16px', minHeight: 44, textDecoration: 'none', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-primary)' }}
                   onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >

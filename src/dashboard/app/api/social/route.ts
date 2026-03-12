@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '@/lib/api-auth';
 
 /**
  * Social Media API — account analysis, competitor analysis, post analytics
@@ -94,6 +95,9 @@ function mockCompetitorSearch(industry: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   try {
     const body = await req.json();
     const { action, platform, username, industry } = body;

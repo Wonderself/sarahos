@@ -73,7 +73,7 @@ export function SlideOver({
             className="slide-over-close"
             aria-label="Fermer"
           >
-            <span className="material-symbols-rounded" style={{ fontSize: 16 }}>close</span>
+            ✕
           </button>
         </div>
 

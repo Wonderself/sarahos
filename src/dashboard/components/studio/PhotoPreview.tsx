@@ -105,7 +105,7 @@ export default function PhotoPreview({ generationId, onComplete }: PhotoPreviewP
         height: 300, borderRadius: 12, border: '1px solid #fca5a5', background: '#fef2f2',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8,
       }}>
-        <span className="material-symbols-rounded" style={{ fontSize: 28 }}>sentiment_dissatisfied</span>
+        <span style={{ fontSize: 28 }}>😞</span>
         <div style={{ fontSize: 13, fontWeight: 600, color: '#991b1b' }}>Erreur de generation</div>
         <div style={{ fontSize: 11, color: '#b91c1c' }}>{errorMsg}</div>
       </div>

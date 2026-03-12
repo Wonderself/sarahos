@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '@/lib/api-auth';
 
 const DEEPGRAM_API_KEY = process.env['DEEPGRAM_API_KEY'];
 
 export async function POST(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   if (!DEEPGRAM_API_KEY) {
     return NextResponse.json({ error: 'Deepgram API key not configured' }, { status: 500 });
   }

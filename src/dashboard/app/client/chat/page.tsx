@@ -12,6 +12,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { Channel, TeamMessage, getChannels, getMessages as getTeamMessages, sendMessage as sendTeamMessage, editMessage, deleteMessage, addReaction, pinMessage, createChannel, deleteChannel, getUnreadCounts, markAsRead, searchMessages as searchTeamMessages, getThreadReplies, replyToThread, seedDefaultChannels } from '../../../lib/messaging';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { VisitorEmptyState } from '../../../components/VisitorBanner';
 
 type CommMode = 'chat' | 'visio' | 'whatsapp' | 'repondeur';
 const COMM_TABS: { id: CommMode; label: string; icon: string }[] = [
@@ -20,6 +21,8 @@ const COMM_TABS: { id: CommMode; label: string; icon: string }[] = [
   { id: 'whatsapp', label: 'WhatsApp', icon: '📱' },
   { id: 'repondeur', label: 'Répondeur IA', icon: '📞' },
 ];
+import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { useVisitorDraft } from '../../../lib/useVisitorDraft';
 import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
 
@@ -156,7 +159,7 @@ interface MessageBubbleProps {
 
 function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: MessageBubbleProps) {
   const [showActions, setShowActions] = useState(false);
-  const QUICK_EMOJIS = ['\u{1F44D}', '\u2764\uFE0F', '\u{1F604}', '\u{1F389}', '\u{1F914}', '\u{1F44F}'];
+  const QUICK_EMOJIS = ['\u{1F44D}', '❤️', '\u{1F604}', '\u{1F389}', '\u{1F914}', '\u{1F44F}'];
 
   return (
     <div
@@ -176,7 +179,7 @@ function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: M
           <span className="cu-message-time">
             {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
           </span>
-          {message.isEdited && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>(modifi\u00e9)</span>}
+          {message.isEdited && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>(modifié)</span>}
           {message.isPinned && <span style={{ fontSize: 12 }}>{'\u{1F4CC}'}</span>}
         </div>
         <div className="cu-message-text">{message.content}</div>
@@ -198,27 +201,27 @@ function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: M
       {showActions && (onReply || onReact || onPin || onEdit || onDelete) && (
         <div style={{
           position: 'absolute', top: -4, right: 8, display: 'flex', gap: 2,
-          background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border)', borderRadius: 6,
-          padding: '2px 4px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border)', borderRadius: 6,
+          padding: '2px 4px',
         }}>
           {onReply && (
-            <button onClick={onReply} title="R\u00e9pondre" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4AC}'}</button>
+            <button onClick={onReply} title="Répondre" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4AC}'}</button>
           )}
           {onReact && (
             <>
               {QUICK_EMOJIS.map(e => (
-                <button key={e} onClick={() => onReact(e)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 2px', borderRadius: 4 }}>{e}</button>
+                <button key={e} onClick={() => onReact(e)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '6px', borderRadius: 4, minWidth: 32, minHeight: 32 }}>{e}</button>
               ))}
             </>
           )}
           {onPin && (
-            <button onClick={onPin} title="\u00c9pingler" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4CC}'}</button>
+            <button onClick={onPin} title="Épingler" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4CC}'}</button>
           )}
           {onEdit && (
-            <button onClick={onEdit} title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u270F\uFE0F'}</button>
+            <button onClick={onEdit} title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'✏️'}</button>
           )}
           {onDelete && (
-            <button onClick={onDelete} title="Supprimer" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F5D1}\uFE0F'}</button>
+            <button onClick={onDelete} title="Supprimer" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F5D1}️'}</button>
           )}
         </div>
       )}
@@ -387,12 +390,12 @@ function TeamChat() {
   // Channel sidebar content (shared between mobile and desktop)
   const sidebarContent = (
     <>
-      <div style={{ padding: '8px', borderBottom: '1px solid var(--fz-border-light, var(--fz-border, #E2E8F0))' }}>
+      <div style={{ padding: '8px', borderBottom: '1px solid var(--fz-border-light, var(--fz-border, #E5E5E5))' }}>
         <input
           placeholder="Rechercher..."
           value={teamSearchQuery}
           onChange={e => setTeamSearchQuery(e.target.value)}
-          style={{ width: '100%', height: 28, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '0 8px', fontSize: 12, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+          style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '0 8px', fontSize: 13, background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit', outline: 'none' }}
         />
       </div>
       {pinnedChannels.length > 0 && (
@@ -415,7 +418,7 @@ function TeamChat() {
       )}
       <div className="cu-channel-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span>{'\u{1F4AC}'} Channels</span>
-        <button onClick={() => setShowCreateChannel(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>+</button>
+        <button onClick={() => setShowCreateChannel(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>+</button>
       </div>
       {regularChannels.map(channel => (
         <div
@@ -452,18 +455,18 @@ function TeamChat() {
   );
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 140px)', borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
+    <div style={{ display: 'flex', height: 'calc(100vh - 140px)', borderTop: '1px solid var(--fz-border, #E5E5E5)' }}>
       {/* Mobile sidebar toggle */}
       {isMobile && (
         <button
           onClick={() => setShowMobileSidebar(true)}
           style={{
-            position: 'absolute', top: 8, left: 8, zIndex: 10, background: 'var(--fz-bg, #FFFFFF)',
-            border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '4px 8px',
-            cursor: 'pointer', fontSize: 14,
+            position: 'absolute', top: 8, left: 8, zIndex: 10, background: 'var(--fz-bg, #fff)',
+            border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '10px 14px',
+            cursor: 'pointer', fontSize: 14, minWidth: 44, minHeight: 44,
           }}
         >
-          {'\u2630'}
+          {'☰'}
         </button>
       )}
 
@@ -472,9 +475,9 @@ function TeamChat() {
         <>
           <div onClick={() => setShowMobileSidebar(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 40 }} />
           <div className="cu-channel-sidebar" style={{ position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 50, width: 260 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
-              <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>Channels</span>
-              <button onClick={() => setShowMobileSidebar(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2715'}</button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
+              <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1A1A1A)' }}>Channels</span>
+              <button onClick={() => setShowMobileSidebar(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'✕'}</button>
             </div>
             {sidebarContent}
           </div>
@@ -491,20 +494,20 @@ function TeamChat() {
       {/* Message Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Channel Header */}
-        <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--fz-border, #E5E5E5)', display: 'flex', alignItems: 'center', gap: 8 }}>
           {isMobile && <div style={{ width: 28 }} />}
           <span style={{ fontSize: 20 }}>{activeChannel?.emoji}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{activeChannel?.name}</div>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{activeChannel?.description}</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{activeChannel?.name}</div>
+            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{activeChannel?.description}</div>
           </div>
           {activeChannel && !activeChannel.isPinned && (
             <button
               onClick={() => handleDeleteChannel(activeChannel.id)}
               title="Supprimer le channel"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}
             >
-              {'\u{1F5D1}\uFE0F'}
+              {'\u{1F5D1}️'}
             </button>
           )}
         </div>
@@ -532,11 +535,11 @@ function TeamChat() {
                         if (e.key === 'Enter') { handleSend(); }
                         if (e.key === 'Escape') { setEditingMessageId(null); setNewMessage(''); }
                       }}
-                      style={{ flex: 1, padding: '6px 10px', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, fontSize: 13, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+                      style={{ flex: 1, padding: '6px 10px', border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, fontSize: 13, background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit', outline: 'none' }}
                       autoFocus
                     />
-                    <button onClick={handleSend} style={{ background: 'var(--accent, #7c3aed)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 }}>OK</button>
-                    <button onClick={() => { setEditingMessageId(null); setNewMessage(''); }} style={{ background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2715'}</button>
+                    <button onClick={handleSend} style={{ background: 'var(--accent, #1A1A1A)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 }}>OK</button>
+                    <button onClick={() => { setEditingMessageId(null); setNewMessage(''); }} style={{ background: 'none', border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'✕'}</button>
                   </div>
                 ) : (
                   <MessageBubble
@@ -555,7 +558,7 @@ function TeamChat() {
                   return (
                     <button
                       onClick={() => setThreadMessageId(msg.id)}
-                      style={{ marginLeft: 44, marginBottom: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--accent, #7c3aed)', fontFamily: 'inherit' }}
+                      style={{ marginLeft: 44, marginBottom: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--accent, #1A1A1A)', fontFamily: 'inherit' }}
                     >
                       {'\u{1F4AC}'} {replyCount} réponse{replyCount !== 1 ? 's' : ''}
                     </button>
@@ -573,20 +576,20 @@ function TeamChat() {
             className="cu-composer-input"
             value={newMessage}
             onChange={e => setNewMessage(e.target.value)}
-            placeholder={editingMessageId ? 'Modifier le message...' : '\u00c9crire un message...'}
+            placeholder={editingMessageId ? 'Modifier le message...' : 'Écrire un message...'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
             rows={1}
           />
-          <button className="cu-composer-send" onClick={handleSend} disabled={!newMessage.trim()}>{'\u27A4'}</button>
+          <button className="cu-composer-send" onClick={handleSend} disabled={!newMessage.trim()}>{'➤'}</button>
         </div>
       </div>
 
       {/* Thread Panel */}
       {threadMessageId && (
-        <div className="cu-thread-panel" style={isMobile ? { position: 'fixed', inset: 0, zIndex: 50, width: '100%' } : undefined}>
+        <div className="cu-thread-panel" style={isMobile ? { position: 'fixed', inset: 0, zIndex: 50, width: '100%', paddingBottom: 'max(16px, env(safe-area-inset-bottom))' } : undefined}>
           <div className="cu-thread-header">
             <span>Fil de discussion</span>
-            <button className="cu-thread-close" onClick={() => setThreadMessageId(null)}>{'\u2715'}</button>
+            <button className="cu-thread-close" onClick={() => setThreadMessageId(null)} style={{ minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{'✕'}</button>
           </div>
           <div className="cu-thread-messages fz-scroll">
             {(() => {
@@ -594,23 +597,23 @@ function TeamChat() {
               if (!parentMsg) return null;
               return <MessageBubble message={parentMsg} onReact={(emoji) => handleReaction(parentMsg.id, emoji)} />;
             })()}
-            <div style={{ borderTop: '1px solid var(--fz-border-light, var(--fz-border, #E2E8F0))', margin: '8px 0', padding: '4px 12px', fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div style={{ borderTop: '1px solid var(--fz-border-light, var(--fz-border, #E5E5E5))', margin: '8px 0', padding: '4px 12px', fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>
               {threadReplies.length} réponse{threadReplies.length !== 1 ? 's' : ''}
             </div>
             {threadReplies.map(reply => (
               <MessageBubble key={reply.id} message={reply} onReact={(emoji) => handleReaction(reply.id, emoji)} />
             ))}
           </div>
-          <div className="cu-composer" style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
+          <div className="cu-composer" style={{ borderTop: '1px solid var(--fz-border, #E5E5E5)' }}>
             <textarea
               className="cu-composer-input"
               value={threadReply}
               onChange={e => setThreadReply(e.target.value)}
-              placeholder="R\u00e9pondre..."
+              placeholder="Répondre..."
               onKeyDown={handleThreadKeyDown}
               rows={1}
             />
-            <button className="cu-composer-send" onClick={handleThreadSend} disabled={!threadReply.trim()}>{'\u27A4'}</button>
+            <button className="cu-composer-send" onClick={handleThreadSend} disabled={!threadReply.trim()}>{'➤'}</button>
           </div>
         </div>
       )}
@@ -619,44 +622,44 @@ function TeamChat() {
       {showCreateChannel && (
         <>
           <div className="cu-modal-overlay" onClick={() => setShowCreateChannel(false)} />
-          <div className="cu-modal">
+          <div className="cu-modal" style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
             <div className="cu-modal-header">
               <span className="cu-modal-title">Créer un channel</span>
-              <button onClick={() => setShowCreateChannel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>{'\u2715'}</button>
+              <button onClick={() => setShowCreateChannel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'✕'}</button>
             </div>
             <div className="cu-modal-body">
               <div style={{ marginBottom: 12 }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Emoji</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>Emoji</label>
                 <input
                   value={newChannelEmoji}
                   onChange={e => setNewChannelEmoji(e.target.value)}
-                  style={{ width: 60, height: 36, textAlign: 'center', fontSize: 20, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, background: 'var(--fz-bg, #FFFFFF)', outline: 'none' }}
+                  style={{ width: 60, height: 36, textAlign: 'center', fontSize: 20, border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, background: 'var(--fz-bg, #fff)', outline: 'none' }}
                 />
               </div>
               <div style={{ marginBottom: 12 }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Nom du channel</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>Nom du channel</label>
                 <input
                   value={newChannelName}
                   onChange={e => setNewChannelName(e.target.value)}
                   placeholder="ex: marketing"
-                  style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '0 10px', fontSize: 13, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+                  style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '0 10px', fontSize: 13, background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit', outline: 'none' }}
                   onKeyDown={e => { if (e.key === 'Enter') handleCreateChannel(); }}
                   autoFocus
                 />
               </div>
               <div style={{ marginBottom: 12 }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Description</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>Description</label>
                 <input
                   value={newChannelDesc}
                   onChange={e => setNewChannelDesc(e.target.value)}
                   placeholder="De quoi parle ce channel ?"
-                  style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, padding: '0 10px', fontSize: 13, background: 'var(--fz-bg, #FFFFFF)', color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit', outline: 'none' }}
+                  style={{ width: '100%', height: 36, border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '0 10px', fontSize: 13, background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit', outline: 'none' }}
                 />
               </div>
             </div>
             <div className="cu-modal-footer">
-              <button onClick={() => setShowCreateChannel(false)} style={{ padding: '8px 16px', border: '1px solid var(--fz-border, #E2E8F0)', borderRadius: 6, background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', fontFamily: 'inherit' }}>Annuler</button>
-              <button onClick={handleCreateChannel} disabled={!newChannelName.trim()} style={{ padding: '8px 16px', border: 'none', borderRadius: 6, background: 'var(--accent, #7c3aed)', color: 'white', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', opacity: newChannelName.trim() ? 1 : 0.5 }}>Créer</button>
+              <button onClick={() => setShowCreateChannel(false)} style={{ padding: '8px 16px', border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)', fontFamily: 'inherit' }}>Annuler</button>
+              <button onClick={handleCreateChannel} disabled={!newChannelName.trim()} style={{ padding: '8px 16px', border: 'none', borderRadius: 6, background: 'var(--accent, #1A1A1A)', color: 'white', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', opacity: newChannelName.trim() ? 1 : 0.5 }}>Créer</button>
             </div>
           </div>
         </>
@@ -666,10 +669,12 @@ function TeamChat() {
 }
 
 export default function ChatPage() {
+  const isMobile = useIsMobile();
+  const { isAuthenticated, requireAuth, LoginModalComponent } = useAuthGuard();
   const [chatMode, setChatMode] = useState<'ai' | 'team'>('ai');
   const [agents, setAgents] = useState<ResolvedAgent[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput, clearInputDraft] = useVisitorDraft('chat', 'message', '');
   const [loading, setLoading] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<ResolvedAgent | null>(null);
   const [totalTokens, setTotalTokens] = useState(0);
@@ -786,8 +791,9 @@ export default function ChatPage() {
 
   async function sendMessage() {
     if (!input.trim() || loading || !selectedAgent) return;
+    if (!requireAuth('Connectez-vous pour envoyer un message')) return;
     const session = getSession();
-    if (!session.token) { window.location.href = '/login'; return; }
+    if (!session.token) return;
 
     const userMsg: Message = { role: 'user', content: input.trim(), timestamp: new Date().toISOString() };
     const newMessages = [...messages, userMsg];
@@ -910,14 +916,16 @@ export default function ChatPage() {
     if (!input.trim() || loading || !selectedAgent) return;
     if (sendingRef.current) return;
     sendingRef.current = true;
+    if (!requireAuth('Connectez-vous pour envoyer un message')) { sendingRef.current = false; return; }
     const session = getSession();
-    if (!session.token) { sendingRef.current = false; window.location.href = '/login'; return; }
+    if (!session.token) { sendingRef.current = false; return; }
 
     const userContent = input.trim();
     const userMsg: Message = { role: 'user', content: userContent, timestamp: new Date().toISOString() };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');
+    clearInputDraft();
     setFollowUpQuestions([]);
     setFaqMatch(null);
     setFaqSuggestion(false);
@@ -1155,7 +1163,7 @@ export default function ChatPage() {
     const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
     return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase()
-        ? <mark key={i} style={{ background: '#fef08a', color: '#000', borderRadius: 2 }}>{part}</mark>
+        ? <mark key={i} style={{ background: 'rgba(0,0,0,0.06)', color: '#1A1A1A', borderRadius: 2 }}>{part}</mark>
         : part
     );
   }
@@ -1223,14 +1231,32 @@ export default function ChatPage() {
 
   if (!selectedAgent) return <div className="animate-pulse p-24 text-center text-muted">Chargement...</div>;
 
+  if (!isAuthenticated) {
+    return (
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto' }}>
+        <VisitorEmptyState
+          icon="💬"
+          title="Connectez-vous pour discuter avec vos agents IA"
+          description="Chattez en temps réel avec plus de 100 assistants IA spécialisés. Chaque agent comprend votre contexte métier et vous accompagne dans vos tâches quotidiennes."
+          features={[
+            { icon: '🤖', label: 'Agents spécialisés', desc: 'Juridique, comptable, marketing, RH et plus' },
+            { icon: '🧠', label: 'Mémoire contextuelle', desc: 'L\'agent retient vos préférences et votre historique' },
+            { icon: '⚡', label: 'Réponses instantanées', desc: 'Streaming en temps réel avec suivi de questions' },
+          ]}
+        />
+        {LoginModalComponent}
+      </div>
+    );
+  }
+
   return (
     <div className="chat-page">
       {/* ═══ PAGE HEADER ═══ */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid var(--fz-border, #E2E8F0)`, background: 'var(--fz-bg, #FFFFFF)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid var(--fz-border, #E5E5E5)`, background: 'var(--fz-bg, #fff)' }}>
         <span style={{ fontSize: 18 }}>{PAGE_META.chat.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.chat.title}</h1>
-          <p style={{ fontSize: 13, margin: 0, color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.chat.subtitle}</p>
+          <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1A1A1A)' }}>{PAGE_META.chat.title}</h1>
+          <p style={{ fontSize: 13, margin: 0, color: 'var(--fz-text-secondary, #6B6B6B)' }}>{PAGE_META.chat.subtitle}</p>
         </div>
         <HelpBubble text={PAGE_META.chat.helpText} />
       </div>
@@ -1269,7 +1295,7 @@ export default function ChatPage() {
               })()}
             </div>
           </div>
-          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>&#9662;</span>
+          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>&#9662;</span>
         </div>
 
         {/* Actions menu */}
@@ -1285,33 +1311,33 @@ export default function ChatPage() {
           {showActionsMenu && (
             <div style={{
               position: 'absolute', top: '100%', right: 0, marginTop: 4, zIndex: 20,
-              background: 'var(--fz-bg, #FFFFFF)', border: '1px solid var(--fz-border, #E2E8F0)',
-              borderRadius: 'var(--radius-md)', boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+              background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E5E5E5)',
+              borderRadius: 'var(--radius-md)',
               backdropFilter: 'blur(12px)',
               minWidth: 180, padding: 4,
             }}>
               <button onClick={() => { setSearchActive(s => !s); setSearchQuery(''); setShowActionsMenu(false); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1A1A1A)', borderRadius: 6, fontFamily: 'inherit' }}>
                 🔍 Rechercher
               </button>
               {messages.length > 0 && (
                 <button onClick={() => { exportConversation(); setShowActionsMenu(false); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1A1A1A)', borderRadius: 6, fontFamily: 'inherit' }}>
                   📥 Exporter
                 </button>
               )}
               <button onClick={() => { setShowHistory(!showHistory); setShowActionsMenu(false); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1A1A1A)', borderRadius: 6, fontFamily: 'inherit' }}>
                 🕐 Historique {history.length > 0 && `(${history.length})`}
               </button>
               {faqEntries.length > 0 && (
                 <button onClick={() => { setShowFaqPanel(!showFaqPanel); setShowActionsMenu(false); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1A1A1A)', borderRadius: 6, fontFamily: 'inherit' }}>
                   💡 FAQ ({faqEntries.filter(e => e.agentId === selectedAgent?.id).length})
                 </button>
               )}
               <button onClick={() => { setShowActionsMenu(false); }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1E293B)', borderRadius: 6, fontFamily: 'inherit' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text, #1A1A1A)', borderRadius: 6, fontFamily: 'inherit' }}>
                 <Link href="/client/agents/customize" style={{ color: 'inherit', textDecoration: 'none' }}>🎨 Personnaliser</Link>
               </button>
             </div>
@@ -1324,7 +1350,7 @@ export default function ChatPage() {
 
       {/* ═══ SEARCH BAR ═══ */}
       {searchActive && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', background: 'var(--fz-bg-secondary, #F7F7F7)', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
           <span style={{ fontSize: 14 }}>🔍</span>
           <input
             autoFocus
@@ -1332,39 +1358,39 @@ export default function ChatPage() {
             onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => e.key === 'Escape' && (setSearchActive(false), setSearchQuery(''))}
             placeholder="Rechercher dans la conversation..."
-            style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 14, color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit' }}
+            style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 14, color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit' }}
           />
           {searchQuery && (
-            <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>
               {messages.filter(m => m.content.toLowerCase().includes(searchQuery.toLowerCase())).length} résultat(s)
             </span>
           )}
-          <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16 }}>✕</button>
+          <button onClick={() => { setSearchActive(false); setSearchQuery(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 16 }}>✕</button>
         </div>
       )}
 
       {/* ═══ HISTORY PANEL ═══ */}
       {showHistory && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', maxHeight: 280, overflowY: 'auto', background: 'var(--fz-bg-secondary, #F8FAFC)', backdropFilter: 'blur(12px)' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--fz-border, #E5E5E5)', maxHeight: 280, overflowY: 'auto', background: 'var(--fz-bg-secondary, #F7F7F7)', backdropFilter: 'blur(12px)' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">Conversations récentes</span>
             <div className="flex gap-4">
               {history.length > 0 && (
                 <button onClick={clearHistory} className="btn btn-ghost btn-sm text-xs text-danger">Effacer tout</button>
               )}
-              <button onClick={() => setShowHistory(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16 }}>✕</button>
+              <button onClick={() => setShowHistory(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 16 }}>✕</button>
             </div>
           </div>
           {history.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 6, border: '1px solid var(--fz-border, #E2E8F0)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, padding: '5px 8px', background: 'var(--fz-bg, #fff)', borderRadius: 6, border: '1px solid var(--fz-border, #E5E5E5)' }}>
               <span style={{ fontSize: 13 }}>🔍</span>
               <input
                 value={historySearchQuery}
                 onChange={e => setHistorySearchQuery(e.target.value)}
                 placeholder="Rechercher dans l'historique..."
-                style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 12, color: 'var(--fz-text, #1E293B)', fontFamily: 'inherit' }}
+                style={{ flex: 1, background: 'none', border: 'none', outline: 'none', fontSize: 12, color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit' }}
               />
-              {historySearchQuery && <button onClick={() => setHistorySearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>✕</button>}
+              {historySearchQuery && <button onClick={() => setHistorySearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>}
             </div>
           )}
           {history.length === 0 ? (
@@ -1384,7 +1410,7 @@ export default function ChatPage() {
                   className="flex items-center gap-8 rounded-sm border pointer w-full"
                   style={{
                     padding: '8px 12px',
-                    background: h.id === currentConvoId ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
+                    background: h.id === currentConvoId ? 'var(--accent-muted)' : 'var(--fz-bg, #fff)',
                     textAlign: 'left', fontFamily: 'var(--font-sans)',
                   }}
                 >
@@ -1410,10 +1436,10 @@ export default function ChatPage() {
 
       {/* ═══ FAQ PANEL ═══ */}
       {showFaqPanel && selectedAgent && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)', maxHeight: 250, overflowY: 'auto', background: 'var(--fz-bg-secondary, #F8FAFC)', backdropFilter: 'blur(12px)' }}>
+        <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--fz-border, #E5E5E5)', maxHeight: 250, overflowY: 'auto', background: 'var(--fz-bg-secondary, #F7F7F7)', backdropFilter: 'blur(12px)' }}>
           <div className="flex flex-between items-center mb-8">
             <span className="text-md font-bold">💡 FAQ de {selectedAgent.name}</span>
-            <button onClick={() => setShowFaqPanel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16 }}>✕</button>
+            <button onClick={() => setShowFaqPanel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 16 }}>✕</button>
           </div>
           <div className="text-xs text-muted mb-8">Réponses gratuites (0 token)</div>
           {faqEntries.filter(e => e.agentId === selectedAgent.id).length === 0 ? (
@@ -1423,7 +1449,7 @@ export default function ChatPage() {
           ) : (
             <div className="flex flex-col gap-4">
               {faqEntries.filter(e => e.agentId === selectedAgent.id).map(entry => (
-                <div key={entry.id} className="rounded-sm border" style={{ padding: '8px 12px', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={entry.id} className="rounded-sm border" style={{ padding: '8px 12px', background: 'var(--fz-bg, #fff)' }}>
                   <div className="flex flex-between items-center">
                     <div className="text-sm font-semibold" style={{ flex: 1, minWidth: 0 }}>
                       Q: {entry.question.substring(0, 80)}{entry.question.length > 80 ? '...' : ''}
@@ -1458,7 +1484,7 @@ export default function ChatPage() {
               Consomme ~3x plus de crédits (STT + LLM + TTS)
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 14 }}>
             {ALL_AGENTS.map(agent => (
               <Link key={agent.id} href={`/client/visio/${agent.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="card card-lift" style={{ padding: 16, textAlign: 'center' }}>
@@ -1527,10 +1553,10 @@ export default function ChatPage() {
         {messages.length === 0 && (
           <div className="text-center text-tertiary" style={{ padding: '40px 12px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <div className="mb-16" style={{ fontSize: 48 }}>{selectedAgent.emoji}</div>
-            <div className="text-xl font-semibold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>
+            <div className="text-xl font-semibold mb-8" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
               Bonjour, je suis {selectedAgent.name}
             </div>
-            <div className="text-base" style={{ maxWidth: 400, margin: '0 auto', lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
+            <div className="text-base" style={{ maxWidth: 400, margin: '0 auto', lineHeight: 1.6, color: 'var(--fz-text-secondary, #6B6B6B)' }}>
               Votre {selectedAgent.role}. Posez-moi vos questions, demandez-moi de rédiger, analyser, planifier...
             </div>
             {/* Agent Modes */}
@@ -1541,7 +1567,7 @@ export default function ChatPage() {
                 <div className="flex gap-8 flex-center flex-wrap mt-16">
                   {agentDef.modes.map(mode => (
                     <div key={mode.id} className="rounded-md bg-secondary border text-sm" style={{ padding: '10px 14px', maxWidth: 200, textAlign: 'left' }}>
-                      <div className="font-bold" style={{ marginBottom: 2 }}>{/^[a-z_]+$/.test(mode.icon) ? <span className="material-symbols-rounded" style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{mode.icon}</span> : <span style={{ marginRight: 4 }}>{mode.icon}</span>}{mode.name}</div>
+                      <div className="font-bold" style={{ marginBottom: 2 }}>{mode.icon} {mode.name}</div>
                       <div className="text-xs text-muted">{mode.description}</div>
                     </div>
                   ))}
@@ -1668,9 +1694,9 @@ export default function ChatPage() {
             <div style={{ marginTop: 32, textAlign: 'left', maxWidth: 600, margin: '32px auto 0' }}>
               <div className="flex items-center gap-8 mb-8" style={{ justifyContent: 'center' }}>
                 <span style={{ fontSize: 20 }}>🏛️</span>
-                <span className="text-base font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>Reunions multi-assistants</span>
+                <span className="text-base font-bold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Reunions multi-assistants</span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(170px, 100%), 1fr))', gap: 8 }}>
                 {([
                   { id: 'lancement-projet', emoji: '🚀', title: 'Lancement de projet', desc: 'Scope, roles et timeline' },
                   { id: 'revue-trimestrielle', emoji: '📊', title: 'Revue trimestrielle', desc: 'Resultats et strategie' },
@@ -1681,7 +1707,7 @@ export default function ChatPage() {
                 ] as const).map(tpl => (
                   <Link key={tpl.id} href={`/client/meeting?template=${tpl.id}`} style={{
                     display: 'block', padding: '10px 12px', borderRadius: 8,
-                    border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
+                    border: '1px solid var(--fz-border, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)',
                     textDecoration: 'none', color: 'inherit', transition: 'border-color 0.15s',
                   }}>
                     <div className="text-sm font-semibold">{tpl.emoji} {tpl.title}</div>
@@ -1737,18 +1763,18 @@ export default function ChatPage() {
                     <div className="chat-msg-actions">
                       <AudioPlayback text={msg.content} gender={selectedAgent?.gender ?? 'F'} size="sm" />
                       {msg.isFaq && (
-                        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#22c55e15', color: '#22c55e', fontWeight: 600 }}>
+                        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', fontWeight: 600 }}>
                           FAQ
                         </span>
                       )}
                       <button onClick={() => copyMessage(msg.content, i)}
-                        style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', color: copiedIdx === i ? 'var(--success)' : 'var(--fz-text-muted, #94A3B8)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
+                        style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--fz-border, #E5E5E5)', color: copiedIdx === i ? 'var(--success)' : 'var(--fz-text-muted, #9B9B9B)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
                         title="Copier">
                         {copiedIdx === i ? '✅' : '📋'}
                       </button>
                       {!msg.isFaq && i > 0 && messages[i - 1]?.role === 'user' && (
                         <button onClick={() => saveAsFaq(i - 1, i)}
-                          style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--fz-border, #E2E8F0)', color: savedFaqIdx === i ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
+                          style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, cursor: 'pointer', background: 'none', border: '1px solid var(--fz-border, #E5E5E5)', color: savedFaqIdx === i ? '#1A1A1A' : 'var(--fz-text-muted, #9B9B9B)', fontFamily: 'var(--font-sans)', transition: 'all 0.15s' }}
                           title="Sauvegarder en FAQ">
                           {savedFaqIdx === i ? '✅' : '💾'}
                         </button>
@@ -1766,18 +1792,18 @@ export default function ChatPage() {
               <div style={{ display: 'flex', gap: 6, marginTop: 6, paddingLeft: 38 }}>
                 <button
                   onClick={() => { if (selectedAgent) { recordFeedback(selectedAgent.id, true); recordEvent({ type: 'agent_feedback' }); } setFeedbackGiven(prev => ({ ...prev, [i]: 'positive' })); }}
-                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', fontFamily: 'var(--font-sans)' }}>
+                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--fz-border, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)', color: 'var(--fz-text-secondary, #6B6B6B)', fontFamily: 'var(--font-sans)' }}>
                   Utile 👍
                 </button>
                 <button
                   onClick={() => { if (selectedAgent) { recordFeedback(selectedAgent.id, false); recordEvent({ type: 'agent_feedback' }); } setFeedbackGiven(prev => ({ ...prev, [i]: 'negative' })); }}
-                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', fontFamily: 'var(--font-sans)' }}>
+                  style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, cursor: 'pointer', border: '1px solid var(--fz-border, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)', color: 'var(--fz-text-secondary, #6B6B6B)', fontFamily: 'var(--font-sans)' }}>
                   A ameliorer 👎
                 </button>
               </div>
             )}
             {feedbackGiven[i] && (
-              <div style={{ fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#22c55e' : '#f97316', marginTop: 4, fontWeight: 500, paddingLeft: 38 }}>
+              <div style={{ fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#1A1A1A' : '#6B6B6B', marginTop: 4, fontWeight: 500, paddingLeft: 38 }}>
                 {feedbackGiven[i] === 'positive' ? <>🙏 Merci pour votre retour !</> : 'Noté, on va s\'améliorer !'}
               </div>
             )}
@@ -1790,7 +1816,7 @@ export default function ChatPage() {
             <div className="chat-msg-avatar" style={{ background: selectedAgent.color + '22' }}>
               {selectedAgent.emoji}
             </div>
-            <div className="chat-msg-content" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
+            <div className="chat-msg-content" style={{ background: 'var(--fz-bg-secondary, #F7F7F7)' }}>
               <div className="animate-pulse text-tertiary" style={{ fontSize: 14 }}>
                 {selectedAgent.name} réfléchit...
               </div>
@@ -1804,9 +1830,9 @@ export default function ChatPage() {
 
       {/* Action Proposals */}
       {actionProposals.length > 0 && !loading && (
-        <div style={{ padding: '8px 16px', borderTop: '1px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)', backdropFilter: 'blur(12px)', maxHeight: 200, overflowY: 'auto' }}>
+        <div style={{ padding: '8px 16px', borderTop: '1px solid var(--fz-border, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)', backdropFilter: 'blur(12px)', maxHeight: isMobile ? 100 : 200, overflowY: 'auto' }}>
           <div className="flex flex-between items-center mb-4">
-            <span className="text-sm font-semibold" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+            <span className="text-sm font-semibold" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
               Actions proposées ({actionProposals.length})
             </span>
             {actionProposals.length > 1 && (
@@ -1834,12 +1860,12 @@ export default function ChatPage() {
               </button>
             )}
           </div>
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, WebkitOverflowScrolling: 'touch' }}>
             {actionProposals.map((p, i) => (
               <div key={i} className="rounded-sm" style={{
                 padding: '8px 12px', minWidth: 220, flexShrink: 0,
-                border: acceptedActions.has(i) ? '1px solid var(--success)' : '1px solid var(--fz-border, #E2E8F0)',
-                background: acceptedActions.has(i) ? 'var(--success-muted)' : 'var(--fz-bg, #FFFFFF)',
+                border: acceptedActions.has(i) ? '1px solid var(--success)' : '1px solid var(--fz-border, #E5E5E5)',
+                background: acceptedActions.has(i) ? 'var(--success-muted)' : 'var(--fz-bg, #fff)',
                 opacity: acceptedActions.has(i) ? 0.7 : 1,
               }}>
                 <div className="flex items-center gap-6 mb-2">
@@ -1849,9 +1875,9 @@ export default function ChatPage() {
                     {PRIORITY_LABELS[p.priority] ?? p.priority}
                   </span>
                 </div>
-                {p.description && <p className="text-xs mb-2" style={{ color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.3 }}>{p.description}</p>}
+                {p.description && <p className="text-xs mb-2" style={{ color: 'var(--fz-text-secondary, #6B6B6B)', lineHeight: 1.3 }}>{p.description}</p>}
                 <div className="flex flex-between items-center">
-                  <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>{ACTION_TYPE_LABELS[p.type] ?? p.type}{p.dueDate ? ` · ${formatDueDate(p.dueDate)}` : ''}</span>
+                  <span className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{ACTION_TYPE_LABELS[p.type] ?? p.type}{p.dueDate ? ` · ${formatDueDate(p.dueDate)}` : ''}</span>
                   {acceptedActions.has(i) ? (
                     <span style={{ fontSize: 14, color: 'var(--success)' }}>✅</span>
                   ) : (
@@ -1922,12 +1948,12 @@ export default function ChatPage() {
       {/* FAQ match hint */}
       {faqMatch && !loading && (
         <div className="flex flex-between items-center flex-wrap gap-6" style={{
-          padding: '6px 16px', background: '#22c55e10', borderTop: '1px solid #22c55e33',
+          padding: '6px 16px', background: 'rgba(0,0,0,0.03)', borderTop: '1px solid rgba(0,0,0,0.08)',
         }}>
           <span className="text-xs font-semibold text-success">💡 FAQ trouvée — 0 token</span>
           <div className="flex gap-4">
             <button onClick={() => useFaqAnswer(faqMatch)} className="btn btn-sm"
-              style={{ fontSize: 10, background: '#22c55e', color: 'white', borderColor: '#22c55e' }}>Utiliser FAQ</button>
+              style={{ fontSize: 10, background: '#1A1A1A', color: 'white', borderColor: '#1A1A1A' }}>Utiliser FAQ</button>
             <button onClick={() => setFaqMatch(null)} className="btn btn-ghost btn-sm" style={{ fontSize: 10 }}>IA</button>
           </div>
         </div>
@@ -2013,7 +2039,7 @@ export default function ChatPage() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{agent.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{agent.role}</div>
+                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{agent.role}</div>
               </div>
               {agent.isCustomized && <span style={{ fontSize: 10, color: 'var(--accent)' }}>✨ Perso</span>}
               {selectedAgent.id === agent.id && <span style={{ color: 'var(--accent)', fontSize: 16 }}>✅</span>}
@@ -2022,6 +2048,7 @@ export default function ChatPage() {
         </div>
       </>}
       </>}
+      {LoginModalComponent}
     </div>
   );
 }

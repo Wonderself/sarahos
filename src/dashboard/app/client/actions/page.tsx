@@ -329,11 +329,12 @@ export default function ActionsPage() {
               onClick={() => setSelectedAction(action)}
               style={{
                 padding: '10px 12px', background: '#F7F7F7',
-                border: '1px solid #E5E5E5',
+                border: '1px solid #E5E5E5', flexWrap: 'wrap',
+                minHeight: 44,
               }}
             >
               <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <div className="text-sm font-medium">{action.title}</div>
                 <div className="text-xs" style={{ color: '#6B6B6B' }}>
                   {ACTION_TYPE_LABELS[action.type] ?? action.type}
@@ -347,7 +348,7 @@ export default function ActionsPage() {
               }}>
                 {PRIORITY_LABELS[action.priority] ?? action.priority}
               </span>
-              <span className="text-xs" style={{ color: '#9B9B9B', minWidth: 80 }}>
+              <span className="text-xs" style={{ color: '#9B9B9B' }}>
                 {COLUMNS.find(c => c.id === action.status)?.label ?? action.status}
               </span>
               {action.dueDate && (
@@ -457,14 +458,14 @@ function ActionCard({
           <button
             onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'accepted'); }}
             className="btn btn-sm"
-            style={{ fontSize: 10, flex: 1, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)' }}
+            style={{ fontSize: 11, flex: 1, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', minHeight: 44 }}
           >
             Accepter
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'cancelled'); }}
             className="btn btn-ghost btn-sm"
-            style={{ fontSize: 10 }}
+            style={{ fontSize: 11, minHeight: 44 }}
           >
             Ignorer
           </button>
@@ -474,7 +475,7 @@ function ActionCard({
         <button
           onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'in_progress'); }}
           className="btn btn-sm mt-6"
-          style={{ fontSize: 10, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5' }}
+          style={{ fontSize: 11, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5', minHeight: 44 }}
         >
           Démarrer
         </button>
@@ -483,7 +484,7 @@ function ActionCard({
         <button
           onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'completed'); }}
           className="btn btn-sm mt-6"
-          style={{ fontSize: 10, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5' }}
+          style={{ fontSize: 11, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5', minHeight: 44 }}
         >
           Terminer
         </button>
@@ -511,14 +512,14 @@ function ActionDetailPanel({
       {/* Status timeline */}
       <div>
         <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Statut</label>
-        <div className="flex gap-4">
+        <div className="flex gap-4" style={{ flexWrap: 'wrap' }}>
           {COLUMNS.map((col, i) => (
             <button
               key={col.id}
               onClick={() => onStatusChange(col.id)}
               className="btn btn-sm"
               style={{
-                fontSize: 11, flex: 1,
+                fontSize: 11, flex: '1 1 auto', minHeight: 44,
                 background: action.status === col.id ? `${col.color}22` : 'transparent',
                 color: action.status === col.id ? col.color : 'var(--fz-text-secondary, #64748B)',
                 borderColor: action.status === col.id ? `${col.color}44` : 'var(--fz-border, #E2E8F0)',
@@ -540,7 +541,7 @@ function ActionDetailPanel({
       )}
 
       {/* Metadata */}
-      <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr' }}>
+      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
         <div>
           <label className="text-xs" style={{ color: '#9B9B9B' }}>Type</label>
           <div className="text-sm">{ACTION_TYPE_ICONS[action.type]} {ACTION_TYPE_LABELS[action.type]}</div>
@@ -657,7 +658,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
           style={{ fontSize: 13, resize: 'vertical' }}
         />
       </div>
-      <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr' }}>
+      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
         <div>
           <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Priorité</label>
           <select value={priority} onChange={e => setPriority(e.target.value)} className="input" style={{ fontSize: 13 }}>
@@ -681,7 +682,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
         type="submit"
         disabled={!title.trim() || saving}
         className="btn"
-        style={{ background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', fontSize: 13 }}
+        style={{ background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', fontSize: 13, minHeight: 44 }}
       >
         {saving ? 'Création...' : 'Créer l\'action'}
       </button>

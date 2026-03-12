@@ -534,7 +534,7 @@ export default function AgentCustomizePage() {
                     key={c.value}
                     onClick={() => updateConfig({ accentColor: c.value })}
                     style={{
-                      width: 36, height: 36, borderRadius: '50%', border: 'none',
+                      width: 36, height: 36, borderRadius: '50%',
                       background: c.value, cursor: 'pointer',
                       boxShadow: config.accentColor === c.value ? `0 0 0 3px var(--bg-primary), 0 0 0 5px ${c.value}` : 'none',
                       transition: 'all 0.15s',
@@ -1045,7 +1045,7 @@ export default function AgentCustomizePage() {
             ⚙️ R&eacute;glages vocaux
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 24 }}>
             {/* Left column: sliders */}
             <div>
               {/* Stability */}

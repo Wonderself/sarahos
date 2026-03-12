@@ -451,7 +451,7 @@ function BuilderContent() {
           ) : null; })()}
 
           {/* Standard types */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 14, marginBottom: 32 }}>
             {MODULE_TYPES.filter(t => !t.featured).map(mt => (
               <button
                 key={mt.type}

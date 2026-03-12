@@ -16,6 +16,8 @@ import WorkflowStepper from '../../../../components/studio/WorkflowStepper';
 import RoadmapBadge from '../../../../components/studio/RoadmapBadge';
 import AgentRequestQueue from '../../../../components/studio/AgentRequestQueue';
 import VideoLibrary from '../../../../components/studio/VideoLibrary';
+import { useAuthGuard } from '../../../../lib/useAuthGuard';
+import { useVisitorDraft } from '../../../../lib/useVisitorDraft';
 
 function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
@@ -25,13 +27,14 @@ type Mode = 'free' | 'request';
 
 function VideoStudioContent() {
   const searchParams = useSearchParams();
+  const { requireAuth, LoginModalComponent } = useAuthGuard();
   const workflowId = searchParams.get('workflow') ?? 'video-pub';
 
   const [selectedWorkflowId, setSelectedWorkflowId] = useState(workflowId);
   const workflow = VIDEO_WORKFLOWS.find(w => w.id === selectedWorkflowId) ?? VIDEO_WORKFLOWS[0]!;
 
   const [currentStep, setCurrentStep] = useState(0);
-  const [script, setScript] = useState('');
+  const [script, setScript, clearScriptDraft] = useVisitorDraft('studio_video', 'script', '');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [voiceProvider, setVoiceProvider] = useState('deepgram');
   const [costConfirmed, setCostConfirmed] = useState(false);
@@ -117,6 +120,7 @@ function VideoStudioContent() {
 
   const handleGenerate = useCallback(async () => {
     if (!script.trim() || !costConfirmed) return;
+    if (!requireAuth('Connectez-vous pour generer une video')) return;
     setGenerating(true);
     setCurrentStep(5);
 
@@ -144,11 +148,12 @@ function VideoStudioContent() {
     } finally {
       setGenerating(false);
     }
-  }, [script, costConfirmed, token, avatarUrl, voiceProvider, buildEnrichedScript]);
+  }, [script, costConfirmed, token, avatarUrl, voiceProvider, buildEnrichedScript, requireAuth]);
 
   const handleVideoComplete = useCallback((url: string) => {
     setVideoUrl(url);
     setCurrentStep(6);
+    clearScriptDraft();
     // Save to video library
     const saved = saveVideoToLibrary({
       url,
@@ -158,7 +163,7 @@ function VideoStudioContent() {
       requestId: activeRequest?.id,
     });
     setLatestVideoLibId(saved.id);
-  }, [script, selectedWorkflowId, avatarUrl, activeRequest]);
+  }, [script, selectedWorkflowId, avatarUrl, activeRequest, clearScriptDraft]);
 
   const systemPrompt = workflow.systemPrompt
     .replace('{displayName}', displayName)
@@ -335,7 +340,7 @@ function VideoStudioContent() {
 
             {advancedOpen && (
               <div style={{
-                display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10,
+                display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10,
                 padding: 14, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10,
                 border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
               }}>
@@ -433,6 +438,7 @@ function VideoStudioContent() {
           </div>
         </div>
       </div>
+      {LoginModalComponent}
     </div>
   );
 }

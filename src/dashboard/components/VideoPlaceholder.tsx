@@ -19,7 +19,9 @@ export default function VideoPlaceholder({
 }: VideoPlaceholderProps) {
   const [playing, setPlaying] = useState(false);
 
-  if (playing && videoUrl) {
+  const isSafeUrl = (url: string) => /^https?:\/\//i.test(url);
+
+  if (playing && videoUrl && isSafeUrl(videoUrl)) {
     return (
       <div id={id} style={{
         position: 'relative', width: '100%', paddingTop: '56.25%',
@@ -39,7 +41,7 @@ export default function VideoPlaceholder({
   return (
     <div
       id={id}
-      onClick={() => videoUrl ? setPlaying(true) : undefined}
+      onClick={() => videoUrl && isSafeUrl(videoUrl) ? setPlaying(true) : undefined}
       style={{
         position: 'relative', width: '100%', paddingTop: '56.25%',
         borderRadius: 20, overflow: 'hidden',

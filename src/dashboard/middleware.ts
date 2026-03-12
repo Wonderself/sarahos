@@ -5,14 +5,22 @@ const PROTECTED_PREFIXES = ['/admin', '/client', '/system', '/infra', '/avatars'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const response = NextResponse.next();
+
+  // Security headers for all responses
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(self), geolocation=()');
 
   // Check if this is a protected route
   const isProtected = PROTECTED_PREFIXES.some(prefix => pathname.startsWith(prefix));
-  if (!isProtected) return NextResponse.next();
+  if (!isProtected) return response;
 
   // Check for auth token in cookie
   const token = request.cookies.get('fz-token')?.value;
-  if (token) return NextResponse.next();
+  if (token) return response;
 
   // No cookie token found — redirect to login
   const loginUrl = new URL('/login', request.url);
@@ -23,11 +31,11 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/admin/:path*',
-    '/client/:path*',
     '/system/:path*',
     '/infra/:path*',
     '/avatars/:path*',
     '/security/:path*',
     '/roadmap/:path*',
+    '/((?!_next/static|_next/image|favicon.ico|embed|api/health).*)',
   ],
 };

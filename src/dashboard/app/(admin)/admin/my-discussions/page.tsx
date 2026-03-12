@@ -196,7 +196,7 @@ export default function MyDiscussionsPage() {
                 const agent = ALL_AGENTS.find(a => a.id === t.agentId);
                 return (
                   <button key={t.title} onClick={() => startDiscussion(t)} className="w-full text-left p-2 rounded-lg hover:bg-[rgba(0,0,0,0.04)] text-sm">
-                    <span><span className="material-symbols-rounded" style={{ fontSize: 14, color: agent?.color || 'var(--accent)' }}>{agent?.materialIcon}</span> {t.title}</span>
+                    <span>{agent?.materialIcon} {t.title}</span>
                   </button>
                 );
               })}
@@ -209,7 +209,7 @@ export default function MyDiscussionsPage() {
               className={`p-3 border-b border-[rgba(0,0,0,0.06)] cursor-pointer hover:bg-[rgba(0,0,0,0.04)] ${activeId === d.id ? 'bg-[rgba(0,0,0,0.04)]' : ''}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-white text-sm font-medium truncate"><span className="material-symbols-rounded" style={{ fontSize: 14 }}>{d.agentMaterialIcon}</span> {d.title}</span>
+                <span className="text-white text-sm font-medium truncate">{d.agentMaterialIcon} {d.title}</span>
                 <button onClick={(e) => { e.stopPropagation(); deleteDiscussion(d.id); }} className="text-red-500 text-xs hover:text-red-400">×</button>
               </div>
               <p className="text-gray-500 text-xs mt-1">{d.messages.length} messages • {new Date(d.lastActivityAt).toLocaleDateString('fr-FR')}</p>
@@ -224,7 +224,7 @@ export default function MyDiscussionsPage() {
           <>
             <div className="p-4 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between">
               <div>
-                <h2 className="text-white font-medium"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>{active.agentMaterialIcon}</span> {active.title}</h2>
+                <h2 className="text-white font-medium">{active.agentMaterialIcon} {active.title}</h2>
                 <p className="text-gray-500 text-xs">{active.agentName} • {active.messages.length} messages</p>
               </div>
               <button onClick={() => exportMarkdown(active)} className="px-3 py-1 bg-[rgba(0,0,0,0.04)] text-gray-300 rounded text-xs hover:bg-[rgba(0,0,0,0.06)]">
@@ -263,7 +263,7 @@ export default function MyDiscussionsPage() {
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
             <div className="text-center">
-              <p className="mb-3"><span className="material-symbols-rounded" style={{ fontSize: 40 }}>psychology</span></p>
+              <p className="mb-3">🧠</p>
               <p className="text-lg font-medium text-gray-400">Discussions approfondies</p>
               <p className="text-sm mt-2">Explorez des sujets en profondeur avec les agents IA</p>
               <button onClick={() => setShowTemplates(true)} className="mt-4 px-4 py-2 bg-[#1A1A1A] text-white rounded-lg text-sm">

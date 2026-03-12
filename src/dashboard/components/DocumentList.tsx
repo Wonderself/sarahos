@@ -108,7 +108,9 @@ export default function DocumentList({ agentContext, token, refreshKey }: Docume
             disabled={deleting === doc.id}
             style={{
               background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer',
-              fontSize: 16, padding: '2px 6px', opacity: deleting === doc.id ? 0.4 : 1,
+              fontSize: 16, padding: '10px 12px', minWidth: 44, minHeight: 44,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              opacity: deleting === doc.id ? 0.4 : 1, flexShrink: 0,
             }}
             title="Supprimer"
           >

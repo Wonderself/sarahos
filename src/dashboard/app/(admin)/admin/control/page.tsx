@@ -20,7 +20,7 @@ interface RouteSection {
 const ROUTE_SECTIONS: RouteSection[] = [
   {
     title: 'Pages Publiques',
-    icon: 'language',
+    icon: '🌐',
     routes: [
       {
         path: '/',
@@ -38,7 +38,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/login',
         label: 'Connexion',
-        icon: 'lock',
+        icon: '🔒',
         status: 'fonctionnel',
         description: 'Formulaire de login avec email/password. Redirige vers /client/dashboard.',
         testInstructions: [
@@ -51,7 +51,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/demo',
         label: 'Demo',
-        icon: 'rocket_launch',
+        icon: '🚀',
         status: 'fonctionnel',
         description: 'Page demo complete avec sections technologies, WhatsApp, tarifs, enterprise.',
         testInstructions: [
@@ -62,7 +62,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/reset-password',
         label: 'Reset Password',
-        icon: 'key',
+        icon: '🔑',
         status: 'fonctionnel',
         description: 'Réinitialisation de mot de passe par email.',
         testInstructions: [
@@ -74,12 +74,12 @@ const ROUTE_SECTIONS: RouteSection[] = [
   },
   {
     title: 'Espace Client',
-    icon: 'work',
+    icon: '💼',
     routes: [
       {
         path: '/client/dashboard',
         label: 'Accueil Client',
-        icon: 'home',
+        icon: '🏠',
         status: 'fonctionnel',
         description: 'Dashboard client avec résumé agents, crédits, activité récente, gamification.',
         testInstructions: [
@@ -93,7 +93,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/briefing',
         label: 'Briefing du jour',
-        icon: 'wb_sunny',
+        icon: '☀️',
         status: 'fonctionnel',
         description: 'Briefing quotidien avec tâches, minuteur focus (Pomodoro 25min), insights IA.',
         testInstructions: [
@@ -108,7 +108,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/chat',
         label: 'Chat IA',
-        icon: 'chat',
+        icon: '💬',
         status: 'fonctionnel',
         description: 'Chat temps réel avec les 6 agents. Historique (50 max), questions de suivi [Q1/Q2/Q3], copier.',
         testInstructions: [
@@ -124,7 +124,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/meeting',
         label: 'Réunion',
-        icon: 'account_balance',
+        icon: '🏛️',
         status: 'fonctionnel',
         description: 'Réunion multi-agents (2-5). 6 templates pré-configurés. Mode auto (2 tours de table).',
         testInstructions: [
@@ -139,7 +139,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/documents',
         label: 'Documents',
-        icon: 'description',
+        icon: '📄',
         status: 'fonctionnel',
         description: '8 templates (email, proposition, business plan, post social, CR réunion, fiche de poste, newsletter, contrat).',
         testInstructions: [
@@ -155,7 +155,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/team',
         label: 'Équipe IA',
-        icon: 'group',
+        icon: '👥',
         status: 'fonctionnel',
         description: 'Vue des 6 agents avec fiches, compétences, boutons "Discuter" et "Personnaliser".',
         testInstructions: [
@@ -167,7 +167,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/agents/customize',
         label: 'Personnaliser les Agents',
-        icon: 'palette',
+        icon: '🎨',
         status: 'fonctionnel',
         description: 'Wizard 6 étapes : identité, personnalité (6 curseurs), expertise, instructions, contexte, aperçu & test.',
         testInstructions: [
@@ -182,7 +182,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/strategy',
         label: 'Plan d\'Attaque',
-        icon: 'target',
+        icon: '🎯',
         status: 'fonctionnel',
         description: 'Formulaire guidé par agent pour générer un plan d\'action personnalisé (marketing, finance, organisation...).',
         testInstructions: [
@@ -198,7 +198,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/onboarding',
         label: 'Mon Entreprise (Onboarding)',
-        icon: 'business',
+        icon: '🏢',
         status: 'fonctionnel',
         description: 'Formulaire 7 étapes pour présenter son entreprise. Option analyse automatique par URL.',
         testInstructions: [
@@ -213,7 +213,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/account',
         label: 'Compte & Crédits',
-        icon: 'person',
+        icon: '👤',
         status: 'fonctionnel',
         description: 'Informations du compte, solde wallet, historique d\'usage, packs de recharge.',
         testInstructions: [
@@ -226,7 +226,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/discussions',
         label: 'Discussions Profondes',
-        icon: 'psychology',
+        icon: '🧠',
         status: 'fonctionnel',
         description: '85+ templates de discussions profondes (Opus). 12 sections, 17 tags, partage social, completion, export Markdown.',
         testInstructions: [
@@ -242,7 +242,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/studio',
         label: 'Studio Créatif',
-        icon: 'palette',
+        icon: '🎨',
         status: 'fonctionnel',
         description: 'Hub photo (fal.ai Flux/schnell) + vidéo (fal.ai LTX + D-ID). Mode libre + demandes agents.',
         testInstructions: [
@@ -256,7 +256,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/repondeur',
         label: 'Répondeur IA',
-        icon: 'call',
+        icon: '📞',
         status: 'fonctionnel',
         description: 'Config répondeur IA (7 modes, 7 styles, 10 compétences, FAQ, VIP, anti-spam) + téléphonie Twilio.',
         testInstructions: [
@@ -269,7 +269,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/marketplace',
         label: 'Marketplace',
-        icon: 'storefront',
+        icon: '🏪',
         status: 'fonctionnel',
         description: 'Marketplace de 50 templates d\'agents pré-configurés (23 gratuits + 25 premium).',
         testInstructions: [
@@ -280,7 +280,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/social',
         label: 'Réseaux Sociaux',
-        icon: 'phone_iphone',
+        icon: '📱',
         status: 'fonctionnel',
         description: 'Générateur de posts, calendrier éditorial, connexion API, analytics.',
         testInstructions: [
@@ -292,7 +292,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/whatsapp',
         label: 'WhatsApp',
-        icon: 'chat',
+        icon: '💬',
         status: 'fonctionnel',
         description: 'Intégration WhatsApp Business via Twilio.',
         testInstructions: ['Vérifier la liaison téléphone et conversations'],
@@ -301,7 +301,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/client/reveil',
         label: 'Réveil Intelligent',
-        icon: 'alarm',
+        icon: '⏰',
         status: 'fonctionnel',
         description: 'Programmation d\'appels matinaux IA (8 modes, 18 rubriques).',
         testInstructions: [
@@ -314,7 +314,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
   },
   {
     title: 'Admin',
-    icon: 'settings',
+    icon: '⚙️',
     routes: [
       {
         path: '/admin/users',
@@ -412,7 +412,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/admin/diagnostics',
         label: 'Diagnostics',
-        icon: 'search',
+        icon: '🔍',
         status: 'fonctionnel',
         description: 'Tests live des services : Anthropic, ElevenLabs, Email, SMS.',
         testInstructions: [
@@ -424,7 +424,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/admin/security',
         label: 'Sécurité',
-        icon: 'shield',
+        icon: '🛡️',
         status: 'fonctionnel',
         description: '2FA TOTP, audit sécurité, configuration de sécurité.',
         testInstructions: [
@@ -435,7 +435,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/admin/referrals',
         label: 'Parrainages',
-        icon: 'handshake',
+        icon: '🤝',
         status: 'fonctionnel',
         description: 'Gestion des parrainages, tiers de récompenses, statistiques.',
         testInstructions: [
@@ -446,7 +446,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/admin/setup',
         label: 'Setup',
-        icon: 'check_circle',
+        icon: '✅',
         status: 'fonctionnel',
         description: 'Checklist de configuration initiale du système.',
         testInstructions: ['Vérifier que toutes les étapes sont cochées'],
@@ -454,7 +454,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/admin/users/[id]',
         label: 'Détail Utilisateur',
-        icon: 'person',
+        icon: '👤',
         status: 'fonctionnel',
         description: 'Page détail utilisateur avec Feature Flags, Danger Zone, impersonation JWT 1h.',
         testInstructions: [
@@ -468,7 +468,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
   },
   {
     title: 'Système',
-    icon: 'build',
+    icon: '🔧',
     routes: [
       {
         path: '/system/agents',
@@ -521,7 +521,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       {
         path: '/system/crons',
         label: 'Cron Jobs',
-        icon: 'schedule',
+        icon: '⏰',
         status: 'fonctionnel',
         description: 'Gestion des 10+ cron jobs automatiques. Actions : lancer, pause, historique.',
         testInstructions: [
@@ -534,7 +534,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
   },
   {
     title: 'Infrastructure',
-    icon: 'dns',
+    icon: '🖥️',
     routes: [
       {
         path: '/infra/health',
@@ -632,7 +632,7 @@ export default function ControlPage() {
       {ROUTE_SECTIONS.map((section) => (
         <section key={section.title} className="section">
           <h2 className="section-title">
-            <span className="material-symbols-rounded" style={{ marginRight: 8, fontSize: 20 }}>{section.icon}</span>
+            {section.icon}
             {section.title}
             <span className="badge badge-neutral" style={{ marginLeft: 8, fontSize: 11, fontWeight: 500 }}>
               {section.routes.length} pages
@@ -645,7 +645,7 @@ export default function ControlPage() {
               return (
                 <div key={route.path} className="card" style={{ padding: '16px 20px' }}>
                   <div className="flex items-center" style={{ gap: 10, marginBottom: 6 }}>
-                    <span className="material-symbols-rounded text-lg text-center" style={{ width: 24, fontSize: 18 }}>{route.icon}</span>
+                    {route.icon}
                     <a
                       href={route.path}
                       className="text-base font-bold text-accent"

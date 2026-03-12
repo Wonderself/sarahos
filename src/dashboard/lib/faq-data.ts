@@ -22,8 +22,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'general',
     label: 'Général',
-    icon: 'business',
-    color: '#6366f1',
+    icon: '🏢',
+    color: '#1A1A1A',
     questions: [
       {
         q: "C'est quoi Freenzy.io ?",
@@ -72,8 +72,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'agents',
     label: 'Agents IA',
-    icon: 'smart_toy',
-    color: '#22c55e',
+    icon: '🤖',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Combien d'agents IA sont disponibles ?",
@@ -126,8 +126,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'pricing',
     label: 'Tarifs & Crédits',
-    icon: 'savings',
-    color: '#f59e0b',
+    icon: '💰',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Comment fonctionne le système de crédits ?",
@@ -184,8 +184,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'tech',
     label: 'Technologies',
-    icon: 'bolt',
-    color: '#3b82f6',
+    icon: '⚡',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Quels modèles IA sont disponibles ?",
@@ -234,8 +234,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'security',
     label: 'Sécurité & RGPD',
-    icon: 'lock',
-    color: '#dc2626',
+    icon: '🔒',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Mes données sont-elles sécurisées ?",
@@ -284,8 +284,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'whatsapp',
     label: 'WhatsApp & Téléphonie',
-    icon: 'phone_iphone',
-    color: '#25D366',
+    icon: '📱',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Comment fonctionne WhatsApp avec Freenzy.io ?",
@@ -334,8 +334,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'studio',
     label: 'Studio Créatif',
-    icon: 'palette',
-    color: '#ec4899',
+    icon: '🎨',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Qu'est-ce que le Studio Créatif ?",
@@ -384,8 +384,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'custom',
     label: 'Sur mesure',
-    icon: 'build',
-    color: '#8b5cf6',
+    icon: '🛠️',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Puis-je créer mes propres agents ?",
@@ -434,8 +434,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'dashboard',
     label: 'Flashboard',
-    icon: 'bar_chart',
-    color: '#f97316',
+    icon: '📊',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Qu'est-ce que Flashboard ?",
@@ -484,8 +484,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: 'enterprise',
     label: 'Entreprise',
-    icon: 'account_balance',
-    color: '#9333ea',
+    icon: '🏛️',
+    color: '#1A1A1A',
     questions: [
       {
         q: "Freenzy.io convient-il aux grandes entreprises ?",

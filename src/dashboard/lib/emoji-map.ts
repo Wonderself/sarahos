@@ -40,7 +40,7 @@ export const NAV_EMOJIS: Record<string, string> = {
   journee: '📅',
 
   // Moi
-  account: '🏠',
+  account: '⚙️',
   analytics: '📊',
   finances: '💳',
   referrals: '🎁',
@@ -52,7 +52,7 @@ export const NAV_EMOJIS: Record<string, string> = {
   // Agents personnels
   budget: '💰',
   comptable: '🧾',
-  chasseur: '🎯',
+  chasseur: '🏹',
   cv: '📝',
   ecrivain: '✍️',
 
@@ -62,7 +62,7 @@ export const NAV_EMOJIS: Record<string, string> = {
   // Divertissement
   games: '🕹️',
   'games-create': '➕',
-  'games-community': '👥',
+  'games-community': '🎪',
 
   // Mon Entreprise
   onboarding: '🏗️',
@@ -75,10 +75,10 @@ export const NAV_EMOJIS: Record<string, string> = {
 
   // Extras
   briefing: '☀️',
-  meeting: '📅',
-  visio: '📞',
-  whatsapp: '💬',
-  profile: '👤',
+  meeting: '📆',
+  visio: '🎥',
+  whatsapp: '💚',
+  profile: '🪪',
   settings: '⚙️',
 };
 
@@ -183,7 +183,7 @@ export const PAGE_META: Record<string, PageMeta> = {
     helpText: 'Complétez des actions (première conversation, premier document...) pour gagner des crédits bonus.',
   },
   account: {
-    emoji: '🏠',
+    emoji: '⚙️',
     title: 'Mon Compte',
     subtitle: 'Profil et paramètres',
     helpText: 'Gérez votre profil, suivez vos crédits et configurez vos préférences.',
@@ -213,7 +213,7 @@ export const PAGE_META: Record<string, PageMeta> = {
     helpText: 'Utilisez l\'IA pour créer un mini-jeu personnalisé et le partager avec la communauté.',
   },
   'games-community': {
-    emoji: '👥',
+    emoji: '🎪',
     title: 'Communauté',
     subtitle: 'Jeux partagés et scores',
     helpText: 'Découvrez les jeux créés par d\'autres utilisateurs et comparez vos scores.',
@@ -237,7 +237,7 @@ export const PAGE_META: Record<string, PageMeta> = {
     helpText: 'Votre assistant comptable gère factures, TVA et déclarations.',
   },
   chasseur: {
-    emoji: '🎯',
+    emoji: '🏹',
     title: 'Chasseur de missions',
     subtitle: 'Trouvez des opportunités',
     helpText: 'Votre assistant recherche des missions, emplois et opportunités correspondant à votre profil.',
@@ -339,13 +339,13 @@ export const PAGE_META: Record<string, PageMeta> = {
     helpText: 'Ajustez le comportement, le ton et les capacités de chaque assistant.',
   },
   visio: {
-    emoji: '📞',
+    emoji: '🎥',
     title: 'Appel vocal',
     subtitle: 'Parlez à vos assistants',
     helpText: 'Démarrez un appel vocal avec n\'importe quel assistant. Transcription en temps réel.',
   },
   meeting: {
-    emoji: '📅',
+    emoji: '📆',
     title: 'Réunion',
     subtitle: 'Réunions multi-assistants',
     helpText: 'Lancez une réunion avec plusieurs assistants pour des discussions collaboratives.',
@@ -357,7 +357,7 @@ export const PAGE_META: Record<string, PageMeta> = {
     helpText: 'Tous vos widgets, tâches, bien-être et objectifs du jour en un coup d\'oeil.',
   },
   'team-members': {
-    emoji: '👤',
+    emoji: '🧑‍💼',
     title: 'Membres',
     subtitle: 'Gérez votre équipe',
     helpText: 'Invitez des collaborateurs, gérez les rôles et suivez qui est en ligne.',
@@ -539,7 +539,7 @@ export const FEATURE_SECTIONS: FeatureSection[] = [
     title: 'Moi',
     subtitle: 'Votre espace personnel',
     items: [
-      { id: 'account', emoji: '🏠', label: 'Mon Compte', desc: 'Profil & paramètres', href: '/client/account' },
+      { id: 'account', emoji: '⚙️', label: 'Mon Compte', desc: 'Profil & paramètres', href: '/client/account' },
       { id: 'analytics', emoji: '📊', label: 'Analytics', desc: 'Statistiques d\'utilisation', href: '/client/analytics' },
       { id: 'finances', emoji: '💳', label: 'Finances', desc: 'Coûts & facturation', href: '/client/finances' },
       { id: 'referrals', emoji: '🎁', label: 'Parrainer', desc: 'Gagnez 20€ par ami', href: '/client/referrals' },
@@ -558,7 +558,7 @@ export const FEATURE_SECTIONS: FeatureSection[] = [
     items: [
       { id: 'budget', emoji: '💰', label: 'Budget', desc: 'Suivi finances personnelles', href: '/client/personal/budget' },
       { id: 'comptable', emoji: '🧾', label: 'Comptabilité', desc: 'Factures, TVA, déclarations', href: '/client/personal/comptable' },
-      { id: 'chasseur', emoji: '🎯', label: 'Chasseur', desc: 'Opportunités & missions', href: '/client/personal/chasseur' },
+      { id: 'chasseur', emoji: '🏹', label: 'Chasseur', desc: 'Opportunités & missions', href: '/client/personal/chasseur' },
       { id: 'cv', emoji: '📝', label: 'CV 2026', desc: 'CV moderne & optimisé', href: '/client/personal/cv' },
       { id: 'ecrivain', emoji: '✍️', label: 'Écriture', desc: 'Articles, livres, scripts', href: '/client/personal/ecrivain' },
     ],
@@ -580,7 +580,7 @@ export const FEATURE_SECTIONS: FeatureSection[] = [
     items: [
       { id: 'games', emoji: '🕹️', label: 'Arcade', desc: 'Mini-jeux & classements', href: '/client/games' },
       { id: 'games-create', emoji: '➕', label: 'Créer un jeu', desc: 'Concevez votre propre jeu', href: '/client/games/create' },
-      { id: 'games-community', emoji: '👥', label: 'Communauté', desc: 'Jeux partagés & scores', href: '/client/games/community' },
+      { id: 'games-community', emoji: '🎪', label: 'Communauté', desc: 'Jeux partagés & scores', href: '/client/games/community' },
     ],
   },
   {

@@ -10,16 +10,16 @@ const NAV_LINKS = [
 ];
 
 const FEATURE_LINKS = [
-  { href: '/fonctionnalites/repondeur', label: 'Répondeur IA 24/7', icon: 'call' },
-  { href: '/fonctionnalites/documents', label: 'Documents & contrats IA', icon: 'description' },
-  { href: '/fonctionnalites/social', label: 'Réseaux sociaux IA', icon: 'share' },
-  { href: '/fonctionnalites/reveil', label: 'Briefing matinal', icon: 'wb_sunny' },
-  { href: '/demo#technologies', label: 'Studio Créatif (Photo/Vidéo)', icon: 'movie' },
-  { href: '/demo#whatsapp', label: 'WhatsApp Business IA', icon: 'chat' },
-  { href: '/fonctionnalites/agents', label: '100+ Agents IA', icon: 'smart_toy' },
-  { href: '/fonctionnalites/discussions', label: 'Discussions profondes', icon: 'psychology' },
-  { href: '/fonctionnalites/arcade', label: 'Arcade & Gamification', icon: 'sports_esports' },
-  { href: '/fonctionnalites/marketplace', label: 'Marketplace (50 templates)', icon: 'storefront' },
+  { href: '/fonctionnalites/repondeur', label: 'Répondeur IA 24/7', emoji: '📞' },
+  { href: '/fonctionnalites/documents', label: 'Documents & contrats IA', emoji: '📄' },
+  { href: '/fonctionnalites/social', label: 'Réseaux sociaux IA', emoji: '📱' },
+  { href: '/fonctionnalites/reveil', label: 'Briefing matinal', emoji: '☀️' },
+  { href: '/demo#technologies', label: 'Studio Créatif (Photo/Vidéo)', emoji: '🎬' },
+  { href: '/demo#whatsapp', label: 'WhatsApp Business IA', emoji: '💚' },
+  { href: '/fonctionnalites/agents', label: '100+ Agents IA', emoji: '🤖' },
+  { href: '/fonctionnalites/discussions', label: 'Discussions profondes', emoji: '🧠' },
+  { href: '/fonctionnalites/arcade', label: 'Arcade & Gamification', emoji: '🕹️' },
+  { href: '/fonctionnalites/marketplace', label: 'Marketplace (50 templates)', emoji: '🛒' },
 ];
 
 export default function PublicNav() {
@@ -30,7 +30,7 @@ export default function PublicNav() {
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
   const featuresTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLanding = pathname === '/';
-  const isDark = !scrolled && isLanding;
+  const isDark = false;
   const isFeaturesActive = pathname.startsWith('/fonctionnalites');
 
   useEffect(() => {
@@ -64,12 +64,10 @@ export default function PublicNav() {
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled
-        ? 'rgba(255,255,255,0.92)'
-        : (isLanding ? 'rgba(15,7,32,0.75)' : 'rgba(255,255,255,0.92)'),
+      background: 'rgba(255,255,255,0.92)',
       backdropFilter: 'blur(20px) saturate(180%)',
       WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-      borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
+      borderBottom: '1px solid #E5E5E5',
       transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
     }}>
       <div style={{
@@ -111,11 +109,12 @@ export default function PublicNav() {
               }}
             >
               Fonctionnalités
-              <span className="material-symbols-rounded" style={{
-                fontSize: 16,
+              <span style={{
+                fontSize: 12,
                 transition: 'transform 0.2s ease',
                 transform: featuresOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-              }}>expand_more</span>
+                display: 'inline-block',
+              }}>▼</span>
             </button>
 
             {featuresOpen && (
@@ -133,9 +132,9 @@ export default function PublicNav() {
                 style={{
                   position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
                   marginTop: 8, minWidth: 300, maxHeight: 420, overflowY: 'auto',
-                  background: '#1a0e3a', border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#FFFFFF', border: '1px solid #E5E5E5',
                   borderRadius: 12, padding: '8px',
-                  boxShadow: '0 16px 48px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.15)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
                 }}
               >
                 {FEATURE_LINKS.map(fl => (
@@ -148,21 +147,21 @@ export default function PublicNav() {
                       display: 'flex', alignItems: 'center', gap: 10,
                       padding: '10px 14px', borderRadius: 8,
                       textDecoration: 'none',
-                      color: pathname === fl.href ? '#fff' : 'rgba(255,255,255,0.7)',
-                      background: pathname === fl.href ? 'rgba(124,58,237,0.15)' : 'transparent',
+                      color: pathname === fl.href ? '#1A1A1A' : '#6B6B6B',
+                      background: pathname === fl.href ? '#F7F7F7' : 'transparent',
                       fontSize: 13, fontWeight: 500, fontFamily: 'var(--font-display)',
                       transition: 'background 0.15s ease, color 0.15s ease',
                     }}
                     onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
-                      (e.currentTarget as HTMLElement).style.color = '#fff';
+                      (e.currentTarget as HTMLElement).style.background = '#F7F7F7';
+                      (e.currentTarget as HTMLElement).style.color = '#1A1A1A';
                     }}
                     onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.background = pathname === fl.href ? 'rgba(124,58,237,0.15)' : 'transparent';
-                      (e.currentTarget as HTMLElement).style.color = pathname === fl.href ? '#fff' : 'rgba(255,255,255,0.7)';
+                      (e.currentTarget as HTMLElement).style.background = pathname === fl.href ? '#F7F7F7' : 'transparent';
+                      (e.currentTarget as HTMLElement).style.color = pathname === fl.href ? '#1A1A1A' : '#6B6B6B';
                     }}
                   >
-                    <span className="material-symbols-rounded" style={{ fontSize: 18, color: '#7c3aed' }}>{fl.icon}</span>
+                    <span style={{ fontSize: 18 }}>{fl.emoji}</span>
                     {fl.label}
                   </Link>
                 ))}
@@ -195,7 +194,7 @@ export default function PublicNav() {
             style={{
               fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em', textDecoration: 'none',
               padding: '8px 20px', borderRadius: 8,
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              background: '#1A1A1A',
               color: '#fff',
               border: '1px solid transparent',
               transition: 'all 0.3s ease',
@@ -233,19 +232,20 @@ export default function PublicNav() {
             style={{
               fontSize: 15, fontWeight: 500, textDecoration: 'none',
               padding: '14px 16px', borderRadius: 8,
-              color: isFeaturesActive ? '#7c3aed' : '#4b5563',
-              background: isFeaturesActive ? 'rgba(124,58,237,0.06)' : 'transparent',
+              color: isFeaturesActive ? '#1A1A1A' : '#4b5563',
+              background: isFeaturesActive ? 'rgba(0,0,0,0.04)' : 'transparent',
               border: 'none', cursor: 'pointer', textAlign: 'left',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               width: '100%',
             }}
           >
             Fonctionnalités
-            <span className="material-symbols-rounded" style={{
-              fontSize: 18,
+            <span style={{
+              fontSize: 12,
               transition: 'transform 0.2s ease',
               transform: mobileFeaturesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}>expand_more</span>
+              display: 'inline-block',
+            }}>▼</span>
           </button>
           {mobileFeaturesOpen && (
             <div style={{ paddingLeft: 12, display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -257,11 +257,11 @@ export default function PublicNav() {
                     display: 'flex', alignItems: 'center', gap: 8,
                     fontSize: 14, fontWeight: 500, textDecoration: 'none',
                     padding: '10px 16px', borderRadius: 8,
-                    color: pathname === fl.href ? '#7c3aed' : '#6b7280',
-                    background: pathname === fl.href ? 'rgba(124,58,237,0.06)' : 'transparent',
+                    color: pathname === fl.href ? '#1A1A1A' : '#6b7280',
+                    background: pathname === fl.href ? 'rgba(0,0,0,0.04)' : 'transparent',
                   }}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#7c3aed' }}>{fl.icon}</span>
+                  <span style={{ fontSize: 16 }}>{fl.emoji}</span>
                   {fl.label}
                 </Link>
               ))}
@@ -273,8 +273,8 @@ export default function PublicNav() {
             style={{
               fontSize: 15, fontWeight: 500, textDecoration: 'none',
               padding: '14px 16px', borderRadius: 8,
-              color: pathname.startsWith('/cas') ? '#7c3aed' : '#4b5563',
-              background: pathname.startsWith('/cas') ? 'rgba(124,58,237,0.06)' : 'transparent',
+              color: pathname.startsWith('/cas') ? '#1A1A1A' : '#4b5563',
+              background: pathname.startsWith('/cas') ? 'rgba(0,0,0,0.04)' : 'transparent',
             }}
           >
             Cas d&apos;usage
@@ -284,8 +284,8 @@ export default function PublicNav() {
             style={{
               fontSize: 15, fontWeight: 500, textDecoration: 'none',
               padding: '14px 16px', borderRadius: 8,
-              color: pathname === '/vs-alternatives' ? '#7c3aed' : '#4b5563',
-              background: pathname === '/vs-alternatives' ? 'rgba(124,58,237,0.06)' : 'transparent',
+              color: pathname === '/vs-alternatives' ? '#1A1A1A' : '#4b5563',
+              background: pathname === '/vs-alternatives' ? 'rgba(0,0,0,0.04)' : 'transparent',
             }}
           >
             Comparaison
@@ -298,8 +298,8 @@ export default function PublicNav() {
               style={{
                 fontSize: 15, fontWeight: 500, textDecoration: 'none',
                 padding: '14px 16px', borderRadius: 8,
-                color: pathname === link.href ? '#7c3aed' : '#4b5563',
-                background: pathname === link.href ? 'rgba(124,58,237,0.06)' : 'transparent',
+                color: pathname === link.href ? '#1A1A1A' : '#4b5563',
+                background: pathname === link.href ? 'rgba(0,0,0,0.04)' : 'transparent',
               }}
             >
               {link.label}
@@ -311,7 +311,7 @@ export default function PublicNav() {
             style={{
               fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
               padding: '12px 20px', borderRadius: 10,
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
+              background: '#1A1A1A', color: '#fff',
             }}
           >
             Se connecter
@@ -321,7 +321,7 @@ export default function PublicNav() {
             style={{
               fontSize: 14, fontWeight: 600, textDecoration: 'none', textAlign: 'center',
               padding: '12px 20px', borderRadius: 10,
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff',
+              background: '#1A1A1A', color: '#fff',
             }}
           >
             Créer un compte gratuit

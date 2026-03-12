@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { DEFAULT_AGENTS, PERSONAL_AGENTS, TOTAL_AGENTS_DISPLAY } from '../../lib/agent-config';
 import EnterpriseSection from './EnterpriseSection';
@@ -38,30 +38,50 @@ const MODEL_PRICES = [
 ];
 
 // ── Shared styles ────────────────────────────────────────
-const eyebrow: React.CSSProperties = {
-  fontSize: 11, fontWeight: 700, letterSpacing: 4,
-  textTransform: 'uppercase', color: '#86868b', marginBottom: 12,
-  fontFamily: 'var(--font-display)',
-};
-const sectionTitle: React.CSSProperties = {
-  fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 700,
-  fontFamily: 'var(--font-display)',
-  letterSpacing: -1.2, color: '#1d1d1f', lineHeight: 1.1, margin: 0,
-};
-const sectionSubtitle: React.CSSProperties = {
-  fontSize: 15, color: '#86868b', lineHeight: 1.6, marginTop: 10,
-};
 const sectionPad: React.CSSProperties = {
   padding: 'clamp(64px, 8vw, 96px) 0',
 };
-const card: React.CSSProperties = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 16,
-};
-const cell = { padding: '12px 16px', fontSize: 13, borderBottom: '1px solid #f0f0f0' } as const;
 
 export default function PlansPage() {
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    const isDark = localStorage.getItem('fz_dark_mode') === 'true';
+    setDark(isDark);
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
+
+  const txt = dark ? '#e4e6eb' : '#1d1d1f';
+  const txtSub = dark ? '#a0a4b0' : '#86868b';
+  const txtMuted = dark ? '#6b7280' : '#9ca3af';
+  const txtBody = dark ? '#9ca3b0' : '#4b5563';
+  const bg = dark ? '#0f0720' : '#fff';
+  const bgSurface = dark ? '#1a0e3a' : '#f5f5f7';
+  const bgCard = dark ? 'rgba(255,255,255,0.05)' : '#fff';
+  const borderCol = dark ? 'rgba(255,255,255,0.08)' : '#e5e7eb';
+  const borderLight = dark ? 'rgba(255,255,255,0.04)' : '#f0f0f0';
+  const borderLighter = dark ? 'rgba(255,255,255,0.03)' : '#f2f2f2';
+  const btnBg = dark ? '#7c3aed' : '#1a0e3a';
+
+  const eyebrow: React.CSSProperties = {
+    fontSize: 11, fontWeight: 700, letterSpacing: 4,
+    textTransform: 'uppercase', color: txtSub, marginBottom: 12,
+    fontFamily: 'var(--font-display)',
+  };
+  const sectionTitle: React.CSSProperties = {
+    fontSize: 'clamp(22px, 3.2vw, 36px)', fontWeight: 700,
+    fontFamily: 'var(--font-display)',
+    letterSpacing: -1.2, color: txt, lineHeight: 1.1, margin: 0,
+  };
+  const sectionSubtitle: React.CSSProperties = {
+    fontSize: 15, color: txtSub, lineHeight: 1.6, marginTop: 10,
+  };
+  const card: React.CSSProperties = {
+    background: bgCard,
+    border: `1px solid ${borderCol}`,
+    borderRadius: 16,
+  };
+  const cell = { padding: '12px 16px', fontSize: 13, borderBottom: `1px solid ${borderLight}` };
+
   const { audience, setAudience, config } = useAudience();
 
   // Section observer
@@ -90,7 +110,7 @@ export default function PlansPage() {
 
   return (
     <div style={{
-      background: '#fff', color: '#1d1d1f',
+      background: bg, color: txt,
       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif',
     }}>
       <PublicNav />
@@ -180,7 +200,7 @@ export default function PlansPage() {
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
 
         {/* VALUE PROPS */}
-        <div style={{ ...sectionPad, borderBottom: '1px solid #f2f2f2' }}>
+        <div style={{ ...sectionPad, borderBottom: `1px solid ${borderLighter}` }}>
           <div className="lp-plans-value-props">
             {[
               { label: 'Claude & GPT-4', desc: 'Anthropic · OpenAI · Gemini · Meta' },
@@ -190,11 +210,11 @@ export default function PlansPage() {
             ].map((p, i) => (
               <div key={p.label} style={{
                 padding: '28px 24px', textAlign: 'center',
-                borderRight: i < 3 ? '1px solid #f2f2f2' : 'none',
+                borderRight: i < 3 ? `1px solid ${borderLighter}` : 'none',
               }}>
                 <div style={{ width: 6, height: 6, background: '#7c3aed', borderRadius: '50%', margin: '0 auto 14px' }} />
-                <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f', marginBottom: 5 }}>{p.label}</div>
-                <div style={{ fontSize: 11, color: '#86868b', lineHeight: 1.5 }}>{p.desc}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: txt, marginBottom: 5 }}>{p.label}</div>
+                <div style={{ fontSize: 11, color: txtSub, lineHeight: 1.5 }}>{p.desc}</div>
               </div>
             ))}
           </div>
@@ -231,7 +251,7 @@ export default function PlansPage() {
               </p>
               <Link href={ctaHref} onClick={() => trackCtaClick('pricing_cta', ctaHref, audience, '/plans')} style={{
                 display: 'inline-block', marginTop: 28,
-                padding: '13px 28px', background: '#1a0e3a', color: '#fff',
+                padding: '13px 28px', background: btnBg, color: '#fff',
                 borderRadius: 10, fontWeight: 600, fontFamily: 'var(--font-display)', fontSize: 14, textDecoration: 'none',
               }}>
                 {ctaLabel}
@@ -240,16 +260,16 @@ export default function PlansPage() {
             <div style={{ ...card, padding: '36px 32px' }}>
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: '#f0fdf4', border: '1px solid #bbf7d0',
+                background: dark ? 'rgba(34,197,94,0.1)' : '#f0fdf4', border: `1px solid ${dark ? 'rgba(34,197,94,0.2)' : '#bbf7d0'}`,
                 color: '#16a34a', padding: '4px 12px', borderRadius: 40,
                 fontSize: 11, fontWeight: 700, marginBottom: 18, letterSpacing: 0.5,
               }}>
                 Pour tous · à vie
               </div>
-              <div style={{ fontSize: 64, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#1d1d1f', letterSpacing: -4, lineHeight: 1, marginBottom: 6 }}>
+              <div style={{ fontSize: 64, fontWeight: 700, fontFamily: 'var(--font-display)', color: txt, letterSpacing: -4, lineHeight: 1, marginBottom: 6 }}>
                 0%
               </div>
-              <div style={{ fontSize: 14, color: '#86868b', marginBottom: 28, lineHeight: 1.5 }}>
+              <div style={{ fontSize: 14, color: txtSub, marginBottom: 28, lineHeight: 1.5 }}>
                 Prix officiel fournisseur · aucun frais ajouté
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -259,7 +279,7 @@ export default function PlansPage() {
                   'Valable pour tous les utilisateurs, pour toujours',
                   'Payez uniquement ce que vous consommez',
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: '#4b5563', alignItems: 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: txtBody, alignItems: 'flex-start' }}>
                     <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 14, flexShrink: 0, marginTop: 1 }}>check</span>
                     {item}
                   </div>
@@ -272,7 +292,7 @@ export default function PlansPage() {
       </div>
 
       {/* DEPOSITS — light bg */}
-      <section style={{ background: '#f5f5f7', padding: 'clamp(64px, 8vw, 96px) 24px' }}>
+      <section style={{ background: bgSurface, padding: 'clamp(64px, 8vw, 96px) 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <p style={eyebrow}>Recharges</p>
@@ -291,8 +311,8 @@ export default function PlansPage() {
               <div key={opt.amount} style={{
                 padding: '28px 20px', textAlign: 'center',
                 borderRadius: 16, position: 'relative',
-                background: opt.label === 'Populaire' ? '#1a0e3a' : '#fff',
-                border: `1px solid ${opt.label === 'Populaire' ? '#1a0e3a' : '#e5e7eb'}`,
+                background: opt.label === 'Populaire' ? '#1a0e3a' : bgCard,
+                border: `1px solid ${opt.label === 'Populaire' ? '#1a0e3a' : borderCol}`,
               }}>
                 {opt.label && (
                   <div style={{
@@ -306,38 +326,38 @@ export default function PlansPage() {
                 )}
                 <div style={{
                   fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-display)', letterSpacing: -1.5,
-                  color: opt.label === 'Populaire' ? '#fff' : '#1d1d1f',
+                  color: opt.label === 'Populaire' ? '#fff' : txt,
                   lineHeight: 1, marginBottom: 6,
                 }}>
                   {opt.amount}€
                 </div>
-                <div style={{ fontSize: 13, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.45)' : '#86868b' }}>
+                <div style={{ fontSize: 13, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.45)' : txtSub }}>
                   {opt.credits.toLocaleString('fr-FR')} crédits
                 </div>
                 <div style={{
                   marginTop: 12, paddingTop: 12,
-                  borderTop: `1px solid ${opt.label === 'Populaire' ? 'rgba(255,255,255,0.1)' : '#e5e7eb'}`,
+                  borderTop: `1px solid ${opt.label === 'Populaire' ? 'rgba(255,255,255,0.1)' : borderCol}`,
                 }}>
-                  <p style={{ fontSize: 10, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.35)' : '#9ca3af', marginBottom: 4, fontWeight: 600 }}>
+                  <p style={{ fontSize: 10, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.35)' : txtMuted, marginBottom: 4, fontWeight: 600 }}>
                     Tes limites avec ce pack :
                   </p>
-                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : '#4b5563', margin: '2px 0' }}>
+                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : txtBody, margin: '2px 0' }}>
                     {opt.dailyK >= 1000 ? `${opt.dailyK / 1000}M` : `${opt.dailyK}K`} tokens/jour
                   </p>
-                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : '#4b5563', margin: '2px 0' }}>
+                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : txtBody, margin: '2px 0' }}>
                     {opt.hourlyK >= 1000 ? `${opt.hourlyK / 1000}M` : `${opt.hourlyK}K`} tokens/heure
                   </p>
-                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : '#4b5563', margin: '2px 0' }}>
+                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : txtBody, margin: '2px 0' }}>
                     {opt.outputMax.toLocaleString('fr-FR')} tokens max/reponse
                   </p>
-                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : '#4b5563', margin: '2px 0' }}>
+                  <p style={{ fontSize: 11, color: opt.label === 'Populaire' ? 'rgba(255,255,255,0.6)' : txtBody, margin: '2px 0' }}>
                     ~{opt.estReqs.toLocaleString('fr-FR')} requetes/jour
                   </p>
                 </div>
               </div>
             ))}
           </div>
-          <p style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: '#9ca3af' }}>
+          <p style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: txtMuted }}>
             Montant libre également disponible depuis votre tableau de bord.
           </p>
         </div>
@@ -355,10 +375,10 @@ export default function PlansPage() {
           <div className="lp-plans-credits">
             {creditsItems.map(ex => (
               <div key={ex.action} style={{ padding: '24px 16px', textAlign: 'center', ...card }}>
-                <div style={{ fontSize: 28, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#1d1d1f', letterSpacing: -1.5, lineHeight: 1 }}>
+                <div style={{ fontSize: 28, fontWeight: 700, fontFamily: 'var(--font-display)', color: txt, letterSpacing: -1.5, lineHeight: 1 }}>
                   {ex.count}
                 </div>
-                <div style={{ fontSize: 12, color: '#86868b', marginTop: 6, fontWeight: 600 }}>{ex.action}</div>
+                <div style={{ fontSize: 12, color: txtSub, marginTop: 6, fontWeight: 600 }}>{ex.action}</div>
               </div>
             ))}
           </div>
@@ -371,27 +391,27 @@ export default function PlansPage() {
             <h2 style={sectionTitle}>Prix par action, transparent.</h2>
             <p style={sectionSubtitle}>Toutes les actions disponibles dès l&apos;inscription</p>
           </div>
-          <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+          <div style={{ background: bgCard, borderRadius: 14, border: `1px solid ${borderCol}`, overflow: 'hidden' }}>
             <div className="lp-table-scroll">
               <table style={{ width: '100%', minWidth: 540, borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
-                  <tr style={{ background: '#f9f9f9', borderBottom: '1px solid #e5e7eb' }}>
-                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Action</th>
-                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Modèle</th>
-                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Crédits/action</th>
-                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Avec 50 cr (5€)</th>
+                  <tr style={{ background: bgSurface, borderBottom: `1px solid ${borderCol}` }}>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: txt }}>Action</th>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: txt }}>Modèle</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: txt }}>Crédits/action</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: txt }}>Avec 50 cr (5€)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ACTION_COSTS.map((item, i) => (
-                    <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                    <tr key={i} style={{ background: i % 2 === 0 ? bgCard : (dark ? 'rgba(255,255,255,0.02)' : '#fafafa') }}>
                       <td style={{ ...cell }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           <span className="material-symbols-rounded" style={{ fontSize: 18 }}>{item.icon}</span>
-                          <span style={{ color: '#1d1d1f' }}>{item.action}</span>
+                          <span style={{ color: txt }}>{item.action}</span>
                         </span>
                       </td>
-                      <td style={{ ...cell, color: '#6b7280' }}>{item.model}</td>
+                      <td style={{ ...cell, color: dark ? '#8b8fa0' : '#6b7280' }}>{item.model}</td>
                       <td style={{ ...cell, textAlign: 'right', fontWeight: 700, color: item.color }}>{item.credits}</td>
                       <td style={{ ...cell, textAlign: 'right', fontWeight: 800, color: item.color }}>{item.per50}</td>
                     </tr>
@@ -409,36 +429,36 @@ export default function PlansPage() {
             <h2 style={sectionTitle}>0% de marge. 0% de commission.</h2>
             <p style={sectionSubtitle}>Freenzy applique exactement ces tarifs, sans marge, sans commission.</p>
           </div>
-          <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+          <div style={{ background: bgCard, borderRadius: 14, border: `1px solid ${borderCol}`, overflow: 'hidden' }}>
             <div className="lp-table-scroll">
               <table style={{ width: '100%', minWidth: 540, borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
-                  <tr style={{ background: '#f9f9f9', borderBottom: '1px solid #e5e7eb' }}>
-                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Modèle</th>
-                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Prix input</th>
-                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: '#1d1d1f' }}>Prix output</th>
-                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: '#1d1d1f' }}>Usage type</th>
+                  <tr style={{ background: bgSurface, borderBottom: `1px solid ${borderCol}` }}>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: txt }}>Modèle</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: txt }}>Prix input</th>
+                    <th style={{ ...cell, textAlign: 'right', fontWeight: 700, color: txt }}>Prix output</th>
+                    <th style={{ ...cell, textAlign: 'left', fontWeight: 700, color: txt }}>Usage type</th>
                   </tr>
                 </thead>
                 <tbody>
                   {MODEL_PRICES.map((m, i) => (
-                    <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                    <tr key={i} style={{ background: i % 2 === 0 ? bgCard : (dark ? 'rgba(255,255,255,0.02)' : '#fafafa') }}>
                       <td style={{ ...cell }}>
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
                           <span style={{ width: 8, height: 8, borderRadius: '50%', background: m.color, flexShrink: 0, display: 'inline-block' }} />
-                          <span style={{ fontWeight: 700, color: '#1d1d1f' }}>{m.model}</span>
+                          <span style={{ fontWeight: 700, color: txt }}>{m.model}</span>
                         </span>
                       </td>
-                      <td style={{ ...cell, textAlign: 'right', fontFamily: 'monospace', color: '#374151' }}>{m.input}</td>
-                      <td style={{ ...cell, textAlign: 'right', fontFamily: 'monospace', color: '#374151' }}>{m.output}</td>
-                      <td style={{ ...cell, color: '#6b7280', fontSize: 12 }}>{m.usage}</td>
+                      <td style={{ ...cell, textAlign: 'right', fontFamily: 'monospace', color: txtBody }}>{m.input}</td>
+                      <td style={{ ...cell, textAlign: 'right', fontFamily: 'monospace', color: txtBody }}>{m.output}</td>
+                      <td style={{ ...cell, color: dark ? '#8b8fa0' : '#6b7280', fontSize: 12 }}>{m.usage}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0' }}>
-              <p style={{ fontSize: 11, color: '#9ca3af', margin: 0 }}>
+            <div style={{ padding: '12px 16px', borderTop: `1px solid ${borderLight}` }}>
+              <p style={{ fontSize: 11, color: txtMuted, margin: 0 }}>
                 * Prix Anthropic, ElevenLabs, Twilio, Runway publiés sur leurs sites respectifs. Mis à jour automatiquement.
               </p>
             </div>
@@ -461,8 +481,8 @@ export default function PlansPage() {
               }}>
                 <span style={{ fontSize: 20, flexShrink: 0 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></span>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f' }}>{agent.role}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{agent.priceCredits} cr/action</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: txt }}>{agent.role}</div>
+                  <div style={{ fontSize: 11, color: txtMuted }}>{agent.priceCredits} cr/action</div>
                 </div>
               </div>
             ))}
@@ -472,14 +492,14 @@ export default function PlansPage() {
       </div>
 
       {/* TELEPHONY — light bg */}
-      <section style={{ background: '#f5f5f7', padding: 'clamp(64px, 8vw, 96px) 24px' }}>
+      <section style={{ background: bgSurface, padding: 'clamp(64px, 8vw, 96px) 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={eyebrow}>Coûts détaillés</p>
             <h2 style={sectionTitle}>Téléphonie Twilio</h2>
           </div>
           <div className="lp-plans-costs">
-            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, overflow: 'hidden', maxWidth: 560, margin: '0 auto' }}>
+            <div style={{ background: bgCard, border: `1px solid ${borderCol}`, borderRadius: 16, overflow: 'hidden', maxWidth: 560, margin: '0 auto' }}>
               {[
                 ['Appels entrants (France)', '~0.01€/min'],
                 ['Appels sortants (France)', '~0.014€/min'],
@@ -490,14 +510,14 @@ export default function PlansPage() {
                 <div key={String(service)} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: '13px 20px',
-                  borderBottom: i < arr.length - 1 ? '1px solid #f8f8f8' : 'none',
+                  borderBottom: i < arr.length - 1 ? `1px solid ${borderLighter}` : 'none',
                 }}>
-                  <span style={{ fontSize: 13, color: '#4b5563' }}>{service}</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#1d1d1f' }}>{cost}</span>
+                  <span style={{ fontSize: 13, color: txtBody }}>{service}</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: txt }}>{cost}</span>
                 </div>
               ))}
-              <div style={{ padding: '12px 20px', borderTop: '1px solid #f2f2f2' }}>
-                <p style={{ fontSize: 11, color: '#9ca3af', margin: 0 }}>Facturés séparément du solde crédits.</p>
+              <div style={{ padding: '12px 20px', borderTop: `1px solid ${borderLighter}` }}>
+                <p style={{ fontSize: 11, color: txtMuted, margin: 0 }}>Facturés séparément du solde crédits.</p>
               </div>
             </div>
           </div>
@@ -512,16 +532,16 @@ export default function PlansPage() {
             <p style={eyebrow}>Comparaison</p>
             <h2 style={sectionTitle}>Pourquoi Freenzy.io ?</h2>
           </div>
-          <div className="lp-table-scroll" style={{ border: '1px solid #e5e7eb', background: '#fff' }}>
+          <div className="lp-table-scroll" style={{ border: `1px solid ${borderCol}`, background: bgCard }}>
             <table style={{ width: '100%', minWidth: 540, borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
-                <tr style={{ background: '#f5f5f7' }}>
+                <tr style={{ background: bgSurface }}>
                   {['Critère', 'Freenzy.io', 'ChatGPT Plus', 'Assistant humain'].map((h, i) => (
                     <th key={h} style={{
                       padding: '14px 20px', textAlign: i === 0 ? 'left' : 'center',
                       fontSize: 12, fontWeight: 700,
-                      color: i === 1 ? '#7c3aed' : '#86868b',
-                      borderBottom: '1px solid #e5e7eb',
+                      color: i === 1 ? '#7c3aed' : txtSub,
+                      borderBottom: `1px solid ${borderCol}`,
                     }}>{h}</th>
                   ))}
                 </tr>
@@ -536,10 +556,10 @@ export default function PlansPage() {
                   ['Engagement', 'Aucun', 'Mensuel', 'Contrat'],
                 ].map(([label, freenzy, chatgpt, classic], i, arr) => (
                   <tr key={String(label)}>
-                    <td style={{ padding: '13px 20px', fontWeight: 600, color: '#1d1d1f', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{label}</td>
-                    <td style={{ padding: '13px 20px', textAlign: 'center', fontWeight: 700, color: '#06b6d4', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{freenzy}</td>
-                    <td style={{ padding: '13px 20px', textAlign: 'center', color: '#9ca3af', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{chatgpt}</td>
-                    <td style={{ padding: '13px 20px', textAlign: 'center', color: '#9ca3af', borderBottom: i < arr.length - 1 ? '1px solid #f2f2f2' : 'none' }}>{classic}</td>
+                    <td style={{ padding: '13px 20px', fontWeight: 600, color: txt, borderBottom: i < arr.length - 1 ? `1px solid ${borderLighter}` : 'none' }}>{label}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', fontWeight: 700, color: '#06b6d4', borderBottom: i < arr.length - 1 ? `1px solid ${borderLighter}` : 'none' }}>{freenzy}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', color: txtMuted, borderBottom: i < arr.length - 1 ? `1px solid ${borderLighter}` : 'none' }}>{chatgpt}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', color: txtMuted, borderBottom: i < arr.length - 1 ? `1px solid ${borderLighter}` : 'none' }}>{classic}</td>
                   </tr>
                 ))}
               </tbody>
@@ -567,25 +587,25 @@ export default function PlansPage() {
             ].map(item => (
               <div key={item.title} style={{
                 padding: '18px 16px',
-                background: '#fff',
-                border: '1px solid #e5e7eb',
+                background: bgCard,
+                border: `1px solid ${borderCol}`,
                 borderRadius: 14, position: 'relative',
                 opacity: item.available ? 1 : 0.55,
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 5 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f' }}>{item.title}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, fontFamily: 'var(--font-display)', color: txt }}>{item.title}</div>
                   <span style={{
                     fontSize: 9, fontWeight: 700,
                     padding: '2px 7px', borderRadius: 20,
-                    background: item.available ? '#f0fdf4' : '#f5f5f7',
-                    color: item.available ? '#22c55e' : '#9ca3af',
-                    border: `1px solid ${item.available ? '#bbf7d0' : '#e5e7eb'}`,
+                    background: item.available ? (dark ? 'rgba(34,197,94,0.1)' : '#f0fdf4') : bgSurface,
+                    color: item.available ? '#22c55e' : txtMuted,
+                    border: `1px solid ${item.available ? (dark ? 'rgba(34,197,94,0.2)' : '#bbf7d0') : borderCol}`,
                     flexShrink: 0, marginLeft: 8,
                   }}>
                     {item.available ? 'Dispo' : 'Bientôt'}
                   </span>
                 </div>
-                <div style={{ fontSize: 11, color: '#9ca3af' }}>{item.desc}</div>
+                <div style={{ fontSize: 11, color: txtMuted }}>{item.desc}</div>
               </div>
             ))}
           </div>
@@ -628,21 +648,21 @@ export default function PlansPage() {
                 a: 'Oui. White-Label SaaS : votre domaine, vos clés API, isolation complète des données, SLA garanti, support dédié. Disponible sur devis.',
               },
             ].map((faq, i) => (
-              <details key={i} style={{ borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+              <details key={i} style={{ borderRadius: 12, border: `1px solid ${borderCol}`, overflow: 'hidden' }}>
                 <summary style={{
                   padding: '16px 20px',
-                  fontSize: 14, fontWeight: 600, fontFamily: 'var(--font-display)', color: '#1d1d1f',
+                  fontSize: 14, fontWeight: 600, fontFamily: 'var(--font-display)', color: txt,
                   cursor: 'pointer', listStyle: 'none',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  background: '#fff', userSelect: 'none',
+                  background: bgCard, userSelect: 'none',
                 }}>
                   {faq.q}
-                  <span style={{ fontSize: 16, color: '#9ca3af', fontWeight: 400, flexShrink: 0, marginLeft: 12 }}>+</span>
+                  <span style={{ fontSize: 16, color: txtMuted, fontWeight: 400, flexShrink: 0, marginLeft: 12 }}>+</span>
                 </summary>
                 <div style={{
                   padding: '14px 20px 18px',
-                  fontSize: 14, color: '#4b5563', lineHeight: 1.7,
-                  background: '#fafafa', borderTop: '1px solid #f2f2f2',
+                  fontSize: 14, color: txtBody, lineHeight: 1.7,
+                  background: dark ? 'rgba(255,255,255,0.02)' : '#fafafa', borderTop: `1px solid ${borderLighter}`,
                 }}>
                   {faq.a}
                 </div>

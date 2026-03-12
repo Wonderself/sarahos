@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import QuoteForm from './QuoteForm';
 
 const FEATURES = [
@@ -18,20 +18,32 @@ const FEATURES = [
 
 export default function EnterpriseSection() {
   const [showForm, setShowForm] = useState(false);
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    setDark(localStorage.getItem('fz_dark_mode') === 'true');
+  }, []);
+
+  const txt = dark ? '#e4e6eb' : '#111827';
+  const txtSub = dark ? '#a0a4b0' : '#6b7280';
+  const txtBody = dark ? '#9ca3b0' : '#374151';
+  const txtMuted = dark ? '#6b7280' : '#9ca3af';
+  const bgCard = dark ? 'rgba(255,255,255,0.05)' : '#fff';
+  const borderCol = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  const btnBg = dark ? '#7c3aed' : '#111827';
 
   return (
     <>
       <div className="landing-enterprise-section" style={{
         maxWidth: 860, margin: '0 auto 20px', padding: 'clamp(24px, 4vw, 48px) clamp(16px, 3vw, 40px)',
         borderRadius: 24,
-        border: '1px solid rgba(0,0,0,0.06)',
-        background: '#fafafa',
+        border: `1px solid ${borderCol}`,
+        background: dark ? 'rgba(255,255,255,0.02)' : '#fafafa',
         position: 'relative', overflow: 'hidden',
       }}>
         {/* Badge */}
         <div style={{
           position: 'absolute', top: 0, right: 0,
-          background: '#1A1A1A',
+          background: btnBg,
           color: 'white', fontSize: 10, fontWeight: 600,
           padding: '5px 18px', borderRadius: '0 0 0 12px',
           letterSpacing: '0.05em', textTransform: 'uppercase',
@@ -41,10 +53,10 @@ export default function EnterpriseSection() {
 
         <div className="text-center" style={{ marginBottom: 36 }}>
           <div style={{ fontSize: 44, marginBottom: 14 }}>&#x1F3E2;</div>
-          <h3 className="section-heading" style={{ fontSize: 26, fontWeight: 700, color: '#1A1A1A', marginBottom: 10, letterSpacing: '-0.02em' }}>
+          <h3 className="section-heading" style={{ fontSize: 26, fontWeight: 700, color: txt, marginBottom: 10, letterSpacing: '-0.02em' }}>
             <span className="fz-accent-word">Entreprise</span> — White-Label SaaS
           </h3>
-          <p className="section-subheading" style={{ fontSize: 16, color: '#6b7280', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
+          <p className="section-subheading" style={{ fontSize: 16, color: txtSub, maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
             Votre propre plateforme Freenzy.io, <span className="fz-accent-word">sur mesure</span>. Instance dédiée, sécurité maximale, branding personnalisé.
           </p>
         </div>
@@ -57,11 +69,11 @@ export default function EnterpriseSection() {
             <div key={f.text} style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '12px 16px', borderRadius: 12,
-              background: '#fff',
-              border: '1px solid rgba(0,0,0,0.06)',
+              background: bgCard,
+              border: `1px solid ${borderCol}`,
             }}>
               <span style={{ fontSize: 18, flexShrink: 0 }} dangerouslySetInnerHTML={{ __html: f.icon }} />
-              <span style={{ fontSize: 13, fontWeight: 500, color: '#374151' }}>{f.text}</span>
+              <span style={{ fontSize: 13, fontWeight: 500, color: txtBody }}>{f.text}</span>
             </div>
           ))}
         </div>
@@ -70,12 +82,12 @@ export default function EnterpriseSection() {
           <button onClick={() => setShowForm(true)} className="btn btn-primary"
             style={{
               padding: '14px 36px', fontSize: 15, fontWeight: 600,
-              background: '#1A1A1A',
+              background: btnBg,
               border: 'none', borderRadius: 12,
             }}>
             Demander un devis personnalise
           </button>
-          <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 12 }}>
+          <p style={{ fontSize: 13, color: txtMuted, marginTop: 12 }}>
             Reponse sous 24h ouvrables
           </p>
         </div>

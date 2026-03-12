@@ -50,9 +50,9 @@ export default function ClaudePage() {
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '5px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600,
-          background: '#f5f5f7', color: txtSub, marginBottom: 24,
+          background: bgSurface, color: txtSub, marginBottom: 24,
         }}>
-          <ClaudeIcon size={14} color="#86868b" /> Propulse par Anthropic
+          <ClaudeIcon size={14} color={txtSub} /> Propulse par Anthropic
         </div>
 
         <h1 style={{
@@ -106,7 +106,7 @@ export default function ClaudePage() {
             ].map(c => (
               <div key={c.title} style={{
                 padding: 24, borderRadius: 12,
-                background: '#f5f5f7',
+                background: bgSurface,
               }}>
                 <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>{c.icon}</span></div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 6 }}>{c.title}</div>
@@ -135,7 +135,7 @@ export default function ClaudePage() {
             }}>
               <div style={{
                 display: 'inline-block', padding: '4px 12px', borderRadius: 20,
-                background: '#f5f5f7', color: txtSub,
+                background: bgSurface, color: txtSub,
                 fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', marginBottom: 16,
               }}>
                 CLAUDE SONNET
@@ -159,14 +159,14 @@ export default function ClaudePage() {
                   </div>
                 ))}
               </div>
-              <div style={{ borderTop: '1px solid #f5f5f7', paddingTop: 14, fontSize: 12, color: txtSub }}>
+              <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: 14, fontSize: 12, color: txtSub }}>
                 Agents : {sonnetAgents.map(a => a.name).join(', ')}
               </div>
             </div>
 
             {/* Opus */}
             <div style={{
-              padding: 32, borderRadius: 12, border: '1px solid #1d1d1f',
+              padding: 32, borderRadius: 12, border: `1px solid ${dark ? '#7c3aed' : '#1d1d1f'}`,
               background: bgCard,
             }}>
               <div style={{
@@ -195,7 +195,7 @@ export default function ClaudePage() {
                   </div>
                 ))}
               </div>
-              <div style={{ borderTop: '1px solid #f5f5f7', paddingTop: 14, fontSize: 12, color: txtSub }}>
+              <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: 14, fontSize: 12, color: txtSub }}>
                 Agents : {opusAgents.map(a => `${a.name} (${a.role})`).join(', ')}
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function ClaudePage() {
         {/* ═══ Extended Thinking ═══ */}
         <section style={{ padding: '48px 0', maxWidth: 780, margin: '0 auto' }}>
           <div style={{
-            padding: 40, borderRadius: 12, background: '#f5f5f7',
+            padding: 40, borderRadius: 12, background: bgSurface,
           }}>
             <div style={{ marginBottom: 24 }}>
               <div style={{
@@ -260,7 +260,7 @@ export default function ClaudePage() {
                 <div key={agent.id} style={{
                   display: 'flex', alignItems: 'center',
                   gap: 12, padding: '14px 20px',
-                  borderBottom: i < DEFAULT_AGENTS.length - 1 ? '1px solid #f5f5f7' : 'none',
+                  borderBottom: i < DEFAULT_AGENTS.length - 1 ? `1px solid ${borderCol}` : 'none',
                   background: bgCard,
                 }}>
                   <div style={{ fontSize: 20 }}><span className="material-symbols-rounded" style={{ fontSize: 16, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
@@ -270,8 +270,8 @@ export default function ClaudePage() {
                   </div>
                   <div style={{
                     padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
-                    background: isOpus ? '#1d1d1f' : '#f5f5f7',
-                    color: isOpus ? '#fff' : '#86868b',
+                    background: isOpus ? btnBg : bgSurface,
+                    color: isOpus ? '#fff' : txtSub,
                   }}>
                     {isOpus ? 'Opus' : 'Sonnet'}
                   </div>
@@ -300,7 +300,7 @@ export default function ClaudePage() {
               { icon: 'trophy', title: 'Benchmarks #1', desc: 'Classe #1 sur MMLU, HumanEval, GSM8K. Le plus performant en raisonnement et comprehension.' },
             ].map(c => (
               <div key={c.title} style={{
-                padding: 24, borderRadius: 12, background: '#f5f5f7',
+                padding: 24, borderRadius: 12, background: bgSurface,
               }}>
                 <div style={{ fontSize: 24, marginBottom: 10 }}><span className="material-symbols-rounded" style={{ fontSize: 24 }}>{c.icon}</span></div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: txt, marginBottom: 6 }}>{c.title}</div>
@@ -345,9 +345,9 @@ export default function ClaudePage() {
         {/* ═══ CTA Final ═══ */}
         <section style={{
           padding: '48px 32px', borderRadius: 12,
-          background: '#f5f5f7', textAlign: 'center', marginBottom: 48,
+          background: bgSurface, textAlign: 'center', marginBottom: 48,
         }}>
-          <ClaudeIcon size={36} color="#1d1d1f" />
+          <ClaudeIcon size={36} color={txt} />
           <h2 style={{
             fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em',
             color: txt, marginTop: 16, marginBottom: 10,

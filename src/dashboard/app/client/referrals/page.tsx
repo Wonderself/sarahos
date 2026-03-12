@@ -20,11 +20,11 @@ interface Referral {
 }
 
 const STATUS_LABELS: Record<string, { label: string; color: string; emoji: string }> = {
-  pending: { label: 'En attente', color: '#1A1A1A', emoji: '\u23F3' },
-  month1_ok: { label: 'Mois 1 valide', color: '#1A1A1A', emoji: '\u2705' },
-  qualified: { label: 'Qualifie', color: '#1A1A1A', emoji: '\uD83C\uDF89' },
-  rewarded: { label: 'Recompense', color: '#1A1A1A', emoji: '\uD83D\uDCB0' },
-  failed: { label: 'Non qualifie', color: '#ef4444', emoji: '\u274C' },
+  pending: { label: 'En attente', color: '#1A1A1A', emoji: '⏳' },
+  month1_ok: { label: 'Mois 1 valide', color: '#1A1A1A', emoji: '✅' },
+  qualified: { label: 'Qualifie', color: '#1A1A1A', emoji: '🎉' },
+  rewarded: { label: 'Recompense', color: '#1A1A1A', emoji: '💰' },
+  failed: { label: 'Non qualifie', color: '#ef4444', emoji: '❌' },
 };
 
 export default function ReferralsPage() {
@@ -85,8 +85,8 @@ export default function ReferralsPage() {
   function shareLink() {
     if (navigator.share) {
       navigator.share({
-        title: 'Freenzy.io \u2014 Votre \u00e9quipe IA gratuite',
-        text: 'Rejoignez Freenzy.io \u2014 votre \u00e9quipe IA compl\u00e8te, 0% de commission !',
+        title: 'Freenzy.io — Votre équipe IA gratuite',
+        text: 'Rejoignez Freenzy.io — votre équipe IA complète, 0% de commission !',
         url: getReferralLink(),
       }).catch(() => {});
     }
@@ -113,7 +113,7 @@ export default function ReferralsPage() {
 
   const shareToSocial = useCallback((platform: string) => {
     const url = encodeURIComponent(getReferralLink());
-    const text = encodeURIComponent('Rejoignez Freenzy.io \u2014 votre \u00e9quipe IA compl\u00e8te, 0% de commission !');
+    const text = encodeURIComponent('Rejoignez Freenzy.io — votre équipe IA complète, 0% de commission !');
     const urls: Record<string, string> = {
       twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
@@ -164,14 +164,14 @@ export default function ReferralsPage() {
         backdropFilter: 'none',
       }}>
         <div className="flex items-center gap-16 flex-wrap">
-          <span style={{ fontSize: 48 }}>{'\uD83C\uDF81'}</span>
+          <span style={{ fontSize: 48 }}>{'🎁'}</span>
           <div className="flex-1" style={{ minWidth: 0 }}>
             <div className="font-bold" style={{ fontSize: 20, marginBottom: 6, color: '#1A1A1A' }}>
-              Gagnez 20 EUR de cr\u00e9dits <span className="fz-logo-word">gratuits</span> !
+              Gagnez 20 EUR de crédits <span className="fz-logo-word">gratuits</span> !
             </div>
             <div className="text-md" style={{ lineHeight: 1.6, color: '#6B6B6B' }}>
-              Partagez votre lien d&apos;invitation. Pour chaque filleul qualifi\u00e9, vous recevez
-              <strong style={{ color: '#1A1A1A' }}> 20 EUR de cr\u00e9dits </strong>
+              Partagez votre lien d&apos;invitation. Pour chaque filleul qualifié, vous recevez
+              <strong style={{ color: '#1A1A1A' }}> 20 EUR de crédits </strong>
               (10 EUR/mois sur 2 mois).
             </div>
           </div>
@@ -191,7 +191,7 @@ export default function ReferralsPage() {
             {referralCode ? getReferralLink() : 'Chargement...'}
           </div>
           <button onClick={copyLink} className="btn btn-primary btn-sm" disabled={!referralCode}>
-            {copied ? <>{'\u2705'} Copi\u00e9 !</> : 'Copier'}
+            {copied ? <>{'✅'} Copié !</> : 'Copier'}
           </button>
           {shareSupported && (
             <button onClick={shareLink} className="btn btn-secondary btn-sm" disabled={!referralCode}>
@@ -221,17 +221,17 @@ export default function ReferralsPage() {
               style={{ marginTop: 12, width: '100%' }}
               disabled={!referralCode}
             >
-              {'\u2B07\uFE0F'} T\u00e9l\u00e9charger PNG
+              {'⬇️'} Télécharger PNG
             </button>
           </div>
           <div style={{ flex: 1, minWidth: isMobile ? 0 : 200 }}>
-            <div className="text-sm font-bold mb-8" style={{ color: '#1A1A1A' }}>Partagez sur les r\u00e9seaux</div>
+            <div className="text-sm font-bold mb-8" style={{ color: '#1A1A1A' }}>Partagez sur les réseaux</div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {[
-                { id: 'twitter', emoji: '\uD83D\uDCAC', label: 'Twitter / X' },
-                { id: 'linkedin', emoji: '\uD83D\uDCBC', label: 'LinkedIn' },
-                { id: 'whatsapp', emoji: '\uD83D\uDCF1', label: 'WhatsApp' },
-                { id: 'email', emoji: '\u2709\uFE0F', label: 'Email' },
+                { id: 'twitter', emoji: '💬', label: 'Twitter / X' },
+                { id: 'linkedin', emoji: '💼', label: 'LinkedIn' },
+                { id: 'whatsapp', emoji: '📱', label: 'WhatsApp' },
+                { id: 'email', emoji: '✉️', label: 'Email' },
               ].map(p => (
                 <button
                   key={p.id}
@@ -267,23 +267,23 @@ export default function ReferralsPage() {
           <span className="stat-value" style={{ color: '#1A1A1A' }}>{qualifiedReferrals}</span>
         </div>
         <div className="stat-card">
-          <span className="stat-label" style={{ color: '#9B9B9B' }}>Cr\u00e9dits gagn\u00e9s</span>
+          <span className="stat-label" style={{ color: '#9B9B9B' }}>Crédits gagnés</span>
           <span className="stat-value" style={{ color: '#1A1A1A' }}>
             {totalRewards > 0 ? (totalRewards / 1_000_000).toFixed(0) : '0'}
           </span>
-          <span className="text-xs" style={{ color: '#9B9B9B' }}>cr\u00e9dits</span>
+          <span className="text-xs" style={{ color: '#9B9B9B' }}>crédits</span>
         </div>
       </div>
 
       {/* How it works */}
       <div className="card section">
-        <div className="section-title" style={{ marginBottom: 16, color: '#1A1A1A' }}>Comment \u00e7a marche</div>
+        <div className="section-title" style={{ marginBottom: 16, color: '#1A1A1A' }}>Comment ça marche</div>
         <div className="grid-4" style={{ gap: 12, gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : undefined }}>
           {[
-            { step: '1', emoji: '\uD83D\uDD17', title: 'Partagez', desc: 'Envoyez votre lien \u00e0 vos amis et coll\u00e8gues' },
-            { step: '2', emoji: '\u270D\uFE0F', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
-            { step: '3', emoji: '\uD83D\uDCCA', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
-            { step: '4', emoji: '\uD83D\uDCB0', title: 'R\u00e9compense', desc: '20 EUR de cr\u00e9dits pour vous (10 EUR/mois)' },
+            { step: '1', emoji: '🔗', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
+            { step: '2', emoji: '✍️', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
+            { step: '3', emoji: '📊', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
+            { step: '4', emoji: '💰', title: 'Récompense', desc: '20 EUR de crédits pour vous (10 EUR/mois)' },
           ].map(s => (
             <div key={s.step} className="text-center" style={{ padding: '12px 8px' }}>
               <div className="flex-center" style={{
@@ -304,8 +304,8 @@ export default function ReferralsPage() {
           borderRadius: 8, marginTop: 16, padding: '10px 14px',
         }}>
           <div className="text-xs" style={{ lineHeight: 1.6, color: '#9B9B9B' }}>
-            <strong style={{ color: '#6B6B6B' }}>Condition :</strong> Votre filleul doit d\u00e9penser au moins 9 EUR
-            de tokens pendant 2 mois cons\u00e9cutifs pour que la r\u00e9compense soit valid\u00e9e.
+            <strong style={{ color: '#6B6B6B' }}>Condition :</strong> Votre filleul doit dépenser au moins 9 EUR
+            de tokens pendant 2 mois consécutifs pour que la récompense soit validée.
           </div>
         </div>
       </div>
@@ -317,12 +317,12 @@ export default function ReferralsPage() {
           <div className="card"><div className="animate-pulse" style={{ color: '#9B9B9B' }}>Chargement...</div></div>
         ) : referrals.length === 0 ? (
           <div className="card text-center" style={{ padding: '32px 20px' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>{'\uD83D\uDC65'}</div>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>{'👥'}</div>
             <div className="text-md" style={{ marginBottom: 16, color: '#6B6B6B' }}>
               Vous n&apos;avez pas encore de filleul.
             </div>
             <div className="text-sm" style={{ color: '#9B9B9B' }}>
-              Partagez votre lien pour commencer \u00e0 gagner des cr\u00e9dits !
+              Partagez votre lien pour commencer à gagner des crédits !
             </div>
           </div>
         ) : (
@@ -351,13 +351,13 @@ export default function ReferralsPage() {
                         </span>
                       </td>
                       <td className="text-center text-sm" style={{ color: '#6B6B6B' }}>
-                        {ref.month1Spend > 0 ? `${(ref.month1Spend / 1_000_000).toFixed(0)} cr` : '\u2014'}
+                        {ref.month1Spend > 0 ? `${(ref.month1Spend / 1_000_000).toFixed(0)} cr` : '—'}
                       </td>
                       <td className="text-center text-sm" style={{ color: '#6B6B6B' }}>
-                        {ref.month2Spend > 0 ? `${(ref.month2Spend / 1_000_000).toFixed(0)} cr` : '\u2014'}
+                        {ref.month2Spend > 0 ? `${(ref.month2Spend / 1_000_000).toFixed(0)} cr` : '—'}
                       </td>
                       <td className="text-center text-sm font-bold" style={{ color: ref.rewardCredited ? '#1A1A1A' : '#9B9B9B' }}>
-                        {ref.rewardCredited ? `${(ref.rewardAmount / 1_000_000).toFixed(0)} cr` : '\u2014'}
+                        {ref.rewardCredited ? `${(ref.rewardAmount / 1_000_000).toFixed(0)} cr` : '—'}
                       </td>
                       <td className="text-center text-xs" style={{ color: '#9B9B9B' }}>
                         {new Date(ref.createdAt).toLocaleDateString('fr-FR')}

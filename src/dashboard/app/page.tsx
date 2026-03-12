@@ -212,8 +212,8 @@ export default function LandingPage() {
                 fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap',
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1A1A1A', display: 'inline-block', flexShrink: 0 }} />
-                <span className="lp-green-badge-full">{heroBadge || 'Pro & Particuliers \u00b7 0% de commission \u00b7 Simplicit\u00e9 \u00b7 Personnalisation 100% \u00b7 Complet'}</span>
-                <span className="lp-green-badge-mobile">{heroBadge || 'Pros & Particuliers \u00b7 0% frais \u00b7 Personnalisable 100% \u00b7 Simple et complet'}</span>
+                <span className="lp-green-badge-full">{heroBadge || 'Pro & Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet'}</span>
+                <span className="lp-green-badge-mobile">{heroBadge || 'Pros & Particuliers · 0% frais · Personnalisable 100% · Simple et complet'}</span>
               </span>
             </div>
 
@@ -245,7 +245,7 @@ export default function LandingPage() {
               {heroSub ? (
                 <span style={{ color: '#1A1A1A' }}>{heroSub}</span>
               ) : (
-                <><span style={{ fontWeight: 700, color: '#1A1A1A' }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: '#1A1A1A' }}>t\u00e9l\u00e9phonie, r\u00e9veil, r\u00e9seaux sociaux, documents, r\u00e9flexions, WhatsApp, modules sur mesure\u2026</span></>
+                <><span style={{ fontWeight: 700, color: '#1A1A1A' }}>{totalAgents}+ agents</span> pour s&apos;occuper de vous : <span style={{ color: '#1A1A1A' }}>téléphonie, réveil, réseaux sociaux, documents, réflexions, WhatsApp, modules sur mesure…</span></>
               )}
             </p>
 
@@ -281,7 +281,7 @@ export default function LandingPage() {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 'clamp(8px, 1.5vw, 16px)' }}>
                 <div style={{ display: 'flex' }}>
-                  {['\ud83d\udc69\u200d\ud83d\udcbc', '\ud83d\udc68\u200d\ud83d\udd27', '\ud83d\udc69\u200d\ud83c\udf73'].map((e, i) => (
+                  {['��‍��', '��‍��', '��‍��'].map((e, i) => (
                     <span key={i} style={{ fontSize: 18, marginLeft: i > 0 ? -6 : 0, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>{e}</span>
                   ))}
                 </div>
@@ -303,7 +303,7 @@ export default function LandingPage() {
                   <span style={{ fontSize: 13 }}>{item.emoji}</span>
                   <span style={{ color: '#1A1A1A', fontWeight: 700, fontSize: 11 }}>{item.agent}</span>
                   <span style={{ color: '#6B6B6B', fontSize: 11 }}>{item.text}</span>
-                  <span style={{ color: '#9B9B9B', fontSize: 10 }}>\u00b7 {item.ago}</span>
+                  <span style={{ color: '#9B9B9B', fontSize: 10 }}>· {item.ago}</span>
                 </div>
               ))}
             </div>
@@ -333,9 +333,9 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Outils</p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, color: '#1A1A1A' }}>
-                Vos outils, pr\u00eats \u00e0 l&apos;emploi.
+                Vos outils, prêts à l&apos;emploi.
               </h2>
-              <p style={{ color: '#6B6B6B', fontSize: 14 }}>Tout ce dont vous avez besoin, activ\u00e9 en <strong style={{ color: '#1A1A1A' }}>un clic</strong>.</p>
+              <p style={{ color: '#6B6B6B', fontSize: 14 }}>Tout ce dont vous avez besoin, activé en <strong style={{ color: '#1A1A1A' }}>un clic</strong>.</p>
             </div>
 
             <div style={{ display: 'flex', gap: 6, marginBottom: 20, overflowX: 'auto', paddingBottom: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -405,10 +405,10 @@ export default function LandingPage() {
                   Vos agents sur <strong>WhatsApp</strong>.
                 </h2>
                 <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 20 }}>
-                  Recevez les r\u00e9sum\u00e9s, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents r\u00e9pondent en <strong style={{ color: '#1A1A1A' }}>temps r\u00e9el</strong>.
+                  Recevez les résumés, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents répondent en <strong style={{ color: '#1A1A1A' }}>temps réel</strong>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['R\u00e9sum\u00e9s automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
+                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#6B6B6B' }}>
                       <span style={{ fontSize: 16 }}>✅</span> {f}
                     </div>
@@ -488,7 +488,7 @@ export default function LandingPage() {
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#E5E5E5', display: 'inline-block' }} />
                 <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#E5E5E5', display: 'inline-block' }} />
                 <span style={{ fontSize: 11, color: '#9B9B9B', marginLeft: 6 }}>
-                  Flashboard \u00b7 Agent {demo.tab}
+                  Flashboard · Agent {demo.tab}
                 </span>
               </div>
               <div style={{ padding: '20px' }}>
@@ -515,7 +515,7 @@ export default function LandingPage() {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                       <span style={{ fontSize: 11, color: '#1A1A1A', fontWeight: 700, letterSpacing: 0.5 }}>
-                        {demo.tab.toUpperCase()} \u00b7 TERMIN\u00c9
+                        {demo.tab.toUpperCase()} · TERMINÉ
                       </span>
                       <span style={{
                         display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
@@ -547,15 +547,15 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ 7. COMMENT \u00c7A MARCHE \u2014 scenarios + technologies ═════════ */}
+        {/* ══ 7. COMMENT ÇA MARCHE — scenarios + technologies ═════════ */}
         <section style={{ background: '#FFFFFF', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 28 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment \u00e7a marche</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>Comment ça marche</p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 6, color: '#1A1A1A' }}>
-                Concret. Automatis\u00e9. Instantan\u00e9.
+                Concret. Automatisé. Instantané.
               </h2>
-              <p style={{ color: '#6B6B6B', fontSize: 14 }}>Vos agents traitent tout, <strong style={{ color: '#1A1A1A' }}>24h/24</strong>. Voici ce que \u00e7a donne.</p>
+              <p style={{ color: '#6B6B6B', fontSize: 14 }}>Vos agents traitent tout, <strong style={{ color: '#1A1A1A' }}>24h/24</strong>. Voici ce que ça donne.</p>
             </div>
 
             {/* Scenarios concrets */}
@@ -587,9 +587,9 @@ export default function LandingPage() {
               ))}
             </div>
 
-            {/* Technologies int\u00e9gr\u00e9es \u2014 carousel */}
+            {/* Technologies intégrées — carousel */}
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 3, textTransform: 'uppercase' }}>Propuls\u00e9 par</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 3, textTransform: 'uppercase' }}>Propulsé par</p>
             </div>
             <TechCarousel items={TECH_FEATURES} />
           </div>
@@ -606,7 +606,7 @@ export default function LandingPage() {
                 Des agents IA pour <strong>VOUS</strong>, pas juste votre entreprise.
               </h2>
               <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
-                Budget, imp\u00f4ts, immobilier, coaching, \u00e9criture... <span style={{ color: '#1A1A1A', fontWeight: 600 }}>12 agents personnels</span>, inclus gratuitement dans chaque compte.
+                Budget, impôts, immobilier, coaching, écriture... <span style={{ color: '#1A1A1A', fontWeight: 600 }}>12 agents personnels</span>, inclus gratuitement dans chaque compte.
               </p>
             </div>
             <div className="lp-personal-grid">
@@ -628,27 +628,27 @@ export default function LandingPage() {
               ))}
             </div>
             <div style={{ textAlign: 'center', marginTop: 28 }}>
-              <span style={{ fontSize: 12, color: '#9B9B9B' }}>+ Coach, Contradicteur, Cin\u00e9aste, D\u00e9connexion et bien d&apos;autres...</span>
+              <span style={{ fontSize: 12, color: '#9B9B9B' }}>+ Coach, Contradicteur, Cinéaste, Déconnexion et bien d&apos;autres...</span>
             </div>
           </div>
         </section>
 
-        {/* ══ 9. STUDIO CR\u00c9ATIF ══════════════════════════════════════ */}
+        {/* ══ 9. STUDIO CRÉATIF ══════════════════════════════════════ */}
         <section style={{ background: '#FFFFFF', padding: 'clamp(40px, 5vw, 64px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                Studio cr\u00e9atif
+                Studio créatif
               </p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1.5, marginBottom: 12 }}>
-                Photos, vid\u00e9os, avatars \u2014 <strong>g\u00e9n\u00e9r\u00e9s par l&apos;IA</strong>.
+                Photos, vidéos, avatars — <strong>générés par l&apos;IA</strong>.
               </h2>
               <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.6, maxWidth: 560, margin: '0 auto' }}>
-                Cr\u00e9ez du contenu visuel professionnel en quelques secondes. Int\u00e9gr\u00e9 directement dans votre dashboard.
+                Créez du contenu visuel professionnel en quelques secondes. Intégré directement dans votre dashboard.
               </p>
             </div>
             <div className="lp-studio-bento">
-              {/* Main card \u2014 Photo */}
+              {/* Main card — Photo */}
               <div style={{
                 background: '#F7F7F7',
                 borderRadius: 18, padding: 'clamp(20px, 3vw, 32px)', position: 'relative', overflow: 'hidden',
@@ -668,7 +668,7 @@ export default function LandingPage() {
                   background: '#fff', border: '1px solid #E5E5E5',
                   fontSize: 11, color: '#9B9B9B', fontStyle: 'italic', position: 'relative',
                 }}>
-                  &quot;Photo produit minimaliste pour e-commerce, fond blanc, \u00e9clairage studio&quot;
+                  &quot;Photo produit minimaliste pour e-commerce, fond blanc, éclairage studio&quot;
                 </div>
               </div>
               {/* Right stacked cards */}
@@ -702,7 +702,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══ 10. CR\u00c9ATION SUR MESURE ═════════════════════════════════ */}
+        {/* ══ 10. CRÉATION SUR MESURE ═════════════════════════════════ */}
         <section style={{ background: '#F7F7F7', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -710,10 +710,10 @@ export default function LandingPage() {
                 Sur mesure
               </p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, marginBottom: 12, color: '#1A1A1A' }}>
-                Cr\u00e9ez vos propres modules.
+                Créez vos propres modules.
               </h2>
               <p style={{ fontSize: 15, color: '#6B6B6B', lineHeight: 1.65, maxWidth: 580, margin: '0 auto' }}>
-                Chaque entreprise est <strong style={{ color: '#1A1A1A' }}>unique</strong>. Cr\u00e9ez des modules IA adapt\u00e9s \u00e0 votre m\u00e9tier, ou confiez-nous leur conception.
+                Chaque entreprise est <strong style={{ color: '#1A1A1A' }}>unique</strong>. Créez des modules IA adaptés à votre métier, ou confiez-nous leur conception.
               </p>
             </div>
 
@@ -725,17 +725,17 @@ export default function LandingPage() {
               <div style={{ background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12, padding: '32px 28px' }}>
                 <span style={{ fontSize: 28, marginBottom: 16, display: 'block' }}>🛠️</span>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1A1A1A', marginBottom: 8 }}>
-                  Vous cr\u00e9ez
+                  Vous créez
                 </h3>
                 <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 18 }}>
-                  Depuis votre tableau de bord, d\u00e9finissez un agent personnalis\u00e9 en quelques minutes : nom, r\u00f4le, instructions, ton, et outils connect\u00e9s.
+                  Depuis votre tableau de bord, définissez un agent personnalisé en quelques minutes : nom, rôle, instructions, ton, et outils connectés.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
-                    'D\u00e9finissez le r\u00f4le et les objectifs',
-                    'Choisissez le mod\u00e8le IA (Claude, GPT, Gemini\u2026)',
-                    'Connectez vos outils (email, CRM, WhatsApp\u2026)',
-                    'Testez et d\u00e9ployez instantan\u00e9ment',
+                    'Définissez le rôle et les objectifs',
+                    'Choisissez le modèle IA (Claude, GPT, Gemini…)',
+                    'Connectez vos outils (email, CRM, WhatsApp…)',
+                    'Testez et déployez instantanément',
                   ].map((p, i) => (
                     <div key={i} style={{ fontSize: 12, color: '#6B6B6B', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <span style={{ fontSize: 14 }}>✅</span> {p}
@@ -748,16 +748,16 @@ export default function LandingPage() {
               <div style={{ background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12, padding: '32px 28px' }}>
                 <span style={{ fontSize: 28, marginBottom: 16, display: 'block' }}>🎯</span>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 700, color: '#1A1A1A', marginBottom: 8 }}>
-                  On cr\u00e9e pour vous
+                  On crée pour vous
                 </h3>
                 <p style={{ fontSize: 13, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 18 }}>
-                  Besoin d&apos;un module complexe ou sp\u00e9cifique \u00e0 votre secteur ? Notre \u00e9quipe le con\u00e7oit, le configure et le d\u00e9ploie dans votre espace.
+                  Besoin d&apos;un module complexe ou spécifique à votre secteur ? Notre équipe le conçoit, le configure et le déploie dans votre espace.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
-                    'Agents m\u00e9tier sur mesure (immobilier, sant\u00e9, juridique\u2026)',
-                    'Workflows automatis\u00e9s multi-agents',
-                    'Int\u00e9grations personnalis\u00e9es (API, bases de donn\u00e9es)',
+                    'Agents métier sur mesure (immobilier, santé, juridique…)',
+                    'Workflows automatisés multi-agents',
+                    'Intégrations personnalisées (API, bases de données)',
                     'Formation et accompagnement inclus',
                   ].map((p, i) => (
                     <div key={i} style={{ fontSize: 12, color: '#6B6B6B', display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -768,10 +768,10 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Examples \u2014 CAROUSEL */}
+            {/* Examples — CAROUSEL */}
             <div style={{ background: '#fff', border: '1px solid #E5E5E5', borderRadius: 12, padding: '24px 28px' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: '#9B9B9B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
-                Exemples de modules cr\u00e9\u00e9s par nos utilisateurs
+                Exemples de modules créés par nos utilisateurs
               </p>
               <Carousel
                 items={CUSTOM_EXAMPLES}
@@ -798,13 +798,13 @@ export default function LandingPage() {
             <div className="lp-discussions-grid">
               <div>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>
-                  R\u00e9flexion profonde
+                  Réflexion profonde
                 </p>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1.5, marginBottom: 12 }}>
                   Explorez les <strong>grandes questions</strong> avec l&apos;IA.
                 </h2>
                 <p style={{ fontSize: 14, color: '#6B6B6B', lineHeight: 1.65, marginBottom: 24 }}>
-                  85+ templates de discussion guid\u00e9e, 16 cat\u00e9gories, pens\u00e9e \u00e9tendue avec Claude Opus. L&apos;IA ne se contente pas de r\u00e9pondre \u2014 elle <strong style={{ color: '#1A1A1A' }}>r\u00e9fl\u00e9chit profond\u00e9ment</strong> avec vous.
+                  85+ templates de discussion guidée, 16 catégories, pensée étendue avec Claude Opus. L&apos;IA ne se contente pas de répondre — elle <strong style={{ color: '#1A1A1A' }}>réfléchit profondément</strong> avec vous.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
                   {DISCUSSION_HIGHLIGHTS.map((h, i) => (
@@ -854,7 +854,7 @@ export default function LandingPage() {
                     padding: '10px 14px', marginBottom: 10, maxWidth: '85%', marginLeft: 'auto',
                   }}>
                     <p style={{ fontSize: 12, color: '#1A1A1A', lineHeight: 1.5, margin: 0 }}>
-                      Est-ce que le bonheur d\u00e9pend de nos circonstances ou de notre attitude int\u00e9rieure ?
+                      Est-ce que le bonheur dépend de nos circonstances ou de notre attitude intérieure ?
                     </p>
                   </div>
                   {/* AI bubble */}
@@ -863,7 +863,7 @@ export default function LandingPage() {
                     padding: '10px 14px', maxWidth: '90%',
                   }}>
                     <p style={{ fontSize: 12, color: '#6B6B6B', lineHeight: 1.5, margin: 0 }}>
-                      Cette question touche au c\u0153ur de la philosophie sto\u00efcienne. \u00c9pict\u00e8te distinguait les choses qui d\u00e9pendent de nous de celles qui n&apos;en d\u00e9pendent pas...
+                      Cette question touche au cœur de la philosophie stoïcienne. Épictète distinguait les choses qui dépendent de nous de celles qui n&apos;en dépendent pas...
                     </p>
                   </div>
                   {/* Depth bar */}
@@ -890,10 +890,10 @@ export default function LandingPage() {
                 Free &amp; Easy
               </p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: -1.5, color: '#1A1A1A' }}>
-                L&apos;IA accessible \u00e0 tous.
+                L&apos;IA accessible à tous.
               </h2>
               <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8, lineHeight: 1.6, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
-                Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <strong style={{ color: '#1A1A1A' }}>compl\u00e8te</strong>, <strong style={{ color: '#1A1A1A' }}>gratuite</strong>, sans abonnement, sans commission, sans complexit\u00e9. L&apos;intelligence artificielle pour tous.
+                Free &amp; Easy, c&apos;est notre philosophie : une plateforme IA <strong style={{ color: '#1A1A1A' }}>complète</strong>, <strong style={{ color: '#1A1A1A' }}>gratuite</strong>, sans abonnement, sans commission, sans complexité. L&apos;intelligence artificielle pour tous.
               </p>
             </div>
             <div className="lp-scenario-steps" style={{ gap: 16 }}>
@@ -935,16 +935,16 @@ export default function LandingPage() {
           </section>
         )}
 
-        {/* ══ 14. FAQ \u2014 100+ QUESTIONS PAR TH\u00c8ME ════════════════════ */}
+        {/* ══ 14. FAQ — 100+ QUESTIONS PAR THÈME ════════════════════ */}
         <section ref={faqRef} id="faq" style={{ background: '#FFFFFF', padding: 'clamp(32px, 4vw, 56px) 24px' }}>
           <div style={{ maxWidth: 820, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <p style={{ fontFamily: 'var(--font-display)', fontSize: 11, fontWeight: 600, color: '#9B9B9B', letterSpacing: 4, textTransform: 'uppercase', marginBottom: 10 }}>FAQ</p>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 700, color: '#1A1A1A', letterSpacing: -1 }}>
-                <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{TOTAL_FAQ_COUNT}</span> r\u00e9ponses \u00e0 vos questions.
+                <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{TOTAL_FAQ_COUNT}</span> réponses à vos questions.
               </h2>
               <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>
-                Tout ce que vous devez savoir sur Freenzy.io, class\u00e9 par th\u00e8me.
+                Tout ce que vous devez savoir sur Freenzy.io, classé par thème.
               </p>
             </div>
 
@@ -1035,7 +1035,7 @@ export default function LandingPage() {
                         fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9B9B9B',
                         transition: 'all 0.2s',
                       }}>
-                        {isOpen ? '\u2212' : '+'}
+                        {isOpen ? '−' : '+'}
                       </div>
                     </div>
                     {isOpen && (
@@ -1068,11 +1068,11 @@ export default function LandingPage() {
               letterSpacing: -2.5, lineHeight: 1.05, marginBottom: 14,
               color: '#1A1A1A',
             }}>
-              Votre \u00e9quipe IA<br />
+              Votre équipe IA<br />
               vous attend.
             </h2>
             <p style={{ fontSize: 15, color: '#6B6B6B', marginBottom: 24 }}>
-              <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{totalAgents}+ agents IA</span>. Toutes les IA du march\u00e9. <span style={{ fontWeight: 700, color: '#1A1A1A' }}>0% de commission</span>. Sans carte bancaire.
+              <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{totalAgents}+ agents IA</span>. Toutes les IA du marché. <span style={{ fontWeight: 700, color: '#1A1A1A' }}>0% de commission</span>. Sans carte bancaire.
             </p>
             {/* Rewards chips */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 28 }}>
@@ -1096,7 +1096,7 @@ export default function LandingPage() {
               {heroCta?.label || 'Commencer gratuitement'}
             </Link>
             <div style={{ marginTop: 16, fontSize: 12 }}>
-              <Link href="/plans" style={{ color: '#9B9B9B', textDecoration: 'none' }}>Tarifs d\u00e9taill\u00e9s \u2192</Link>
+              <Link href="/plans" style={{ color: '#9B9B9B', textDecoration: 'none' }}>Tarifs détaillés →</Link>
             </div>
           </div>
         </section>

@@ -38,7 +38,7 @@ export interface AudienceTarifsExample {
 export interface AudienceConfig {
   id: AudienceType;
   label: string;
-  materialIcon: string;
+  emoji: string;
   hero: AudienceHero;
   agents: AudienceAgent[];
   useCases: AudienceUseCase[];
@@ -63,7 +63,7 @@ export const AUDIENCE_CONFIGS: Record<AudienceType, AudienceConfig> = {
   particulier: {
     id: 'particulier',
     label: 'Particulier',
-    materialIcon: 'person',
+    emoji: '👤',
     hero: {
       headline: 'Simplifiez votre vie.',
       subheadline: 'Vos agents personnels s\'occupent de tout : budget, impots, immobilier, CV, coaching, ecriture...',
@@ -108,7 +108,7 @@ export const AUDIENCE_CONFIGS: Record<AudienceType, AudienceConfig> = {
   freelance: {
     id: 'freelance',
     label: 'Freelance',
-    materialIcon: 'work',
+    emoji: '💼',
     hero: {
       headline: 'Gagnez du temps, gagnez plus.',
       subheadline: 'Votre equipe IA gere clients, devis, marketing, juridique pendant que vous creez.',
@@ -153,7 +153,7 @@ export const AUDIENCE_CONFIGS: Record<AudienceType, AudienceConfig> = {
   entreprise: {
     id: 'entreprise',
     label: 'Entreprise',
-    materialIcon: 'business',
+    emoji: '🏢',
     hero: {
       headline: 'Transformez votre organisation.',
       subheadline: '34 agents specialises pour chaque departement. Direction, RH, operations, data, innovation...',

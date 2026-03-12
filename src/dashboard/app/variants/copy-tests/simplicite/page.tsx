@@ -20,11 +20,11 @@ const totalAgents = TOTAL_AGENTS_DISPLAY;
 // ─── Extended WhatsApp messages for simplicite variant
 const WA_MESSAGES_EXTENDED = [
   { from: 'user' as const, text: 'Fais mes impots', time: '09:12' },
-  { from: 'agent' as const, text: 'Analyse en cours... Votre declaration est prete.\n\u00b7 Revenus: 42 300\u20ac\n\u00b7 Deductions: 3 800\u20ac\n\u00b7 Impot estime: 4 120\u20ac', time: '09:13' },
+  { from: 'agent' as const, text: 'Analyse en cours... Votre declaration est prete.\n· Revenus: 42 300€\n· Deductions: 3 800€\n· Impot estime: 4 120€', time: '09:13' },
   { from: 'user' as const, text: 'Envoie le devis a contact@acme.fr', time: '14:30' },
-  { from: 'agent' as const, text: 'Devis envoye a contact@acme.fr \u00b7 suivi planifie J+3', time: '14:30' },
+  { from: 'agent' as const, text: 'Devis envoye a contact@acme.fr · suivi planifie J+3', time: '14:30' },
   { from: 'user' as const, text: 'Publie 3 posts LinkedIn cette semaine', time: '16:45' },
-  { from: 'agent' as const, text: '3 posts programmes :\n\u00b7 Lundi 9h \u00b7 Storytelling\n\u00b7 Mercredi 9h \u00b7 Data\n\u00b7 Vendredi 9h \u00b7 CTA', time: '16:46' },
+  { from: 'agent' as const, text: '3 posts programmes :\n· Lundi 9h · Storytelling\n· Mercredi 9h · Data\n· Vendredi 9h · CTA', time: '16:46' },
 ];
 
 // ─── Hero copy per audience
@@ -214,7 +214,7 @@ export default function LandingPageSimplicite() {
                   Recevez les r&eacute;sum&eacute;s, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents r&eacute;pondent en <span className="fz-accent-word" style={{ color: '#22c55e' }}>temps r&eacute;el</span>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['R\u00e9sum\u00e9s automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
+                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#4b5563' }}>
                       <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 16 }}>check_circle</span> {f}
                     </div>
@@ -522,9 +522,9 @@ export default function LandingPageSimplicite() {
             }}>
               {[
                 { icon: 'lock', text: 'Chiffrement AES-256' },
-                { icon: 'verified_user', text: 'Serveurs EU \u00b7 RGPD' },
+                { icon: 'verified_user', text: 'Serveurs EU · RGPD' },
                 { icon: 'credit_card', text: 'Paiement Stripe PCI' },
-                { icon: 'shield', text: '2FA \u00b7 TOTP' },
+                { icon: 'shield', text: '2FA · TOTP' },
                 { icon: 'bar_chart', text: 'Audit logs complets' },
               ].map((badge, i) => (
                 <div key={i} style={{
@@ -633,7 +633,7 @@ export default function LandingPageSimplicite() {
                         fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
                         transition: 'all 0.2s',
                       }}>
-                        {isOpen ? '\u2212' : '+'}
+                        {isOpen ? '−' : '+'}
                       </div>
                     </div>
                     {isOpen && (

@@ -53,7 +53,7 @@ interface PipelineHealth {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_LABELS: Record<CallStatus, string> = {
-  completed: 'Termin\u00e9', failed: '\u00c9chec', busy: 'Occup\u00e9', 'no-answer': 'Sans r\u00e9ponse',
+  completed: 'Terminé', failed: 'Échec', busy: 'Occupé', 'no-answer': 'Sans réponse',
 };
 const STATUS_COLORS: Record<CallStatus, string> = {
   completed: '#1A1A1A', failed: '#1A1A1A', busy: '#6B6B6B', 'no-answer': '#9B9B9B',
@@ -137,7 +137,7 @@ export default function TelephonyPage() {
       if (metricsRes) setMetrics(metricsRes);
       if (healthRes) setHealth(healthRes);
     } catch (e) {
-      showError(e instanceof Error ? e.message : 'Erreur de chargement des m\u00e9triques');
+      showError(e instanceof Error ? e.message : 'Erreur de chargement des métriques');
     } finally {
       setMetricsLoading(false);
     }
@@ -155,7 +155,7 @@ export default function TelephonyPage() {
     try {
       await portalCall('/avatar/personas/switch', 'POST', { personaId });
       setPersonas(prev => prev.map(p => ({ ...p, active: p.id === personaId })));
-      showSuccess('Persona activ\u00e9e');
+      showSuccess('Persona activée');
     } catch (e) {
       showError(e instanceof Error ? e.message : 'Erreur lors du changement de persona');
     } finally {
@@ -164,7 +164,7 @@ export default function TelephonyPage() {
   }
 
   function exportCSV() {
-    const rows = [['Date', 'De', 'Vers', 'Dur\u00e9e', 'Statut', 'Agent', 'Co\u00fbt']];
+    const rows = [['Date', 'De', 'Vers', 'Durée', 'Statut', 'Agent', 'Coût']];
     for (const c of displayedCalls) {
       rows.push([
         new Date(c.createdAt).toLocaleString('fr-FR'),
@@ -201,7 +201,7 @@ export default function TelephonyPage() {
   })) ?? [];
 
   const healthColor = health?.status === 'ok' ? '#1A1A1A' : health?.status === 'degraded' ? '#6B6B6B' : '#9B9B9B';
-  const healthLabel = health?.status === 'ok' ? 'Op\u00e9rationnel' : health?.status === 'degraded' ? 'D\u00e9grad\u00e9' : 'En panne';
+  const healthLabel = health?.status === 'ok' ? 'Opérationnel' : health?.status === 'degraded' ? 'Dégradé' : 'En panne';
 
   return (
     <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
@@ -222,10 +222,10 @@ export default function TelephonyPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Total appels', value: String(totalCalls), icon: '\u260e\ufe0f', color: '#1A1A1A' },
-          { label: 'Taux de succ\u00e8s', value: `${successRate}%`, icon: '\u2705', color: '#1A1A1A' },
-          { label: 'Dur\u00e9e moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '\u2014', icon: '\u23f1\ufe0f', color: '#1A1A1A' },
-          { label: 'Co\u00fbt total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '\u2014', icon: '\ud83d\udcb0', color: '#1A1A1A' },
+          { label: 'Total appels', value: String(totalCalls), icon: '☎️', color: '#1A1A1A' },
+          { label: 'Taux de succès', value: `${successRate}%`, icon: '✅', color: '#1A1A1A' },
+          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: '⏱️', color: '#1A1A1A' },
+          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: '💰', color: '#1A1A1A' },
         ].map(s => (
           <div key={s.label} style={{ padding: '14px 18px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
             <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
@@ -265,7 +265,7 @@ export default function TelephonyPage() {
             </div>
             {displayedCalls.length > 0 && (
               <button onClick={exportCSV} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
-                \u2b07\ufe0f Export CSV
+                ⬇️ Export CSV
               </button>
             )}
           </div>
@@ -276,7 +276,7 @@ export default function TelephonyPage() {
             <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
               <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel{filterStatus !== 'all' ? ' ' + STATUS_LABELS[filterStatus as CallStatus].toLowerCase() : ''}</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les appels <span className="fz-logo-word">Twilio</span> appara\u00eetront ici.</div>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les appels <span className="fz-logo-word">Twilio</span> apparaîtront ici.</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -285,13 +285,13 @@ export default function TelephonyPage() {
                   <div style={{ flexShrink: 0, fontSize: 24 }}>📞</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
-                      {call.from && call.to ? `${call.from} \u2192 ${call.to}` : call.from ?? call.to ?? 'Appel entrant'}
-                      {call.agent && <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginLeft: 6 }}>\u00b7 {call.agent}</span>}
+                      {call.from && call.to ? `${call.from} → ${call.to}` : call.from ?? call.to ?? 'Appel entrant'}
+                      {call.agent && <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginLeft: 6 }}>· {call.agent}</span>}
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
                       {new Date(call.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                      {call.duration > 0 && ` \u00b7 ${formatDuration(call.duration)}`}
-                      {call.cost && call.cost > 0 && ` \u00b7 ${(call.cost / 1_000_000).toFixed(4)} cr`}
+                      {call.duration > 0 && ` · ${formatDuration(call.duration)}`}
+                      {call.cost && call.cost > 0 && ` · ${(call.cost / 1_000_000).toFixed(4)} cr`}
                     </div>
                   </div>
                   <span style={{
@@ -314,9 +314,9 @@ export default function TelephonyPage() {
             <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des personas...</div>
           ) : personas.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
-              <div style={{ marginBottom: 16, fontSize: 48 }}>\ud83c\udfad</div>
+              <div style={{ marginBottom: 16, fontSize: 48 }}>🎭</div>
               <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune persona disponible</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les personas vocales appara\u00eetront ici.</div>
+              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les personas vocales apparaîtront ici.</div>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
@@ -328,7 +328,7 @@ export default function TelephonyPage() {
                     </span>
                   )}
                   <div style={{ textAlign: 'center', marginBottom: 14 }}>
-                    <div style={{ marginBottom: 8, fontSize: 40 }}>\ud83d\udc64</div>
+                    <div style={{ marginBottom: 8, fontSize: 40 }}>👤</div>
                     <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{p.name}</div>
                     <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{p.language}</div>
                   </div>
@@ -337,7 +337,7 @@ export default function TelephonyPage() {
                   )}
                   {p.voice && (
                     <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', marginBottom: 14 }}>
-                      \ud83c\udfa4 {p.voice}
+                      🎤 {p.voice}
                     </div>
                   )}
                   {!p.active && (
@@ -361,27 +361,27 @@ export default function TelephonyPage() {
       {tab === 'Pipeline' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {metricsLoading ? (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des m\u00e9triques...</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des métriques...</div>
           ) : (
             <>
               {/* Health status */}
               <div style={{ padding: 20, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>\u00c9tat du pipeline</h3>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>État du pipeline</h3>
                   <span style={{ fontSize: 13, fontWeight: 700, padding: '4px 12px', borderRadius: 8, background: healthColor + '20', color: healthColor }}>
                     {healthLabel}
                   </span>
                 </div>
                 <div className="fz-grid-3" style={{ display: 'grid', gap: 10 }}>
                   {[
-                    { label: 'STT (Transcription)', value: health?.stt ?? 'N/A', icon: '\ud83c\udfa4' },
-                    { label: 'LLM (R\u00e9ponse)', value: health?.llm ?? 'N/A', icon: '\ud83e\udd16' },
-                    { label: 'TTS (Synth\u00e8se)', value: health?.tts ?? 'N/A', icon: '\ud83d\udd0a' },
+                    { label: 'STT (Transcription)', value: health?.stt ?? 'N/A', icon: '🎤' },
+                    { label: 'LLM (Réponse)', value: health?.llm ?? 'N/A', icon: '🤖' },
+                    { label: 'TTS (Synthèse)', value: health?.tts ?? 'N/A', icon: '🔊' },
                   ].map(item => (
                     <div key={item.label} style={{ textAlign: 'center', padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10 }}>
                       <div style={{ marginBottom: 4, fontSize: 22 }}>{item.icon}</div>
                       <div style={{ fontSize: 12, fontWeight: 600, color: item.value === 'ok' ? '#1A1A1A' : item.value === 'degraded' ? '#6B6B6B' : '#9B9B9B' }}>
-                        {item.value === 'ok' ? 'OK' : item.value === 'degraded' ? 'D\u00e9grad\u00e9' : item.value}
+                        {item.value === 'ok' ? 'OK' : item.value === 'degraded' ? 'Dégradé' : item.value}
                       </div>
                       <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{item.label}</div>
                     </div>
@@ -395,15 +395,15 @@ export default function TelephonyPage() {
                   <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Latences moyennes</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 20 }}>
                     {[
-                      { label: 'STT', value: metrics.sttLatency, icon: '\ud83c\udfa4' },
-                      { label: 'LLM', value: metrics.llmLatency, icon: '\ud83e\udd16' },
-                      { label: 'TTS', value: metrics.ttsLatency, icon: '\ud83d\udd0a' },
-                      { label: 'Total', value: metrics.totalLatency, icon: '\u26a1', highlight: true },
+                      { label: 'STT', value: metrics.sttLatency, icon: '🎤' },
+                      { label: 'LLM', value: metrics.llmLatency, icon: '🤖' },
+                      { label: 'TTS', value: metrics.ttsLatency, icon: '🔊' },
+                      { label: 'Total', value: metrics.totalLatency, icon: '⚡', highlight: true },
                     ].map(m => (
                       <div key={m.label} style={{ padding: '12px', textAlign: 'center', borderRadius: 8, border: '1px solid #E5E5E5', background: m.highlight ? '#F7F7F7' : '#fff' }}>
                         <div style={{ marginBottom: 4, fontSize: 18 }}>{m.icon}</div>
                         <div style={{ fontSize: 18, fontWeight: 700, color: '#1A1A1A' }}>
-                          {m.value != null ? `${m.value}ms` : '\u2014'}
+                          {m.value != null ? `${m.value}ms` : '—'}
                         </div>
                         <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>{m.label}</div>
                       </div>
@@ -412,7 +412,7 @@ export default function TelephonyPage() {
 
                   {latencyChart.length > 0 && (
                     <>
-                      <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 12, color: 'var(--fz-text-secondary, #64748B)' }}>\u00c9volution de la latence</h4>
+                      <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 12, color: 'var(--fz-text-secondary, #64748B)' }}>Évolution de la latence</h4>
                       <ResponsiveContainer width="100%" height={180}>
                         <LineChart data={latencyChart} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />

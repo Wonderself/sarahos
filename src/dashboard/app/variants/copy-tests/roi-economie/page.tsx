@@ -19,30 +19,30 @@ const totalAgents = TOTAL_AGENTS_DISPLAY;
 
 // ─── Hero copy per audience
 const DEFAULT_HERO = {
-  badge: '5 employes IA pour 5\u20AC/mois',
+  badge: '5 employes IA pour 5€/mois',
   headline: 'REMPLACEZ 5 EMPLOYES POUR LE PRIX D\'UN CAFE.',
   tagline: 'Les chiffres parlent.',
-  subheadline: '1 agent IA = 0.50 credit. 1 salarie = 3 500\u20AC/mois. 45 emails pour 5\u20AC. 14 contrats pour 5\u20AC. Faites le calcul.',
+  subheadline: '1 agent IA = 0.50 credit. 1 salarie = 3 500€/mois. 45 emails pour 5€. 14 contrats pour 5€. Faites le calcul.',
 };
 
 const AUDIENCE_HEROES: Record<AudienceType, typeof DEFAULT_HERO> = {
   particulier: {
     badge: 'Les chiffres parlent',
-    headline: 'ECONOMISEZ 847\u20AC PAR AN.',
+    headline: 'ECONOMISEZ 847€ PAR AN.',
     tagline: 'Les chiffres parlent.',
-    subheadline: 'Comptable: 0.50cr vs 150\u20AC. Coach: 0.50cr vs 80\u20AC/seance. Impots: gratuit vs 200\u20AC.',
+    subheadline: 'Comptable: 0.50cr vs 150€. Coach: 0.50cr vs 80€/seance. Impots: gratuit vs 200€.',
   },
   freelance: {
     badge: 'ROI immediat',
     headline: '12H PAR SEMAINE RECUPEREES.',
     tagline: 'Les chiffres parlent.',
-    subheadline: '45 emails pour 5\u20AC. 14 devis pour 5\u20AC. 62 posts pour 5\u20AC. Faites le calcul.',
+    subheadline: '45 emails pour 5€. 14 devis pour 5€. 62 posts pour 5€. Faites le calcul.',
   },
   entreprise: {
     badge: 'Performance mesuree',
     headline: 'ROI x47 EN 90 JOURS.',
     tagline: 'Les chiffres parlent.',
-    subheadline: '34 agents a 0.50cr/action vs 34 salaries a 3500\u20AC/mois. 0 conge, 0 turnover.',
+    subheadline: '34 agents a 0.50cr/action vs 34 salaries a 3500€/mois. 0 conge, 0 turnover.',
   },
 };
 
@@ -487,7 +487,7 @@ export default function LandingPageRoiEconomie() {
                   Recevez les r&eacute;sum&eacute;s, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents r&eacute;pondent en <span className="fz-accent-word" style={{ color: '#22c55e' }}>temps r&eacute;el</span>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['R\u00e9sum\u00e9s automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
+                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#4b5563' }}>
                       <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 16 }}>check_circle</span> {f}
                     </div>
@@ -536,12 +536,12 @@ export default function LandingPageRoiEconomie() {
             </div>
             <div className="lp-scenario-steps" style={{ gap: 16 }}>
               {[
-                { icon: 'diamond', title: '0% de commission', desc: 'Vous payez le prix officiel des fournisseurs IA. Pas de markup, pas de marge cach\u00e9e. Ce que \u00e7a co\u00fbte r\u00e9ellement, c\'est ce que vous payez.', color: '#22c55e' },
+                { icon: 'diamond', title: '0% de commission', desc: 'Vous payez le prix officiel des fournisseurs IA. Pas de markup, pas de marge cachée. Ce que ça coûte réellement, c\'est ce que vous payez.', color: '#22c55e' },
                 { icon: 'bolt', title: '0.50 cr/action', desc: 'Chaque action IA coute entre 0.04 et 3.5 credits. Un email pro = 1.1 credit. Un contrat = 3.5 credits. Un chat = 0.05 credit.', color: '#5b6cf7' },
-                { icon: 'savings', title: '847\u20AC/an d\'economies', desc: 'Comptable, coach, negociateur, chasseur immo : tous remplaces par l\'IA pour une fraction du cout. Calculez vos economies.', color: '#f59e0b' },
+                { icon: 'savings', title: '847€/an d\'economies', desc: 'Comptable, coach, negociateur, chasseur immo : tous remplaces par l\'IA pour une fraction du cout. Calculez vos economies.', color: '#f59e0b' },
                 { icon: 'speed', title: 'ROI en 48h', desc: 'Des votre premiere action, vous economisez. Le retour sur investissement est mesurable immediatement. Pas dans 6 mois.', color: '#3b82f6' },
                 { icon: 'lock_open', title: 'Credits sans expiration', desc: 'Vos credits n\'expirent jamais. Rechargez quand vous voulez, utilisez quand vous en avez besoin. Aucun abonnement.', color: '#f97316' },
-                { icon: 'smart_toy', title: '72+ agents specialises', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, creatif\u2026 Plus le marketplace avec 50 templates pr\u00eats \u00e0 l\'emploi.', color: '#9333ea' },
+                { icon: 'smart_toy', title: '72+ agents specialises', desc: 'Chaque domaine a son expert : commercial, marketing, RH, juridique, finance, creatif… Plus le marketplace avec 50 templates prêts à l\'emploi.', color: '#9333ea' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark">
                   <span className="material-symbols-rounded" style={{ fontSize: 28, marginBottom: 12, display: 'block' }}>{item.icon}</span>
@@ -559,9 +559,9 @@ export default function LandingPageRoiEconomie() {
             }}>
               {[
                 { icon: 'lock', text: 'Chiffrement AES-256' },
-                { icon: 'verified_user', text: 'Serveurs EU \u00b7 RGPD' },
+                { icon: 'verified_user', text: 'Serveurs EU · RGPD' },
                 { icon: 'credit_card', text: 'Paiement Stripe PCI' },
-                { icon: 'shield', text: '2FA \u00b7 TOTP' },
+                { icon: 'shield', text: '2FA · TOTP' },
                 { icon: 'bar_chart', text: 'Audit logs complets' },
               ].map((badge, i) => (
                 <div key={i} style={{
@@ -670,7 +670,7 @@ export default function LandingPageRoiEconomie() {
                         fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
                         transition: 'all 0.2s',
                       }}>
-                        {isOpen ? '\u2212' : '+'}
+                        {isOpen ? '−' : '+'}
                       </div>
                     </div>
                     {isOpen && (

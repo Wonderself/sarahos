@@ -124,11 +124,11 @@ export default function AgentCustomizePage() {
 
   const CAPABILITIES = [
     { icon: 'mic', title: 'Text-to-Speech', desc: '7 voix premium, 16 langues', available: true },
-    { icon: 'record_voice_over', title: 'Voice Cloning', desc: 'Clonez votre propre voix (bient\u00f4t)', available: false },
-    { icon: 'music_note', title: 'Sound Effects', desc: 'Effets sonores IA (bient\u00f4t)', available: false },
-    { icon: 'language', title: 'Dubbing', desc: 'Doublage vid\u00e9o multi-langue (bient\u00f4t)', available: false },
-    { icon: 'volume_off', title: 'Audio Isolation', desc: 'Extraction de voix (bient\u00f4t)', available: false },
-    { icon: 'menu_book', title: 'Projects', desc: 'Contenu long (podcasts, audiobooks) (bient\u00f4t)', available: false },
+    { icon: 'record_voice_over', title: 'Voice Cloning', desc: 'Clonez votre propre voix (bientôt)', available: false },
+    { icon: 'music_note', title: 'Sound Effects', desc: 'Effets sonores IA (bientôt)', available: false },
+    { icon: 'language', title: 'Dubbing', desc: 'Doublage vidéo multi-langue (bientôt)', available: false },
+    { icon: 'volume_off', title: 'Audio Isolation', desc: 'Extraction de voix (bientôt)', available: false },
+    { icon: 'menu_book', title: 'Projects', desc: 'Contenu long (podcasts, audiobooks) (bientôt)', available: false },
   ];
 
   function loadVoiceSettings() {
@@ -1031,7 +1031,7 @@ export default function AgentCustomizePage() {
                       fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                     }}
                   >
-                    {isLoading ? '\u23F3 Chargement...' : '\u25B6 \u00C9couter'}
+                    {isLoading ? '⏳ Chargement...' : '▶ Écouter'}
                   </button>
                 </div>
               );
@@ -1139,7 +1139,7 @@ export default function AgentCustomizePage() {
                     }} />
                   </div>
                   <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? '#1A1A1A' : 'var(--text-muted)' }}>
-                    {voiceSpeakerBoost ? 'Activ\u00e9' : 'D\u00e9sactiv\u00e9'}
+                    {voiceSpeakerBoost ? 'Activé' : 'Désactivé'}
                   </span>
                 </div>
                 <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 6 }}>
@@ -1154,8 +1154,8 @@ export default function AgentCustomizePage() {
                 </label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
-                    { id: 'eleven_multilingual_v2', label: 'Multilingual v2', desc: 'Haute qualit\u00e9, 29 langues' },
-                    { id: 'eleven_flash_v2_5', label: 'Flash v2.5', desc: 'Faible latence, temps r\u00e9el' },
+                    { id: 'eleven_multilingual_v2', label: 'Multilingual v2', desc: 'Haute qualité, 29 langues' },
+                    { id: 'eleven_flash_v2_5', label: 'Flash v2.5', desc: 'Faible latence, temps réel' },
                   ].map(m => (
                     <div
                       key={m.id}
@@ -1198,12 +1198,12 @@ export default function AgentCustomizePage() {
             }}
           >
             <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1A1A1A)' }}>
-              {'\uD83E\uDDEC'} Cloner ma voix
+              {'🧬'} Cloner ma voix
             </h3>
             <span style={{
               fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)', transition: 'transform 0.2s',
               transform: showVoiceClone ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}>{'\u25BC'}</span>
+            }}>{'▼'}</span>
           </div>
 
           {showVoiceClone && (

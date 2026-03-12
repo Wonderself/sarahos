@@ -156,7 +156,7 @@ interface MessageBubbleProps {
 
 function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: MessageBubbleProps) {
   const [showActions, setShowActions] = useState(false);
-  const QUICK_EMOJIS = ['\u{1F44D}', '\u2764\uFE0F', '\u{1F604}', '\u{1F389}', '\u{1F914}', '\u{1F44F}'];
+  const QUICK_EMOJIS = ['\u{1F44D}', '❤️', '\u{1F604}', '\u{1F389}', '\u{1F914}', '\u{1F44F}'];
 
   return (
     <div
@@ -176,7 +176,7 @@ function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: M
           <span className="cu-message-time">
             {new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
           </span>
-          {message.isEdited && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>(modifi\u00e9)</span>}
+          {message.isEdited && <span style={{ fontSize: 11, color: 'var(--fz-text-muted)' }}>(modifié)</span>}
           {message.isPinned && <span style={{ fontSize: 12 }}>{'\u{1F4CC}'}</span>}
         </div>
         <div className="cu-message-text">{message.content}</div>
@@ -202,7 +202,7 @@ function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: M
           padding: '2px 4px',
         }}>
           {onReply && (
-            <button onClick={onReply} title="R\u00e9pondre" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4AC}'}</button>
+            <button onClick={onReply} title="Répondre" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4AC}'}</button>
           )}
           {onReact && (
             <>
@@ -212,13 +212,13 @@ function MessageBubble({ message, onReply, onReact, onEdit, onDelete, onPin }: M
             </>
           )}
           {onPin && (
-            <button onClick={onPin} title="\u00c9pingler" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4CC}'}</button>
+            <button onClick={onPin} title="Épingler" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F4CC}'}</button>
           )}
           {onEdit && (
-            <button onClick={onEdit} title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u270F\uFE0F'}</button>
+            <button onClick={onEdit} title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'✏️'}</button>
           )}
           {onDelete && (
-            <button onClick={onDelete} title="Supprimer" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F5D1}\uFE0F'}</button>
+            <button onClick={onDelete} title="Supprimer" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4 }}>{'\u{1F5D1}️'}</button>
           )}
         </div>
       )}
@@ -397,7 +397,7 @@ function TeamChat() {
       </div>
       {pinnedChannels.length > 0 && (
         <>
-          <div className="cu-channel-section-title">{'\u{1F4CC}'} \u00c9pingl\u00e9s</div>
+          <div className="cu-channel-section-title">{'\u{1F4CC}'} Épinglés</div>
           {pinnedChannels.map(channel => (
             <div
               key={channel.id}
@@ -463,7 +463,7 @@ function TeamChat() {
             cursor: 'pointer', fontSize: 14,
           }}
         >
-          {'\u2630'}
+          {'☰'}
         </button>
       )}
 
@@ -474,7 +474,7 @@ function TeamChat() {
           <div className="cu-channel-sidebar" style={{ position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 50, width: 260 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
               <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1A1A1A)' }}>Channels</span>
-              <button onClick={() => setShowMobileSidebar(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'\u2715'}</button>
+              <button onClick={() => setShowMobileSidebar(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'✕'}</button>
             </div>
             {sidebarContent}
           </div>
@@ -504,7 +504,7 @@ function TeamChat() {
               title="Supprimer le channel"
               style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}
             >
-              {'\u{1F5D1}\uFE0F'}
+              {'\u{1F5D1}️'}
             </button>
           )}
         </div>
@@ -536,7 +536,7 @@ function TeamChat() {
                       autoFocus
                     />
                     <button onClick={handleSend} style={{ background: 'var(--accent, #1A1A1A)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 }}>OK</button>
-                    <button onClick={() => { setEditingMessageId(null); setNewMessage(''); }} style={{ background: 'none', border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'\u2715'}</button>
+                    <button onClick={() => { setEditingMessageId(null); setNewMessage(''); }} style={{ background: 'none', border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'✕'}</button>
                   </div>
                 ) : (
                   <MessageBubble
@@ -557,7 +557,7 @@ function TeamChat() {
                       onClick={() => setThreadMessageId(msg.id)}
                       style={{ marginLeft: 44, marginBottom: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--accent, #1A1A1A)', fontFamily: 'inherit' }}
                     >
-                      {'\u{1F4AC}'} {replyCount} r\u00e9ponse{replyCount !== 1 ? 's' : ''}
+                      {'\u{1F4AC}'} {replyCount} réponse{replyCount !== 1 ? 's' : ''}
                     </button>
                   );
                 })()}
@@ -573,11 +573,11 @@ function TeamChat() {
             className="cu-composer-input"
             value={newMessage}
             onChange={e => setNewMessage(e.target.value)}
-            placeholder={editingMessageId ? 'Modifier le message...' : '\u00c9crire un message...'}
+            placeholder={editingMessageId ? 'Modifier le message...' : 'Écrire un message...'}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
             rows={1}
           />
-          <button className="cu-composer-send" onClick={handleSend} disabled={!newMessage.trim()}>{'\u27A4'}</button>
+          <button className="cu-composer-send" onClick={handleSend} disabled={!newMessage.trim()}>{'➤'}</button>
         </div>
       </div>
 
@@ -586,7 +586,7 @@ function TeamChat() {
         <div className="cu-thread-panel" style={isMobile ? { position: 'fixed', inset: 0, zIndex: 50, width: '100%' } : undefined}>
           <div className="cu-thread-header">
             <span>Fil de discussion</span>
-            <button className="cu-thread-close" onClick={() => setThreadMessageId(null)}>{'\u2715'}</button>
+            <button className="cu-thread-close" onClick={() => setThreadMessageId(null)}>{'✕'}</button>
           </div>
           <div className="cu-thread-messages fz-scroll">
             {(() => {
@@ -595,7 +595,7 @@ function TeamChat() {
               return <MessageBubble message={parentMsg} onReact={(emoji) => handleReaction(parentMsg.id, emoji)} />;
             })()}
             <div style={{ borderTop: '1px solid var(--fz-border-light, var(--fz-border, #E5E5E5))', margin: '8px 0', padding: '4px 12px', fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>
-              {threadReplies.length} r\u00e9ponse{threadReplies.length !== 1 ? 's' : ''}
+              {threadReplies.length} réponse{threadReplies.length !== 1 ? 's' : ''}
             </div>
             {threadReplies.map(reply => (
               <MessageBubble key={reply.id} message={reply} onReact={(emoji) => handleReaction(reply.id, emoji)} />
@@ -606,11 +606,11 @@ function TeamChat() {
               className="cu-composer-input"
               value={threadReply}
               onChange={e => setThreadReply(e.target.value)}
-              placeholder="R\u00e9pondre..."
+              placeholder="Répondre..."
               onKeyDown={handleThreadKeyDown}
               rows={1}
             />
-            <button className="cu-composer-send" onClick={handleThreadSend} disabled={!threadReply.trim()}>{'\u27A4'}</button>
+            <button className="cu-composer-send" onClick={handleThreadSend} disabled={!threadReply.trim()}>{'➤'}</button>
           </div>
         </div>
       )}
@@ -621,8 +621,8 @@ function TeamChat() {
           <div className="cu-modal-overlay" onClick={() => setShowCreateChannel(false)} />
           <div className="cu-modal">
             <div className="cu-modal-header">
-              <span className="cu-modal-title">Cr\u00e9er un channel</span>
-              <button onClick={() => setShowCreateChannel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'\u2715'}</button>
+              <span className="cu-modal-title">Créer un channel</span>
+              <button onClick={() => setShowCreateChannel(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #9B9B9B)' }}>{'✕'}</button>
             </div>
             <div className="cu-modal-body">
               <div style={{ marginBottom: 12 }}>
@@ -656,7 +656,7 @@ function TeamChat() {
             </div>
             <div className="cu-modal-footer">
               <button onClick={() => setShowCreateChannel(false)} style={{ padding: '8px 16px', border: '1px solid var(--fz-border, #E5E5E5)', borderRadius: 6, background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)', fontFamily: 'inherit' }}>Annuler</button>
-              <button onClick={handleCreateChannel} disabled={!newChannelName.trim()} style={{ padding: '8px 16px', border: 'none', borderRadius: 6, background: 'var(--accent, #1A1A1A)', color: 'white', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', opacity: newChannelName.trim() ? 1 : 0.5 }}>Cr\u00e9er</button>
+              <button onClick={handleCreateChannel} disabled={!newChannelName.trim()} style={{ padding: '8px 16px', border: 'none', borderRadius: 6, background: 'var(--accent, #1A1A1A)', color: 'white', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', opacity: newChannelName.trim() ? 1 : 0.5 }}>Créer</button>
             </div>
           </div>
         </>
@@ -1242,7 +1242,7 @@ export default function ChatPage() {
           <span style={{ fontSize: 16 }}>{'\u{1F916}'}</span> Assistants IA
         </button>
         <button className={`cu-tab ${chatMode === 'team' ? 'cu-tab-active' : ''}`} onClick={() => setChatMode('team')}>
-          <span style={{ fontSize: 16 }}>{'\u{1F465}'}</span> \u00c9quipe
+          <span style={{ fontSize: 16 }}>{'\u{1F465}'}</span> Équipe
         </button>
       </div>
 

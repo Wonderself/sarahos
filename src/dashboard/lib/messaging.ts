@@ -398,7 +398,7 @@ export function seedDefaultChannels(): void {
       color: '#0EA5E9',
       members: [],
       createdAt: now,
-      description: "Discussions g\u00e9n\u00e9rales de l'\u00e9quipe",
+      description: "Discussions générales de l'équipe",
       isPinned: true,
       lastMessageAt: now,
     },
@@ -445,7 +445,7 @@ export function seedDefaultChannels(): void {
       authorName: systemAuthor.name,
       authorEmoji: systemAuthor.emoji,
       content:
-        "Bienvenue dans le chat d'\u00e9quipe ! \u{1F389} Utilisez les channels pour organiser vos conversations.",
+        "Bienvenue dans le chat d'équipe ! \u{1F389} Utilisez les channels pour organiser vos conversations.",
       timestamp: now,
       reactions: [],
       mentions: [],
@@ -459,7 +459,7 @@ export function seedDefaultChannels(): void {
       authorName: systemAuthor.name,
       authorEmoji: systemAuthor.emoji,
       content:
-        'Cr\u00e9ez de nouveaux channels avec le bouton + pour des discussions th\u00e9matiques.',
+        'Créez de nouveaux channels avec le bouton + pour des discussions thématiques.',
       timestamp: new Date(Date.now() + 1000).toISOString(),
       reactions: [],
       mentions: [],
@@ -473,7 +473,7 @@ export function seedDefaultChannels(): void {
       authorName: systemAuthor.name,
       authorEmoji: systemAuthor.emoji,
       content:
-        "Mentionnez @nom pour notifier un membre, et \u{1F4AC} pour r\u00e9pondre en fil de discussion.",
+        "Mentionnez @nom pour notifier un membre, et \u{1F4AC} pour répondre en fil de discussion.",
       timestamp: new Date(Date.now() + 2000).toISOString(),
       reactions: [],
       mentions: [],

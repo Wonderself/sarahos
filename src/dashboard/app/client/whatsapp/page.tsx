@@ -73,11 +73,11 @@ async function apiFetch(path: string, options: RequestInit = {}) {
 
 // WhatsApp commands guide
 const WA_COMMANDS = [
-  { cmd: '@ines', desc: 'Parler \u00e0 In\u00e8s (Assistante)' },
-  { cmd: '@sacha', desc: 'Parler \u00e0 Sacha (Commercial)' },
-  { cmd: '@jade', desc: 'Parler \u00e0 Jade (Marketing)' },
-  { cmd: 'd\u00e9taille', desc: 'Obtenir une r\u00e9ponse longue' },
-  { cmd: 'r\u00e9sume', desc: 'Revenir en mode court' },
+  { cmd: '@ines', desc: 'Parler à Inès (Assistante)' },
+  { cmd: '@sacha', desc: 'Parler à Sacha (Commercial)' },
+  { cmd: '@jade', desc: 'Parler à Jade (Marketing)' },
+  { cmd: 'détaille', desc: 'Obtenir une réponse longue' },
+  { cmd: 'résume', desc: 'Revenir en mode court' },
 ];
 
 export default function WhatsAppPage() {
@@ -104,7 +104,7 @@ export default function WhatsAppPage() {
         setConversations(convData.conversations || []);
       }
     } catch {
-      setError('Impossible de charger les donn\u00e9es. V\u00e9rifiez votre connexion.');
+      setError('Impossible de charger les données. Vérifiez votre connexion.');
     } finally {
       setLoading(false);
     }
@@ -200,18 +200,18 @@ export default function WhatsAppPage() {
       <div className="p-24 text-center">
         {loadingTimedOut ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>\ud83d\udd0c</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
             <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', marginBottom: 8 }}>
-              Impossible de charger les donn\u00e9es
+              Impossible de charger les données
             </div>
             <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 16 }}>
-              V\u00e9rifiez votre connexion ou r\u00e9essayez.
+              Vérifiez votre connexion ou réessayez.
             </div>
             <button
               onClick={() => { setLoadingTimedOut(false); setLoading(true); loadStatus(); }}
               className="btn btn-primary btn-sm"
             >
-              R\u00e9essayer
+              Réessayer
             </button>
           </>
         ) : (
@@ -225,7 +225,7 @@ export default function WhatsAppPage() {
     <div className="page-container max-w-lg client-page-scrollable">
       <div className="page-header">
         <div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>\ud83d\udcac WhatsApp</h1>
+          <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>💬 WhatsApp</h1>
           <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
             Conversez avec vos <span className="fz-logo-word">assistants IA</span> directement sur WhatsApp. Changez d&apos;assistant avec @nom.
           </p>
@@ -235,7 +235,7 @@ export default function WhatsAppPage() {
           className="btn btn-ghost btn-sm"
           style={{ fontSize: 13, gap: 6 }}
         >
-          {showGuide ? 'Fermer' : <>\ud83d\udcda Guide</>}
+          {showGuide ? 'Fermer' : <>📚 Guide</>}
         </button>
       </div>
 
@@ -255,7 +255,7 @@ export default function WhatsAppPage() {
             ))}
           </div>
           <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 12 }}>
-            Par d\u00e9faut, les r\u00e9ponses sont courtes (300 car.). Dites &quot;d\u00e9taille&quot; pour une r\u00e9ponse compl\u00e8te.
+            Par défaut, les réponses sont courtes (300 car.). Dites &quot;détaille&quot; pour une réponse complète.
           </p>
         </div>
       )}
@@ -282,7 +282,7 @@ export default function WhatsAppPage() {
               className="input flex-1 text-lg"
             />
             <button onClick={handleLinkPhone} className="btn wa-btn font-semibold">
-              \ud83d\udce4 Envoyer le code
+              📤 Envoyer le code
             </button>
           </div>
           <p style={{ color: 'var(--fz-text-muted, #9B9B9B)' }} className="text-md mt-8">
@@ -323,7 +323,7 @@ export default function WhatsAppPage() {
 
             <div className="grid-2 mb-16">
               <div>
-                <div style={{ color: 'var(--fz-text-muted, #9B9B9B)' }} className="text-md">\ud83d\udcde Numero</div>
+                <div style={{ color: 'var(--fz-text-muted, #9B9B9B)' }} className="text-md">📞 Numero</div>
                 <div className="font-semibold text-lg" style={{ color: 'var(--fz-text, #1A1A1A)' }}>{status.phoneNumber}</div>
               </div>
               <div>
@@ -336,7 +336,7 @@ export default function WhatsAppPage() {
             <div className="separator"></div>
             <div>
               <div className="flex-between items-center mb-12">
-                <h3 className="text-lg" style={{ color: 'var(--fz-text, #1A1A1A)' }}>\ud83e\udd16 Assistant principal</h3>
+                <h3 className="text-lg" style={{ color: 'var(--fz-text, #1A1A1A)' }}>🤖 Assistant principal</h3>
                 <button
                   onClick={() => setShowAgentPicker(!showAgentPicker)}
                   className="btn btn-ghost btn-sm"
@@ -356,7 +356,7 @@ export default function WhatsAppPage() {
                     padding: '10px 14px', borderRadius: 10,
                     background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
                   }}>
-                    <span style={{ fontSize: 24 }}>\ud83e\udd16</span>
+                    <span style={{ fontSize: 24 }}>🤖</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{current.name}</div>
                       <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{current.role}</div>
@@ -397,7 +397,7 @@ export default function WhatsAppPage() {
                           transition: 'all 0.15s',
                         }}
                       >
-                        <span style={{ fontSize: 22 }}>\ud83e\udd16</span>
+                        <span style={{ fontSize: 22 }}>🤖</span>
                         <span style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', color: 'var(--fz-text, #1A1A1A)' }}>{agent.name}</span>
                         <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', textAlign: 'center', lineHeight: 1.2 }}>
                           {agent.role.length > 20 ? agent.role.slice(0, 18) + '...' : agent.role}
@@ -447,11 +447,11 @@ export default function WhatsAppPage() {
                       background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
                       flex: '1 1 140px', minWidth: 140,
                     }}>
-                      <span style={{ fontSize: 20 }}>\ud83e\udd16</span>
+                      <span style={{ fontSize: 20 }}>🤖</span>
                       <div>
                         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{agentDef.name}</div>
                         <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>
-                          {bond.totalInteractions} echanges \u00b7 {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
+                          {bond.totalInteractions} echanges · {LEVEL_ICONS[bond.relationshipLevel]} {LEVEL_NAMES[bond.relationshipLevel]}
                         </div>
                         {bond.satisfactionScore !== 50 && (
                           <div style={{ fontSize: 10, color: bond.satisfactionScore >= 60 ? '#1A1A1A' : '#6B6B6B' }}>
@@ -468,7 +468,7 @@ export default function WhatsAppPage() {
 
           {/* Conversations */}
           <div className="section">
-            <h2 className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>\ud83d\udcac Conversations</h2>
+            <h2 className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>💬 Conversations</h2>
             {conversations.length === 0 ? (
               <p style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>Aucune conversation. Envoyez un message WhatsApp au numero Freenzy.io pour commencer !</p>
             ) : (
@@ -489,7 +489,7 @@ export default function WhatsAppPage() {
                       <span className="text-md" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{new Date(conv.createdAt).toLocaleDateString('fr-FR')}</span>
                     </div>
                     <div className="text-md mt-4" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
-                      {conv.messageCount} messages \u00b7 {conv.totalTokens} tokens \u00b7 {conv.status}
+                      {conv.messageCount} messages · {conv.totalTokens} tokens · {conv.status}
                     </div>
                   </div>
                 ))}
@@ -512,14 +512,14 @@ export default function WhatsAppPage() {
                           fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)',
                           marginBottom: 2, textAlign: 'right',
                         }}>
-                          \ud83e\udd16 {agent.name}
+                          🤖 {agent.name}
                         </div>
                       )}
                       <div className={`wa-bubble ${msg.direction === 'inbound' ? 'wa-bubble-inbound' : 'wa-bubble-outbound'}`}>
                         <div className="text-base">{msg.content || msg.transcription || `[${msg.messageType}]`}</div>
                         <div className="text-xs mt-4 text-right" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
                           {new Date(msg.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                          {msg.tokensUsed > 0 && ` \u00b7 ${msg.tokensUsed}t`}
+                          {msg.tokensUsed > 0 && ` · ${msg.tokensUsed}t`}
                         </div>
                       </div>
                     </div>

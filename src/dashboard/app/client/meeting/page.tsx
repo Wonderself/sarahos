@@ -19,23 +19,23 @@ interface MeetingMessage {
 }
 
 const MEETING_TEMPLATES = [
-  { icon: '\ud83d\ude80', title: 'Lancement de projet', topic: 'Lancer un nouveau projet strat\u00e9gique', description: 'D\u00e9finir les objectifs, les r\u00f4les et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
-  { icon: '\ud83d\udcca', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les r\u00e9sultats et ajuster la strat\u00e9gie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
-  { icon: '\ud83d\udca1', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'G\u00e9n\u00e9rer des id\u00e9es innovantes en \u00e9quipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
-  { icon: '\ud83d\udee1\ufe0f', title: 'R\u00e9solution de crise', topic: 'R\u00e9soudre une situation de crise urgente', description: 'Coordonner la r\u00e9ponse et prot\u00e9ger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
-  { icon: '\ud83d\udcc5', title: 'Planification annuelle', topic: 'Planification strat\u00e9gique pour l\'ann\u00e9e', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
-  { icon: '\ud83e\udd1d', title: 'Partenariat strat\u00e9gique', topic: '\u00c9valuer un partenariat ou une acquisition', description: 'Analyser les opportunit\u00e9s et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
+  { icon: '🚀', title: 'Lancement de projet', topic: 'Lancer un nouveau projet stratégique', description: 'Définir les objectifs, les rôles et le planning', suggestedAgents: ['fz-dg', 'fz-dev', 'fz-finance'] as AgentTypeId[] },
+  { icon: '📊', title: 'Revue trimestrielle', topic: 'Revue des performances du trimestre', description: 'Analyser les résultats et ajuster la stratégie', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-commercial'] as AgentTypeId[] },
+  { icon: '💡', title: 'Brainstorming produit', topic: 'Brainstorming pour un nouveau produit ou service', description: 'Générer des idées innovantes en équipe', suggestedAgents: ['fz-marketing', 'fz-dev', 'fz-commercial'] as AgentTypeId[] },
+  { icon: '🛡️', title: 'Résolution de crise', topic: 'Résoudre une situation de crise urgente', description: 'Coordonner la réponse et protéger l\'entreprise', suggestedAgents: ['fz-dg', 'fz-communication', 'fz-juridique'] as AgentTypeId[] },
+  { icon: '📅', title: 'Planification annuelle', topic: 'Planification stratégique pour l\'année', description: 'Fixer les objectifs et budgets annuels', suggestedAgents: ['fz-dg', 'fz-finance', 'fz-rh'] as AgentTypeId[] },
+  { icon: '🤝', title: 'Partenariat stratégique', topic: 'Évaluer un partenariat ou une acquisition', description: 'Analyser les opportunités et risques', suggestedAgents: ['fz-dg', 'fz-commercial', 'fz-juridique'] as AgentTypeId[] },
 ];
 
 const TOPIC_SUGGESTIONS = [
   'Comment augmenter notre CA de 20% ?',
   'Faut-il recruter un dev ou externaliser ?',
-  'Notre concurrent a baiss\u00e9 ses prix, que faire ?',
-  'On doit r\u00e9duire nos co\u00fbts de 15%, par o\u00f9 commencer ?',
+  'Notre concurrent a baissé ses prix, que faire ?',
+  'On doit réduire nos coûts de 15%, par où commencer ?',
 ];
 
 const VALIDATION_SUGGESTIONS = [
-  'Creusez les co\u00fbts',
+  'Creusez les coûts',
   'Quels risques ?',
   'Plan d\'action concret',
   'Comparez les options',
@@ -90,10 +90,10 @@ export default function MeetingPage() {
       const profile = localStorage.getItem('fz_company_profile');
       if (profile) {
         const p = JSON.parse(profile);
-        return `Entreprise: ${p.companyName ?? 'N/A'}, Secteur: ${p.industry ?? 'N/A'}, Mission: ${p.mission ?? 'N/A'}, D\u00e9fis: ${p.challenges ?? 'N/A'}, Objectifs: ${p.shortTermGoals ?? 'N/A'}`;
+        return `Entreprise: ${p.companyName ?? 'N/A'}, Secteur: ${p.industry ?? 'N/A'}, Mission: ${p.mission ?? 'N/A'}, Défis: ${p.challenges ?? 'N/A'}, Objectifs: ${p.shortTermGoals ?? 'N/A'}`;
       }
     } catch { /* */ }
-    return 'Pas de profil entreprise configur\u00e9. R\u00e9pondre de mani\u00e8re g\u00e9n\u00e9rique.';
+    return 'Pas de profil entreprise configuré. Répondre de manière générique.';
   }
 
   function toggleAgent(id: string) {
@@ -242,9 +242,9 @@ export default function MeetingPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 28 }}>{meta.emoji}</span>
             <div>
-              <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Salle de <span className="fz-logo-word">R\u00e9union</span></h1>
+              <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Salle de <span className="fz-logo-word">Réunion</span></h1>
               <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
-                R\u00e9unissez vos <span className="fz-logo-word">agents</span> pour des discussions strat\u00e9giques. Ils collaborent, d\u00e9battent, et proposent des solutions <span className="fz-logo-word">ensemble</span>.
+                Réunissez vos <span className="fz-logo-word">agents</span> pour des discussions stratégiques. Ils collaborent, débattent, et proposent des solutions <span className="fz-logo-word">ensemble</span>.
               </p>
             </div>
             <HelpBubble text={meta.helpText} />
@@ -254,7 +254,7 @@ export default function MeetingPage() {
 
         {/* Agent Selection */}
         <div className="card section">
-          <div className="section-title mb-16" style={{ color: 'var(--fz-text, #1A1A1A)' }}>\ud83d\udc65 Participants ({selectedAgents.length}/5)</div>
+          <div className="section-title mb-16" style={{ color: 'var(--fz-text, #1A1A1A)' }}>👥 Participants ({selectedAgents.length}/5)</div>
           <div className="flex flex-wrap" style={{ gap: 10 }}>
             {meetingAgents.map(agent => {
               const selected = selectedAgents.includes(agent.id);
@@ -269,10 +269,10 @@ export default function MeetingPage() {
                     cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
-                  <span style={{ fontSize: 24 }}>\ud83e\udd16</span>
+                  <span style={{ fontSize: 24 }}>🤖</span>
                   <div style={{ textAlign: 'left' }}>
                     <div className="text-md font-semibold" style={{ color: '#1A1A1A' }}>{agent.role}</div>
-                    <div className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{selected ? 'Pr\u00e9sent' : 'Inviter'}</div>
+                    <div className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{selected ? 'Présent' : 'Inviter'}</div>
                   </div>
                 </button>
               );
@@ -283,7 +283,7 @@ export default function MeetingPage() {
         {/* Topic */}
         <div className="card section">
           <div className="section-title flex items-center gap-8 mb-16" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
-            Sujet de la r\u00e9union
+            Sujet de la réunion
             <VoiceInput
               onTranscript={(t) => setTopic(prev => prev ? prev + ' ' + t : t)}
               size="sm"
@@ -294,7 +294,7 @@ export default function MeetingPage() {
             onChange={e => setTopic(e.target.value)}
             className="input"
             rows={3}
-            placeholder="D\u00e9crivez le sujet, la probl\u00e9matique, ou l'objectif de cette r\u00e9union..."
+            placeholder="Décrivez le sujet, la problématique, ou l'objectif de cette réunion..."
             style={{ width: '100%', resize: 'vertical', marginBottom: 12 }}
           />
 
@@ -353,7 +353,7 @@ export default function MeetingPage() {
             className="btn btn-primary text-lg"
             style={{ padding: '14px 48px' }}
           >
-            Lancer la r\u00e9union
+            Lancer la réunion
           </button>
         </div>
       </div>
@@ -368,7 +368,7 @@ export default function MeetingPage() {
       {/* Meeting Header */}
       <div className="flex flex-between items-center flex-wrap gap-8" style={{ padding: '12px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
         <div>
-          <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>\ud83d\udcde R\u00e9union en cours</div>
+          <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>📞 Réunion en cours</div>
           <div className="text-sm" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
             {activeAgents.length} participants | {messages.length} interventions | {totalTokens.toLocaleString()} tokens | {(totalCost / 1_000_000).toFixed(4)} cr
           </div>
@@ -379,7 +379,7 @@ export default function MeetingPage() {
               width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, background: '#F0F0F0', border: '2px solid #E5E5E5',
             }}>
-              \ud83e\udd16
+              🤖
             </span>
           ))}
         </div>
@@ -400,7 +400,7 @@ export default function MeetingPage() {
                 width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 20, background: '#F0F0F0', border: '2px solid #E5E5E5', flexShrink: 0,
               }}>
-                \ud83e\udd16
+                🤖
               </div>
               <div className="flex-1">
                 <div className="flex gap-8 mb-4" style={{ alignItems: 'baseline' }}>
@@ -448,7 +448,7 @@ export default function MeetingPage() {
               Votre avis est important
             </div>
             <div className="text-sm" style={{ marginBottom: 14, color: 'var(--fz-text-secondary, #6B6B6B)' }}>
-              Un tour de table est termin\u00e9. Donnez une orientation pour la suite ou laissez continuer librement.
+              Un tour de table est terminé. Donnez une orientation pour la suite ou laissez continuer librement.
             </div>
 
             {/* Suggestion chips */}
@@ -496,7 +496,7 @@ export default function MeetingPage() {
                 Continuer
               </button>
               <button onClick={handleValidationStop} className="btn btn-danger" style={{ padding: '8px 20px' }}>
-                Arr\u00eater
+                Arrêter
               </button>
             </div>
           </div>
@@ -515,7 +515,7 @@ export default function MeetingPage() {
           disabled={(running && !autoMode) || validationNeeded}
           className={autoMode ? 'btn btn-danger flex-1' : 'btn btn-secondary flex-1'}
         >
-          {autoMode ? 'Arr\u00eater le mode auto' : 'Mode auto (2 tours)'}
+          {autoMode ? 'Arrêter le mode auto' : 'Mode auto (2 tours)'}
         </button>
         <button onClick={endMeeting} className="btn btn-ghost">
           Terminer

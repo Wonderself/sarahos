@@ -326,8 +326,8 @@ export default function LandingPageOriginalV2() {
                 fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap',
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0 }} />
-                <span className="lp-green-badge-full">{config?.hero.badge || 'Pro & Particuliers \u00b7 0% de commission \u00b7 Simplicit\u00e9 \u00b7 Personnalisation 100% \u00b7 Complet'}</span>
-                <span className="lp-green-badge-mobile">{config?.hero.badge || 'Pros & Particuliers \u00b7 0% frais \u00b7 Personnalisable 100% \u00b7 Simple et complet'}</span>
+                <span className="lp-green-badge-full">{config?.hero.badge || 'Pro & Particuliers · 0% de commission · Simplicité · Personnalisation 100% · Complet'}</span>
+                <span className="lp-green-badge-mobile">{config?.hero.badge || 'Pros & Particuliers · 0% frais · Personnalisable 100% · Simple et complet'}</span>
               </span>
             </div>
 
@@ -941,7 +941,7 @@ export default function LandingPageOriginalV2() {
                         fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
                         transition: 'all 0.2s',
                       }}>
-                        {isOpen ? '\u2212' : '+'}
+                        {isOpen ? '−' : '+'}
                       </div>
                     </div>
                     {isOpen && (

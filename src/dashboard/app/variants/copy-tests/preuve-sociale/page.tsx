@@ -20,9 +20,9 @@ const totalAgents = TOTAL_AGENTS_DISPLAY;
 // ─── Testimonials
 const TESTIMONIALS = [
   { quote: 'Freenzy a remplace mon assistante et mon community manager. Je gagne 15h/semaine.', name: 'Marie L.', role: 'Designer freelance', rating: 5 },
-  { quote: 'Le repondeur IA a triple nos leads qualifies en 2 mois. ROI immediat.', name: 'Thomas R.', role: 'Gerant \u00b7 TPE BTP', rating: 5 },
-  { quote: 'Deploiement en 1 journee pour 6 departements. L\'equipe technique a ete bluffee.', name: 'Sophie M.', role: 'DRH \u00b7 ETI 200 salaries', rating: 5 },
-  { quote: 'Mon comptable IA me fait economiser 200\u20ac/mois. Et il ne prend pas de vacances.', name: 'Lucas D.', role: 'Particulier', rating: 5 },
+  { quote: 'Le repondeur IA a triple nos leads qualifies en 2 mois. ROI immediat.', name: 'Thomas R.', role: 'Gerant · TPE BTP', rating: 5 },
+  { quote: 'Deploiement en 1 journee pour 6 departements. L\'equipe technique a ete bluffee.', name: 'Sophie M.', role: 'DRH · ETI 200 salaries', rating: 5 },
+  { quote: 'Mon comptable IA me fait economiser 200€/mois. Et il ne prend pas de vacances.', name: 'Lucas D.', role: 'Particulier', rating: 5 },
 ];
 
 // ─── Trust partners
@@ -548,7 +548,7 @@ export default function LandingPagePreuveSociale() {
                   Recevez les r&eacute;sum&eacute;s, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents r&eacute;pondent en <span className="fz-accent-word" style={{ color: '#22c55e' }}>temps r&eacute;el</span>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['R\u00e9sum\u00e9s automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
+                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#4b5563' }}>
                       <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 16 }}>check_circle</span> {f}
                     </div>
@@ -612,9 +612,9 @@ export default function LandingPagePreuveSociale() {
             }}>
               {[
                 { icon: 'lock', text: 'Chiffrement AES-256' },
-                { icon: 'verified_user', text: 'Serveurs EU \u00b7 RGPD' },
+                { icon: 'verified_user', text: 'Serveurs EU · RGPD' },
                 { icon: 'credit_card', text: 'Paiement Stripe PCI' },
-                { icon: 'shield', text: '2FA \u00b7 TOTP' },
+                { icon: 'shield', text: '2FA · TOTP' },
                 { icon: 'bar_chart', text: 'Audit logs complets' },
               ].map((badge, i) => (
                 <div key={i} style={{
@@ -723,7 +723,7 @@ export default function LandingPagePreuveSociale() {
                         fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
                         transition: 'all 0.2s',
                       }}>
-                        {isOpen ? '\u2212' : '+'}
+                        {isOpen ? '−' : '+'}
                       </div>
                     </div>
                     {isOpen && (

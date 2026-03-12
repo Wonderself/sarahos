@@ -106,10 +106,10 @@ export const DEMO_SCENARIOS = [
     tab: 'Repondeur',
     tabIcon: 'call',
     color: '#22c55e',
-    prompt: "Antoine Bernard vient d'appeler. Demande de devis, budget estime 4 800\u20AC.",
+    prompt: "Antoine Bernard vient d'appeler. Demande de devis, budget estime 4 800€.",
     lines: [
       { label: 'Statut', text: 'Appel traite · 2 min 14s' },
-      { label: 'Lead', text: 'Qualifie · devis 4 800\u20AC' },
+      { label: 'Lead', text: 'Qualifie · devis 4 800€' },
       { label: 'Action', text: 'RDV calendrier · demain 9h30' },
       { label: 'Notif.', text: 'Resume envoye par WhatsApp' },
     ],
@@ -119,7 +119,7 @@ export const DEMO_SCENARIOS = [
     tab: 'Email',
     tabIcon: 'mail',
     color: '#7c3aed',
-    prompt: 'Redige une proposition pour Acme Corp — integration SaaS, budget 12 000\u20AC.',
+    prompt: 'Redige une proposition pour Acme Corp — integration SaaS, budget 12 000€.',
     lines: [
       { label: 'Objet', text: 'Proposition · Integration SaaS · Acme Corp' },
       { label: 'Corps', text: '487 mots · ton pro · personnalise' },
@@ -218,7 +218,7 @@ export const TECH_FEATURES = [
 
 // ─── WhatsApp messages mockup
 export const WA_MESSAGES = [
-  { from: 'agent', text: 'Resume de la journee :\n\u00b7 3 appels traites\n\u00b7 2 leads qualifies\n\u00b7 1 devis envoye', time: '18:32' },
+  { from: 'agent', text: 'Resume de la journee :\n· 3 appels traites\n· 2 leads qualifies\n· 1 devis envoye', time: '18:32' },
   { from: 'user', text: 'Envoie le devis a contact@acme.fr', time: '18:33' },
   { from: 'agent', text: 'Devis envoye a contact@acme.fr · suivi planifie J+3', time: '18:33' },
 ];

@@ -15,59 +15,59 @@ type Category = keyof typeof REWARD_CATEGORIES;
 
 // Material icon name -> emoji mapping for reward action icons
 const ICON_EMOJI: Record<string, string> = {
-  share: '\uD83D\uDD17', // 🔗
-  work: '\uD83D\uDCBC', // 💼
-  thumb_up: '\uD83D\uDC4D', // 👍
-  chat: '\uD83D\uDCAC', // 💬
-  star: '\u2B50', // ⭐
-  verified: '\u2705', // ✅
-  rocket_launch: '\uD83D\uDE80', // 🚀
-  chat_bubble: '\uD83D\uDCAC', // 💬
-  description: '\uD83D\uDCC4', // 📄
-  groups: '\uD83D\uDC65', // 👥
-  call: '\uD83D\uDCDE', // 📞
-  tune: '\uD83D\uDD27', // 🔧
-  account_circle: '\uD83D\uDC64', // 👤
-  login: '\uD83D\uDD11', // 🔑
-  diversity_3: '\uD83E\uDD1D', // 🤝
-  palette: '\uD83C\uDFA8', // 🎨
-  smartphone: '\uD83D\uDCF1', // 📱
-  person_add: '\uD83D\uDC65', // 👥
-  emoji_people: '\uD83D\uDE4B', // 🙋
-  paid: '\uD83D\uDCB0', // 💰
-  store: '\uD83C\uDFEA', // 🏪
-  forum: '\uD83D\uDCAC', // 💬
-  rate_review: '\u270D\uFE0F', // ✍️
-  bug_report: '\uD83D\uDC1B', // 🐛
-  lightbulb: '\uD83D\uDCA1', // 💡
-  local_fire_department: '\uD83D\uDD25', // 🔥
-  whatshot: '\uD83D\uDD25', // 🔥
-  military_tech: '\uD83C\uDF96\uFE0F', // 🎖️
-  emoji_events: '\uD83C\uDFC6', // 🏆
-  bolt: '\u26A1', // ⚡
-  edit: '\u270F\uFE0F', // ✏️
-  toll: '\uD83E\uDE99', // 🪙
-  check_circle: '\u2705', // ✅
-  error: '\u274C', // ❌
-  link: '\uD83D\uDD17', // 🔗
-  content_copy: '\uD83D\uDCCB', // 📋
-  card_giftcard: '\uD83C\uDFC6', // 🏆
-  lock_open: '\uD83D\uDD13', // 🔓
-  check: '\u2705', // ✅
-  schedule: '\uD83D\uDD50', // 🕐
+  share: '🔗', // 🔗
+  work: '💼', // 💼
+  thumb_up: '👍', // 👍
+  chat: '💬', // 💬
+  star: '⭐', // ⭐
+  verified: '✅', // ✅
+  rocket_launch: '🚀', // 🚀
+  chat_bubble: '💬', // 💬
+  description: '📄', // 📄
+  groups: '👥', // 👥
+  call: '📞', // 📞
+  tune: '🔧', // 🔧
+  account_circle: '👤', // 👤
+  login: '🔑', // 🔑
+  diversity_3: '🤝', // 🤝
+  palette: '🎨', // 🎨
+  smartphone: '📱', // 📱
+  person_add: '👥', // 👥
+  emoji_people: '🙋', // 🙋
+  paid: '💰', // 💰
+  store: '🏪', // 🏪
+  forum: '💬', // 💬
+  rate_review: '✍️', // ✍️
+  bug_report: '🐛', // 🐛
+  lightbulb: '💡', // 💡
+  local_fire_department: '🔥', // 🔥
+  whatshot: '🔥', // 🔥
+  military_tech: '🎖️', // 🎖️
+  emoji_events: '🏆', // 🏆
+  bolt: '⚡', // ⚡
+  edit: '✏️', // ✏️
+  toll: '🪙', // 🪙
+  check_circle: '✅', // ✅
+  error: '❌', // ❌
+  link: '🔗', // 🔗
+  content_copy: '📋', // 📋
+  card_giftcard: '🏆', // 🏆
+  lock_open: '🔓', // 🔓
+  check: '✅', // ✅
+  schedule: '🕐', // 🕐
 };
 
 function getIconEmoji(iconName: string): string {
-  return ICON_EMOJI[iconName] || '\u2B50'; // fallback: ⭐
+  return ICON_EMOJI[iconName] || '⭐'; // fallback: ⭐
 }
 
 // Category icon mapping
 const CAT_ICON_EMOJI: Record<string, string> = {
-  share: '\uD83D\uDD17', // 🔗
-  bolt: '\u26A1', // ⚡
-  person_add: '\uD83D\uDC65', // 👥
-  edit: '\u270F\uFE0F', // ✏️
-  emoji_events: '\uD83C\uDFC6', // 🏆
+  share: '🔗', // 🔗
+  bolt: '⚡', // ⚡
+  person_add: '👥', // 👥
+  edit: '✏️', // ✏️
+  emoji_events: '🏆', // 🏆
 };
 
 function getToken() {
@@ -141,7 +141,7 @@ export default function RewardsPage() {
           animation: 'lp-fade-in 0.3s ease',
         }}>
           <span style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 8 }}>
-            {toast.type === 'success' ? '\u2705' : '\u274C'}
+            {toast.type === 'success' ? '✅' : '❌'}
           </span>
           {toast.message}
         </div>
@@ -182,14 +182,14 @@ export default function RewardsPage() {
           borderRadius: 8, padding: '18px 16px', textAlign: 'center',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{state.totalEarned}</div>
-          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>CR\u00c9DITS GAGN\u00c9S</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>CRÉDITS GAGNÉS</div>
         </div>
         <div style={{
           background: '#F7F7F7', border: '1px solid #E5E5E5',
           borderRadius: 8, padding: '18px 16px', textAlign: 'center',
         }}>
           <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{state.claimed.length}</div>
-          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPL\u00c9T\u00c9ES</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPLÉTÉES</div>
         </div>
         <div style={{
           background: '#F7F7F7', border: '1px solid #E5E5E5',
@@ -219,7 +219,7 @@ export default function RewardsPage() {
           borderRadius: 8, padding: '16px 20px', marginBottom: 28,
           display: 'flex', alignItems: 'center', gap: 14,
         }}>
-          <span style={{ fontSize: 28 }}>{'\uD83D\uDD17'}</span>
+          <span style={{ fontSize: 28 }}>{'🔗'}</span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', marginBottom: 4 }}>Votre lien de parrainage</div>
             <div style={{ fontSize: 12, color: '#9B9B9B', fontFamily: 'monospace', wordBreak: 'break-all' }}>
@@ -229,7 +229,7 @@ export default function RewardsPage() {
           <button
             onClick={() => {
               navigator.clipboard.writeText(`https://freenzy.io/?ref=${referralCode}`);
-              setToast({ message: 'Lien copi\u00e9 !', type: 'success' });
+              setToast({ message: 'Lien copié !', type: 'success' });
               setTimeout(() => setToast(null), 2000);
             }}
             style={{
@@ -237,7 +237,7 @@ export default function RewardsPage() {
               background: '#1A1A1A', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer',
             }}
           >
-            <span style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{'\uD83D\uDCCB'}</span>
+            <span style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{'📋'}</span>
             Copier
           </button>
         </div>
@@ -270,7 +270,7 @@ export default function RewardsPage() {
                 display: 'flex', alignItems: 'center', gap: 6,
               }}
             >
-              <span style={{ fontSize: 14 }}>{CAT_ICON_EMOJI[meta.icon] || '\u2B50'}</span>
+              <span style={{ fontSize: 14 }}>{CAT_ICON_EMOJI[meta.icon] || '⭐'}</span>
               {meta.label} ({count})
             </button>
           );
@@ -313,7 +313,7 @@ export default function RewardsPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
                   <span style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{action.label}</span>
                   {action.oneTime && claimCount > 0 && (
-                    <span style={{ fontSize: 16 }}>{'\u2705'}</span>
+                    <span style={{ fontSize: 16 }}>{'✅'}</span>
                   )}
                 </div>
                 <div style={{ fontSize: 12, color: '#9B9B9B', lineHeight: 1.4 }}>
@@ -334,7 +334,7 @@ export default function RewardsPage() {
                 fontSize: isMobile ? 12 : 14, fontWeight: 800, flexShrink: 0,
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
-                <span style={{ fontSize: 16 }}>{'\uD83E\uDE99'}</span>
+                <span style={{ fontSize: 16 }}>{'🪙'}</span>
                 +{action.credits}
               </div>
 
@@ -350,7 +350,7 @@ export default function RewardsPage() {
                   flexShrink: 0, minWidth: isMobile ? 60 : 80, textAlign: 'center',
                 }}
               >
-                {claimed ? 'Fait' : 'R\u00e9clamer'}
+                {claimed ? 'Fait' : 'Réclamer'}
               </button>
             </div>
           );
@@ -367,10 +367,10 @@ export default function RewardsPage() {
           Total possible
         </div>
         <div style={{ fontSize: 32, fontWeight: 800, color: '#1A1A1A' }}>
-          {totalPossible} cr\u00e9dits
+          {totalPossible} crédits
         </div>
         <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 4 }}>
-          en compl\u00e9tant toutes les actions disponibles
+          en complétant toutes les actions disponibles
         </div>
       </div>
     </div>

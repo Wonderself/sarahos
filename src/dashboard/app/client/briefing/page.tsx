@@ -58,20 +58,20 @@ function parseSections(text: string): { title: string; body: string }[] {
 }
 
 const SECTION_ICONS: Record<string, string> = {
-  'Salutation': '\ud83d\udc4b',
-  'Priorit\u00e9s du jour': '\ud83c\udfaf',
-  'Insight': '\ud83d\udca1',
-  'Conseil': '\u2728',
-  'T\u00e2ches': '\ud83d\udccb',
-  'Alertes': '\u26a0\ufe0f',
-  'Opportunit\u00e9s': '\ud83d\ude80',
+  'Salutation': '👋',
+  'Priorités du jour': '🎯',
+  'Insight': '💡',
+  'Conseil': '✨',
+  'Tâches': '📋',
+  'Alertes': '⚠️',
+  'Opportunités': '🚀',
 };
 
 function sectionIcon(title: string): string {
   for (const [key, icon] of Object.entries(SECTION_ICONS)) {
     if (title.toLowerCase().includes(key.toLowerCase())) return icon;
   }
-  return '\ud83d\udccc';
+  return '📌';
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -107,11 +107,11 @@ export default function BriefingPage() {
 
   async function generateBriefing(showToast = true) {
     const session = getSession();
-    if (!session.token) { showError('Session expir\u00e9e'); return; }
+    if (!session.token) { showError('Session expirée'); return; }
     setGenerating(true);
     try {
       const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      const companyProfile = localStorage.getItem('fz_company_profile') ?? 'Non renseign\u00e9';
+      const companyProfile = localStorage.getItem('fz_company_profile') ?? 'Non renseigné';
       const gam = JSON.parse(localStorage.getItem('fz_gamification') ?? '{}');
 
       const res = await fetch('/api/chat', {
@@ -122,7 +122,7 @@ export default function BriefingPage() {
           model: 'claude-haiku-4-5-20251001',
           messages: [{
             role: 'user',
-            content: `Tu es Ma\u00ebva, directrice g\u00e9n\u00e9rale IA de Freenzy. Nous sommes le ${today}. G\u00e9n\u00e8re un briefing du jour concis et actionnable. Contexte entreprise: ${companyProfile}. Stats: ${gam.totalMessages ?? 0} messages, ${gam.streak ?? 0} jours cons\u00e9cutifs. Structure ainsi:\n**Salutation personnalis\u00e9e** (1 ligne bienveillante)\n**Priorit\u00e9s du jour** (3 actions concr\u00e8tes num\u00e9rot\u00e9es)\n**Insight business** (1 observation bas\u00e9e sur l'activit\u00e9)\n**Conseil du jour** (1 astuce productivit\u00e9)\nSois concise et percutante. En fran\u00e7ais.`,
+            content: `Tu es Maëva, directrice générale IA de Freenzy. Nous sommes le ${today}. Génère un briefing du jour concis et actionnable. Contexte entreprise: ${companyProfile}. Stats: ${gam.totalMessages ?? 0} messages, ${gam.streak ?? 0} jours consécutifs. Structure ainsi:\n**Salutation personnalisée** (1 ligne bienveillante)\n**Priorités du jour** (3 actions concrètes numérotées)\n**Insight business** (1 observation basée sur l'activité)\n**Conseil du jour** (1 astuce productivité)\nSois concise et percutante. En français.`,
           }],
           maxTokens: 400,
           agentName: 'fz-dg',
@@ -143,9 +143,9 @@ export default function BriefingPage() {
       await portalCall('/portal/user-data/briefing', 'POST', newBriefing).catch(() => {});
 
       setBriefing(newBriefing);
-      if (showToast) showSuccess('Briefing g\u00e9n\u00e9r\u00e9 !');
+      if (showToast) showSuccess('Briefing généré !');
     } catch (e) {
-      showError(e instanceof Error ? e.message : 'Erreur de g\u00e9n\u00e9ration');
+      showError(e instanceof Error ? e.message : 'Erreur de génération');
     } finally {
       setGenerating(false);
     }
@@ -162,11 +162,11 @@ export default function BriefingPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>
-            \u2600\ufe0f <span className="fz-logo-word">Briefing</span> du jour
+            ☀️ <span className="fz-logo-word">Briefing</span> du jour
           </h1>
           <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-            {briefing?.generated_at ? ` \u00b7 G\u00e9n\u00e9r\u00e9 \u00e0 ${briefing.generated_at}` : ''}
+            {briefing?.generated_at ? ` · Généré à ${briefing.generated_at}` : ''}
           </p>
         </div>
         <button
@@ -174,7 +174,7 @@ export default function BriefingPage() {
           disabled={generating || loading}
           className="btn btn-primary btn-sm"
         >
-          {generating ? <>\u231b G\u00e9n\u00e9ration...</> : briefing ? <>\ud83d\udd04 Rafra\u00eechir</> : <>\u2728 G\u00e9n\u00e9rer</>}
+          {generating ? <>⌛ Génération...</> : briefing ? <>🔄 Rafraîchir</> : <>✨ Générer</>}
         </button>
       </div>
 
@@ -199,17 +199,17 @@ export default function BriefingPage() {
           background: 'var(--fz-bg, #fff)', borderRadius: 20,
           border: '2px dashed var(--fz-border, #E5E5E5)',
         }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}>\u2600\ufe0f</div>
+          <div style={{ fontSize: 56, marginBottom: 16 }}>☀️</div>
           <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1A1A1A)' }}>Pas encore de briefing</h2>
           <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-            G\u00e9n\u00e9rez votre briefing <span className="fz-logo-word">IA</span> quotidien \u2014 priorit\u00e9s du jour, insights business et conseils personnalis\u00e9s.
+            Générez votre briefing <span className="fz-logo-word">IA</span> quotidien — priorités du jour, insights business et conseils personnalisés.
           </p>
           <button
             onClick={() => generateBriefing(true)}
             disabled={generating}
             className="btn btn-primary"
           >
-            {generating ? <>\u231b G\u00e9n\u00e9ration en cours...</> : <>\u2728 G\u00e9n\u00e9rer mon briefing</>}
+            {generating ? <>⌛ Génération en cours...</> : <>✨ Générer mon briefing</>}
           </button>
         </div>
       )}
@@ -217,9 +217,9 @@ export default function BriefingPage() {
       {/* Generating state */}
       {generating && !briefing && (
         <div style={{ textAlign: 'center', padding: '60px 40px' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">\u2728</div>
+          <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">✨</div>
           <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14 }}>
-            Ma\u00ebva analyse votre contexte et pr\u00e9pare votre briefing...
+            Maëva analyse votre contexte et prépare votre briefing...
           </p>
         </div>
       )}

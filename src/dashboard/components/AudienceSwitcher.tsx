@@ -84,12 +84,7 @@ export default function AudienceSwitcher({ audience, onChange, variant = 'dark' 
               whiteSpace: 'nowrap',
             }}
           >
-            <span
-              className="material-symbols-rounded"
-              style={{ fontSize: 18 }}
-            >
-              {cfg.materialIcon}
-            </span>
+            <span style={{ fontSize: 16 }}>{cfg.emoji}</span>
             <span className="audience-switcher-label">{cfg.label}</span>
           </button>
         );

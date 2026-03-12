@@ -489,7 +489,7 @@ export default function LandingPageUrgenceFomo() {
                   Recevez les r&eacute;sum&eacute;s, donnez des instructions, pilotez votre entreprise depuis WhatsApp. Vos agents r&eacute;pondent en <span className="fz-accent-word" style={{ color: '#22c55e' }}>temps r&eacute;el</span>.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {['R\u00e9sum\u00e9s automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
+                  {['Résumés automatiques', 'Instructions en langage naturel', 'Notifications intelligentes', 'Fichiers et documents'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: '#4b5563' }}>
                       <span className="material-symbols-rounded" style={{ color: '#22c55e', fontSize: 16 }}>check_circle</span> {f}
                     </div>
@@ -540,9 +540,9 @@ export default function LandingPageUrgenceFomo() {
               {[
                 { icon: 'schedule', title: '2h/jour perdues', desc: 'En moyenne, un professionnel passe 2h/jour en taches administratives repetitives. C\'est 520h/an. Du temps que vos concurrents investissent ailleurs.', color: '#f97316' },
                 { icon: 'phone_missed', title: '3 leads manques/semaine', desc: 'Sans repondeur 24/7, chaque appel manque est un client potentiel perdu. 3 leads/semaine = 156 opportunites/an envolees.', color: '#dc2626' },
-                { icon: 'money_off', title: '12 000\u20AC/an gaspilles', desc: 'Comptable, assistant, community manager : des couts que l\'IA elimine pour 5\u20AC/mois. Faites le calcul.', color: '#f59e0b' },
+                { icon: 'money_off', title: '12 000€/an gaspilles', desc: 'Comptable, assistant, community manager : des couts que l\'IA elimine pour 5€/mois. Faites le calcul.', color: '#f59e0b' },
                 { icon: 'visibility_off', title: '0 visibilite en ligne', desc: 'Sans contenu regulier, votre entreprise est invisible. L\'IA publie pour vous, chaque jour, sur tous vos reseaux.', color: '#5b6cf7' },
-                { icon: 'speed', title: 'Concurrents en avance', desc: 'Pendant que vous hesitez, vos concurrents deploient deja leurs agents IA. L\'\u00e9cart se creuse chaque jour.', color: '#3b82f6' },
+                { icon: 'speed', title: 'Concurrents en avance', desc: 'Pendant que vous hesitez, vos concurrents deploient deja leurs agents IA. L\'écart se creuse chaque jour.', color: '#3b82f6' },
                 { icon: 'timer', title: 'Offre temporaire', desc: 'Les 5 000 premieres places a 0% de commission ne dureront pas. Inscrivez-vous maintenant avant qu\'il ne soit trop tard.', color: '#22c55e' },
               ].map((item, i) => (
                 <div key={i} className="lp-app-card-dark">
@@ -561,9 +561,9 @@ export default function LandingPageUrgenceFomo() {
             }}>
               {[
                 { icon: 'lock', text: 'Chiffrement AES-256' },
-                { icon: 'verified_user', text: 'Serveurs EU \u00b7 RGPD' },
+                { icon: 'verified_user', text: 'Serveurs EU · RGPD' },
                 { icon: 'credit_card', text: 'Paiement Stripe PCI' },
-                { icon: 'shield', text: '2FA \u00b7 TOTP' },
+                { icon: 'shield', text: '2FA · TOTP' },
                 { icon: 'bar_chart', text: 'Audit logs complets' },
               ].map((badge, i) => (
                 <div key={i} style={{
@@ -607,10 +607,10 @@ export default function LandingPageUrgenceFomo() {
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
-                    'D\u00e9finissez le r\u00f4le et les objectifs',
-                    'Choisissez le mod\u00e8le IA (Claude, GPT, Gemini\u2026)',
-                    'Connectez vos outils (email, CRM, WhatsApp\u2026)',
-                    'Testez et d\u00e9ployez instantan\u00e9ment',
+                    'Définissez le rôle et les objectifs',
+                    'Choisissez le modèle IA (Claude, GPT, Gemini…)',
+                    'Connectez vos outils (email, CRM, WhatsApp…)',
+                    'Testez et déployez instantanément',
                   ].map((p, i) => (
                     <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
                       <span className="material-symbols-rounded" style={{ color: '#8b5cf6', fontSize: 14 }}>check_circle</span> {p}
@@ -629,9 +629,9 @@ export default function LandingPageUrgenceFomo() {
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
-                    'Agents m\u00e9tier sur mesure (immobilier, sant\u00e9, juridique\u2026)',
-                    'Workflows automatis\u00e9s multi-agents',
-                    'Int\u00e9grations personnalis\u00e9es (API, bases de donn\u00e9es)',
+                    'Agents métier sur mesure (immobilier, santé, juridique…)',
+                    'Workflows automatisés multi-agents',
+                    'Intégrations personnalisées (API, bases de données)',
                     'Formation et accompagnement inclus',
                   ].map((p, i) => (
                     <div key={i} style={{ fontSize: 12, color: '#4b5563', display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -650,10 +650,10 @@ export default function LandingPageUrgenceFomo() {
                 display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12,
               }}>
                 {[
-                  { icon: 'home', name: 'Agent Immobilier', desc: 'R\u00e9dige les annonces, qualifie les leads, planifie les visites' },
-                  { icon: 'gavel', name: 'Veille Juridique', desc: 'Surveille les changements r\u00e9glementaires et alerte en temps r\u00e9el' },
-                  { icon: 'restaurant', name: 'Ma\u00eetre d\'H\u00f4tel IA', desc: 'G\u00e8re les r\u00e9servations, allergies, menus du jour par WhatsApp' },
-                  { icon: 'package_2', name: 'Suivi Logistique', desc: 'Traque les colis, pr\u00e9vient les retards, notifie les clients' },
+                  { icon: 'home', name: 'Agent Immobilier', desc: 'Rédige les annonces, qualifie les leads, planifie les visites' },
+                  { icon: 'gavel', name: 'Veille Juridique', desc: 'Surveille les changements réglementaires et alerte en temps réel' },
+                  { icon: 'restaurant', name: 'Maître d\'Hôtel IA', desc: 'Gère les réservations, allergies, menus du jour par WhatsApp' },
+                  { icon: 'package_2', name: 'Suivi Logistique', desc: 'Traque les colis, prévient les retards, notifie les clients' },
                 ].map((ex, i) => (
                   <div key={i} style={{
                     padding: '16px 14px', borderRadius: 12,
@@ -763,7 +763,7 @@ export default function LandingPageUrgenceFomo() {
                         fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: isOpen ? '#fff' : '#9ca3af',
                         transition: 'all 0.2s',
                       }}>
-                        {isOpen ? '\u2212' : '+'}
+                        {isOpen ? '−' : '+'}
                       </div>
                     </div>
                     {isOpen && (

@@ -55,7 +55,7 @@ export default function PhotoWorkspacePanel({
         return (
           <div style={{ padding: 20 }}>
             <div style={{
-              fontSize: 11, fontWeight: 600, color: '#06b6d4', textTransform: 'uppercase',
+              fontSize: 11, fontWeight: 600, color: '#6B6B6B', textTransform: 'uppercase',
               letterSpacing: 1, marginBottom: 12,
             }}>
               {step.title}
@@ -66,7 +66,7 @@ export default function PhotoWorkspacePanel({
             {quickStarts && quickStarts.length > 0 && onQuickStart && (
               <div>
                 <div style={{
-                  fontSize: 11, fontWeight: 700, color: '#8b5cf6', textTransform: 'uppercase',
+                  fontSize: 11, fontWeight: 700, color: '#1A1A1A', textTransform: 'uppercase',
                   letterSpacing: 0.5, marginBottom: 10,
                 }}>
                   Demarrage rapide
@@ -78,14 +78,14 @@ export default function PhotoWorkspacePanel({
                       onClick={() => onQuickStart(qs)}
                       style={{
                         padding: '12px 14px', borderRadius: 10, textAlign: 'left',
-                        border: '1px solid #e9e5ff', background: '#faf8ff',
+                        border: '1px solid #E5E5E5', background: '#F7F7F7',
                         cursor: 'pointer', transition: 'all 0.15s',
                       }}
                     >
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#7c3aed', marginBottom: 4 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A', marginBottom: 4 }}>
                         {qs.label}
                       </div>
-                      <div style={{ fontSize: 11, color: '#9ca3af', lineHeight: 1.4 }}>
+                      <div style={{ fontSize: 11, color: '#9B9B9B', lineHeight: 1.4 }}>
                         {qs.prompt.slice(0, 80)}...
                       </div>
                     </button>
@@ -100,7 +100,7 @@ export default function PhotoWorkspacePanel({
         return (
           <div style={{ padding: 20 }}>
             <div style={{
-              fontSize: 11, fontWeight: 600, color: '#06b6d4', textTransform: 'uppercase',
+              fontSize: 11, fontWeight: 600, color: '#6B6B6B', textTransform: 'uppercase',
               letterSpacing: 1, marginBottom: 12,
             }}>
               Prompt & Style
@@ -132,7 +132,7 @@ export default function PhotoWorkspacePanel({
                 disabled={generating}
                 style={{
                   marginTop: 16, width: '100%', padding: '14px 24px', borderRadius: 10,
-                  border: 'none', background: generating ? '#94a3b8' : '#8b5cf6',
+                  border: 'none', background: generating ? '#9B9B9B' : '#1A1A1A',
                   color: 'white', fontSize: 14, fontWeight: 700,
                   cursor: generating ? 'wait' : 'pointer',
                 }}
@@ -148,7 +148,7 @@ export default function PhotoWorkspacePanel({
         return (
           <div style={{ padding: 20 }}>
             <div style={{
-              fontSize: 11, fontWeight: 600, color: '#06b6d4', textTransform: 'uppercase',
+              fontSize: 11, fontWeight: 600, color: '#6B6B6B', textTransform: 'uppercase',
               letterSpacing: 1, marginBottom: 12,
             }}>
               {step.type === 'generate' ? 'Generation' : 'Resultat'}
@@ -163,14 +163,14 @@ export default function PhotoWorkspacePanel({
       case 'roadmap':
         return (
           <div style={{
-            padding: 40, textAlign: 'center', border: '2px dashed #fcd34d',
-            borderRadius: 12, background: '#fffbeb', margin: 20,
+            padding: 40, textAlign: 'center', border: '2px dashed #E5E5E5',
+            borderRadius: 12, background: '#F7F7F7', margin: 20,
           }}>
             <div style={{ marginBottom: 12 }}><RoadmapBadge /></div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: '#92400e', marginBottom: 8 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: '#6B6B6B', marginBottom: 8 }}>
               {step.title} — Bientot disponible
             </div>
-            <div style={{ fontSize: 13, color: '#b45309', lineHeight: 1.6 }}>
+            <div style={{ fontSize: 13, color: '#9B9B9B', lineHeight: 1.6 }}>
               Cette fonctionnalite sera integree prochainement.
               Emma peut deja vous guider pour preparer vos briefs.
             </div>
@@ -179,7 +179,7 @@ export default function PhotoWorkspacePanel({
 
       default:
         return (
-          <div style={{ padding: 20, color: '#94a3b8', fontSize: 13 }}>
+          <div style={{ padding: 20, color: '#9B9B9B', fontSize: 13 }}>
             Etape: {step.title}
           </div>
         );

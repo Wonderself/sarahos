@@ -135,10 +135,9 @@ export default function RewardsPage() {
       {toast && (
         <div style={{
           position: 'fixed', top: 20, right: 20, zIndex: 9999,
-          padding: '12px 20px', borderRadius: 10,
-          background: toast.type === 'success' ? '#22c55e' : '#ef4444',
+          padding: '12px 20px', borderRadius: 8,
+          background: toast.type === 'success' ? '#1A1A1A' : 'var(--danger)',
           color: '#fff', fontWeight: 700, fontSize: 14,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
           animation: 'lp-fade-in 0.3s ease',
         }}>
           <span style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 8 }}>
@@ -152,13 +151,13 @@ export default function RewardsPage() {
       <div style={{
         display: 'flex', alignItems: 'center', gap: 14,
         marginBottom: 24, padding: '0 0 16px 0',
-        borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+        borderBottom: '1px solid #E5E5E5',
       }}>
         <span style={{ fontSize: 32 }}>{meta.emoji}</span>
         <div style={{ flex: 1 }}>
           <h1 style={{
             fontSize: isMobile ? 22 : 28, fontWeight: 800, margin: 0,
-            color: 'var(--fz-text, #1E293B)',
+            color: '#1A1A1A',
             display: 'flex', alignItems: 'center', gap: 6,
           }}>
             {meta.title}
@@ -166,7 +165,7 @@ export default function RewardsPage() {
           </h1>
           <p style={{
             margin: '4px 0 0', fontSize: 14,
-            color: 'var(--fz-text-secondary, #64748B)',
+            color: '#6B6B6B',
           }}>
             {meta.subtitle}
           </p>
@@ -179,39 +178,36 @@ export default function RewardsPage() {
         display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 10 : 14, marginBottom: 28,
       }}>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-          borderRadius: 14, padding: '18px 16px', textAlign: 'center',
-          backdropFilter: 'blur(12px)',
+          background: '#F7F7F7', border: '1px solid #E5E5E5',
+          borderRadius: 8, padding: '18px 16px', textAlign: 'center',
         }}>
-          <div style={{ fontSize: 28, fontWeight: 800, color: '#22c55e' }}>{state.totalEarned}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>CR\u00c9DITS GAGN\u00c9S</div>
+          <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{state.totalEarned}</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>CR\u00c9DITS GAGN\u00c9S</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-          borderRadius: 14, padding: '18px 16px', textAlign: 'center',
-          backdropFilter: 'blur(12px)',
+          background: '#F7F7F7', border: '1px solid #E5E5E5',
+          borderRadius: 8, padding: '18px 16px', textAlign: 'center',
         }}>
-          <div style={{ fontSize: 28, fontWeight: 800, color: '#f59e0b' }}>{state.claimed.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPL\u00c9T\u00c9ES</div>
+          <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{state.claimed.length}</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>ACTIONS COMPL\u00c9T\u00c9ES</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-          borderRadius: 14, padding: '18px 16px', textAlign: 'center',
-          backdropFilter: 'blur(12px)',
+          background: '#F7F7F7', border: '1px solid #E5E5E5',
+          borderRadius: 8, padding: '18px 16px', textAlign: 'center',
         }}>
-          <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--fz-accent, #0EA5E9)' }}>{progress}%</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 4 }}>PROGRESSION</div>
+          <div style={{ fontSize: 28, fontWeight: 800, color: '#1A1A1A' }}>{progress}%</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B', fontWeight: 600, marginTop: 4 }}>PROGRESSION</div>
         </div>
       </div>
 
       {/* Progress bar */}
       <div style={{
-        background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
-        border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+        background: '#F7F7F7', borderRadius: 6, height: 8, marginBottom: 32, overflow: 'hidden',
+        border: '1px solid #E5E5E5',
       }}>
         <div style={{
           width: `${progress}%`, height: '100%', borderRadius: 6,
-          background: 'linear-gradient(90deg, #22c55e, #06b6d4)',
+          background: '#1A1A1A',
           transition: 'width 0.5s ease',
         }} />
       </div>
@@ -219,14 +215,14 @@ export default function RewardsPage() {
       {/* Referral link */}
       {referralCode && (
         <div style={{
-          background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)',
-          borderRadius: 14, padding: '16px 20px', marginBottom: 28,
+          background: '#F7F7F7', border: '1px solid #E5E5E5',
+          borderRadius: 8, padding: '16px 20px', marginBottom: 28,
           display: 'flex', alignItems: 'center', gap: 14,
         }}>
           <span style={{ fontSize: 28 }}>{'\uD83D\uDD17'}</span>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>Votre lien de parrainage</div>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', marginBottom: 4 }}>Votre lien de parrainage</div>
+            <div style={{ fontSize: 12, color: '#9B9B9B', fontFamily: 'monospace', wordBreak: 'break-all' }}>
               freenzy.io/?ref={referralCode}
             </div>
           </div>
@@ -237,8 +233,8 @@ export default function RewardsPage() {
               setTimeout(() => setToast(null), 2000);
             }}
             style={{
-              padding: '8px 16px', borderRadius: 8, border: 'none',
-              background: '#f97316', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer',
+              padding: '8px 16px', borderRadius: 8, border: '1px solid #E5E5E5',
+              background: '#1A1A1A', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer',
             }}
           >
             <span style={{ fontSize: 16, verticalAlign: 'middle', marginRight: 4 }}>{'\uD83D\uDCCB'}</span>
@@ -252,9 +248,9 @@ export default function RewardsPage() {
         <button
           onClick={() => setActiveCategory('all')}
           style={{
-            padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
+            padding: '8px 16px', borderRadius: 8, border: '1px solid #E5E5E5', cursor: 'pointer',
             fontSize: 12, fontWeight: 700,
-            background: activeCategory === 'all' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
+            background: activeCategory === 'all' ? '#1A1A1A' : 'var(--fz-bg-secondary, #F8FAFC)',
             color: activeCategory === 'all' ? '#fff' : 'var(--fz-text-secondary, #64748B)',
           }}
         >
@@ -267,9 +263,9 @@ export default function RewardsPage() {
               key={key}
               onClick={() => setActiveCategory(key)}
               style={{
-                padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                padding: '8px 16px', borderRadius: 8, border: '1px solid #E5E5E5', cursor: 'pointer',
                 fontSize: 12, fontWeight: 700,
-                background: activeCategory === key ? meta.color : 'var(--fz-bg-secondary, #F8FAFC)',
+                background: activeCategory === key ? '#1A1A1A' : 'var(--fz-bg-secondary, #F8FAFC)',
                 color: activeCategory === key ? '#fff' : 'var(--fz-text-secondary, #64748B)',
                 display: 'flex', alignItems: 'center', gap: 6,
               }}
@@ -292,9 +288,9 @@ export default function RewardsPage() {
             <div
               key={action.id}
               style={{
-                background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : 'var(--fz-bg, #FFFFFF)',
-                border: `1px solid ${claimed ? 'var(--fz-border, #E2E8F0)' : 'var(--fz-border, #E2E8F0)'}`,
-                borderRadius: 14, padding: '16px 20px',
+                background: claimed ? '#F7F7F7' : '#fff',
+                border: `1px solid ${claimed ? '#E5E5E5' : '#E5E5E5'}`,
+                borderRadius: 8, padding: '16px 20px',
                 display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 14,
                 flexWrap: isMobile ? 'wrap' as const : 'nowrap' as const,
                 opacity: claimed ? 0.5 : 1,
@@ -304,7 +300,7 @@ export default function RewardsPage() {
               {/* Icon */}
               <div style={{
                 width: isMobile ? 36 : 44, height: isMobile ? 36 : 44, borderRadius: isMobile ? 10 : 12, flexShrink: 0,
-                background: `${catMeta.color}15`, border: `1px solid ${catMeta.color}30`,
+                background: 'rgba(0,0,0,0.04)', border: '1px solid #E5E5E5',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <span style={{ fontSize: isMobile ? 18 : 22 }}>
@@ -315,16 +311,16 @@ export default function RewardsPage() {
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{action.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{action.label}</span>
                   {action.oneTime && claimCount > 0 && (
                     <span style={{ fontSize: 16 }}>{'\u2705'}</span>
                   )}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.4 }}>
+                <div style={{ fontSize: 12, color: '#9B9B9B', lineHeight: 1.4 }}>
                   {action.description}
                 </div>
                 {!action.oneTime && action.maxClaims && (
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 3, opacity: 0.7 }}>
+                  <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 3, opacity: 0.7 }}>
                     {claimCount}/{action.maxClaims} fois
                   </div>
                 )}
@@ -333,8 +329,8 @@ export default function RewardsPage() {
               {/* Credits badge */}
               <div style={{
                 padding: isMobile ? '4px 10px' : '6px 14px', borderRadius: 8,
-                background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : `${catMeta.color}15`,
-                color: claimed ? 'var(--fz-text-muted, #94A3B8)' : catMeta.color,
+                background: claimed ? '#F7F7F7' : 'rgba(0,0,0,0.04)',
+                color: claimed ? '#9B9B9B' : '#1A1A1A',
                 fontSize: isMobile ? 12 : 14, fontWeight: 800, flexShrink: 0,
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
@@ -347,9 +343,9 @@ export default function RewardsPage() {
                 onClick={() => handleClaim(action)}
                 disabled={claimed}
                 style={{
-                  padding: '8px 16px', borderRadius: 8, border: 'none',
-                  background: claimed ? 'var(--fz-bg-secondary, #F8FAFC)' : catMeta.color,
-                  color: claimed ? 'var(--fz-text-muted, #94A3B8)' : '#fff',
+                  padding: '8px 16px', borderRadius: 8, border: '1px solid #E5E5E5',
+                  background: claimed ? '#F7F7F7' : '#1A1A1A',
+                  color: claimed ? '#9B9B9B' : '#fff',
                   fontWeight: 700, fontSize: 12, cursor: claimed ? 'default' : 'pointer',
                   flexShrink: 0, minWidth: isMobile ? 60 : 80, textAlign: 'center',
                 }}
@@ -363,18 +359,17 @@ export default function RewardsPage() {
 
       {/* Bottom summary */}
       <div style={{
-        marginTop: 32, padding: '20px 24px', borderRadius: 14,
-        background: 'rgba(14,165,233,0.08)', border: '1px solid rgba(14,165,233,0.15)',
-        backdropFilter: 'blur(12px)', boxShadow: '0 0 40px rgba(14,165,233,0.15)',
+        marginTop: 32, padding: '20px 24px', borderRadius: 8,
+        background: '#F7F7F7', border: '1px solid #E5E5E5',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
+        <div style={{ fontSize: 14, color: '#6B6B6B', marginBottom: 8 }}>
           Total possible
         </div>
-        <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--fz-accent, #0EA5E9)' }}>
+        <div style={{ fontSize: 32, fontWeight: 800, color: '#1A1A1A' }}>
           {totalPossible} cr\u00e9dits
         </div>
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+        <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 4 }}>
           en compl\u00e9tant toutes les actions disponibles
         </div>
       </div>

@@ -202,7 +202,7 @@ export default function UserDetailPage() {
           background: 'var(--danger-muted)',
           color: 'var(--danger)',
           padding: 20,
-          borderRadius: 12,
+          borderRadius: 8,
           fontSize: 14,
           fontWeight: 500,
         }}>
@@ -228,7 +228,7 @@ export default function UserDetailPage() {
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <span style={styles.badge(ROLE_COLORS[user.role] || '#6b7280')}>{user.role}</span>
           <span style={styles.badge(TIER_COLORS[user.tier] || '#6b7280')}>{user.tier}</span>
-          <span style={styles.badge(user.isActive ? '#16a34a' : '#dc2626')}>
+          <span style={styles.badge(user.isActive ? '#1A1A1A' : '#DC2626')}>
             {user.isActive ? 'Actif' : 'Inactif'}
           </span>
         </div>
@@ -264,47 +264,47 @@ export default function UserDetailPage() {
             }}
           />
           <div style={{
-            background: 'var(--bg-secondary, #1a0e3a)',
-            borderRadius: 12,
+            background: 'var(--bg-secondary)',
+            borderRadius: 8,
             padding: 20,
             border: '1px solid var(--border-primary, rgba(255,255,255,0.08))',
             marginTop: 16,
           }}>
-            <h3 style={{ color: '#fff', fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Token Budget</h3>
+            <h3 style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Token Budget</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <label style={{ color: '#9ca3af', fontSize: 14 }}>Multiplicateur</label>
+              <label style={{ color: '#9B9B9B', fontSize: 14 }}>Multiplicateur</label>
               <input
                 type="number"
                 min={0.1} max={10} step={0.1}
                 value={multiplier}
                 onChange={e => setMultiplier(parseFloat(e.target.value) || 1)}
                 style={{
-                  background: '#0f0720', color: '#fff',
+                  background: 'var(--bg-primary)', color: 'var(--text-primary)',
                   padding: '6px 12px', borderRadius: 8,
-                  border: '1px solid rgba(255,255,255,0.08)', width: 96, fontSize: 14,
+                  border: '1px solid var(--border-primary)', width: 96, fontSize: 14,
                 }}
               />
               <button
                 onClick={saveMultiplier}
                 style={{
-                  padding: '6px 14px', background: '#7c3aed', color: '#fff',
+                  padding: '6px 14px', background: '#1A1A1A', color: 'var(--text-primary)',
                   borderRadius: 8, fontSize: 14, fontWeight: 500, border: 'none', cursor: 'pointer',
                 }}
               >
                 Appliquer
               </button>
             </div>
-            <p style={{ fontSize: 12, color: '#6b7280', marginTop: 8 }}>
+            <p style={{ fontSize: 12, color: '#9B9B9B', marginTop: 8 }}>
               1.0 = standard, 2.0 = double les limites, 0.5 = moitie
             </p>
             {tokenLimits && (
               <div style={{
                 marginTop: 12, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 12,
               }}>
-                <div style={{ color: '#9ca3af' }}>Palier: <span style={{ color: '#fff', textTransform: 'capitalize' }}>{tokenLimits.tier}</span></div>
-                <div style={{ color: '#9ca3af' }}>Daily: <span style={{ color: '#fff' }}>{(tokenLimits.limits.daily / 1000).toFixed(0)}K</span></div>
-                <div style={{ color: '#9ca3af' }}>Hourly: <span style={{ color: '#fff' }}>{(tokenLimits.limits.hourly / 1000).toFixed(0)}K</span></div>
-                <div style={{ color: '#9ca3af' }}>Per-min: <span style={{ color: '#fff' }}>{(tokenLimits.limits.perMinute / 1000).toFixed(0)}K</span></div>
+                <div style={{ color: '#9B9B9B' }}>Palier: <span style={{ color: 'var(--text-primary)', textTransform: 'capitalize' }}>{tokenLimits.tier}</span></div>
+                <div style={{ color: '#9B9B9B' }}>Daily: <span style={{ color: 'var(--text-primary)' }}>{(tokenLimits.limits.daily / 1000).toFixed(0)}K</span></div>
+                <div style={{ color: '#9B9B9B' }}>Hourly: <span style={{ color: 'var(--text-primary)' }}>{(tokenLimits.limits.hourly / 1000).toFixed(0)}K</span></div>
+                <div style={{ color: '#9B9B9B' }}>Per-min: <span style={{ color: 'var(--text-primary)' }}>{(tokenLimits.limits.perMinute / 1000).toFixed(0)}K</span></div>
               </div>
             )}
           </div>

@@ -129,7 +129,7 @@ export default function AdminAgentsPage() {
       {saved && (
         <div className="font-semibold text-base rounded-md shadow-md" style={{
           position: 'fixed', bottom: 24, right: 24, padding: '12px 20px',
-          background: '#22c55e', color: 'white',
+          background: '#1A1A1A', color: 'white',
         }}>
           Modifications sauvegardees
         </div>

@@ -35,16 +35,16 @@ interface GuardrailStats {
 }
 
 const LEVEL_COLORS = {
-  normal: 'text-green-400',
-  degraded: 'text-yellow-400',
-  emergency: 'text-red-400',
+  normal: 'text-primary',
+  degraded: 'text-secondary',
+  emergency: 'text-danger',
 };
 
 const SEVERITY_COLORS = {
-  critical: 'bg-red-600',
-  high: 'bg-orange-600',
-  medium: 'bg-yellow-600',
-  low: 'bg-gray-600',
+  critical: 'bg-danger',
+  high: 'bg-secondary',
+  medium: 'bg-tertiary',
+  low: 'bg-muted',
 };
 
 export default function GuardrailsPage() {
@@ -92,10 +92,10 @@ export default function GuardrailsPage() {
     return () => clearInterval(interval);
   }, [autoRefresh, loadStats]);
 
-  if (loading) return <div className="p-12 text-center text-gray-500 admin-page-scrollable">Chargement...</div>;
+  if (loading) return <div className="admin-page-scrollable" style={{ padding: 48, textAlign: 'center', color: '#9B9B9B' }}>Chargement...</div>;
 
   const s = stats;
-  if (!s) return <div className="p-12 text-center text-gray-500 admin-page-scrollable">Erreur de chargement</div>;
+  if (!s) return <div className="admin-page-scrollable" style={{ padding: 48, textAlign: 'center', color: '#9B9B9B' }}>Erreur de chargement</div>;
 
   const totalModels = s.tokenBudget.modelDistribution.haiku + s.tokenBudget.modelDistribution.sonnet + s.tokenBudget.modelDistribution.opus;
   const haikuPct = totalModels > 0 ? Math.round((s.tokenBudget.modelDistribution.haiku / totalModels) * 100) : 0;
@@ -104,108 +104,108 @@ export default function GuardrailsPage() {
   const budgetPct = s.tokenBudget.globalHourlyBudget > 0 ? Math.round((s.tokenBudget.globalHourlyTokens / s.tokenBudget.globalHourlyBudget) * 100) : 0;
 
   return (
-    <div className="space-y-6 admin-page-scrollable">
-      <div className="flex items-center justify-between">
+    <div className="admin-page-scrollable">
+      <div className="page-header">
         <div>
-          <h1 className="text-2xl font-bold text-white">Guardrails Monitor</h1>
-          <p className="text-gray-400 mt-1">Protection en temps réel — tokens, agents, alertes</p>
+          <h1 className="page-title">Guardrails Monitor</h1>
+          <p className="page-subtitle">Protection en temps réel — tokens, agents, alertes</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${autoRefresh ? 'bg-green-600/20 text-green-400' : 'bg-white/[0.08] text-gray-400'}`}>
-            <span className={`w-2 h-2 rounded-full ${autoRefresh ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`} />
-            <span className="text-xs">{autoRefresh ? 'LIVE' : 'PAUSED'}</span>
+        <div className="page-actions" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, background: autoRefresh ? 'rgba(0,0,0,0.04)' : 'rgba(0,0,0,0.04)', color: autoRefresh ? '#1A1A1A' : '#9B9B9B', fontSize: 12, fontWeight: 600, border: '1px solid var(--border-primary)' }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: autoRefresh ? '#1A1A1A' : '#9B9B9B', display: 'inline-block' }} />
+            <span>{autoRefresh ? 'LIVE' : 'PAUSED'}</span>
           </div>
-          <button onClick={() => setAutoRefresh(!autoRefresh)} className="px-3 py-1.5 bg-[#1a0e3a] text-gray-400 rounded-lg text-xs hover:text-white">
+          <button onClick={() => setAutoRefresh(!autoRefresh)} className="btn btn-secondary btn-sm">
             {autoRefresh ? 'Pause' : 'Resume'}
           </button>
         </div>
       </div>
 
       {/* Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid-4 section">
         {/* Token Budget */}
-        <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>savings</span>
-            <h3 className="text-white font-medium text-sm">Tokens (cette heure)</h3>
+        <div className="stat-card">
+          <div className="flex items-center gap-8 mb-8">
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>savings</span>
+            <span className="stat-label">Tokens (cette heure)</span>
           </div>
-          <p className="text-2xl font-bold text-white">{(s.tokenBudget.globalHourlyTokens / 1000).toFixed(0)}K</p>
-          <p className="text-xs text-gray-500 mt-1">/ {(s.tokenBudget.globalHourlyBudget / 1_000_000).toFixed(1)}M budget</p>
-          <div className="w-full bg-white/[0.08] rounded-full h-2 mt-3">
-            <div className={`h-2 rounded-full ${budgetPct > 150 ? 'bg-red-500' : budgetPct > 80 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${Math.min(budgetPct, 100)}%` }} />
+          <span className="stat-value stat-value-sm">{(s.tokenBudget.globalHourlyTokens / 1000).toFixed(0)}K</span>
+          <div className="text-xs text-muted" style={{ marginTop: 4 }}>/ {(s.tokenBudget.globalHourlyBudget / 1_000_000).toFixed(1)}M budget</div>
+          <div className="progress-bar" style={{ marginTop: 8 }}>
+            <div className="progress-bar-fill" style={{ width: `${Math.min(budgetPct, 100)}%`, background: budgetPct > 150 ? '#DC2626' : budgetPct > 80 ? '#9B9B9B' : '#1A1A1A' }} />
           </div>
-          <p className="text-xs text-gray-500 mt-1">{budgetPct}% utilisé</p>
+          <div className="text-xs text-muted" style={{ marginTop: 4 }}>{budgetPct}% utilisé</div>
         </div>
 
         {/* Circuit Breakers */}
-        <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>shield</span>
-            <h3 className="text-white font-medium text-sm">Circuit Breakers</h3>
+        <div className="stat-card">
+          <div className="flex items-center gap-8 mb-8">
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>shield</span>
+            <span className="stat-label">Circuit Breakers</span>
           </div>
-          <p className={`text-2xl font-bold ${LEVEL_COLORS[s.circuitBreakers.level]}`}>
-            {s.circuitBreakers.level === 'normal' ? 'NORMAL' : s.circuitBreakers.level === 'degraded' ? 'DÉGRADÉ' : 'URGENCE'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">{s.circuitBreakers.tripsLast24h} déclenchements (24h)</p>
+          <span className={`stat-value stat-value-sm ${LEVEL_COLORS[s.circuitBreakers.level]}`}>
+            {s.circuitBreakers.level === 'normal' ? 'NORMAL' : s.circuitBreakers.level === 'degraded' ? 'DEGRADE' : 'URGENCE'}
+          </span>
+          <div className="text-xs text-muted" style={{ marginTop: 4 }}>{s.circuitBreakers.tripsLast24h} déclenchements (24h)</div>
           {s.circuitBreakers.agentsSuspended.length > 0 && (
-            <p className="text-xs text-red-400 mt-2">{s.circuitBreakers.agentsSuspended.length} agents suspendus</p>
+            <div className="text-xs text-danger" style={{ marginTop: 4 }}>{s.circuitBreakers.agentsSuspended.length} agents suspendus</div>
           )}
         </div>
 
         {/* Model Distribution */}
-        <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>smart_toy</span>
-            <h3 className="text-white font-medium text-sm">Distribution modèles</h3>
+        <div className="stat-card">
+          <div className="flex items-center gap-8 mb-8">
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>smart_toy</span>
+            <span className="stat-label">Distribution modèles</span>
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-green-400">Haiku</span>
-              <span className="text-gray-400">{haikuPct}%</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div className="flex flex-between text-xs">
+              <span>Haiku</span>
+              <span className="text-muted">{haikuPct}%</span>
             </div>
-            <div className="w-full bg-white/[0.08] rounded-full h-1.5">
-              <div className="h-1.5 rounded-full bg-green-500" style={{ width: `${haikuPct}%` }} />
+            <div className="progress-bar" style={{ height: 4 }}>
+              <div className="progress-bar-fill" style={{ width: `${haikuPct}%`, background: '#1A1A1A' }} />
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-blue-400">Sonnet</span>
-              <span className="text-gray-400">{sonnetPct}%</span>
+            <div className="flex flex-between text-xs">
+              <span>Sonnet</span>
+              <span className="text-muted">{sonnetPct}%</span>
             </div>
-            <div className="w-full bg-white/[0.08] rounded-full h-1.5">
-              <div className="h-1.5 rounded-full bg-blue-500" style={{ width: `${sonnetPct}%` }} />
+            <div className="progress-bar" style={{ height: 4 }}>
+              <div className="progress-bar-fill" style={{ width: `${sonnetPct}%`, background: '#6B6B6B' }} />
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-purple-400">Opus</span>
-              <span className="text-gray-400">{opusPct}%</span>
+            <div className="flex flex-between text-xs">
+              <span>Opus</span>
+              <span className="text-muted">{opusPct}%</span>
             </div>
-            <div className="w-full bg-white/[0.08] rounded-full h-1.5">
-              <div className="h-1.5 rounded-full bg-purple-500" style={{ width: `${opusPct}%` }} />
+            <div className="progress-bar" style={{ height: 4 }}>
+              <div className="progress-bar-fill" style={{ width: `${opusPct}%`, background: '#9B9B9B' }} />
             </div>
           </div>
-          <p className="text-xs text-gray-600 mt-2">Cible: 70/25/5</p>
+          <div className="text-xs text-muted" style={{ marginTop: 6 }}>Cible: 70/25/5</div>
         </div>
 
         {/* Chains & Loops */}
-        <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="material-symbols-rounded text-xl" style={{ fontSize: 20 }}>link</span>
-            <h3 className="text-white font-medium text-sm">Chaînes inter-agents</h3>
+        <div className="stat-card">
+          <div className="flex items-center gap-8 mb-8">
+            <span className="material-symbols-rounded" style={{ fontSize: 20 }}>link</span>
+            <span className="stat-label">Chaînes inter-agents</span>
           </div>
-          <p className="text-2xl font-bold text-white">{s.activeChains}</p>
-          <p className="text-xs text-gray-500 mt-1">chaînes actives</p>
-          <p className="text-xs text-gray-500 mt-2">{s.loopsDetectedLast24h} boucles détectées (24h)</p>
+          <span className="stat-value stat-value-sm">{s.activeChains}</span>
+          <div className="text-xs text-muted" style={{ marginTop: 4 }}>chaînes actives</div>
+          <div className="text-xs text-muted" style={{ marginTop: 4 }}>{s.loopsDetectedLast24h} boucles détectées (24h)</div>
         </div>
       </div>
 
       {/* API Health */}
-      <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-        <h3 className="text-white font-medium mb-4">APIs externes</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="section">
+        <div className="section-title">APIs externes</div>
+        <div className="grid-4">
           {Object.entries(s.apiHealth).map(([name, health]) => (
-            <div key={name} className="flex items-center gap-2 bg-[#0f0720] rounded-lg p-3">
-              <div className={`w-3 h-3 rounded-full ${health.up ? 'bg-green-500' : 'bg-red-500'}`} />
+            <div key={name} className="card card-compact flex items-center gap-12">
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: health.up ? '#1A1A1A' : '#DC2626', flexShrink: 0 }} />
               <div>
-                <p className="text-white text-sm font-medium">{name}</p>
-                <p className="text-gray-500 text-xs">{health.up ? `${health.latencyMs}ms` : 'DOWN'}</p>
+                <div className="text-md font-semibold">{name}</div>
+                <div className="text-xs text-muted">{health.up ? `${health.latencyMs}ms` : 'DOWN'}</div>
               </div>
             </div>
           ))}
@@ -213,34 +213,38 @@ export default function GuardrailsPage() {
       </div>
 
       {/* Recent Alerts */}
-      <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-medium">Alertes récentes</h3>
-          <span className="text-xs text-gray-500">{s.recentAlerts.filter(a => !a.acknowledged).length} non lues</span>
+      <div className="section">
+        <div className="section-title">
+          Alertes récentes
+          <span className="section-subtitle"> — {s.recentAlerts.filter(a => !a.acknowledged).length} non lues</span>
         </div>
-        {s.recentAlerts.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-4">Aucune alerte</p>
-        ) : (
-          <div className="space-y-2 max-h-64 overflow-y-auto">
-            {s.recentAlerts.map(alert => (
-              <div key={alert.id} className={`flex items-start gap-3 p-3 rounded-lg ${alert.acknowledged ? 'bg-[#0f0720]/50' : 'bg-[#0f0720]'}`}>
-                <span className={`px-2 py-0.5 rounded text-xs text-white ${SEVERITY_COLORS[alert.severity as keyof typeof SEVERITY_COLORS] ?? 'bg-gray-600'}`}>
-                  {alert.severity}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm">{alert.message}</p>
-                  <p className="text-gray-500 text-xs mt-1">{alert.type} — {new Date(alert.createdAt).toLocaleString('fr-FR')}</p>
+        <div className="card">
+          {s.recentAlerts.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-state-text">Aucune alerte</div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 256, overflowY: 'auto' }}>
+              {s.recentAlerts.map(alert => (
+                <div key={alert.id} className="flex gap-8 rounded-sm" style={{ padding: '8px 12px', alignItems: 'flex-start', background: alert.acknowledged ? 'transparent' : 'var(--bg-secondary)', opacity: alert.acknowledged ? 0.6 : 1 }}>
+                  <span className={`badge ${alert.severity === 'critical' ? 'badge-danger' : alert.severity === 'high' ? 'badge-warning' : 'badge-neutral'}`} style={{ fontSize: 10 }}>
+                    {alert.severity}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div className="text-md">{alert.message}</div>
+                    <div className="text-xs text-muted" style={{ marginTop: 2 }}>{alert.type} — {new Date(alert.createdAt).toLocaleString('fr-FR')}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Guardrail Modules Status */}
-      <div className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08]">
-        <h3 className="text-white font-medium mb-4">Modules de protection</h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="section">
+        <div className="section-title">Modules de protection</div>
+        <div className="grid-auto">
           {[
             { name: 'Token Budget', icon: 'savings', status: 'active' },
             { name: 'Circuit Breakers', icon: 'shield', status: 'active' },
@@ -253,10 +257,10 @@ export default function GuardrailsPage() {
             { name: 'Alert System', icon: 'notifications', status: 'active' },
             { name: 'Mode Toggle', icon: 'bolt', status: 'active' },
           ].map(m => (
-            <div key={m.name} className="bg-[#0f0720] rounded-lg p-3 text-center">
-              <span className="material-symbols-rounded text-lg" style={{ fontSize: 20 }}>{m.icon}</span>
-              <p className="text-white text-xs font-medium mt-1">{m.name}</p>
-              <p className="text-green-400 text-xs mt-0.5">Actif</p>
+            <div key={m.name} className="card card-compact text-center">
+              <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{m.icon}</span>
+              <div className="text-xs font-semibold" style={{ marginTop: 4 }}>{m.name}</div>
+              <div className="text-xs text-success" style={{ marginTop: 2 }}>Actif</div>
             </div>
           ))}
         </div>

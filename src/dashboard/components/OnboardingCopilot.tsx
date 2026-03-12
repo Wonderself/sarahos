@@ -578,9 +578,9 @@ export default function OnboardingCopilot() {
                     padding: '8px 12px',
                     borderRadius: msg.role === 'user' ? '12px 12px 4px 12px' : '12px 12px 12px 4px',
                     background: msg.role === 'user'
-                      ? 'var(--fz-accent, #7c3aed)'
-                      : 'var(--fz-bg-secondary, #F8FAFC)',
-                    color: msg.role === 'user' ? '#fff' : 'var(--fz-text, #1E293B)',
+                      ? 'var(--text-primary, #1a1a1a)'
+                      : '#F7F7F7',
+                    color: msg.role === 'user' ? '#fff' : 'var(--text-primary, #1a1a1a)',
                     fontSize: 13,
                     lineHeight: 1.5,
                   }}>
@@ -628,7 +628,7 @@ export default function OnboardingCopilot() {
                 <div style={{
                   height: '100%',
                   borderRadius: 2,
-                  background: 'var(--fz-accent, #7c3aed)',
+                  background: 'var(--text-primary, #1a1a1a)',
                   width: `${((8 - missing.length) / 8) * 100}%`,
                   transition: 'width 0.3s ease',
                 }} />

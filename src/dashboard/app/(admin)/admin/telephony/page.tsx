@@ -196,9 +196,9 @@ export default function TelephonyPage() {
             borderRadius: 12,
             fontSize: 11,
             fontWeight: 600,
-            background: 'rgba(22,163,74,0.1)',
-            color: 'var(--success)',
-            border: '1px solid rgba(22,163,74,0.2)',
+            background: 'rgba(0,0,0,0.06)',
+            color: 'var(--text-primary)',
+            border: '1px solid rgba(0,0,0,0.12)',
           }}>
             Actif
           </span>
@@ -210,9 +210,9 @@ export default function TelephonyPage() {
             borderRadius: 12,
             fontSize: 11,
             fontWeight: 600,
-            background: 'rgba(217,119,6,0.1)',
-            color: 'var(--warning)',
-            border: '1px solid rgba(217,119,6,0.2)',
+            background: 'rgba(0,0,0,0.04)',
+            color: 'var(--text-secondary)',
+            border: '1px solid rgba(0,0,0,0.08)',
           }}>
             A configurer
           </span>
@@ -224,9 +224,9 @@ export default function TelephonyPage() {
             borderRadius: 12,
             fontSize: 11,
             fontWeight: 600,
-            background: 'rgba(91,108,247,0.1)',
-            color: 'var(--accent)',
-            border: '1px solid rgba(91,108,247,0.2)',
+            background: 'rgba(0,0,0,0.04)',
+            color: 'var(--text-secondary)',
+            border: '1px solid rgba(0,0,0,0.08)',
           }}>
             Bientot
           </span>
@@ -237,11 +237,11 @@ export default function TelephonyPage() {
   function getConnectionBadge() {
     switch (connectionStatus) {
       case 'connected':
-        return { color: 'var(--success)', bg: 'rgba(22,163,74,0.1)', border: 'rgba(22,163,74,0.25)', label: 'Connecte' };
+        return { color: 'var(--text-primary)', bg: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.12)', label: 'Connecte' };
       case 'partial':
-        return { color: 'var(--warning)', bg: 'rgba(217,119,6,0.1)', border: 'rgba(217,119,6,0.25)', label: 'Partiel' };
+        return { color: 'var(--text-secondary)', bg: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.08)', label: 'Partiel' };
       case 'missing':
-        return { color: 'var(--danger)', bg: 'rgba(220,38,38,0.1)', border: 'rgba(220,38,38,0.25)', label: 'Non configure' };
+        return { color: 'var(--danger)', bg: 'rgba(220,38,38,0.04)', border: 'rgba(220,38,38,0.12)', label: 'Non configure' };
     }
   }
 
@@ -283,7 +283,7 @@ export default function TelephonyPage() {
             <span style={{
               width: 10, height: 10, borderRadius: '50%',
               background: connBadge.color,
-              boxShadow: connectionStatus === 'connected' ? `0 0 8px ${connBadge.color}` : 'none',
+              boxShadow: 'none',
             }} />
             <span style={{ fontSize: 15, fontWeight: 600, color: connBadge.color }}>
               {connBadge.label}
@@ -297,7 +297,7 @@ export default function TelephonyPage() {
         {/* Phone Number */}
         <div style={{
           background: 'var(--bg-secondary)',
-          border: `1px solid ${hasPhoneNumber ? 'rgba(22,163,74,0.25)' : 'rgba(220,38,38,0.25)'}`,
+          border: `1px solid ${hasPhoneNumber ? 'rgba(0,0,0,0.12)' : 'rgba(220,38,38,0.12)'}`,
           borderRadius: 'var(--radius-md)',
           padding: '16px 18px',
           display: 'flex',
@@ -307,7 +307,7 @@ export default function TelephonyPage() {
           <div style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Numero de telephone
           </div>
-          <div style={{ fontSize: 15, fontWeight: 600, color: hasPhoneNumber ? 'var(--success)' : 'var(--danger)' }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: hasPhoneNumber ? 'var(--text-primary)' : 'var(--danger)' }}>
             {hasPhoneNumber ? 'Configure' : 'Non configure'}
           </div>
           <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
@@ -339,7 +339,7 @@ export default function TelephonyPage() {
         {/* Backend */}
         <div style={{
           background: 'var(--bg-secondary)',
-          border: `1px solid ${healthStatus === 'ok' ? 'rgba(22,163,74,0.25)' : 'var(--border-primary)'}`,
+          border: `1px solid ${healthStatus === 'ok' ? 'rgba(0,0,0,0.12)' : 'var(--border-primary)'}`,
           borderRadius: 'var(--radius-md)',
           padding: '16px 18px',
           display: 'flex',
@@ -352,7 +352,7 @@ export default function TelephonyPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{
               width: 10, height: 10, borderRadius: '50%',
-              background: healthStatus === 'ok' ? 'var(--success)' : healthStatus === 'loading' ? 'var(--warning)' : 'var(--danger)',
+              background: healthStatus === 'ok' ? 'var(--text-primary)' : healthStatus === 'loading' ? 'var(--text-secondary)' : 'var(--danger)',
             }} />
             <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
               {healthStatus === 'ok' ? 'En ligne' : healthStatus === 'loading' ? 'Verification...' : 'Hors ligne'}
@@ -387,11 +387,9 @@ export default function TelephonyPage() {
             }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-secondary)';
-                (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--shadow-md)';
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border-primary)';
-                (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -484,13 +482,13 @@ export default function TelephonyPage() {
                   display: 'flex', alignItems: 'flex-start', gap: 12,
                   padding: '10px 14px',
                   borderRadius: 'var(--radius-sm)',
-                  background: s.done ? 'rgba(22,163,74,0.04)' : 'transparent',
+                  background: s.done ? 'rgba(0,0,0,0.02)' : 'transparent',
                 }}>
                   <span style={{
                     width: 24, height: 24, borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 11, fontWeight: 700, flexShrink: 0,
-                    background: s.done ? 'var(--success)' : 'var(--bg-tertiary)',
+                    background: s.done ? 'var(--text-primary)' : 'var(--bg-tertiary)',
                     color: s.done ? '#fff' : 'var(--text-tertiary)',
                   }}>
                     {s.done ? <span className="material-symbols-rounded" style={{ fontSize: 14, color: '#fff' }}>check</span> : s.step}
@@ -537,7 +535,7 @@ export default function TelephonyPage() {
                   </span>
                   <span style={{
                     display: 'flex', alignItems: 'center', gap: 6,
-                    color: v.configured ? 'var(--success)' : 'var(--danger)',
+                    color: v.configured ? 'var(--text-primary)' : 'var(--danger)',
                     fontWeight: 600,
                     fontFamily: 'var(--font-sans)',
                     fontSize: 11,
@@ -574,9 +572,9 @@ export default function TelephonyPage() {
             <div style={{
               padding: '8px 14px',
               borderRadius: 'var(--radius-sm)',
-              background: 'rgba(217,119,6,0.08)',
-              border: '1px solid rgba(217,119,6,0.2)',
-              color: 'var(--warning)',
+              background: 'rgba(0,0,0,0.04)',
+              border: '1px solid rgba(0,0,0,0.08)',
+              color: 'var(--text-secondary)',
               fontSize: 12,
               fontWeight: 500,
               marginBottom: 16,
@@ -632,7 +630,7 @@ export default function TelephonyPage() {
                 fontSize: 12,
                 fontWeight: 600,
                 border: 'none',
-                background: hasPhoneNumber ? 'var(--success)' : 'var(--bg-tertiary)',
+                background: hasPhoneNumber ? 'var(--text-primary)' : 'var(--bg-tertiary)',
                 color: hasPhoneNumber ? '#fff' : 'var(--text-muted)',
                 cursor: hasPhoneNumber ? 'pointer' : 'not-allowed',
                 fontFamily: 'var(--font-sans)',
@@ -704,10 +702,10 @@ export default function TelephonyPage() {
           marginTop: 10,
           padding: '10px 14px',
           borderRadius: 'var(--radius-sm)',
-          background: 'rgba(37,99,235,0.06)',
-          border: '1px solid rgba(37,99,235,0.15)',
+          background: 'rgba(0,0,0,0.04)',
+          border: '1px solid rgba(0,0,0,0.08)',
           fontSize: 11,
-          color: 'var(--info)',
+          color: 'var(--text-secondary)',
           lineHeight: 1.5,
         }}>
           <span className="material-symbols-rounded" style={{ fontSize: 14 }}>lightbulb</span> Les couts Twilio sont factures separement de vos credits Freenzy.io. Twilio facture directement sur votre compte Twilio.

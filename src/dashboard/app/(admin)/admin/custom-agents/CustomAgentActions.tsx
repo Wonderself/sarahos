@@ -50,8 +50,8 @@ export default function CustomAgentActions({ agentId, isActive }: Props) {
         fontSize: 12,
         fontWeight: 600,
         cursor: loading ? 'wait' : 'pointer',
-        background: isActive ? '#dcfce7' : '#fee2e2',
-        color: isActive ? '#16a34a' : '#dc2626',
+        background: isActive ? '#F7F7F7' : '#fee2e2',
+        color: isActive ? '#1A1A1A' : '#dc2626',
         opacity: loading ? 0.6 : 1,
       }}
     >

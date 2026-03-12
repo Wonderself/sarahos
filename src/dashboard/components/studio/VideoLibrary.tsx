@@ -84,22 +84,22 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
           </span>
           {items.length > 0 && (
             <span style={{
-              fontSize: 10, fontWeight: 600, color: '#7c3aed',
-              background: '#eef2ff', padding: '1px 8px', borderRadius: 10,
+              fontSize: 10, fontWeight: 600, color: '#1A1A1A',
+              background: '#F7F7F7', padding: '1px 8px', borderRadius: 10,
             }}>
               {items.length} vidéo{items.length > 1 ? 's' : ''}
             </span>
           )}
           {projects.length > 0 && (
             <span style={{
-              fontSize: 10, fontWeight: 600, color: '#f59e0b',
-              background: '#fffbeb', padding: '1px 8px', borderRadius: 10,
+              fontSize: 10, fontWeight: 600, color: '#9B9B9B',
+              background: '#F7F7F7', padding: '1px 8px', borderRadius: 10,
             }}>
               {projects.length} projet{projects.length > 1 ? 's' : ''}
             </span>
           )}
         </div>
-        <span style={{ fontSize: 10, color: '#9ca3af' }}>
+        <span style={{ fontSize: 10, color: '#9B9B9B' }}>
           {expanded ? '▲ Masquer' : '▼ Afficher'}
         </span>
       </button>
@@ -107,7 +107,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
       {expanded && items.length === 0 && (
         <div style={{ padding: '24px 16px', textAlign: 'center' }}>
           <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>videocam</span></div>
-          <div style={{ fontSize: 12, color: '#9ca3af' }}>
+          <div style={{ fontSize: 12, color: '#9B9B9B' }}>
             Vos vidéos générées apparaîtront ici
           </div>
           <div style={{ fontSize: 11, color: '#d1d5db', marginTop: 4 }}>
@@ -151,7 +151,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
             <div>
               {projects.length > 0 && (
                 <div style={{
-                  fontSize: 10, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase',
+                  fontSize: 10, fontWeight: 700, color: '#9B9B9B', textTransform: 'uppercase',
                   letterSpacing: 0.5, marginBottom: 8,
                 }}>
                   Sans projet
@@ -172,7 +172,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
           {expandedItem && (
             <div style={{
               marginTop: 12, padding: 14, background: 'white', borderRadius: 12,
-              border: '1px solid #e5e7eb', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              border: '1px solid #e5e7eb',
             }}>
               {/* Video player */}
               <video
@@ -222,7 +222,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                       onClick={() => handleSetProject(expandedItem.id)}
                       style={{
                         padding: '6px 12px', borderRadius: 7, border: 'none',
-                        background: '#7c3aed', color: 'white', fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                        background: '#1A1A1A', color: 'white', fontSize: 11, fontWeight: 600, cursor: 'pointer',
                       }}
                     >OK</button>
                     <button
@@ -259,7 +259,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
                     onClick={() => { onReuseScript(expandedItem.script); setExpandedId(null); }}
                     style={{
                       fontSize: 10, padding: '5px 10px', borderRadius: 6,
-                      border: '1px solid #7c3aed', color: '#7c3aed', background: 'white',
+                      border: '1px solid #1A1A1A', color: '#1A1A1A', background: 'white',
                       cursor: 'pointer', fontWeight: 600,
                     }}
                   >
@@ -323,14 +323,13 @@ function VideoGrid({
             style={{
               borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
               border: `2px solid ${expandedId === v.id
-                ? '#7c3aed'
+                ? '#1A1A1A'
                 : v.id === highlightedId
-                  ? '#10b981'
+                  ? '#1A1A1A'
                   : '#e5e7eb'}`,
               aspectRatio: '16/9', background: '#1d1d1f',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               position: 'relative',
-              boxShadow: v.id === highlightedId ? '0 0 0 3px #10b98130' : 'none',
             }}
           >
             <span style={{ fontSize: 20, opacity: 0.7 }}>▶</span>
@@ -344,13 +343,13 @@ function VideoGrid({
             {v.id === highlightedId && (
               <div style={{
                 position: 'absolute', top: 3, right: 3,
-                background: '#10b981', borderRadius: '50%',
+                background: '#1A1A1A', borderRadius: '50%',
                 width: 12, height: 12, display: 'flex', alignItems: 'center',
                 justifyContent: 'center', fontSize: 7, color: 'white', fontWeight: 700,
               }}><span className="material-symbols-rounded" style={{ fontSize: 7 }}>check</span></div>
             )}
           </div>
-          <div style={{ fontSize: 9, color: '#94a3b8', marginTop: 2, textAlign: 'center' }}>
+          <div style={{ fontSize: 9, color: '#9B9B9B', marginTop: 2, textAlign: 'center' }}>
             {formatDate(v.createdAt)}
           </div>
         </div>

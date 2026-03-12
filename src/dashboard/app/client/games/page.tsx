@@ -115,10 +115,10 @@ export default function GamesHubPage() {
         <div
           style={{
             background: 'var(--fz-bg, #FFFFFF)',
-            borderRadius: 14,
+            borderRadius: 8,
             padding: '24px',
             marginBottom: 24,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+            boxShadow: 'none',
             border: borderColor
               ? isGradient
                 ? '2px solid transparent'
@@ -138,7 +138,7 @@ export default function GamesHubPage() {
                 width: 64,
                 height: 64,
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
+                background: '#1A1A1A',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -167,7 +167,7 @@ export default function GamesHubPage() {
                   style={{
                     height: '100%',
                     width: `${Math.round(levelInfo.progress * 100)}%`,
-                    background: 'linear-gradient(90deg, var(--fz-accent, #0EA5E9), #06b6d4)',
+                    background: '#1A1A1A',
                     borderRadius: 3,
                     transition: 'width 0.5s ease',
                   }}
@@ -219,8 +219,8 @@ export default function GamesHubPage() {
                       textAlign: 'center',
                       padding: '10px 6px',
                       borderRadius: 10,
-                      background: earned ? 'rgba(139,92,246,0.08)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                      border: earned ? '1px solid rgba(139,92,246,0.2)' : '1px solid var(--fz-border, #E2E8F0)',
+                      background: earned ? 'rgba(0,0,0,0.04)' : '#F7F7F7',
+                      border: earned ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
                       opacity: earned ? 1 : 0.45,
                       cursor: 'default',
                     }}
@@ -257,12 +257,12 @@ export default function GamesHubPage() {
               style={{
                 flex: isMobile ? '1 1 100px' : '1 1 160px',
                 background: 'var(--fz-bg, #FFFFFF)',
-                borderRadius: 12,
+                borderRadius: 8,
                 padding: '14px 18px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                border: '1px solid #E5E5E5',
               }}
             >
               <span style={{ fontSize: 26 }}>
@@ -281,7 +281,7 @@ export default function GamesHubPage() {
           <Link href="/client/games/create" style={{ textDecoration: 'none' }}>
             <button
               style={{
-                background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
+                background: '#1A1A1A',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,
@@ -303,7 +303,7 @@ export default function GamesHubPage() {
               style={{
                 background: 'var(--fz-bg, #FFFFFF)',
                 color: 'var(--fz-text, #1E293B)',
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                border: '1px solid #E5E5E5',
                 borderRadius: 10,
                 padding: '10px 20px',
                 fontSize: 14,
@@ -334,9 +334,9 @@ export default function GamesHubPage() {
                     key={mode}
                     onClick={() => setLbMode(mode)}
                     style={{
-                      background: lbMode === mode ? 'rgba(139,92,246,0.1)' : 'transparent',
-                      color: lbMode === mode ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-muted, #94A3B8)',
-                      border: lbMode === mode ? '1px solid rgba(139,92,246,0.2)' : '1px solid var(--fz-border, #E2E8F0)',
+                      background: lbMode === mode ? '#1A1A1A' : '#fff',
+                      color: lbMode === mode ? '#fff' : '#6B6B6B',
+                      border: lbMode === mode ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
                       borderRadius: 8,
                       padding: '5px 12px',
                       fontSize: 12,
@@ -352,8 +352,8 @@ export default function GamesHubPage() {
             <div
               style={{
                 background: 'var(--fz-bg, #FFFFFF)',
-                borderRadius: 12,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                borderRadius: 8,
+                border: '1px solid #E5E5E5',
                 overflow: 'hidden',
               }}
             >
@@ -379,10 +379,10 @@ export default function GamesHubPage() {
                       fontSize: 13,
                       fontWeight: 700,
                       background:
-                        i === 0 ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-                        : i === 1 ? 'linear-gradient(135deg, #94a3b8, #64748b)'
-                        : i === 2 ? 'linear-gradient(135deg, #b45309, #92400e)'
-                        : 'var(--fz-bg-secondary, #F8FAFC)',
+                        i === 0 ? '#1A1A1A'
+                        : i === 1 ? '#6B6B6B'
+                        : i === 2 ? '#9B9B9B'
+                        : '#F7F7F7',
                       color: i < 3 ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
                       flexShrink: 0,
                     }}
@@ -412,7 +412,7 @@ export default function GamesHubPage() {
                       })}
                     </div>
                   )}
-                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', flexShrink: 0 }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A', flexShrink: 0 }}>
                     {entry.points.toLocaleString()} pts
                   </span>
                 </div>
@@ -440,8 +440,8 @@ export default function GamesHubPage() {
                 <div
                   style={{
                     background: 'var(--fz-bg, #FFFFFF)',
-                    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-                    borderRadius: 14,
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 8,
                     padding: '20px 18px',
                     cursor: 'pointer',
                     transition: 'transform 0.15s, border-color 0.2s',

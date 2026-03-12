@@ -96,14 +96,14 @@ export default function AgentRequestQueue({
           )}
           {completed.length > 0 && (
             <span style={{
-              fontSize: 10, fontWeight: 600, color: '#10b981',
-              padding: '1px 7px', borderRadius: 10, background: '#d1fae5',
+              fontSize: 10, fontWeight: 600, color: '#1A1A1A',
+              padding: '1px 7px', borderRadius: 10, background: '#E5E5E5',
             }}>
               {completed.length} complété{completed.length > 1 ? 's' : ''}
             </span>
           )}
         </div>
-        <span style={{ fontSize: 10, color: '#9ca3af' }}>
+        <span style={{ fontSize: 10, color: '#9B9B9B' }}>
           {expanded ? '▲ Masquer' : '▼ Afficher'}
         </span>
       </button>
@@ -124,7 +124,6 @@ export default function AgentRequestQueue({
                   borderRadius: 10, border: `1px solid ${isActive ? req.agentColor + '60' : '#e5e7eb'}`,
                   background: isActive ? req.agentColor + '08' : 'white',
                   overflow: 'hidden',
-                  boxShadow: isActive ? `0 0 0 2px ${req.agentColor}20` : 'none',
                 }}
               >
                 {/* Card header */}
@@ -157,13 +156,13 @@ export default function AgentRequestQueue({
                       )}
                       {isActive && (
                         <span style={{
-                          fontSize: 9, fontWeight: 700, color: '#7c3aed',
-                          background: '#7c3aed15', padding: '1px 6px', borderRadius: 6,
+                          fontSize: 9, fontWeight: 700, color: '#1A1A1A',
+                          background: '#1A1A1A15', padding: '1px 6px', borderRadius: 6,
                         }}>
                           En cours
                         </span>
                       )}
-                      <span style={{ fontSize: 9, color: '#9ca3af', marginLeft: 'auto' }}>
+                      <span style={{ fontSize: 9, color: '#9B9B9B', marginLeft: 'auto' }}>
                         {formatRequestAge(req.createdAt)}
                       </span>
                     </div>
@@ -192,7 +191,7 @@ export default function AgentRequestQueue({
                       )}
                       {req.specs.style && (
                         <span style={{
-                          fontSize: 9, background: '#f5f3ff', color: '#7c3aed',
+                          fontSize: 9, background: '#F7F7F7', color: '#1A1A1A',
                           padding: '2px 8px', borderRadius: 8, fontWeight: 600,
                         }}>
                           Style: {req.specs.style}
@@ -200,7 +199,7 @@ export default function AgentRequestQueue({
                       )}
                       {req.specs.dimensions && (
                         <span style={{
-                          fontSize: 9, background: '#f0f9ff', color: '#0284c7',
+                          fontSize: 9, background: '#F7F7F7', color: '#6B6B6B',
                           padding: '2px 8px', borderRadius: 8, fontWeight: 600,
                         }}>
                           {req.specs.dimensions}
@@ -208,7 +207,7 @@ export default function AgentRequestQueue({
                       )}
                       {req.specs.format && (
                         <span style={{
-                          fontSize: 9, background: '#fef3c7', color: '#92400e',
+                          fontSize: 9, background: '#F7F7F7', color: '#6B6B6B',
                           padding: '2px 8px', borderRadius: 8, fontWeight: 600,
                         }}>
                           {req.specs.format}
@@ -225,7 +224,7 @@ export default function AgentRequestQueue({
                         style={{
                           padding: '6px 14px', borderRadius: 7, border: 'none', fontSize: 11,
                           fontWeight: 700, cursor: 'pointer',
-                          background: req.agentColor || '#7c3aed', color: 'white',
+                          background: req.agentColor || '#1A1A1A', color: 'white',
                         }}
                       >
                         Prendre en charge
@@ -237,13 +236,13 @@ export default function AgentRequestQueue({
                         style={{
                           padding: '6px 14px', borderRadius: 7, border: 'none', fontSize: 11,
                           fontWeight: 700, cursor: isFulfilling ? 'wait' : 'pointer',
-                          background: isFulfilling ? '#94a3b8' : '#10b981', color: 'white',
+                          background: isFulfilling ? '#9B9B9B' : '#1A1A1A', color: 'white',
                         }}
                       >
                         {isFulfilling ? <><span className="material-symbols-rounded" style={{ fontSize: 11 }}>hourglass_empty</span> Envoi...</> : <><span className="material-symbols-rounded" style={{ fontSize: 11 }}>check_circle</span> Valider &amp; envoyer à {req.agentName.replace('Agent ', '')}</>}
                       </button>
                     ) : (
-                      <span style={{ fontSize: 11, color: '#7c3aed', fontStyle: 'italic', padding: '6px 0' }}>
+                      <span style={{ fontSize: 11, color: '#1A1A1A', fontStyle: 'italic', padding: '6px 0' }}>
                         Générez un média pour valider cette demande
                       </span>
                     )}
@@ -266,7 +265,7 @@ export default function AgentRequestQueue({
           {/* Completed requests (collapsed) */}
           {completed.length > 0 && (
             <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#9B9B9B', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>
                 Complétées ({completed.length})
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -279,11 +278,11 @@ export default function AgentRequestQueue({
                     <span style={{ fontSize: 11, color: '#6b7280', flex: 1 }}>
                       {req.title}
                     </span>
-                    <span style={{ fontSize: 10, color: '#10b981', fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> Envoyé</span>
+                    <span style={{ fontSize: 10, color: '#1A1A1A', fontWeight: 600 }}><span className="material-symbols-rounded" style={{ fontSize: 10 }}>check</span> Envoyé</span>
                     <button
                       onClick={() => handleDelete(req.id)}
                       style={{
-                        fontSize: 10, color: '#9ca3af', background: 'none', border: 'none',
+                        fontSize: 10, color: '#9B9B9B', background: 'none', border: 'none',
                         cursor: 'pointer', padding: 0,
                       }}
                       title="Supprimer"

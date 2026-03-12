@@ -165,18 +165,18 @@ export default function AdminMyStudioPage() {
   };
 
   const pad = isMobile ? 16 : 24;
-  const cardStyle = { background: '#1a0e3a', borderRadius: 12, padding: pad };
+  const cardStyle = { background: '#FFFFFF', borderRadius: 8, padding: pad, border: '1px solid rgba(0,0,0,0.08)' as const };
   const btnBase = { border: 'none', cursor: 'pointer', borderRadius: 8, fontWeight: 500 as const, fontSize: 14, minHeight: 44 };
   const inputStyle = {
-    width: '100%', background: '#0f0720', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8,
-    padding: 12, fontSize: 14, color: '#fff', outline: 'none', resize: 'none' as const,
+    width: '100%', background: '#F7F7F7', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8,
+    padding: 12, fontSize: 14, color: '#1A1A1A', outline: 'none', resize: 'none' as const,
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0720', color: '#f3f4f6', padding: pad }} className="admin-page-scrollable">
+    <div style={{ minHeight: '100vh', background: '#FFFFFF', color: '#1A1A1A', padding: pad }} className="admin-page-scrollable">
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>Mon Studio Creatif</h1>
-      <p style={{ color: '#9ca3af', fontSize: 14, marginBottom: 24 }}>Generez des photos et videos avec l&apos;IA directement depuis l&apos;admin.</p>
+      <p style={{ color: '#9B9B9B', fontSize: 14, marginBottom: 24 }}>Generez des photos et videos avec l&apos;IA directement depuis l&apos;admin.</p>
 
       {/* Mode switcher */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
@@ -186,8 +186,8 @@ export default function AdminMyStudioPage() {
             onClick={() => setMode(m)}
             style={{
               ...btnBase, padding: '8px 20px',
-              background: mode === m ? '#7c3aed' : '#1a0e3a',
-              color: mode === m ? '#fff' : '#9ca3af',
+              background: mode === m ? '#1A1A1A' : '#F7F7F7',
+              color: mode === m ? '#fff' : '#9B9B9B',
             }}
           >
             {m === 'photo' ? 'Photo' : 'Video'}
@@ -215,7 +215,7 @@ export default function AdminMyStudioPage() {
           }}>
             {/* Style */}
             <div>
-              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Style</label>
+              <label style={{ fontSize: 12, color: '#9B9B9B', marginBottom: 4, display: 'block' }}>Style</label>
               <select
                 value={photoStyle}
                 onChange={e => setPhotoStyle(e.target.value as PhotoStyle)}
@@ -227,7 +227,7 @@ export default function AdminMyStudioPage() {
 
             {/* Aspect Ratio */}
             <div>
-              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Format</label>
+              <label style={{ fontSize: 12, color: '#9B9B9B', marginBottom: 4, display: 'block' }}>Format</label>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {ASPECT_RATIOS.map(a => (
                   <button
@@ -235,8 +235,8 @@ export default function AdminMyStudioPage() {
                     onClick={() => setAspectRatio(a.value)}
                     style={{
                       ...btnBase, padding: '6px 12px', fontSize: 12,
-                      background: aspectRatio === a.value ? '#7c3aed' : 'rgba(255,255,255,0.08)',
-                      color: aspectRatio === a.value ? '#fff' : '#d1d5db',
+                      background: aspectRatio === a.value ? '#1A1A1A' : 'rgba(0,0,0,0.04)',
+                      color: aspectRatio === a.value ? '#fff' : '#1A1A1A',
                     }}
                   >
                     {a.label}
@@ -247,13 +247,13 @@ export default function AdminMyStudioPage() {
 
             {/* HD Toggle */}
             <div>
-              <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Qualite</label>
+              <label style={{ fontSize: 12, color: '#9B9B9B', marginBottom: 4, display: 'block' }}>Qualite</label>
               <button
                 onClick={() => setHd(!hd)}
                 style={{
                   ...btnBase, padding: '6px 16px', fontSize: 12,
-                  background: hd ? '#d97706' : 'rgba(255,255,255,0.08)',
-                  color: hd ? '#fff' : '#d1d5db',
+                  background: hd ? '#9B9B9B' : 'rgba(0,0,0,0.04)',
+                  color: hd ? '#fff' : '#1A1A1A',
                 }}
               >
                 {hd ? 'HD Active (Flux Dev)' : 'Standard (Flux Schnell)'}
@@ -266,18 +266,18 @@ export default function AdminMyStudioPage() {
             disabled={photoLoading || !photoPrompt.trim()}
             style={{
               ...btnBase, padding: '10px 24px',
-              background: (photoLoading || !photoPrompt.trim()) ? 'rgba(255,255,255,0.08)' : '#7c3aed',
-              color: (photoLoading || !photoPrompt.trim()) ? '#6b7280' : '#fff',
+              background: (photoLoading || !photoPrompt.trim()) ? 'rgba(0,0,0,0.04)' : '#1A1A1A',
+              color: (photoLoading || !photoPrompt.trim()) ? '#9B9B9B' : '#fff',
             }}
           >
             {photoLoading ? 'Generation en cours...' : 'Generer la photo'}
           </button>
 
-          {photoError && <p style={{ color: '#f87171', fontSize: 14, marginTop: 12 }}>{photoError}</p>}
+          {photoError && <p style={{ color: '#DC2626', fontSize: 14, marginTop: 12 }}>{photoError}</p>}
 
           {photoResult && (
             <div style={{ marginTop: 16 }}>
-              <img src={photoResult} alt={photoPrompt} style={{ maxWidth: isMobile ? '100%' : 400, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }} />
+              <img src={photoResult} alt={photoPrompt} style={{ maxWidth: isMobile ? '100%' : 400, borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)' }} />
             </div>
           )}
         </div>
@@ -297,7 +297,7 @@ export default function AdminMyStudioPage() {
           />
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, color: '#9ca3af', marginBottom: 4, display: 'block' }}>Duree</label>
+            <label style={{ fontSize: 12, color: '#9B9B9B', marginBottom: 4, display: 'block' }}>Duree</label>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {DURATIONS.map(d => (
                 <button
@@ -305,8 +305,8 @@ export default function AdminMyStudioPage() {
                   onClick={() => setVideoDuration(d.value)}
                   style={{
                     ...btnBase, padding: '6px 16px', fontSize: 12,
-                    background: videoDuration === d.value ? '#7c3aed' : 'rgba(255,255,255,0.08)',
-                    color: videoDuration === d.value ? '#fff' : '#d1d5db',
+                    background: videoDuration === d.value ? '#1A1A1A' : 'rgba(0,0,0,0.04)',
+                    color: videoDuration === d.value ? '#fff' : '#1A1A1A',
                   }}
                 >
                   {d.label}
@@ -320,22 +320,22 @@ export default function AdminMyStudioPage() {
             disabled={videoLoading || !videoPrompt.trim()}
             style={{
               ...btnBase, padding: '10px 24px',
-              background: (videoLoading || !videoPrompt.trim()) ? 'rgba(255,255,255,0.08)' : '#7c3aed',
-              color: (videoLoading || !videoPrompt.trim()) ? '#6b7280' : '#fff',
+              background: (videoLoading || !videoPrompt.trim()) ? 'rgba(0,0,0,0.04)' : '#1A1A1A',
+              color: (videoLoading || !videoPrompt.trim()) ? '#9B9B9B' : '#fff',
             }}
           >
             {videoLoading ? 'Lancement...' : 'Generer la video'}
           </button>
 
-          {videoError && <p style={{ color: '#f87171', fontSize: 14, marginTop: 12 }}>{videoError}</p>}
+          {videoError && <p style={{ color: '#DC2626', fontSize: 14, marginTop: 12 }}>{videoError}</p>}
 
           {videoStatus && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
               <span style={{
                 display: 'inline-block', width: 10, height: 10, borderRadius: '50%',
-                background: videoStatus === 'done' ? '#22c55e' : videoStatus === 'error' ? '#ef4444' : '#eab308',
+                background: videoStatus === 'done' ? '#1A1A1A' : videoStatus === 'error' ? '#DC2626' : '#9B9B9B',
               }} />
-              <span style={{ fontSize: 14, color: '#d1d5db' }}>
+              <span style={{ fontSize: 14, color: '#1A1A1A' }}>
                 {videoStatus === 'queued' && 'En file d\'attente...'}
                 {videoStatus === 'processing' && 'Generation en cours...'}
                 {videoStatus === 'done' && 'Video terminee !'}
@@ -346,7 +346,7 @@ export default function AdminMyStudioPage() {
 
           {videoResult && (
             <div style={{ marginTop: 16 }}>
-              <video src={videoResult} controls style={{ maxWidth: isMobile ? '100%' : 400, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }} />
+              <video src={videoResult} controls style={{ maxWidth: isMobile ? '100%' : 400, borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)' }} />
             </div>
           )}
         </div>
@@ -357,14 +357,14 @@ export default function AdminMyStudioPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <h2 style={{ fontSize: 18, fontWeight: 600 }}>Galerie ({gallery.length})</h2>
           {gallery.length > 0 && (
-            <button onClick={clearGallery} style={{ fontSize: 12, color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', minHeight: 44, padding: '8px 12px' }}>
+            <button onClick={clearGallery} style={{ fontSize: 12, color: '#DC2626', background: 'none', border: 'none', cursor: 'pointer', minHeight: 44, padding: '8px 12px' }}>
               Vider la galerie
             </button>
           )}
         </div>
 
         {gallery.length === 0 && (
-          <p style={{ color: '#6b7280', fontSize: 14 }}>Aucune creation pour le moment. Generez votre premiere image ou video !</p>
+          <p style={{ color: '#9B9B9B', fontSize: 14 }}>Aucune creation pour le moment. Generez votre premiere image ou video !</p>
         )}
 
         <div style={{
@@ -373,7 +373,7 @@ export default function AdminMyStudioPage() {
           gap: 16,
         }}>
           {gallery.map(item => (
-            <div key={item.id} style={{ background: '#0f0720', borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div key={item.id} style={{ background: '#F7F7F7', borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.08)' }}>
               {item.type === 'photo' ? (
                 <img src={item.url} alt={item.prompt} style={{ width: '100%', height: 160, objectFit: 'cover' }} />
               ) : (
@@ -382,13 +382,13 @@ export default function AdminMyStudioPage() {
               <div style={{ padding: 8 }}>
                 <span style={{
                   fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 500,
-                  background: item.type === 'photo' ? 'rgba(37,99,235,0.2)' : 'rgba(147,51,234,0.2)',
-                  color: item.type === 'photo' ? '#93c5fd' : '#c4b5fd',
+                  background: 'rgba(0,0,0,0.04)',
+                  color: '#1A1A1A',
                 }}>
                   {item.type === 'photo' ? 'Photo' : 'Video'}
                 </span>
-                <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.prompt}</p>
-                <p style={{ fontSize: 10, color: '#4b5563', marginTop: 4 }}>
+                <p style={{ fontSize: 12, color: '#9B9B9B', marginTop: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.prompt}</p>
+                <p style={{ fontSize: 10, color: '#9B9B9B', marginTop: 4 }}>
                   {new Date(item.createdAt).toLocaleDateString('fr-FR')}
                 </p>
               </div>

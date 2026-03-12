@@ -158,8 +158,8 @@ export default function VideoProPage() {
             setForm({ name: '', email: '', phone: '', service: '', brief: '', budget: '' });
           }}
           style={{
-            padding: '10px 24px', fontSize: 14, fontWeight: 600, borderRadius: 10,
-            background: 'var(--fz-accent, #0EA5E9)', color: '#fff', border: 'none', cursor: 'pointer',
+            padding: '10px 24px', fontSize: 14, fontWeight: 600, borderRadius: 8,
+            background: '#1A1A1A', color: '#fff', border: '1px solid #E5E5E5', cursor: 'pointer',
           }}
         >
           Retour aux services
@@ -186,25 +186,18 @@ export default function VideoProPage() {
 
       {/* Hero Section */}
       <div style={{
-        background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9) 0%, #6d28d9 50%, #06b6d4 100%)',
-        borderRadius: 16, padding: isMobile ? '28px 18px' : '48px 36px', marginBottom: 36, position: 'relative', overflow: 'hidden',
+        background: '#F7F7F7',
+        borderRadius: 8, padding: isMobile ? '28px 18px' : '48px 36px', marginBottom: 36,
+        border: '1px solid #E5E5E5',
       }}>
-        <div style={{
-          position: 'absolute', top: -40, right: -40, width: 200, height: 200,
-          borderRadius: '50%', background: 'rgba(255,255,255,0.08)',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: -30, left: -30, width: 140, height: 140,
-          borderRadius: '50%', background: 'rgba(255,255,255,0.05)',
-        }} />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.7)', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 }}>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: '#9B9B9B', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 }}>
             Freenzy.io Production
           </div>
-          <h1 style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.03em' }}>
+          <h1 style={{ fontSize: 32, fontWeight: 800, color: '#1A1A1A', marginBottom: 8, letterSpacing: '-0.03em' }}>
             <span className="fz-logo-word">Video Pro</span>
           </h1>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6, maxWidth: 560, margin: 0 }}>
+          <p style={{ fontSize: 16, color: '#6B6B6B', lineHeight: 1.6, maxWidth: 560, margin: 0 }}>
             Productions video professionnelles assistees par <span className="fz-logo-word">IA</span>.
             De l&apos;idee au produit fini, nos <span className="fz-logo-word">assistants</span> et nos experts creent vos contenus video avec qualite et rapidite.
           </p>
@@ -220,27 +213,22 @@ export default function VideoProPage() {
           <div
             key={svc.id}
             style={{
-              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 14, border: 'none',
+              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5',
               padding: '24px 20px', display: 'flex', flexDirection: 'column',
               transition: 'all 0.2s ease',
-              boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--fz-accent, #0EA5E9)';
-              (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 16px rgba(14,165,233,0.12)';
-              (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
+              (e.currentTarget as HTMLDivElement).style.background = '#F7F7F7';
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--fz-border, #E2E8F0)';
-              (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
-              (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLDivElement).style.background = '#fff';
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 12 }}>{svc.icon}</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>
               {svc.title}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--fz-accent, #0EA5E9)', fontWeight: 600, marginBottom: 10 }}>
+            <div style={{ fontSize: 12, color: '#6B6B6B', fontWeight: 600, marginBottom: 10 }}>
               {svc.subtitle}
             </div>
             <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
@@ -259,17 +247,17 @@ export default function VideoProPage() {
               onClick={() => handleOrder(svc.id)}
               style={{
                 width: '100%', padding: '10px 0', fontSize: 13, fontWeight: 600,
-                borderRadius: 10, border: '2px solid var(--fz-accent, #0EA5E9)', background: 'transparent',
-                color: 'var(--fz-accent, #0EA5E9)', cursor: 'pointer', transition: 'all 0.15s',
+                borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff',
+                color: '#1A1A1A', cursor: 'pointer', transition: 'all 0.15s',
                 fontFamily: 'var(--font-sans)',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-accent, #0EA5E9)';
+                (e.currentTarget as HTMLButtonElement).style.background = '#1A1A1A';
                 (e.currentTarget as HTMLButtonElement).style.color = '#fff';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                (e.currentTarget as HTMLButtonElement).style.color = 'var(--fz-accent, #0EA5E9)';
+                (e.currentTarget as HTMLButtonElement).style.background = '#fff';
+                (e.currentTarget as HTMLButtonElement).style.color = '#1A1A1A';
               }}
             >
               Commander
@@ -280,10 +268,10 @@ export default function VideoProPage() {
 
       {/* Studio Creatif Link */}
       <div style={{
-        background: 'var(--accent-muted)', borderRadius: 14, padding: '20px 24px',
+        background: '#F7F7F7', borderRadius: 8, padding: '20px 24px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 12, marginBottom: 40,
-        border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+        border: '1px solid #E5E5E5',
       }}>
         <div>
           <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
@@ -296,12 +284,12 @@ export default function VideoProPage() {
         <Link
           href="/client/studio"
           style={{
-            padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 600,
-            background: 'var(--fz-accent, #0EA5E9)', color: '#fff', textDecoration: 'none',
+            padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+            background: '#1A1A1A', color: '#fff', textDecoration: 'none',
             transition: 'background 0.15s', whiteSpace: 'nowrap',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#6d28d9'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--fz-accent, #0EA5E9)'; }}
+          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#333'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#1A1A1A'; }}
         >
           Ouvrir le Studio
         </Link>
@@ -309,9 +297,8 @@ export default function VideoProPage() {
 
       {/* Devis Section */}
       <div id="devis-section" style={{
-        background: 'var(--fz-bg, #FFFFFF)', borderRadius: 16, border: 'none',
+        background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5',
         padding: '32px 28px', marginBottom: 40,
-        boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
       }}>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
           Demander un devis
@@ -332,11 +319,11 @@ export default function VideoProPage() {
               placeholder="Votre nom"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -353,11 +340,11 @@ export default function VideoProPage() {
               placeholder="votre@email.com"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -375,11 +362,11 @@ export default function VideoProPage() {
               placeholder="+33 6 12 34 56 78"
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
                 outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -394,11 +381,11 @@ export default function VideoProPage() {
               onChange={e => setForm(prev => ({ ...prev, service: e.target.value }))}
               style={{
                 width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
+                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
                 background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
                 boxSizing: 'border-box',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; }}
+              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             >
               <option value="">Selectionnez un service</option>
@@ -421,11 +408,11 @@ export default function VideoProPage() {
             rows={4}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
+              border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
               resize: 'vertical', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
-            onFocus={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
             onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           />
         </div>
@@ -440,11 +427,11 @@ export default function VideoProPage() {
             onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
             style={{
               width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, fontFamily: 'var(--font-sans)',
+              border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
               background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
               boxSizing: 'border-box',
             }}
-            onFocus={e => { e.currentTarget.style.borderColor = 'var(--fz-accent, #0EA5E9)'; }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
             onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           >
             {BUDGET_OPTIONS.map(b => (
@@ -469,12 +456,12 @@ export default function VideoProPage() {
           disabled={submitting}
           style={{
             width: '100%', padding: '13px 0', fontSize: 14, fontWeight: 700,
-            borderRadius: 10, background: 'var(--fz-accent, #0EA5E9)', color: '#fff', border: 'none',
+            borderRadius: 8, background: '#1A1A1A', color: '#fff', border: '1px solid #E5E5E5',
             cursor: submitting ? 'wait' : 'pointer', opacity: submitting ? 0.7 : 1,
             transition: 'background 0.15s', fontFamily: 'var(--font-sans)',
           }}
-          onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLButtonElement).style.background = '#6d28d9'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-accent, #0EA5E9)'; }}
+          onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLButtonElement).style.background = '#333'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1A1A1A'; }}
         >
           {submitting ? 'Envoi en cours...' : 'Envoyer la demande de devis'}
         </button>

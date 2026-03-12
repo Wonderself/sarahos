@@ -128,7 +128,7 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
           onCancel={() => setPreview(null)}
         />
         {uploading && (
-          <div style={{ fontSize: 12, color: '#7c3aed', marginTop: 8, textAlign: 'center' }}>
+          <div style={{ fontSize: 12, color: '#1A1A1A', marginTop: 8, textAlign: 'center' }}>
             Sauvegarde en cours...
           </div>
         )}
@@ -147,12 +147,12 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
         onDrop={handleDrop}
         onClick={() => fileRef.current?.click()}
         style={{
-          border: `2px dashed ${dragOver ? '#7c3aed' : '#e5e7eb'}`,
+          border: `2px dashed ${dragOver ? '#1A1A1A' : '#e5e7eb'}`,
           borderRadius: 10,
           padding: '20px 16px',
           textAlign: 'center',
           cursor: uploading ? 'wait' : 'pointer',
-          background: dragOver ? 'rgba(91,108,247,0.04)' : '#fafafa',
+          background: dragOver ? 'rgba(0,0,0,0.04)' : '#fafafa',
           transition: 'all 0.2s',
         }}
       >
@@ -164,17 +164,17 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
           style={{ display: 'none' }}
         />
         {uploading ? (
-          <div style={{ fontSize: 13, color: '#7c3aed' }}>Analyse du document...</div>
+          <div style={{ fontSize: 13, color: '#1A1A1A' }}>Analyse du document...</div>
         ) : (
           <>
             <div style={{ fontSize: 22, marginBottom: 6 }}>+</div>
             <div style={{ fontSize: 13, color: '#6b7280' }}>
               Glissez un fichier ici ou cliquez pour selectionner
             </div>
-            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>
+            <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>
               PDF, Word, Excel, CSV, TXT, images — max {MAX_FILE_SIZE_MB} Mo
             </div>
-            <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 6 }}>
+            <div style={{ fontSize: 10, color: '#9B9B9B', marginTop: 6 }}>
               Seul le texte utile est conserve — vous pourrez selectionner les sections a garder
             </div>
           </>
@@ -185,7 +185,7 @@ export default function DocumentUploader({ agentContext, token, onUploadComplete
         <div style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>{error}</div>
       )}
       {success && (
-        <div style={{ fontSize: 12, color: '#10b981', marginTop: 8 }}>{success}</div>
+        <div style={{ fontSize: 12, color: '#1A1A1A', marginTop: 8 }}>{success}</div>
       )}
     </div>
   );

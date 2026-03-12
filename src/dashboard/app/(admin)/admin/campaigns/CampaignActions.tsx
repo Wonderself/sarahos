@@ -48,7 +48,7 @@ export function CampaignActions({ campaignId, currentStatus }: CampaignActionsPr
     <div style={{ display: 'flex', gap: 6 }}>
       <button
         className="btn btn-primary btn-sm"
-        style={{ background: '#22c55e', borderColor: '#22c55e', fontSize: 11, padding: '3px 8px' }}
+        style={{ background: '#1A1A1A', borderColor: '#1A1A1A', fontSize: 11, padding: '3px 8px' }}
         onClick={() => updateStatus('approved')}
         disabled={!!loading}
       >

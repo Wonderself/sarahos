@@ -95,7 +95,7 @@ export default function AdminRepondeurPage() {
 
       {loading && <div className="skeleton" style={{ height: 200, borderRadius: 8 }} />}
       {error && (
-        <div className="card p-4 text-center" style={{ color: 'var(--error, #ef4444)' }}>
+        <div className="card p-4 text-center" style={{ color: 'var(--error, #DC2626)' }}>
           {error}
         </div>
       )}
@@ -110,7 +110,7 @@ export default function AdminRepondeurPage() {
               <div className="stat-label">Configs totales</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value" style={{ color: '#22c55e' }}>{stats.activeConfigs}</div>
+              <div className="stat-value" style={{ color: '#1A1A1A' }}>{stats.activeConfigs}</div>
               <div className="stat-label">Configs actives</div>
             </div>
             <div className="stat-card">
@@ -118,7 +118,7 @@ export default function AdminRepondeurPage() {
               <div className="stat-label">Messages traités</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value" style={{ color: '#8b5cf6' }}>{stats.messagesToday}</div>
+              <div className="stat-value" style={{ color: '#1A1A1A' }}>{stats.messagesToday}</div>
               <div className="stat-label">Messages aujourd&apos;hui</div>
             </div>
             <div className="stat-card">
@@ -126,7 +126,7 @@ export default function AdminRepondeurPage() {
               <div className="stat-label">Commandes détectées</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value" style={{ color: '#f59e0b' }}>{stats.pendingOrders}</div>
+              <div className="stat-value" style={{ color: '#9B9B9B' }}>{stats.pendingOrders}</div>
               <div className="stat-label">Commandes en attente</div>
             </div>
             <div className="stat-card">
@@ -157,7 +157,7 @@ export default function AdminRepondeurPage() {
                           <span style={{ color: 'var(--muted)' }}>{c.count} ({pct}%)</span>
                         </div>
                         <div style={{ height: 4, background: 'var(--border)', borderRadius: 2 }}>
-                          <div style={{ width: `${pct}%`, height: '100%', background: '#8b5cf6', borderRadius: 2 }} />
+                          <div style={{ width: `${pct}%`, height: '100%', background: '#1A1A1A', borderRadius: 2 }} />
                         </div>
                       </div>
                     );

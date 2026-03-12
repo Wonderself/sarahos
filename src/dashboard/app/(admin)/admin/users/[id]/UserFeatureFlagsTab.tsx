@@ -76,7 +76,7 @@ export default function UserFeatureFlagsTab({ userId, showToast }: {
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 padding: '10px 12px', borderRadius: 8,
                 border: '1px solid var(--border-primary)',
-                background: isDefined ? (enabled ? '#10b98108' : '#ef444408') : 'transparent',
+                background: isDefined ? (enabled ? 'rgba(0,0,0,0.03)' : 'rgba(220,38,38,0.03)') : 'transparent',
               }}
             >
               <div>
@@ -87,8 +87,8 @@ export default function UserFeatureFlagsTab({ userId, showToast }: {
                 {isDefined && (
                   <span style={{
                     fontSize: 10, padding: '2px 6px', borderRadius: 10,
-                    background: enabled ? '#10b98120' : '#ef444420',
-                    color: enabled ? '#10b981' : '#ef4444', fontWeight: 600,
+                    background: enabled ? 'rgba(0,0,0,0.08)' : 'rgba(220,38,38,0.08)',
+                    color: enabled ? '#1A1A1A' : '#DC2626', fontWeight: 600,
                   }}>
                     {enabled ? 'ON' : 'OFF'}
                   </span>
@@ -99,7 +99,7 @@ export default function UserFeatureFlagsTab({ userId, showToast }: {
                   title={enabled ? 'Désactiver' : 'Activer'}
                   style={{
                     width: 40, height: 22, borderRadius: 11, border: 'none', cursor: 'pointer',
-                    background: enabled ? '#10b981' : '#d1d5db', transition: 'background 0.2s', position: 'relative',
+                    background: enabled ? '#1A1A1A' : '#d1d5db', transition: 'background 0.2s', position: 'relative',
                   }}
                 >
                   <span style={{

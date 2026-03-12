@@ -161,10 +161,10 @@ export default function BriefingPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>
             \u2600\ufe0f <span className="fz-logo-word">Briefing</span> du jour
           </h1>
-          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14 }}>
+          <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14 }}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             {briefing?.generated_at ? ` \u00b7 G\u00e9n\u00e9r\u00e9 \u00e0 ${briefing.generated_at}` : ''}
           </p>
@@ -196,12 +196,12 @@ export default function BriefingPage() {
       {!loading && !briefing && !generating && (
         <div style={{
           textAlign: 'center', padding: '60px 40px',
-          background: 'var(--fz-bg, #FFFFFF)', borderRadius: 20,
-          border: '2px dashed var(--fz-border, #E2E8F0)',
+          background: 'var(--fz-bg, #fff)', borderRadius: 20,
+          border: '2px dashed var(--fz-border, #E5E5E5)',
         }}>
           <div style={{ fontSize: 56, marginBottom: 16 }}>\u2600\ufe0f</div>
-          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Pas encore de briefing</h2>
-          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1A1A1A)' }}>Pas encore de briefing</h2>
+          <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
             G\u00e9n\u00e9rez votre briefing <span className="fz-logo-word">IA</span> quotidien \u2014 priorit\u00e9s du jour, insights business et conseils personnalis\u00e9s.
           </p>
           <button
@@ -218,7 +218,7 @@ export default function BriefingPage() {
       {generating && !briefing && (
         <div style={{ textAlign: 'center', padding: '60px 40px' }}>
           <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">\u2728</div>
-          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14 }}>
+          <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14 }}>
             Ma\u00ebva analyse votre contexte et pr\u00e9pare votre briefing...
           </p>
         </div>
@@ -233,20 +233,20 @@ export default function BriefingPage() {
               className="card"
               style={{
                 background: i === 0
-                  ? 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d405)'
-                  : 'var(--fz-bg, #FFFFFF)',
-                borderColor: i === 0 ? 'rgba(14,165,233,0.13)' : 'var(--fz-border, #E2E8F0)',
+                  ? 'rgba(0,0,0,0.02)'
+                  : 'var(--fz-bg, #fff)',
+                borderColor: i === 0 ? '#E5E5E5' : 'var(--fz-border, #E5E5E5)',
               }}
             >
               {section.title && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                   <span style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
-                  <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--fz-text, #1E293B)' }}>{section.title}</span>
+                  <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--fz-text, #1A1A1A)' }}>{section.title}</span>
                 </div>
               )}
               <div style={{
                 fontSize: 14,
-                color: 'var(--fz-text-secondary, #64748B)',
+                color: 'var(--fz-text-secondary, #6B6B6B)',
                 lineHeight: 1.7,
                 whiteSpace: 'pre-wrap',
               }}>
@@ -260,7 +260,7 @@ export default function BriefingPage() {
       {/* Raw fallback if no sections parsed */}
       {!loading && briefing && sections.length === 0 && (
         <div className="card">
-          <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
+          <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #6B6B6B)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
             {briefing.content}
           </div>
         </div>

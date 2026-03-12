@@ -86,14 +86,14 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
       <div style={styles.grid4}>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Solde</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--accent)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {wallet ? formatCredits(wallet.balanceCredits) : '0.00'}
           </span>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>credits</span>
         </div>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Total depose</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--success)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {wallet ? formatCredits(wallet.totalDeposited) : '0.00'}
           </span>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>credits</span>
@@ -208,10 +208,10 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
                     <td style={styles.td(i)}>{formatDate(tx.createdAt)}</td>
                     <td style={styles.td(i)}>
                       <span style={styles.badge(
-                        tx.type === 'deposit' || tx.type === 'credit' ? '#16a34a'
-                          : tx.type === 'refund' ? '#2563eb'
-                          : tx.type === 'debit' || tx.type === 'charge' ? '#dc2626'
-                          : '#6b7280'
+                        tx.type === 'deposit' || tx.type === 'credit' ? '#1A1A1A'
+                          : tx.type === 'refund' ? '#6B6B6B'
+                          : tx.type === 'debit' || tx.type === 'charge' ? '#DC2626'
+                          : '#6B6B6B'
                       )}>
                         {tx.type}
                       </span>
@@ -219,7 +219,7 @@ export default function UserWalletTab({ userId, data, loading, showToast, onRefr
                     <td style={{
                       ...styles.td(i),
                       fontWeight: 600,
-                      color: tx.amount >= 0 ? 'var(--success)' : 'var(--danger)',
+                      color: tx.amount >= 0 ? 'var(--text-primary)' : 'var(--danger)',
                       fontFamily: 'var(--font-mono)',
                     }}>
                       {tx.amount >= 0 ? '+' : ''}{formatCredits(tx.amount)} cr

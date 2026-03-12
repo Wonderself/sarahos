@@ -126,7 +126,7 @@ export default async function TokensPage() {
             ))}
           </div>
           <div className="card p-20">
-            <h3 className="text-base font-bold mb-12" style={{ color: '#f59e0b' }}>Actions Opus (avancé)</h3>
+            <h3 className="text-base font-bold mb-12" style={{ color: '#9B9B9B' }}>Actions Opus (avancé)</h3>
             {[
               { action: 'Conseil stratégique', input: 1500, output: 800, cost: '8.25' },
               { action: 'Analyse financière détaillée', input: 3000, output: 2000, cost: '19.50' },
@@ -134,7 +134,7 @@ export default async function TokensPage() {
             ].map(a => (
               <div key={a.action} className="flex flex-between text-md" style={{ padding: '6px 0', borderBottom: '1px solid var(--border-primary)' }}>
                 <span>{a.action} <span className="text-muted" style={{ fontSize: 10 }}>({a.input}in/{a.output}out)</span></span>
-                <strong style={{ color: '#f59e0b' }}>{a.cost} cr</strong>
+                <strong style={{ color: '#9B9B9B' }}>{a.cost} cr</strong>
               </div>
             ))}
             <div className="mt-12 text-sm text-muted" style={{ lineHeight: 1.5 }}>
@@ -154,42 +154,42 @@ export default async function TokensPage() {
               title: 'Utiliser Sonnet par défaut',
               desc: 'Sonnet est 5x moins cher qu\'Opus pour une qualité excellente. Réservez Opus aux décisions stratégiques critiques.',
               saving: 'Économie : ~80% par rapport à Opus',
-              color: '#22c55e',
+              color: '#1A1A1A',
             },
             {
               icon: 'straighten',
               title: 'Configurer la concision des agents',
               desc: 'Dans Agent Studio, réglez "Longueur de réponse" à 0-30 (concis). Moins de tokens output = moins de crédits.',
               saving: 'Économie : jusqu\'à -60% output tokens',
-              color: '#7c3aed',
+              color: '#1A1A1A',
             },
             {
               icon: 'business',
               title: 'Remplir le profil entreprise',
               desc: 'Un profil complet évite les questions de clarification. L\'agent comprend directement le contexte = moins d\'échanges.',
               saving: 'Économie : -30% d\'échanges en moyenne',
-              color: '#06b6d4',
+              color: '#6B6B6B',
             },
             {
               icon: 'wb_sunny',
               title: 'Utiliser les briefings quotidiens',
               desc: 'Un seul briefing résume toutes les infos importantes. Plus efficace que 5 chats séparés.',
               saving: 'Économie : ~2.70 cr au lieu de ~3.45 cr (5 chats)',
-              color: '#f59e0b',
+              color: '#9B9B9B',
             },
             {
               icon: 'assignment',
               title: 'Préférer les campagnes structurées',
               desc: 'Les campagnes guident l\'agent avec des templates. Moins d\'allers-retours, moins de tokens gaspillés.',
               saving: 'Économie : -25% par rapport à du chat libre',
-              color: '#ec4899',
+              color: '#6B6B6B',
             },
             {
               icon: 'refresh',
               title: 'Éviter les conversations trop longues',
               desc: 'Le contexte s\'accumule à chaque message (tokens input augmentent). Commencez une nouvelle conversation régulièrement.',
               saving: 'Économie : -40% sur les conversations longues',
-              color: '#14b8a6',
+              color: '#6B6B6B',
             },
           ].map(s => (
             <div key={s.title} className="card card-lift p-20" style={{ borderLeft: `3px solid ${s.color}` }}>
@@ -225,8 +225,8 @@ export default async function TokensPage() {
               </div>
             </div>
           </div>
-          <div className="card p-20" style={{ borderTop: '3px solid #f59e0b' }}>
-            <div className="text-lg font-bold mb-12" style={{ color: '#f59e0b' }}>Claude Opus</div>
+          <div className="card p-20" style={{ borderTop: '3px solid #9B9B9B' }}>
+            <div className="text-lg font-bold mb-12" style={{ color: '#9B9B9B' }}>Claude Opus</div>
             <div className="text-md text-secondary leading-relaxed">
               <strong>Utiliser pour :</strong>
               <ul style={{ paddingLeft: 16, margin: '8px 0' }}>
@@ -254,14 +254,14 @@ export default async function TokensPage() {
           {/* Visual consumption curve */}
           <div className="flex gap-4 mb-16" style={{ alignItems: 'flex-end', height: 120, padding: '0 20px' }}>
             {[
-              { label: 'Sem. 1', height: 100, color: '#ef4444' },
-              { label: 'Sem. 2', height: 75, color: '#f59e0b' },
-              { label: 'Sem. 3', height: 55, color: '#f59e0b' },
-              { label: 'Sem. 4', height: 40, color: '#22c55e' },
-              { label: 'Sem. 5', height: 30, color: '#22c55e' },
-              { label: 'Sem. 6', height: 25, color: '#22c55e' },
-              { label: 'Sem. 7', height: 22, color: '#22c55e' },
-              { label: 'Sem. 8+', height: 20, color: '#22c55e' },
+              { label: 'Sem. 1', height: 100, color: '#1A1A1A' },
+              { label: 'Sem. 2', height: 75, color: '#4A4A4A' },
+              { label: 'Sem. 3', height: 55, color: '#4A4A4A' },
+              { label: 'Sem. 4', height: 40, color: '#6B6B6B' },
+              { label: 'Sem. 5', height: 30, color: '#6B6B6B' },
+              { label: 'Sem. 6', height: 25, color: '#6B6B6B' },
+              { label: 'Sem. 7', height: 22, color: '#6B6B6B' },
+              { label: 'Sem. 8+', height: 20, color: '#6B6B6B' },
             ].map(bar => (
               <div key={bar.label} className="flex-1 text-center">
                 <div style={{
@@ -312,8 +312,8 @@ export default async function TokensPage() {
             ))}
           </div>
 
-          <div className="mt-16 rounded-sm" style={{ padding: '12px 16px', background: '#22c55e08', border: '1px solid #22c55e22' }}>
-            <div className="text-md font-semibold" style={{ color: '#22c55e', marginBottom: 4 }}>Mécanismes d&apos;optimisation actifs</div>
+          <div className="mt-16 rounded-sm" style={{ padding: '12px 16px', background: 'rgba(0,0,0,0.04)', border: '1px solid var(--border-primary)' }}>
+            <div className="text-md font-semibold" style={{ color: '#1A1A1A', marginBottom: 4 }}>Mécanismes d&apos;optimisation actifs</div>
             <ul className="text-sm text-secondary" style={{ lineHeight: 1.8, paddingLeft: 16, margin: 0 }}>
               <li><strong>Troncation automatique</strong> : Seuls les 8 derniers messages sont envoyés à l&apos;API (au lieu de tout l&apos;historique)</li>
               <li><strong>Système FAQ</strong> : Les utilisateurs sauvegardent les Q&amp;A fréquentes — réponse instantanée, 0 token</li>

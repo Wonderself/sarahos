@@ -399,8 +399,8 @@ export default function AgentCustomizePage() {
                 display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px',
                 borderRadius: 'var(--radius-md)',
                 background: isSelected ? (effective?.accentColor ?? agent.color) + '22' : 'var(--bg-secondary)',
-                border: `2px solid ${isSelected ? (effective?.accentColor ?? agent.color) : 'var(--fz-border, #E2E8F0)'}`,
-                cursor: 'pointer', color: 'var(--fz-text, #1E293B)',
+                border: `2px solid ${isSelected ? (effective?.accentColor ?? agent.color) : 'var(--fz-border, #E5E5E5)'}`,
+                cursor: 'pointer', color: 'var(--fz-text, #1A1A1A)',
                 transition: 'all 0.15s', fontFamily: 'var(--font-sans)',
                 position: 'relative',
               }}
@@ -431,7 +431,7 @@ export default function AgentCustomizePage() {
             className="card card-compact"
             style={{
               cursor: 'pointer', flex: 1, textAlign: 'left',
-              borderColor: config.templateId === preset.id ? preset.color : 'var(--fz-border, #E2E8F0)',
+              borderColor: config.templateId === preset.id ? preset.color : 'var(--fz-border, #E5E5E5)',
             }}
           >
             <div className="flex items-center gap-8 mb-4">
@@ -455,7 +455,7 @@ export default function AgentCustomizePage() {
               color: step === i ? 'var(--text-primary)' : 'var(--text-muted)',
               fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: step === i ? 600 : 400,
               transition: 'all 0.15s', textAlign: 'center',
-              boxShadow: step === i ? 'var(--shadow-sm)' : 'none',
+              
             }}
           >
             <div style={{ fontSize: 18, marginBottom: 2 }}>{s.icon}</div>
@@ -511,7 +511,7 @@ export default function AgentCustomizePage() {
                     onClick={() => updateConfig({ emoji: e })}
                     style={{
                       width: 44, height: 44, borderRadius: 10,
-                      border: `2px solid ${config.emoji === e ? config.accentColor : 'var(--fz-border, #E2E8F0)'}`,
+                      border: `2px solid ${config.emoji === e ? config.accentColor : 'var(--fz-border, #E5E5E5)'}`,
                       background: config.emoji === e ? config.accentColor + '22' : 'var(--bg-primary)',
                       cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'all 0.1s',
@@ -536,7 +536,7 @@ export default function AgentCustomizePage() {
                     style={{
                       width: 36, height: 36, borderRadius: '50%', border: 'none',
                       background: c.value, cursor: 'pointer',
-                      boxShadow: config.accentColor === c.value ? `0 0 0 3px var(--bg-primary), 0 0 0 5px ${c.value}` : 'none',
+                      border: config.accentColor === c.value ? '2px solid #1A1A1A' : '2px solid transparent',
                       transition: 'all 0.15s',
                     }}
                     title={c.name}
@@ -642,7 +642,7 @@ export default function AgentCustomizePage() {
                       }}
                       style={{
                         padding: '6px 12px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                        border: `1px solid ${isSelected ? config.accentColor : 'var(--fz-border, #E2E8F0)'}`,
+                        border: `1px solid ${isSelected ? config.accentColor : 'var(--fz-border, #E5E5E5)'}`,
                         background: isSelected ? config.accentColor + '22' : 'transparent',
                         color: isSelected ? config.accentColor : 'var(--text-secondary)',
                         cursor: 'pointer', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
@@ -753,7 +753,7 @@ export default function AgentCustomizePage() {
                     className="card card-compact"
                     style={{
                       flex: 1, textAlign: 'center', cursor: 'pointer',
-                      borderColor: config.instructions.responseFormat === f.value ? config.accentColor : 'var(--fz-border, #E2E8F0)',
+                      borderColor: config.instructions.responseFormat === f.value ? config.accentColor : 'var(--fz-border, #E5E5E5)',
                       background: config.instructions.responseFormat === f.value ? config.accentColor + '15' : 'var(--bg-secondary)',
                     }}
                   >
@@ -797,7 +797,7 @@ export default function AgentCustomizePage() {
                       }}
                       style={{
                         padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                        border: `1px solid ${isSelected ? config.accentColor : 'var(--fz-border, #E2E8F0)'}`,
+                        border: `1px solid ${isSelected ? config.accentColor : 'var(--fz-border, #E5E5E5)'}`,
                         background: isSelected ? config.accentColor + '22' : 'transparent',
                         color: isSelected ? config.accentColor : 'var(--text-secondary)',
                         cursor: 'pointer', fontFamily: 'var(--font-sans)',
@@ -942,14 +942,14 @@ export default function AgentCustomizePage() {
       <div style={{ marginTop: 40 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24,
-          borderBottom: '2px solid var(--fz-accent, #0EA5E9)', paddingBottom: 12,
+          borderBottom: '2px solid #1A1A1A', paddingBottom: 12,
         }}>
           🎤
           <div>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>
               Voix &amp; Audio — ElevenLabs
             </h2>
-            <p style={{ margin: 0, fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)' }}>
               Configurez la voix de vos assistants avec ElevenLabs TTS
             </p>
           </div>
@@ -957,13 +957,13 @@ export default function AgentCustomizePage() {
 
         {/* 1. Voice Selection per Agent */}
         <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1A1A1A)' }}>
             🎯 S&eacute;lection de voix par agent
           </h3>
 
           {/* Agent dropdown */}
           <div style={{ marginBottom: 20 }}>
-            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)', marginBottom: 6 }}>
               Agent &agrave; configurer
             </label>
             <select
@@ -979,7 +979,7 @@ export default function AgentCustomizePage() {
           </div>
 
           {/* Voice grid */}
-          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 10 }}>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)', marginBottom: 10 }}>
             Voix disponibles
           </label>
           <div style={{
@@ -995,16 +995,16 @@ export default function AgentCustomizePage() {
                   onClick={() => { setSelectedVoiceId(v.id); saveVoiceSettings({ selectedVoiceId: v.id }); }}
                   style={{
                     padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
-                    border: `2px solid ${isSelected ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: isSelected ? 'rgba(14,165,233,0.08)' : 'var(--bg-secondary)',
+                    border: `2px solid ${isSelected ? '#1A1A1A' : 'var(--fz-border, #E5E5E5)'}`,
+                    background: isSelected ? 'rgba(0,0,0,0.03)' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{v.name}</span>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{v.name}</span>
                     {isSelected && (
                       <span style={{
-                        width: 20, height: 20, borderRadius: '50%', background: 'var(--fz-accent, #0EA5E9)',
+                        width: 20, height: 20, borderRadius: '50%', background: '#1A1A1A',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white',
                       }}>✓</span>
@@ -1013,21 +1013,21 @@ export default function AgentCustomizePage() {
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: v.gender === 'Female' ? '#ec489920' : '#3b82f620',
-                      color: v.gender === 'Female' ? '#ec4899' : '#3b82f6',
+                      background: 'rgba(0,0,0,0.04)',
+                      color: '#6B6B6B',
                     }}>{v.gender}</span>
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: 'rgba(14,165,233,0.13)', color: 'var(--fz-accent, #0EA5E9)',
+                      background: 'rgba(0,0,0,0.06)', color: '#1A1A1A',
                     }}>{v.lang}</span>
                   </div>
                   <button
                     onClick={e => { e.stopPropagation(); previewVoice(v.id, v.name); }}
                     disabled={isLoading}
                     style={{
-                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid rgba(14,165,233,0.25)',
-                      background: isLoading ? 'rgba(14,165,233,0.13)' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
-                      fontSize: 12, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)',
+                      width: '100%', padding: '6px 0', borderRadius: 8, border: '1px solid rgba(0,0,0,0.08)',
+                      background: isLoading ? 'rgba(0,0,0,0.06)' : 'transparent', cursor: isLoading ? 'wait' : 'pointer',
+                      fontSize: 12, fontWeight: 600, color: '#1A1A1A',
                       fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                     }}
                   >
@@ -1041,7 +1041,7 @@ export default function AgentCustomizePage() {
 
         {/* 2. Voice Settings */}
         <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--fz-text, #1A1A1A)' }}>
             ⚙️ R&eacute;glages vocaux
           </h3>
 
@@ -1051,19 +1051,19 @@ export default function AgentCustomizePage() {
               {/* Stability */}
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Stabilit&eacute;</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)' }}>{voiceStability.toFixed(2)}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)' }}>Stabilit&eacute;</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>{voiceStability.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceStability}
                   onChange={e => { const v = Number(e.target.value); setVoiceStability(v); saveVoiceSettings({ stability: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, var(--fz-accent, #0EA5E9) ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
+                    background: `linear-gradient(to right, #1A1A1A ${voiceStability * 100}%, var(--bg-tertiary) ${voiceStability * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
                   <span>Variable</span><span>Stable</span>
                 </div>
               </div>
@@ -1071,19 +1071,19 @@ export default function AgentCustomizePage() {
               {/* Similarity */}
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Similarit&eacute;</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)' }}>{voiceSimilarity.toFixed(2)}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)' }}>Similarit&eacute;</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>{voiceSimilarity.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceSimilarity}
                   onChange={e => { const v = Number(e.target.value); setVoiceSimilarity(v); saveVoiceSettings({ similarity: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, var(--fz-accent, #0EA5E9) ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
+                    background: `linear-gradient(to right, #1A1A1A ${voiceSimilarity * 100}%, var(--bg-tertiary) ${voiceSimilarity * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
                   <span>Faible</span><span>Forte</span>
                 </div>
               </div>
@@ -1091,19 +1091,19 @@ export default function AgentCustomizePage() {
               {/* Style */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)' }}>Style</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)' }}>{voiceStyle.toFixed(2)}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)' }}>Style</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>{voiceStyle.toFixed(2)}</span>
                 </div>
                 <input
                   type="range" min={0} max={1} step={0.01} value={voiceStyle}
                   onChange={e => { const v = Number(e.target.value); setVoiceStyle(v); saveVoiceSettings({ style: v }); }}
                   style={{
                     width: '100%', height: 6, appearance: 'none', WebkitAppearance: 'none',
-                    background: `linear-gradient(to right, var(--fz-accent, #0EA5E9) ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
+                    background: `linear-gradient(to right, #1A1A1A ${voiceStyle * 100}%, var(--bg-tertiary) ${voiceStyle * 100}%)`,
                     borderRadius: 3, outline: 'none', cursor: 'pointer',
                   }}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
                   <span>Neutre</span><span>Expressif</span>
                 </div>
               </div>
@@ -1113,7 +1113,7 @@ export default function AgentCustomizePage() {
             <div>
               {/* Speaker Boost Toggle */}
               <div style={{ marginBottom: 24 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)', marginBottom: 8 }}>
                   Speaker Boost
                 </label>
                 <div
@@ -1121,14 +1121,14 @@ export default function AgentCustomizePage() {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                     padding: '8px 16px', borderRadius: 10,
-                    border: `1px solid ${voiceSpeakerBoost ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: voiceSpeakerBoost ? 'rgba(14,165,233,0.08)' : 'var(--bg-secondary)',
+                    border: `1px solid ${voiceSpeakerBoost ? '#1A1A1A' : 'var(--fz-border, #E5E5E5)'}`,
+                    background: voiceSpeakerBoost ? 'rgba(0,0,0,0.03)' : 'var(--bg-secondary)',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{
                     width: 40, height: 22, borderRadius: 11, position: 'relative',
-                    background: voiceSpeakerBoost ? 'var(--fz-accent, #0EA5E9)' : 'var(--bg-tertiary)',
+                    background: voiceSpeakerBoost ? '#1A1A1A' : 'var(--bg-tertiary)',
                     transition: 'background 0.2s',
                   }}>
                     <div style={{
@@ -1136,21 +1136,20 @@ export default function AgentCustomizePage() {
                       position: 'absolute', top: 2,
                       left: voiceSpeakerBoost ? 20 : 2,
                       transition: 'left 0.2s',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }} />
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? 'var(--fz-accent, #0EA5E9)' : 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: voiceSpeakerBoost ? '#1A1A1A' : 'var(--text-muted)' }}>
                     {voiceSpeakerBoost ? 'Activ\u00e9' : 'D\u00e9sactiv\u00e9'}
                   </span>
                 </div>
-                <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 6 }}>
+                <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 6 }}>
                   Am&eacute;liore la clart&eacute; et la pr&eacute;sence de la voix
                 </p>
               </div>
 
               {/* Model Selector */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)', marginBottom: 8 }}>
                   Mod&egrave;le TTS
                 </label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1163,24 +1162,24 @@ export default function AgentCustomizePage() {
                       onClick={() => { setVoiceModel(m.id); saveVoiceSettings({ model: m.id }); }}
                       style={{
                         padding: '10px 14px', borderRadius: 10, cursor: 'pointer',
-                        border: `2px solid ${voiceModel === m.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                        background: voiceModel === m.id ? 'rgba(14,165,233,0.08)' : 'var(--bg-secondary)',
+                        border: `2px solid ${voiceModel === m.id ? '#1A1A1A' : 'var(--fz-border, #E5E5E5)'}`,
+                        background: voiceModel === m.id ? 'rgba(0,0,0,0.03)' : 'var(--bg-secondary)',
                         transition: 'all 0.15s',
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{
                           width: 16, height: 16, borderRadius: '50%',
-                          border: `2px solid ${voiceModel === m.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
+                          border: `2px solid ${voiceModel === m.id ? '#1A1A1A' : 'var(--fz-border, #E5E5E5)'}`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
                           {voiceModel === m.id && (
-                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--fz-accent, #0EA5E9)' }} />
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1A1A1A' }} />
                           )}
                         </div>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{m.label}</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{m.label}</span>
                       </div>
-                      <p style={{ margin: '4px 0 0 24px', fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{m.desc}</p>
+                      <p style={{ margin: '4px 0 0 24px', fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{m.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -1198,11 +1197,11 @@ export default function AgentCustomizePage() {
               cursor: 'pointer',
             }}
           >
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1E293B)' }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1A1A1A)' }}>
               {'\uD83E\uDDEC'} Cloner ma voix
             </h3>
             <span style={{
-              fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)', transition: 'transform 0.2s',
+              fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)', transition: 'transform 0.2s',
               transform: showVoiceClone ? 'rotate(180deg)' : 'rotate(0deg)',
             }}>{'\u25BC'}</span>
           </div>
@@ -1210,7 +1209,7 @@ export default function AgentCustomizePage() {
           {showVoiceClone && (
             <div style={{ marginTop: 16, opacity: 0.5, pointerEvents: 'none' as const }}>
               <div style={{
-                padding: 16, borderRadius: 10, border: '1px dashed var(--fz-border, #E2E8F0)',
+                padding: 16, borderRadius: 10, border: '1px dashed var(--fz-border, #E5E5E5)',
                 background: 'var(--bg-secondary)', marginBottom: 16,
               }}>
                 <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '0 0 12px 0', lineHeight: 1.6 }}>
@@ -1218,14 +1217,14 @@ export default function AgentCustomizePage() {
                   La qualit&eacute; du clone d&eacute;pend de la clart&eacute; de l&apos;enregistrement.
                 </p>
                 <div style={{
-                  padding: 32, borderRadius: 10, border: '2px dashed var(--fz-border, #E2E8F0)',
+                  padding: 32, borderRadius: 10, border: '2px dashed var(--fz-border, #E5E5E5)',
                   background: 'var(--bg-primary)', textAlign: 'center',
                 }}>
                   <div style={{ marginBottom: 8 }}>🎤</div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', margin: '0 0 4px 0' }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)', margin: '0 0 4px 0' }}>
                     Glissez un fichier audio ici
                   </p>
-                  <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', margin: 0 }}>
+                  <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', margin: 0 }}>
                     Formats accept&eacute;s : MP3, WAV, M4A, OGG (max 25 MB)
                   </p>
                   <input type="file" accept="audio/*" disabled style={{ display: 'none' }} />
@@ -1234,10 +1233,10 @@ export default function AgentCustomizePage() {
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '10px 16px', borderRadius: 10,
-                background: '#f59e0b18', border: '1px solid #f59e0b40',
+                background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.1)',
               }}>
                 ⭐
-                <span style={{ fontSize: 12, fontWeight: 600, color: '#f59e0b' }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#1A1A1A' }}>
                   Fonctionnalit&eacute; premium — Bient&ocirc;t disponible
                 </span>
               </div>
@@ -1247,7 +1246,7 @@ export default function AgentCustomizePage() {
 
         {/* 4. Capabilities ElevenLabs */}
         <div className="card" style={{ padding: 24 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1A1A1A)' }}>
             💡 Capacit&eacute;s ElevenLabs
           </h3>
           <div style={{
@@ -1259,22 +1258,22 @@ export default function AgentCustomizePage() {
                 key={cap.title}
                 style={{
                   padding: '14px 16px', borderRadius: 10,
-                  border: `1px solid ${cap.available ? 'rgba(14,165,233,0.25)' : 'var(--fz-border, #E2E8F0)'}`,
-                  background: cap.available ? 'rgba(14,165,233,0.03)' : 'var(--bg-secondary)',
+                  border: `1px solid ${cap.available ? 'rgba(0,0,0,0.08)' : 'var(--fz-border, #E5E5E5)'}`,
+                  background: cap.available ? 'rgba(0,0,0,0.01)' : 'var(--bg-secondary)',
                   opacity: cap.available ? 1 : 0.6,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                   <span style={{ fontSize: 20 }}>{cap.icon === 'mic' ? '🎤' : cap.icon === 'record_voice_over' ? '🗣️' : cap.icon === 'music_note' ? '🎵' : cap.icon === 'language' ? '🌐' : cap.icon === 'volume_off' ? '🔇' : cap.icon === 'menu_book' ? '📖' : cap.icon}</span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{cap.title}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{cap.title}</span>
                   {cap.available && (
                     <span style={{
                       marginLeft: 'auto', padding: '2px 8px', borderRadius: 10, fontSize: 9, fontWeight: 700,
-                      background: '#22c55e20', color: '#22c55e',
+                      background: 'rgba(0,0,0,0.06)', color: '#1A1A1A',
                     }}>ACTIF</span>
                   )}
                 </div>
-                <p style={{ margin: 0, fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.5 }}>{cap.desc}</p>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.5 }}>{cap.desc}</p>
               </div>
             ))}
           </div>

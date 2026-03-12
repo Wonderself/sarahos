@@ -46,23 +46,22 @@ const DOMAIN_LABELS: Record<string, string> = {
 /* ClickUp design tokens */
 const CU = {
   card: {
-    background: 'var(--fz-bg, #FFFFFF)',
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    background: 'var(--fz-bg, #fff)',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
     transition: 'all 0.15s',
   },
-  heading: { fontSize: 16, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
-  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
-  subtitle: { fontSize: 13, color: 'var(--fz-text-muted, #A1A5AC)' },
-  btn: { height: 36, padding: '0 12px', borderRadius: 6, fontWeight: 500 as const, fontSize: 13, border: 'none' as const, cursor: 'pointer' as const, transition: 'all 0.15s' },
-  btnPrimary: { background: 'var(--fz-accent, #0EA5E9)', color: '#fff' },
+  heading: { fontSize: 16, fontWeight: 600 as const, color: 'var(--fz-text, #1A1A1A)', margin: 0 },
+  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: 'var(--fz-text, #1A1A1A)', margin: 0 },
+  subtitle: { fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)' },
+  btn: { height: 36, padding: '0 12px', borderRadius: 8, fontWeight: 500 as const, fontSize: 13, border: '1px solid #E5E5E5' as const, cursor: 'pointer' as const, transition: 'all 0.15s' },
+  btnPrimary: { background: '#1A1A1A', color: '#fff' },
   badge: { fontSize: 11, fontWeight: 600 as const, padding: '2px 8px', borderRadius: 10 },
-  text: 'var(--fz-text, #1A1D23)',
-  textSec: 'var(--fz-text-secondary, #6B6F76)',
-  textMuted: 'var(--fz-text-muted, #A1A5AC)',
-  accent: 'var(--fz-accent, #0EA5E9)',
-  border: 'var(--fz-border, #E8EAED)',
+  text: 'var(--fz-text, #1A1A1A)',
+  textSec: 'var(--fz-text-secondary, #6B6B6B)',
+  textMuted: 'var(--fz-text-muted, #9B9B9B)',
+  accent: '#1A1A1A',
+  border: 'var(--fz-border, #E5E5E5)',
 };
 
 export default function AgentsPage() {
@@ -114,8 +113,8 @@ export default function AgentsPage() {
 
       {error && (
         <div style={{
-          padding: '10px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-          borderRadius: 8, fontSize: 13, color: '#ef4444', marginBottom: 16,
+          padding: '10px 14px', background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.08)',
+          borderRadius: 8, fontSize: 13, color: 'var(--danger, #ef4444)', marginBottom: 16,
         }}>
           {error}
         </div>
@@ -163,7 +162,7 @@ export default function AgentsPage() {
         ) : customAgents.length === 0 ? (
           <div style={{
             ...CU.card, border: `2px dashed ${CU.border}`,
-            padding: '40px 32px', textAlign: 'center' as const, boxShadow: 'none',
+            padding: '40px 32px', textAlign: 'center' as const,
           }}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>🤖</div>
             <div style={{ fontSize: 16, fontWeight: 600, color: CU.text, marginBottom: 6 }}>Aucun assistant personnalisé</div>
@@ -183,11 +182,11 @@ export default function AgentsPage() {
             {customAgents.map(agent => (
               <div key={agent.id} style={{
                 ...CU.card, padding: 16, display: 'flex', flexDirection: 'column' as const, gap: 10,
-                borderTop: `3px solid ${agent.color ?? CU.accent}`,
+                borderTop: '3px solid #E5E5E5',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{
-                    width: 40, height: 40, borderRadius: 8, background: `${agent.color ?? CU.accent}18`,
+                    width: 40, height: 40, borderRadius: 8, background: '#F0F0F0',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0,
                   }}>
                     🤖
@@ -206,8 +205,8 @@ export default function AgentsPage() {
                   )}
                   <span style={{
                     fontSize: 10, padding: '2px 7px', borderRadius: 8, fontWeight: 600,
-                    background: agent.is_active ? 'rgba(16,185,129,0.12)' : `${CU.border}`,
-                    color: agent.is_active ? '#10b981' : CU.textMuted,
+                    background: agent.is_active ? 'rgba(0,0,0,0.04)' : `${CU.border}`,
+                    color: agent.is_active ? '#1A1A1A' : CU.textMuted,
                   }}>
                     {agent.is_active ? '✅ Actif' : '⬜ Inactif'}
                   </span>
@@ -215,8 +214,8 @@ export default function AgentsPage() {
 
                 <div style={{ display: 'flex', gap: 6, marginTop: 'auto' }}>
                   <Link href={`/client/agents/create?edit=${agent.id}`} style={{
-                    flex: 1, height: 32, borderRadius: 6, border: 'none',
-                    boxShadow: CU.card.boxShadow, background: 'var(--fz-bg, #FFFFFF)', color: CU.textSec,
+                    flex: 1, height: 32, borderRadius: 8, border: '1px solid #E5E5E5',
+                    background: '#fff', color: CU.textSec,
                     fontSize: 12, fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer', transition: 'all 0.15s',
                   }}>
@@ -226,8 +225,8 @@ export default function AgentsPage() {
                     onClick={() => deleteAgent(agent.id, agent.name)}
                     disabled={deleting === agent.id}
                     style={{
-                      height: 32, padding: '0 10px', borderRadius: 6, border: '1px solid rgba(239,68,68,0.2)',
-                      background: 'var(--fz-bg, #FFFFFF)', color: '#ef4444', fontSize: 12, cursor: 'pointer',
+                      height: 32, padding: '0 10px', borderRadius: 6, border: '1px solid rgba(0,0,0,0.08)',
+                      background: 'var(--fz-bg, #fff)', color: 'var(--danger, #ef4444)', fontSize: 12, cursor: 'pointer',
                       transition: 'all 0.15s',
                     }}
                   >
@@ -259,8 +258,8 @@ export default function AgentsPage() {
                 <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                height: 28, padding: '0 8px', borderRadius: 6, border: 'none',
-                boxShadow: CU.card.boxShadow, background: 'var(--fz-bg, #FFFFFF)',
+                height: 28, padding: '0 8px', borderRadius: 8, border: '1px solid #E5E5E5',
+                background: '#fff',
                 fontSize: 11, fontWeight: 500, color: CU.textSec, textDecoration: 'none', flexShrink: 0,
                 display: 'inline-flex', alignItems: 'center', transition: 'all 0.15s',
               }}>
@@ -290,8 +289,8 @@ export default function AgentsPage() {
                 <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                height: 28, padding: '0 8px', borderRadius: 6, border: 'none',
-                boxShadow: CU.card.boxShadow, background: 'var(--fz-bg, #FFFFFF)',
+                height: 28, padding: '0 8px', borderRadius: 8, border: '1px solid #E5E5E5',
+                background: '#fff',
                 fontSize: 11, fontWeight: 500, color: CU.textSec, textDecoration: 'none', flexShrink: 0,
                 display: 'inline-flex', alignItems: 'center', transition: 'all 0.15s',
               }}>

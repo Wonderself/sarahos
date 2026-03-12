@@ -24,11 +24,11 @@ export default function CostEstimator({ costSteps, onConfirm, confirmed }: CostE
         {items.map((item, i) => (
           <div key={i} style={{
             display: 'flex', justifyContent: 'space-between', fontSize: 12,
-            color: item.available ? '#4b5563' : '#9ca3af',
+            color: item.available ? '#4b5563' : '#9B9B9B',
           }}>
             <span>
               {item.label}
-              {!item.available && <span style={{ fontSize: 10, marginLeft: 4, color: '#d97706' }}>(bientot)</span>}
+              {!item.available && <span style={{ fontSize: 10, marginLeft: 4, color: '#9B9B9B' }}>(bientot)</span>}
             </span>
             <span style={{ fontWeight: 600 }}>{formatCredits(item.credits)}</span>
           </div>
@@ -44,7 +44,7 @@ export default function CostEstimator({ costSteps, onConfirm, confirmed }: CostE
         <span>{formatCredits(total)}</span>
       </div>
 
-      <p style={{ fontSize: 11, color: '#9ca3af', marginTop: 8, marginBottom: 12 }}>
+      <p style={{ fontSize: 11, color: '#9B9B9B', marginTop: 8, marginBottom: 12 }}>
         Le cout reel peut varier selon la duree de la video et le nombre de messages echanges.
       </p>
 
@@ -53,7 +53,7 @@ export default function CostEstimator({ costSteps, onConfirm, confirmed }: CostE
           onClick={onConfirm}
           style={{
             width: '100%', padding: '10px 0', borderRadius: 8, border: 'none',
-            background: '#7c3aed', color: 'white', fontSize: 13, fontWeight: 600,
+            background: '#1A1A1A', color: 'white', fontSize: 13, fontWeight: 600,
             cursor: 'pointer',
           }}
         >
@@ -61,7 +61,7 @@ export default function CostEstimator({ costSteps, onConfirm, confirmed }: CostE
         </button>
       ) : (
         <div style={{
-          textAlign: 'center', padding: 8, fontSize: 12, color: '#10b981', fontWeight: 600,
+          textAlign: 'center', padding: 8, fontSize: 12, color: '#1A1A1A', fontWeight: 600,
         }}>
           Cout confirme <span className="material-symbols-rounded" style={{ fontSize: 14 }}>check</span>
         </div>

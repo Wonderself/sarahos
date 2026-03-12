@@ -24,10 +24,10 @@ interface ModulesData {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  form: '#7c3aed',
-  crm: '#06b6d4',
-  agent: '#8b5cf6',
-  dashboard: '#f59e0b',
+  form: '#1A1A1A',
+  crm: '#6B6B6B',
+  agent: '#1A1A1A',
+  dashboard: '#9B9B9B',
 };
 
 function fmt(d: string) {
@@ -78,7 +78,7 @@ export default async function ModulesPage() {
             <span
               key={t.type}
               className="badge"
-              style={{ background: TYPE_COLORS[t.type] ?? '#64748b', color: '#fff' }}
+              style={{ background: TYPE_COLORS[t.type] ?? '#6B6B6B', color: '#fff' }}
             >
               {t.type}: {t.count}
             </span>
@@ -120,7 +120,7 @@ export default async function ModulesPage() {
                     <td>
                       <span
                         className="badge"
-                        style={{ background: TYPE_COLORS[m.type] ?? '#64748b', color: '#fff' }}
+                        style={{ background: TYPE_COLORS[m.type] ?? '#6B6B6B', color: '#fff' }}
                       >
                         {m.type}
                       </span>

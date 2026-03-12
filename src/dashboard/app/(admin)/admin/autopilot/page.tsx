@@ -9,11 +9,11 @@ const STATUS_LABEL: Record<string, string> = {
   executing: 'En cours', completed: 'Terminé', failed: 'Échoué', rolled_back: 'Annulé', expired: 'Expiré',
 };
 const STATUS_COLOR: Record<string, string> = {
-  pending_review: 'bg-yellow-500/20 text-yellow-400', approved: 'bg-green-500/20 text-green-400',
-  denied: 'bg-red-500/20 text-red-400', completed: 'bg-green-500/20 text-green-400',
-  failed: 'bg-red-500/20 text-red-400', rolled_back: 'bg-orange-500/20 text-orange-400',
-  expired: 'bg-gray-500/20 text-gray-400', executing: 'bg-blue-500/20 text-blue-400',
-  draft: 'bg-gray-500/20 text-gray-400',
+  pending_review: 'bg-[rgba(0,0,0,0.06)] text-[#9B9B9B]', approved: 'bg-[rgba(0,0,0,0.04)] text-[#1A1A1A]',
+  denied: 'bg-[rgba(220,38,38,0.08)] text-[#DC2626]', completed: 'bg-[rgba(0,0,0,0.04)] text-[#1A1A1A]',
+  failed: 'bg-[rgba(220,38,38,0.08)] text-[#DC2626]', rolled_back: 'bg-[rgba(0,0,0,0.06)] text-[#9B9B9B]',
+  expired: 'bg-[rgba(0,0,0,0.04)] text-[#9B9B9B]', executing: 'bg-[rgba(0,0,0,0.04)] text-[#6B6B6B]',
+  draft: 'bg-[rgba(0,0,0,0.04)] text-[#9B9B9B]',
 };
 
 function timeAgo(date: string): string {
@@ -49,12 +49,12 @@ export default async function AutopilotPage() {
   }
 
   const statCards = [
-    { label: 'En attente', value: stats.pendingCount ?? 0, color: 'text-yellow-400' },
-    { label: 'Approuvés (24h)', value: stats.approvedToday ?? 0, color: 'text-green-400' },
-    { label: 'Exécutés (24h)', value: stats.executedToday ?? 0, color: 'text-blue-400' },
-    { label: 'Échoués (24h)', value: stats.failedToday ?? 0, color: 'text-red-400' },
-    { label: 'Rollbacks', value: stats.rolledBackTotal ?? 0, color: 'text-orange-400' },
-    { label: 'Temps moyen décision', value: `${stats.avgDecisionTimeMinutes ?? 0}m`, color: 'text-purple-400' },
+    { label: 'En attente', value: stats.pendingCount ?? 0, color: 'text-[#9B9B9B]' },
+    { label: 'Approuvés (24h)', value: stats.approvedToday ?? 0, color: 'text-[#1A1A1A]' },
+    { label: 'Exécutés (24h)', value: stats.executedToday ?? 0, color: 'text-[#6B6B6B]' },
+    { label: 'Échoués (24h)', value: stats.failedToday ?? 0, color: 'text-[#DC2626]' },
+    { label: 'Rollbacks', value: stats.rolledBackTotal ?? 0, color: 'text-[#9B9B9B]' },
+    { label: 'Temps moyen décision', value: `${stats.avgDecisionTimeMinutes ?? 0}m`, color: 'text-[#1A1A1A]' },
   ];
 
   return (
@@ -71,7 +71,7 @@ export default async function AutopilotPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {statCards.map(s => (
-          <div key={s.label} className="bg-[#1a0e3a] rounded-xl p-4 border border-white/[0.08]">
+          <div key={s.label} className="bg-[#F7F7F7] rounded-xl p-4 border border-[rgba(0,0,0,0.08)]">
             <p className="text-xs text-gray-400 uppercase">{s.label}</p>
             <p className={`text-2xl font-bold mt-1 ${s.color}`}>{String(s.value)}</p>
           </div>
@@ -84,13 +84,13 @@ export default async function AutopilotPage() {
           File d&apos;attente ({pendingProposals.length})
         </h2>
         {pendingProposals.length === 0 ? (
-          <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
+          <div className="bg-[#F7F7F7]/50 rounded-xl p-8 text-center text-gray-500 border border-[rgba(0,0,0,0.06)]">
             Aucune proposition en attente
           </div>
         ) : (
           <div className="space-y-3">
             {pendingProposals.map((p) => (
-              <div key={String(p.id)} className="bg-[#1a0e3a] rounded-xl p-5 border border-white/[0.08] hover:border-white/[0.15] transition-colors">
+              <div key={String(p.id)} className="bg-[#F7F7F7] rounded-xl p-5 border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.15)] transition-colors">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -122,14 +122,14 @@ export default async function AutopilotPage() {
       <section>
         <h2 className="text-lg font-semibold text-white mb-4">Journal d&apos;exécution</h2>
         {recentProposals.length === 0 ? (
-          <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
+          <div className="bg-[#F7F7F7]/50 rounded-xl p-8 text-center text-gray-500 border border-[rgba(0,0,0,0.06)]">
             Aucune exécution récente
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-500 text-xs uppercase border-b border-white/[0.08]">
+                <tr className="text-gray-500 text-xs uppercase border-b border-[rgba(0,0,0,0.08)]">
                   <th className="text-left py-3 px-4">Sévérité</th>
                   <th className="text-left py-3 px-4">Titre</th>
                   <th className="text-left py-3 px-4">Agent</th>
@@ -141,12 +141,12 @@ export default async function AutopilotPage() {
               </thead>
               <tbody>
                 {recentProposals.slice(0, 20).map((p) => (
-                  <tr key={String(p.id)} className="border-b border-[#1a0e3a] hover:bg-[#1a0e3a]/50">
+                  <tr key={String(p.id)} className="border-b border-[rgba(0,0,0,0.06)] hover:bg-[#F7F7F7]/50">
                     <td className="py-3 px-4"><span className="material-symbols-rounded" style={{ fontSize: 16 }}>{SEVERITY_ICON[String(p.severity)] ?? 'circle'}</span></td>
                     <td className="py-3 px-4 text-white max-w-xs truncate">{String(p.title)}</td>
                     <td className="py-3 px-4 text-gray-400 text-xs">{String(p.agentName)}</td>
                     <td className="py-3 px-4">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLOR[String(p.status)] ?? 'bg-white/[0.08] text-gray-300'}`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLOR[String(p.status)] ?? 'bg-[rgba(0,0,0,0.04)] text-gray-300'}`}>
                         {STATUS_LABEL[String(p.status)] ?? String(p.status)}
                       </span>
                     </td>
@@ -169,7 +169,7 @@ export default async function AutopilotPage() {
       <section>
         <h2 className="text-lg font-semibold text-white mb-4">Rapports d&apos;audit</h2>
         {reports.length === 0 ? (
-          <div className="bg-[#1a0e3a]/50 rounded-xl p-8 text-center text-gray-500 border border-white/[0.06]">
+          <div className="bg-[#F7F7F7]/50 rounded-xl p-8 text-center text-gray-500 border border-[rgba(0,0,0,0.06)]">
             Aucun rapport — lancez un audit pour commencer
           </div>
         ) : (
@@ -177,10 +177,10 @@ export default async function AutopilotPage() {
             {reports.map((r) => {
               const findings = (r.findings as Array<Record<string, unknown>>) ?? [];
               return (
-                <details key={String(r.id)} className="bg-[#1a0e3a] rounded-xl border border-white/[0.08] group">
-                  <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-white/[0.05] rounded-xl">
+                <details key={String(r.id)} className="bg-[#F7F7F7] rounded-xl border border-[rgba(0,0,0,0.08)] group">
+                  <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-[rgba(0,0,0,0.03)] rounded-xl">
                     <div className="flex items-center gap-3">
-                      <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full uppercase">
+                      <span className="text-xs bg-[rgba(0,0,0,0.04)] text-[#1A1A1A] px-2 py-0.5 rounded-full uppercase">
                         {String(r.reportType)}
                       </span>
                       <span className="text-white text-sm">{String(r.summary).slice(0, 100)}</span>
@@ -202,11 +202,11 @@ export default async function AutopilotPage() {
                       </div>
                     ))}
                     {r.metrics && typeof r.metrics === 'object' && Object.keys(r.metrics as object).length > 0 ? (
-                      <div className="mt-3 pt-3 border-t border-white/[0.08]">
+                      <div className="mt-3 pt-3 border-t border-[rgba(0,0,0,0.08)]">
                         <p className="text-xs text-gray-500 uppercase mb-1">Métriques</p>
                         <div className="flex flex-wrap gap-3">
                           {Object.entries(r.metrics as Record<string, unknown>).map(([k, v]) => (
-                            <span key={k} className="text-xs bg-white/[0.08] px-2 py-1 rounded">
+                            <span key={k} className="text-xs bg-[rgba(0,0,0,0.04)] px-2 py-1 rounded">
                               <span className="text-gray-400">{k}:</span> <span className="text-white">{String(v)}</span>
                             </span>
                           ))}

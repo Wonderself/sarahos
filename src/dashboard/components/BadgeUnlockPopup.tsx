@@ -65,26 +65,25 @@ export default function BadgeUnlockPopup() {
     >
       <div
         style={{
-          background: 'linear-gradient(145deg, #1a0e3a, #0f0720)',
-          border: '1px solid rgba(139,92,246,0.3)',
-          borderRadius: 16,
+          background: '#fff',
+          border: '1px solid #E5E5E5',
+          borderRadius: 8,
           padding: '32px 40px',
           textAlign: 'center',
           transform: visible ? 'scale(1)' : 'scale(0.5)',
           opacity: visible ? 1 : 0,
           transition: 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease',
           maxWidth: 320,
-          boxShadow: '0 24px 80px rgba(124,58,237,0.3), 0 0 40px rgba(124,58,237,0.15)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Glow effect */}
+        {/* Icon circle */}
         <div
           style={{
             width: 80,
             height: 80,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(124,58,237,0.3) 0%, transparent 70%)',
+            background: '#F7F7F7',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -93,21 +92,21 @@ export default function BadgeUnlockPopup() {
         >
           <span
             className="material-symbols-rounded"
-            style={{ fontSize: 48, color: '#f59e0b' }}
+            style={{ fontSize: 48, color: 'var(--text-primary)' }}
           >
             {currentBadge.icon}
           </span>
         </div>
 
-        <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+        <div style={{ fontSize: 11, color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
           Badge débloqué !
         </div>
 
-        <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+        <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
           {currentBadge.name}
         </div>
 
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.5 }}>
+        <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
           {currentBadge.description}
         </div>
 
@@ -115,7 +114,7 @@ export default function BadgeUnlockPopup() {
           style={{
             marginTop: 20,
             fontSize: 12,
-            color: 'rgba(255,255,255,0.3)',
+            color: 'var(--text-tertiary)',
           }}
         >
           Cliquez pour fermer

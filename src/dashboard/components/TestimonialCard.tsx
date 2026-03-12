@@ -8,7 +8,7 @@ interface TestimonialCardProps {
 }
 
 export default function TestimonialCard({
-  name, company, role, quote, rating, avatarColor = '#7c3aed',
+  name, company, role, quote, rating, avatarColor = '#1A1A1A',
 }: TestimonialCardProps) {
   const initials = name.split(' ').map(n => n[0]).join('');
 
@@ -20,7 +20,7 @@ export default function TestimonialCard({
       {/* Stars */}
       <div style={{ display: 'flex', gap: 2, marginBottom: 18 }}>
         {Array.from({ length: 5 }).map((_, i) => (
-          <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={i < rating ? '#f59e0b' : '#e5e7eb'}>
+          <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={i < rating ? '#9B9B9B' : '#e5e7eb'}>
             <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
           </svg>
         ))}
@@ -47,7 +47,7 @@ export default function TestimonialCard({
         </div>
         <div>
           <div style={{ fontWeight: 600, fontSize: 14, color: '#111827' }}>{name}</div>
-          <div style={{ fontSize: 12, color: '#9ca3af' }}>{role}, {company}</div>
+          <div style={{ fontSize: 12, color: '#9B9B9B' }}>{role}, {company}</div>
         </div>
       </div>
     </div>

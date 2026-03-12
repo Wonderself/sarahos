@@ -47,7 +47,7 @@ function getInitials(name: string) {
 function avatarColor(email: string) {
   let h = 0;
   for (let i = 0; i < email.length; i++) h = email.charCodeAt(i) + ((h << 5) - h);
-  return `hsl(${Math.abs(h) % 360}, 60%, 45%)`;
+  return '#6B6B6B';
 }
 
 function formatDate(dateStr: string | null) {
@@ -434,8 +434,8 @@ export default function UsersTableClient({ users: initialUsers }: { users: UserE
                             user.dailyApiCalls > user.dailyApiLimit * 0.9
                               ? 'var(--danger)'
                               : user.dailyApiCalls > user.dailyApiLimit * 0.7
-                              ? 'var(--warning)'
-                              : 'var(--success)',
+                              ? 'var(--text-secondary)'
+                              : 'var(--text-primary)',
                         }}
                       />
                     </div>

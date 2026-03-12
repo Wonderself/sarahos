@@ -63,7 +63,7 @@ export default async function BillingPage() {
       usageEntries.push(
         { label: 'Total appels', value: totalCalls.toLocaleString() },
         { label: 'Input tokens', value: totalInput.toLocaleString(), color: 'var(--accent)' },
-        { label: 'Output tokens', value: totalOutput.toLocaleString(), color: 'var(--success)' },
+        { label: 'Output tokens', value: totalOutput.toLocaleString(), color: 'var(--text-primary)' },
         { label: 'Total tokens', value: (totalInput + totalOutput).toLocaleString() },
       );
     } else {
@@ -246,7 +246,7 @@ export default async function BillingPage() {
                     </td>
                     <td style={{ fontSize: 12 }}>{String(tx['email'] ?? tx['user_id'] ?? '—')}</td>
                     <td><span className={`badge ${isCredit ? 'badge-success' : 'badge-danger'}`}>{String(tx['type'] ?? '—')}</span></td>
-                    <td className="text-right font-semibold" style={{ color: isCredit ? 'var(--success)' : 'var(--danger)', fontSize: 12 }}>
+                    <td className="text-right font-semibold" style={{ color: isCredit ? 'var(--text-primary)' : 'var(--danger)', fontSize: 12 }}>
                       {isCredit ? '+' : ''}{amount.toLocaleString()}
                     </td>
                     <td className="text-right" style={{ fontSize: 12, color: 'var(--text-muted)' }}>

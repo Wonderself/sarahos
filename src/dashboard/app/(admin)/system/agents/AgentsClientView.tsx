@@ -6,9 +6,9 @@ import { AgentActions } from './actions';
 import { AgentConfigButton } from './AgentConfigSlideOver';
 
 const levelMeta: Record<number, { label: string; color: string; desc: string }> = {
-  1: { label: 'L1 — Execution', color: 'var(--info)', desc: 'Agents operationnels executant les taches quotidiennes' },
-  2: { label: 'L2 — Management', color: 'var(--warning)', desc: 'Agents de coordination et gestion des workflows' },
-  3: { label: 'L3 — Executive', color: 'var(--purple)', desc: 'Agents strategiques et prise de decision' },
+  1: { label: 'L1 — Execution', color: 'var(--text-secondary)', desc: 'Agents operationnels executant les taches quotidiennes' },
+  2: { label: 'L2 — Management', color: 'var(--text-secondary)', desc: 'Agents de coordination et gestion des workflows' },
+  3: { label: 'L3 — Executive', color: 'var(--text-primary)', desc: 'Agents strategiques et prise de decision' },
 };
 
 const statusBadge: Record<string, string> = {

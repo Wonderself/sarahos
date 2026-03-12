@@ -37,7 +37,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
       height: '100%', overflowY: 'auto', padding: 20, background: '#fafafa',
     }}>
       <div style={{
-        fontSize: 11, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase',
+        fontSize: 11, fontWeight: 600, color: '#1A1A1A', textTransform: 'uppercase',
         letterSpacing: 1, marginBottom: 6,
       }}>
         {step.title}
@@ -50,7 +50,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
       {step.type === 'chat' && (
         <div style={{
           padding: 30, textAlign: 'center', border: '2px dashed #e5e7eb',
-          borderRadius: 12, color: '#9ca3af', fontSize: 13,
+          borderRadius: 12, color: '#9B9B9B', fontSize: 13,
         }}>
           <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>chat</span></div>
           <div>Discutez avec l&apos;agent pour definir votre projet.</div>
@@ -77,7 +77,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
               outline: 'none',
             }}
           />
-          <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>
+          <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>
             {props.script.length} caracteres — ~{Math.ceil(props.script.length / 15)}s de video
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
               />
             </div>
           )}
-          <p style={{ fontSize: 11, color: '#9ca3af', marginTop: 8 }}>
+          <p style={{ fontSize: 11, color: '#9B9B9B', marginTop: 8 }}>
             Utilisez un portrait de face, eclairage uniforme, fond neutre. Resolution min 512x512.
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
                 disabled={!props.costConfirmed || !props.script.trim()}
                 style={{
                   padding: '14px 32px', borderRadius: 10, border: 'none',
-                  background: props.costConfirmed ? '#7c3aed' : '#d1d5db',
+                  background: props.costConfirmed ? '#1A1A1A' : '#d1d5db',
                   color: 'white', fontSize: 14, fontWeight: 600,
                   cursor: props.costConfirmed ? 'pointer' : 'not-allowed',
                 }}
@@ -180,7 +180,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
           ) : (
             <div style={{
               padding: 30, textAlign: 'center', border: '2px dashed #e5e7eb',
-              borderRadius: 12, color: '#9ca3af', fontSize: 13,
+              borderRadius: 12, color: '#9B9B9B', fontSize: 13,
             }}>
               Le resultat final apparaitra ici
             </div>
@@ -191,16 +191,16 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
       {/* Roadmap */}
       {step.type === 'roadmap' && (
         <div style={{
-          padding: 30, textAlign: 'center', border: '2px dashed #fcd34d',
-          borderRadius: 12, background: '#fffbeb',
+          padding: 30, textAlign: 'center', border: '2px dashed #E5E5E5',
+          borderRadius: 12, background: '#F7F7F7',
         }}>
           <div style={{ marginBottom: 12 }}>
             <RoadmapBadge />
           </div>
-          <div style={{ fontSize: 13, color: '#92400e' }}>
+          <div style={{ fontSize: 13, color: '#6B6B6B' }}>
             Cette fonctionnalite sera disponible prochainement.
           </div>
-          <div style={{ fontSize: 11, color: '#b45309', marginTop: 8 }}>
+          <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 8 }}>
             L&apos;agent peut quand meme vous guider et preparer le travail.
           </div>
         </div>

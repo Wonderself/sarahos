@@ -36,7 +36,7 @@ export default function VisioControls({
       padding: '12px 20px', background: '#1a1a2e', borderRadius: 16,
     }}>
       {/* Duration */}
-      <div style={{ color: '#94a3b8', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums', minWidth: 60 }}>
+      <div style={{ color: '#9B9B9B', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums', minWidth: 60 }}>
         {formatDuration(elapsed)}
       </div>
 
@@ -48,7 +48,7 @@ export default function VisioControls({
           return (
             <div key={i} style={{
               width: 4, height: 6 + i * 3, borderRadius: 2,
-              background: active ? (i < 3 ? '#22c55e' : i < 4 ? '#eab308' : '#ef4444') : '#334155',
+              background: active ? (i < 3 ? '#1A1A1A' : i < 4 ? '#9B9B9B' : '#ef4444') : '#334155',
               transition: 'background 0.1s',
             }} />
           );
@@ -74,7 +74,7 @@ export default function VisioControls({
         onClick={onToggleMode}
         style={{
           width: 44, height: 44, borderRadius: '50%', border: 'none',
-          background: isTextMode ? '#7c3aed' : '#334155', color: 'white',
+          background: isTextMode ? '#1A1A1A' : '#334155', color: 'white',
           cursor: 'pointer', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.2s',
         }}

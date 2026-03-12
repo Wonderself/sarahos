@@ -460,11 +460,10 @@ export default function TeamPage() {
                       </div>
                       <div className="flex items-center gap-6 rounded-full" style={{
                         padding: '4px 10px',
-                        background: '#22c55e22', border: '1px solid #22c55e44',
+                        background: '#F0F0F0', border: '1px solid #E5E5E5',
                       }}>
                         <div className="rounded-full" style={{
-                          width: 8, height: 8, background: '#22c55e',
-                          boxShadow: '0 0 6px #22c55e88',
+                          width: 8, height: 8, background: '#1A1A1A',
                         }} />
                         <span className="text-xs font-semibold text-success">En ligne 24/7</span>
                       </div>
@@ -480,7 +479,7 @@ export default function TeamPage() {
                   {agent.capabilities.map(cap => (
                     <span key={cap} className="text-xs rounded-sm font-medium" style={{
                       padding: '2px 8px',
-                      background: agent.color + '15', color: agent.color,
+                      background: '#F0F0F0', color: '#1A1A1A',
                     }}>
                       {cap}
                     </span>
@@ -659,7 +658,7 @@ export default function TeamPage() {
                         <div style={{
                           position: 'absolute', right: 0, top: '100%', zIndex: 50,
                           background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E2E8F0)',
-                          borderRadius: 8, padding: 8, minWidth: 160, boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                          borderRadius: 8, padding: 8, minWidth: 160, border: '1px solid #E5E5E5',
                         }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
                           {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
@@ -669,8 +668,8 @@ export default function TeamPage() {
                               style={{
                                 display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
                                 fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: member.role === r ? 'var(--accent-light, #EDE9FE)' : 'transparent',
-                                color: member.role === r ? 'var(--accent, #7c3aed)' : 'var(--fz-text)',
+                                background: member.role === r ? '#F0F0F0' : 'transparent',
+                                color: member.role === r ? '#1A1A1A' : 'var(--fz-text)',
                                 fontWeight: member.role === r ? 600 : 400,
                               }}
                             >
@@ -737,7 +736,7 @@ export default function TeamPage() {
                         <div style={{
                           position: 'absolute', right: 0, top: '100%', zIndex: 50,
                           background: 'var(--fz-bg, #fff)', border: '1px solid var(--fz-border, #E2E8F0)',
-                          borderRadius: 8, padding: 8, minWidth: 160, boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                          borderRadius: 8, padding: 8, minWidth: 160, border: '1px solid #E5E5E5',
                         }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
                           {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
@@ -747,8 +746,8 @@ export default function TeamPage() {
                               style={{
                                 display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
                                 fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: member.role === r ? 'var(--accent-light, #EDE9FE)' : 'transparent',
-                                color: member.role === r ? 'var(--accent, #7c3aed)' : 'var(--fz-text)',
+                                background: member.role === r ? '#F0F0F0' : 'transparent',
+                                color: member.role === r ? '#1A1A1A' : 'var(--fz-text)',
                                 fontWeight: member.role === r ? 600 : 400,
                               }}
                             >
@@ -850,7 +849,7 @@ export default function TeamPage() {
                     disabled={!inviteEmail.trim()}
                     style={{
                       padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
                       opacity: inviteEmail.trim() ? 1 : 0.5,
                     }}
                   >Envoyer l&apos;invitation</button>
@@ -881,9 +880,9 @@ export default function TeamPage() {
           {/* Selected group detail view */}
           {selectedGroup && !editingGroup && (
             <div style={{
-              marginBottom: 20, padding: 16, borderRadius: 12,
-              border: `1px solid ${selectedGroup.color}44`,
-              background: selectedGroup.color + '08',
+              marginBottom: 20, padding: 16, borderRadius: 8,
+              border: '1px solid #E5E5E5',
+              background: '#F7F7F7',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                 <span style={{ fontSize: 24 }}>{selectedGroup.emoji}</span>
@@ -940,7 +939,7 @@ export default function TeamPage() {
                       background: 'var(--fz-bg, #fff)', color: 'var(--fz-text)', cursor: 'pointer',
                     }}
                   >
-                    <span>{m.emoji}</span> {m.name} <span style={{ color: 'var(--accent)' }}>+</span>
+                    <span>{m.emoji}</span> {m.name} <span style={{ color: '#1A1A1A' }}>+</span>
                   </button>
                 ))}
                 {membersLocal.filter(m => !selectedGroup.members.includes(m.id)).length === 0 && (
@@ -1024,7 +1023,7 @@ export default function TeamPage() {
                     onClick={handleUpdateGroup}
                     style={{
                       padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
                     }}
                   >Enregistrer</button>
                 </div>
@@ -1163,7 +1162,7 @@ export default function TeamPage() {
                     disabled={!newGroupName.trim()}
                     style={{
                       padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
                       opacity: newGroupName.trim() ? 1 : 0.5,
                     }}
                   >Créer le groupe</button>
@@ -1264,7 +1263,7 @@ export default function TeamPage() {
                         onClick={() => handleJoinCommunity(community.id)}
                         style={{
                           fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none',
-                          background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                          background: '#1A1A1A', color: '#fff', cursor: 'pointer',
                         }}
                       >Rejoindre</button>
                     </div>
@@ -1325,7 +1324,7 @@ export default function TeamPage() {
                           type="checkbox"
                           checked={newCommunityPublic}
                           onChange={e => setNewCommunityPublic(e.target.checked)}
-                          style={{ width: 16, height: 16, accentColor: 'var(--accent)' }}
+                          style={{ width: 16, height: 16, accentColor: '#1A1A1A' }}
                         />
                         Communauté publique
                       </label>
@@ -1386,7 +1385,7 @@ export default function TeamPage() {
                     disabled={!newCommunityName.trim()}
                     style={{
                       padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: 'var(--accent, #7c3aed)', color: '#fff', cursor: 'pointer',
+                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
                       opacity: newCommunityName.trim() ? 1 : 0.5,
                     }}
                   >Créer la communauté</button>

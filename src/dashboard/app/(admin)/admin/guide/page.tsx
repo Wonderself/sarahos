@@ -172,7 +172,7 @@ export default function GuidePage() {
                         Données chargées côté serveur. Idéal pour les tableaux de bord, stats, listes. Pas d&apos;interactivité directe (pas de clics, formulaires).
                       </div>
                     </div>
-                    <div className="flex-1 rounded-sm" style={{ padding: '10px 14px', border: '2px solid #f59e0b', background: '#f59e0b10' }}>
+                    <div className="flex-1 rounded-sm" style={{ padding: '10px 14px', border: '2px solid #9B9B9B', background: 'rgba(0,0,0,0.04)' }}>
                       <div className="text-md font-bold" style={{ marginBottom: 4 }}>Page Client (interactive)</div>
                       <div className="text-xs text-secondary" style={{ lineHeight: 1.5 }}>
                         Pour les pages interactives : formulaires, chat, boutons. Utilise le localStorage pour la session utilisateur.
@@ -757,7 +757,7 @@ export default function GuidePage() {
               <div key={e.priority} className="flex gap-8 bg-secondary rounded-sm border" style={{ padding: '8px 12px', alignItems: 'flex-start' }}>
                 <span className="flex-center font-bold" style={{
                   width: 22, height: 22, borderRadius: 6, fontSize: 11,
-                  background: e.priority <= 2 ? '#ef4444' : e.priority <= 4 ? '#f59e0b' : '#22c55e',
+                  background: e.priority <= 2 ? '#1A1A1A' : e.priority <= 4 ? '#6B6B6B' : '#9B9B9B',
                   color: 'white', flexShrink: 0,
                 }}>{e.priority}</span>
                 <div className="flex-1">

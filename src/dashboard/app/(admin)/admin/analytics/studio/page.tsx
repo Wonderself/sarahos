@@ -37,7 +37,7 @@ export default function StudioAnalyticsPage() {
   if (error) return (
     <div className="p-8 max-w-5xl mx-auto admin-page-scrollable">
       <h1 className="text-2xl font-bold mb-4">Analytics — Studio Creatif</h1>
-      <div className="card p-6 text-center" style={{ color: 'var(--error, #ef4444)' }}>Erreur : {error}</div>
+      <div className="card p-6 text-center" style={{ color: 'var(--error, #DC2626)' }}>Erreur : {error}</div>
     </div>
   );
 
@@ -58,11 +58,11 @@ export default function StudioAnalyticsPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-[#8b5cf6]">{data.videoGenerations}</div>
+          <div className="text-2xl font-bold text-[#1A1A1A]">{data.videoGenerations}</div>
           <div className="text-xs text-[var(--muted)]">Videos generees</div>
         </div>
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-[#06b6d4]">{data.photoGenerations}</div>
+          <div className="text-2xl font-bold text-[#6B6B6B]">{data.photoGenerations}</div>
           <div className="text-xs text-[var(--muted)]">Photos generees</div>
         </div>
         <div className="card p-4 text-center">
@@ -82,15 +82,15 @@ export default function StudioAnalyticsPage() {
           <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
             <div style={{
               width: 80, height: 80, borderRadius: '50%',
-              background: `conic-gradient(#8b5cf6 ${data.videoGenerations / Math.max(data.videoGenerations + data.photoGenerations, 1) * 360}deg, #06b6d4 0deg)`,
+              background: `conic-gradient(#1A1A1A ${data.videoGenerations / Math.max(data.videoGenerations + data.photoGenerations, 1) * 360}deg, #6B6B6B 0deg)`,
             }} />
             <div>
               <div className="flex items-center gap-2 text-sm mb-1">
-                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#8b5cf6' }} />
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#1A1A1A' }} />
                 Video: {data.videoGenerations}
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#06b6d4' }} />
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: '#6B6B6B' }} />
                 Photo: {data.photoGenerations}
               </div>
             </div>
@@ -116,7 +116,7 @@ export default function StudioAnalyticsPage() {
         {data.recentGenerations.length > 0 ? (
           <table style={{ width: '100%', fontSize: 12 }}>
             <thead>
-              <tr style={{ textAlign: 'left', color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
+              <tr style={{ textAlign: 'left', color: '#9B9B9B', borderBottom: '1px solid #E0E0E0' }}>
                 <th style={{ padding: '6px 0' }}>Type</th>
                 <th>Workflow</th>
                 <th>Date</th>
@@ -125,12 +125,12 @@ export default function StudioAnalyticsPage() {
             </thead>
             <tbody>
               {data.recentGenerations.map(g => (
-                <tr key={g.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <tr key={g.id} style={{ borderBottom: '1px solid #F0F0F0' }}>
                   <td style={{ padding: '6px 0' }}>
                     <span style={{
                       fontSize: 10, padding: '2px 6px', borderRadius: 4,
-                      background: g.type === 'video' ? '#f5f3ff' : '#ecfdf5',
-                      color: g.type === 'video' ? '#7c3aed' : '#059669',
+                      background: '#F7F7F7',
+                      color: g.type === 'video' ? '#1A1A1A' : '#1A1A1A',
                     }}>
                       {g.type}
                     </span>

@@ -42,7 +42,7 @@ export default function DocumentsAnalyticsPage() {
   if (error) return (
     <div className="p-8 max-w-5xl mx-auto admin-page-scrollable">
       <h1 className="text-2xl font-bold mb-4">Analytics — Documents</h1>
-      <div className="card p-6 text-center" style={{ color: 'var(--error, #ef4444)' }}>Erreur : {error}</div>
+      <div className="card p-6 text-center" style={{ color: 'var(--error, #DC2626)' }}>Erreur : {error}</div>
     </div>
   );
 
@@ -62,7 +62,7 @@ export default function DocumentsAnalyticsPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div className="card p-4 text-center">
-          <div className="text-2xl font-bold text-[#7c3aed]">{data.totalDocuments}</div>
+          <div className="text-2xl font-bold text-[#1A1A1A]">{data.totalDocuments}</div>
           <div className="text-xs text-[var(--muted)]">Documents uploades</div>
         </div>
         <div className="card p-4 text-center">

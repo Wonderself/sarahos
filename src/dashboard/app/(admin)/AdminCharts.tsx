@@ -10,7 +10,7 @@ import {
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 
-const PIE_COLORS = ['#7c3aed', '#06b6d4', '#10b981', '#f59e0b', '#dc2626'];
+const PIE_COLORS = ['#1A1A1A', '#6B6B6B', '#9B9B9B', '#C4C4C4', '#E5E5E5'];
 const CHART_STYLE = { fontSize: 11, borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-elevated)' };
 
 // ─── Date range selector ───────────────────────────────────────────────────────
@@ -81,12 +81,12 @@ export function RevenueAreaChart({
       <AreaChart data={formatted} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.25} />
-            <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+            <stop offset="5%" stopColor="#1A1A1A" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#1A1A1A" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gradMargin" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10b981" stopOpacity={0.25} />
-            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+            <stop offset="5%" stopColor="#9B9B9B" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#9B9B9B" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" vertical={false} />
@@ -94,8 +94,8 @@ export function RevenueAreaChart({
         <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <Tooltip contentStyle={CHART_STYLE} formatter={(v) => [`${Number(v).toFixed(2)} cr`, '']} />
         <Legend iconSize={8} wrapperStyle={{ fontSize: 10, paddingTop: 4 }} />
-        <Area type="monotone" dataKey="revenueK" stroke="#7c3aed" strokeWidth={2} fill="url(#gradRevenue)" name="Revenus (cr)" />
-        <Area type="monotone" dataKey="marginK" stroke="#10b981" strokeWidth={2} fill="url(#gradMargin)" name="Marge (cr)" />
+        <Area type="monotone" dataKey="revenueK" stroke="#1A1A1A" strokeWidth={2} fill="url(#gradRevenue)" name="Revenus (cr)" />
+        <Area type="monotone" dataKey="marginK" stroke="#9B9B9B" strokeWidth={2} fill="url(#gradMargin)" name="Marge (cr)" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -128,7 +128,7 @@ export function UserGrowthBarChart({
         <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <Tooltip contentStyle={CHART_STYLE} />
-        <Bar dataKey="newUsers" fill="#7c3aed" radius={[4, 4, 0, 0]} name="Nouveaux users" />
+        <Bar dataKey="newUsers" fill="#1A1A1A" radius={[4, 4, 0, 0]} name="Nouveaux users" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -209,8 +209,8 @@ export function LLMCostStackedBar({ data }: { data: LLMCostData[] }) {
         <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
         <Tooltip contentStyle={CHART_STYLE} formatter={(v) => [`${Number(v).toFixed(2)} cr`, '']} />
         <Legend iconSize={8} wrapperStyle={{ fontSize: 10 }} />
-        <Bar dataKey="costK" stackId="a" fill="#ef4444" name="Coût" />
-        <Bar dataKey="marginK" stackId="a" fill="#10b981" radius={[4, 4, 0, 0]} name="Marge" />
+        <Bar dataKey="costK" stackId="a" fill="#9B9B9B" name="Coût" />
+        <Bar dataKey="marginK" stackId="a" fill="#1A1A1A" radius={[4, 4, 0, 0]} name="Marge" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -229,10 +229,10 @@ interface TopClientEntry {
 }
 
 const TIER_BADGE: Record<string, string> = {
-  paid: '#10b981',
-  free: '#7c3aed',
-  demo: '#f59e0b',
-  guest: '#9ca3af',
+  paid: '#1A1A1A',
+  free: '#6B6B6B',
+  demo: '#9B9B9B',
+  guest: '#C4C4C4',
 };
 
 export function TopClientsTable({ clients }: { clients: TopClientEntry[] }) {
@@ -271,7 +271,7 @@ export function TopClientsTable({ clients }: { clients: TopClientEntry[] }) {
             <td style={{ padding: '8px', textAlign: 'right', fontWeight: 700 }}>
               {(c.totalSpent / 1_000_000).toFixed(2)} cr
             </td>
-            <td style={{ padding: '8px', textAlign: 'right', color: c.balance > 0 ? '#10b981' : 'var(--text-muted)' }}>
+            <td style={{ padding: '8px', textAlign: 'right', color: c.balance > 0 ? 'var(--text-primary)' : 'var(--text-muted)' }}>
               {(c.balance / 1_000_000).toFixed(2)} cr
             </td>
           </tr>
@@ -329,7 +329,7 @@ export default function AdminCharts({ billingStats, tokenUsage, agentCounts }: A
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={CHART_STYLE} />
-            <Bar dataKey="count" fill="#7c3aed" radius={[4, 4, 0, 0]} name="Agents" />
+            <Bar dataKey="count" fill="#1A1A1A" radius={[4, 4, 0, 0]} name="Agents" />
           </BarChart>
         </ResponsiveContainer>
       </div>

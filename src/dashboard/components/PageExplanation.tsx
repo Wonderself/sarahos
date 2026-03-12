@@ -56,7 +56,7 @@ export default function PageExplanation({ pageId, text }: PageExplanationProps) 
             setDontShow(e.target.checked);
             if (e.target.checked) dismissForever();
           }}
-          style={{ width: 12, height: 12, accentColor: 'var(--fz-accent, #0EA5E9)' }}
+          style={{ width: 12, height: 12, accentColor: 'var(--text-primary, #1a1a1a)' }}
         />
         Ne plus afficher
       </label>

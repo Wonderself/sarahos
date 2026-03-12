@@ -69,10 +69,10 @@ export default function PushPermissionBanner() {
           margin: '0 auto',
           maxWidth: 600,
           padding: '16px 20px',
-          background: 'rgba(91, 108, 247, 0.12)',
+          background: 'rgba(0, 0, 0, 0.06)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(91, 108, 247, 0.25)',
+          borderTop: '1px solid rgba(0, 0, 0, 0.1)',
           borderRadius: '16px 16px 0 0',
           display: 'flex',
           alignItems: 'center',
@@ -82,7 +82,7 @@ export default function PushPermissionBanner() {
         {/* Icon */}
         <span
           className="material-symbols-rounded"
-          style={{ fontSize: 28, color: '#7c3aed', flexShrink: 0 }}
+          style={{ fontSize: 28, color: '#1A1A1A', flexShrink: 0 }}
         >
           notifications_active
         </span>
@@ -119,7 +119,7 @@ export default function PushPermissionBanner() {
           <button
             onClick={handleActivate}
             style={{
-              background: '#7c3aed',
+              background: '#1A1A1A',
               border: 'none',
               borderRadius: 8,
               padding: '7px 16px',
@@ -129,8 +129,8 @@ export default function PushPermissionBanner() {
               cursor: 'pointer',
               transition: 'background 0.2s',
             }}
-            onMouseEnter={(e) => { (e.target as HTMLElement).style.background = '#4f5fe0'; }}
-            onMouseLeave={(e) => { (e.target as HTMLElement).style.background = '#7c3aed'; }}
+            onMouseEnter={(e) => { (e.target as HTMLElement).style.background = '#333333'; }}
+            onMouseLeave={(e) => { (e.target as HTMLElement).style.background = '#1A1A1A'; }}
           >
             Activer
           </button>

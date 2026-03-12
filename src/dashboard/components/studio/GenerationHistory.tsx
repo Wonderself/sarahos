@@ -116,7 +116,7 @@ export default function GenerationHistory({ onReusePrompt }: Props) {
                   onClick={() => setExpanded(expanded === entry.id ? null : entry.id)}
                   style={{
                     cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
-                    border: expanded === entry.id ? '2px solid #8b5cf6' : '1px solid #e5e7eb',
+                    border: expanded === entry.id ? '2px solid #1A1A1A' : '1px solid #e5e7eb',
                     aspectRatio: '1',
                   }}
                 >
@@ -126,7 +126,7 @@ export default function GenerationHistory({ onReusePrompt }: Props) {
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 </div>
-                <div style={{ fontSize: 9, color: '#94a3b8', marginTop: 2, textAlign: 'center' }}>
+                <div style={{ fontSize: 9, color: '#9B9B9B', marginTop: 2, textAlign: 'center' }}>
                   {formatDate(entry.date)}
                 </div>
               </div>
@@ -157,19 +157,19 @@ export default function GenerationHistory({ onReusePrompt }: Props) {
                     </div>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
                       <span style={{
-                        fontSize: 9, background: '#f5f3ff', color: '#7c3aed', padding: '2px 8px',
+                        fontSize: 9, background: '#F7F7F7', color: '#1A1A1A', padding: '2px 8px',
                         borderRadius: 10, fontWeight: 600,
                       }}>
                         {entry.style}
                       </span>
                       <span style={{
-                        fontSize: 9, background: '#f0f9ff', color: '#0284c7', padding: '2px 8px',
+                        fontSize: 9, background: '#F7F7F7', color: '#6B6B6B', padding: '2px 8px',
                         borderRadius: 10, fontWeight: 600,
                       }}>
                         {entry.dimensions}
                       </span>
                       <span style={{
-                        fontSize: 9, background: '#f0fdf4', color: '#16a34a', padding: '2px 8px',
+                        fontSize: 9, background: '#F7F7F7', color: '#1A1A1A', padding: '2px 8px',
                         borderRadius: 10, fontWeight: 600,
                       }}>
                         {entry.workflow}
@@ -181,7 +181,7 @@ export default function GenerationHistory({ onReusePrompt }: Props) {
                           onClick={() => onReusePrompt(entry.prompt, entry.style)}
                           style={{
                             fontSize: 10, padding: '4px 10px', borderRadius: 6,
-                            border: '1px solid #8b5cf6', color: '#8b5cf6', background: 'white',
+                            border: '1px solid #1A1A1A', color: '#1A1A1A', background: 'white',
                             cursor: 'pointer', fontWeight: 600,
                           }}
                         >

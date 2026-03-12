@@ -50,7 +50,7 @@ export default function UserDangerTab({ user, showToast }: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div style={{ ...styles.card, border: '1px solid #7c3aed44' }}>
+      <div style={{ ...styles.card, border: '1px solid rgba(0,0,0,0.15)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>theater_comedy</span> Impersonation</div>
@@ -65,7 +65,7 @@ export default function UserDangerTab({ user, showToast }: {
             style={{
               padding: '8px 16px', borderRadius: 6, border: 'none',
               cursor: user.role === 'admin' ? 'not-allowed' : 'pointer',
-              background: user.role === 'admin' ? '#9ca3af' : '#7c3aed', color: 'white',
+              background: user.role === 'admin' ? '#9B9B9B' : '#1A1A1A', color: 'white',
               fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 16,
               opacity: impersonating ? 0.7 : 1,
             }}
@@ -75,7 +75,7 @@ export default function UserDangerTab({ user, showToast }: {
         </div>
       </div>
 
-      <div style={{ ...styles.card, border: '1px solid #f59e0b44' }}>
+      <div style={{ ...styles.card, border: '1px solid rgba(0,0,0,0.12)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>key</span> Régénérer la clé API</div>
@@ -84,8 +84,8 @@ export default function UserDangerTab({ user, showToast }: {
           <button
             onClick={handleResetKey}
             style={{
-              padding: '8px 16px', borderRadius: 6, border: '1px solid #f59e0b', cursor: 'pointer',
-              background: 'transparent', color: '#f59e0b', fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 16,
+              padding: '8px 16px', borderRadius: 6, border: '1px solid #9B9B9B', cursor: 'pointer',
+              background: 'transparent', color: '#9B9B9B', fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 16,
             }}
           >
             Régénérer
@@ -93,10 +93,10 @@ export default function UserDangerTab({ user, showToast }: {
         </div>
       </div>
 
-      <div style={{ ...styles.card, border: '1px solid #ef444444' }}>
+      <div style={{ ...styles.card, border: '1px solid rgba(220,38,38,0.25)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#ef4444', marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>block</span> Désactiver le compte</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#DC2626', marginBottom: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 16 }}>block</span> Désactiver le compte</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Le user ne pourra plus se connecter. Ses données sont conservées.</div>
           </div>
           <button
@@ -105,7 +105,7 @@ export default function UserDangerTab({ user, showToast }: {
             style={{
               padding: '8px 16px', borderRadius: 6, border: 'none',
               cursor: user.isActive ? 'pointer' : 'not-allowed',
-              background: user.isActive ? '#ef4444' : '#9ca3af', color: 'white',
+              background: user.isActive ? '#DC2626' : '#9B9B9B', color: 'white',
               fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 16,
             }}
           >

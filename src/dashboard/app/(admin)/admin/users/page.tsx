@@ -12,7 +12,7 @@ function getInitials(name: string) {
 function avatarColor(email: string) {
   let h = 0;
   for (let i = 0; i < email.length; i++) h = email.charCodeAt(i) + ((h << 5) - h);
-  return `hsl(${Math.abs(h) % 360}, 60%, 45%)`;
+  return '#6B6B6B';
 }
 
 export default async function UsersPage() {
@@ -109,7 +109,7 @@ export default async function UsersPage() {
                   className="text-base font-bold"
                   style={{
                     color: u.dailyApiCalls > u.dailyApiLimit * 0.8
-                      ? 'var(--warning)'
+                      ? 'var(--text-secondary)'
                       : 'var(--text-primary)',
                   }}
                 >
@@ -140,8 +140,8 @@ export default async function UsersPage() {
                     width: `${(count / Math.max(totalUsers, 1)) * 100}%`,
                     background:
                       role === 'admin' ? 'var(--danger)' :
-                      role === 'system' ? 'var(--purple)' :
-                      role === 'operator' ? 'var(--warning)' :
+                      role === 'system' ? 'var(--text-primary)' :
+                      role === 'operator' ? 'var(--text-secondary)' :
                       'var(--text-tertiary)',
                   }}
                 />
@@ -166,9 +166,9 @@ export default async function UsersPage() {
                   style={{
                     width: `${(count / Math.max(totalUsers, 1)) * 100}%`,
                     background:
-                      tier === 'paid' ? 'var(--success)' :
-                      tier === 'free' ? 'var(--info)' :
-                      tier === 'demo' ? 'var(--warning)' :
+                      tier === 'paid' ? 'var(--text-primary)' :
+                      tier === 'free' ? 'var(--text-secondary)' :
+                      tier === 'demo' ? 'var(--text-secondary)' :
                       'var(--text-muted)',
                   }}
                 />

@@ -181,10 +181,10 @@ export default function ActivityPage() {
         {loadingTimedOut ? (
           <>
             <div style={{ fontSize: 48, marginBottom: 8 }}>🔗</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>
               Impossible de charger les données
             </div>
-            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>
               Vérifiez votre connexion ou réessayez.
             </div>
             <button
@@ -210,14 +210,14 @@ export default function ActivityPage() {
       <div style={{ marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 style={{
-            fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)',
+            fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)',
             letterSpacing: '-0.02em', marginBottom: 6,
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
             <span style={{ fontSize: 24 }}>{meta.emoji}</span> {meta.title}
             <HelpBubble text={meta.helpText} />
           </h1>
-          <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>
             {meta.subtitle}
           </p>
         </div>
@@ -238,8 +238,8 @@ export default function ActivityPage() {
             }}
             style={{
               padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-              border: '1.5px solid var(--fz-border, #E2E8F0)', background: 'var(--fz-bg-secondary, #F8FAFC)',
-              color: 'var(--fz-text, #1E293B)', cursor: 'pointer',
+              border: '1px solid #E5E5E5', background: '#fff', height: 36,
+              color: '#1A1A1A', cursor: 'pointer',
             }}
           >
             📥 Export CSV
@@ -256,14 +256,14 @@ export default function ActivityPage() {
       {activities.length === 0 && !error && (
         <div style={{
           textAlign: 'center', padding: '60px 20px',
-          background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 16,
-          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 8,
+          border: '1px solid var(--border-primary, #E5E5E5)',
         }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>📭</div>
-          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
+          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', marginBottom: 8 }}>
             Aucune activite pour le moment
           </div>
-          <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>
             Vos actions apparaitront ici au fur et a mesure de votre utilisation.
           </div>
         </div>
@@ -274,7 +274,7 @@ export default function ActivityPage() {
         <div key={groupLabel} style={{ marginBottom: 32 }}>
           {/* Group header */}
           <div style={{
-            fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)',
+            fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)',
             textTransform: 'uppercase', letterSpacing: '0.05em',
             marginBottom: 14, paddingLeft: 20,
           }}>
@@ -286,7 +286,7 @@ export default function ActivityPage() {
             {/* Left border line */}
             <div style={{
               position: 'absolute', left: 7, top: 4, bottom: 4,
-              width: 2, background: 'var(--fz-border, #E2E8F0)',
+              width: 2, background: 'var(--fz-border, #E5E5E5)',
               borderRadius: 1,
             }} />
 
@@ -300,25 +300,25 @@ export default function ActivityPage() {
                   position: 'absolute', left: -16, top: 14,
                   width: 10, height: 10, borderRadius: '50%',
                   background: 'var(--fz-bg, #FFFFFF)',
-                  border: '2px solid var(--accent, var(--fz-accent, #0EA5E9))',
+                  border: '2px solid var(--fz-border, #E5E5E5)',
                   zIndex: 1,
                 }} />
 
                 {/* Card */}
                 <div style={{
                   background: 'var(--fz-bg, #FFFFFF)',
-                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                  border: '1px solid var(--border-primary, #E5E5E5)',
                   borderRadius: 12, padding: '14px 18px',
                   transition: 'border-color 0.15s ease',
                 }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--fz-border, #CBD5E1)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)')}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = '#D0D0D0')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = '#E5E5E5')}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     {/* Emoji icon */}
                     <div style={{
                       width: 36, height: 36, borderRadius: 10,
-                      background: 'var(--fz-bg-secondary, #F8FAFC)',
+                      background: 'var(--fz-bg-secondary, #F7F7F7)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 18, flexShrink: 0,
                     }}>
@@ -328,10 +328,10 @@ export default function ActivityPage() {
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>
                           {getActionLabel(activity.action)}
                         </span>
-                        <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>
+                        <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', flexShrink: 0 }}>
                           {formatTime(activity.created_at)}
                         </span>
                       </div>
@@ -343,7 +343,7 @@ export default function ActivityPage() {
                             <span>
                               {activity.resource_type}
                               {activity.resource_id && (
-                                <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}> #{activity.resource_id.slice(0, 8)}</span>
+                                <span style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}> #{activity.resource_id.slice(0, 8)}</span>
                               )}
                             </span>
                           )}
@@ -352,7 +352,7 @@ export default function ActivityPage() {
 
                       {/* IP address (subtle) */}
                       {activity.ip_address && (
-                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
                           IP: {activity.ip_address}
                         </div>
                       )}
@@ -374,7 +374,7 @@ export default function ActivityPage() {
             className="btn btn-ghost"
             style={{
               fontSize: 13, fontWeight: 500, padding: '10px 28px',
-              borderRadius: 10, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+              borderRadius: 10, border: '1px solid var(--border-primary, #E5E5E5)',
             }}
           >
             {loadingMore ? 'Chargement...' : 'Charger plus d\'activites'}
@@ -386,7 +386,7 @@ export default function ActivityPage() {
       {!hasMore && activities.length > 0 && (
         <div style={{
           textAlign: 'center', padding: '16px 0 40px',
-          fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)',
+          fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)',
         }}>
           Fin de l&apos;historique
         </div>

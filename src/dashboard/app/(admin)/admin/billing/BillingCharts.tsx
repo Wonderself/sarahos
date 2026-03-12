@@ -9,7 +9,7 @@ import { getToken, API_BASE } from '@/lib/client-fetch';
 
 const API = API_BASE;
 
-const COLORS = ['#7c3aed', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+const COLORS = ['#1A1A1A', '#6B6B6B', '#9B9B9B', '#DC2626', '#4A4A4A', '#B0B0B0'];
 const TOOLTIP_STYLE = { fontSize: 11, borderRadius: 8, border: '1px solid var(--border-primary)', background: '#fff' };
 
 type RevenuePoint = { date: string; revenue: number; cost: number; margin: number };
@@ -89,12 +89,12 @@ export default function BillingCharts({ tierData }: { tierData?: TierEntry[] }) 
             <AreaChart data={revenue.map(r => ({ date: r.date.slice(5), Revenu: Number(fmt(r.revenue)), 'Coût LLM': Number(fmt(r.cost)), Marge: Number(fmt(r.margin)) }))}>
               <defs>
                 <linearGradient id="gradRevenu" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#1A1A1A" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#1A1A1A" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gradCout" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#DC2626" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#DC2626" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border-primary)" />
@@ -102,9 +102,9 @@ export default function BillingCharts({ tierData }: { tierData?: TierEntry[] }) 
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => [`${String(v)} cr`, '']} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Area type="monotone" dataKey="Revenu" stroke="#7c3aed" fill="url(#gradRevenu)" strokeWidth={2} />
-              <Area type="monotone" dataKey="Coût LLM" stroke="#ef4444" fill="url(#gradCout)" strokeWidth={1.5} />
-              <Area type="monotone" dataKey="Marge" stroke="#22c55e" fill="none" strokeWidth={1.5} strokeDasharray="4 2" />
+              <Area type="monotone" dataKey="Revenu" stroke="#1A1A1A" fill="url(#gradRevenu)" strokeWidth={2} />
+              <Area type="monotone" dataKey="Coût LLM" stroke="#DC2626" fill="url(#gradCout)" strokeWidth={1.5} />
+              <Area type="monotone" dataKey="Marge" stroke="#6B6B6B" fill="none" strokeWidth={1.5} strokeDasharray="4 2" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -118,7 +118,7 @@ export default function BillingCharts({ tierData }: { tierData?: TierEntry[] }) 
               <XAxis dataKey="date" tick={{ fontSize: 10 }} />
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
-              <Bar dataKey="Users" fill="#7c3aed" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="Users" fill="#1A1A1A" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -158,9 +158,9 @@ export default function BillingCharts({ tierData }: { tierData?: TierEntry[] }) 
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v) => [`${String(v)} cr`, '']} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="Revenu" fill="#7c3aed" radius={[2, 2, 0, 0]} />
-              <Bar dataKey="Coût LLM" fill="#ef4444" radius={[2, 2, 0, 0]} />
-              <Bar dataKey="Marge" fill="#22c55e" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="Revenu" fill="#1A1A1A" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="Coût LLM" fill="#DC2626" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="Marge" fill="#6B6B6B" radius={[2, 2, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

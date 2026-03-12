@@ -49,41 +49,41 @@ const FILTER_LABELS: { id: FilterType; label: string }[] = [
 // ── ClickUp-style tokens ──────────────────────────────────────────────────────
 const CU = {
   card: {
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
-    background: 'var(--fz-bg, #FFFFFF)',
+    background: '#fff',
   },
   btn: {
     height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500 as const,
     fontSize: 13,
     cursor: 'pointer' as const,
-    border: 'none' as const,
+    border: '1px solid #E5E5E5' as const,
+    background: '#fff' as const,
   },
   btnPrimary: {
     height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500 as const,
     fontSize: 13,
     cursor: 'pointer' as const,
-    border: 'none' as const,
-    background: 'var(--fz-accent, #0EA5E9)',
-    color: '#fff',
+    border: '1px solid #E5E5E5' as const,
+    background: '#fff',
+    color: '#1A1A1A',
   },
   btnGhost: {
     height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500 as const,
     fontSize: 13,
     cursor: 'pointer' as const,
-    border: '1px solid var(--fz-border, #E8EAED)',
-    background: 'transparent',
-    color: 'var(--fz-text-secondary, #64748B)',
+    border: '1px solid #E5E5E5',
+    background: '#fff',
+    color: '#6B6B6B',
   },
 };
 
@@ -261,10 +261,10 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const typeColor: Record<NotifType, string> = {
-    alert: '#ef4444',
-    session: 'var(--fz-accent, #0EA5E9)',
-    update: '#22c55e',
-    info: '#3b82f6',
+    alert: '#1A1A1A',
+    session: '#1A1A1A',
+    update: '#1A1A1A',
+    info: '#1A1A1A',
   };
 
   const pageMeta = PAGE_META.notifications;
@@ -314,9 +314,9 @@ export default function NotificationsPage() {
             onClick={() => setFilter(f.id)}
             style={{
               ...CU.btn,
-              background: filter === f.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: filter === f.id ? '#fff' : 'var(--fz-text-secondary, #64748B)',
-              border: filter === f.id ? 'none' : '1px solid var(--fz-border, #E8EAED)',
+              background: filter === f.id ? '#1A1A1A' : '#fff',
+              color: filter === f.id ? '#fff' : '#6B6B6B',
+              border: filter === f.id ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
               height: isMobile ? 28 : 32,
               fontSize: isMobile ? 11 : 12,
               padding: isMobile ? '0 8px' : '0 12px',
@@ -428,18 +428,18 @@ export default function NotificationsPage() {
       {!loading && notifications.filter(n => n.type === 'alert').length === 0 && (
         <div style={{
           ...CU.card, textAlign: 'center', marginTop: 16, padding: '24px 20px',
-          borderLeft: '3px solid #22c55e', background: '#22c55e06',
+          borderLeft: '3px solid #1A1A1A', background: '#fff',
         }}>
           <span style={{ fontSize: 24 }}>✅</span>
-          <div style={{ fontSize: 14, fontWeight: 600, marginTop: 6, color: '#22c55e' }}>
+          <div style={{ fontSize: 14, fontWeight: 600, marginTop: 6, color: '#1A1A1A' }}>
             Aucune alerte active — Votre compte est en bonne santé
           </div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginTop: 4 }}>
+          <div style={{ fontSize: 12, color: '#6B6B6B', marginTop: 4 }}>
             Vos crédits sont suffisants et vos assistants sont opérationnels.
           </div>
           <Link href="/client/dashboard" style={{
             ...CU.btnPrimary, display: 'inline-flex', alignItems: 'center',
-            marginTop: 12, background: '#22c55e', textDecoration: 'none',
+            marginTop: 12, textDecoration: 'none',
           }}>
             Voir mon dashboard →
           </Link>

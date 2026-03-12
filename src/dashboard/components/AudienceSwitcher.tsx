@@ -36,7 +36,7 @@ export default function AudienceSwitcher({ audience, onChange, variant = 'dark' 
           height: 'calc(100% - 6px)',
           width: `calc(${100 / 3}% - 2px)`,
           borderRadius: 20,
-          background: '#7c3aed',
+          background: '#1A1A1A',
           transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s',
           transform: activeIndex >= 0 ? `translateX(${activeIndex * 100}%)` : 'translateX(0)',
           opacity: activeIndex >= 0 ? 1 : 0,

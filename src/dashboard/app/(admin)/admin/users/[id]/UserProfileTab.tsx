@@ -100,7 +100,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
           <div style={styles.cardTitle}><span className="material-symbols-rounded" style={{ fontSize: 18, verticalAlign: 'middle' }}>bar_chart</span> Activite</div>
           <div style={styles.kpiCard}>
             <span style={styles.kpiLabel}>Appels API aujourd&apos;hui</span>
-            <span style={{ ...styles.kpiValue, color: user.dailyApiCalls > user.dailyApiLimit * 0.8 ? 'var(--warning)' : 'var(--text-primary)' }}>
+            <span style={{ ...styles.kpiValue, color: user.dailyApiCalls > user.dailyApiLimit * 0.8 ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
               {user.dailyApiCalls}
             </span>
             <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>/ {user.dailyApiLimit}</span>
@@ -111,7 +111,7 @@ export default function UserProfileTab({ user, onUpdate, showToast }: {
               borderRadius: 6,
               width: `${Math.min((user.dailyApiCalls / user.dailyApiLimit) * 100, 100)}%`,
               background: user.dailyApiCalls > user.dailyApiLimit * 0.9 ? 'var(--danger)'
-                : user.dailyApiCalls > user.dailyApiLimit * 0.7 ? 'var(--warning)' : 'var(--success)',
+                : user.dailyApiCalls > user.dailyApiLimit * 0.7 ? 'var(--text-secondary)' : 'var(--text-primary)',
               transition: 'width 0.3s ease',
             }} />
           </div>

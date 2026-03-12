@@ -39,10 +39,10 @@ interface ActionStats {
 type KanbanColumn = 'proposed' | 'accepted' | 'in_progress' | 'completed';
 
 const COLUMNS: { id: KanbanColumn; label: string; color: string }[] = [
-  { id: 'proposed', label: 'Proposées', color: '#8B5CF6' },
-  { id: 'accepted', label: 'À faire', color: '#3B82F6' },
-  { id: 'in_progress', label: 'En cours', color: '#F59E0B' },
-  { id: 'completed', label: 'Terminées', color: '#22C55E' },
+  { id: 'proposed', label: 'Proposées', color: '#9B9B9B' },
+  { id: 'accepted', label: 'À faire', color: '#6B6B6B' },
+  { id: 'in_progress', label: 'En cours', color: '#1A1A1A' },
+  { id: 'completed', label: 'Terminées', color: '#1A1A1A' },
 ];
 
 const ALL_TYPES = Object.keys(ACTION_TYPE_LABELS);
@@ -213,18 +213,18 @@ export default function ActionsPage() {
       {stats && (
         <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(140px, 1fr))' }}>
           {[
-            { label: 'Total', value: stats.total, color: 'var(--fz-text, #1E293B)' },
-            { label: 'Proposées', value: stats.proposed, color: '#8B5CF6' },
-            { label: 'À faire', value: stats.accepted, color: '#3B82F6' },
-            { label: 'En cours', value: stats.inProgress, color: '#F59E0B' },
-            { label: 'Terminées', value: stats.completed, color: '#22C55E' },
+            { label: 'Total', value: stats.total, color: '#1A1A1A' },
+            { label: 'Proposées', value: stats.proposed, color: '#9B9B9B' },
+            { label: 'À faire', value: stats.accepted, color: '#6B6B6B' },
+            { label: 'En cours', value: stats.inProgress, color: '#1A1A1A' },
+            { label: 'Terminées', value: stats.completed, color: '#1A1A1A' },
             { label: 'En retard', value: overdueCount, color: '#EF4444' },
           ].map(s => (
             <div key={s.label} className="rounded-sm" style={{
-              padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+              padding: '12px', background: '#F7F7F7', border: '1px solid #E5E5E5',
               borderRadius: 8,
             }}>
-              <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{s.label}</div>
+              <div className="text-xs" style={{ color: '#6B6B6B' }}>{s.label}</div>
               <div className="text-lg font-bold" style={{ color: s.color }}>{s.value}</div>
             </div>
           ))}
@@ -272,7 +272,7 @@ export default function ActionsPage() {
 
       {/* Loading */}
       {loading && (
-        <div className="text-center" style={{ padding: '40px', color: 'var(--fz-text-secondary, #64748B)' }}>
+        <div className="text-center" style={{ padding: '40px', color: '#6B6B6B' }}>
           Chargement...
         </div>
       )}
@@ -280,12 +280,12 @@ export default function ActionsPage() {
       {/* Empty state */}
       {!loading && actions.length === 0 && (
         <div className="text-center" style={{
-          padding: '60px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)',
-          borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          padding: '60px 20px', background: '#F7F7F7',
+          borderRadius: 8, border: '1px solid #E5E5E5',
         }}>
           <div style={{ marginBottom: 12, fontSize: 48 }}>⚡</div>
-          <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>Aucune action pour le moment</h3>
-          <p className="text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)', maxWidth: 400, margin: '0 auto' }}>
+          <h3 className="text-lg font-semibold mb-4" style={{ color: '#1A1A1A' }}>Aucune action pour le moment</h3>
+          <p className="text-sm" style={{ color: '#6B6B6B', maxWidth: 400, margin: '0 auto' }}>
             Discutez avec vos assistants dans le chat — ils proposeront des actions concrètes
             à la fin de vos conversations.
           </p>
@@ -300,7 +300,7 @@ export default function ActionsPage() {
               <div className="flex items-center gap-6 mb-6" style={{ padding: '0 4px' }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
                 <span className="text-sm font-semibold">{col.label}</span>
-                <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
+                <span className="text-xs" style={{ color: '#9B9B9B' }}>
                   {actionsForColumn(col.id).length}
                 </span>
               </div>
@@ -328,14 +328,14 @@ export default function ActionsPage() {
               className="flex items-center gap-8 rounded-sm cursor-pointer"
               onClick={() => setSelectedAction(action)}
               style={{
-                padding: '10px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)',
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                padding: '10px 12px', background: '#F7F7F7',
+                border: '1px solid #E5E5E5',
               }}
             >
               <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
               <div style={{ flex: 1 }}>
                 <div className="text-sm font-medium">{action.title}</div>
-                <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                <div className="text-xs" style={{ color: '#6B6B6B' }}>
                   {ACTION_TYPE_LABELS[action.type] ?? action.type}
                   {action.sourceAgent && ` · ${getAgentEmoji(action.sourceAgent)} ${getAgentName(action.sourceAgent)}`}
                 </div>
@@ -347,7 +347,7 @@ export default function ActionsPage() {
               }}>
                 {PRIORITY_LABELS[action.priority] ?? action.priority}
               </span>
-              <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)', minWidth: 80 }}>
+              <span className="text-xs" style={{ color: '#9B9B9B', minWidth: 80 }}>
                 {COLUMNS.find(c => c.id === action.status)?.label ?? action.status}
               </span>
               {action.dueDate && (
@@ -416,7 +416,7 @@ function ActionCard({
       onClick={onClick}
       style={{
         padding: '10px 12px',
-        background: 'var(--fz-bg-secondary, #F8FAFC)',
+        background: '#F7F7F7',
         border: isOverdue ? '1px solid #EF444444' : '1px solid var(--fz-border, #E2E8F0)',
         borderRadius: 8,
       }}
@@ -426,7 +426,7 @@ function ActionCard({
         <span className="text-sm font-medium" style={{ flex: 1, lineHeight: 1.3 }}>{action.title}</span>
       </div>
       {action.description && (
-        <p className="text-xs mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.3 }}>
+        <p className="text-xs mb-4" style={{ color: '#6B6B6B', lineHeight: 1.3 }}>
           {action.description.length > 80 ? action.description.slice(0, 80) + '...' : action.description}
         </p>
       )}
@@ -474,7 +474,7 @@ function ActionCard({
         <button
           onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'in_progress'); }}
           className="btn btn-sm mt-6"
-          style={{ fontSize: 10, width: '100%', background: '#F59E0B22', color: '#F59E0B', borderColor: '#F59E0B44' }}
+          style={{ fontSize: 10, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5' }}
         >
           Démarrer
         </button>
@@ -483,7 +483,7 @@ function ActionCard({
         <button
           onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'completed'); }}
           className="btn btn-sm mt-6"
-          style={{ fontSize: 10, width: '100%', background: '#22C55E22', color: '#22C55E', borderColor: '#22C55E44' }}
+          style={{ fontSize: 10, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5' }}
         >
           Terminer
         </button>
@@ -510,7 +510,7 @@ function ActionDetailPanel({
     <div className="flex flex-col gap-8">
       {/* Status timeline */}
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Statut</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Statut</label>
         <div className="flex gap-4">
           {COLUMNS.map((col, i) => (
             <button
@@ -534,7 +534,7 @@ function ActionDetailPanel({
       {/* Description */}
       {action.description && (
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Description</label>
+          <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Description</label>
           <p className="text-sm" style={{ lineHeight: 1.5 }}>{action.description}</p>
         </div>
       )}
@@ -542,24 +542,24 @@ function ActionDetailPanel({
       {/* Metadata */}
       <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <div>
-          <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Type</label>
+          <label className="text-xs" style={{ color: '#9B9B9B' }}>Type</label>
           <div className="text-sm">{ACTION_TYPE_ICONS[action.type]} {ACTION_TYPE_LABELS[action.type]}</div>
         </div>
         <div>
-          <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Priorité</label>
+          <label className="text-xs" style={{ color: '#9B9B9B' }}>Priorité</label>
           <div className="text-sm" style={{ color: PRIORITY_COLORS[action.priority] }}>
             {PRIORITY_LABELS[action.priority]}
           </div>
         </div>
         {action.sourceAgent && (
           <div>
-            <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Assistant source</label>
+            <label className="text-xs" style={{ color: '#9B9B9B' }}>Assistant source</label>
             <div className="text-sm">{getAgentEmoji(action.sourceAgent)} {getAgentName(action.sourceAgent)}</div>
           </div>
         )}
         {action.dueDate && (
           <div>
-            <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Échéance</label>
+            <label className="text-xs" style={{ color: '#9B9B9B' }}>Échéance</label>
             <div className="text-sm" style={{
               color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--fz-text, #1E293B)',
             }}>
@@ -568,7 +568,7 @@ function ActionDetailPanel({
           </div>
         )}
         <div>
-          <label className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Créée le</label>
+          <label className="text-xs" style={{ color: '#9B9B9B' }}>Créée le</label>
           <div className="text-sm">
             {new Date(action.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
           </div>
@@ -628,7 +628,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Type</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Type</label>
         <select value={type} onChange={e => setType(e.target.value)} className="input" style={{ fontSize: 13 }}>
           {ALL_TYPES.map(t => (
             <option key={t} value={t}>{ACTION_TYPE_ICONS[t]} {ACTION_TYPE_LABELS[t]}</option>
@@ -636,7 +636,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
         </select>
       </div>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Titre *</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Titre *</label>
         <input
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -647,7 +647,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
         />
       </div>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Description</label>
+        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Description</label>
         <textarea
           value={description}
           onChange={e => setDescription(e.target.value)}
@@ -659,7 +659,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
       </div>
       <div className="grid gap-6" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Priorité</label>
+          <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Priorité</label>
           <select value={priority} onChange={e => setPriority(e.target.value)} className="input" style={{ fontSize: 13 }}>
             {ALL_PRIORITIES.map(p => (
               <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>
@@ -667,7 +667,7 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
           </select>
         </div>
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: 'var(--fz-text-secondary, #64748B)', display: 'block' }}>Échéance</label>
+          <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Échéance</label>
           <input
             type="date"
             value={dueDate}

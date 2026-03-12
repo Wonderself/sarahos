@@ -121,29 +121,28 @@ export default function MarketplacePage() {
             <div
               key={agent.id}
               style={{
-                background: FEATURED_GRADIENTS[idx % FEATURED_GRADIENTS.length],
-                borderRadius: 'var(--radius-lg)',
+                background: '#F7F7F7',
+                borderRadius: 8,
                 padding: 24,
-                color: '#fff',
+                color: '#1A1A1A',
                 position: 'relative',
                 overflow: 'hidden',
-                transition: 'transform 0.2s, box-shadow 0.2s',
+                transition: 'background 0.2s',
                 cursor: 'pointer',
+                border: '1px solid #E5E5E5',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2)';
+                e.currentTarget.style.background = '#F0F0F0';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.background = '#F7F7F7';
               }}
             >
               <div style={{ fontSize: 40, marginBottom: 12 }}>{agent.icon}</div>
               <h3 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 6 }}>{agent.name}</h3>
-              <p style={{ fontSize: isMobile ? 12 : 13, opacity: 0.9, marginBottom: 16, lineHeight: 1.5 }}>{agent.description}</p>
+              <p style={{ fontSize: isMobile ? 12 : 13, color: '#6B6B6B', marginBottom: 16, lineHeight: 1.5 }}>{agent.description}</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12, opacity: 0.8 }}>
+                <span style={{ fontSize: 12, color: '#9B9B9B' }}>
                   {agent.installs.toLocaleString('fr-FR')} installations
                 </span>
                 <button
@@ -153,10 +152,10 @@ export default function MarketplacePage() {
                   }}
                   disabled={installing === agent.id}
                   style={{
-                    background: installed.has(agent.id) ? 'rgba(255,255,255,0.2)' : '#fff',
-                    color: installed.has(agent.id) ? '#fff' : '#333',
-                    border: 'none',
-                    borderRadius: 'var(--radius-md)',
+                    background: installed.has(agent.id) ? '#F0F0F0' : '#1A1A1A',
+                    color: installed.has(agent.id) ? '#1A1A1A' : '#fff',
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 8,
                     padding: '8px 20px',
                     fontSize: 13,
                     fontWeight: 600,
@@ -187,16 +186,16 @@ export default function MarketplacePage() {
             style={{
               width: '100%',
               padding: '12px 16px 12px 42px',
-              borderRadius: 'var(--radius-md)',
-              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-              background: 'var(--fz-bg, #FFFFFF)',
-              color: 'var(--fz-text, #1E293B)',
+              borderRadius: 8,
+              border: '1px solid #E5E5E5',
+              background: '#fff',
+              color: '#1A1A1A',
               fontSize: 14,
               outline: 'none',
               transition: 'border-color 0.2s',
             }}
-            onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
-            onBlur={(e) => (e.target.style.borderColor = 'var(--fz-border, #E2E8F0)')}
+            onFocus={(e) => (e.target.style.borderColor = '#1A1A1A')}
+            onBlur={(e) => (e.target.style.borderColor = '#E5E5E5')}
           />
         </div>
 
@@ -208,10 +207,10 @@ export default function MarketplacePage() {
               onClick={() => setCategory(cat)}
               style={{
                 padding: '6px 16px',
-                borderRadius: 20,
-                border: category === cat ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E2E8F0)',
-                background: category === cat ? 'var(--accent-muted)' : 'var(--fz-bg, #FFFFFF)',
-                color: category === cat ? 'var(--accent)' : 'var(--fz-text-secondary, #64748B)',
+                borderRadius: 8,
+                border: category === cat ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
+                background: category === cat ? '#1A1A1A' : '#fff',
+                color: category === cat ? '#fff' : '#6B6B6B',
                 fontSize: 13,
                 fontWeight: category === cat ? 600 : 400,
                 cursor: 'pointer',
@@ -241,9 +240,9 @@ export default function MarketplacePage() {
                 style={{
                   padding: '5px 12px',
                   borderRadius: 'var(--radius-sm)',
-                  border: 'none',
-                  background: sort === s.key ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                  color: sort === s.key ? '#fff' : 'var(--fz-text-secondary, #64748B)',
+                  border: '1px solid #E5E5E5',
+                  background: sort === s.key ? '#1A1A1A' : '#fff',
+                  color: sort === s.key ? '#fff' : '#6B6B6B',
                   fontSize: 12,
                   fontWeight: 500,
                   cursor: 'pointer',
@@ -285,10 +284,10 @@ export default function MarketplacePage() {
             style={{
               marginTop: 12,
               padding: '8px 20px',
-              borderRadius: 'var(--radius-md)',
-              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-              background: 'var(--fz-bg, #FFFFFF)',
-              color: 'var(--accent)',
+              borderRadius: 8,
+              border: '1px solid #E5E5E5',
+              background: '#fff',
+              color: '#1A1A1A',
               fontSize: 13,
               cursor: 'pointer',
             }}
@@ -303,12 +302,11 @@ export default function MarketplacePage() {
         style={{
           marginTop: 40,
           padding: '16px 24px',
-          borderRadius: 'var(--radius-md)',
-          background: 'var(--fz-bg-secondary, #F8FAFC)',
-          border: 'none',
+          borderRadius: 8,
+          background: '#F7F7F7',
+          border: '1px solid #E5E5E5',
           display: 'flex',
           justifyContent: 'space-around',
-          boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
           flexWrap: 'wrap',
           gap: 16,
         }}
@@ -335,27 +333,25 @@ function AgentCard({
   isInstalling: boolean;
   onToggle: () => void;
 }) {
-  const catColor = CATEGORY_COLORS[agent.category] || 'var(--accent)';
+  const catColor = '#1A1A1A';
 
   return (
     <div
       style={{
-        background: 'var(--fz-bg, #FFFFFF)',
-        borderRadius: 'var(--radius-lg)',
-        border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+        background: '#fff',
+        borderRadius: 8,
+        border: '1px solid #E5E5E5',
         padding: 20,
-        transition: 'transform 0.2s, box-shadow 0.2s',
+        transition: 'background 0.2s',
         cursor: 'default',
         display: 'flex',
         flexDirection: 'column',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+        e.currentTarget.style.background = '#F7F7F7';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.background = '#fff';
       }}
     >
       {/* Top row: icon + badges */}
@@ -367,8 +363,8 @@ function AgentCard({
               style={{
                 padding: '2px 8px',
                 borderRadius: 10,
-                background: '#fef3c7',
-                color: '#92400e',
+                background: '#F0F0F0',
+                color: '#1A1A1A',
                 fontSize: 11,
                 fontWeight: 600,
               }}
@@ -381,8 +377,8 @@ function AgentCard({
               style={{
                 padding: '2px 8px',
                 borderRadius: 10,
-                background: '#dbeafe',
-                color: '#1e40af',
+                background: '#F0F0F0',
+                color: '#1A1A1A',
                 fontSize: 11,
                 fontWeight: 600,
               }}
@@ -402,8 +398,8 @@ function AgentCard({
           style={{
             padding: '2px 10px',
             borderRadius: 10,
-            background: catColor + '18',
-            color: catColor,
+            background: '#F0F0F0',
+            color: '#1A1A1A',
             fontSize: 11,
             fontWeight: 600,
           }}
@@ -414,8 +410,8 @@ function AgentCard({
           style={{
             padding: '2px 10px',
             borderRadius: 10,
-            background: 'var(--success-muted)',
-            color: 'var(--success)',
+            background: '#F0F0F0',
+            color: '#1A1A1A',
             fontSize: 11,
             fontWeight: 600,
           }}
@@ -451,10 +447,10 @@ function AgentCard({
           disabled={isInstalling}
           style={{
             padding: '7px 18px',
-            borderRadius: 'var(--radius-md)',
-            border: isInstalled ? '1px solid var(--fz-border, #E2E8F0)' : 'none',
-            background: isInstalled ? 'var(--fz-bg, #FFFFFF)' : 'var(--accent)',
-            color: isInstalled ? 'var(--fz-text-secondary, #64748B)' : '#fff',
+            borderRadius: 8,
+            border: '1px solid #E5E5E5',
+            background: isInstalled ? '#fff' : '#1A1A1A',
+            color: isInstalled ? '#6B6B6B' : '#fff',
             fontSize: 13,
             fontWeight: 600,
             cursor: isInstalling ? 'wait' : 'pointer',
@@ -462,12 +458,12 @@ function AgentCard({
           }}
           onMouseEnter={(e) => {
             if (!isInstalled && !isInstalling) {
-              e.currentTarget.style.background = 'var(--accent-hover)';
+              e.currentTarget.style.background = '#333';
             }
           }}
           onMouseLeave={(e) => {
             if (!isInstalled && !isInstalling) {
-              e.currentTarget.style.background = 'var(--accent)';
+              e.currentTarget.style.background = '#1A1A1A';
             }
           }}
         >
@@ -481,7 +477,7 @@ function AgentCard({
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--accent)' }}>{value}</div>
+      <div style={{ fontSize: 22, fontWeight: 700, color: '#1A1A1A' }}>{value}</div>
       <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{label}</div>
     </div>
   );

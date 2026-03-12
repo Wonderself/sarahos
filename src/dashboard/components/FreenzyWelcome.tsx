@@ -52,10 +52,10 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
           {agentDetails.slice(0, 10).map(a => (
             <div key={a.id} title={a.role} style={{
               width: 26, height: 26, borderRadius: 6,
-              background: a.color + '22', border: `1px solid ${a.color}44`,
+              background: '#F7F7F7', border: '1px solid #E5E5E5',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <span className="material-symbols-rounded" style={{ fontSize: 13, color: a.color }}>{a.materialIcon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 13, color: 'var(--text-primary)' }}>{a.materialIcon}</span>
             </div>
           ))}
           {agentDetails.length > 10 && (
@@ -70,8 +70,8 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
         {!hasProfile && (
           <div style={{
             padding: '10px 12px', marginBottom: 10, borderRadius: 10,
-            background: 'linear-gradient(135deg, #7c3aed0a, #06b6d408)',
-            border: '1px solid #7c3aed25',
+            background: '#F7F7F7',
+            border: '1px solid #E5E5E5',
           }}>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, marginBottom: 2 }}>
               Configurons votre profil !
@@ -107,7 +107,7 @@ export default function FreenzyWelcome({ userName, tier, onDismiss }: FreenzyWel
                 transition: 'border-color 0.15s',
               }}
             >
-              <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--accent)', flexShrink: 0 }}>{action.icon}</span>
+              <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--text-primary)', flexShrink: 0 }}>{action.icon}</span>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{action.label}</div>
                 <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>{action.desc}</div>

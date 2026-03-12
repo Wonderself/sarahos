@@ -31,7 +31,7 @@ export default function EnterpriseSection() {
         {/* Badge */}
         <div style={{
           position: 'absolute', top: 0, right: 0,
-          background: '#111827',
+          background: '#1A1A1A',
           color: 'white', fontSize: 10, fontWeight: 600,
           padding: '5px 18px', borderRadius: '0 0 0 12px',
           letterSpacing: '0.05em', textTransform: 'uppercase',
@@ -41,7 +41,7 @@ export default function EnterpriseSection() {
 
         <div className="text-center" style={{ marginBottom: 36 }}>
           <div style={{ fontSize: 44, marginBottom: 14 }}>&#x1F3E2;</div>
-          <h3 className="section-heading" style={{ fontSize: 26, fontWeight: 700, color: '#111827', marginBottom: 10, letterSpacing: '-0.02em' }}>
+          <h3 className="section-heading" style={{ fontSize: 26, fontWeight: 700, color: '#1A1A1A', marginBottom: 10, letterSpacing: '-0.02em' }}>
             <span className="fz-accent-word">Entreprise</span> — White-Label SaaS
           </h3>
           <p className="section-subheading" style={{ fontSize: 16, color: '#6b7280', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
@@ -70,7 +70,7 @@ export default function EnterpriseSection() {
           <button onClick={() => setShowForm(true)} className="btn btn-primary"
             style={{
               padding: '14px 36px', fontSize: 15, fontWeight: 600,
-              background: '#111827',
+              background: '#1A1A1A',
               border: 'none', borderRadius: 12,
             }}>
             Demander un devis personnalise

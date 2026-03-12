@@ -25,7 +25,7 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
     .reduce((sum, s) => sum + s.tokenEstimate, 0);
 
   const tokenRatio = totalTokens > 0 ? selectedTokens / 8000 : 0;
-  const tokenColor = tokenRatio < 0.3 ? '#22c55e' : tokenRatio < 0.7 ? '#eab308' : '#ef4444';
+  const tokenColor = tokenRatio < 0.3 ? '#1A1A1A' : tokenRatio < 0.7 ? '#9B9B9B' : '#ef4444';
 
   const toggleSection = (idx: number) => {
     setSelected(prev => {
@@ -59,8 +59,8 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
 
       {/* Info banner */}
       <div style={{
-        padding: '8px 16px', background: '#eff6ff', borderBottom: '1px solid #bfdbfe',
-        fontSize: 11, color: '#1e40af', lineHeight: 1.5,
+        padding: '8px 16px', background: '#F7F7F7', borderBottom: '1px solid #E5E5E5',
+        fontSize: 11, color: '#1A1A1A', lineHeight: 1.5,
       }}>
         Seul le texte utile est conserve en memoire, pas le fichier original. Selectionnez les sections a garder pour enrichir le contexte de vos agents.
       </div>
@@ -77,7 +77,7 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
             transition: 'width 0.3s, background 0.3s',
           }} />
         </div>
-        <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2, textAlign: 'right' }}>
+        <div style={{ fontSize: 10, color: '#9B9B9B', marginTop: 2, textAlign: 'right' }}>
           max ~8000 tokens de contexte par conversation
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
         {sections.map((section, idx) => (
           <div key={idx} style={{
             padding: '10px 16px', borderBottom: '1px solid #f3f4f6',
-            background: selected.has(idx) ? '#f0fdf4' : '#fafafa',
+            background: selected.has(idx) ? '#F7F7F7' : '#fafafa',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
@@ -114,12 +114,12 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
               />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#1d1d1f' }}>{section.title}</div>
-                <div style={{ fontSize: 10, color: '#94a3b8' }}>~{section.tokenEstimate} tokens</div>
+                <div style={{ fontSize: 10, color: '#9B9B9B' }}>~{section.tokenEstimate} tokens</div>
               </div>
               <button
                 onClick={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
                 style={{
-                  fontSize: 10, color: '#7c3aed', background: 'none', border: 'none',
+                  fontSize: 10, color: '#1A1A1A', background: 'none', border: 'none',
                   cursor: 'pointer', padding: '2px 6px',
                 }}
               >
@@ -165,7 +165,7 @@ export default function DocumentPreview({ filename, sections, totalTokens, onCon
             disabled={selected.size === 0}
             style={{
               padding: '8px 16px', borderRadius: 8, border: 'none',
-              background: selected.size > 0 ? '#7c3aed' : '#94a3b8',
+              background: selected.size > 0 ? '#1A1A1A' : '#9B9B9B',
               color: 'white', fontSize: 12, fontWeight: 600,
               cursor: selected.size > 0 ? 'pointer' : 'not-allowed',
             }}

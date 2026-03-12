@@ -185,15 +185,15 @@ const INTEGRATIONS: Integration[] = [
 ];
 
 const STATUS_CONFIG = {
-  active: { label: 'Actif', color: '#22c55e', bg: '#22c55e15' },
-  planned: { label: 'Prochainement', color: '#f59e0b', bg: '#f59e0b15' },
-  future: { label: 'Prévu', color: '#7c3aed', bg: '#7c3aed15' },
+  active: { label: 'Actif', color: '#1A1A1A', bg: 'rgba(0,0,0,0.04)' },
+  planned: { label: 'Prochainement', color: '#6B6B6B', bg: 'rgba(0,0,0,0.04)' },
+  future: { label: 'Prévu', color: '#9B9B9B', bg: 'rgba(0,0,0,0.04)' },
 };
 
 const DIFFICULTY_CONFIG = {
-  Facile: { color: '#22c55e' },
-  Moyen: { color: '#f59e0b' },
-  Complexe: { color: '#ef4444' },
+  Facile: { color: '#1A1A1A' },
+  Moyen: { color: '#6B6B6B' },
+  Complexe: { color: '#DC2626' },
 };
 
 export default function RoadmapPage() {
@@ -295,7 +295,7 @@ export default function RoadmapPage() {
 
       {/* ═══ Active ═══ */}
       <section className="section">
-        <h2 className="section-title" style={{ color: '#22c55e' }}>Intégrations actives</h2>
+        <h2 className="section-title" style={{ color: '#1A1A1A' }}>Intégrations actives</h2>
         <div className="grid-3 gap-12">
           {activeIntegrations.map(i => <IntegrationCard key={i.name} integration={i} />)}
         </div>
@@ -303,7 +303,7 @@ export default function RoadmapPage() {
 
       {/* ═══ Planned ═══ */}
       <section className="section">
-        <h2 className="section-title" style={{ color: '#f59e0b' }}>Prochainement</h2>
+        <h2 className="section-title" style={{ color: '#6B6B6B' }}>Prochainement</h2>
         <p className="text-md text-tertiary mb-16">
           Ces intégrations sont prioritaires et seront implémentées dans les prochaines semaines.
         </p>
@@ -314,7 +314,7 @@ export default function RoadmapPage() {
 
       {/* ═══ Future ═══ */}
       <section className="section">
-        <h2 className="section-title" style={{ color: '#7c3aed' }}>Prévu (moyen terme)</h2>
+        <h2 className="section-title" style={{ color: '#9B9B9B' }}>Prévu (moyen terme)</h2>
         <p className="text-md text-tertiary mb-16">
           Ces intégrations sont prévues pour enrichir les capacités de Freenzy.io.
           Inscrivez-vous dès maintenant pour obtenir vos clés API.
@@ -419,14 +419,14 @@ export default function RoadmapPage() {
               <div key={item.name} className="flex items-center gap-12 bg-secondary rounded-sm border" style={{ padding: '8px 14px' }}>
                 <span style={{
                   width: 10, height: 10, borderRadius: 5, flexShrink: 0,
-                  background: item.status === 'ok' ? '#22c55e' : item.status === 'opt' ? '#f59e0b' : item.status === 'next' ? '#f59e0b' : '#7c3aed',
+                  background: item.status === 'ok' ? '#1A1A1A' : item.status === 'opt' ? '#9B9B9B' : item.status === 'next' ? '#9B9B9B' : '#6B6B6B',
                 }} />
                 <span className="text-md font-semibold" style={{ minWidth: 200 }}>{item.name}</span>
                 <span className="text-sm text-secondary">{item.desc}</span>
                 <span style={{
                   marginLeft: 'auto', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10, flexShrink: 0,
-                  background: item.status === 'ok' ? '#22c55e15' : item.status === 'opt' ? '#f59e0b15' : item.status === 'next' ? '#f59e0b15' : '#7c3aed15',
-                  color: item.status === 'ok' ? '#22c55e' : item.status === 'opt' ? '#f59e0b' : item.status === 'next' ? '#f59e0b' : '#7c3aed',
+                  background: 'rgba(0,0,0,0.04)',
+                  color: item.status === 'ok' ? '#1A1A1A' : item.status === 'opt' ? '#9B9B9B' : item.status === 'next' ? '#9B9B9B' : '#6B6B6B',
                 }}>
                   {item.status === 'ok' ? 'Actif' : item.status === 'opt' ? 'Optionnel' : item.status === 'next' ? 'Prochainement' : 'Prévu'}
                 </span>

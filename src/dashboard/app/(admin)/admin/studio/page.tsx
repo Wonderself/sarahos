@@ -190,7 +190,7 @@ function OverviewTab() {
         </div>
         <div className="stat-card">
           <span className="stat-label">Vidéos</span>
-          <span className="stat-value stat-value-sm" style={{ color: '#8b5cf6' }}>{videos}</span>
+          <span className="stat-value stat-value-sm" style={{ color: '#1A1A1A' }}>{videos}</span>
         </div>
         <div className="stat-card">
           <span className="stat-label">Crédits consommés</span>

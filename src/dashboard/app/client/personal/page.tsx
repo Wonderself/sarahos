@@ -29,18 +29,17 @@ import HelpBubble from '../../../components/HelpBubble';
 
 const CU = {
   card: {
-    background: 'var(--fz-bg, #FFFFFF)',
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    background: '#fff',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
   },
-  text: 'var(--fz-text, #1A1D23)',
-  textSecondary: 'var(--fz-text-secondary, #6B6F76)',
-  textMuted: 'var(--fz-text-muted, #A1A5AC)',
-  accent: 'var(--fz-accent, #0EA5E9)',
-  border: 'var(--fz-border, #E8EAED)',
-  bg: 'var(--fz-bg, #FFFFFF)',
-  bgSecondary: 'var(--fz-bg-secondary, #F8FAFC)',
+  text: '#1A1A1A',
+  textSecondary: '#6B6B6B',
+  textMuted: '#9B9B9B',
+  accent: '#1A1A1A',
+  border: '#E5E5E5',
+  bg: '#fff',
+  bgSecondary: '#F7F7F7',
 };
 
 // ─── Person emoji overrides (replace generic object emojis with person emojis) ───
@@ -325,7 +324,7 @@ export default function PersonalAgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, background: 'rgba(14,165,233,0.08)', fontSize: 18,
+            borderRadius: 8, background: 'rgba(0,0,0,0.04)', fontSize: 18,
           }}>
             🏢
           </div>
@@ -365,7 +364,7 @@ export default function PersonalAgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, background: '#06b6d415', fontSize: 18,
+            borderRadius: 8, background: 'rgba(0,0,0,0.04)', fontSize: 18,
           }}>
             👥
           </div>
@@ -395,7 +394,7 @@ export default function PersonalAgentsPage() {
                   display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                   padding: '8px 12px', borderRadius: 8,
                   background: CU.bgSecondary, border: 'none',
-                  boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                  boxShadow: 'none',
                   cursor: 'pointer', fontFamily: 'var(--font-sans)', marginBottom: 8,
                   transition: 'background 0.15s',
                 }}
@@ -439,7 +438,7 @@ export default function PersonalAgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, background: '#22c55e15', fontSize: 18,
+            borderRadius: 8, background: 'rgba(0,0,0,0.04)', fontSize: 18,
           }}>
             🚀
           </div>
@@ -478,7 +477,7 @@ export default function PersonalAgentsPage() {
       <div style={{
         ...CU.card,
         padding: 24,
-        background: 'linear-gradient(135deg, rgba(14,165,233,0.03), #06b6d408)',
+        background: '#F7F7F7',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
@@ -526,7 +525,7 @@ export default function PersonalAgentsPage() {
                 width: '100%', height: 40, padding: '0 16px 0 42px', borderRadius: 8,
                 border: `1px solid ${CU.border}`, background: CU.bg,
                 color: CU.text, fontSize: 13, outline: 'none', transition: 'border-color 0.2s',
-                boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                boxShadow: 'none',
               }}
               onFocus={e => (e.target.style.borderColor = CU.accent)}
               onBlur={e => (e.target.style.borderColor = CU.border)}
@@ -594,7 +593,7 @@ export default function PersonalAgentsPage() {
                     padding: 20, transition: 'transform 0.2s, box-shadow 0.2s',
                     display: 'flex', flexDirection: 'column',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'none'; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))'; }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -659,7 +658,7 @@ export default function PersonalAgentsPage() {
                 onClick={() => { setMpSearch(''); setMpCategory('Tous'); }}
                 style={{
                   marginTop: 12, height: 36, padding: '0 20px', borderRadius: 6,
-                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                  border: 'none', boxShadow: 'none',
                   background: CU.bg, color: CU.accent, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                 }}
               >
@@ -672,7 +671,7 @@ export default function PersonalAgentsPage() {
           <div style={{
             marginTop: 40, padding: '16px 24px', borderRadius: 8,
             background: CU.bgSecondary, border: 'none',
-            boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+            boxShadow: 'none',
             display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16,
           }}>
             {[
@@ -783,7 +782,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
             position: 'absolute', top: 2, left: isActive ? 20 : 2,
             width: 18, height: 18, borderRadius: '50%',
             background: 'white', transition: 'left 0.2s',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+            boxShadow: 'none',
           }} />
         </button>
       </div>
@@ -833,7 +832,7 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
               background: CU.bgSecondary,
               color: CU.textMuted,
               border: 'none',
-              boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+              boxShadow: 'none',
             }}
           >
             {cap}
@@ -905,7 +904,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
               position: 'absolute', top: 2, left: 20,
               width: 18, height: 18, borderRadius: '50%',
               background: 'white', transition: 'left 0.2s',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+              boxShadow: 'none',
             }} />
           </button>
         </div>
@@ -989,7 +988,7 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
             position: 'absolute', top: 2, left: 2,
             width: 18, height: 18, borderRadius: '50%',
             background: 'white', transition: 'left 0.2s',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+            boxShadow: 'none',
           }} />
         </button>
       </div>

@@ -26,7 +26,7 @@ const GOALS: GoalOption[] = [
     id: 'productivity',
     label: 'Productivité',
     icon: 'speed',
-    color: '#22c55e',
+    color: '#1a1a1a',
     agentId: 'fz-assistante',
     description: 'Organisez votre temps, vos tâches et vos projets efficacement.',
   },
@@ -34,7 +34,7 @@ const GOALS: GoalOption[] = [
     id: 'sales',
     label: 'Ventes & Commercial',
     icon: 'trending_up',
-    color: '#3b82f6',
+    color: '#1a1a1a',
     agentId: 'fz-commercial',
     description: 'Boostez vos ventes, prospectez et concluez plus de deals.',
   },
@@ -42,7 +42,7 @@ const GOALS: GoalOption[] = [
     id: 'creation',
     label: 'Création & Communication',
     icon: 'palette',
-    color: '#8b5cf6',
+    color: '#1a1a1a',
     agentId: 'fz-communication',
     description: 'Créez du contenu percutant et gérez votre image de marque.',
   },
@@ -50,7 +50,7 @@ const GOALS: GoalOption[] = [
     id: 'personal',
     label: 'Gestion Personnelle',
     icon: 'person',
-    color: '#f97316',
+    color: '#1a1a1a',
     agentId: 'fz-budget',
     description: 'Gérez votre budget, vos finances et votre vie quotidienne.',
   },
@@ -101,7 +101,7 @@ function useConfetti(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const colors = ['#22c55e', '#3b82f6', '#8b5cf6', '#f97316', '#ec4899', '#eab308'];
+    const colors = ['#1a1a1a', '#666', '#999', '#bbb', '#ddd', '#444'];
     const particles: Particle[] = [];
 
     for (let i = 0; i < 120; i++) {
@@ -258,9 +258,9 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
       <div style={{
         width: '100%',
         maxWidth: 640,
-        background: '#0f0720',
-        borderRadius: 20,
-        border: '1px solid rgba(255,255,255,0.1)',
+        background: '#fff',
+        borderRadius: 8,
+        border: '1px solid #E5E5E5',
         overflow: 'hidden',
         position: 'relative',
         maxHeight: '90vh',
@@ -281,11 +281,11 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 width: s === step ? 32 : 10,
                 height: 10,
                 borderRadius: 5,
-                background: s <= step ? '#7c3aed' : 'rgba(255,255,255,0.12)',
+                background: s <= step ? 'var(--text-primary, #1a1a1a)' : '#E5E5E5',
                 transition: 'all 0.3s ease',
               }} />
             ))}
-            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginLeft: 8 }}>
+            <span style={{ color: 'var(--text-tertiary)', fontSize: 13, marginLeft: 8 }}>
               {step}/3
             </span>
           </div>
@@ -296,7 +296,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
             style={{
               background: 'none',
               border: 'none',
-              color: 'rgba(255,255,255,0.4)',
+              color: 'var(--text-tertiary)',
               fontSize: 14,
               cursor: 'pointer',
               padding: '4px 8px',
@@ -314,7 +314,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
           {step === 1 && (
             <div>
               <h2 style={{
-                color: '#fff',
+                color: 'var(--text-primary)',
                 fontSize: 24,
                 fontWeight: 700,
                 marginBottom: 6,
@@ -323,7 +323,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 Quel est votre objectif principal ?
               </h2>
               <p style={{
-                color: 'rgba(255,255,255,0.55)',
+                color: 'var(--text-secondary)',
                 fontSize: 15,
                 marginBottom: 24,
                 lineHeight: 1.5,
@@ -337,10 +337,9 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     key={goal.id}
                     onClick={() => selectGoal(goal)}
                     style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: 14,
+                      background: '#F7F7F7',
+                      border: '1px solid #E5E5E5',
+                      borderRadius: 8,
                       padding: '20px 16px',
                       cursor: 'pointer',
                       textAlign: 'left',
@@ -350,32 +349,32 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       gap: 10,
                     }}
                     onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = goal.color;
-                      (e.currentTarget as HTMLElement).style.background = `${goal.color}11`;
+                      (e.currentTarget as HTMLElement).style.borderColor = '#1a1a1a';
+                      (e.currentTarget as HTMLElement).style.background = '#F0F0F0';
                     }}
                     onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+                      (e.currentTarget as HTMLElement).style.borderColor = '#E5E5E5';
+                      (e.currentTarget as HTMLElement).style.background = '#F7F7F7';
                     }}
                   >
                     <div style={{
                       width: 44,
                       height: 44,
                       borderRadius: 12,
-                      background: `${goal.color}20`,
+                      background: '#F0F0F0',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 24, color: goal.color }}>
+                      <span className="material-symbols-rounded" style={{ fontSize: 24, color: 'var(--text-primary)' }}>
                         {goal.icon}
                       </span>
                     </div>
                     <div>
-                      <div style={{ color: '#fff', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
+                      <div style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
                         {goal.label}
                       </div>
-                      <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, lineHeight: 1.4 }}>
+                      <div style={{ color: 'var(--text-tertiary)', fontSize: 13, lineHeight: 1.4 }}>
                         {goal.description}
                       </div>
                     </div>
@@ -389,7 +388,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
           {step === 2 && agent && selectedGoal && (
             <div>
               <h2 style={{
-                color: '#fff',
+                color: 'var(--text-primary)',
                 fontSize: 24,
                 fontWeight: 700,
                 marginBottom: 6,
@@ -398,7 +397,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 Rencontrez votre premier assistant
               </h2>
               <p style={{
-                color: 'rgba(255,255,255,0.55)',
+                color: 'var(--text-secondary)',
                 fontSize: 15,
                 marginBottom: 24,
                 lineHeight: 1.5,
@@ -408,9 +407,9 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
 
               {/* Agent Card */}
               <div style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: `1px solid ${agent.color}40`,
-                borderRadius: 16,
+                background: '#F7F7F7',
+                border: '1px solid #E5E5E5',
+                borderRadius: 8,
                 padding: '28px 24px',
                 marginBottom: 24,
               }}>
@@ -420,21 +419,21 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     width: 56,
                     height: 56,
                     borderRadius: 16,
-                    background: `${agent.color}20`,
+                    background: '#F0F0F0',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: `2px solid ${agent.color}40`,
+                    border: '1px solid #E5E5E5',
                   }}>
-                    <span className="material-symbols-rounded" style={{ fontSize: 28, color: agent.color }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: 28, color: 'var(--text-primary)' }}>
                       {agent.materialIcon}
                     </span>
                   </div>
                   <div>
-                    <div style={{ color: '#fff', fontWeight: 700, fontSize: 20 }}>
+                    <div style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: 20 }}>
                       {agent.emoji} {agent.name}
                     </div>
-                    <div style={{ color: agent.color, fontSize: 14, fontWeight: 500 }}>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: 14, fontWeight: 500 }}>
                       {agent.role}
                     </div>
                   </div>
@@ -442,7 +441,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
 
                 {/* Description */}
                 <p style={{
-                  color: 'rgba(255,255,255,0.6)',
+                  color: 'var(--text-secondary)',
                   fontSize: 14,
                   lineHeight: 1.6,
                   marginBottom: 20,
@@ -455,13 +454,13 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {agent.capabilities.map((cap, i) => (
                     <span key={i} style={{
-                      background: `${agent.color}15`,
-                      color: agent.color,
+                      background: '#F0F0F0',
+                      color: 'var(--text-primary)',
                       fontSize: 12,
                       fontWeight: 500,
                       padding: '5px 12px',
                       borderRadius: 20,
-                      border: `1px solid ${agent.color}25`,
+                      border: '1px solid #E5E5E5',
                     }}>
                       {cap}
                     </span>
@@ -475,9 +474,9 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 style={{
                   width: '100%',
                   padding: '14px 24px',
-                  background: agent.color,
-                  border: 'none',
-                  borderRadius: 12,
+                  background: 'var(--text-primary, #1a1a1a)',
+                  border: '1px solid var(--text-primary, #1a1a1a)',
+                  borderRadius: 8,
                   color: '#fff',
                   fontSize: 16,
                   fontWeight: 600,
@@ -501,7 +500,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'rgba(255,255,255,0.4)',
+                  color: 'var(--text-tertiary)',
                   fontSize: 13,
                   cursor: 'pointer',
                   marginTop: 16,
@@ -518,7 +517,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
           {step === 3 && agent && selectedGoal && (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <h2 style={{
-                color: '#fff',
+                color: 'var(--text-primary)',
                 fontSize: 22,
                 fontWeight: 700,
                 marginBottom: 4,
@@ -527,7 +526,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                 Envoyez votre premier message
               </h2>
               <p style={{
-                color: 'rgba(255,255,255,0.55)',
+                color: 'var(--text-secondary)',
                 fontSize: 14,
                 marginBottom: 20,
                 lineHeight: 1.5,
@@ -538,9 +537,9 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
               {/* Chat area */}
               <div style={{
                 flex: 1,
-                background: 'rgba(255,255,255,0.02)',
-                borderRadius: 14,
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: '#F7F7F7',
+                borderRadius: 8,
+                border: '1px solid #E5E5E5',
                 padding: 16,
                 marginBottom: 16,
                 minHeight: 220,
@@ -567,22 +566,22 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                           width: 32,
                           height: 32,
                           borderRadius: 10,
-                          background: `${agent.color}20`,
+                          background: '#F0F0F0',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           flexShrink: 0,
                         }}>
-                          <span className="material-symbols-rounded" style={{ fontSize: 18, color: agent.color }}>
+                          <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--text-primary)' }}>
                             {agent.materialIcon}
                           </span>
                         </div>
                       )}
                       <div style={{
-                        background: msg.role === 'user' ? '#7c3aed' : 'rgba(255,255,255,0.06)',
+                        background: msg.role === 'user' ? 'var(--text-primary, #1a1a1a)' : '#F0F0F0',
                         borderRadius: 12,
                         padding: '10px 14px',
-                        color: '#fff',
+                        color: msg.role === 'user' ? '#fff' : 'var(--text-primary)',
                         fontSize: 14,
                         lineHeight: 1.6,
                         whiteSpace: 'pre-wrap',
@@ -600,21 +599,21 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       width: 32,
                       height: 32,
                       borderRadius: 10,
-                      background: `${agent.color}20`,
+                      background: '#F0F0F0',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
                     }}>
-                      <span className="material-symbols-rounded" style={{ fontSize: 18, color: agent.color }}>
+                      <span className="material-symbols-rounded" style={{ fontSize: 18, color: 'var(--text-primary)' }}>
                         {agent.materialIcon}
                       </span>
                     </div>
                     <div style={{
-                      background: 'rgba(255,255,255,0.06)',
-                      borderRadius: 12,
+                      background: '#F0F0F0',
+                      borderRadius: 8,
                       padding: '10px 14px',
-                      color: 'rgba(255,255,255,0.4)',
+                      color: 'var(--text-tertiary)',
                       fontSize: 14,
                       display: 'flex',
                       gap: 4,
@@ -642,7 +641,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     🎉
                   </div>
                   <h3 style={{
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                     fontSize: 20,
                     fontWeight: 700,
                     marginBottom: 6,
@@ -651,20 +650,20 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     Bravo ! Vous êtes prêt.
                   </h3>
                   <p style={{
-                    color: 'rgba(255,255,255,0.55)',
+                    color: 'var(--text-secondary)',
                     fontSize: 14,
                     marginBottom: 20,
                     marginTop: 0,
                   }}>
-                    <span style={{ color: '#22c55e', fontWeight: 600 }}>+10 crédits</span> offerts pour votre premier échange !
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>+10 crédits</span> offerts pour votre premier échange !
                   </p>
                   <button
                     onClick={finish}
                     style={{
                       padding: '14px 36px',
-                      background: '#7c3aed',
-                      border: 'none',
-                      borderRadius: 12,
+                      background: 'var(--text-primary, #1a1a1a)',
+                      border: '1px solid var(--text-primary, #1a1a1a)',
+                      borderRadius: 8,
                       color: '#fff',
                       fontSize: 16,
                       fontWeight: 600,
@@ -700,10 +699,10 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                     style={{
                       flex: 1,
                       padding: '12px 16px',
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: 12,
-                      color: '#fff',
+                      background: '#fff',
+                      border: '1px solid #E5E5E5',
+                      borderRadius: 8,
+                      color: 'var(--text-primary)',
                       fontSize: 14,
                       outline: 'none',
                       fontFamily: 'inherit',
@@ -716,7 +715,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                       width: 44,
                       height: 44,
                       borderRadius: 12,
-                      background: inputText.trim() && !hasReplied && !isTyping ? '#7c3aed' : 'rgba(255,255,255,0.06)',
+                      background: inputText.trim() && !hasReplied && !isTyping ? 'var(--text-primary, #1a1a1a)' : '#F0F0F0',
                       border: 'none',
                       cursor: inputText.trim() && !hasReplied && !isTyping ? 'pointer' : 'default',
                       display: 'flex',
@@ -728,7 +727,7 @@ export default function QuickOnboarding({ onComplete, onSkip }: QuickOnboardingP
                   >
                     <span className="material-symbols-rounded" style={{
                       fontSize: 20,
-                      color: inputText.trim() && !hasReplied && !isTyping ? '#fff' : 'rgba(255,255,255,0.3)',
+                      color: inputText.trim() && !hasReplied && !isTyping ? '#fff' : 'var(--text-tertiary)',
                     }}>
                       send
                     </span>

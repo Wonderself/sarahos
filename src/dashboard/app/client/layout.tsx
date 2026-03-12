@@ -813,7 +813,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     )}
     <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
       {/* Mobile Top Bar — no hamburger, starts after emoji rail */}
-      <div className="mobile-topbar" style={{ height: 48, background: 'var(--fz-bg, #fff)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 12px' }}>
+      <div className="mobile-topbar" style={{ height: 48, background: 'var(--bg-primary)', borderBottom: '1px solid var(--border-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
           {(() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
@@ -882,14 +882,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       })()}
 
       {/* Client Sidebar (expanded) */}
-      <nav className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`} style={{ background: 'var(--fz-bg-sidebar, var(--bg-primary))', width: 240, borderRight: '1px solid var(--fz-border, #E2E8F0)' }}>
+      <nav className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`} style={{ background: 'var(--bg-primary)', width: 240, borderRight: '1px solid var(--border-primary)' }}>
         <div className="sidebar-header" style={{ padding: '8px 12px 4px' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,
           }}>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
-              background: 'var(--fz-accent-light, rgba(14,165,233,0.1))',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, flexShrink: 0,
             }}>🚀</div>
@@ -899,8 +900,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               onClick={toggleDarkMode}
               title={darkMode ? 'Mode clair' : 'Mode sombre'}
               style={{
-                width: 24, height: 24, borderRadius: '50%', border: '1px solid var(--fz-border, #E2E8F0)',
-                background: 'var(--fz-bg, #fff)', cursor: 'pointer', display: 'flex',
+                width: 24, height: 24, borderRadius: '50%', border: '1px solid var(--border-primary)',
+                background: 'var(--bg-primary)', cursor: 'pointer', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
               }}
             >
@@ -951,7 +952,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {/* Favorite agents bar */}
         {favoriteAgents.length > 0 && (
           <div style={{ margin: '0 16px 12px', display: 'flex', gap: 8, alignItems: 'center' }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 14, color: '#f59e0b' }}>star</span>
+            <span style={{ fontSize: 14 }}>⭐</span>
             {favoriteAgents.map(agId => {
               const ag = ALL_AGENTS.find(a => a.id === agId);
               if (!ag) return null;
@@ -969,7 +970,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.15)')}
                   onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
                 >
-                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'var(--accent)' }}>
+                  <span className="material-symbols-rounded" style={{ fontSize: 16, color: 'var(--text-secondary)' }}>
                     {ag.materialIcon || 'smart_toy'}
                   </span>
                 </Link>
@@ -1131,7 +1132,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <button onClick={resetCustomize} className="btn btn-ghost btn-xs">
                   Réinitialiser
                 </button>
-                <button onClick={saveCustomize} className="btn btn-xs" style={{ background: 'var(--accent)', color: 'white' }}>
+                <button onClick={saveCustomize} className="btn btn-xs" style={{ background: 'var(--text-primary)', color: 'var(--bg-primary)' }}>
                   Enregistrer
                 </button>
               </div>
@@ -1145,7 +1146,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             const hiddenItems = sortedItems.filter(item => !item.visible);
             return (
               <div key={section.id} className="nav-section">
-                <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+                <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
                   <span style={{ fontSize: 12 }}>{SECTION_EMOJIS[section.id] || '📌'}</span> {section.title}
                 </div>
                 {visibleItems.map(item => {
@@ -1157,9 +1158,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                       style={{
                         height: 32, fontSize: 13, fontWeight: 400,
                         ...(isActive ? {
-                          borderLeft: '3px solid var(--fz-accent, #0EA5E9)',
-                          background: 'var(--fz-bg-sidebar-active, rgba(14,165,233,0.08))',
-                          color: 'var(--fz-accent-text, #0EA5E9)',
+                          borderLeft: '2px solid var(--text-primary)',
+                          background: 'rgba(0,0,0,0.06)',
+                          color: 'var(--text-primary)',
                         } : {}),
                       }}
                     >
@@ -1196,7 +1197,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Dynamic — Mes assistants personnalisés */}
           {customAgents.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
                 <span style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
               </div>
               {customAgents.map(agent => (
@@ -1215,7 +1216,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Dynamic — Mes modules publiés */}
           {publishedModules.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
                 <span style={{ fontSize: 12 }}>📦</span> Mes modules
               </div>
               {publishedModules.map(mod => {
@@ -1237,7 +1238,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
           {/* Statut — hardcoded, always visible */}
           <div className="nav-section">
-            <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal' }}>
+            <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
               <span style={{ fontSize: 12 }}>📊</span> Statut
             </div>
             <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
@@ -1245,9 +1246,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
                 fontSize: 12, fontWeight: 800, marginLeft: 'auto',
-                color: walletBalance !== null && walletBalance > 50_000_000 ? 'var(--success)'
-                  : walletBalance !== null && walletBalance > 10_000_000 ? 'var(--warning)'
-                  : 'var(--danger)',
+                color: walletBalance !== null && walletBalance < 10_000_000 ? 'var(--danger)' : 'var(--text-primary)',
               }}>
                 {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
               </span>
@@ -1257,13 +1256,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
                   alignItems: 'center', justifyContent: 'center',
-                  background: 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
-                  color: 'white', fontSize: 9, fontWeight: 700,
+                  background: 'var(--text-primary)',
+                  color: 'var(--bg-primary)', fontSize: 9, fontWeight: 700,
                 }}>{gamLevel}</span>
               </span>
               <span style={{ flex: 1 }}>Niv. {gamLevel} — {LEVEL_TITLES[gamLevel] ?? 'Maître'}</span>
               {gamStreak > 0 && (
-                <span style={{ fontSize: 11, color: 'var(--warning)', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}>🔥{gamStreak}j</span>
+                <span style={{ fontSize: 11, color: 'var(--text-secondary)', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}>🔥{gamStreak}j</span>
               )}
             </Link>
           </div>
@@ -1271,7 +1270,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Hidden sections — at the very bottom, greyed out */}
           {hiddenSections.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'none', letterSpacing: 'normal', opacity: 0.5 }}>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal', opacity: 0.5 }}>
                 <span style={{ fontSize: 12 }}>👁️</span> Sections masquées
               </div>
               {hiddenSections.map(section => (
@@ -1308,9 +1307,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div className="sidebar-footer-compact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
           <div style={{
             width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-            background: 'var(--fz-accent-light, rgba(14,165,233,0.1))',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 11, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)',
+            fontSize: 11, fontWeight: 700, color: 'var(--text-primary)',
           }}>
             {(session.displayName || session.email || '?').slice(0, 2).toUpperCase()}
           </div>
@@ -1329,9 +1329,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'rgba(14,165,233,0.04)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', fontSize: 12 }}>
-            <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
-            <a href="/client/onboarding" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', fontSize: 12 }}>
+            <span style={{ color: 'var(--text-secondary)' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
+            <a href="/client/onboarding" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12 }}>
               Compléter →
             </a>
           </div>
@@ -1339,26 +1339,26 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {!lowCreditDismissed && walletBalance !== null && walletBalance < 50_000_000 && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', fontSize: 12,
-            background: walletBalance < 10_000_000 ? 'rgba(239,68,68,0.04)' : 'rgba(245,158,11,0.04)',
-            borderBottom: '1px solid var(--fz-border, #E2E8F0)',
+            background: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-primary)',
           }}>
-            <span style={{ color: walletBalance < 10_000_000 ? '#DC2626' : '#D97706' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>
               {walletBalance < 10_000_000 ? '⚠️' : '⚡'} {Math.round(walletBalance / 1_000_000)} crédits restants
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Link href="/client/account" style={{ color: walletBalance < 10_000_000 ? '#DC2626' : '#D97706', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
+              <Link href="/client/account" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
                 Recharger →
               </Link>
-              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer', color: 'var(--fz-text-muted)' }}>×</button>
+              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '0 2px', cursor: 'pointer', color: 'var(--text-muted)' }}>×</button>
             </div>
           </div>
         )}
-        <div style={{ padding: '8px 16px 0', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Link href="/client/dashboard" style={{ textDecoration: 'none', color: 'var(--fz-text-muted, #94A3B8)' }}>🏠 Accueil</Link>
+        <div style={{ padding: '8px 16px 0', fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Link href="/client/dashboard" style={{ textDecoration: 'none', color: 'var(--text-muted)' }}>🏠 Accueil</Link>
           {pathname !== '/client/dashboard' && (() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
             const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-            return meta ? <><span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>›</span><span>{meta.title}</span></> : null;
+            return meta ? <><span style={{ color: 'var(--text-muted)' }}>›</span><span>{meta.title}</span></> : null;
           })()}
         </div>
         <div className="page-container">{children}</div>

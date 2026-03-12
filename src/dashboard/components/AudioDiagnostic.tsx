@@ -166,9 +166,9 @@ export default function AudioDiagnostic() {
 
   const statusIcon = (s: DiagStep['status']) => {
     switch (s) {
-      case 'ok': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#16a34a' }}>check_circle</span>;
+      case 'ok': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#1A1A1A' }}>check_circle</span>;
       case 'error': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#dc2626' }}>close</span>;
-      case 'running': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#d97706' }}>hourglass_empty</span>;
+      case 'running': return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#9B9B9B' }}>hourglass_empty</span>;
       default: return <span className="material-symbols-rounded" style={{ fontSize: 16, color: '#d1d5db' }}>check_box_outline_blank</span>;
     }
   };
@@ -188,7 +188,7 @@ export default function AudioDiagnostic() {
         disabled={running}
         style={{
           padding: '10px 24px', borderRadius: 10, border: 'none',
-          background: running ? '#94a3b8' : '#7c3aed', color: 'white',
+          background: running ? '#9B9B9B' : '#1A1A1A', color: 'white',
           fontSize: 14, fontWeight: 700, cursor: running ? 'wait' : 'pointer',
           marginBottom: 20,
         }}
@@ -201,7 +201,7 @@ export default function AudioDiagnostic() {
           <div key={step.id} style={{
             display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px',
             borderRadius: 10, border: '1px solid #e5e7eb',
-            background: step.status === 'ok' ? '#f0fdf4' : step.status === 'error' ? '#fef2f2' : step.status === 'running' ? '#fffbeb' : 'white',
+            background: step.status === 'ok' ? '#F7F7F7' : step.status === 'error' ? '#fef2f2' : step.status === 'running' ? '#F7F7F7' : 'white',
           }}>
             <span style={{ fontSize: 16, flexShrink: 0 }}>{statusIcon(step.status)}</span>
             <div>
@@ -217,10 +217,10 @@ export default function AudioDiagnostic() {
       {!running && (okCount > 0 || errCount > 0) && (
         <div style={{
           marginTop: 20, padding: '12px 16px', borderRadius: 10,
-          background: errCount === 0 ? '#f0fdf4' : '#fef3c7',
-          border: `1px solid ${errCount === 0 ? '#bbf7d0' : '#fcd34d'}`,
+          background: errCount === 0 ? '#F7F7F7' : '#F7F7F7',
+          border: `1px solid ${errCount === 0 ? '#E5E5E5' : '#E5E5E5'}`,
         }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: errCount === 0 ? '#16a34a' : '#92400e' }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: errCount === 0 ? '#1A1A1A' : '#6B6B6B' }}>
             {errCount === 0 ? 'Tout fonctionne !' : `${errCount} probleme(s) detecte(s)`}
           </div>
           <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>

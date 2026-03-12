@@ -28,8 +28,8 @@ export default function MyAgentsPage() {
   return (
     <div className="space-y-6 admin-page-scrollable">
       <div>
-        <h1 className="text-2xl font-bold text-white">Mes Agents</h1>
-        <p className="text-gray-400 mt-1">34 agents IA disponibles — 22 business + 12 personnels</p>
+        <h1 className="text-2xl font-bold text-neutral-900">Mes Agents</h1>
+        <p className="text-neutral-500 mt-1">34 agents IA disponibles — 22 business + 12 personnels</p>
       </div>
 
       {/* Filters */}
@@ -39,20 +39,20 @@ export default function MyAgentsPage() {
           placeholder="Rechercher un agent..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="px-4 py-2 bg-[#1a0e3a] border border-white/[0.08] rounded-lg text-white text-sm w-64 focus:border-purple-500 focus:outline-none"
+          className="px-4 py-2 bg-[#F7F7F7] border border-neutral-200 rounded-lg text-neutral-900 text-sm w-64 focus:border-neutral-400 focus:outline-none"
         />
         <div className="flex gap-2">
           {CATEGORIES.map(c => (
             <button
               key={c.id}
               onClick={() => setCategory(c.id)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${category === c.id ? 'bg-[#7c3aed] text-white' : 'bg-[#1a0e3a] text-gray-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${category === c.id ? 'bg-[#1A1A1A] text-white' : 'bg-[#F7F7F7] text-neutral-500 hover:text-neutral-900'}`}
             >
               {c.label}
             </button>
           ))}
         </div>
-        <span className="text-xs text-gray-500 ml-auto">{filtered.length} agents</span>
+        <span className="text-xs text-neutral-500 ml-auto">{filtered.length} agents</span>
       </div>
 
       <div className="flex gap-6">
@@ -62,16 +62,16 @@ export default function MyAgentsPage() {
             <button
               key={agent.id}
               onClick={() => setSelected(agent.id)}
-              className={`p-4 rounded-xl border text-left transition-all hover:border-purple-500/50 ${selected === agent.id ? 'bg-purple-600/10 border-purple-500' : 'bg-[#1a0e3a] border-white/[0.08]'}`}
+              className={`p-4 rounded-xl border text-left transition-all hover:border-neutral-400/50 ${selected === agent.id ? 'bg-neutral-200/10 border-neutral-400' : 'bg-[#F7F7F7] border-neutral-200'}`}
             >
               <div className="mb-2"><span className="material-symbols-rounded" style={{ fontSize: 28, color: agent.color || 'var(--accent)' }}>{agent.materialIcon}</span></div>
-              <h3 className="text-white font-medium text-sm">{agent.name}</h3>
-              <p className="text-gray-500 text-xs mt-1 line-clamp-2">{agent.description}</p>
+              <h3 className="text-neutral-900 font-medium text-sm">{agent.name}</h3>
+              <p className="text-neutral-500 text-xs mt-1 line-clamp-2">{agent.description}</p>
               <div className="flex items-center gap-2 mt-3">
-                <span className={`text-xs px-2 py-0.5 rounded-full ${BUSINESS_IDS.includes(agent.id) ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400'}`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${BUSINESS_IDS.includes(agent.id) ? 'bg-neutral-300/20 text-neutral-600' : 'bg-neutral-400/20 text-neutral-500'}`}>
                   {BUSINESS_IDS.includes(agent.id) ? 'Business' : 'Personnel'}
                 </span>
-                <span className="text-xs text-gray-600">{agent.model ?? 'sonnet'}</span>
+                <span className="text-xs text-neutral-500">{agent.model ?? 'sonnet'}</span>
               </div>
             </button>
           ))}
@@ -79,25 +79,25 @@ export default function MyAgentsPage() {
 
         {/* Detail panel */}
         {selectedAgent && (
-          <div className="w-80 bg-[#1a0e3a] rounded-xl border border-white/[0.08] p-6 sticky top-4 self-start">
+          <div className="w-80 bg-[#F7F7F7] rounded-xl border border-neutral-200 p-6 sticky top-4 self-start">
             <div className="mb-3"><span className="material-symbols-rounded" style={{ fontSize: 40, color: selectedAgent.color || 'var(--accent)' }}>{selectedAgent.materialIcon}</span></div>
-            <h2 className="text-xl font-bold text-white">{selectedAgent.name}</h2>
-            <p className="text-gray-400 text-sm mt-2">{selectedAgent.description}</p>
+            <h2 className="text-xl font-bold text-neutral-900">{selectedAgent.name}</h2>
+            <p className="text-neutral-500 text-sm mt-2">{selectedAgent.description}</p>
             <div className="mt-4 space-y-3">
               <div>
-                <p className="text-xs text-gray-500 uppercase">ID</p>
-                <p className="text-sm text-gray-300 font-mono">{selectedAgent.id}</p>
+                <p className="text-xs text-neutral-500 uppercase">ID</p>
+                <p className="text-sm text-neutral-600 font-mono">{selectedAgent.id}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase">Modèle</p>
-                <p className="text-sm text-gray-300">{selectedAgent.model ?? 'claude-sonnet-4-20250514'}</p>
+                <p className="text-xs text-neutral-500 uppercase">Modèle</p>
+                <p className="text-sm text-neutral-600">{selectedAgent.model ?? 'claude-sonnet-4-20250514'}</p>
               </div>
               {selectedAgent.capabilities && selectedAgent.capabilities.length > 0 && (
                 <div>
-                  <p className="text-xs text-gray-500 uppercase mb-1">Capacités</p>
+                  <p className="text-xs text-neutral-500 uppercase mb-1">Capacités</p>
                   <div className="flex flex-wrap gap-1">
                     {selectedAgent.capabilities.map((cap: string) => (
-                      <span key={cap} className="text-xs bg-white/[0.08] text-gray-300 px-2 py-0.5 rounded">{cap}</span>
+                      <span key={cap} className="text-xs bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded">{cap}</span>
                     ))}
                   </div>
                 </div>
@@ -105,7 +105,7 @@ export default function MyAgentsPage() {
             </div>
             <a
               href={`/admin/chat?agent=${selectedAgent.id}`}
-              className="mt-6 block text-center px-4 py-2 bg-[#7c3aed] text-white rounded-lg text-sm hover:bg-[#6d28d9] transition-colors"
+              className="mt-6 block text-center px-4 py-2 bg-[#1A1A1A] text-white rounded-lg text-sm hover:bg-[#333333] transition-colors"
             >
               Parler à cet agent
             </a>

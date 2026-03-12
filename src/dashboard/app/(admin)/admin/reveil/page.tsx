@@ -27,14 +27,14 @@ interface AlarmsData {
 }
 
 const MODE_COLORS: Record<string, string> = {
-  doux: '#22c55e',
-  dur: '#ef4444',
-  motivant: '#f59e0b',
-  zen: '#06b6d4',
-  energique: '#8b5cf6',
-  drole: '#ec4899',
-  sympa: '#10b981',
-  fou: '#f97316',
+  doux: '#1A1A1A',
+  dur: '#DC2626',
+  motivant: '#9B9B9B',
+  zen: '#6B6B6B',
+  energique: '#1A1A1A',
+  drole: '#6B6B6B',
+  sympa: '#1A1A1A',
+  fou: '#9B9B9B',
 };
 
 const DELIVERY_LABELS: Record<string, string> = {
@@ -92,7 +92,7 @@ export default async function ReveilPage() {
             <span
               key={m.mode}
               className="badge"
-              style={{ background: MODE_COLORS[m.mode] ?? '#64748b', color: '#fff' }}
+              style={{ background: MODE_COLORS[m.mode] ?? '#6B6B6B', color: '#fff' }}
             >
               {m.mode}: {m.count}
             </span>
@@ -147,7 +147,7 @@ export default async function ReveilPage() {
                     <td>
                       <span
                         className="badge"
-                        style={{ background: MODE_COLORS[a.mode] ?? '#64748b', color: '#fff' }}
+                        style={{ background: MODE_COLORS[a.mode] ?? '#6B6B6B', color: '#fff' }}
                       >
                         {a.mode}
                       </span>

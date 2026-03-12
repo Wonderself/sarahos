@@ -74,14 +74,14 @@ export default function TimelinePage() {
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{
-          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1E293B)',
+          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1A1A1A)',
           display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
         }}>
           <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta.emoji}</span>
           {meta.title}
           <HelpBubble text={meta.helpText} />
         </h1>
-        <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>
+        <p style={{ color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 14 }}>
           {meta.subtitle}
         </p>
       </div>
@@ -91,7 +91,7 @@ export default function TimelinePage() {
       <div style={{ marginBottom: 20 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
           borderRadius: 10, padding: '10px 14px',
         }}>
           <span style={{ fontSize: 18 }}>🔍</span>
@@ -102,13 +102,13 @@ export default function TimelinePage() {
             placeholder="Rechercher dans la timeline..."
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              color: 'var(--fz-text, #1E293B)', fontSize: 14,
+              color: 'var(--fz-text, #1A1A1A)', fontSize: 14,
             }}
           />
           {search && (
             <span
               onClick={() => setSearch('')}
-              style={{ fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)', cursor: 'pointer' }}
+              style={{ fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)', cursor: 'pointer' }}
             >✕</span>
           )}
         </div>
@@ -126,8 +126,8 @@ export default function TimelinePage() {
               style={{
                 padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
                 fontSize: 11, fontWeight: 700,
-                background: active ? catMeta.color : 'var(--fz-bg-secondary, #F8FAFC)',
-                color: active ? '#fff' : 'var(--fz-text-muted, #94A3B8)',
+                background: active ? '#1A1A1A' : 'var(--fz-bg-secondary, #F7F7F7)',
+                color: active ? '#fff' : 'var(--fz-text-muted, #9B9B9B)',
                 display: 'flex', alignItems: 'center', gap: 5,
                 transition: 'all 0.2s',
               }}
@@ -144,30 +144,30 @@ export default function TimelinePage() {
         display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 8 : 12, marginBottom: 28,
       }}>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
-          backdropFilter: 'blur(12px)',
+          
         }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--fz-accent, #0EA5E9)' }}>{events.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#1A1A1A' }}>{events.length}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
-          backdropFilter: 'blur(12px)',
+          
         }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#22c55e' }}>{dates.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#1A1A1A' }}>{dates.length}</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
         </div>
         <div style={{
-          background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
           borderRadius: 12, padding: '14px', textAlign: 'center',
-          backdropFilter: 'blur(12px)',
+          
         }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#f59e0b' }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#1A1A1A' }}>
             {new Set(events.filter(e => e.agentId).map(e => e.agentId)).size}
           </div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, marginTop: 2 }}>AGENTS UTILISÉS</div>
+          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, marginTop: 2 }}>AGENTS UTILISÉS</div>
         </div>
       </div>
 
@@ -175,12 +175,12 @@ export default function TimelinePage() {
       {dates.length === 0 ? (
         <div style={{
           textAlign: 'center', padding: '60px 20px',
-          background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 14,
-          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 14,
+          border: '1px solid var(--border-primary, #E5E5E5)',
         }}>
           <span style={{ fontSize: 48, marginBottom: 12, display: 'block' }}>🕐</span>
-          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 6 }}>Aucune action enregistrée</div>
-          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text-secondary, #6B6B6B)', marginBottom: 6 }}>Aucune action enregistrée</div>
+          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)' }}>
             Vos actions apparaîtront ici au fur et à mesure
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function TimelinePage() {
           {/* Vertical line */}
           <div style={{
             position: 'absolute', left: 8, top: 0, bottom: 0, width: 2,
-            background: 'var(--fz-border, #E2E8F0)',
+            background: 'var(--fz-border, #E5E5E5)',
           }} />
 
           {dates.map(date => (
@@ -197,12 +197,12 @@ export default function TimelinePage() {
               {/* Date header */}
               <div style={{
                 position: 'relative', marginBottom: 14,
-                fontSize: 13, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)',
+                fontSize: 13, fontWeight: 700, color: 'var(--fz-text-secondary, #6B6B6B)',
                 textTransform: 'capitalize',
               }}>
                 <div style={{
                   position: 'absolute', left: -24, top: 2, width: 12, height: 12,
-                  borderRadius: '50%', background: 'var(--fz-accent, #0EA5E9)', border: '2px solid var(--fz-bg, #FFFFFF)',
+                  borderRadius: '50%', background: '#1A1A1A', border: '2px solid #fff',
                 }} />
                 {formatDate(date)}
               </div>
@@ -215,7 +215,7 @@ export default function TimelinePage() {
                     key={event.id}
                     style={{
                       position: 'relative', marginBottom: 8,
-                      background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                      background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
                       borderRadius: 10, padding: '12px 14px',
                       display: 'flex', alignItems: 'center', gap: 12,
                     }}
@@ -224,13 +224,13 @@ export default function TimelinePage() {
                     <div style={{
                       position: 'absolute', left: -22, top: '50%', transform: 'translateY(-50%)',
                       width: 8, height: 8, borderRadius: '50%',
-                      background: catMeta.color, opacity: 0.6,
+                      background: '#9B9B9B', opacity: 0.6,
                     }} />
 
                     {/* Icon */}
                     <div style={{
                       width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                      background: `${catMeta.color}15`, border: `1px solid ${catMeta.color}25`,
+                      background: '#F0F0F0', border: '1px solid #E5E5E5',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 18,
                     }}>
@@ -239,14 +239,14 @@ export default function TimelinePage() {
 
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{event.title}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{event.title}</div>
                       {event.description && (
-                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{event.description}</div>
+                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 2 }}>{event.description}</div>
                       )}
                     </div>
 
                     {/* Time */}
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', fontWeight: 600, flexShrink: 0 }}>
+                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, flexShrink: 0 }}>
                       {formatTime(event.timestamp)}
                     </div>
                   </div>

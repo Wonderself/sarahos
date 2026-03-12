@@ -104,7 +104,7 @@ export default async function EventsPage() {
         {groupEvents.map((event) => (
           <div key={event.id} className="flex gap-8 rounded-sm p-8" style={{
             alignItems: 'flex-start', marginBottom: 2,
-            background: event.type === 'Error' ? 'rgba(239,68,68,0.05)' : 'transparent',
+            background: event.type === 'Error' ? 'rgba(220,38,38,0.05)' : 'transparent',
           }}>
             <span className="material-symbols-rounded" style={{ fontSize: 16, marginTop: 2 }}>{typeIcons[event.type] ?? 'radio_button_checked'}</span>
             <div className="flex-1" style={{ minWidth: 0 }}>

@@ -57,7 +57,7 @@ export default function DocumentList({ agentContext, token, refreshKey }: Docume
     setDeleting(null);
   };
 
-  if (loading) return <div style={{ fontSize: 12, color: '#9ca3af', padding: 12 }}>Chargement...</div>;
+  if (loading) return <div style={{ fontSize: 12, color: '#9B9B9B', padding: 12 }}>Chargement...</div>;
 
   const usedPercent = Math.min(100, (storage.totalBytes / (MAX_STORAGE_MB * 1024 * 1024)) * 100);
 
@@ -72,14 +72,14 @@ export default function DocumentList({ agentContext, token, refreshKey }: Docume
         <div style={{ height: 4, borderRadius: 2, background: '#f3f4f6', overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: 2,
-            background: usedPercent > 80 ? '#ef4444' : usedPercent > 50 ? '#f59e0b' : '#10b981',
+            background: usedPercent > 80 ? '#ef4444' : usedPercent > 50 ? '#9B9B9B' : '#1A1A1A',
             width: `${usedPercent}%`, transition: 'width 0.3s',
           }} />
         </div>
       </div>
 
       {docs.length === 0 && (
-        <div style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', padding: 16 }}>
+        <div style={{ fontSize: 12, color: '#9B9B9B', textAlign: 'center', padding: 16 }}>
           Aucun document uploade
         </div>
       )}
@@ -99,7 +99,7 @@ export default function DocumentList({ agentContext, token, refreshKey }: Docume
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1d1d1f' }}>
               {doc.originalFilename}
             </div>
-            <div style={{ fontSize: 11, color: '#9ca3af' }}>
+            <div style={{ fontSize: 11, color: '#9B9B9B' }}>
               {formatFileSize(doc.sizeBytes)} — {formatTokenEstimate(doc.tokenEstimate)}
             </div>
           </div>

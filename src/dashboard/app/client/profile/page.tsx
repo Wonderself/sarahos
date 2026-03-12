@@ -9,7 +9,7 @@ export default function ProfileRedirect() {
 
   return (
     <div className="flex-center client-page-scrollable" style={{ height: '60vh' }}>
-      <div className="animate-pulse text-base" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
+      <div className="animate-pulse text-base" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
         \ud83d\udc64 Redirection vers Mon Compte...
       </div>
     </div>

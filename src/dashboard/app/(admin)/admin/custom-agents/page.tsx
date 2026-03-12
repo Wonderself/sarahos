@@ -120,7 +120,7 @@ export default async function CustomAgentsPage() {
                           <div style={{
                             width: `${Math.min(100, a.autonomyLevel ?? 0)}%`,
                             height: '100%',
-                            background: (a.autonomyLevel ?? 0) >= 70 ? '#22c55e' : (a.autonomyLevel ?? 0) >= 40 ? '#f59e0b' : '#ef4444',
+                            background: (a.autonomyLevel ?? 0) >= 70 ? '#1A1A1A' : (a.autonomyLevel ?? 0) >= 40 ? '#9B9B9B' : '#DC2626',
                             borderRadius: 3,
                           }} />
                         </div>

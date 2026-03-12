@@ -87,11 +87,11 @@ export default async function FinancialPage() {
         <div className="text-base font-bold mb-16">Compte de Resultat Simplifie</div>
         <div className="flex flex-col" style={{ gap: 2 }}>
           {[
-            { label: 'Revenus bruts', amount: revCents, color: 'var(--success)', bold: true },
+            { label: 'Revenus bruts', amount: revCents, color: 'var(--text-primary)', bold: true },
             { label: 'Depenses totales', amount: -expCents, color: 'var(--danger)', bold: false },
-            { label: 'Resultat brut', amount: grossMargin, color: grossMargin >= 0 ? 'var(--success)' : 'var(--danger)', bold: true },
-            { label: `Allocation charite (${charityPct}%)`, amount: -charityCents, color: 'var(--purple)', bold: false },
-            { label: 'Resultat net', amount: netCents, color: netCents >= 0 ? 'var(--success)' : 'var(--danger)', bold: true },
+            { label: 'Resultat brut', amount: grossMargin, color: grossMargin >= 0 ? 'var(--text-primary)' : 'var(--danger)', bold: true },
+            { label: `Allocation charite (${charityPct}%)`, amount: -charityCents, color: 'var(--text-primary)', bold: false },
+            { label: 'Resultat net', amount: netCents, color: netCents >= 0 ? 'var(--text-primary)' : 'var(--danger)', bold: true },
           ].map((row, i) => (
             <div key={i} className={`flex flex-between items-center ${row.bold ? 'bg-secondary rounded-sm' : ''}`} style={{
               padding: '10px 12px',
@@ -146,10 +146,10 @@ export default async function FinancialPage() {
             <div>
               <div className="flex flex-between" style={{ marginBottom: 4 }}>
                 <span className="text-md">Alloue</span>
-                <span className="text-md font-semibold" style={{ color: 'var(--purple)' }}>{(charityAllocated / 100).toFixed(2)} {currency}</span>
+                <span className="text-md font-semibold" style={{ color: 'var(--text-primary)' }}>{(charityAllocated / 100).toFixed(2)} {currency}</span>
               </div>
               <div className="progress-bar progress-bar-lg">
-                <div className="progress-bar-fill" style={{ width: '100%', background: 'var(--purple)' }} />
+                <div className="progress-bar-fill" style={{ width: '100%', background: '#1A1A1A' }} />
               </div>
             </div>
             <div>
@@ -158,7 +158,7 @@ export default async function FinancialPage() {
                 <span className="text-md font-semibold text-success">{(charityDisbursed / 100).toFixed(2)} {currency}</span>
               </div>
               <div className="progress-bar progress-bar-lg">
-                <div className="progress-bar-fill" style={{ width: charityAllocated > 0 ? `${(charityDisbursed / charityAllocated) * 100}%` : '0%', background: 'var(--success)' }} />
+                <div className="progress-bar-fill" style={{ width: charityAllocated > 0 ? `${(charityDisbursed / charityAllocated) * 100}%` : '0%', background: 'var(--text-primary)' }} />
               </div>
             </div>
             <div>

@@ -64,10 +64,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const ICONS: Record<ToastType, string> = { success: 'check_circle', error: 'close', info: 'info', warning: 'warning' };
   const COLORS: Record<ToastType, { bg: string; border: string; text: string }> = {
-    success: { bg: '#f0fdf4', border: '#86efac', text: '#15803d' },
-    error:   { bg: '#fef2f2', border: '#fca5a5', text: '#dc2626' },
-    info:    { bg: '#eff6ff', border: '#93c5fd', text: '#1d4ed8' },
-    warning: { bg: '#fffbeb', border: '#fcd34d', text: '#d97706' },
+    success: { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)' },
+    error:   { bg: '#fff', border: '#E5E5E5', text: 'var(--danger, #dc2626)' },
+    info:    { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)' },
+    warning: { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)' },
   };
 
   return (
@@ -93,10 +93,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               style={{
                 background: c.bg,
                 border: `1px solid ${c.border}`,
-                borderRadius: 12,
+                borderRadius: 8,
                 padding: '10px 14px',
                 display: 'flex', alignItems: 'flex-start', gap: 10,
-                boxShadow: '0 4px 16px rgba(0,0,0,0.12), 0 0 40px rgba(124,58,237,0.08)',
                 pointerEvents: 'all',
                 animation: 'toastIn 0.2s ease',
               }}
@@ -125,9 +124,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           to   { opacity: 1; transform: translateY(0); }
         }
         [data-theme="dark"] {
-          --toast-success-bg: #14532d22;
-          --toast-error-bg: #7f1d1d22;
-          --toast-bg: #1a0e3a;
+          --toast-success-bg: rgba(0,0,0,0.04);
+          --toast-error-bg: rgba(0,0,0,0.04);
+          --toast-bg: #fff;
         }
       `}</style>
     </ToastContext.Provider>
@@ -144,9 +143,9 @@ interface ErrorBannerProps {
 
 export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerProps) {
   const COLORS = {
-    error:   { bg: '#fef2f2', border: '#fca5a5', text: '#dc2626', icon: 'close' },
-    warning: { bg: '#fffbeb', border: '#fcd34d', text: '#d97706', icon: 'warning' },
-    info:    { bg: '#eff6ff', border: '#93c5fd', text: '#1d4ed8', icon: 'info' },
+    error:   { bg: '#fff', border: '#E5E5E5', text: 'var(--danger, #dc2626)', icon: 'close' },
+    warning: { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)', icon: 'warning' },
+    info:    { bg: '#fff', border: '#E5E5E5', text: 'var(--text-primary)', icon: 'info' },
   };
   const c = COLORS[type];
   return (
@@ -154,7 +153,7 @@ export function ErrorBanner({ message, onDismiss, type = 'error' }: ErrorBannerP
       role="alert"
       style={{
         background: c.bg, border: `1px solid ${c.border}`,
-        borderRadius: 10, padding: '10px 14px', marginBottom: 12,
+        borderRadius: 8, padding: '10px 14px', marginBottom: 12,
         display: 'flex', alignItems: 'center', gap: 10,
       }}
     >

@@ -313,8 +313,8 @@ export default function OnboardingPage() {
               border: '2px solid var(--fz-border, #E2E8F0)', borderRadius: 'var(--radius-xl)',
               transition: 'all 0.2s', background: 'var(--fz-bg-secondary, #F8FAFC)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-muted)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)'; e.currentTarget.style.background = 'var(--fz-bg-secondary, #F8FAFC)'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#1A1A1A'; e.currentTarget.style.background = '#F7F7F7'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.background = '#F7F7F7'; }}
           >
             <div style={{ fontSize: 40, marginBottom: 12 }}>👤</div>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>Usage personnel</div>
@@ -328,8 +328,8 @@ export default function OnboardingPage() {
               border: '2px solid var(--fz-border, #E2E8F0)', borderRadius: 'var(--radius-xl)',
               transition: 'all 0.2s', background: 'var(--fz-bg-secondary, #F8FAFC)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-muted)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--fz-border, #E2E8F0)'; e.currentTarget.style.background = 'var(--fz-bg-secondary, #F8FAFC)'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#1A1A1A'; e.currentTarget.style.background = '#F7F7F7'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.background = '#F7F7F7'; }}
           >
             <div style={{ fontSize: 40, marginBottom: 12 }}>🏢</div>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>Mon entreprise</div>
@@ -366,13 +366,13 @@ export default function OnboardingPage() {
           <p className="text-base mt-8" style={{ lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
             Choisissez la méthode qui vous convient le mieux pour commencer. Plus vous fournissez de contexte, mieux vos agents pourront vous aider.
           </p>
-          <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: '#f0fdf4', border: '1px solid #bbf7d0', fontSize: 12, color: '#166534', lineHeight: 1.5 }}>
+          <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: '#F7F7F7', border: '1px solid #E5E5E5', fontSize: 12, color: '#1A1A1A', lineHeight: 1.5 }}>
             🔒 <strong>Confidentialité garantie :</strong> Ces informations sont strictement privées et ne seront jamais partagées avec des tiers. Le Répondeur Intelligent et les agents externes n&apos;ont aucun accès à ces données.
           </div>
         </div>
 
         {/* Option 1: Quick Analysis */}
-        <div className="card p-24 mb-16" style={{ borderLeft: '4px solid var(--accent)' }}>
+        <div className="card p-24 mb-16" style={{ borderLeft: '4px solid #1A1A1A' }}>
           <div className="flex items-center gap-12 mb-16">
             <span style={{ fontSize: 28 }}>⚡</span>
             <div>
@@ -484,7 +484,7 @@ export default function OnboardingPage() {
         {/* Compact mode toggle + prefilled badge + voice input */}
         <div className="flex flex-center items-center gap-12 mt-12">
           {prefilled && (
-            <span style={{ fontSize: 11, height: 36, padding: '0 12px', borderRadius: 12, background: 'rgba(14,165,233,0.08)', color: 'var(--accent)', fontWeight: 600 }}>
+            <span style={{ fontSize: 11, height: 36, padding: '0 12px', borderRadius: 8, background: '#F0F0F0', color: '#1A1A1A', fontWeight: 600 }}>
               Pré-rempli par IA — vérifiez et ajustez
             </span>
           )}
@@ -504,9 +504,9 @@ export default function OnboardingPage() {
             onClick={toggleCompactMode}
             style={{
               fontSize: 11, height: 36, padding: '0 12px', borderRadius: 12, cursor: 'pointer',
-              background: compactMode ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: compactMode ? 'var(--accent)' : 'var(--fz-text-muted, #94A3B8)',
-              border: `1px solid ${compactMode ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+              background: compactMode ? '#1A1A1A' : '#fff',
+              color: compactMode ? '#fff' : '#9B9B9B',
+              border: `1px solid ${compactMode ? '#1A1A1A' : '#E5E5E5'}`,
               fontFamily: 'var(--font-sans)',
             }}
           >
@@ -522,7 +522,7 @@ export default function OnboardingPage() {
           <span className="text-sm text-accent">Étape {step}/7</span>
         </div>
         <div className="progress-bar progress-bar-lg">
-          <div className="progress-bar-fill" style={{ width: `${score}%`, background: score > 70 ? 'var(--success)' : score > 40 ? 'var(--warning)' : 'var(--accent)' }} />
+          <div className="progress-bar-fill" style={{ width: `${score}%`, background: '#1A1A1A' }} />
         </div>
       </div>
 
@@ -534,9 +534,9 @@ export default function OnboardingPage() {
             onClick={() => { saveProfile(); setStep(s.id); }}
             style={{
               flex: '1 0 auto', padding: '10px 12px', borderRadius: 'var(--radius-sm)',
-              background: step === s.id ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              border: `1px solid ${step === s.id ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
-              color: step === s.id ? 'var(--accent-hover)' : 'var(--fz-text-secondary, #64748B)',
+              background: step === s.id ? '#1A1A1A' : '#fff',
+              border: `1px solid ${step === s.id ? '#1A1A1A' : '#E5E5E5'}`,
+              color: step === s.id ? '#fff' : '#6B6B6B',
               cursor: 'pointer', fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-sans)',
               display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
             }}
@@ -617,9 +617,9 @@ export default function OnboardingPage() {
                     onClick={() => toggleArray('aiPriorities', p)}
                     style={{
                       padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                      background: profile.aiPriorities.includes(p) ? 'var(--accent)' : 'var(--fz-bg, #FFFFFF)',
-                      color: profile.aiPriorities.includes(p) ? 'white' : 'var(--fz-text-secondary, #64748B)',
-                      border: `1px solid ${profile.aiPriorities.includes(p) ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                      background: profile.aiPriorities.includes(p) ? '#1A1A1A' : '#fff',
+                      color: profile.aiPriorities.includes(p) ? '#fff' : '#6B6B6B',
+                      border: `1px solid ${profile.aiPriorities.includes(p) ? '#1A1A1A' : '#E5E5E5'}`,
                       cursor: 'pointer', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
                     }}
                   >
@@ -644,9 +644,9 @@ export default function OnboardingPage() {
                     onClick={() => updateField('brandTone', t)}
                     style={{
                       padding: '8px 18px', borderRadius: 20, fontSize: 13, fontWeight: 500,
-                      background: profile.brandTone === t ? 'var(--accent)' : 'var(--fz-bg, #FFFFFF)',
-                      color: profile.brandTone === t ? 'white' : 'var(--fz-text-secondary, #64748B)',
-                      border: `1px solid ${profile.brandTone === t ? 'var(--accent)' : 'var(--fz-border, #E2E8F0)'}`,
+                      background: profile.brandTone === t ? '#1A1A1A' : '#fff',
+                      color: profile.brandTone === t ? '#fff' : '#6B6B6B',
+                      border: `1px solid ${profile.brandTone === t ? '#1A1A1A' : '#E5E5E5'}`,
                       cursor: 'pointer', fontFamily: 'var(--font-sans)',
                     }}
                   >
@@ -664,9 +664,9 @@ export default function OnboardingPage() {
                     onClick={() => toggleArray('languages', l)}
                     style={{
                       padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                      background: profile.languages.includes(l) ? 'var(--success)' : 'var(--fz-bg, #FFFFFF)',
-                      color: profile.languages.includes(l) ? 'white' : 'var(--fz-text-secondary, #64748B)',
-                      border: `1px solid ${profile.languages.includes(l) ? 'var(--success)' : 'var(--fz-border, #E2E8F0)'}`,
+                      background: profile.languages.includes(l) ? '#1A1A1A' : '#fff',
+                      color: profile.languages.includes(l) ? '#fff' : '#6B6B6B',
+                      border: `1px solid ${profile.languages.includes(l) ? '#1A1A1A' : '#E5E5E5'}`,
                       cursor: 'pointer', fontFamily: 'var(--font-sans)',
                     }}
                   >
@@ -717,8 +717,8 @@ export default function OnboardingPage() {
 
       {/* WhatsApp Bonus Section */}
       <div className="card p-24 mt-24" style={{
-        background: 'linear-gradient(135deg, #25d36608, #128c7e08)',
-        border: '1px solid #25d36622',
+        background: '#F7F7F7',
+        border: '1px solid #E5E5E5',
       }}>
         <div className="flex items-center gap-8 mb-12">
           <span style={{ fontSize: 24 }}>📱</span>

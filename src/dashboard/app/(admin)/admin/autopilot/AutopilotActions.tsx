@@ -44,7 +44,7 @@ export function ApproveButton({ proposalId }: { proposalId: string }) {
           setLoading(false);
         }
       }}
-      className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50"
+      className="px-3 py-1.5 bg-[#1A1A1A] text-white rounded-lg text-sm hover:bg-[#333333] disabled:opacity-50"
     >
       {loading ? '...' : 'Approuver'}
     </button>
@@ -74,7 +74,7 @@ export function DenyButton({ proposalId }: { proposalId: string }) {
           setLoading(false);
         }
       }}
-      className="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 disabled:opacity-50"
+      className="px-3 py-1.5 bg-[#DC2626] text-white rounded-lg text-sm hover:bg-[#b91c1c] disabled:opacity-50"
     >
       {loading ? '...' : 'Refuser'}
     </button>
@@ -103,7 +103,7 @@ export function RollbackButton({ proposalId }: { proposalId: string }) {
           setLoading(false);
         }
       }}
-      className="px-3 py-1.5 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700 disabled:opacity-50"
+      className="px-3 py-1.5 bg-[#9B9B9B] text-white rounded-lg text-sm hover:bg-[#6B6B6B] disabled:opacity-50"
     >
       {loading ? '...' : 'Rollback'}
     </button>
@@ -120,7 +120,7 @@ export function TriggerAuditButton() {
       <select
         value={type}
         onChange={e => setType(e.target.value)}
-        className="px-2 py-1.5 bg-gray-700 text-white rounded-lg text-sm border border-gray-600"
+        className="px-2 py-1.5 bg-[#F7F7F7] text-[#1A1A1A] rounded-lg text-sm border border-[rgba(0,0,0,0.08)]"
       >
         <option value="combined">Audit combiné</option>
         <option value="health">Santé</option>
@@ -143,7 +143,7 @@ export function TriggerAuditButton() {
             setLoading(false);
           }
         }}
-        className="px-4 py-1.5 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 disabled:opacity-50"
+        className="px-4 py-1.5 bg-[#1A1A1A] text-white rounded-lg text-sm hover:bg-[#333333] disabled:opacity-50"
       >
         {loading ? 'Audit en cours...' : 'Lancer audit'}
       </button>

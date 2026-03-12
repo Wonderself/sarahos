@@ -121,14 +121,14 @@ export default function PhotoPromptEditor({
           }}
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-          <span style={{ fontSize: 10, color: '#94a3b8' }}>
+          <span style={{ fontSize: 10, color: '#9B9B9B' }}>
             Soyez precis : sujet, style, eclairage, composition, couleurs
           </span>
           {hasTemplate && (
             <button
               onClick={() => onPromptChange(PROMPT_TEMPLATES[style])}
               style={{
-                fontSize: 10, color: '#8b5cf6', background: '#f5f3ff', border: '1px solid #e9e5ff',
+                fontSize: 10, color: '#1A1A1A', background: '#F7F7F7', border: '1px solid #E5E5E5',
                 borderRadius: 12, padding: '3px 10px', cursor: 'pointer', fontWeight: 600,
                 transition: 'all 0.15s',
               }}
@@ -174,7 +174,7 @@ export default function PhotoPromptEditor({
           <button
             onClick={() => setShowAllStyles(!showAllStyles)}
             style={{
-              fontSize: 10, color: '#8b5cf6', background: 'none', border: 'none',
+              fontSize: 10, color: '#1A1A1A', background: 'none', border: 'none',
               cursor: 'pointer', fontWeight: 600,
             }}
           >
@@ -196,8 +196,8 @@ export default function PhotoPromptEditor({
               title={s.desc}
               style={{
                 padding: '8px 4px', borderRadius: 8,
-                border: `2px solid ${style === s.id ? '#8b5cf6' : '#e5e7eb'}`,
-                background: style === s.id ? '#f5f3ff' : 'white', cursor: 'pointer',
+                border: `2px solid ${style === s.id ? '#1A1A1A' : '#e5e7eb'}`,
+                background: style === s.id ? '#F7F7F7' : 'white', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
                 transition: 'all 0.15s',
               }}
@@ -223,10 +223,10 @@ export default function PhotoPromptEditor({
               onClick={() => onDimensionsChange(d.id)}
               style={{
                 padding: '6px 12px', borderRadius: 20,
-                border: `1px solid ${dimensions === d.id ? '#8b5cf6' : '#e5e7eb'}`,
-                background: dimensions === d.id ? '#f5f3ff' : 'white',
+                border: `1px solid ${dimensions === d.id ? '#1A1A1A' : '#e5e7eb'}`,
+                background: dimensions === d.id ? '#F7F7F7' : 'white',
                 fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                color: dimensions === d.id ? '#7c3aed' : '#6b7280',
+                color: dimensions === d.id ? '#1A1A1A' : '#6b7280',
               }}
             >
               {d.label} <span style={{ fontWeight: 400, fontSize: 10 }}>({d.size})</span>

@@ -128,9 +128,9 @@ export default function OnboardingTour() {
     >
       <div
         style={{
-          background: 'var(--bg-primary)', borderRadius: 20, padding: '36px 32px',
-          maxWidth: 460, width: '100%', boxShadow: '0 24px 80px rgba(0,0,0,0.4)',
-          border: '1px solid var(--border-primary)', position: 'relative',
+          background: '#fff', borderRadius: 8, padding: '36px 32px',
+          maxWidth: 460, width: '100%',
+          border: '1px solid #E5E5E5', position: 'relative',
           animation: 'fadeInUp 0.3s ease',
         }}
       >
@@ -154,7 +154,7 @@ export default function OnboardingTour() {
               onClick={() => setStep(i)}
               style={{
                 width: i === step ? 20 : 8, height: 8, borderRadius: 4,
-                background: i === step ? 'var(--accent)' : i < step ? 'var(--accent)60' : 'var(--border-primary)',
+                background: i === step ? 'var(--text-primary)' : i < step ? 'rgba(0,0,0,0.3)' : '#E5E5E5',
                 border: 'none', cursor: 'pointer', transition: 'all 0.3s ease', padding: 0,
               }}
             />
@@ -162,7 +162,7 @@ export default function OnboardingTour() {
         </div>
 
         {/* Step counter */}
-        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', marginBottom: 12, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 12, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
           Étape {step + 1} / {TOUR_STEPS.length}
         </div>
 

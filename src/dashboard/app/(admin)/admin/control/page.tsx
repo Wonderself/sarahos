@@ -607,17 +607,17 @@ export default function ControlPage() {
           <div className="stat-label">Total pages</div>
           <div className="stat-value">{allRoutes.length}</div>
         </div>
-        <div className="stat-card" style={{ borderLeft: '3px solid #22c55e' }}>
+        <div className="stat-card" style={{ borderLeft: '3px solid #1A1A1A' }}>
           <div className="stat-label">Fonctionnel</div>
-          <div className="stat-value" style={{ color: '#22c55e' }}>{totalFonctionnel}</div>
+          <div className="stat-value" style={{ color: '#1A1A1A' }}>{totalFonctionnel}</div>
         </div>
-        <div className="stat-card" style={{ borderLeft: '3px solid #f59e0b' }}>
+        <div className="stat-card" style={{ borderLeft: '3px solid #9B9B9B' }}>
           <div className="stat-label">Partiel</div>
-          <div className="stat-value" style={{ color: '#f59e0b' }}>{totalPartiel}</div>
+          <div className="stat-value" style={{ color: '#9B9B9B' }}>{totalPartiel}</div>
         </div>
-        <div className="stat-card" style={{ borderLeft: '3px solid #ef4444' }}>
+        <div className="stat-card" style={{ borderLeft: '3px solid #DC2626' }}>
           <div className="stat-label">Stub</div>
-          <div className="stat-value" style={{ color: '#ef4444' }}>{totalStub}</div>
+          <div className="stat-value" style={{ color: '#DC2626' }}>{totalStub}</div>
         </div>
       </div>
 

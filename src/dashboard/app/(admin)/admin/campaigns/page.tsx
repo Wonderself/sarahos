@@ -132,7 +132,7 @@ export default async function CampaignsPage() {
                     <td className="hide-mobile text-sm">{c.type}</td>
                     <td>
                       {c.status === 'active' ? (
-                        <span className="badge" style={{ background: '#7c3aed', color: '#fff' }}>
+                        <span className="badge" style={{ background: '#1A1A1A', color: '#fff' }}>
                           {STATUS_LABEL[c.status] ?? c.status}
                         </span>
                       ) : (

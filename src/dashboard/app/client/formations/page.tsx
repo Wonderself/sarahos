@@ -173,7 +173,7 @@ export default function FormationsPage() {
   };
 
   /* ─── Styles ─── */
-  const accent = 'var(--fz-accent, #0EA5E9)';
+  const accent = '#1A1A1A';
 
   const sectionStyle: React.CSSProperties = {
     maxWidth: 1100,
@@ -183,10 +183,9 @@ export default function FormationsPage() {
 
   const cardStyle: React.CSSProperties = {
     background: 'var(--fz-bg, #FFFFFF)',
-    borderRadius: 16,
+    borderRadius: 8,
     padding: '28px 24px',
-    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-    transition: 'box-shadow 0.25s, transform 0.25s',
+    border: '1px solid #E5E5E5',
     cursor: 'default',
     display: 'flex',
     flexDirection: 'column',
@@ -197,7 +196,7 @@ export default function FormationsPage() {
     width: '100%',
     padding: '12px 16px',
     fontSize: 14,
-    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    border: '1px solid #E5E5E5',
     borderRadius: 10,
     outline: 'none',
     fontFamily: 'inherit',
@@ -240,9 +239,9 @@ export default function FormationsPage() {
           {BENEFITS.map(b => (
             <div key={b.title} style={{
               background: 'var(--fz-bg, #FFFFFF)',
-              borderRadius: 14,
+              borderRadius: 8,
               padding: '20px 18px',
-              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+              border: '1px solid #E5E5E5',
               textAlign: 'center',
             }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>{b.icon}</div>
@@ -281,7 +280,7 @@ export default function FormationsPage() {
               onChange={e => setSearch(e.target.value)}
               style={{
                 width: '100%', padding: '10px 12px 10px 36px', fontSize: 14,
-                border: 'none', borderRadius: 8, boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', outline: 'none',
+                border: 'none', borderRadius: 8, boxShadow: 'none', outline: 'none',
                 fontFamily: 'inherit', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box',
               }}
               onFocus={e => (e.currentTarget.style.borderColor = accent)}
@@ -289,7 +288,7 @@ export default function FormationsPage() {
             />
           </div>
           {doneCount > 0 && (
-            <div style={{ fontSize: 13, color: '#22c55e', fontWeight: 600, flexShrink: 0 }}>
+            <div style={{ fontSize: 13, color: '#1A1A1A', fontWeight: 600, flexShrink: 0 }}>
               ✅ {doneCount}/{FORMATIONS.length} terminée{doneCount > 1 ? 's' : ''}
             </div>
           )}
@@ -316,12 +315,10 @@ export default function FormationsPage() {
                 opacity: f.available ? 1 : 0.85,
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(14,165,233,0.12)';
-                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
+                (e.currentTarget as HTMLDivElement).style.background = '#F7F7F7';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
-                (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                (e.currentTarget as HTMLDivElement).style.background = '#fff';
               }}
             >
               {/* Unavailable badge */}
@@ -347,7 +344,7 @@ export default function FormationsPage() {
                 <div style={{
                   width: 48,
                   height: 48,
-                  borderRadius: 12,
+                  borderRadius: 8,
                   background: `${accent}12`,
                   display: 'flex',
                   alignItems: 'center',
@@ -466,7 +463,7 @@ export default function FormationsPage() {
           background: 'var(--fz-bg, #FFFFFF)',
           borderRadius: 20,
           padding: 'clamp(24px, 4vw, 48px)',
-          border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+          border: '1px solid #E5E5E5',
           maxWidth: 680,
           margin: '0 auto',
         }}>
@@ -491,7 +488,7 @@ export default function FormationsPage() {
               textAlign: 'center',
               padding: '40px 24px',
               background: '#f0fdf4',
-              borderRadius: 14,
+              borderRadius: 8,
               border: '1px solid #bbf7d0',
             }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
@@ -660,11 +657,11 @@ export default function FormationsPage() {
                 style={{
                   width: '100%',
                   padding: '14px 24px',
-                  borderRadius: 12,
+                  borderRadius: 8,
                   fontSize: 15,
                   fontWeight: 700,
                   border: 'none',
-                  background: `linear-gradient(135deg, ${accent}, #06b6d4)`,
+                  background: '#1A1A1A',
                   color: '#fff',
                   cursor: 'pointer',
                   transition: 'opacity 0.2s, transform 0.15s',

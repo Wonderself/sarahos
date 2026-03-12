@@ -121,8 +121,8 @@ export default function UserNotificationsTab({ userId, showToast }: {
       {/* Info box */}
       <div style={{
         ...styles.card,
-        background: 'var(--info-muted)',
-        borderColor: 'var(--info)',
+        background: '#F7F7F7',
+        borderColor: 'var(--border-primary)',
       }}>
         <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
           <strong><span className="material-symbols-rounded" style={{ fontSize: 14, verticalAlign: 'middle' }}>info</span> Information sur les canaux:</strong>

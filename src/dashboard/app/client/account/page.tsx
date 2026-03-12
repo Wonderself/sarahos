@@ -34,73 +34,71 @@ const NOTIFICATION_CHANNELS = [
 // ── ClickUp-style tokens ──────────────────────────────────────────────────────
 const CU = {
   card: {
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
-    background: 'var(--fz-bg, #FFFFFF)',
+    background: '#fff',
   },
   sectionCard: {
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
     padding: '16px 24px',
-    background: 'var(--fz-bg, #FFFFFF)',
+    background: '#fff',
   },
   btn: {
     height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500 as const,
     fontSize: 13,
     cursor: 'pointer' as const,
-    border: 'none' as const,
+    border: '1px solid #E5E5E5' as const,
+    background: '#fff',
   },
   btnPrimary: {
     height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500 as const,
     fontSize: 13,
     cursor: 'pointer' as const,
-    border: 'none' as const,
-    background: 'var(--fz-accent, #0EA5E9)',
+    border: '1px solid #1A1A1A' as const,
+    background: '#1A1A1A',
     color: '#fff',
   },
   btnSecondary: {
     height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500 as const,
     fontSize: 13,
     cursor: 'pointer' as const,
-    border: '1px solid var(--fz-border, #E8EAED)',
-    background: 'var(--fz-bg, #FFFFFF)',
-    color: 'var(--fz-text, #1E293B)',
+    border: '1px solid #E5E5E5',
+    background: '#fff',
+    color: '#1A1A1A',
   },
   input: {
     height: 36,
     padding: '0 10px',
-    borderRadius: 6,
-    border: '1px solid var(--fz-border, #E8EAED)',
+    borderRadius: 8,
+    border: '1px solid #E5E5E5',
     fontSize: 14,
-    background: 'var(--fz-bg, #FFFFFF)',
-    color: 'var(--fz-text, #1E293B)',
+    background: '#fff',
+    color: '#1A1A1A',
     width: '100%',
     boxSizing: 'border-box' as const,
   },
   statCard: {
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
     padding: '16px 20px',
-    background: 'var(--fz-bg, #FFFFFF)',
+    background: '#fff',
     display: 'flex' as const,
     flexDirection: 'column' as const,
     gap: 4,
   },
-  statValue: { fontSize: 20, fontWeight: 700 as const, color: 'var(--fz-text, #1E293B)' },
-  statLabel: { fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' },
-  sectionTitle: { fontSize: 16, fontWeight: 600 as const, color: 'var(--fz-text, #1E293B)', margin: '0 0 12px' },
+  statValue: { fontSize: 20, fontWeight: 700 as const, color: '#1A1A1A' },
+  statLabel: { fontSize: 12, color: '#9B9B9B' },
+  sectionTitle: { fontSize: 16, fontWeight: 600 as const, color: '#1A1A1A', margin: '0 0 12px' },
 };
 
 export default function AccountPage() {
@@ -367,7 +365,7 @@ export default function AccountPage() {
   // Determine tier badge
   const tierBadge = COMMISSION_TIERS.find(t => userNumber <= t.maxUsers);
   const badgeLabel = tierBadge?.badge ?? 'Standard+';
-  const badgeColor = commissionRate === 0 ? '#22c55e' : commissionRate <= 0.05 ? 'var(--fz-accent, #0EA5E9)' : '#9333ea';
+  const badgeColor = '#1A1A1A';
 
   return (
     <div className="client-page-scrollable">
@@ -399,7 +397,7 @@ export default function AccountPage() {
                 #{userNumber || '—'}
               </div>
               <div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A' }}>
                   Inscrit n&deg;{userNumber || '—'}
                   <span style={{
                     marginLeft: 10, padding: '3px 10px', borderRadius: 6,
@@ -408,7 +406,7 @@ export default function AccountPage() {
                     {badgeLabel}
                   </span>
                 </div>
-                <div style={{ marginTop: 4, fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>
+                <div style={{ marginTop: 4, fontSize: 13, color: '#6B6B6B' }}>
                   Taux de commission a vie : <strong style={{ color: badgeColor }}>{(commissionRate * 100).toFixed(0)}%</strong>
                   {commissionRate === 0 && ' — Vous ne payez aucune commission !'}
                 </div>
@@ -429,9 +427,9 @@ export default function AccountPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 28 }}>🎁</span>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Invitez vos amis, gagnez 20 EUR de crédits</div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginTop: 2 }}>
-                  Votre code : <strong style={{ color: 'var(--fz-accent, #0EA5E9)' }}>{referralCode}</strong>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>Invitez vos amis, gagnez 20 EUR de crédits</div>
+                <div style={{ fontSize: 12, color: '#6B6B6B', marginTop: 2 }}>
+                  Votre code : <strong style={{ color: '#1A1A1A' }}>{referralCode}</strong>
                 </div>
               </div>
             </div>
@@ -453,24 +451,24 @@ export default function AccountPage() {
         <div style={CU.sectionCard}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
             <div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Nom</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{(session.displayName as string) ?? '—'}</div>
+              <div style={{ fontSize: 11, color: '#9B9B9B', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Nom</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{(session.displayName as string) ?? '—'}</div>
             </div>
             <div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Email</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{(session.email as string) ?? '—'}</div>
+              <div style={{ fontSize: 11, color: '#9B9B9B', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Email</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{(session.email as string) ?? '—'}</div>
             </div>
             <div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Role</div>
-              <span style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 6, background: 'var(--fz-accent, #0EA5E9)15', color: 'var(--fz-accent, #0EA5E9)' }}>
+              <div style={{ fontSize: 11, color: '#9B9B9B', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Role</div>
+              <span style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 6, background: 'var(--fz-accent, #0EA5E9)15', color: '#1A1A1A' }}>
                 {(session.role as string) ?? 'viewer'}
               </span>
             </div>
           </div>
-          <div style={{ borderTop: '1px solid var(--fz-border, #E8EAED)', margin: '16px 0' }} />
+          <div style={{ borderTop: '1px solid #E5E5E5', margin: '16px 0' }} />
           <div>
-            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Clé API</div>
-            <code style={{ fontSize: 13, fontFamily: 'monospace', color: 'var(--fz-text-secondary, #64748B)', background: 'var(--fz-bg-secondary, #F8FAFC)', padding: '4px 8px', borderRadius: 4 }}>
+            <div style={{ fontSize: 11, color: '#9B9B9B', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>Clé API</div>
+            <code style={{ fontSize: 13, fontFamily: 'monospace', color: '#6B6B6B', background: '#F7F7F7', padding: '4px 8px', borderRadius: 4 }}>
               {session.apiKey ? `${(session.apiKey as string).slice(0, 12)}...` : 'Non disponible'}
             </code>
           </div>
@@ -481,12 +479,12 @@ export default function AccountPage() {
       <div style={{ marginBottom: 20 }}>
         <h2 style={CU.sectionTitle}>💰 Wallet & Crédits</h2>
         {loading ? (
-          <div style={CU.sectionCard}><div style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div></div>
+          <div style={CU.sectionCard}><div style={{ color: '#9B9B9B' }}>Chargement...</div></div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
             <div style={CU.statCard}>
               <span style={{ fontSize: 20 }}>💳</span>
-              <span style={{ ...CU.statValue, color: balance > 0 ? '#22c55e' : '#ef4444' }}>
+              <span style={{ ...CU.statValue, color: balance > 0 ? '#1A1A1A' : 'var(--danger)' }}>
                 {(balance / 1_000_000).toFixed(2)}
               </span>
               <span style={CU.statLabel}>Solde actuel (crédits)</span>
@@ -498,7 +496,7 @@ export default function AccountPage() {
             </div>
             <div style={CU.statCard}>
               <span style={{ fontSize: 20 }}>📤</span>
-              <span style={{ ...CU.statValue, color: '#f59e0b' }}>{(spent / 1_000_000).toFixed(2)}</span>
+              <span style={{ ...CU.statValue, color: '#6B6B6B' }}>{(spent / 1_000_000).toFixed(2)}</span>
               <span style={CU.statLabel}>Total dépensé (crédits)</span>
             </div>
           </div>
@@ -506,32 +504,32 @@ export default function AccountPage() {
 
         {/* Deposit Options */}
         <div style={{ ...CU.sectionCard, textAlign: 'center', marginTop: 16, padding: 24 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, color: 'var(--fz-text, #1E293B)' }}>Deposer des euros</div>
-          <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 16 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, color: '#1A1A1A' }}>Deposer des euros</div>
+          <div style={{ fontSize: 13, color: '#6B6B6B', marginBottom: 16 }}>
             1 EUR = 100 crédits. Vos crédits n&apos;expirent jamais.
             {commissionRate === 0 && (
-              <span style={{ color: '#22c55e', fontWeight: 600 }}> 0% de commission — Early Adopter !</span>
+              <span style={{ color: '#1A1A1A', fontWeight: 600 }}> 0% de commission — Early Adopter !</span>
             )}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${isMobile ? '120px' : '140px'}, 1fr))`, gap: 12 }}>
             {DEPOSIT_OPTIONS.map(opt => (
               <div key={opt.id} style={{
                 ...CU.card, padding: 16, position: 'relative', textAlign: 'center',
-                border: opt.popular ? '2px solid var(--fz-accent, #0EA5E9)' : '1px solid var(--fz-border, #E8EAED)',
+                border: opt.popular ? '2px solid var(--fz-accent, #0EA5E9)' : '1px solid #E5E5E5',
                 transition: 'transform 0.15s, box-shadow 0.15s',
               }}>
                 {opt.popular && (
                   <div style={{
                     position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)',
-                    background: 'var(--fz-accent, #0EA5E9)', color: 'white',
+                    background: '#1A1A1A', color: 'white',
                     padding: '2px 10px', borderRadius: '0 0 6px 6px', fontSize: 9, fontWeight: 700,
                   }}>
                     POPULAIRE
                   </div>
                 )}
                 <div style={{ fontSize: 24, marginBottom: 4, marginTop: opt.popular ? 6 : 0 }}>💳</div>
-                <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 2, color: 'var(--fz-text, #1E293B)' }}>{opt.amount}€</div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>{(opt.amount * 100).toLocaleString()} crédits</div>
+                <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 2, color: '#1A1A1A' }}>{opt.amount}€</div>
+                <div style={{ fontSize: 12, color: '#6B6B6B', marginBottom: 8 }}>{(opt.amount * 100).toLocaleString()} crédits</div>
                 <button
                   style={{ ...CU.btnPrimary, width: '100%' }}
                   onClick={() => alert(`Dépôt de ${opt.amount} EUR\n\nL'intégration Stripe arrive bientôt.\nContactez contact@freenzy.io pour déposer.`)}>
@@ -547,9 +545,9 @@ export default function AccountPage() {
       <div style={{ ...CU.sectionCard, marginBottom: 20, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <span style={{ fontSize: 18 }}>🔄</span>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: 0 }}>Recharge Automatique</h3>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: 0 }}>Recharge Automatique</h3>
         </div>
-        <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 13, marginBottom: 16 }}>
+        <p style={{ color: '#6B6B6B', fontSize: 13, marginBottom: 16 }}>
           Activez la recharge <span className="fz-logo-word">automatique</span> pour ne jamais manquer de crédits.
           Sans Stripe, un administrateur traitera votre demande manuellement.
         </p>
@@ -562,14 +560,14 @@ export default function AccountPage() {
               onChange={toggleAutoTopup}
               style={{ width: 18, height: 18, cursor: 'pointer' }}
             />
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Activer la recharge automatique</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>Activer la recharge automatique</span>
           </label>
         </div>
 
         {autoTopup.enabled && (
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, alignItems: 'start' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>
                 Seuil minimum (crédits)
               </label>
               <input
@@ -579,12 +577,12 @@ export default function AccountPage() {
                 min={1}
                 style={CU.input}
               />
-              <small style={{ display: 'block', marginTop: 4, fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              <small style={{ display: 'block', marginTop: 4, fontSize: 11, color: '#9B9B9B' }}>
                 Recharger quand le solde descend sous ce seuil
               </small>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+              <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>
                 Montant de recharge (crédits)
               </label>
               <input
@@ -594,7 +592,7 @@ export default function AccountPage() {
                 min={1}
                 style={CU.input}
               />
-              <small style={{ display: 'block', marginTop: 4, fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+              <small style={{ display: 'block', marginTop: 4, fontSize: 11, color: '#9B9B9B' }}>
                 Montant demande a chaque recharge
               </small>
             </div>
@@ -607,7 +605,7 @@ export default function AccountPage() {
                 {autoTopupLoading ? 'Sauvegarde...' : autoTopupSaved ? '✅ Sauvegarde !' : 'Sauvegarder'}
               </button>
               {autoTopupSaved && (
-                <span style={{ marginLeft: 12, fontSize: 12, color: '#22c55e' }}>
+                <span style={{ marginLeft: 12, fontSize: 12, color: '#1A1A1A' }}>
                   Preferences enregistrees
                 </span>
               )}
@@ -620,9 +618,9 @@ export default function AccountPage() {
       <div style={{ ...CU.sectionCard, marginBottom: 20, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <span style={{ fontSize: 18 }}>🏷️</span>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: 0 }}>Type de compte</h3>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: 0 }}>Type de compte</h3>
         </div>
-        <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 13, marginBottom: 16 }}>
+        <p style={{ color: '#6B6B6B', fontSize: 13, marginBottom: 16 }}>
           Activez le mode Entreprise pour accéder aux modules business et à la section «&nbsp;Mon Entreprise&nbsp;» dans le menu.
         </p>
         <div style={{ display: 'flex', gap: 12 }}>
@@ -630,7 +628,7 @@ export default function AccountPage() {
             onClick={() => toggleProMode(false)}
             style={{
               flex: 1, padding: '14px 16px', borderRadius: 8, cursor: 'pointer',
-              border: `2px solid ${!isPro ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E8EAED)'}`,
+              border: `2px solid ${!isPro ? 'var(--fz-accent, #0EA5E9)' : '#E5E5E5'}`,
               background: !isPro ? 'var(--fz-accent, #0EA5E9)08' : 'transparent',
               textAlign: 'center', transition: 'all 0.15s',
             }}
@@ -642,7 +640,7 @@ export default function AccountPage() {
             onClick={() => toggleProMode(true)}
             style={{
               flex: 1, padding: '14px 16px', borderRadius: 8, cursor: 'pointer',
-              border: `2px solid ${isPro ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E8EAED)'}`,
+              border: `2px solid ${isPro ? 'var(--fz-accent, #0EA5E9)' : '#E5E5E5'}`,
               background: isPro ? 'var(--fz-accent, #0EA5E9)08' : 'transparent',
               textAlign: 'center', transition: 'all 0.15s',
             }}
@@ -652,7 +650,7 @@ export default function AccountPage() {
           </button>
         </div>
         {isPro && (
-          <p style={{ marginTop: 10, fontSize: 12, color: '#22c55e' }}>
+          <p style={{ marginTop: 10, fontSize: 12, color: '#1A1A1A' }}>
             ✅ Section «&nbsp;Mon Entreprise&nbsp;» activée dans le menu — rechargez la page pour voir les changements.
           </p>
         )}
@@ -662,9 +660,9 @@ export default function AccountPage() {
       <div style={{ ...CU.sectionCard, marginBottom: 20, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <span style={{ fontSize: 18 }}>🔔</span>
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: 0 }}>Preferences de Notification</h3>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: 0 }}>Preferences de Notification</h3>
         </div>
-        <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 13, marginBottom: 16 }}>
+        <p style={{ color: '#6B6B6B', fontSize: 13, marginBottom: 16 }}>
           Choisissez comment vous souhaitez etre notifie.
         </p>
 
@@ -677,7 +675,7 @@ export default function AccountPage() {
                 borderRadius: 6, cursor: channel.comingSoon ? 'not-allowed' : 'pointer',
                 opacity: channel.comingSoon ? 0.55 : 1,
                 background: notifPrefs[channel.key] ? 'var(--fz-accent, #0EA5E9)06' : 'var(--fz-bg-secondary, #F8FAFC)',
-                border: notifPrefs[channel.key] ? '1px solid var(--fz-accent, #0EA5E9)22' : '1px solid var(--fz-border, #E8EAED)',
+                border: notifPrefs[channel.key] ? '1px solid var(--fz-accent, #0EA5E9)22' : '1px solid #E5E5E5',
                 transition: 'background 0.15s, border-color 0.15s',
               }}
             >
@@ -690,7 +688,7 @@ export default function AccountPage() {
               />
               <span style={{ fontSize: 13 }}>{channel.icon} {channel.label}</span>
               {channel.comingSoon && (
-                <span style={{ fontSize: 10, marginLeft: 'auto', padding: '2px 6px', borderRadius: 4, background: '#f59e0b18', color: '#f59e0b', fontWeight: 600 }}>
+                <span style={{ fontSize: 10, marginLeft: 'auto', padding: '2px 6px', borderRadius: 4, background: 'rgba(0,0,0,0.04)', color: '#6B6B6B', fontWeight: 600 }}>
                   Bientot
                 </span>
               )}
@@ -707,7 +705,7 @@ export default function AccountPage() {
             {notifLoading ? 'Sauvegarde...' : notifSaved ? '✅ Sauvegarde !' : 'Sauvegarder les preferences'}
           </button>
           {notifSaved && (
-            <span style={{ fontSize: 12, color: '#22c55e' }}>
+            <span style={{ fontSize: 12, color: '#1A1A1A' }}>
               Preferences enregistrees
             </span>
           )}
@@ -716,7 +714,7 @@ export default function AccountPage() {
 
       {/* Communication Channels */}
       <div style={{ ...CU.sectionCard, marginBottom: 20, padding: '16px 24px' }}>
-        <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: '0 0 16px' }}>Canaux de communication</h3>
+        <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: '0 0 16px' }}>Canaux de communication</h3>
         {[
           { icon: '📱', name: 'WhatsApp', desc: 'Parlez a vos agents par message et notes vocales', status: 'Bientot' },
           { icon: '💬', name: 'SMS', desc: 'Recevez des alertes et rapports par SMS', status: 'Bientot' },
@@ -725,27 +723,27 @@ export default function AccountPage() {
         ].map((ch, i, arr) => (
           <div key={ch.name} style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--fz-border, #E8EAED)' : 'none',
+            padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid #E5E5E5' : 'none',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 20 }}>{ch.icon}</span>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{ch.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{ch.desc}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{ch.name}</div>
+                <div style={{ fontSize: 12, color: '#9B9B9B' }}>{ch.desc}</div>
               </div>
             </div>
             <span style={{
               fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 4,
-              background: ch.status === 'Actif' ? '#22c55e15' : '#f59e0b15',
-              color: ch.status === 'Actif' ? '#22c55e' : '#f59e0b',
+              background: 'rgba(0,0,0,0.04)',
+              color: '#1A1A1A',
             }}>{ch.status}</span>
           </div>
         ))}
       </div>
 
       {/* Integrations */}
-      <div style={{ ...CU.sectionCard, marginBottom: 20, padding: '16px 24px', background: 'linear-gradient(135deg, rgba(14,165,233,0.02), rgba(6,182,212,0.02))' }}>
-        <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', margin: '0 0 12px' }}>Integrations</h3>
+      <div style={{ ...CU.sectionCard, marginBottom: 20, padding: '16px 24px', background: '#fff' }}>
+        <h3 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: '0 0 12px' }}>Integrations</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
           {[
             { icon: '🎙️', title: 'Voix Premium (ElevenLabs)', desc: 'Voix ultra-realistes', active: true },
@@ -754,21 +752,21 @@ export default function AccountPage() {
           ].map(item => (
             <div key={item.title} style={{
               ...CU.card, padding: 12,
-              border: item.active ? '1px solid #22c55e33' : '1px solid var(--fz-border, #E8EAED)',
-              background: item.active ? '#22c55e06' : 'var(--fz-bg, #FFFFFF)',
+              border: '1px solid #E5E5E5',
+              background: '#fff',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 22 }}>{item.icon}</span>
                 <span style={{
                   fontSize: 10, fontWeight: 600, padding: '2px 6px', borderRadius: 4,
-                  background: item.active ? '#22c55e15' : '#f59e0b15',
-                  color: item.active ? '#22c55e' : '#f59e0b',
+                  background: 'rgba(0,0,0,0.04)',
+                  color: '#1A1A1A',
                 }}>
                   {item.active ? 'Actif' : 'Bientot'}
                 </span>
               </div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{item.title}</div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{item.desc}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{item.title}</div>
+              <div style={{ fontSize: 11, color: '#9B9B9B' }}>{item.desc}</div>
             </div>
           ))}
         </div>
@@ -802,7 +800,7 @@ export default function AccountPage() {
       <div style={{ marginBottom: 20 }}>
         <h2 style={CU.sectionTitle}>🔒 Appareils connectés</h2>
         {sessions.length === 0 ? (
-          <div style={{ ...CU.sectionCard, textAlign: 'center', padding: 24, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>
+          <div style={{ ...CU.sectionCard, textAlign: 'center', padding: 24, color: '#9B9B9B', fontSize: 13 }}>
             Aucune session active trouvée
           </div>
         ) : (
@@ -813,15 +811,15 @@ export default function AccountPage() {
                   {/mobile|android|iphone/i.test(s.userAgent ?? '') ? '📱' : '💻'}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--fz-text, #1E293B)' }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: '#1A1A1A' }}>
                     {s.userAgent ? s.userAgent.slice(0, 60) : 'Appareil inconnu'}
                     {s.current && (
-                      <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4, background: '#22c55e18', color: '#22c55e' }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A' }}>
                         Cette session
                       </span>
                     )}
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>
                     {s.ip ? `IP: ${s.ip} · ` : ''}
                     {s.lastSeen ? `Dernière activité: ${new Date(s.lastSeen).toLocaleString('fr-FR')}` : `Créée le ${new Date(s.createdAt).toLocaleDateString('fr-FR')}`}
                   </div>
@@ -849,10 +847,10 @@ export default function AccountPage() {
               <div key={inv.id} style={{ ...CU.sectionCard, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ fontSize: 20, flexShrink: 0 }}>🧾</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--fz-text, #1E293B)' }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, color: '#1A1A1A' }}>
                     Dépôt de {(Number(inv.amount ?? 0) / 1_000_000).toFixed(0)} crédits
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>
                     {new Date(inv.createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </div>
                 </div>

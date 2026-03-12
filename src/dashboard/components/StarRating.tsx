@@ -27,7 +27,7 @@ export default function StarRating({ value, onChange, size = 20, readonly = fals
             onClick={() => !readonly && onChange?.(star)}
             style={{
               fontSize: size,
-              color: filled ? '#f59e0b' : 'rgba(255,255,255,0.15)',
+              color: filled ? '#9B9B9B' : 'rgba(255,255,255,0.15)',
               cursor: readonly ? 'default' : 'pointer',
               transition: 'color 0.15s, transform 0.15s',
               transform: hovered === star ? 'scale(1.2)' : 'scale(1)',

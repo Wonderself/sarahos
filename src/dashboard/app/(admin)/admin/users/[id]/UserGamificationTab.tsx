@@ -46,26 +46,26 @@ export default function UserGamificationTab({ userId, data, loading, showToast, 
       <div style={styles.grid4}>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Niveau</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--accent)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {data?.level ?? 1}
           </span>
         </div>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>XP</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--success)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {(data?.xp ?? 0).toLocaleString()}
           </span>
         </div>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Streak</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--warning)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-secondary)' }}>
             {data?.streak ?? 0}
           </span>
           <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>jours</span>
         </div>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Succes</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--purple)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {data?.achievements ?? 0}
           </span>
         </div>
@@ -85,7 +85,7 @@ export default function UserGamificationTab({ userId, data, loading, showToast, 
             height: '100%',
             borderRadius: 6,
             width: `${Math.min(((data?.xp ?? 0) / ((data?.level ?? 1) * 1000)) * 100, 100)}%`,
-            background: 'linear-gradient(90deg, var(--accent), var(--purple))',
+            background: '#1A1A1A',
             transition: 'width 0.3s ease',
           }} />
         </div>

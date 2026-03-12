@@ -90,7 +90,7 @@ function AgentConfigSlideOver({ agentId, agentName, onClose }: { agentId: string
         width: '100%', maxWidth: 480,
         background: 'var(--bg-primary)',
         borderLeft: '1px solid var(--border-primary)',
-        boxShadow: '-8px 0 30px rgba(0,0,0,0.2)',
+        /* boxShadow removed for B&W theme */
         display: 'flex', flexDirection: 'column',
         animation: 'slideInRight 0.2s ease-out',
       }}>

@@ -33,19 +33,19 @@ export default function UserUsageTab({ data, loading }: {
       <div style={styles.grid4}>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Total requetes</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--accent)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {(data.totalRequests ?? 0).toLocaleString()}
           </span>
         </div>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Tokens entrants</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--info)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-secondary)' }}>
             {(data.inputTokens ?? 0).toLocaleString()}
           </span>
         </div>
         <div style={styles.kpiCard}>
           <span style={styles.kpiLabel}>Tokens sortants</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--purple)' }}>
+          <span style={{ ...styles.kpiValue, color: 'var(--text-primary)' }}>
             {(data.outputTokens ?? 0).toLocaleString()}
           </span>
         </div>

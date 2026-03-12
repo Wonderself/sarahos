@@ -160,7 +160,7 @@ export default function GlobalSearch() {
         background: 'var(--bg-primary)',
         borderRadius: 12,
         border: '1px solid var(--border-primary)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(124,58,237,0.15)',
+        boxShadow: 'none',
         overflow: 'hidden',
       }}>
         {/* Input */}
@@ -224,7 +224,7 @@ export default function GlobalSearch() {
                         padding: '9px 16px',
                         cursor: 'pointer',
                         background: isActive ? 'var(--bg-secondary)' : 'transparent',
-                        borderLeft: isActive ? '3px solid var(--accent)' : '3px solid transparent',
+                        borderLeft: isActive ? '3px solid var(--text-primary)' : '3px solid transparent',
                         transition: 'background 0.1s',
                       }}
                     >

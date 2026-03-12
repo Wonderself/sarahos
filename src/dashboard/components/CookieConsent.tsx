@@ -62,36 +62,35 @@ export default function CookieConsent() {
         padding: 24,
       }}>
         <div style={{
-          background: '#1d1d1f',
-          color: '#e5e5e5',
-          borderRadius: 16,
+          background: '#fff',
+          color: 'var(--text-primary)',
+          borderRadius: 8,
           padding: '28px 28px 24px',
           maxWidth: 440,
           width: '100%',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.6)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '1px solid #E5E5E5',
         }}>
           {/* Icon + Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-            <span className="material-symbols-rounded" style={{ fontSize: 22, color: '#7c3aed' }}>cookie</span>
+            <span className="material-symbols-rounded" style={{ fontSize: 22, color: 'var(--text-primary)' }}>cookie</span>
             <h3 style={{
               margin: 0, fontSize: 16, fontWeight: 700,
               fontFamily: 'var(--font-display)',
-              color: '#fff',
+              color: 'var(--text-primary)',
             }}>
               Cookies &amp; confidentialité
             </h3>
           </div>
 
           {/* Body */}
-          <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(255,255,255,0.6)', margin: '0 0 8px' }}>
+          <p style={{ fontSize: 13, lineHeight: 1.65, color: 'var(--text-secondary)', margin: '0 0 8px' }}>
             Nous utilisons des cookies analytiques (Google Analytics) pour comprendre comment
             vous utilisez notre site et améliorer votre expérience. Aucune donnée personnelle
             n&apos;est vendue ni partagée à des tiers.
           </p>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', margin: '0 0 22px' }}>
+          <p style={{ fontSize: 12, color: 'var(--text-tertiary)', margin: '0 0 22px' }}>
             Les cookies essentiels (session, préférences) fonctionnent toujours.{' '}
-            <Link href="/legal/cookies" style={{ color: '#7c3aed', textDecoration: 'underline' }}>
+            <Link href="/legal/cookies" style={{ color: 'var(--text-primary)', textDecoration: 'underline' }}>
               Politique de cookies
             </Link>
           </p>
@@ -103,10 +102,10 @@ export default function CookieConsent() {
               style={{
                 flex: 1,
                 padding: '11px 20px',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.15)',
-                color: 'rgba(255,255,255,0.5)',
-                borderRadius: 10,
+                background: '#fff',
+                border: '1px solid #E5E5E5',
+                color: 'var(--text-secondary)',
+                borderRadius: 8,
                 fontSize: 13,
                 fontWeight: 600,
                 fontFamily: 'var(--font-display)',
@@ -120,15 +119,14 @@ export default function CookieConsent() {
               style={{
                 flex: 1,
                 padding: '11px 20px',
-                background: '#7c3aed',
-                border: 'none',
+                background: 'var(--text-primary)',
+                border: '1px solid var(--text-primary)',
                 color: '#fff',
-                borderRadius: 10,
+                borderRadius: 8,
                 fontSize: 13,
                 fontWeight: 600,
                 fontFamily: 'var(--font-display)',
                 cursor: 'pointer',
-                boxShadow: '0 0 20px rgba(124,58,237,0.3)',
               }}
             >
               Accepter

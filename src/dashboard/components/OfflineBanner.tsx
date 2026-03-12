@@ -66,10 +66,10 @@ export default function OfflineBanner() {
     >
       <div
         style={{
-          background: 'rgba(217, 119, 6, 0.15)',
+          background: 'rgba(0, 0, 0, 0.06)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(217, 119, 6, 0.3)',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
           padding: '10px 20px',
           display: 'flex',
           alignItems: 'center',
@@ -80,13 +80,13 @@ export default function OfflineBanner() {
         {/* Icon */}
         <span
           className="material-symbols-rounded"
-          style={{ fontSize: 20, color: '#f59e0b', flexShrink: 0 }}
+          style={{ fontSize: 20, color: '#9B9B9B', flexShrink: 0 }}
         >
           wifi_off
         </span>
 
         {/* Text */}
-        <span style={{ color: '#fbbf24', fontSize: 13, fontWeight: 500 }}>
+        <span style={{ color: '#9B9B9B', fontSize: 13, fontWeight: 500 }}>
           Vous etes hors ligne — les messages seront envoyes automatiquement a la reconnexion
         </span>
 
@@ -94,11 +94,11 @@ export default function OfflineBanner() {
         {queueCount > 0 && (
           <span
             style={{
-              background: 'rgba(217, 119, 6, 0.3)',
-              border: '1px solid rgba(217, 119, 6, 0.4)',
+              background: 'rgba(0, 0, 0, 0.1)',
+              border: '1px solid rgba(0, 0, 0, 0.15)',
               borderRadius: 12,
               padding: '2px 10px',
-              color: '#fbbf24',
+              color: '#9B9B9B',
               fontSize: 12,
               fontWeight: 600,
               flexShrink: 0,

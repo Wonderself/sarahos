@@ -62,7 +62,7 @@ export const styles = {
   } as React.CSSProperties),
   card: {
     background: 'var(--bg-secondary)',
-    borderRadius: 12,
+    borderRadius: 8,
     padding: 20,
     border: '1px solid var(--border-primary)',
     marginBottom: 16,
@@ -93,7 +93,7 @@ export const styles = {
   } as React.CSSProperties,
   kpiCard: {
     background: 'var(--bg-secondary)',
-    borderRadius: 12,
+    borderRadius: 8,
     padding: 20,
     border: '1px solid var(--border-primary)',
     textAlign: 'center' as const,
@@ -227,7 +227,6 @@ export const styles = {
     top: 2,
     left: active ? 22 : 2,
     transition: 'left 0.2s ease',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
   } as React.CSSProperties),
   table: {
     width: '100%',
@@ -255,12 +254,11 @@ export const styles = {
     bottom: 24,
     right: 24,
     padding: '14px 24px',
-    borderRadius: 10,
+    borderRadius: 8,
     fontSize: 14,
     fontWeight: 500,
     color: '#fff',
-    background: type === 'success' ? 'var(--success)' : 'var(--danger)',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.15), 0 0 40px rgba(124,58,237,0.1)',
+    background: type === 'success' ? 'var(--text-primary)' : 'var(--danger)',
     zIndex: 9999,
     animation: 'fadeIn 0.3s ease',
     maxWidth: 400,
@@ -338,17 +336,17 @@ export const ALL_AGENTS = [
 ];
 
 export const ROLE_COLORS: Record<string, string> = {
-  admin: '#dc2626',
-  system: '#9333ea',
-  operator: '#d97706',
-  viewer: '#6b7280',
+  admin: '#DC2626',
+  system: '#1A1A1A',
+  operator: '#9B9B9B',
+  viewer: '#6B6B6B',
 };
 
 export const TIER_COLORS: Record<string, string> = {
-  paid: '#16a34a',
-  free: '#2563eb',
-  demo: '#d97706',
-  guest: '#6b7280',
+  paid: '#1A1A1A',
+  free: '#6B6B6B',
+  demo: '#9B9B9B',
+  guest: '#6B6B6B',
 };
 
 // ── Shared Types ──

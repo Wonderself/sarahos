@@ -18,10 +18,10 @@ interface ServiceStatus {
 
 function StatusBadge({ status }: { status: ServiceStatus['status'] }) {
   const cfg: Record<string, { color: string; bg: string; border: string; icon: string; label: string }> = {
-    ok:       { color: '#16a34a', bg: '#16a34a18', border: '#16a34a44', icon: 'check_circle', label: 'Opérationnel' },
-    error:    { color: '#ef4444', bg: '#ef444418', border: '#ef444444', icon: 'cancel', label: 'Erreur' },
-    warning:  { color: '#f59e0b', bg: '#f59e0b18', border: '#f59e0b44', icon: 'warning', label: 'Non configuré' },
-    checking: { color: '#7c3aed', bg: '#7c3aed18', border: '#7c3aed44', icon: 'hourglass_empty', label: 'Vérification…' },
+    ok:       { color: '#1A1A1A', bg: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.12)', icon: 'check_circle', label: 'Opérationnel' },
+    error:    { color: '#DC2626', bg: 'rgba(220,38,38,0.06)', border: 'rgba(220,38,38,0.2)', icon: 'cancel', label: 'Erreur' },
+    warning:  { color: '#9B9B9B', bg: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.12)', icon: 'warning', label: 'Non configuré' },
+    checking: { color: '#6B6B6B', bg: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.12)', icon: 'hourglass_empty', label: 'Vérification…' },
   };
   const c = cfg[status];
   return (
@@ -83,17 +83,17 @@ function AudioTest() {
         </button>
       )}
       {step === 'recording' && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#ef4444', fontWeight: 600, fontSize: 13 }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#DC2626', fontWeight: 600, fontSize: 13 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#DC2626', display: 'inline-block' }} />
           Enregistrement en cours… parlez maintenant (3s)
         </div>
       )}
       {step === 'transcribing' && (
-        <span style={{ color: '#7c3aed', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Transcription en cours…</span>
+        <span style={{ color: '#6B6B6B', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>hourglass_empty</span> Transcription en cours…</span>
       )}
       {step === 'done' && (
         <div>
-          <div style={{ color: '#16a34a', fontWeight: 700, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Transcription réussie</div>
+          <div style={{ color: '#1A1A1A', fontWeight: 700, marginBottom: 6 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>check_circle</span> Transcription réussie</div>
           <div style={{ padding: '8px 12px', background: 'var(--bg-secondary)', borderRadius: 8, fontSize: 13, fontStyle: 'italic', border: '1px solid var(--border-primary)' }}>
             &ldquo;{transcript}&rdquo;
           </div>
@@ -104,7 +104,7 @@ function AudioTest() {
       )}
       {step === 'error' && (
         <div>
-          <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>cancel</span> {errorMsg}</div>
+          <div style={{ color: '#DC2626', fontWeight: 600, fontSize: 13 }}><span className="material-symbols-rounded" style={{ fontSize: 14 }}>cancel</span> {errorMsg}</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
             Vérifiez que DEEPGRAM_API_KEY est configurée et que vous avez accordé l&apos;accès au micro.
           </div>
@@ -161,7 +161,7 @@ function WhatsAppSendTest() {
         </button>
       </div>
       {result && (
-        <div style={{ marginTop: 8, color: result.ok ? '#16a34a' : '#ef4444', fontWeight: 600, fontSize: 12 }}>
+        <div style={{ marginTop: 8, color: result.ok ? '#1A1A1A' : '#DC2626', fontWeight: 600, fontSize: 12 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{result.ok ? 'check_circle' : 'cancel'}</span> {result.msg}
         </div>
       )}
@@ -202,7 +202,7 @@ function LiveTestCard({ title, desc, endpoint, method, resultKey }: {
         {status === 'running' ? 'Test en cours…' : '▶ Lancer le test'}
       </button>
       {status !== 'idle' && status !== 'running' && (
-        <div style={{ marginTop: 8, fontSize: 12, color: status === 'ok' ? '#16a34a' : '#ef4444', fontWeight: 600 }}>
+        <div style={{ marginTop: 8, fontSize: 12, color: status === 'ok' ? '#1A1A1A' : '#DC2626', fontWeight: 600 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{status === 'ok' ? 'check_circle' : 'cancel'}</span> {result}
         </div>
       )}
@@ -253,7 +253,7 @@ function LiveTestCardWithInput({ title, desc, endpoint, inputPlaceholder, inputL
       </div>
       <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>{inputLabel}</div>
       {status !== 'idle' && status !== 'running' && (
-        <div style={{ fontSize: 12, color: status === 'ok' ? '#16a34a' : '#ef4444', fontWeight: 600 }}>
+        <div style={{ fontSize: 12, color: status === 'ok' ? '#1A1A1A' : '#DC2626', fontWeight: 600 }}>
           <span className="material-symbols-rounded" style={{ fontSize: 14 }}>{status === 'ok' ? 'check_circle' : 'cancel'}</span> {result}
         </div>
       )}
@@ -405,7 +405,7 @@ export default function DiagnosticsPage() {
                     <div style={{ fontWeight: 700, fontSize: 14 }}>{svc.name}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{svc.message}</div>
                     {svc.hint && svc.status !== 'ok' && (
-                      <div style={{ fontSize: 11, color: '#f59e0b', marginTop: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>lightbulb</span> {svc.hint}</div>
+                      <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}><span className="material-symbols-rounded" style={{ fontSize: 12 }}>lightbulb</span> {svc.hint}</div>
                     )}
                     {svc.envVars && svc.envVars.length > 0 && svc.status !== 'ok' && (
                       <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 4 }}>

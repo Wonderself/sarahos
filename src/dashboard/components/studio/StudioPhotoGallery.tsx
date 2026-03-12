@@ -89,14 +89,14 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
           </span>
           {entries.length > 0 && (
             <span style={{
-              fontSize: 10, fontWeight: 600, color: '#8b5cf6',
-              background: '#f5f3ff', padding: '1px 8px', borderRadius: 10,
+              fontSize: 10, fontWeight: 600, color: '#1A1A1A',
+              background: '#F7F7F7', padding: '1px 8px', borderRadius: 10,
             }}>
               {entries.length}
             </span>
           )}
         </div>
-        <span style={{ fontSize: 10, color: '#9ca3af' }}>
+        <span style={{ fontSize: 10, color: '#9B9B9B' }}>
           {expanded ? '▲ Masquer' : '▼ Afficher'}
         </span>
       </button>
@@ -104,7 +104,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
       {expanded && entries.length === 0 && (
         <div style={{ padding: '24px 16px', textAlign: 'center' }}>
           <div style={{ fontSize: 28, marginBottom: 8 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>palette</span></div>
-          <div style={{ fontSize: 12, color: '#9ca3af' }}>
+          <div style={{ fontSize: 12, color: '#9B9B9B' }}>
             Vos photos générées apparaîtront ici
           </div>
         </div>
@@ -140,14 +140,11 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                   style={{
                     cursor: 'pointer', borderRadius: 8, overflow: 'hidden',
                     border: `2px solid ${expandedId === entry.id
-                      ? '#8b5cf6'
+                      ? '#1A1A1A'
                       : entry.imageUrl === highlightedUrl
-                        ? '#10b981'
+                        ? '#1A1A1A'
                         : '#e5e7eb'}`,
                     aspectRatio: '1', position: 'relative',
-                    boxShadow: entry.imageUrl === highlightedUrl
-                      ? '0 0 0 3px #10b98130'
-                      : 'none',
                   }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -159,13 +156,13 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                   {entry.imageUrl === highlightedUrl && (
                     <div style={{
                       position: 'absolute', top: 4, right: 4,
-                      background: '#10b981', borderRadius: '50%',
+                      background: '#1A1A1A', borderRadius: '50%',
                       width: 14, height: 14, display: 'flex', alignItems: 'center',
                       justifyContent: 'center', fontSize: 8, color: 'white', fontWeight: 700,
                     }}><span className="material-symbols-rounded" style={{ fontSize: 8 }}>check</span></div>
                   )}
                 </div>
-                <div style={{ fontSize: 9, color: '#94a3b8', marginTop: 2, textAlign: 'center' }}>
+                <div style={{ fontSize: 9, color: '#9B9B9B', marginTop: 2, textAlign: 'center' }}>
                   {formatDate(entry.date)}
                 </div>
               </div>
@@ -176,7 +173,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
           {expandedEntry && (
             <div style={{
               marginTop: 12, padding: 14, background: 'white', borderRadius: 12,
-              border: '1px solid #e5e7eb', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              border: '1px solid #e5e7eb',
             }}>
               <div style={{ display: 'flex', gap: 14 }}>
                 {/* Preview */}
@@ -208,7 +205,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
                     {expandedEntry.style && (
                       <span style={{
-                        fontSize: 9, background: '#f5f3ff', color: '#7c3aed',
+                        fontSize: 9, background: '#F7F7F7', color: '#1A1A1A',
                         padding: '2px 8px', borderRadius: 8, fontWeight: 600,
                       }}>
                         {expandedEntry.style}
@@ -216,14 +213,14 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                     )}
                     {expandedEntry.dimensions && (
                       <span style={{
-                        fontSize: 9, background: '#f0f9ff', color: '#0284c7',
+                        fontSize: 9, background: '#F7F7F7', color: '#6B6B6B',
                         padding: '2px 8px', borderRadius: 8, fontWeight: 600,
                       }}>
                         {expandedEntry.dimensions}
                       </span>
                     )}
                     <span style={{
-                      fontSize: 9, background: '#f0fdf4', color: '#16a34a',
+                      fontSize: 9, background: '#F7F7F7', color: '#1A1A1A',
                       padding: '2px 8px', borderRadius: 8, fontWeight: 600,
                     }}>
                       {expandedEntry.workflow}
@@ -240,7 +237,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                         }}
                         style={{
                           fontSize: 10, padding: '5px 10px', borderRadius: 6,
-                          border: '1px solid #8b5cf6', color: '#8b5cf6', background: 'white',
+                          border: '1px solid #1A1A1A', color: '#1A1A1A', background: 'white',
                           cursor: 'pointer', fontWeight: 600,
                         }}
                       >
@@ -265,7 +262,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                       onClick={() => handleCopyUrl(expandedEntry.imageUrl, expandedEntry.id)}
                       style={{
                         fontSize: 10, padding: '5px 10px', borderRadius: 6,
-                        border: '1px solid #e5e7eb', color: copied === expandedEntry.id ? '#10b981' : '#374151',
+                        border: '1px solid #e5e7eb', color: copied === expandedEntry.id ? '#1A1A1A' : '#374151',
                         background: 'white', cursor: 'pointer', fontWeight: 600,
                       }}
                     >

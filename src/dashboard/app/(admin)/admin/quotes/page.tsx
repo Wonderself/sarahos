@@ -12,11 +12,11 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  new: '#3b82f6',
-  contacted: '#f59e0b',
-  negotiation: '#8b5cf6',
-  accepted: '#22c55e',
-  declined: '#ef4444',
+  new: '#6B6B6B',
+  contacted: '#9B9B9B',
+  negotiation: '#1A1A1A',
+  accepted: '#1A1A1A',
+  declined: '#DC2626',
 };
 
 export default async function QuotesPage() {
@@ -55,10 +55,10 @@ export default async function QuotesPage() {
       {/* Stats */}
       <div className="grid-4" style={{ gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Nouvelles', count: quotes.filter(q => q['status'] === 'new').length, color: '#3b82f6' },
-          { label: 'Contactees', count: quotes.filter(q => q['status'] === 'contacted').length, color: '#f59e0b' },
-          { label: 'En negociation', count: quotes.filter(q => q['status'] === 'negotiation').length, color: '#8b5cf6' },
-          { label: 'Acceptees', count: quotes.filter(q => q['status'] === 'accepted').length, color: '#22c55e' },
+          { label: 'Nouvelles', count: quotes.filter(q => q['status'] === 'new').length, color: '#6B6B6B' },
+          { label: 'Contactees', count: quotes.filter(q => q['status'] === 'contacted').length, color: '#9B9B9B' },
+          { label: 'En negociation', count: quotes.filter(q => q['status'] === 'negotiation').length, color: '#1A1A1A' },
+          { label: 'Acceptees', count: quotes.filter(q => q['status'] === 'accepted').length, color: '#1A1A1A' },
         ].map(s => (
           <div key={s.label} className="card p-16 text-center">
             <div style={{ fontSize: 28, fontWeight: 800, color: s.color }}>{s.count}</div>
@@ -149,8 +149,8 @@ export default async function QuotesPage() {
                 {q['admin_notes'] ? (
                   <div style={{
                     marginTop: 10, padding: '8px 12px', borderRadius: 8,
-                    background: 'var(--bg-secondary, #f9fafb)', fontSize: 13,
-                    borderLeft: '3px solid #7c3aed',
+                    background: 'var(--bg-secondary, #F7F7F7)', fontSize: 13,
+                    borderLeft: '3px solid #1A1A1A',
                   }}>
                     <strong>Notes admin :</strong> {String(q['admin_notes'])}
                   </div>

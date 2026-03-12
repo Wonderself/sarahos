@@ -33,17 +33,15 @@ function getSession() {
 
 const CU = {
   card: {
-    background: 'var(--fz-bg, #fff)',
-    border: 'none',
-    borderRadius: 'var(--fz-radius-md, 8px)',
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    background: '#fff',
+    border: '1px solid #E5E5E5',
+    borderRadius: 8,
     transition: 'all 0.15s ease',
   } as React.CSSProperties,
   cardHover: {
-    background: 'var(--fz-bg, #fff)',
-    border: 'none',
-    borderRadius: 'var(--fz-radius-md, 8px)',
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    background: '#fff',
+    border: '1px solid #E5E5E5',
+    borderRadius: 8,
     transition: 'all 0.15s ease',
     cursor: 'pointer',
   } as React.CSSProperties,
@@ -56,40 +54,41 @@ const CU = {
   sectionTitle: {
     fontSize: 14,
     fontWeight: 600,
-    color: 'var(--fz-text, #1E293B)',
+    color: '#1A1A1A',
     lineHeight: 1.3,
   } as React.CSSProperties,
   sectionSub: {
     fontSize: 12,
-    color: 'var(--fz-text-muted, #94A3B8)',
+    color: '#9B9B9B',
     lineHeight: 1.3,
   } as React.CSSProperties,
   kpiLabel: {
     fontSize: 11,
     fontWeight: 600,
-    color: 'var(--fz-text-muted, #94A3B8)',
+    color: '#9B9B9B',
     textTransform: 'uppercase' as const,
     letterSpacing: '0.04em',
   },
   kpiValue: {
     fontSize: 20,
     fontWeight: 700,
-    color: 'var(--fz-text, #1E293B)',
+    color: '#1A1A1A',
     lineHeight: 1.2,
   } as React.CSSProperties,
   kpiMeta: {
     fontSize: 11,
-    color: 'var(--fz-text-muted, #94A3B8)',
+    color: '#9B9B9B',
     marginTop: 2,
   } as React.CSSProperties,
   btn: {
-    height: 44,
-    minHeight: 44,
-    padding: '0 12px',
-    borderRadius: 6,
+    height: 36,
+    minHeight: 36,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500,
     fontSize: 13,
-    border: 'none',
+    border: '1px solid #E5E5E5',
+    background: '#fff',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
@@ -97,46 +96,46 @@ const CU = {
     transition: 'all 0.15s ease',
   } as React.CSSProperties,
   btnGhost: {
-    height: 44,
-    minHeight: 44,
-    padding: '0 12px',
-    borderRadius: 6,
+    height: 36,
+    minHeight: 36,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500,
     fontSize: 13,
-    border: 'none',
+    border: '1px solid #E5E5E5',
+    background: '#fff',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
     gap: 6,
     transition: 'all 0.15s ease',
-    background: 'transparent',
-    color: 'var(--fz-text-secondary, #64748B)',
+    color: '#6B6B6B',
   } as React.CSSProperties,
   btnPrimary: {
-    height: 44,
-    minHeight: 44,
-    padding: '0 12px',
-    borderRadius: 6,
+    height: 36,
+    minHeight: 36,
+    padding: '0 14px',
+    borderRadius: 8,
     fontWeight: 500,
     fontSize: 13,
-    border: 'none',
+    border: '1px solid #1A1A1A',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
     transition: 'all 0.15s ease',
-    background: 'var(--fz-accent, #0EA5E9)',
+    background: '#1A1A1A',
     color: '#fff',
     minWidth: 36,
   } as React.CSSProperties,
   input: {
     height: 36,
     padding: '0 10px',
-    borderRadius: 6,
-    border: '1px solid var(--fz-border, #E2E8F0)',
-    background: 'var(--fz-bg, #fff)',
-    color: 'var(--fz-text, #1E293B)',
+    borderRadius: 8,
+    border: '1px solid #E5E5E5',
+    background: '#fff',
+    color: '#1A1A1A',
     fontSize: 13,
     outline: 'none',
     transition: 'border-color 0.15s ease',
@@ -391,10 +390,10 @@ export default function ClientDashboard() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
         <span style={{ fontSize: 20, lineHeight: 1 }}>👋</span>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', lineHeight: 1.3 }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', lineHeight: 1.3 }}>
             {greeting}, {userName || 'cher client'}
           </span>
-          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.3 }}>
+          <span style={{ fontSize: 12, color: '#9B9B9B', lineHeight: 1.3 }}>
             {todayStr}
           </span>
         </div>
@@ -405,16 +404,15 @@ export default function ClientDashboard() {
       {!hasProfile && !isDismissed('onboarding') && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 12,
-          background: 'rgba(14,165,233,0.04)', borderRadius: 'var(--fz-radius-md, 8px)',
-          boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-          border: 'none',
+          background: 'rgba(0,0,0,0.04)', borderRadius: 8,
+          border: '1px solid #E5E5E5',
         }}>
           <span style={{ fontSize: 16 }}>🏗️</span>
-          <span style={{ flex: 1, fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>Complétez votre profil pour des résultats optimaux</span>
-          <Link href="/client/onboarding" style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          <span style={{ flex: 1, fontSize: 12, color: '#6B6B6B' }}>Complétez votre profil pour des résultats optimaux</span>
+          <Link href="/client/onboarding" style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A', textDecoration: 'none', whiteSpace: 'nowrap' }}>
             Configurer →
           </Link>
-          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: '#9B9B9B' }}>×</button>
         </div>
       )}
 
@@ -472,11 +470,11 @@ export default function ClientDashboard() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 16 }}>🧠</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Briefing IA du jour</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>Briefing IA du jour</span>
             <HelpBubble text="Chaque matin, votre IA analyse votre activité et vous propose un résumé actionnable." />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {briefingTime && <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>Mis à jour à {briefingTime}</span>}
+            {briefingTime && <span style={{ fontSize: 11, color: '#9B9B9B' }}>Mis à jour à {briefingTime}</span>}
             <button
               onClick={refreshBriefing}
               disabled={briefingLoading}
@@ -490,13 +488,13 @@ export default function ClientDashboard() {
           </div>
         </div>
         {briefingLoading && !briefingLoaded ? (
-          <div style={{ padding: '12px 0', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, fontStyle: 'italic' }}>
+          <div style={{ padding: '12px 0', color: '#9B9B9B', fontSize: 13, fontStyle: 'italic' }}>
             ⏳ Votre briefing IA est en cours de génération...
           </div>
         ) : briefing ? (
           <div style={{
-            fontSize: 13, lineHeight: 1.7, color: 'var(--fz-text-secondary, #64748B)',
-            background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 'var(--fz-radius-md, 8px)', padding: '12px 16px',
+            fontSize: 13, lineHeight: 1.7, color: '#6B6B6B',
+            background: '#F7F7F7', borderRadius: 8, padding: '12px 16px',
             whiteSpace: 'pre-wrap',
           }}>
             {briefing}
@@ -504,8 +502,8 @@ export default function ClientDashboard() {
         ) : (
           <div style={{ textAlign: 'center', padding: '24px 0' }}>
             <div style={{ fontSize: 40, marginBottom: 8 }}>🧠</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>Briefing IA</div>
-            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+            <div style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', marginBottom: 4 }}>Briefing IA</div>
+            <div style={{ fontSize: 13, color: '#9B9B9B' }}>
               Connectez-vous pour recevoir votre briefing quotidien.
             </div>
           </div>
@@ -516,7 +514,7 @@ export default function ClientDashboard() {
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ fontSize: 16 }}>⚡</span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>Actions rapides</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>Actions rapides</span>
           <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
         </div>
         <div style={{
@@ -531,8 +529,8 @@ export default function ClientDashboard() {
             }}>
               <span style={{ fontSize: 28, flexShrink: 0 }}>{action.emoji}</span>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{action.label}</div>
-                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{action.desc}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{action.label}</div>
+                <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>{action.desc}</div>
               </div>
             </Link>
           ))}
@@ -545,8 +543,8 @@ export default function ClientDashboard() {
         <div style={{ ...CU.card, padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <span style={{ fontSize: 16 }}>✅</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>
-              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: 'var(--fz-text-muted, #94A3B8)' }}>({todosDone}/{todosTotal})</span>}
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>
+              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: '#9B9B9B' }}>({todosDone}/{todosTotal})</span>}
             </span>
             <HelpBubble text="Ajoutez vos tâches pour la journée. Elles sont sauvegardées automatiquement." />
           </div>
@@ -565,14 +563,14 @@ export default function ClientDashboard() {
             {todos.length === 0 && (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <div style={{ fontSize: 40, marginBottom: 4 }}>✅</div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>Aucune tâche</div>
-                <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Ajoutez-en une ci-dessus</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', marginBottom: 2 }}>Aucune tâche</div>
+                <div style={{ fontSize: 13, color: '#9B9B9B' }}>Ajoutez-en une ci-dessus</div>
               </div>
             )}
             {todos.map(todo => (
               <div key={todo.id} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
-                borderBottom: '1px solid var(--fz-border-light, #F1F5F9)',
+                borderBottom: '1px solid #E5E5E5',
               }}>
                 <button onClick={() => toggleTodo(todo.id)} style={{
                   background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, padding: 0,
@@ -580,14 +578,14 @@ export default function ClientDashboard() {
                   {todo.done ? '✅' : '⬜'}
                 </button>
                 <span style={{
-                  flex: 1, fontSize: 13, color: 'var(--fz-text, #1E293B)',
+                  flex: 1, fontSize: 13, color: '#1A1A1A',
                   textDecoration: todo.done ? 'line-through' : 'none',
                   opacity: todo.done ? 0.5 : 1,
                 }}>
                   {todo.text}
                 </span>
                 <button onClick={() => removeTodo(todo.id)} style={{
-                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)',
+                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#9B9B9B',
                   padding: '0 4px',
                 }}>
                   ×
@@ -601,14 +599,14 @@ export default function ClientDashboard() {
         <div style={{ ...CU.card, padding: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <span style={{ fontSize: 16 }}>🎯</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>3 priorités du jour</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>3 priorités du jour</span>
             <HelpBubble text="Définissez vos 3 objectifs principaux. Restez concentré sur l'essentiel." />
           </div>
           {[0, 1, 2].map(idx => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <span style={{
                 width: 24, height: 24, borderRadius: '50%',
-                background: idx === 0 ? '#ef4444' : idx === 1 ? '#f59e0b' : '#22c55e',
+                background: '#1A1A1A',
                 color: '#fff', fontSize: 12, fontWeight: 800,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
@@ -631,7 +629,7 @@ export default function ClientDashboard() {
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ fontSize: 16 }}>🧭</span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)', flex: 1 }}>Toutes vos fonctionnalités</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>Toutes vos fonctionnalités</span>
           <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -644,16 +642,16 @@ export default function ClientDashboard() {
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '12px 16px',
-                borderBottom: '1px solid var(--fz-border-light, #F1F5F9)',
-                background: 'var(--fz-bg-secondary, #F8FAFC)',
+                borderBottom: '1px solid #E5E5E5',
+                background: '#F7F7F7',
               }}>
                 <span style={{ fontSize: 16 }}>{section.emoji}</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>
                     {section.title}
-                    {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', marginLeft: 8, padding: '1px 6px', background: 'rgba(14,165,233,0.08)', borderRadius: 4 }}>PRO</span>}
+                    {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: '#1A1A1A', marginLeft: 8, padding: '1px 6px', background: 'rgba(0,0,0,0.06)', borderRadius: 4 }}>PRO</span>}
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{section.subtitle}</div>
+                  <div style={{ fontSize: 12, color: '#9B9B9B' }}>{section.subtitle}</div>
                 </div>
               </div>
               <div style={{
@@ -666,14 +664,14 @@ export default function ClientDashboard() {
                     textDecoration: 'none',
                     display: 'flex', alignItems: 'center', gap: 10,
                     padding: '12px 16px',
-                    borderBottom: '1px solid var(--fz-border-light, #F1F5F9)',
+                    borderBottom: '1px solid #E5E5E5',
                     transition: 'background 0.15s ease',
                     color: 'inherit',
                   }}>
                     <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{item.label}</div>
-                      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>{item.desc}</div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{item.label}</div>
+                      <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 1 }}>{item.desc}</div>
                     </div>
                   </Link>
                 ))}
@@ -688,16 +686,16 @@ export default function ClientDashboard() {
         <div style={{
           ...CU.card,
           display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', marginBottom: 16,
-          background: 'linear-gradient(135deg, rgba(249,115,22,0.06), rgba(234,179,8,0.04))',
+          background: '#F7F7F7',
         }}>
           <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, textDecoration: 'none', color: 'inherit' }}>
             <span style={{ fontSize: 28 }}>🎁</span>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>Invitez un ami, gagnez 20€</div>
-              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>Invitez un ami, gagnez 20€</div>
+              <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
             </div>
           </Link>
-          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: '#9B9B9B' }}>
             ×
           </button>
         </div>

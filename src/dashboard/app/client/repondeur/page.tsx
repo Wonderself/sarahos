@@ -119,9 +119,9 @@ const SCENARIO_TEMPLATES = [
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 const CLASSIF_COLORS: Record<string, string> = {
-  urgent: '#ef4444', vip: '#f59e0b', order: 'var(--fz-accent, #0EA5E9)', complaint: '#f97316',
-  appointment: '#0ea5e9', faq: '#10b981', family: '#ec4899', spam: '#94a3b8',
-  general: '#64748b', blocked: '#dc2626',
+  urgent: '#1A1A1A', vip: '#1A1A1A', order: '#1A1A1A', complaint: '#1A1A1A',
+  appointment: '#6B6B6B', faq: '#6B6B6B', family: '#6B6B6B', spam: '#9B9B9B',
+  general: '#9B9B9B', blocked: '#9B9B9B',
 };
 
 // ── API helper ────────────────────────────────────────────────────────────────
@@ -152,15 +152,15 @@ function timeAgo(iso: string): string {
 }
 
 // ── Shared sub-components ─────────────────────────────────────────────────────
-function StatCard({ emoji, value, label, color = 'var(--fz-accent, #0EA5E9)' }: { emoji: string; value: number | string; label: string; color?: string }) {
+function StatCard({ emoji, value, label, color = '#1A1A1A' }: { emoji: string; value: number | string; label: string; color?: string }) {
   return (
     <div style={{
-      background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: '16px 20px',
-      border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', flex: 1, minWidth: 100,
+      background: '#fff', borderRadius: 8, padding: '16px 20px',
+      border: '1px solid #E5E5E5', flex: 1, minWidth: 100,
     }}>
       <div style={{ marginBottom: 4, fontSize: 22 }}>{emoji}</div>
       <div style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{label}</div>
+      <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>{label}</div>
     </div>
   );
 }
@@ -169,7 +169,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
   if (!changed && !saving) return null;
   return (
     <div style={{
-      position: 'sticky', bottom: 0, background: 'var(--fz-bg, #FFFFFF)', borderTop: '1px solid var(--fz-border, #E2E8F0)',
+      position: 'sticky', bottom: 0, background: '#fff', borderTop: '1px solid #E5E5E5',
       padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', zIndex: 10,
     }}>
       <button
@@ -177,7 +177,7 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
         disabled={saving}
         style={{
           padding: '8px 20px', borderRadius: 8, border: 'none',
-          background: saving ? '#c4b5fd' : 'var(--fz-accent, #0EA5E9)', color: 'white',
+          background: saving ? '#9B9B9B' : '#1A1A1A', color: 'white',
           fontSize: 13, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
         }}
       >
@@ -266,8 +266,8 @@ export default function RepondeurPage() {
   if (loading) {
     return (
       <div style={{ padding: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid var(--fz-accent, #0EA5E9)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
-        <span style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)' }}>Chargement du répondeur...</span>
+        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #1A1A1A', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+        <span style={{ fontSize: 14, color: '#6B6B6B' }}>Chargement du répondeur...</span>
       </div>
     );
   }
@@ -276,11 +276,10 @@ export default function RepondeurPage() {
   const toast = (error || success) ? (
     <div style={{
       position: 'fixed', top: 20, right: 20, zIndex: 1000,
-      padding: '10px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600,
-      background: error ? '#fef2f2' : '#f0fdf4',
-      color: error ? '#ef4444' : '#16a34a',
-      border: `1px solid ${error ? '#fecaca' : '#bbf7d0'}`,
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+      background: '#fff',
+      color: error ? 'var(--danger)' : '#1A1A1A',
+      border: '1px solid #E5E5E5',
     }}>
       {error || success}
     </div>
@@ -294,8 +293,8 @@ export default function RepondeurPage() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{ marginBottom: 12, fontSize: 48 }}>{PAGE_META.repondeur.emoji}</div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0, color: 'var(--fz-text, #1E293B)' }}>Configurer votre répondeur <span className="fz-logo-word">IA</span></h1>
-          <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', marginTop: 8 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0, color: '#1A1A1A' }}>Configurer votre répondeur <span className="fz-logo-word">IA</span></h1>
+          <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>
             Votre assistant répondra automatiquement à vos messages WhatsApp
           </p>
           {/* Progress */}
@@ -305,10 +304,10 @@ export default function RepondeurPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 700,
-                  background: wizardStep >= s ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                  color: wizardStep >= s ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                  background: wizardStep >= s ? '#1A1A1A' : '#F7F7F7',
+                  color: wizardStep >= s ? 'white' : '#9B9B9B',
                 }}>{s}</div>
-                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)' }} />}
+                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#1A1A1A' : '#E5E5E5' }} />}
               </div>
             ))}
           </div>
@@ -326,15 +325,15 @@ export default function RepondeurPage() {
                   key={s.id}
                   onClick={() => setWizardScenario(s.id)}
                   style={{
-                    padding: 16, borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    border: `2px solid ${wizardScenario === s.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: wizardScenario === s.id ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)',
+                    padding: 16, borderRadius: 8, cursor: 'pointer', textAlign: 'left',
+                    border: `2px solid ${wizardScenario === s.id ? '#1A1A1A' : '#E5E5E5'}`,
+                    background: wizardScenario === s.id ? 'rgba(0,0,0,0.04)' : '#fff',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{ marginBottom: 6, fontSize: 24 }}>{REPONDEUR_SCENARIO_EMOJIS[s.id] ?? '📞'}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{s.label}</div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', marginTop: 2 }}>{s.desc}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A' }}>{s.label}</div>
+                  <div style={{ fontSize: 11, color: '#6B6B6B', marginTop: 2 }}>{s.desc}</div>
                 </button>
               ))}
             </div>
@@ -343,9 +342,9 @@ export default function RepondeurPage() {
                 onClick={() => wizardScenario && setWizardStep(2)}
                 disabled={!wizardScenario}
                 style={{
-                  padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: wizardScenario ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)',
-                  color: wizardScenario ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                  padding: '10px 32px', borderRadius: 8, border: 'none',
+                  background: wizardScenario ? '#1A1A1A' : '#E5E5E5',
+                  color: wizardScenario ? 'white' : '#9B9B9B',
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
                 }}
               >
@@ -361,11 +360,11 @@ export default function RepondeurPage() {
             <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
               2 — Numéro d'alerte patron
             </h2>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', textAlign: 'center', marginBottom: 20 }}>
+            <p style={{ fontSize: 12, color: '#9B9B9B', textAlign: 'center', marginBottom: 20 }}>
               Pour les messages urgents, le répondeur vous envoie immédiatement une alerte WhatsApp.
             </p>
-            <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 20, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 8 }}>
+            <div style={{ background: '#F7F7F7', borderRadius: 8, padding: 20, border: '1px solid #E5E5E5' }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 8 }}>
                 Votre numéro WhatsApp
               </label>
               <input
@@ -378,15 +377,15 @@ export default function RepondeurPage() {
                   fontSize: 14, outline: 'none', boxSizing: 'border-box',
                 }}
               />
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 6 }}>
+              <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 6 }}>
                 Optionnel — vous pouvez l'ajouter plus tard dans Paramètres
               </div>
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 24 }}>
-              <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', fontSize: 13 }}>
+              <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
-              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 10, border: 'none', background: 'var(--fz-accent, #0EA5E9)', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 8, border: 'none', background: '#1A1A1A', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                 Continuer →
               </button>
             </div>
@@ -399,37 +398,37 @@ export default function RepondeurPage() {
             <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>
               3 — Prêt à démarrer !
             </h2>
-            <div style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 12, padding: 20, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', marginBottom: 20 }}>
+            <div style={{ background: '#F7F7F7', borderRadius: 8, padding: 20, border: '1px solid #E5E5E5', marginBottom: 20 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                   <span style={{ fontSize: 20 }}>{REPONDEUR_SCENARIO_EMOJIS[wizardScenario] ?? '📞'}</span>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Scénario</div>
-                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>Scénario</div>
+                    <div style={{ fontSize: 12, color: '#9B9B9B' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                   <span style={{ fontSize: 20 }}>📞</span>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Numéro d'alerte</div>
-                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>Numéro d'alerte</div>
+                    <div style={{ fontSize: 12, color: '#9B9B9B' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ background: '#f3eeff', borderRadius: 10, padding: 14, fontSize: 12, color: '#4338ca', marginBottom: 20 }}>
+            <div style={{ background: 'rgba(0,0,0,0.04)', borderRadius: 8, padding: 14, fontSize: 12, color: '#1A1A1A', marginBottom: 20 }}>
               💡 Après activation, vous pouvez tout personnaliser : modes, styles, FAQ, VIP, planning...
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button onClick={() => setWizardStep(2)} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', fontSize: 13 }}>
+              <button onClick={() => setWizardStep(2)} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff', cursor: 'pointer', fontSize: 13 }}>
                 ← Retour
               </button>
               <button
                 onClick={finishWizard}
                 disabled={saving}
                 style={{
-                  padding: '10px 32px', borderRadius: 10, border: 'none',
-                  background: saving ? '#c4b5fd' : '#10b981', color: 'white',
+                  padding: '10px 32px', borderRadius: 8, border: 'none',
+                  background: saving ? '#9B9B9B' : '#1A1A1A', color: 'white',
                   fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
                 }}
               >
@@ -458,20 +457,20 @@ export default function RepondeurPage() {
       {toast}
 
       {/* Page header */}
-      <div style={{ padding: '16px 20px 0', background: 'var(--fz-bg, #FFFFFF)', borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+      <div style={{ padding: '16px 20px 0', background: '#fff', borderBottom: '1px solid #E5E5E5' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
           <span style={{ fontSize: 18 }}>{PAGE_META.repondeur.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: 'var(--fz-text, #1E293B)' }}>
+            <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: '#1A1A1A' }}>
               {PAGE_META.repondeur.title}
               <HelpBubble text={PAGE_META.repondeur.helpText} />
             </h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', margin: 0 }}>
+            <p style={{ fontSize: 12, color: '#9B9B9B', margin: 0 }}>
               {PAGE_META.repondeur.subtitle}
             </p>
           </div>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 12, color: config.isActive ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: config.isActive ? '#1A1A1A' : '#dc2626', fontWeight: 600 }}>
               {config.isActive ? '● Actif' : '● Inactif'}
             </span>
             <button
@@ -479,8 +478,8 @@ export default function RepondeurPage() {
               style={{
                 padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 700,
                 cursor: 'pointer',
-                background: config.isActive ? '#fef2f2' : '#f0fdf4',
-                color: config.isActive ? '#ef4444' : '#16a34a',
+                background: config.isActive ? '#fef2f2' : '#fff',
+                color: config.isActive ? 'var(--danger)' : '#1A1A1A',
               }}
             >
               {config.isActive ? 'Désactiver' : 'Activer'}
@@ -497,10 +496,10 @@ export default function RepondeurPage() {
               onClick={() => setTab(t.id)}
               style={{
                 padding: '8px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
-                background: tab === t.id ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-                color: tab === t.id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
+                background: tab === t.id ? '#fff' : 'transparent',
+                color: tab === t.id ? '#1A1A1A' : '#6B6B6B',
                 borderRadius: '8px 8px 0 0',
-                borderBottom: tab === t.id ? '2px solid var(--fz-accent, #0EA5E9)' : '2px solid transparent',
+                borderBottom: tab === t.id ? '2px solid #1A1A1A' : '2px solid transparent',
               }}
             >
               {t.emoji} {t.label}
@@ -573,18 +572,18 @@ function OverviewTab({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 800 }}>
       {/* Stat cards */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <StatCard emoji="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="var(--fz-accent, #0EA5E9)" />
-        <StatCard emoji="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#f59e0b" />
-        <StatCard emoji="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#ef4444" />
-        <StatCard emoji="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#10b981" />
+        <StatCard emoji="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#1A1A1A" />
+        <StatCard emoji="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#1A1A1A" />
+        <StatCard emoji="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#1A1A1A" />
+        <StatCard emoji="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#1A1A1A" />
       </div>
 
       {/* Current mode */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>Mode actif</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A' }}>Mode actif</span>
           <button
-            style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', color: 'var(--fz-text-secondary, #64748B)' }}
+            style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, border: '1px solid #E5E5E5', background: '#fff', cursor: 'pointer', color: '#6B6B6B' }}
             onClick={() => { /* switch to config tab is done externally */ }}
           >
             Changer
@@ -593,22 +592,22 @@ function OverviewTab({
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 28 }}>{REPONDEUR_MODE_EMOJIS[config.activeMode] ?? '📞'}</span>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{mode?.label ?? config.activeMode}</div>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>{mode?.desc ?? ''}</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{mode?.label ?? config.activeMode}</div>
+            <div style={{ fontSize: 12, color: '#6B6B6B' }}>{mode?.desc ?? ''}</div>
           </div>
         </div>
         {config.greetingMessage && (
-          <div style={{ marginTop: 10, padding: '8px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', borderLeft: '3px solid var(--fz-accent, #0EA5E9)' }}>
+          <div style={{ marginTop: 10, padding: '8px 12px', background: '#F7F7F7', borderRadius: 8, fontSize: 12, color: '#6B6B6B', borderLeft: '3px solid #1A1A1A' }}>
             "{config.greetingMessage}"
           </div>
         )}
       </div>
 
       {/* Test zone */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: 'var(--fz-text, #1E293B)' }}>🧪 Tester le répondeur</div>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: '#1A1A1A' }}>🧪 Tester le répondeur</div>
         {testSent ? (
-          <div style={{ padding: '10px 14px', background: '#f0fdf4', borderRadius: 8, fontSize: 13, color: '#16a34a', fontWeight: 600 }}>
+          <div style={{ padding: '10px 14px', background: '#fff', borderRadius: 8, fontSize: 13, color: '#1A1A1A', fontWeight: 600 }}>
             ✅ Message envoyé ! Le répondeur va traiter et répondre.
           </div>
         ) : (
@@ -619,15 +618,15 @@ function OverviewTab({
               onChange={e => setTestMessage(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && sendTest()}
               placeholder="Ex: Bonjour, je voudrais un devis..."
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none' }}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }}
             />
             <button
               onClick={sendTest}
               disabled={!testMessage.trim()}
               style={{
                 padding: '8px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600,
-                background: testMessage.trim() ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)',
-                color: testMessage.trim() ? 'white' : 'var(--fz-text-muted, #94A3B8)',
+                background: testMessage.trim() ? '#1A1A1A' : '#E5E5E5',
+                color: testMessage.trim() ? 'white' : '#9B9B9B',
                 cursor: testMessage.trim() ? 'pointer' : 'not-allowed',
               }}
             >
@@ -639,27 +638,27 @@ function OverviewTab({
 
       {/* Recent messages */}
       {recentMessages.length > 0 && (
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>📨 Activité récente</div>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>📨 Activité récente</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {recentMessages.map(m => (
               <div key={m.id} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0',
-                borderBottom: '1px solid var(--fz-bg-secondary, #F8FAFC)',
+                borderBottom: '1px solid #F7F7F7',
               }}>
                 <span style={{
-                  fontSize: 10, padding: '2px 7px', borderRadius: 10, fontWeight: 600, flexShrink: 0, marginTop: 1,
-                  background: `${CLASSIF_COLORS[m.classification] ?? '#64748b'}18`,
-                  color: CLASSIF_COLORS[m.classification] ?? '#64748b',
+                  fontSize: 10, padding: '2px 7px', borderRadius: 8, fontWeight: 600, flexShrink: 0, marginTop: 1,
+                  background: `${CLASSIF_COLORS[m.classification] ?? '#9B9B9B'}18`,
+                  color: CLASSIF_COLORS[m.classification] ?? '#9B9B9B',
                 }}>
                   {m.classification}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {m.content}
                   </div>
                 </div>
-                <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>{timeAgo(m.createdAt)}</span>
+                <span style={{ fontSize: 10, color: '#9B9B9B', flexShrink: 0 }}>{timeAgo(m.createdAt)}</span>
               </div>
             ))}
           </div>
@@ -708,17 +707,17 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
     <div style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Presets */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>⚡ Presets rapides</div>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>⚡ Presets rapides</div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {PRESETS.map(p => (
             <button
               key={p.id}
               onClick={() => applyPreset(p)}
               style={{
-                padding: '6px 14px', borderRadius: 20, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-                background: mode === p.mode ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)',
-                color: mode === p.mode ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
+                padding: '6px 14px', borderRadius: 20, border: '1px solid #E5E5E5',
+                background: mode === p.mode ? 'rgba(0,0,0,0.04)' : '#fff',
+                color: mode === p.mode ? '#1A1A1A' : '#6B6B6B',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
               }}
             >
@@ -729,22 +728,22 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       </div>
 
       {/* Mode selector */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🎭 Mode de réponse</div>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>🎭 Mode de réponse</div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
           {MODES.map(m => (
             <button
               key={m.value}
               onClick={() => { setMode(m.value); markChanged(); }}
               style={{
-                padding: '12px 10px', borderRadius: 10, cursor: 'pointer', textAlign: 'left',
-                border: `2px solid ${mode === m.value ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                background: mode === m.value ? '#f3eeff' : 'var(--fz-bg-secondary, #F8FAFC)',
+                padding: '12px 10px', borderRadius: 8, cursor: 'pointer', textAlign: 'left',
+                border: `2px solid ${mode === m.value ? '#1A1A1A' : '#E5E5E5'}`,
+                background: mode === m.value ? 'rgba(0,0,0,0.04)' : '#F7F7F7',
               }}
             >
               <div style={{ marginBottom: 4, fontSize: 20 }}>{REPONDEUR_MODE_EMOJIS[m.value] ?? '📞'}</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{m.label}</div>
-              <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2, lineHeight: 1.3 }}>{m.desc}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A' }}>{m.label}</div>
+              <div style={{ fontSize: 10, color: '#9B9B9B', marginTop: 2, lineHeight: 1.3 }}>{m.desc}</div>
             </button>
           ))}
         </div>
@@ -753,12 +752,12 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       {/* Style + Skills */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         {/* Style */}
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🎨 Style de réponse</div>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>🎨 Style de réponse</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {STYLES.map(s => (
-              <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? '#f3eeff' : 'transparent' }}>
-                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: 'var(--fz-accent, #0EA5E9)' }} />
+              <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? 'rgba(0,0,0,0.04)' : 'transparent' }}>
+                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#1A1A1A' }} />
                 <span style={{ fontSize: 12, fontWeight: style === s.value ? 600 : 400 }}>{s.label}</span>
               </label>
             ))}
@@ -766,8 +765,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
         </div>
 
         {/* Skills */}
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🔧 Compétences actives</div>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>🔧 Compétences actives</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {SKILLS.map(s => {
               const active = s.always || skills.includes(s.value);
@@ -778,18 +777,18 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
                   style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', borderRadius: 6,
                     border: 'none', cursor: s.always ? 'default' : 'pointer', textAlign: 'left', width: '100%',
-                    background: active ? '#f0fdf4' : 'var(--fz-bg-secondary, #F8FAFC)',
+                    background: active ? '#fff' : '#F7F7F7',
                   }}
                 >
                   <div style={{
                     width: 16, height: 16, borderRadius: 4, flexShrink: 0,
-                    background: active ? '#10b981' : 'var(--fz-border, #E2E8F0)',
+                    background: active ? '#1A1A1A' : '#E5E5E5',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     {active && <span style={{ color: 'white', fontSize: 9, fontWeight: 700 }}>✓</span>}
                   </div>
                   <span style={{ fontSize: 12 }}>{s.emoji}</span>
-                  <span style={{ fontSize: 11, fontWeight: active ? 600 : 400, color: active ? '#059669' : 'var(--fz-text-secondary, #64748B)' }}>
+                  <span style={{ fontSize: 11, fontWeight: active ? 600 : 400, color: active ? '#1A1A1A' : '#6B6B6B' }}>
                     {s.label}{s.always ? ' (toujours)' : ''}
                   </span>
                 </button>
@@ -800,11 +799,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       </div>
 
       {/* Messages */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>💬 Messages</div>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>💬 Messages</div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
               Message d'accueil
             </label>
             <textarea
@@ -812,11 +811,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onChange={e => { setGreeting(e.target.value); markChanged(); }}
               placeholder="Bonjour, je suis le répondeur de [nom]..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
             />
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
               Message d'absence
             </label>
             <textarea
@@ -824,12 +823,12 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onChange={e => { setAbsence(e.target.value); markChanged(); }}
               placeholder="Je suis actuellement indisponible..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
             />
           </div>
         </div>
         <div style={{ marginTop: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+          <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
             📞 Numéro patron (alertes urgences)
           </label>
           <input
@@ -837,11 +836,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
             value={phone}
             onChange={e => { setPhone(e.target.value); markChanged(); }}
             placeholder="+33 6 12 34 56 78"
-            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
           />
         </div>
         <div style={{ marginTop: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+          <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
             Instructions personnalisées
           </label>
           <textarea
@@ -849,7 +848,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
             onChange={e => { setInstructions(e.target.value); markChanged(); }}
             placeholder="Toujours mentionner notre délai de livraison de 48h..."
             rows={2}
-            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
           />
         </div>
       </div>
@@ -918,21 +917,21 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
   return (
     <div style={{ maxWidth: 760 }}>
       {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10, padding: 4, width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: '#F7F7F7', borderRadius: 8, padding: 4, width: 'fit-content' }}>
         {([['faq', '❓', 'FAQ', config.faqEntries.length], ['vip', '⭐', 'VIP', config.vipContacts.length], ['blocked', '🚫', 'Bloqués', config.blockedContacts.length]] as [string, string, string, number][]).map(([id, tabIcon, label, count]) => (
           <button
             key={id}
             onClick={() => setSubTab(id as 'vip' | 'faq' | 'blocked')}
             style={{
               padding: '6px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              background: subTab === id ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-              color: subTab === id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
-              boxShadow: subTab === id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              background: subTab === id ? '#fff' : 'transparent',
+              color: subTab === id ? '#1A1A1A' : '#6B6B6B',
+              boxShadow: subTab === id ? 'none' : 'none',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
           >
             {tabIcon} {label}
-            <span style={{ background: 'var(--fz-border, #E2E8F0)', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
+            <span style={{ background: '#E5E5E5', borderRadius: 8, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
       </div>
@@ -941,27 +940,27 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {subTab === 'faq' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Add form */}
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: 'var(--fz-text-secondary, #64748B)' }}>➕ Ajouter une entrée FAQ</div>
+          <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: '#6B6B6B' }}>➕ Ajouter une entrée FAQ</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none' }} />
+              <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }} />
               <div style={{ display: 'flex', gap: 8 }}>
-                <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
-                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)', color: newQ && newA ? 'white' : 'var(--fz-text-muted, #94A3B8)', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
+                <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
+                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#1A1A1A' : '#E5E5E5', color: newQ && newA ? 'white' : '#9B9B9B', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
               </div>
             </div>
           </div>
           {/* List */}
           {config.faqEntries.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Aucune entrée FAQ</div>
+            <div style={{ textAlign: 'center', padding: 32, color: '#9B9B9B', fontSize: 13 }}>Aucune entrée FAQ</div>
           ) : (
             config.faqEntries.map(f => (
-              <div key={f.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10, padding: '12px 14px', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div key={f.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>❓ {f.question}</div>
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginTop: 4 }}>{f.answer}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A' }}>❓ {f.question}</div>
+                  <div style={{ fontSize: 12, color: '#6B6B6B', marginTop: 4 }}>{f.answer}</div>
                 </div>
-                <button onClick={() => deleteFaq(f.id)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer', flexShrink: 0 }}>Suppr.</button>
+                <button onClick={() => deleteFaq(f.id)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: 'var(--danger)', background: '#fff', cursor: 'pointer', flexShrink: 0 }}>Suppr.</button>
               </div>
             ))
           )}
@@ -971,26 +970,26 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {/* VIP */}
       {subTab === 'vip' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+          <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
             <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>➕ Ajouter un contact VIP</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none', width: 140 }} />
-              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none', minWidth: 100 }} />
-              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none', minWidth: 120 }} />
-              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#f59e0b' : 'var(--fz-border, #E2E8F0)', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Ajouter</button>
+              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', width: 140 }} />
+              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 100 }} />
+              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 120 }} />
+              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#1A1A1A' : '#E5E5E5', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Ajouter</button>
             </div>
           </div>
           {config.vipContacts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Aucun contact VIP</div>
+            <div style={{ textAlign: 'center', padding: 32, color: '#9B9B9B', fontSize: 13 }}>Aucun contact VIP</div>
           ) : (
             config.vipContacts.map((v, i) => (
-              <div key={i} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10, padding: '10px 14px', border: '1px solid #fef3c7', display: 'flex', gap: 10, alignItems: 'center' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⭐</div>
+              <div key={i} style={{ background: '#fff', borderRadius: 8, padding: '10px 14px', border: '1px solid rgba(0,0,0,0.04)', display: 'flex', gap: 10, alignItems: 'center' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⭐</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700 }}>{v.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{v.phone}{v.relationship ? ` · ${v.relationship}` : ''}</div>
+                  <div style={{ fontSize: 11, color: '#9B9B9B' }}>{v.phone}{v.relationship ? ` · ${v.relationship}` : ''}</div>
                 </div>
-                <button onClick={() => removeVip(v.phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer' }}>Retirer</button>
+                <button onClick={() => removeVip(v.phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: 'var(--danger)', background: '#fff', cursor: 'pointer' }}>Retirer</button>
               </div>
             ))
           )}
@@ -1000,21 +999,21 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {/* Blocked */}
       {subTab === 'blocked' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+          <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
             <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>🚫 Bloquer un numéro</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <input type="tel" value={newBlocked} onChange={e => setNewBlocked(e.target.value)} placeholder="+33 6 00 00 00 00" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addBlocked()} />
-              <button onClick={addBlocked} disabled={!newBlocked} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newBlocked ? '#ef4444' : 'var(--fz-border, #E2E8F0)', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Bloquer</button>
+              <input type="tel" value={newBlocked} onChange={e => setNewBlocked(e.target.value)} placeholder="+33 6 00 00 00 00" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addBlocked()} />
+              <button onClick={addBlocked} disabled={!newBlocked} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newBlocked ? '#1A1A1A' : '#E5E5E5', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Bloquer</button>
             </div>
           </div>
           {config.blockedContacts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Aucun numéro bloqué</div>
+            <div style={{ textAlign: 'center', padding: 32, color: '#9B9B9B', fontSize: 13 }}>Aucun numéro bloqué</div>
           ) : (
-            <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', overflow: 'hidden' }}>
+            <div style={{ background: '#fff', borderRadius: 8, border: '1px solid #E5E5E5', overflow: 'hidden' }}>
               {config.blockedContacts.map((phone, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: i < config.blockedContacts.length - 1 ? '1px solid var(--fz-bg-secondary, #F8FAFC)' : 'none' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: i < config.blockedContacts.length - 1 ? '1px solid #F7F7F7' : 'none' }}>
                   <span style={{ fontSize: 12, flex: 1 }}>🚫 {phone}</span>
-                  <button onClick={() => removeBlocked(phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', color: 'var(--fz-text-secondary, #64748B)', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer' }}>Débloquer</button>
+                  <button onClick={() => removeBlocked(phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: '#6B6B6B', background: '#fff', cursor: 'pointer' }}>Débloquer</button>
                 </div>
               ))}
             </div>
@@ -1085,8 +1084,8 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
         {([['messages', '💬', 'Messages', messages.length], ['orders', '🛒', 'Commandes', orders.length], ['summaries', '📋', 'Résumés', summaries.length]] as [string, string, string, number][]).map(([id, icon, label, count]) => (
-          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`, background: inboxTab === id ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: inboxTab === id ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
-            {icon} {label} <span style={{ background: 'var(--fz-border, #E2E8F0)', borderRadius: 10, padding: '0 6px', fontSize: 10 }}>{count}</span>
+          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#1A1A1A' : '#E5E5E5'}`, background: inboxTab === id ? 'rgba(0,0,0,0.04)' : '#fff', color: inboxTab === id ? '#1A1A1A' : '#6B6B6B', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
+            {icon} {label} <span style={{ background: '#E5E5E5', borderRadius: 8, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
       </div>
@@ -1096,26 +1095,26 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Filter chips */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`, background: msgFilter === 'all' ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: msgFilter === 'all' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#1A1A1A' : '#E5E5E5'}`, background: msgFilter === 'all' ? 'rgba(0,0,0,0.04)' : '#fff', color: msgFilter === 'all' ? '#1A1A1A' : '#6B6B6B', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
               Tous ({messages.length})
             </button>
             {Object.entries(classifCounts).map(([c, n]) => (
-              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? 'var(--fz-accent, #0EA5E9)'}12` : 'var(--fz-bg, #FFFFFF)', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? 'var(--fz-accent, #0EA5E9)') : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#1A1A1A' : '#E5E5E5'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#1A1A1A'}12` : '#fff', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#1A1A1A') : '#6B6B6B', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
                 {c} ({n})
               </button>
             ))}
           </div>
           {filteredMessages.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Aucun message</div>
+            <div style={{ textAlign: 'center', padding: 40, color: '#9B9B9B', fontSize: 13 }}>Aucun message</div>
           ) : (
             filteredMessages.map(m => (
-              <div key={m.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10, padding: '12px 14px', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <span style={{ padding: '3px 8px', borderRadius: 10, fontSize: 10, fontWeight: 700, flexShrink: 0, background: `${CLASSIF_COLORS[m.classification] ?? '#64748b'}18`, color: CLASSIF_COLORS[m.classification] ?? '#64748b' }}>
+              <div key={m.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <span style={{ padding: '3px 8px', borderRadius: 8, fontSize: 10, fontWeight: 700, flexShrink: 0, background: `${CLASSIF_COLORS[m.classification] ?? '#9B9B9B'}18`, color: CLASSIF_COLORS[m.classification] ?? '#9B9B9B' }}>
                   {m.classification}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 2 }}>{m.content}</div>
-                  <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{m.direction === 'inbound' ? '← Reçu' : '→ Envoyé'} · {timeAgo(m.createdAt)}</div>
+                  <div style={{ fontSize: 12, color: '#6B6B6B', marginBottom: 2 }}>{m.content}</div>
+                  <div style={{ fontSize: 10, color: '#9B9B9B' }}>{m.direction === 'inbound' ? '← Reçu' : '→ Envoyé'} · {timeAgo(m.createdAt)}</div>
                 </div>
               </div>
             ))
@@ -1127,21 +1126,21 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'orders' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {orders.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Aucune commande</div>
+            <div style={{ textAlign: 'center', padding: 40, color: '#9B9B9B', fontSize: 13 }}>Aucune commande</div>
           ) : (
             orders.map(o => (
-              <div key={o.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10, padding: '12px 14px', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', display: 'flex', gap: 12, alignItems: 'center' }}>
+              <div key={o.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5', display: 'flex', gap: 12, alignItems: 'center' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700 }}>{o.items}</div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{o.total} · {timeAgo(o.createdAt)}</div>
+                  <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>{o.total} · {timeAgo(o.createdAt)}</div>
                 </div>
-                <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 8, background: o.status === 'pending' ? '#fef3c7' : o.status === 'confirmed' ? '#d1fae5' : 'var(--fz-bg-secondary, #F8FAFC)', color: o.status === 'pending' ? '#92400e' : o.status === 'confirmed' ? '#065f46' : 'var(--fz-text-secondary, #64748B)', fontWeight: 600 }}>
+                <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 8, background: o.status === 'pending' ? 'rgba(0,0,0,0.04)' : o.status === 'confirmed' ? 'rgba(0,0,0,0.04)' : '#F7F7F7', color: o.status === 'pending' ? '#1A1A1A' : o.status === 'confirmed' ? '#1A1A1A' : '#6B6B6B', fontWeight: 600 }}>
                   {o.status}
                 </span>
                 {o.status === 'pending' && (
                   <div style={{ display: 'flex', gap: 4 }}>
-                    <button onClick={() => updateOrder(o.id, 'confirmed')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: 'none', background: '#10b981', color: 'white', cursor: 'pointer', fontWeight: 600 }}>Confirmer</button>
-                    <button onClick={() => updateOrder(o.id, 'cancelled')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: '1px solid #fecaca', color: '#ef4444', background: 'var(--fz-bg, #FFFFFF)', cursor: 'pointer' }}>Annuler</button>
+                    <button onClick={() => updateOrder(o.id, 'confirmed')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: 'none', background: '#1A1A1A', color: 'white', cursor: 'pointer', fontWeight: 600 }}>Confirmer</button>
+                    <button onClick={() => updateOrder(o.id, 'cancelled')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: 'var(--danger)', background: '#fff', cursor: 'pointer' }}>Annuler</button>
                   </div>
                 )}
               </div>
@@ -1154,20 +1153,20 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'summaries' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'var(--fz-accent, #0EA5E9)', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#1A1A1A', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
               {generatingSummary ? 'Génération...' : 'Générer un résumé maintenant'}
             </button>
           </div>
           {summaries.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>Aucun résumé généré</div>
+            <div style={{ textAlign: 'center', padding: 40, color: '#9B9B9B', fontSize: 13 }}>Aucun résumé généré</div>
           ) : (
             summaries.map(s => (
-              <div key={s.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10, padding: '12px 14px', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+              <div key={s.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--fz-accent, #0EA5E9)', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
-                  <span style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{timeAgo(s.createdAt)}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
+                  <span style={{ fontSize: 10, color: '#9B9B9B' }}>{timeAgo(s.createdAt)}</span>
                 </div>
-                <pre style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
+                <pre style={{ fontSize: 11, color: '#6B6B6B', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
               </div>
             ))
           )}
@@ -1227,22 +1226,22 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
     <div style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Planning */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <div style={{ fontSize: 13, fontWeight: 700 }}>📅 Planning de disponibilité</div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-            <span style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>Toujours actif</span>
+            <span style={{ fontSize: 12, color: '#6B6B6B' }}>Toujours actif</span>
             <div
               onClick={() => { setAlwaysOn(!alwaysOn); mark(); }}
               style={{
-                width: 36, height: 20, borderRadius: 10, cursor: 'pointer', transition: 'all 0.2s',
-                background: alwaysOn ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)', position: 'relative',
+                width: 36, height: 20, borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s',
+                background: alwaysOn ? '#1A1A1A' : '#E5E5E5', position: 'relative',
               }}
             >
               <div style={{
                 position: 'absolute', top: 2, left: alwaysOn ? 18 : 2,
-                width: 16, height: 16, borderRadius: '50%', background: 'var(--fz-bg, #FFFFFF)', transition: 'all 0.2s',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'all 0.2s',
+                border: '1px solid #E5E5E5',
               }} />
             </div>
           </label>
@@ -1255,15 +1254,15 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
                 const active = rule?.isActive ?? false;
                 return (
                   <button key={i} onClick={() => toggleDay(i + 1)} style={{
-                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                    background: active ? '#f3eeff' : 'var(--fz-bg, #FFFFFF)', color: active ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-muted, #94A3B8)',
+                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#1A1A1A' : '#E5E5E5'}`,
+                    background: active ? 'rgba(0,0,0,0.04)' : '#fff', color: active ? '#1A1A1A' : '#9B9B9B',
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                   }}>{day}</button>
                 );
               })}
             </div>
             {schedule.filter(r => r.isActive).length > 0 && (
-              <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
+              <div style={{ fontSize: 11, color: '#6B6B6B' }}>
                 Horaires : {schedule.filter(r => r.isActive).map(r => `${DAYS[r.dayOfWeek - 1] ?? ''} ${r.startTime}–${r.endTime}`).join(', ')}
               </div>
             )}
@@ -1273,12 +1272,12 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
 
       {/* Résumés + Langue */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📋 Résumés</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Fréquence</label>
-              <select value={summaryFreq} onChange={e => { setSummaryFreq(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Fréquence</label>
+              <select value={summaryFreq} onChange={e => { setSummaryFreq(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', background: '#fff' }}>
                 <option value="realtime">Temps réel (urgences)</option>
                 <option value="hourly">Toutes les heures</option>
                 <option value="daily">Quotidien (20h)</option>
@@ -1286,8 +1285,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Canal de livraison</label>
-              <select value={summaryChannel} onChange={e => { setSummaryChannel(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Canal de livraison</label>
+              <select value={summaryChannel} onChange={e => { setSummaryChannel(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', background: '#fff' }}>
                 <option value="whatsapp">WhatsApp</option>
                 <option value="sms">SMS</option>
                 <option value="email">Email</option>
@@ -1297,12 +1296,12 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           </div>
         </div>
 
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🌐 Langue & Format</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Langue</label>
-              <select value={language} onChange={e => { setLanguage(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 12, outline: 'none', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Langue</label>
+              <select value={language} onChange={e => { setLanguage(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', background: '#fff' }}>
                 <option value="auto">Auto-détection</option>
                 <option value="fr">Français</option>
                 <option value="en">English</option>
@@ -1311,10 +1310,10 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: 'var(--fz-accent, #0EA5E9)' }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)', minWidth: 50 }}>{maxLen} car.</span>
+                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#1A1A1A' }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: '#1A1A1A', minWidth: 50 }}>{maxLen} car.</span>
               </div>
             </div>
           </div>
@@ -1322,7 +1321,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       </div>
 
       {/* Téléphonie */}
-      <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
         <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📞 Intégration téléphonie</div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 10 }}>
           {[
@@ -1330,51 +1329,51 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
             { id: 'B', label: 'Numéro IA dédié', price: 'Dès 5€/mois', desc: 'Numéro professionnel séparé pour votre business' },
             { id: 'C', label: 'SIP Trunking', price: 'Sur devis', desc: 'Intégration IPBX pour grandes entreprises' },
           ].map(opt => (
-            <div key={opt.id} style={{ padding: 14, borderRadius: 10, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
+            <div key={opt.id} style={{ padding: 14, borderRadius: 8, border: '1px solid #E5E5E5', background: '#F7F7F7' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 700 }}>Option {opt.id}</span>
-                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: '#f3eeff', color: 'var(--fz-accent, #0EA5E9)', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
+                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
               </div>
               <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{opt.label}</div>
-              <div style={{ fontSize: 11, color: 'var(--fz-accent, #0EA5E9)', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
-              <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)' }}>{opt.desc}</div>
+              <div style={{ fontSize: 11, color: '#1A1A1A', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
+              <div style={{ fontSize: 10, color: '#9B9B9B' }}>{opt.desc}</div>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 10, fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
-          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: 'var(--fz-accent, #0EA5E9)' }}>support@freenzy.io</a>
+        <div style={{ marginTop: 10, fontSize: 11, color: '#6B6B6B' }}>
+          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#1A1A1A' }}>support@freenzy.io</a>
         </div>
       </div>
 
       {/* GDPR + Webhooks */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔒 RGPD</div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4 }}>Rétention des données</label>
+            <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Rétention des données</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: 'var(--fz-accent, #0EA5E9)' }} />
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--fz-accent, #0EA5E9)', minWidth: 55 }}>{retention} jours</span>
+              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#1A1A1A' }} />
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#1A1A1A', minWidth: 55 }}>{retention} jours</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
             <button
               onClick={() => fetchAPI('/repondeur/gdpr/export', { method: 'POST', body: '{}' }).then(() => alert('Export en cours...')).catch(() => {})}
-              style={{ flex: 1, padding: '7px 0', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: 'var(--fz-bg, #FFFFFF)', fontSize: 11, cursor: 'pointer', fontWeight: 600 }}
+              style={{ flex: 1, padding: '7px 0', borderRadius: 7, border: '1px solid #E5E5E5', background: '#fff', fontSize: 11, cursor: 'pointer', fontWeight: 600 }}
             >
               ⬆️ Exporter
             </button>
           </div>
         </div>
 
-        <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 12, padding: 16, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
           <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔗 Webhook</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)', marginBottom: 8 }}>URL de notification des événements</div>
+          <div style={{ fontSize: 11, color: '#6B6B6B', marginBottom: 8 }}>URL de notification des événements</div>
           <div style={{ display: 'flex', gap: 6 }}>
-            <div style={{ flex: 1, padding: '7px 10px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 10, color: 'var(--fz-text-secondary, #64748B)', background: 'var(--fz-bg-secondary, #F8FAFC)', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ flex: 1, padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 10, color: '#6B6B6B', background: '#F7F7F7', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {webhookUrl}
             </div>
-            <button onClick={copyWebhook} style={{ padding: '7px 12px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', background: webhookCopied ? '#f0fdf4' : 'var(--fz-bg, #FFFFFF)', color: webhookCopied ? '#16a34a' : 'var(--fz-text-secondary, #64748B)', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
+            <button onClick={copyWebhook} style={{ padding: '7px 12px', borderRadius: 7, border: '1px solid #E5E5E5', background: webhookCopied ? '#fff' : '#fff', color: webhookCopied ? '#1A1A1A' : '#6B6B6B', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
               {webhookCopied ? '✅' : 'Copier'}
             </button>
           </div>

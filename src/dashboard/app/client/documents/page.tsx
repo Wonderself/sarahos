@@ -24,9 +24,9 @@ function renderMarkdown(text: string): string {
   const safe = escapeHtml(text);
   return safe
     // Headers
-    .replace(/^### (.+)$/gm, '<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px;color:var(--fz-text, #1E293B)">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 style="font-size:18px;font-weight:700;margin:24px 0 10px;color:var(--fz-text, #1E293B)">$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1 style="font-size:22px;font-weight:800;margin:28px 0 12px;color:var(--fz-text, #1E293B)">$1</h1>')
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px;color:#1A1A1A">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="font-size:18px;font-weight:700;margin:24px 0 10px;color:#1A1A1A">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="font-size:22px;font-weight:800;margin:28px 0 12px;color:#1A1A1A">$1</h1>')
     // Bold & italic
     .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
     .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:700">$1</strong>')
@@ -36,7 +36,7 @@ function renderMarkdown(text: string): string {
     // Numbered lists
     .replace(/^\d+\. (.+)$/gm, (_, content) => `<div style="padding-left:16px;margin:2px 0">${content}</div>`)
     // Horizontal rule
-    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--fz-border, #E2E8F0);margin:16px 0">')
+    .replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid #E5E5E5;margin:16px 0">')
     // Line breaks
     .replace(/\n\n/g, '<br><br>')
     .replace(/\n/g, '<br>');
@@ -83,7 +83,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Email professionnel',
     description: 'Rédigez un email professionnel adapté à votre contexte: prospection, relance, partenariat, etc.',
     category: 'Communication',
-    color: 'var(--fz-accent, #0EA5E9)',
+    color: '#1A1A1A',
     prompt: 'Rédige un email professionnel. Destinataire: {recipient}. Objet: {subject}. Contexte: {context}. Ton: professionnel mais chaleureux. Format: objet, corps, signature.',
     fields: [
       { key: 'recipient', label: 'Destinataire', placeholder: 'Nom et relation (ex: "Jean Dupont, client potentiel")', type: 'input', required: true },
@@ -97,7 +97,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Proposition commerciale',
     description: 'Générez une proposition complète: contexte, solution, tarification, prochaines étapes.',
     category: 'Commercial',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée une proposition commerciale professionnelle. Client: {client}. Besoin: {need}. Notre solution: {solution}. Budget indicatif: {budget}. Structure: executive summary, contexte, solution proposée, planning, tarification, conditions.',
     fields: [
       { key: 'client', label: 'Client', placeholder: 'Nom de l\'entreprise et contact', type: 'input', required: true },
@@ -112,7 +112,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Business Plan',
     description: 'Structurez votre plan d\'affaires: vision, marché, stratégie, projections financières.',
     category: 'Stratégie',
-    color: '#ec4899',
+    color: '#1A1A1A',
     prompt: 'Crée un business plan professionnel. Projet: {project}. Marché cible: {market}. Différenciateur: {usp}. Objectifs à 1 an: {goals}. Structure: executive summary, analyse marché, proposition de valeur, modèle économique, stratégie go-to-market, équipe, projections financières, plan d\'action.',
     fields: [
       { key: 'project', label: 'Nom du projet', placeholder: 'Nom et description courte', type: 'input', required: true },
@@ -127,7 +127,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Post réseaux sociaux',
     description: 'Créez du contenu engageant pour LinkedIn, Instagram, Twitter/X, Facebook.',
     category: 'Marketing',
-    color: '#22c55e',
+    color: '#1A1A1A',
     prompt: 'Crée un post pour {platform}. Sujet: {topic}. Objectif: {goal}. Ton: {tone}. Inclus des hashtags pertinents. Format adapté à la plateforme.',
     fields: [
       { key: 'platform', label: 'Plateforme', placeholder: 'Choisissez une plateforme', type: 'select', options: ['LinkedIn', 'Instagram', 'Twitter/X', 'Facebook', 'TikTok'], required: true },
@@ -142,7 +142,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Compte-rendu de réunion',
     description: 'Structurez vos notes de réunion: participants, décisions, actions, deadlines.',
     category: 'Organisation',
-    color: '#f59e0b',
+    color: '#1A1A1A',
     prompt: 'Crée un compte-rendu de réunion professionnel. Participants: {participants}. Sujet: {subject}. Points discutés: {notes}. Structure: date, participants, ordre du jour, décisions prises, plan d\'action avec responsables et deadlines, prochaine réunion.',
     fields: [
       { key: 'participants', label: 'Participants', placeholder: 'Noms et roles', type: 'input', required: true },
@@ -156,7 +156,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Fiche de poste',
     description: 'Rédigez une offre d\'emploi attractive et complète pour recruter les meilleurs talents.',
     category: 'RH',
-    color: '#14b8a6',
+    color: '#1A1A1A',
     prompt: 'Crée une fiche de poste attractive. Poste: {position}. Entreprise: {company}. Missions principales: {missions}. Profil recherché: {profile}. Structure: titre accrocheur, présentation entreprise, missions, profil, avantages, processus de recrutement.',
     fields: [
       { key: 'position', label: 'Intitulé du poste', placeholder: 'Ex: Développeur Full-Stack Senior', type: 'input', required: true },
@@ -171,7 +171,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Newsletter',
     description: 'Créez une newsletter engageante pour vos clients ou votre équipe.',
     category: 'Marketing',
-    color: '#3b82f6',
+    color: '#1A1A1A',
     prompt: 'Crée une newsletter professionnelle. Thème principal: {theme}. Public cible: {audience}. Actualités: {news}. Call-to-action: {cta}. Structure: titre accrocheur, introduction, articles/sections, conclusion avec CTA.',
     fields: [
       { key: 'theme', label: 'Thème principal', placeholder: 'Le sujet central de cette newsletter', type: 'input' },
@@ -186,7 +186,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Modèle de contrat',
     description: 'Générez un brouillon de contrat: NDA, prestation, partenariat. À faire valider par un juriste.',
     category: 'Juridique',
-    color: '#6b7280',
+    color: '#1A1A1A',
     prompt: 'Crée un brouillon de contrat. Type: {contractType}. Parties: {parties}. Objet: {object}. Conditions spéciales: {conditions}. DISCLAIMER: Ce document est un brouillon et doit être validé par un professionnel du droit. Structure: parties, objet, obligations, durée, conditions financières, confidentialité, résiliation, droit applicable.',
     fields: [
       { key: 'contractType', label: 'Type de contrat', placeholder: 'Choisissez un type', type: 'select', options: ['NDA / Confidentialité', 'Prestation de service', 'Partenariat', 'Contrat commercial', 'CGV', 'Licence'], required: true },
@@ -201,7 +201,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Rapport',
     description: 'Générez un rapport professionnel: analyse, résultats, recommandations.',
     category: 'Stratégie',
-    color: 'var(--fz-accent, #0EA5E9)',
+    color: '#1A1A1A',
     prompt: 'Crée un rapport professionnel. Sujet: {subject}. Type: {reportType}. Données et observations: {data}. Public cible: {audience}. Structure: titre, résumé exécutif, contexte, analyse détaillée, résultats clés, recommandations, conclusion.',
     fields: [
       { key: 'subject', label: 'Sujet du rapport', placeholder: 'Analyse des ventes Q1, audit technique...', type: 'input', required: true },
@@ -216,7 +216,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Présentation',
     description: 'Structurez une présentation slide par slide avec notes speaker.',
     category: 'Communication',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée une présentation structurée slide par slide. Sujet: {subject}. Objectif: {goal}. Durée: {duration}. Public: {audience}. Pour chaque slide: titre, contenu principal (3-5 points max), notes speaker. Inclus: slide de titre, agenda, contenu, conclusion, slide de contact/CTA.',
     fields: [
       { key: 'subject', label: 'Sujet de la présentation', placeholder: 'Résultats trimestriels, pitch produit...', type: 'input', required: true },
@@ -231,7 +231,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Brief créatif',
     description: 'Rédigez un brief créatif complet pour agence, designer ou équipe interne.',
     category: 'Marketing',
-    color: '#ec4899',
+    color: '#1A1A1A',
     prompt: 'Crée un brief créatif professionnel. Projet: {project}. Objectif: {goal}. Cible: {target}. Ton souhaité: {tone}. Contraintes: {constraints}. Structure: contexte, objectifs, cible, message clé, ton et style, références visuelles, livrables attendus, planning.',
     fields: [
       { key: 'project', label: 'Nom du projet', placeholder: 'Campagne été 2026, refonte logo...', type: 'input', required: true },
@@ -247,7 +247,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Devis / Facture',
     description: 'Générez un devis ou une facture professionnelle avec toutes les mentions légales obligatoires.',
     category: 'Commercial',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée un {docType} professionnel conforme à la législation française. Client: {client}. Prestations détaillées: {prestations}. Conditions: {conditions}. Structure: en-tête avec coordonnées, numéro du document, date, coordonnées client, tableau détaillé des prestations (description, quantité, prix unitaire HT, montant HT), sous-total HT, TVA applicable, total TTC, conditions de paiement, mentions légales obligatoires (SIRET, TVA intracommunautaire, etc.).',
     fields: [
       { key: 'docType', label: 'Type de document', placeholder: 'Choisissez', type: 'select', options: ['Devis', 'Facture', 'Facture proforma', 'Avoir'], required: true },
@@ -262,7 +262,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan marketing digital',
     description: 'Élaborez un plan marketing digital complet avec objectifs, canaux, budget et KPIs mesurables.',
     category: 'Marketing',
-    color: '#22c55e',
+    color: '#1A1A1A',
     prompt: 'Crée un plan marketing digital complet et actionnable. Entreprise/Produit: {product}. Objectifs: {objectives}. Budget mensuel: {budget}. Cible: {target}. Structure détaillée: 1) Analyse de la situation actuelle, 2) Objectifs SMART, 3) Personas cibles, 4) Stratégie par canal (SEO, SEA, réseaux sociaux, email marketing, content marketing), 5) Calendrier éditorial mensuel, 6) Répartition du budget par canal, 7) KPIs et tableaux de suivi, 8) Outils recommandés, 9) Planning de mise en oeuvre sur 3 mois.',
     fields: [
       { key: 'product', label: 'Entreprise / Produit', placeholder: 'Décrivez votre entreprise ou produit à promouvoir...', type: 'textarea', required: true },
@@ -277,7 +277,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Cahier des charges',
     description: 'Rédigez un cahier des charges technique ou fonctionnel complet pour votre projet.',
     category: 'Organisation',
-    color: '#f59e0b',
+    color: '#1A1A1A',
     prompt: 'Crée un cahier des charges professionnel et détaillé. Projet: {project}. Type: {cdcType}. Contexte et besoins: {context}. Contraintes: {constraints}. Structure: 1) Présentation du projet et contexte, 2) Objectifs et périmètre, 3) Description fonctionnelle détaillée, 4) Spécifications techniques, 5) Contraintes (budget, délais, techniques), 6) Livrables attendus, 7) Planning prévisionnel, 8) Critères de recette et validation, 9) Annexes.',
     fields: [
       { key: 'project', label: 'Nom du projet', placeholder: 'Refonte site web, application mobile, outil interne...', type: 'input', required: true },
@@ -292,7 +292,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Communiqué de presse',
     description: 'Rédigez un communiqué de presse professionnel pour vos annonces et événements.',
     category: 'Communication',
-    color: 'var(--fz-accent, #0EA5E9)',
+    color: '#1A1A1A',
     prompt: 'Crée un communiqué de presse professionnel au format journalistique. Entreprise: {company}. Annonce: {announcement}. Contexte: {context}. Citation du porte-parole: {quote}. Structure: titre accrocheur (< 10 mots), sous-titre, chapô (résumé en 2-3 lignes), corps du texte en pyramide inversée (le plus important en premier), citation du dirigeant/porte-parole, boilerplate entreprise, contact presse. Respecte le style journalistique : phrases courtes, paragraphes concis, ton factuel.',
     fields: [
       { key: 'company', label: 'Entreprise', placeholder: 'Nom, secteur, taille...', type: 'input', required: true },
@@ -307,7 +307,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Analyse SWOT',
     description: 'Réalisez une analyse SWOT complète avec matrice et recommandations stratégiques.',
     category: 'Stratégie',
-    color: '#ec4899',
+    color: '#1A1A1A',
     prompt: 'Réalise une analyse SWOT complète et actionnable. Entreprise/Projet: {subject}. Secteur: {sector}. Informations disponibles: {info}. Structure: 1) Présentation du contexte, 2) Matrice SWOT détaillée (Forces, Faiblesses, Opportunités, Menaces — minimum 5 points par quadrant), 3) Analyse croisée (stratégies SO, WO, ST, WT), 4) Recommandations stratégiques prioritaires, 5) Plan d\'action immédiat (quick wins). Sois concret et spécifique, évite les généralités.',
     fields: [
       { key: 'subject', label: 'Entreprise / Projet', placeholder: 'Nom et description courte', type: 'input', required: true },
@@ -321,7 +321,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de formation',
     description: 'Concevez un plan de formation structuré pour développer les compétences de vos équipes.',
     category: 'RH',
-    color: '#14b8a6',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de formation professionnel et détaillé. Équipe/Poste: {team}. Compétences à développer: {skills}. Durée: {duration}. Niveau actuel: {level}. Structure: 1) Objectifs pédagogiques, 2) Public cible et prérequis, 3) Programme détaillé par module (objectifs, contenu, durée, méthode), 4) Calendrier de formation, 5) Méthodes pédagogiques (présentiel, e-learning, cas pratiques, mises en situation), 6) Ressources et supports nécessaires, 7) Évaluation des acquis (quiz, mise en pratique), 8) Suivi post-formation, 9) Budget estimatif.',
     fields: [
       { key: 'team', label: 'Équipe / Poste concerné', placeholder: 'Commerciaux, managers, développeurs...', type: 'input', required: true },
@@ -336,7 +336,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Tableau de bord KPI',
     description: 'Concevez un tableau de bord avec les KPIs essentiels pour piloter votre activité.',
     category: 'Finance',
-    color: '#16a34a',
+    color: '#1A1A1A',
     prompt: 'Conçois un tableau de bord KPI complet et actionnable. Activité: {activity}. Département: {department}. Objectifs stratégiques: {objectives}. Structure: 1) Vue d\'ensemble (5-7 KPIs stratégiques avec formules de calcul), 2) KPIs opérationnels par département, 3) Fréquence de mise à jour recommandée pour chaque KPI, 4) Seuils d\'alerte (vert/orange/rouge), 5) Sources de données, 6) Visualisations recommandées (graphiques, jauges, tableaux), 7) Template de rapport mensuel, 8) Métriques de benchmarking sectorielles.',
     fields: [
       { key: 'activity', label: 'Type d\'activité', placeholder: 'SaaS, e-commerce, agence, industrie...', type: 'input', required: true },
@@ -350,7 +350,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Procédure interne',
     description: 'Documentez vos processus internes avec des étapes claires et des responsabilités définies.',
     category: 'Organisation',
-    color: '#f59e0b',
+    color: '#1A1A1A',
     prompt: 'Crée une procédure interne professionnelle et facilement applicable. Processus: {process}. Service concerné: {department}. Description: {description}. Structure: 1) Objet et champ d\'application, 2) Documents de référence, 3) Définitions et abréviations, 4) Responsabilités (matrice RACI), 5) Logigramme du processus (étapes numérotées avec description détaillée, responsable, documents associés, outils utilisés), 6) Points de contrôle, 7) Gestion des exceptions, 8) Indicateurs de performance, 9) Historique des révisions. Format clair avec puces et tableaux.',
     fields: [
       { key: 'process', label: 'Nom du processus', placeholder: 'Onboarding client, gestion des réclamations, validation des dépenses...', type: 'input', required: true },
@@ -364,7 +364,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Étude de marché',
     description: 'Réalisez une étude de marché structurée pour valider votre projet ou orienter votre stratégie.',
     category: 'Stratégie',
-    color: '#ec4899',
+    color: '#1A1A1A',
     prompt: 'Crée une étude de marché approfondie et structurée. Marché cible: {market}. Produit/Service: {product}. Zone géographique: {zone}. Structure: 1) Résumé exécutif, 2) Méthodologie, 3) Analyse macro-environnement (PESTEL), 4) Taille du marché et tendances (TAM/SAM/SOM), 5) Segmentation du marché, 6) Analyse de la demande (profils clients, comportements d\'achat), 7) Analyse concurrentielle (5 forces de Porter, benchmarking détaillé), 8) Analyse de l\'offre, 9) Facteurs clés de succès, 10) Opportunités et menaces, 11) Recommandations stratégiques.',
     fields: [
       { key: 'market', label: 'Marché cible', placeholder: 'Le marché que vous souhaitez étudier...', type: 'input', required: true },
@@ -378,7 +378,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Script de vente',
     description: 'Créez un script de vente téléphonique ou en face-à-face avec gestion des objections.',
     category: 'Commercial',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée un script de vente complet et naturel. Produit/Service: {product}. Cible: {target}. Type d\'appel: {callType}. Structure: 1) Accroche et présentation (3 variantes), 2) Questions de découverte (10 questions ouvertes stratégiques), 3) Pitch produit adapté aux besoins découverts, 4) Argumentation par bénéfice (pas par fonctionnalité), 5) Gestion des 10 objections les plus courantes (prix, timing, concurrent, décideur absent, etc.) avec réponses naturelles, 6) Closing (3 techniques), 7) Relance si pas de décision. Le ton doit être naturel et conversationnel, pas robotique.',
     fields: [
       { key: 'product', label: 'Produit / Service vendu', placeholder: 'Décrivez ce que vous vendez et ses avantages clés...', type: 'textarea', required: true },
@@ -392,7 +392,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Guide d\'onboarding',
     description: 'Créez un guide d\'accueil complet pour intégrer efficacement vos nouveaux collaborateurs.',
     category: 'RH',
-    color: '#14b8a6',
+    color: '#1A1A1A',
     prompt: 'Crée un guide d\'onboarding complet et engageant. Poste: {position}. Entreprise: {company}. Durée d\'intégration: {duration}. Structure: 1) Message de bienvenue, 2) Présentation de l\'entreprise (histoire, valeurs, culture, organigramme), 3) Checklist administrative (documents, accès, équipement), 4) Programme jour par jour — Semaine 1 (détaillé heure par heure le jour 1), 5) Programme semaines 2-4, 6) Objectifs à 30/60/90 jours, 7) Contacts clés et mentors, 8) Outils et ressources internes, 9) FAQ du nouvel arrivant, 10) Évaluation de la période d\'essai.',
     fields: [
       { key: 'position', label: 'Poste concerné', placeholder: 'Développeur, commercial, manager...', type: 'input', required: true },
@@ -406,7 +406,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Politique de confidentialité',
     description: 'Générez une politique de confidentialité conforme RGPD pour votre site web ou application.',
     category: 'Juridique',
-    color: '#6b7280',
+    color: '#1A1A1A',
     prompt: 'Crée une politique de confidentialité complète et conforme au RGPD. Entreprise: {company}. Type de service: {serviceType}. Données collectées: {dataCollected}. DISCLAIMER: Ce document est un brouillon et doit être validé par un juriste spécialisé en protection des données. Structure: 1) Identité du responsable du traitement, 2) Données personnelles collectées et finalités, 3) Base légale du traitement, 4) Destinataires des données, 5) Transferts hors UE, 6) Durée de conservation, 7) Droits des personnes (accès, rectification, suppression, portabilité, opposition), 8) Cookies et traceurs, 9) Sécurité des données, 10) DPO et contact, 11) Mise à jour de la politique.',
     fields: [
       { key: 'company', label: 'Entreprise', placeholder: 'Raison sociale, adresse, SIRET...', type: 'input', required: true },
@@ -420,7 +420,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de communication',
     description: 'Élaborez un plan de communication complet avec messages clés, canaux et calendrier.',
     category: 'Communication',
-    color: 'var(--fz-accent, #0EA5E9)',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de communication stratégique complet. Entreprise/Projet: {project}. Objectif: {objective}. Cibles: {targets}. Budget: {budget}. Structure: 1) Diagnostic de communication actuel, 2) Objectifs de communication (notoriété, image, comportement), 3) Cibles prioritaires et secondaires avec personas, 4) Messages clés par cible, 5) Stratégie créative (concept, ton, univers visuel), 6) Plan d\'actions par canal (digital, print, événementiel, RP, interne), 7) Calendrier sur 6 mois, 8) Budget détaillé par action, 9) KPIs et mesure des résultats, 10) Plan de crise.',
     fields: [
       { key: 'project', label: 'Entreprise / Projet', placeholder: 'Nom et contexte...', type: 'input', required: true },
@@ -435,7 +435,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Pitch deck investisseur',
     description: 'Structurez un pitch deck percutant pour convaincre des investisseurs ou partenaires.',
     category: 'Commercial',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée un pitch deck investisseur percutant et structuré slide par slide. Startup/Projet: {startup}. Stade: {stage}. Montant recherché: {amount}. Métriques clés: {metrics}. Structure (12-15 slides): 1) Titre + baseline, 2) Le problème (douleur marché), 3) La solution, 4) Taille du marché (TAM/SAM/SOM), 5) Produit / Démo, 6) Business model, 7) Traction et métriques clés, 8) Concurrence (positionnement), 9) Avantage compétitif / Moat, 10) Équipe, 11) Roadmap produit, 12) Projections financières 3 ans, 13) Utilisation des fonds (camembert), 14) L\'ask (montant, valorisation, conditions), 15) Coordonnées. Pour chaque slide: titre accrocheur, 3-5 points clés, notes speaker.',
     fields: [
       { key: 'startup', label: 'Startup / Projet', placeholder: 'Nom, description en 1 phrase, stade de développement...', type: 'textarea', required: true },
@@ -453,7 +453,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'CV / Résumé',
     description: 'Créez un CV professionnel et percutant adapté au poste que vous visez.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Crée un CV professionnel optimisé pour le poste visé. Profil: {profile}. Poste visé: {targetJob}. Expériences: {experience}. Compétences: {skills}. Structure: 1) En-tête (nom, titre professionnel, coordonnées), 2) Accroche professionnelle (3-4 lignes percutantes), 3) Expériences professionnelles (du plus récent au plus ancien, avec résultats chiffrés), 4) Formation, 5) Compétences techniques et soft skills, 6) Langues, 7) Centres d\'intérêt pertinents. Utilise des verbes d\'action, quantifie les réalisations, adapte le vocabulaire au secteur visé.',
     fields: [
       { key: 'profile', label: 'Votre profil', placeholder: 'Nom, titre actuel, années d\'expérience, secteur...', type: 'textarea', required: true },
@@ -468,7 +468,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Lettre de motivation',
     description: 'Rédigez une lettre de motivation convaincante et personnalisée pour votre candidature.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Rédige une lettre de motivation percutante et personnalisée. Poste visé: {targetJob}. Entreprise: {company}. Mon parcours: {background}. Mes motivations: {motivation}. Structure: 1) Accroche originale (pas "Je me permets de..."), 2) Paragraphe "Vous" (ce que vous savez de l\'entreprise et pourquoi elle vous attire), 3) Paragraphe "Moi" (vos compétences clés avec exemples concrets), 4) Paragraphe "Nous" (ce que vous apporterez ensemble), 5) Conclusion avec appel à l\'action. Ton: professionnel mais authentique, avec de la personnalité.',
     fields: [
       { key: 'targetJob', label: 'Poste visé', placeholder: 'Intitulé exact du poste', type: 'input', required: true },
@@ -483,7 +483,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Budget personnel',
     description: 'Planifiez votre budget mensuel avec un suivi clair de vos revenus et dépenses.',
     category: 'Finance perso',
-    color: '#059669',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de budget personnel mensuel détaillé et actionnable. Revenus mensuels: {income}. Situation: {situation}. Objectifs financiers: {goals}. Structure: 1) Tableau des revenus (salaire net, revenus complémentaires), 2) Charges fixes (loyer, assurances, abonnements, crédits — détaillées), 3) Charges variables (alimentation, transport, loisirs, vêtements), 4) Épargne recommandée (règle 50/30/20 adaptée), 5) Tableau récapitulatif avec pourcentages, 6) Conseils d\'optimisation personnalisés, 7) Astuces pour réduire chaque poste de dépense, 8) Template de suivi mensuel. Sois bienveillant et réaliste.',
     fields: [
       { key: 'income', label: 'Revenus mensuels nets', placeholder: 'Ex: 2500€ salaire + 300€ freelance', type: 'input', required: true },
@@ -497,7 +497,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan alimentaire',
     description: 'Recevez un plan de repas hebdomadaire équilibré adapté à vos besoins et préférences.',
     category: 'Bien-être',
-    color: '#10b981',
+    color: '#1A1A1A',
     prompt: 'Crée un plan alimentaire hebdomadaire complet et équilibré. Objectif: {goal}. Régime/Restrictions: {diet}. Contraintes: {constraints}. Structure: 1) Objectif nutritionnel et apports recommandés, 2) Liste des aliments à privilégier, 3) Planning semaine complète (lundi à dimanche) avec pour chaque jour: petit-déjeuner, déjeuner, collation, dîner (détail des portions), 4) Liste de courses optimisée par rayon, 5) 3 recettes rapides favorites, 6) Conseils de préparation (meal prep), 7) Astuces pratiques au quotidien. Sois réaliste et gourmand, pas restrictif.',
     fields: [
       { key: 'goal', label: 'Objectif', placeholder: '', type: 'chips', options: ['Perte de poids', 'Prise de masse', 'Équilibre', 'Performance sportive', 'Énergie au quotidien'], required: true },
@@ -511,7 +511,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Programme fitness',
     description: 'Obtenez un programme d\'entraînement personnalisé adapté à vos objectifs et votre niveau.',
     category: 'Bien-être',
-    color: '#10b981',
+    color: '#1A1A1A',
     prompt: 'Crée un programme de fitness personnalisé sur 4 semaines. Objectif: {goal}. Niveau: {level}. Équipement disponible: {equipment}. Disponibilité: {availability}. Structure: 1) Évaluation du profil et objectifs réalistes, 2) Programme semaine type (jour par jour) avec: nom de l\'exercice, nombre de séries x répétitions, temps de repos, vidéo/description du mouvement, 3) Progression sur 4 semaines (augmentation charges/volume), 4) Échauffement et retour au calme, 5) Conseils nutrition de base, 6) Conseils récupération (sommeil, stretching), 7) Indicateurs de progression à suivre.',
     fields: [
       { key: 'goal', label: 'Objectif', placeholder: '', type: 'chips', options: ['Perte de poids', 'Prise de muscle', 'Cardio/Endurance', 'Souplesse', 'Tonus général', 'Prépa sportive'], required: true },
@@ -526,7 +526,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Objectifs de l\'année',
     description: 'Définissez et structurez vos objectifs annuels dans tous les domaines de votre vie.',
     category: 'Développement personnel',
-    color: '#8b5cf6',
+    color: '#1A1A1A',
     prompt: 'Crée un plan d\'objectifs annuels complet et motivant. Domaines prioritaires: {domains}. Situation actuelle: {currentSituation}. Rêve/Vision: {vision}. Structure: 1) Vision à 1 an (ce que votre vie idéale ressemble dans 12 mois), 2) Objectifs par domaine (professionnel, financier, santé, relations, développement personnel, loisirs) — chaque objectif formulé en SMART, 3) Top 3 des objectifs prioritaires, 4) Découpage en objectifs trimestriels, 5) Habitudes quotidiennes à mettre en place, 6) Obstacles anticipés et stratégies, 7) Système de récompenses, 8) Template de revue mensuelle. Sois ambitieux mais réaliste.',
     fields: [
       { key: 'domains', label: 'Domaines prioritaires', placeholder: '', type: 'chips', options: ['Carrière', 'Finance', 'Santé', 'Relations', 'Développement personnel', 'Créativité', 'Voyage', 'Spiritualité'], required: true },
@@ -540,7 +540,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Journal de gratitude',
     description: 'Recevez des prompts de gratitude personnalisés pour cultiver le bien-être au quotidien.',
     category: 'Développement personnel',
-    color: '#8b5cf6',
+    color: '#1A1A1A',
     prompt: 'Crée un programme de journal de gratitude personnalisé sur 30 jours. Thème: {theme}. Moment préféré: {timing}. Contexte: {context}. Structure: 1) Introduction aux bienfaits de la gratitude (scientifiques et pratiques), 2) Comment utiliser ce journal (5 minutes/jour), 3) 30 prompts quotidiens uniques et profonds (pas de simples "listez 3 choses"), classés par thème: — Semaine 1: Gratitude pour le présent — Semaine 2: Gratitude relationnelle — Semaine 3: Gratitude pour soi-même — Semaine 4: Gratitude et vision positive, 4) Exercice bonus hebdomadaire (lettre de gratitude, méditation, acte de gentillesse), 5) Bilan mensuel de gratitude. Les prompts doivent être introspectifs, variés et inspirants.',
     fields: [
       { key: 'theme', label: 'Thème principal', placeholder: '', type: 'chips', options: ['Général', 'Travail', 'Relations', 'Santé', 'Croissance personnelle', 'Nature', 'Créativité'], required: true },
@@ -554,7 +554,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Discours / Toast',
     description: 'Rédigez un discours mémorable pour un mariage, anniversaire, départ ou tout événement.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Rédige un discours mémorable et émouvant. Occasion: {occasion}. Relation avec la personne: {relationship}. Anecdotes: {anecdotes}. Ton: {tone}. Structure: 1) Accroche captivante (humour, citation, question), 2) Introduction et contexte, 3) Corps du discours avec anecdotes personnelles et émotions, 4) Message principal / leçon de vie, 5) Toast ou conclusion inspirante. Durée cible: 3-5 minutes (environ 500-800 mots). Le discours doit alterner humour et émotion, être authentique et personnel.',
     fields: [
       { key: 'occasion', label: 'Occasion', placeholder: '', type: 'select', options: ['Mariage (témoin)', 'Mariage (parent)', 'Anniversaire', 'Départ à la retraite', 'Pot de départ', 'Bar/Bat Mitzvah', 'Baptême', 'Événement professionnel', 'Autre célébration'], required: true },
@@ -569,7 +569,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Lettre de réclamation',
     description: 'Rédigez une lettre de réclamation efficace auprès d\'une administration ou entreprise.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Rédige une lettre de réclamation formelle et efficace. Destinataire: {recipient}. Objet de la réclamation: {subject}. Détails du problème: {details}. Structure: 1) En-tête avec coordonnées expéditeur et destinataire, 2) Lieu et date, 3) Objet précis, 4) Références (numéro client, contrat, commande), 5) Exposé des faits (chronologique, factuel), 6) Préjudice subi, 7) Demande précise (remboursement, réparation, indemnisation), 8) Délai de réponse souhaité, 9) Mention des recours possibles si non-réponse, 10) Formule de politesse. Ton: ferme mais courtois, factuel, sans émotion excessive. Mentionner les articles de loi pertinents si applicable.',
     fields: [
       { key: 'recipient', label: 'Destinataire', placeholder: 'Entreprise, administration, assurance, banque...', type: 'input', required: true },
@@ -583,7 +583,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de voyage',
     description: 'Planifiez votre voyage de A à Z avec un itinéraire détaillé et des conseils pratiques.',
     category: 'Loisirs',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de voyage complet et détaillé. Destination: {destination}. Durée: {duration}. Budget: {budget}. Style de voyage: {style}. Structure: 1) Aperçu de la destination (climat, meilleure période, formalités), 2) Budget estimatif détaillé (transport, hébergement, repas, activités), 3) Itinéraire jour par jour (matin, après-midi, soir) avec adresses et prix, 4) Hébergements recommandés par gamme de prix, 5) Restaurants et spécialités à goûter, 6) Activités et visites incontournables, 7) Bons plans et astuces locales, 8) Checklist de préparation avant le départ, 9) Mots utiles dans la langue locale, 10) Contacts et numéros d\'urgence.',
     fields: [
       { key: 'destination', label: 'Destination', placeholder: 'Pays, ville, région...', type: 'input', required: true },
@@ -598,7 +598,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Lettre de résiliation',
     description: 'Rédigez une lettre de résiliation conforme pour tout type d\'abonnement ou contrat.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Rédige une lettre de résiliation formelle et juridiquement conforme. Service à résilier: {service}. Raison: {reason}. Références: {references}. Structure: 1) En-tête complet (expéditeur + destinataire), 2) Lieu et date, 3) Objet: "Résiliation du contrat n°...", 4) Rappel du contrat (type, date de souscription, références), 5) Demande de résiliation claire avec date d\'effet souhaitée, 6) Motif (si loi Chatel, loi Hamon, ou motif légitime — citer l\'article de loi), 7) Demande de confirmation écrite, 8) Demande de remboursement au prorata si applicable, 9) Formule de politesse. Mention: "Lettre recommandée avec accusé de réception". Ton: formel et direct.',
     fields: [
       { key: 'service', label: 'Service / Contrat', placeholder: '', type: 'select', options: ['Téléphone / Internet', 'Assurance', 'Salle de sport', 'Abonnement streaming', 'Abonnement presse', 'Bail / Location', 'Mutuelle', 'Électricité / Gaz', 'Autre abonnement'], required: true },
@@ -612,7 +612,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Bilan de compétences',
     description: 'Réalisez un auto-bilan de vos compétences pour orienter votre carrière ou une reconversion.',
     category: 'Développement personnel',
-    color: '#8b5cf6',
+    color: '#1A1A1A',
     prompt: 'Crée un bilan de compétences personnel structuré et approfondi. Parcours: {background}. Domaine actuel: {currentField}. Aspirations: {aspirations}. Structure: 1) Synthèse du parcours professionnel, 2) Inventaire des compétences techniques (hard skills), 3) Inventaire des compétences comportementales (soft skills), 4) Analyse des réalisations clés et points de fierté, 5) Identification des valeurs professionnelles, 6) Environnement de travail idéal, 7) Points de force et axes d\'amélioration, 8) Métiers et secteurs compatibles avec votre profil, 9) Compétences à développer pour atteindre vos aspirations, 10) Plan d\'action concret (formations, networking, expériences à chercher). Sois bienveillant et encourageant.',
     fields: [
       { key: 'background', label: 'Votre parcours', placeholder: 'Formation, postes occupés, secteurs, durées...', type: 'textarea', required: true },
@@ -626,7 +626,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Liste de courses optimisée',
     description: 'Générez une liste de courses intelligente organisée par rayon avec astuces économiques.',
     category: 'Organisation perso',
-    color: '#eab308',
+    color: '#1A1A1A',
     prompt: 'Crée une liste de courses optimisée et intelligente. Nombre de personnes: {people}. Repas prévus: {meals}. Budget: {budget}. Structure: 1) Liste organisée par rayon (fruits & légumes, boulangerie, crèmerie, viandes/poissons, épicerie, surgelés, boissons, hygiène/entretien) pour faire les courses efficacement, 2) Quantités adaptées au nombre de personnes, 3) Estimation du coût total, 4) Alternatives économiques pour chaque catégorie, 5) Produits de saison à privilégier ce mois-ci, 6) Basiques à vérifier dans les placards avant de partir, 7) Astuces anti-gaspi.',
     fields: [
       { key: 'people', label: 'Nombre de personnes', placeholder: 'Choisissez', type: 'select', options: ['1 personne', '2 personnes', '3-4 personnes (famille)', '5-6 personnes', '7+ personnes'], required: true },
@@ -640,7 +640,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Routine du matin',
     description: 'Concevez une routine matinale sur mesure pour démarrer chaque journée avec énergie.',
     category: 'Bien-être',
-    color: '#10b981',
+    color: '#1A1A1A',
     prompt: 'Crée une routine matinale personnalisée et réaliste. Heure de réveil: {wakeUpTime}. Temps disponible: {duration}. Objectifs: {goals}. Structure: 1) Pourquoi une routine matinale change tout (bénéfices concrets), 2) Routine minute par minute (heure de chaque activité), 3) Variante jour de semaine vs week-end, 4) Préparation la veille au soir (5 actions clés), 5) Conseils pour chaque étape (méditation guidée, exercice, nutrition, journaling), 6) Plan d\'implémentation progressif sur 3 semaines (commencer petit), 7) Solutions pour les jours difficiles (routine express 15 min), 8) Habitudes à éviter le matin.',
     fields: [
       { key: 'wakeUpTime', label: 'Heure de réveil souhaitée', placeholder: 'Choisissez', type: 'select', options: ['5h00', '5h30', '6h00', '6h30', '7h00', '7h30', '8h00'], required: true },
@@ -654,7 +654,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan d\'épargne',
     description: 'Élaborez une stratégie d\'épargne personnalisée pour atteindre vos objectifs financiers.',
     category: 'Finance perso',
-    color: '#059669',
+    color: '#1A1A1A',
     prompt: 'Crée un plan d\'épargne personnalisé et réaliste. Revenus: {income}. Épargne actuelle: {savings}. Objectif: {goal}. Horizon: {horizon}. Structure: 1) Diagnostic financier rapide, 2) Objectif chiffré et timeline, 3) Capacité d\'épargne mensuelle recommandée, 4) Stratégie de répartition (épargne de précaution, projets moyen terme, long terme), 5) Produits d\'épargne recommandés pour chaque objectif (Livret A, LDDS, PEL, assurance-vie, PEA — avec avantages/inconvénients), 6) Plan d\'action mois par mois pour la première année, 7) Automatisation de l\'épargne (virements programmés), 8) Astuces pour épargner plus sans se priver, 9) Erreurs à éviter.',
     fields: [
       { key: 'income', label: 'Revenus nets mensuels', placeholder: 'Ex: 2800€', type: 'input', required: true },
@@ -669,7 +669,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Checklist déménagement',
     description: 'Obtenez une checklist complète pour organiser votre déménagement sans stress.',
     category: 'Organisation perso',
-    color: '#eab308',
+    color: '#1A1A1A',
     prompt: 'Crée une checklist de déménagement ultra-complète et chronologique. Type de déménagement: {moveType}. Date prévue: {date}. Situation: {situation}. Structure: 1) 3 mois avant (résiliation, recherche déménageurs, tri), 2) 2 mois avant (formalités administratives, devis), 3) 1 mois avant (cartons, changements d\'adresse — liste exhaustive des organismes), 4) 2 semaines avant (préparatifs finaux, voisinage), 5) 1 semaine avant (valise essentielle, frigo, derniers cartons), 6) Jour J (checklist point par point, plan de chargement), 7) Première semaine après (installation, vérifications compteurs), 8) Premier mois après (restants administratifs). Chaque étape avec checkbox, responsable, et deadline. Inclure les astuces d\'organisation et les pièges à éviter.',
     fields: [
       { key: 'moveType', label: 'Type de déménagement', placeholder: 'Choisissez', type: 'select', options: ['Location → Location', 'Location → Propriété', 'Propriété → Location', 'Propriété → Propriété', 'International'], required: true },
@@ -683,7 +683,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Testament numérique',
     description: 'Documentez vos accès numériques et volontés pour votre patrimoine digital.',
     category: 'Juridique perso',
-    color: '#64748b',
+    color: '#1A1A1A',
     prompt: 'Crée un guide de testament numérique complet et organisé. Type de comptes: {accounts}. Volontés: {wishes}. Structure: 1) Importance du testament numérique (contexte légal en France), 2) Inventaire organisé des comptes par catégorie: — Finances (banques, crypto, investissements), — Réseaux sociaux (Facebook, Instagram, LinkedIn, Twitter), — Services cloud (Google, Apple, Microsoft, Dropbox), — Abonnements payants, — Sites e-commerce, — Comptes professionnels, — Emails, 3) Pour chaque catégorie: instructions d\'accès (sans mots de passe en clair — utiliser un gestionnaire de mots de passe), volontés (supprimer, mémorialiser, transférer), 4) Personne de confiance numérique désignée, 5) Procédure en cas de décès pour chaque grande plateforme, 6) Conseils de mise en oeuvre (gestionnaire de mots de passe, lettre scellée, notaire). DISCLAIMER: Ce document ne remplace pas un testament notarié.',
     fields: [
       { key: 'accounts', label: 'Types de comptes à couvrir', placeholder: '', type: 'chips', options: ['Réseaux sociaux', 'Banques/Finance', 'Cloud/Stockage', 'Emails', 'Crypto', 'Abonnements', 'Sites pro', 'Jeux/Divertissement'], required: true },
@@ -696,7 +696,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Lettre de recommandation',
     description: 'Rédigez une lettre de recommandation professionnelle pour un collègue ou collaborateur.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Rédige une lettre de recommandation professionnelle convaincante. Personne recommandée: {person}. Votre relation professionnelle: {relationship}. Qualités et réalisations: {qualities}. Poste visé: {targetJob}. Structure: 1) En-tête et date, 2) À l\'attention de (ou "À qui de droit"), 3) Votre identité et fonction, 4) Contexte de votre relation professionnelle (durée, cadre), 5) Compétences techniques observées avec exemples concrets, 6) Qualités humaines et professionnelles avec anecdotes, 7) Réalisations marquantes chiffrées, 8) Recommandation claire et enthousiaste, 9) Disponibilité pour échange, 10) Coordonnées. Le ton doit être authentique, spécifique et enthousiaste — pas générique.',
     fields: [
       { key: 'person', label: 'Personne recommandée', placeholder: 'Nom, poste actuel, durée de collaboration...', type: 'input', required: true },
@@ -711,7 +711,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de carrière',
     description: 'Élaborez un plan de développement de carrière structuré sur 1 à 5 ans.',
     category: 'Développement personnel',
-    color: '#8b5cf6',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de carrière personnalisé et actionnable. Situation actuelle: {current}. Objectif de carrière: {target}. Horizon: {horizon}. Structure: 1) Analyse de la situation actuelle (poste, compétences, réseau, satisfaction), 2) Définition de l\'objectif carrière (poste, secteur, rémunération, mode de vie), 3) Gap analysis: compétences manquantes entre situation actuelle et objectif, 4) Plan d\'acquisition de compétences (formations, certifications, expériences), 5) Stratégie de networking (personnes à rencontrer, événements, LinkedIn), 6) Personal branding (positionnement, visibilité, contenu), 7) Jalons intermédiaires avec timeline, 8) Plan B et pivots possibles, 9) Métriques de progression, 10) Actions à lancer cette semaine.',
     fields: [
       { key: 'current', label: 'Situation actuelle', placeholder: 'Poste, entreprise, secteur, salaire, années d\'expérience...', type: 'textarea', required: true },
@@ -725,7 +725,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Email personnel délicat',
     description: 'Rédigez un email personnel sensible : excuses, confrontation, annonce difficile.',
     category: 'Personnel',
-    color: '#f97316',
+    color: '#1A1A1A',
     prompt: 'Rédige un email personnel délicat avec tact et intelligence émotionnelle. Destinataire: {recipient}. Type de message: {messageType}. Situation: {situation}. Ce que je veux exprimer: {intent}. L\'email doit: 1) Avoir un ton approprié (ni trop froid ni trop émotionnel), 2) Reconnaître les sentiments de l\'autre, 3) Exprimer clairement le message principal, 4) Prendre ses responsabilités si applicable, 5) Proposer une suite constructive. Propose 2 versions: une version courte et directe, et une version plus développée. Évite les formulations passives-agressives, les justifications excessives et le victim-blaming.',
     fields: [
       { key: 'recipient', label: 'Destinataire', placeholder: 'Relation: ami, famille, ex, voisin, collègue...', type: 'input', required: true },
@@ -740,7 +740,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Recette personnalisée',
     description: 'Obtenez une recette sur mesure adaptée à vos ingrédients, régime et niveau culinaire.',
     category: 'Loisirs',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée une recette personnalisée détaillée et alléchante. Ingrédients disponibles: {ingredients}. Type de plat: {dishType}. Contraintes alimentaires: {diet}. Structure: 1) Nom créatif de la recette, 2) Temps de préparation et cuisson, 3) Niveau de difficulté, 4) Nombre de portions, 5) Liste complète des ingrédients avec quantités précises, 6) Ustensiles nécessaires, 7) Instructions étape par étape (numérotées, avec astuces de chef entre parenthèses), 8) Conseils de présentation, 9) Variantes possibles, 10) Valeurs nutritionnelles approximatives, 11) Accord boisson (vin ou autre). Sois gourmand dans la description — on doit avoir envie de cuisiner !',
     fields: [
       { key: 'ingredients', label: 'Ingrédients disponibles', placeholder: 'Listez ce que vous avez dans le frigo et les placards...', type: 'textarea', required: true, helpText: 'Plus vous listez d\'ingrédients, plus la recette sera créative' },
@@ -754,7 +754,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Plan de lecture',
     description: 'Recevez un plan de lecture personnalisé avec des recommandations adaptées à vos goûts.',
     category: 'Loisirs',
-    color: '#06b6d4',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de lecture personnalisé sur 3 mois. Centres d\'intérêt: {interests}. Livres récents appréciés: {recentBooks}. Objectif: {goal}. Structure: 1) Profil lecteur et recommandations adaptées, 2) Sélection de 12 livres (1 par semaine) organisés en 3 thématiques mensuelles, pour chaque livre: titre, auteur, résumé alléchant (3-4 lignes), pourquoi ce livre pour vous, niveau de difficulté, nombre de pages, 3) Ordre de lecture recommandé (du plus accessible au plus dense), 4) Alternatives si un livre ne plaît pas, 5) Conseils pour lire régulièrement (habitudes, moment idéal, objectif pages/jour), 6) Clubs de lecture en ligne à rejoindre, 7) Bonus: 5 livres "si vous n\'en lisez qu\'un".',
     fields: [
       { key: 'interests', label: 'Centres d\'intérêt', placeholder: '', type: 'chips', options: ['Business/Entrepreneuriat', 'Développement personnel', 'Science-fiction', 'Roman', 'Histoire', 'Philosophie', 'Science', 'Biographie', 'Psychologie', 'Politique'], required: true },
@@ -768,7 +768,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Bilan financier personnel',
     description: 'Faites le point complet sur votre situation financière avec des recommandations concrètes.',
     category: 'Finance perso',
-    color: '#059669',
+    color: '#1A1A1A',
     prompt: 'Crée un bilan financier personnel complet et bienveillant. Revenus: {income}. Charges fixes: {expenses}. Patrimoine: {assets}. Dettes: {debts}. Structure: 1) Tableau récapitulatif des revenus et charges, 2) Taux d\'épargne actuel vs recommandé, 3) Analyse du patrimoine (actifs vs passifs), 4) Ratio d\'endettement et analyse, 5) Score de santé financière (sur 100) avec explication, 6) Points forts à maintenir, 7) Alertes et points d\'attention, 8) Top 5 des actions prioritaires ce mois-ci, 9) Objectifs financiers recommandés à 1 an et 5 ans, 10) Recommandations d\'optimisation fiscale de base. Le ton doit être encourageant et constructif, jamais culpabilisant.',
     fields: [
       { key: 'income', label: 'Revenus mensuels nets', placeholder: 'Salaire, freelance, revenus locatifs, autres...', type: 'textarea', required: true },
@@ -783,7 +783,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Projet passion',
     description: 'Structurez et planifiez votre projet passion pour le concrétiser étape par étape.',
     category: 'Développement personnel',
-    color: '#8b5cf6',
+    color: '#1A1A1A',
     prompt: 'Crée un plan de lancement pour un projet passion. Projet: {project}. Motivation: {motivation}. Temps disponible: {availability}. Ressources: {resources}. Structure: 1) Clarification de la vision (ce projet passion en 1 phrase), 2) Pourquoi ce projet compte pour vous (ancrage émotionnel), 3) Objectif concret et mesurable à 3 mois, 4) Découpage en 12 micro-étapes hebdomadaires (petites victoires), 5) Compétences à acquérir et comment (tutoriels, mentors, communautés), 6) Ressources nécessaires (budget, outils, matériel), 7) Planning hebdomadaire réaliste intégré à votre vie actuelle, 8) Communauté et partage (trouver des pairs, documenter le parcours), 9) Gestion de la motivation (quand l\'enthousiasme baisse), 10) Premier pas à faire AUJOURD\'HUI (micro-action de 15 min).',
     fields: [
       { key: 'project', label: 'Votre projet passion', placeholder: 'Écrire un roman, lancer un podcast, apprendre la guitare, créer une app...', type: 'textarea', required: true },
@@ -798,7 +798,7 @@ const TEMPLATES: DocTemplate[] = [
     title: 'Méditation guidée',
     description: 'Recevez un script de méditation guidée personnalisé à lire ou écouter.',
     category: 'Bien-être',
-    color: '#10b981',
+    color: '#1A1A1A',
     prompt: 'Crée un script de méditation guidée personnalisé. Durée: {duration}. Type: {meditationType}. Intention: {intention}. Le script doit: 1) Commencer par une installation confortable (posture, respiration), 2) Guider progressivement vers la détente (scan corporel ou respiration consciente), 3) Développer le thème principal avec des visualisations riches et sensorielles, 4) Inclure des pauses de silence indiquées (... 10 secondes ..., ... 30 secondes ...), 5) Utiliser un langage doux, lent, avec des phrases courtes, 6) Intégrer des affirmations positives liées à l\'intention, 7) Ramener doucement à la conscience, 8) Terminer par une intention pour la journée/soirée. Le rythme doit être lent et apaisant. Indique entre crochets les instructions de lecture [parler plus doucement], [pause longue], etc.',
     fields: [
       { key: 'duration', label: 'Durée souhaitée', placeholder: 'Choisissez', type: 'select', options: ['5 minutes (express)', '10 minutes', '15 minutes', '20 minutes', '30 minutes'], required: true },
@@ -813,23 +813,22 @@ const CATEGORIES = ['Communication', 'Commercial', 'Stratégie', 'Marketing', 'O
 /* ClickUp design tokens */
 const CU = {
   card: {
-    background: 'var(--fz-bg, #FFFFFF)',
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    background: '#fff',
+    border: '1px solid #E5E5E5',
     borderRadius: 8,
     transition: 'all 0.15s',
   },
-  heading: { fontSize: 16, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
-  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
-  subtitle: { fontSize: 13, color: 'var(--fz-text-muted, #A1A5AC)' },
-  btn: { height: 36, padding: '0 12px', borderRadius: 6, fontWeight: 500 as const, fontSize: 13, border: 'none' as const, cursor: 'pointer' as const, transition: 'all 0.15s' },
-  btnPrimary: { background: 'var(--fz-accent, #0EA5E9)', color: '#fff' },
-  btnGhost: { background: 'transparent', color: 'var(--fz-text-secondary, #6B6F76)' },
-  text: 'var(--fz-text, #1A1D23)',
-  textSec: 'var(--fz-text-secondary, #6B6F76)',
-  textMuted: 'var(--fz-text-muted, #A1A5AC)',
-  accent: 'var(--fz-accent, #0EA5E9)',
-  border: 'var(--fz-border, #E8EAED)',
+  heading: { fontSize: 16, fontWeight: 600 as const, color: '#1A1A1A', margin: 0 },
+  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: '#1A1A1A', margin: 0 },
+  subtitle: { fontSize: 13, color: '#9B9B9B' },
+  btn: { height: 36, padding: '0 14px', borderRadius: 8, fontWeight: 500 as const, fontSize: 13, border: '1px solid #E5E5E5' as const, cursor: 'pointer' as const, transition: 'all 0.15s' },
+  btnPrimary: { background: '#1A1A1A', color: '#fff' },
+  btnGhost: { background: 'transparent', color: '#6B6B6B' },
+  text: '#1A1A1A',
+  textSec: '#6B6B6B',
+  textMuted: '#9B9B9B',
+  accent: '#1A1A1A',
+  border: '#E5E5E5',
 };
 
 export default function DocumentsPage() {
@@ -1002,8 +1001,8 @@ export default function DocumentsPage() {
             URL.revokeObjectURL(url);
           }} style={{
             ...CU.btn, height: 32, fontSize: 12, fontFamily: 'inherit',
-            background: 'var(--fz-bg, #FFFFFF)', color: CU.textSec,
-            boxShadow: CU.card.boxShadow, borderRadius: 6,
+            background: '#fff', color: CU.textSec,
+            border: '1px solid #E5E5E5', borderRadius: 8,
           }}>
             Exporter .txt
           </button>
@@ -1042,7 +1041,7 @@ export default function DocumentsPage() {
             <div key={field.key} style={{ marginBottom: 16 }}>
               <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, color: CU.text }}>
                 {field.label}
-                {field.required && <span style={{ marginLeft: 4, color: '#ef4444' }}>*</span>}
+                {field.required && <span style={{ marginLeft: 4, color: 'var(--danger)' }}>*</span>}
               </label>
               {field.helpText && (
                 <div style={{ fontSize: 11, color: CU.textMuted, marginBottom: 4 }}>{field.helpText}</div>
@@ -1085,7 +1084,7 @@ export default function DocumentsPage() {
                         }}
                         style={{
                           height: 30, padding: '0 12px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-                          background: isSelected ? CU.accent : 'var(--fz-bg, #FFFFFF)',
+                          background: isSelected ? CU.accent : '#fff',
                           color: isSelected ? '#fff' : CU.textMuted,
                           border: `1px solid ${isSelected ? CU.accent : CU.border}`,
                           cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
@@ -1172,7 +1171,7 @@ export default function DocumentsPage() {
       {!bannerDismissed && (
         <div style={{
           ...CU.card,
-          borderLeft: `3px solid ${hasProfile ? '#22c55e' : CU.accent}`,
+          borderLeft: '3px solid #1A1A1A',
           padding: 16, marginBottom: 20,
           display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
         }}>
@@ -1261,7 +1260,7 @@ export default function DocumentsPage() {
           >
             <div style={{
               width: 44, height: 44, borderRadius: 8,
-              fontSize: 22, background: tpl.color + '18', flexShrink: 0,
+              fontSize: 22, background: 'rgba(0,0,0,0.04)', flexShrink: 0,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               📄
@@ -1271,7 +1270,7 @@ export default function DocumentsPage() {
               <div style={{ fontSize: 12, color: CU.textSec, lineHeight: 1.5 }}>{tpl.description}</div>
               <span style={{
                 display: 'inline-block', marginTop: 8, padding: '2px 8px', borderRadius: 6,
-                fontSize: 11, fontWeight: 600, background: tpl.color + '12', color: tpl.color,
+                fontSize: 11, fontWeight: 600, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A',
               }}>
                 {tpl.category}
               </span>
@@ -1299,7 +1298,7 @@ export default function DocumentsPage() {
                 <div style={{
                   height: '100%', borderRadius: 2,
                   width: `${Math.min(100, (kbStorage.totalBytes / kbStorage.maxBytes) * 100)}%`,
-                  background: (kbStorage.totalBytes / kbStorage.maxBytes) > 0.8 ? '#ef4444' : CU.accent,
+                  background: (kbStorage.totalBytes / kbStorage.maxBytes) > 0.8 ? 'var(--danger)' : '#1A1A1A',
                   transition: 'width 0.6s',
                 }} />
               </div>
@@ -1341,7 +1340,7 @@ export default function DocumentsPage() {
                   </div>
                   <span style={{
                     fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, flexShrink: 0,
-                    background: `${CU.accent}12`, color: CU.accent,
+                    background: 'rgba(0,0,0,0.04)', color: '#1A1A1A',
                   }}>
                     {contextLabel[doc.context] ?? doc.context}
                   </span>
@@ -1385,7 +1384,7 @@ export default function DocumentsPage() {
                 }}>Copier</button>
                 <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} style={{
                   ...CU.btn, height: 28, fontSize: 12, fontFamily: 'inherit',
-                  background: 'transparent', color: '#ef4444',
+                  background: 'transparent', color: 'var(--danger)',
                 }} aria-label="Supprimer le document">🗑️</button>
               </div>
             ))}

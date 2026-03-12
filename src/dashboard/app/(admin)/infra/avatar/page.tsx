@@ -211,7 +211,7 @@ export default function AvatarPage() {
                   )}
                 </div>
               ) : (
-                <div style={{ color: 'var(--error, #ef4444)', fontSize: 13 }}>
+                <div style={{ color: 'var(--error, #DC2626)', fontSize: 13 }}>
                   Erreur TTS : {ttsResult.error}
                 </div>
               )}

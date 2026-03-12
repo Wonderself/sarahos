@@ -62,8 +62,8 @@ export default function AudioPreview({ text, token, onSelect, defaultGender }: A
           disabled={loading || !text.trim()}
           style={{
             flex: 1, padding: '10px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-            border: `2px solid ${selectedProvider === 'deepgram' ? '#7c3aed' : '#e5e7eb'}`,
-            background: selectedProvider === 'deepgram' ? '#eef2ff' : 'white',
+            border: `2px solid ${selectedProvider === 'deepgram' ? '#1A1A1A' : '#e5e7eb'}`,
+            background: selectedProvider === 'deepgram' ? '#F7F7F7' : 'white',
             cursor: loading ? 'wait' : 'pointer', color: '#1d1d1f',
           }}
         >
@@ -71,7 +71,7 @@ export default function AudioPreview({ text, token, onSelect, defaultGender }: A
             Deepgram TTS
             <span style={{
               fontSize: 9, padding: '1px 5px', borderRadius: 4,
-              background: '#e0e7ff', color: '#4338ca', fontWeight: 700,
+              background: '#E5E5E5', color: '#1A1A1A', fontWeight: 700,
             }}>Standard</span>
           </div>
           <div style={{ fontSize: 10, color: '#6b7280', fontWeight: 400, marginTop: 2 }}>~0.5 credits</div>
@@ -81,8 +81,8 @@ export default function AudioPreview({ text, token, onSelect, defaultGender }: A
           disabled={loading || !text.trim()}
           style={{
             flex: 1, padding: '10px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-            border: `2px solid ${selectedProvider === 'elevenlabs' ? '#8b5cf6' : '#e5e7eb'}`,
-            background: selectedProvider === 'elevenlabs' ? '#f5f3ff' : 'white',
+            border: `2px solid ${selectedProvider === 'elevenlabs' ? '#1A1A1A' : '#e5e7eb'}`,
+            background: selectedProvider === 'elevenlabs' ? '#F7F7F7' : 'white',
             cursor: loading ? 'wait' : 'pointer', color: '#1d1d1f',
           }}
         >
@@ -90,14 +90,14 @@ export default function AudioPreview({ text, token, onSelect, defaultGender }: A
             {elLabel}
             <span style={{
               fontSize: 9, padding: '1px 5px', borderRadius: 4,
-              background: '#f3e8ff', color: '#7c3aed', fontWeight: 700,
+              background: '#E5E5E5', color: '#1A1A1A', fontWeight: 700,
             }}>Premium</span>
           </div>
           <div style={{ fontSize: 10, color: '#6b7280', fontWeight: 400, marginTop: 2 }}>{elSub}</div>
         </button>
       </div>
 
-      {loading && <div style={{ fontSize: 12, color: '#7c3aed', textAlign: 'center' }}>Generation audio...</div>}
+      {loading && <div style={{ fontSize: 12, color: '#1A1A1A', textAlign: 'center' }}>Generation audio...</div>}
 
       {audioUrl && (
         <audio controls src={audioUrl} style={{ width: '100%', height: 36 }} />

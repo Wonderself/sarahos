@@ -54,7 +54,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
     return (
       <div style={{
         padding: 40, textAlign: 'center', border: '2px dashed #e5e7eb',
-        borderRadius: 12, color: '#9ca3af', fontSize: 13,
+        borderRadius: 12, color: '#9B9B9B', fontSize: 13,
       }}>
         La video apparaitra ici apres generation
       </div>
@@ -64,8 +64,8 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
   if (status === 'processing') {
     return (
       <div style={{
-        padding: 40, textAlign: 'center', border: '2px dashed #7c3aed',
-        borderRadius: 12, background: '#fafafe',
+        padding: 40, textAlign: 'center', border: '2px dashed #1A1A1A',
+        borderRadius: 12, background: '#F7F7F7',
       }}>
         <div style={{ fontSize: 28, marginBottom: 12 }}><span className="material-symbols-rounded" style={{ fontSize: 28 }}>movie</span></div>
         <div style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 8 }}>
@@ -76,7 +76,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
           margin: '0 auto', overflow: 'hidden',
         }}>
           <div style={{
-            height: '100%', borderRadius: 3, background: '#7c3aed',
+            height: '100%', borderRadius: 3, background: '#1A1A1A',
             width: `${progress}%`, transition: 'width 0.5s',
           }} />
         </div>
@@ -113,7 +113,7 @@ export default function VideoPreview({ videoId, resultUrl, token, onComplete }: 
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              padding: '8px 20px', borderRadius: 8, background: '#7c3aed',
+              padding: '8px 20px', borderRadius: 8, background: '#1A1A1A',
               color: 'white', fontSize: 12, fontWeight: 600, textDecoration: 'none',
             }}
           >

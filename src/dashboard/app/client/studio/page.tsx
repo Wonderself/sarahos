@@ -49,20 +49,19 @@ const PHOTO_CATEGORIES = [
 /* ClickUp design tokens */
 const CU = {
   card: {
-    background: 'var(--fz-bg, #FFFFFF)',
-    border: 'none' as const,
-    boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+    background: '#fff',
+    border: '1px solid #E5E5E5' as const,
     borderRadius: 8,
     transition: 'all 0.15s',
   },
-  heading: { fontSize: 16, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
-  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: 'var(--fz-text, #1A1D23)', margin: 0 },
-  subtitle: { fontSize: 13, color: 'var(--fz-text-muted, #A1A5AC)' },
-  text: 'var(--fz-text, #1A1D23)',
-  textSec: 'var(--fz-text-secondary, #6B6F76)',
-  textMuted: 'var(--fz-text-muted, #A1A5AC)',
-  accent: 'var(--fz-accent, #0EA5E9)',
-  border: 'var(--fz-border, #E8EAED)',
+  heading: { fontSize: 16, fontWeight: 600 as const, color: '#1A1A1A', margin: 0 },
+  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: '#1A1A1A', margin: 0 },
+  subtitle: { fontSize: 13, color: '#9B9B9B' },
+  text: '#1A1A1A',
+  textSec: '#6B6B6B',
+  textMuted: '#9B9B9B',
+  accent: '#1A1A1A',
+  border: '#E5E5E5',
 };
 
 export default function StudioPage() {
@@ -135,7 +134,7 @@ export default function StudioPage() {
             {tab === 'photo' ? '📸 Photo' : '🎬 Video'}
             <span style={{
               marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
-              background: activeTab === tab ? 'var(--success)' : `${CU.border}`,
+              background: activeTab === tab ? '#1A1A1A' : '#F0F0F0',
               color: activeTab === tab ? '#fff' : CU.textMuted,
             }}>
               {tab === 'photo' ? `${availablePhotoCount}/${PHOTO_WORKFLOWS.length}` : `${availableVideoCount}/${VIDEO_WORKFLOWS.length}`}
@@ -155,8 +154,8 @@ export default function StudioPage() {
             </div>
             <div style={{ flex: 1 }} />
             <span style={{
-              fontSize: 11, color: 'var(--success)', fontWeight: 600,
-              padding: '3px 10px', borderRadius: 10, background: 'rgba(16,185,129,0.1)',
+              fontSize: 11, color: '#1A1A1A', fontWeight: 600,
+              padding: '3px 10px', borderRadius: 10, background: 'rgba(0,0,0,0.06)',
             }}>
               {availablePhotoCount}/{PHOTO_WORKFLOWS.length} disponibles
             </span>
@@ -206,15 +205,15 @@ export default function StudioPage() {
                   <span style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{wf.label}</span>
                   {wf.id === 'photo-post' && (
                     <span style={{
-                      padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: '#fef3c7', color: '#d97706',
+                      padding: '2px 8px', borderRadius: 8, fontSize: 10, fontWeight: 600,
+                      background: '#F0F0F0', color: '#1A1A1A',
                     }}>Populaire</span>
                   )}
                   {!wf.available && <RoadmapBadge />}
                   {wf.available && wf.id !== 'photo-post' && (
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: 'rgba(22, 163, 74, 0.1)', color: 'var(--success)',
+                      background: 'rgba(0,0,0,0.06)', color: '#1A1A1A',
                     }}>Disponible</span>
                   )}
                 </div>
@@ -241,8 +240,8 @@ export default function StudioPage() {
             </div>
             <div style={{ flex: 1 }} />
             <span style={{
-              fontSize: 11, color: 'var(--success)', fontWeight: 600,
-              padding: '3px 10px', borderRadius: 10, background: 'rgba(16,185,129,0.1)',
+              fontSize: 11, color: '#1A1A1A', fontWeight: 600,
+              padding: '3px 10px', borderRadius: 10, background: 'rgba(0,0,0,0.06)',
             }}>
               {availableVideoCount}/{VIDEO_WORKFLOWS.length} disponibles
             </span>
@@ -268,7 +267,7 @@ export default function StudioPage() {
                   {wf.available && (
                     <span style={{
                       padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                      background: 'rgba(22, 163, 74, 0.1)', color: 'var(--success)',
+                      background: 'rgba(0,0,0,0.06)', color: '#1A1A1A',
                     }}>Disponible</span>
                   )}
                 </div>
@@ -295,7 +294,7 @@ export default function StudioPage() {
         {/* Photo */}
         <div style={{ marginBottom: 16 }}>
           <div style={{
-            fontSize: 11, fontWeight: 600, color: 'var(--purple)', textTransform: 'uppercase' as const,
+            fontSize: 11, fontWeight: 600, color: '#1A1A1A', textTransform: 'uppercase' as const,
             letterSpacing: 0.5, marginBottom: 8,
           }}>
             📸 Photo
@@ -311,7 +310,7 @@ export default function StudioPage() {
         {/* Video */}
         <div style={{ marginBottom: 16 }}>
           <div style={{
-            fontSize: 11, fontWeight: 600, color: CU.accent, textTransform: 'uppercase' as const,
+            fontSize: 11, fontWeight: 600, color: '#1A1A1A', textTransform: 'uppercase' as const,
             letterSpacing: 0.5, marginBottom: 8,
           }}>
             🎬 Video
@@ -336,7 +335,7 @@ export default function StudioPage() {
             <div style={{ color: CU.textSec }}>Message IA (guidage)</div>
             <div style={{ color: CU.text, fontWeight: 600, textAlign: 'right' as const }}>~1.5 credits</div>
             <div style={{ color: CU.textMuted }}>Direction artistique (chat)</div>
-            <div style={{ color: 'var(--success)', fontWeight: 600, textAlign: 'right' as const }}>Inclus</div>
+            <div style={{ color: '#1A1A1A', fontWeight: 600, textAlign: 'right' as const }}>Inclus</div>
           </div>
         </div>
       </section>

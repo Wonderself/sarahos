@@ -14,6 +14,7 @@ tmp/
 .next/
 .claude/
 figma-export/
+archive-variants/
 .vscode/
 scripts/fix-*.js
 scripts/fix-*.py

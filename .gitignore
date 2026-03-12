@@ -13,3 +13,9 @@ Thumbs.db
 tmp/
 .next/
 .claude/
+figma-export/
+.vscode/
+scripts/fix-*.js
+scripts/fix-*.py
+scripts/replace-*.py
+scripts/figma-*.js

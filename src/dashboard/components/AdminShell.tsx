@@ -162,24 +162,27 @@ export default function AdminShell({
     <div className="app-shell">
       {/* Mobile Top Bar */}
       <div className="mobile-topbar">
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setSidebarOpen(o => !o)}
-          aria-label="Menu"
-        >
-          {sidebarOpen ? '\u2715' : '\u2630'}
-        </button>
-        <div className="mobile-topbar-center">
+        <div className="mobile-topbar-center" style={{ marginLeft: 8 }}>
           <span className="text-sm font-bold">Admin</span>
           <span className={`admin-status-dot-mini ${systemStatus}`} />
         </div>
-        <button
-          className="mobile-topbar-action"
-          onClick={() => document.dispatchEvent(new CustomEvent('fz:open-search'))}
-          aria-label="Recherche"
-        >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>search</span>
-        </button>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <button
+            className="mobile-topbar-action"
+            onClick={() => document.dispatchEvent(new CustomEvent('fz:open-search'))}
+            aria-label="Recherche"
+          >
+            <span className="material-symbols-rounded" style={{ fontSize: 18 }}>search</span>
+          </button>
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setSidebarOpen(o => !o)}
+            aria-label="Menu"
+            style={{ display: 'flex' }}
+          >
+            <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{sidebarOpen ? 'close' : 'menu'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Sidebar Overlay */}
@@ -285,29 +288,7 @@ export default function AdminShell({
         </div>
       </div>
 
-      {/* Bottom Tab Bar — mobile only */}
-      <nav className="admin-bottom-tab-bar">
-        <Link href="/admin" className={`admin-tab-item${pathname === '/admin' ? ' active' : ''}`}>
-          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>bar_chart</span></span>
-          <span>Accueil</span>
-        </Link>
-        <Link href="/admin/users" className={`admin-tab-item${pathname.startsWith('/admin/users') ? ' active' : ''}`}>
-          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>group</span></span>
-          <span>Users</span>
-        </Link>
-        <Link href="/infra/health" className={`admin-tab-item${pathname.startsWith('/infra') ? ' active' : ''}`}>
-          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>favorite</span></span>
-          <span>Sante</span>
-        </Link>
-        <Link href="/admin/billing" className={`admin-tab-item${pathname.startsWith('/admin/billing') ? ' active' : ''}`}>
-          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>credit_card</span></span>
-          <span>Billing</span>
-        </Link>
-        <button className="admin-tab-item" onClick={() => setSidebarOpen(o => !o)}>
-          <span className="admin-tab-icon"><span className="material-symbols-rounded" style={{ fontSize: 18 }}>menu</span></span>
-          <span>Menu</span>
-        </button>
-      </nav>
+      {/* Bottom tab bar removed — hamburger menu in top-right only */}
     </div>
   );
 }

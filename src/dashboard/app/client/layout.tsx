@@ -812,8 +812,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
     )}
     <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
-      {/* Mobile Top Bar — no hamburger, starts after emoji rail */}
-      <div className="mobile-topbar" style={{ height: 48, background: 'var(--bg-primary)', borderBottom: '1px solid var(--border-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 12px' }}>
+      {/* Mobile Top Bar — hamburger in top-right */}
+      <div className="mobile-topbar" style={{ height: 48, background: 'var(--fz-bg, #fff)', borderBottom: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px 0 12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
           {(() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
@@ -821,6 +821,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <span>freenzy.io</span>;
           })()}
         </div>
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setSidebarExpanded(e => !e)}
+          aria-label="Menu"
+          style={{ display: 'flex', width: 40, height: 40, borderRadius: 8, background: 'transparent', border: 'none', color: 'var(--text-primary)', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+        >
+          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{sidebarExpanded ? 'close' : 'menu'}</span>
+        </button>
       </div>
 
       {/* Sidebar Overlay (mobile only when expanded) */}

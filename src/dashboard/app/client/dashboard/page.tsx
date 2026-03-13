@@ -234,7 +234,7 @@ export default function ClientDashboard() {
           agentName: 'fz-dg',
         }),
       });
-      if (!res.ok) { setBriefing('Service temporairement indisponible.'); return; }
+      if (!res.ok) { setBriefing('Briefing en préparation... Réessayez dans quelques instants.'); return; }
       const data = await res.json();
       const content = data.content ?? data.text ?? '';
       setBriefing(content);
@@ -411,15 +411,15 @@ export default function ClientDashboard() {
           <div>
             <div style={CU.statLabel}>Assistants</div>
             <div style={CU.statValue}>{activeAgents.length}</div>
-            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>sur {DEFAULT_AGENTS.length}</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>actifs</div>
           </div>
         </Link>
         <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>🔥</span>
+          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>{stats.streak > 0 ? '🔥' : '✨'}</span>
           <div>
-            <div style={CU.statLabel}>Streak</div>
-            <div style={CU.statValue}>{stats.streak}j</div>
-            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>Jours consécutifs</div>
+            <div style={CU.statLabel}>{stats.streak > 0 ? 'Streak' : 'Activité'}</div>
+            <div style={CU.statValue}>{stats.streak > 0 ? `${stats.streak}j` : 'Nouveau'}</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{stats.streak > 0 ? 'Jours consécutifs' : 'Bienvenue !'}</div>
           </div>
         </div>
       </div>

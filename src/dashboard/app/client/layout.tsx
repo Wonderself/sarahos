@@ -840,7 +840,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   if (loading) {
     return (
-      <div className="flex-center" style={{ height: '100vh', background: 'var(--bg-primary)' }}>
+      <div className="flex-center" style={{ height: '100vh', background: '#fff' }}>
         <div className="animate-pulse text-lg text-tertiary">Chargement...</div>
       </div>
     );
@@ -885,35 +885,57 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     )}
     <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
       {/* Mobile Top Bar — hamburger in top-right */}
-      <div className="mobile-topbar" style={{ height: 48, background: 'var(--bg-primary)', borderBottom: '1px solid var(--border-primary)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px 0 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+      <div className="mobile-topbar" style={{ height: 48, background: '#fff', borderBottom: '1px solid #E5E5E5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px 0 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>
           {(() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
             const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-            return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <><span>freenzy.io</span><span style={{ fontSize: 8, fontStyle: 'italic', color: 'var(--text-secondary)', marginLeft: 4, opacity: 0.5 }}>Beta Test 1</span></>;
+            return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <><span style={{ fontWeight: 700 }}>freenzy.io</span><span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B', marginLeft: 4 }}>Beta Test 1</span></>;
           })()}
         </div>
         <button
           className="mobile-menu-btn"
           onClick={() => setSidebarExpanded(e => !e)}
           aria-label="Menu"
-          style={{ display: 'flex', width: 40, height: 40, borderRadius: 8, background: 'transparent', border: 'none', color: 'var(--text-primary)', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+          style={{ display: 'flex', width: 40, height: 40, borderRadius: 8, background: 'transparent', border: 'none', color: '#1A1A1A', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18 }}
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 22 }}>{sidebarExpanded ? 'close' : 'menu'}</span>
+          {sidebarExpanded ? '✕' : '☰'}
         </button>
       </div>
 
-      {/* Sidebar Overlay (mobile only when expanded) */}
-      <div className={`sidebar-overlay${sidebarExpanded ? ' active' : ''}`} onClick={() => setSidebarExpanded(false)} />
+      {/* Sidebar Overlay — click outside to close */}
+      {sidebarExpanded && (
+        <div
+          className="sidebar-overlay active"
+          onClick={() => setSidebarExpanded(false)}
+          style={{ left: isDesktop ? 56 : 0 }}
+        />
+      )}
 
-      {/* Emoji Rail — always visible */}
+      {/* Emoji Rail — always visible on desktop */}
       {(() => {
         const navCtx = getCurrentNavContext(pathname, visibleSections);
+
+        // On emoji click: open sidebar and scroll to that section
+        function handleEmojiClick(sectionId: string) {
+          setSidebarExpanded(true);
+          // Scroll to section after sidebar renders
+          requestAnimationFrame(() => {
+            const el = document.getElementById(`nav-section-${sectionId}`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        }
+
         return (
-          <nav className={`emoji-rail${sidebarExpanded ? ' emoji-rail-hidden' : ''}`}>
+          <nav className="emoji-rail">
             <div className="emoji-rail-top">
-              <button className="emoji-rail-btn" onClick={() => setSidebarExpanded(e => !e)} title="Menu">
-                🚀
+              <button
+                className="emoji-rail-btn"
+                onClick={() => setSidebarExpanded(e => !e)}
+                title="Menu"
+                style={{ fontSize: 13, fontWeight: 800, fontFamily: 'system-ui', color: '#1A1A1A' }}
+              >
+                f.
               </button>
             </div>
             <div className="emoji-rail-sections">
@@ -924,7 +946,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   <div className="emoji-rail-section" key={section.id}>
                     <button
                       className={`emoji-rail-btn${isCurrent ? ' active' : ''}`}
-                      onClick={() => setSidebarExpanded(e => !e)}
+                      onClick={() => handleEmojiClick(section.id)}
                       title={section.title}
                     >
                       {sEmoji}
@@ -953,8 +975,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   <span style={{ position: 'absolute', top: 0, right: 0, minWidth: 16, height: 16, borderRadius: 8, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
                 )}
               </Link>
-              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : 'linear-gradient(135deg, var(--accent), #5b6cf7)', color: session ? undefined : '#fff' }}>
-                {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '🎯'}
+              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : '#1A1A1A', color: session ? undefined : '#fff' }}>
+                {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '?'}
               </Link>
             </div>
           </nav>
@@ -962,27 +984,23 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       })()}
 
       {/* Client Sidebar (expanded) */}
-      <nav className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`} style={{ background: 'var(--bg-primary)', width: 240, borderRight: '1px solid var(--border-primary)' }}>
+      <nav className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`} style={{ background: '#fff', width: 240, borderRight: '1px solid #E5E5E5' }}>
         <div className="sidebar-header" style={{ padding: '8px 12px 4px' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,
           }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: '50%',
-              background: session ? 'var(--bg-secondary)' : 'linear-gradient(135deg, var(--accent), #5b6cf7)',
-              border: '1px solid var(--border-primary)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 16, flexShrink: 0,
-            }}>{session ? '🚀' : '🎯'}</div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', flex: 1 }}>{session ? 'Mon espace' : 'Mode Visiteur'}</span>
-            {session && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginRight: 4 }}>▾</span>}
+            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }}>
+              <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.02em' }}>freenzy.io</span>
+              <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B' }}>Beta Test 1</span>
+            </Link>
             <button
               onClick={() => setSidebarExpanded(false)}
               title="Fermer le menu"
               style={{
-                width: 24, height: 24, borderRadius: '50%', border: '1px solid var(--border-primary)',
-                background: 'var(--bg-primary)', cursor: 'pointer', display: 'flex',
+                width: 24, height: 24, borderRadius: '50%', border: '1px solid #E5E5E5',
+                background: '#fff', cursor: 'pointer', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
+                color: '#6B6B6B',
               }}
             >
               ✕
@@ -995,31 +1013,32 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div style={{ position: 'relative', margin: '0 16px 12px' }}>
             <button
               onClick={() => setShowProjectDropdown(!showProjectDropdown)}
-              className="w-full flex flex-between items-center rounded-sm border"
-              style={{ padding: '8px 12px', background: 'var(--bg-secondary)', fontSize: 12, fontFamily: 'var(--font-sans)', cursor: 'pointer' }}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '8px 12px', background: '#FAFAFA', border: '1px solid #E5E5E5', borderRadius: 8,
+                fontSize: 12, cursor: 'pointer', fontFamily: 'inherit',
+              }}
             >
-              <span className="text-sm font-semibold truncate">
+              <span style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 📁 {activeProject?.name || 'Projet'}
               </span>
-              <span style={{ fontSize: 10 }}>{showProjectDropdown ? '▲' : '▼'}</span>
+              <span style={{ fontSize: 10, color: '#9B9B9B' }}>{showProjectDropdown ? '▲' : '▼'}</span>
             </button>
             {showProjectDropdown && (
-              <div className="rounded-sm border" style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50, background: 'var(--bg-primary)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', marginTop: 4 }}>
+              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50, background: '#fff', border: '1px solid #E5E5E5', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', marginTop: 4 }}>
                 {projects.map(proj => (
                   <button
                     key={proj.id}
                     onClick={() => { setActiveProjectId(proj.id); localStorage.setItem('fz_active_project', proj.id); setShowProjectDropdown(false); window.location.reload(); }}
-                    className="w-full text-sm"
-                    style={{ display: 'block', padding: '8px 12px', textAlign: 'left', background: proj.id === activeProjectId ? 'var(--accent-muted)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)' }}
+                    style={{ display: 'block', width: '100%', padding: '8px 12px', textAlign: 'left', background: proj.id === activeProjectId ? '#F5F5F5' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 12 }}
                   >
                     {proj.isDefault && <>⭐ </>}{proj.name}
                   </button>
                 ))}
-                <div style={{ borderTop: '1px solid var(--border-primary)' }}>
+                <div style={{ borderTop: '1px solid #E5E5E5' }}>
                   <button
                     onClick={() => { setShowProjectDropdown(false); window.location.href = '/client/projects'; }}
-                    className="w-full text-sm text-accent"
-                    style={{ display: 'block', padding: '8px 12px', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-sans)', color: 'var(--accent)' }}
+                    style={{ display: 'block', width: '100%', padding: '8px 12px', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 12, color: '#1A1A1A', fontWeight: 600 }}
                   >
                     + Gérer les projets
                   </button>
@@ -1043,7 +1062,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   title={ag.name}
                   style={{
                     width: 32, height: 32, borderRadius: '50%',
-                    background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)',
+                    background: '#FAFAFA', border: '1px solid #E5E5E5',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     textDecoration: 'none', fontSize: 16, transition: 'transform 0.15s',
                   }}
@@ -1110,7 +1129,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           defaultValue={section.title}
                           onBlur={(e) => updateSectionTitle(sIdx, e.target.value)}
                           onKeyDown={(e) => { if (e.key === 'Enter') updateSectionTitle(sIdx, (e.target as HTMLInputElement).value); if (e.key === 'Escape') setEditingSectionTitle(null); }}
-                          style={{ flex: 1, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid var(--accent)', borderRadius: 4, padding: '2px 6px', outline: 'none', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
+                          style={{ flex: 1, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid #1A1A1A', borderRadius: 4, padding: '2px 6px', outline: 'none', background: '#fff', color: '#1A1A1A', fontFamily: 'inherit' }}
                         />
                       ) : (
                         <span
@@ -1210,7 +1229,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <button onClick={resetCustomize} className="btn btn-ghost btn-xs">
                   Réinitialiser
                 </button>
-                <button onClick={saveCustomize} className="btn btn-xs" style={{ background: 'var(--text-primary)', color: 'var(--bg-primary)' }}>
+                <button onClick={saveCustomize} className="btn btn-xs" style={{ background: '#1A1A1A', color: '#fff' }}>
                   Enregistrer
                 </button>
               </div>
@@ -1223,8 +1242,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             const visibleItems = sortedItems.filter(item => item.visible);
             const hiddenItems = sortedItems.filter(item => !item.visible);
             return (
-              <div key={section.id} className="nav-section">
-                <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
+              <div key={section.id} id={`nav-section-${section.id}`} className="nav-section">
+                <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
                   <span style={{ fontSize: 12 }}>{SECTION_EMOJIS[section.id] || '📌'}</span> {section.title}
                 </div>
                 {visibleItems.map(item => {
@@ -1234,11 +1253,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
                       onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
                       style={{
-                        minHeight: 32, fontSize: 13, fontWeight: 400,
+                        minHeight: 32, fontSize: 13, fontWeight: isActive ? 500 : 400,
+                        color: isActive ? '#1A1A1A' : '#6B6B6B',
                         ...(isActive ? {
-                          borderLeft: '2px solid var(--text-primary)',
-                          background: 'rgba(0,0,0,0.06)',
-                          color: 'var(--text-primary)',
+                          borderLeft: '2px solid #1A1A1A',
+                          background: 'rgba(0,0,0,0.04)',
                         } : {}),
                       }}
                     >
@@ -1278,7 +1297,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Dynamic — Mes assistants personnalisés (auth only) */}
           {session && customAgents.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
                 <span style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
               </div>
               {customAgents.map(agent => (
@@ -1297,7 +1316,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Dynamic — Mes modules publiés (auth only) */}
           {session && publishedModules.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
                 <span style={{ fontSize: 12 }}>📦</span> Mes modules
               </div>
               {publishedModules.map(mod => {
@@ -1318,9 +1337,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           )}
 
           {/* Statut — auth only */}
-          {session && (<>
+          {session && (
           <div className="nav-section">
-            <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal' }}>
+            <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
               <span style={{ fontSize: 12 }}>📊</span> Statut
             </div>
             <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
@@ -1328,7 +1347,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
                 fontSize: 12, fontWeight: 800, marginLeft: 'auto',
-                color: walletBalance !== null && walletBalance < 10_000_000 ? 'var(--danger)' : 'var(--text-primary)',
+                color: walletBalance !== null && walletBalance < 10_000_000 ? '#DC2626' : '#1A1A1A',
               }}>
                 {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
               </span>
@@ -1338,17 +1357,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
                   alignItems: 'center', justifyContent: 'center',
-                  background: 'var(--text-primary)',
-                  color: 'var(--bg-primary)', fontSize: 9, fontWeight: 700,
+                  background: '#1A1A1A', color: '#fff', fontSize: 9, fontWeight: 700,
                 }}>{gamLevel}</span>
               </span>
               <span style={{ flex: 1 }}>Niv. {gamLevel} — {LEVEL_TITLES[gamLevel] ?? 'Maître'}</span>
               {gamStreak > 0 && (
-                <span style={{ fontSize: 11, color: 'var(--text-secondary)', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}>🔥{gamStreak}j</span>
+                <span style={{ fontSize: 11, color: '#6B6B6B', marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 2 }}>🔥{gamStreak}j</span>
               )}
             </Link>
           </div>
-          </>)}
+          )}
 
           {/* Visitor CTA in sidebar */}
           {!session && (
@@ -1358,8 +1376,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   gap: 6, fontSize: 13, fontWeight: 600,
-                  background: 'var(--accent)', color: '#fff',
-                  borderRadius: 'var(--radius-sm)', padding: '10px 12px',
+                  background: '#1A1A1A', color: '#fff',
+                  borderRadius: 8, padding: '10px 12px',
                   textDecoration: 'none', width: '100%',
                   transition: 'opacity 0.15s',
                 }}
@@ -1369,7 +1387,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 Ouvrir un compte gratuit
               </Link>
               <div style={{ textAlign: 'center', marginTop: 6 }}>
-                <Link href="/login" style={{ fontSize: 11, color: 'var(--text-muted)', textDecoration: 'none' }}>
+                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }}>
                   Déjà un compte ? Se connecter
                 </Link>
               </div>
@@ -1379,7 +1397,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {/* Hidden sections — at the very bottom, greyed out */}
           {hiddenSections.length > 0 && (
             <div className="nav-section">
-              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 'normal', opacity: 0.5 }}>
+              <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal', opacity: 0.5 }}>
                 <span style={{ fontSize: 12 }}>👁️</span> Sections masquées
               </div>
               {hiddenSections.map(section => (
@@ -1402,10 +1420,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               onClick={openCustomize}
               style={{
                 width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: 6, fontSize: 11, color: 'var(--text-muted)',
-                background: 'var(--bg-elevated)', border: '1px dashed var(--border-primary)',
-                borderRadius: 'var(--radius-sm)', padding: '5px 10px', cursor: 'pointer',
-                fontFamily: 'var(--font-sans)',
+                gap: 6, fontSize: 11, color: '#9B9B9B',
+                background: '#fff', border: '1px dashed #E5E5E5',
+                borderRadius: 8, padding: '5px 10px', cursor: 'pointer',
+                fontFamily: 'inherit',
               }}
             >
               ⚙️ Personnaliser le menu
@@ -1415,23 +1433,25 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </div>
 
         {/* Footer compact — avatar + name + settings + logout (or login link for guests) */}
-        <div className="sidebar-footer-compact" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderTop: '1px solid #E5E5E5' }}>
           {session ? (
             <>
               <div style={{
                 width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--border-primary)',
+                background: '#FAFAFA', border: '1px solid #E5E5E5',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 11, fontWeight: 700, color: 'var(--text-primary)',
+                fontSize: 11, fontWeight: 700, color: '#1A1A1A',
               }}>
                 {(session.displayName || session.email || '?').slice(0, 2).toUpperCase()}
               </div>
-              <span className="sidebar-footer-text" style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1A1A1A' }}>
                 {session.displayName}
               </span>
               <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }}>⚙️</Link>
-              <button onClick={logout} className="sidebar-footer-logout" title="Déconnexion" style={{ flexShrink: 0 }}>
+              <button onClick={logout} title="Déconnexion" style={{
+                flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 14, color: '#9B9B9B', padding: '4px',
+              }}>
                 ⏻
               </button>
             </>
@@ -1439,20 +1459,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <>
               <div style={{
                 width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                background: 'var(--accent)',
+                background: '#1A1A1A',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 12, color: '#fff',
-              }}>🎯</div>
+              }}>?</div>
               <Link
                 href="/login"
                 style={{
-                  fontSize: 12, fontWeight: 600, color: 'var(--accent)',
+                  fontSize: 12, fontWeight: 600, color: '#1A1A1A',
                   textDecoration: 'none', flex: 1,
                 }}
               >
                 Ouvrir un compte
               </Link>
-              <Link href="/login" style={{ fontSize: 11, color: 'var(--text-muted)', textDecoration: 'none', flexShrink: 0 }}>
+              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }}>
                 Connexion
               </Link>
             </>
@@ -1461,13 +1481,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </nav>
 
       {/* Client Content */}
-      <div className={`client-main-content${sidebarExpanded && isDesktop ? ' content-shifted' : ''}`} onClick={() => { if (sidebarExpanded && isDesktop) setSidebarExpanded(false); }}>
+      <div className="client-main-content" onClick={() => { if (sidebarExpanded) setSidebarExpanded(false); }}>
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', fontSize: 12, flexWrap: 'wrap', gap: 4 }}>
-            <span style={{ color: 'var(--text-secondary)' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
-            <a href="/client/onboarding" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', background: '#FAFAFA', borderBottom: '1px solid #E5E5E5', fontSize: 12, flexWrap: 'wrap', gap: 4 }}>
+            <span style={{ color: '#6B6B6B' }}>📋 Profil incomplet — complétez pour des résultats optimaux</span>
+            <a href="/client/onboarding" style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 12, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>
               Compléter →
             </a>
           </div>
@@ -1475,26 +1495,25 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {!lowCreditDismissed && walletBalance !== null && walletBalance < 50_000_000 && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 16px', fontSize: 12,
-            background: 'var(--bg-secondary)',
-            borderBottom: '1px solid var(--border-primary)',
+            background: '#FAFAFA', borderBottom: '1px solid #E5E5E5',
           }}>
-            <span style={{ color: 'var(--text-secondary)' }}>
+            <span style={{ color: '#6B6B6B' }}>
               {walletBalance < 10_000_000 ? '⚠️' : '⚡'} {Math.round(walletBalance / 1_000_000)} crédits restants
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Link href="/client/account" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
+              <Link href="/client/account" style={{ color: '#1A1A1A', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
                 Recharger →
               </Link>
-              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '10px', minWidth: 44, minHeight: 44, cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+              <button onClick={dismissLowCredit} style={{ fontSize: 14, background: 'none', border: 'none', padding: '10px', minWidth: 44, minHeight: 44, cursor: 'pointer', color: '#9B9B9B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
             </div>
           </div>
         )}
-        <div style={{ padding: '8px 16px 0', fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Link href="/client/dashboard" style={{ textDecoration: 'none', color: 'var(--text-muted)' }}>🏠 Accueil</Link>
+        <div style={{ padding: '8px 16px 0', fontSize: 12, color: '#9B9B9B', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Link href="/client/dashboard" style={{ textDecoration: 'none', color: '#9B9B9B' }}>🏠 Accueil</Link>
           {pathname !== '/client/dashboard' && (() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
             const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-            return meta ? <><span style={{ color: 'var(--text-muted)' }}>›</span><span>{meta.title}</span></> : null;
+            return meta ? <><span style={{ color: '#9B9B9B' }}>›</span><span style={{ color: '#6B6B6B' }}>{meta.title}</span></> : null;
           })()}
         </div>
         <div className="page-container">
@@ -1512,10 +1531,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div style={{
             position: 'fixed', top: '20%', left: '50%', transform: 'translateX(-50%)',
             width: '90%', maxWidth: 480, zIndex: 1000,
-            background: 'var(--bg-elevated)', borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-secondary)', boxShadow: 'var(--shadow-lg)', overflow: 'hidden',
+            background: '#fff', borderRadius: 12,
+            border: '1px solid #E5E5E5', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', overflow: 'hidden',
           }}>
-            <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)' }}>
+            <div style={{ padding: '12px 16px', borderBottom: '1px solid #E5E5E5' }}>
               <input
                 autoFocus
                 type="text"
@@ -1528,7 +1547,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     setSearchOpen(false);
                   }
                 }}
-                style={{ width: '100%', fontSize: 15, border: 'none', outline: 'none', background: 'transparent', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
+                style={{ width: '100%', fontSize: 15, border: 'none', outline: 'none', background: 'transparent', color: '#1A1A1A', fontFamily: 'inherit' }}
               />
             </div>
             <div style={{ maxHeight: 300, overflowY: 'auto' }}>
@@ -1538,8 +1557,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   href={link.href}
                   onClick={() => setSearchOpen(false)}
                   className="flex items-center gap-8 text-base"
-                  style={{ padding: '12px 16px', minHeight: 44, textDecoration: 'none', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-primary)' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
+                  style={{ padding: '12px 16px', minHeight: 44, textDecoration: 'none', color: '#1A1A1A', borderBottom: '1px solid #E5E5E5' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#F5F5F5')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
                   <span style={{ fontSize: 18 }}>{getNavEmoji(link.href)}</span>
@@ -1550,7 +1569,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <div className="p-16 text-md text-muted" style={{ textAlign: 'center' }}>Aucun résultat</div>
               )}
             </div>
-            <div className="text-xs text-muted" style={{ padding: '6px 16px', borderTop: '1px solid var(--border-primary)' }}>
+            <div className="text-xs text-muted" style={{ padding: '6px 16px', borderTop: '1px solid #E5E5E5' }}>
               Entrée pour naviguer | Echap pour fermer | Ctrl+K pour ouvrir
             </div>
           </div>

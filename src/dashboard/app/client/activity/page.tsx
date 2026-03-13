@@ -5,6 +5,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 interface Activity {
   id: string;
@@ -179,26 +180,25 @@ export default function ActivityPage() {
 
   if (loading) {
     return (
-      <div className="flex-center" style={{ minHeight: 400, flexDirection: 'column', gap: 12 }}>
+      <div style={{ ...pageContainer(isMobile), display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 400, gap: 12 }}>
         {loadingTimedOut ? (
           <>
-            <div style={{ fontSize: 48, marginBottom: 8 }}>🔗</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>
+            <div style={CU.emptyEmoji}>🔗</div>
+            <div style={CU.emptyTitle}>
               Impossible de charger les données
             </div>
-            <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+            <div style={{ ...CU.emptyDesc, marginBottom: 12 }}>
               Vérifiez votre connexion ou réessayez.
             </div>
             <button
               onClick={() => { setLoadingTimedOut(false); setLoading(true); setError(''); fetchActivities(0, false); }}
-              className="btn btn-primary btn-sm"
-              style={{ marginTop: 8 }}
+              style={CU.btnSmall}
             >
               Réessayer
             </button>
           </>
         ) : (
-          <div className="animate-pulse text-md text-tertiary">Chargement de l&apos;activité...</div>
+          <div style={{ color: CU.textMuted, fontSize: 14 }}>Chargement de l&apos;activité...</div>
         )}
       </div>
     );
@@ -207,21 +207,16 @@ export default function ActivityPage() {
   const grouped = groupActivities(activities);
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 720, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 720 }}>
       {/* Header */}
       <div style={{ marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{
-            fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)',
-            letterSpacing: '-0.02em', marginBottom: 6,
-            display: 'flex', alignItems: 'center', gap: 8,
-          }}>
-            <span style={{ fontSize: 24 }}>{meta.emoji}</span> {meta.title}
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{meta.emoji}</span>
+            <h1 style={CU.pageTitle}>{meta.title}</h1>
             <HelpBubble text={meta.helpText} />
-          </h1>
-          <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>
-            {meta.subtitle}
-          </p>
+          </div>
+          <p style={CU.pageSubtitle}>{meta.subtitle}</p>
         </div>
         <PageExplanation pageId="activity" text={PAGE_META.activity?.helpText} />
         {activities.length > 0 && (
@@ -238,11 +233,7 @@ export default function ActivityPage() {
               a.href = url; a.download = `activite_${new Date().toISOString().split('T')[0]}.csv`;
               a.click(); URL.revokeObjectURL(url);
             }}
-            style={{
-              padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-              border: '1px solid #E5E5E5', background: '#fff', height: 36,
-              color: '#1A1A1A', cursor: 'pointer',
-            }}
+            style={CU.btnGhost}
           >
             📥 Export CSV
           </button>
@@ -251,21 +242,15 @@ export default function ActivityPage() {
 
       {/* Error */}
       {error && (
-        <div className="alert alert-danger" style={{ marginBottom: 20, fontSize: 13 }}>{error}</div>
+        <div style={{ ...CU.card, background: '#FFF5F5', borderColor: CU.danger, color: CU.danger, marginBottom: 20, fontSize: 13 }}>{error}</div>
       )}
 
       {/* Empty state */}
       {activities.length === 0 && !error && (
-        <div style={{
-          textAlign: 'center', padding: '60px 20px',
-          background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 8,
-          border: '1px solid var(--border-primary, #E5E5E5)',
-        }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>📭</div>
-          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', marginBottom: 8 }}>
-            Aucune activite pour le moment
-          </div>
-          <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>📭</div>
+          <div style={CU.emptyTitle}>Aucune activite pour le moment</div>
+          <div style={CU.emptyDesc}>
             Vos actions apparaitront ici au fur et a mesure de votre utilisation.
           </div>
         </div>
@@ -276,7 +261,7 @@ export default function ActivityPage() {
         <div key={groupLabel} style={{ marginBottom: 32 }}>
           {/* Group header */}
           <div style={{
-            fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary, #6B6B6B)',
+            fontSize: 13, fontWeight: 600, color: CU.textSecondary,
             textTransform: 'uppercase', letterSpacing: '0.05em',
             marginBottom: 14, paddingLeft: isMobile ? 12 : 20,
           }}>
@@ -288,7 +273,7 @@ export default function ActivityPage() {
             {/* Left border line */}
             <div style={{
               position: 'absolute', left: 7, top: 4, bottom: 4,
-              width: 2, background: 'var(--fz-border, #E5E5E5)',
+              width: 2, background: CU.border,
               borderRadius: 1,
             }} />
 
@@ -301,26 +286,24 @@ export default function ActivityPage() {
                 <div style={{
                   position: 'absolute', left: -16, top: 14,
                   width: 10, height: 10, borderRadius: '50%',
-                  background: 'var(--fz-bg, #FFFFFF)',
-                  border: '2px solid var(--fz-border, #E5E5E5)',
+                  background: CU.bg,
+                  border: `2px solid ${CU.border}`,
                   zIndex: 1,
                 }} />
 
                 {/* Card */}
                 <div style={{
-                  background: 'var(--fz-bg, #FFFFFF)',
-                  border: '1px solid var(--border-primary, #E5E5E5)',
-                  borderRadius: 12, padding: '14px 18px',
-                  transition: 'border-color 0.15s ease',
+                  ...CU.cardHoverable,
+                  padding: '14px 18px',
                 }}
                   onMouseEnter={e => (e.currentTarget.style.borderColor = '#D0D0D0')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = '#E5E5E5')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = CU.border)}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     {/* Emoji icon */}
                     <div style={{
-                      width: 36, height: 36, borderRadius: 10,
-                      background: 'var(--fz-bg-secondary, #F7F7F7)',
+                      width: 36, height: 36, borderRadius: 8,
+                      background: CU.bgSecondary,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 18, flexShrink: 0,
                     }}>
@@ -330,22 +313,22 @@ export default function ActivityPage() {
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>
                           {getActionLabel(activity.action)}
                         </span>
-                        <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', flexShrink: 0 }}>
+                        <span style={{ fontSize: 12, color: CU.textMuted, flexShrink: 0 }}>
                           {formatTime(activity.created_at)}
                         </span>
                       </div>
 
                       {/* Description or resource info */}
                       {(activity.description || activity.resource_type) && (
-                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginTop: 4, lineHeight: 1.5 }}>
+                        <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 4, lineHeight: 1.5 }}>
                           {activity.description ?? (
                             <span>
                               {activity.resource_type}
                               {activity.resource_id && (
-                                <span style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}> #{activity.resource_id.slice(0, 8)}</span>
+                                <span style={{ color: CU.textMuted }}> #{activity.resource_id.slice(0, 8)}</span>
                               )}
                             </span>
                           )}
@@ -354,7 +337,7 @@ export default function ActivityPage() {
 
                       {/* IP address (subtle) */}
                       {activity.ip_address && (
-                        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
+                        <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 4 }}>
                           IP: {activity.ip_address}
                         </div>
                       )}
@@ -373,11 +356,7 @@ export default function ActivityPage() {
           <button
             onClick={loadMore}
             disabled={loadingMore}
-            className="btn btn-ghost"
-            style={{
-              fontSize: 13, fontWeight: 500, padding: '10px 28px',
-              borderRadius: 10, border: '1px solid var(--border-primary, #E5E5E5)',
-            }}
+            style={CU.btnGhost}
           >
             {loadingMore ? 'Chargement...' : 'Charger plus d\'activites'}
           </button>
@@ -388,7 +367,7 @@ export default function ActivityPage() {
       {!hasMore && activities.length > 0 && (
         <div style={{
           textAlign: 'center', padding: '16px 0 40px',
-          fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)',
+          fontSize: 12, color: CU.textMuted,
         }}>
           Fin de l&apos;historique
         </div>

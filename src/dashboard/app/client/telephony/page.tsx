@@ -10,6 +10,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,7 +58,7 @@ const STATUS_LABELS: Record<CallStatus, string> = {
   completed: 'Terminé', failed: 'Échec', busy: 'Occupé', 'no-answer': 'Sans réponse',
 };
 const STATUS_COLORS: Record<CallStatus, string> = {
-  completed: '#1A1A1A', failed: '#1A1A1A', busy: '#6B6B6B', 'no-answer': '#9B9B9B',
+  completed: CU.text, failed: CU.text, busy: CU.textSecondary, 'no-answer': CU.textMuted,
 };
 const TABS = ['Historique', 'Personas', 'Pipeline'] as const;
 type Tab = typeof TABS[number];
@@ -203,19 +204,19 @@ export default function TelephonyPage() {
     Latence: s.total,
   })) ?? [];
 
-  const healthColor = health?.status === 'ok' ? '#1A1A1A' : health?.status === 'degraded' ? '#6B6B6B' : '#9B9B9B';
+  const healthColor = health?.status === 'ok' ? CU.text : health?.status === 'degraded' ? CU.textSecondary : CU.textMuted;
   const healthLabel = health?.status === 'ok' ? 'Opérationnel' : health?.status === 'degraded' ? 'Dégradé' : 'En panne';
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
+    <div style={pageContainer(isMobile)}>
 
       {/* Header */}
-      <div className="page-header" style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+      <div style={{ marginBottom: 24 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta.emoji}</span>
           <div>
-            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{meta.title}</h1>
-            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{meta.subtitle}</p>
+            <h1 style={CU.pageTitle}>{meta.title}</h1>
+            <p style={CU.pageSubtitle}>{meta.subtitle}</p>
           </div>
           <HelpBubble text={meta.helpText} />
         </div>
@@ -225,29 +226,25 @@ export default function TelephonyPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Total appels', value: String(totalCalls), icon: '☎️', color: '#1A1A1A' },
-          { label: 'Taux de succès', value: `${successRate}%`, icon: '✅', color: '#1A1A1A' },
-          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: '⏱️', color: '#1A1A1A' },
-          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: '💰', color: '#1A1A1A' },
+          { label: 'Total appels', value: String(totalCalls), icon: '☎️' },
+          { label: 'Taux de succès', value: `${successRate}%`, icon: '✅' },
+          { label: 'Durée moyenne', value: avgDuration > 0 ? formatDuration(avgDuration) : '—', icon: '⏱️' },
+          { label: 'Coût total', value: totalCost > 0 ? `${(totalCost / 1_000_000).toFixed(3)} cr` : '—', icon: '💰' },
         ].map(s => (
-          <div key={s.label} style={{ padding: '14px 18px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+          <div key={s.label} style={{ ...CU.card }}>
             <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
+            <div style={{ ...CU.statValue, fontSize: 16 }}>{s.value}</div>
+            <div style={CU.statLabel}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={tabBar()}>
         {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)} style={{
-            padding: '8px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-            minHeight: 44,
-            border: tab === t ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
-            background: tab === t ? '#1A1A1A' : '#fff',
-            color: tab === t ? '#fff' : '#1A1A1A',
-          }}>{t}</button>
+          <button key={t} onClick={() => setTab(t)} style={tab === t ? CU.tabActive : CU.tab}>
+            {t}
+          </button>
         ))}
       </div>
 
@@ -257,51 +254,50 @@ export default function TelephonyPage() {
           <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {(['all', 'completed', 'failed', 'busy', 'no-answer'] as const).map(s => (
-                <button key={s} onClick={() => setFilterStatus(s)} style={{
-                  padding: '5px 12px', borderRadius: 8, fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  minHeight: 44,
-                  border: filterStatus === s ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
-                  background: filterStatus === s ? '#1A1A1A' : '#fff',
-                  color: filterStatus === s ? '#fff' : '#6B6B6B',
-                }}>
+                <button key={s} onClick={() => setFilterStatus(s)} style={
+                  filterStatus === s
+                    ? { ...CU.btnPrimary, fontSize: 11, height: 32, padding: '0 12px' }
+                    : { ...CU.btnGhost, fontSize: 11, height: 32, padding: '0 12px' }
+                }>
                   {s === 'all' ? 'Tous' : STATUS_LABELS[s as CallStatus]}
                 </button>
               ))}
             </div>
             {displayedCalls.length > 0 && (
-              <button onClick={exportCSV} className="btn btn-ghost btn-sm" style={{ fontSize: 12 }}>
+              <button onClick={exportCSV} style={{ ...CU.btnSmall }}>
                 ⬇️ Export CSV
               </button>
             )}
           </div>
 
           {callsLoading ? (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement...</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: CU.textMuted }}>Chargement...</div>
           ) : displayedCalls.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
-              <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun appel{filterStatus !== 'all' ? ' ' + STATUS_LABELS[filterStatus as CallStatus].toLowerCase() : ''}</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les appels <span className="fz-logo-word">Twilio</span> apparaîtront ici.</div>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>📞</div>
+              <div style={CU.emptyTitle}>Aucun appel{filterStatus !== 'all' ? ' ' + STATUS_LABELS[filterStatus as CallStatus].toLowerCase() : ''}</div>
+              <div style={CU.emptyDesc}>Les appels <span className="fz-logo-word">Twilio</span> apparaîtront ici.</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {displayedCalls.map(call => (
-                <div key={call.id} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={call.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ flexShrink: 0, fontSize: 24 }}>📞</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>
                       {call.from && call.to ? `${call.from} → ${call.to}` : call.from ?? call.to ?? 'Appel entrant'}
-                      {call.agent && <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginLeft: 6 }}>· {call.agent}</span>}
+                      {call.agent && <span style={{ fontSize: 11, color: CU.textMuted, marginLeft: 6 }}>· {call.agent}</span>}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
+                    <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>
                       {new Date(call.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       {call.duration > 0 && ` · ${formatDuration(call.duration)}`}
                       {call.cost && call.cost > 0 && ` · ${(call.cost / 1_000_000).toFixed(4)} cr`}
                     </div>
                   </div>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, flexShrink: 0,
+                    ...CU.badge,
                     background: STATUS_COLORS[call.status] + '20', color: STATUS_COLORS[call.status],
+                    fontWeight: 700,
                   }}>
                     {STATUS_LABELS[call.status]}
                   </span>
@@ -316,32 +312,32 @@ export default function TelephonyPage() {
       {tab === 'Personas' && (
         <div>
           {personasLoading ? (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des personas...</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: CU.textMuted }}>Chargement des personas...</div>
           ) : personas.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
-              <div style={{ marginBottom: 16, fontSize: 48 }}>🎭</div>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucune persona disponible</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>Les personas vocales apparaîtront ici.</div>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>🎭</div>
+              <div style={CU.emptyTitle}>Aucune persona disponible</div>
+              <div style={CU.emptyDesc}>Les personas vocales apparaîtront ici.</div>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
+            <div style={cardGrid(isMobile, 3)}>
               {personas.map(p => (
-                <div key={p.id} style={{ padding: 20, position: 'relative', borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+                <div key={p.id} style={{ ...CU.card, padding: 20, position: 'relative' }}>
                   {p.active && (
-                    <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: '#F0F0F0', color: '#1A1A1A' }}>
+                    <span style={{ ...CU.badgeSuccess, position: 'absolute', top: 10, right: 10 }}>
                       Active
                     </span>
                   )}
                   <div style={{ textAlign: 'center', marginBottom: 14 }}>
                     <div style={{ marginBottom: 8, fontSize: 40 }}>👤</div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{p.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{p.language}</div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: CU.text }}>{p.name}</div>
+                    <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{p.language}</div>
                   </div>
                   {p.description && (
-                    <p style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5, textAlign: 'center', marginBottom: 14 }}>{p.description}</p>
+                    <p style={{ fontSize: 12, color: CU.textSecondary, lineHeight: 1.5, textAlign: 'center', marginBottom: 14 }}>{p.description}</p>
                   )}
                   {p.voice && (
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', marginBottom: 14 }}>
+                    <div style={{ fontSize: 11, color: CU.textMuted, textAlign: 'center', marginBottom: 14 }}>
                       🎤 {p.voice}
                     </div>
                   )}
@@ -349,8 +345,7 @@ export default function TelephonyPage() {
                     <button
                       onClick={() => switchPersona(p.id)}
                       disabled={switchingPersona === p.id}
-                      className="btn btn-primary"
-                      style={{ width: '100%', fontSize: 12 }}
+                      style={{ ...CU.btnPrimary, width: '100%', fontSize: 12 }}
                     >
                       {switchingPersona === p.id ? 'Activation...' : 'Activer cette persona'}
                     </button>
@@ -366,29 +361,29 @@ export default function TelephonyPage() {
       {tab === 'Pipeline' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {metricsLoading ? (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }} className="animate-pulse">Chargement des métriques...</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: CU.textMuted }}>Chargement des métriques...</div>
           ) : (
             <>
               {/* Health status */}
-              <div style={{ padding: 20, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
+              <div style={{ ...CU.card, padding: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>État du pipeline</h3>
-                  <span style={{ fontSize: 13, fontWeight: 700, padding: '4px 12px', borderRadius: 8, background: healthColor + '20', color: healthColor }}>
+                  <h3 style={CU.sectionTitle}>État du pipeline</h3>
+                  <span style={{ ...CU.badge, background: healthColor + '20', color: healthColor, fontWeight: 700 }}>
                     {healthLabel}
                   </span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 10 }}>
+                <div style={cardGrid(isMobile, 3)}>
                   {[
                     { label: 'STT (Transcription)', value: health?.stt ?? 'N/A', icon: '🎤' },
                     { label: 'LLM (Réponse)', value: health?.llm ?? 'N/A', icon: '🤖' },
                     { label: 'TTS (Synthèse)', value: health?.tts ?? 'N/A', icon: '🔊' },
                   ].map(item => (
-                    <div key={item.label} style={{ textAlign: 'center', padding: '12px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 10 }}>
+                    <div key={item.label} style={{ textAlign: 'center', padding: 12, background: CU.bgSecondary, borderRadius: 8 }}>
                       <div style={{ marginBottom: 4, fontSize: 22 }}>{item.icon}</div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: item.value === 'ok' ? '#1A1A1A' : item.value === 'degraded' ? '#6B6B6B' : '#9B9B9B' }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: item.value === 'ok' ? CU.text : item.value === 'degraded' ? CU.textSecondary : CU.textMuted }}>
                         {item.value === 'ok' ? 'OK' : item.value === 'degraded' ? 'Dégradé' : item.value}
                       </div>
-                      <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{item.label}</div>
+                      <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 2 }}>{item.label}</div>
                     </div>
                   ))}
                 </div>
@@ -396,8 +391,8 @@ export default function TelephonyPage() {
 
               {/* Latency metrics */}
               {metrics && (
-                <div style={{ padding: 20, borderRadius: 8, border: '1px solid #E5E5E5', background: 'var(--fz-bg, #FFFFFF)' }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>Latences moyennes</h3>
+                <div style={{ ...CU.card, padding: 20 }}>
+                  <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>Latences moyennes</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 20 }}>
                     {[
                       { label: 'STT', value: metrics.sttLatency, icon: '🎤' },
@@ -405,26 +400,26 @@ export default function TelephonyPage() {
                       { label: 'TTS', value: metrics.ttsLatency, icon: '🔊' },
                       { label: 'Total', value: metrics.totalLatency, icon: '⚡', highlight: true },
                     ].map(m => (
-                      <div key={m.label} style={{ padding: '12px', textAlign: 'center', borderRadius: 8, border: '1px solid #E5E5E5', background: m.highlight ? '#F7F7F7' : '#fff' }}>
+                      <div key={m.label} style={{ ...CU.card, padding: 12, textAlign: 'center', background: m.highlight ? CU.accentLight : CU.bg }}>
                         <div style={{ marginBottom: 4, fontSize: 18 }}>{m.icon}</div>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: '#1A1A1A' }}>
+                        <div style={{ ...CU.statValue, fontSize: 18 }}>
                           {m.value != null ? `${m.value}ms` : '—'}
                         </div>
-                        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>{m.label}</div>
+                        <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 1 }}>{m.label}</div>
                       </div>
                     ))}
                   </div>
 
                   {latencyChart.length > 0 && (
                     <>
-                      <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 12, color: 'var(--fz-text-secondary, #64748B)' }}>Évolution de la latence</h4>
+                      <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 12, color: CU.textSecondary }}>Évolution de la latence</h4>
                       <ResponsiveContainer width="100%" height={180}>
                         <LineChart data={latencyChart} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />
-                          <XAxis dataKey="time" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
-                          <YAxis tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} unit="ms" />
+                          <CartesianGrid strokeDasharray="3 3" stroke={CU.border} />
+                          <XAxis dataKey="time" tick={{ fontSize: 10, fill: CU.textMuted }} />
+                          <YAxis tick={{ fontSize: 10, fill: CU.textMuted }} unit="ms" />
                           <Tooltip formatter={(v: number | undefined) => [`${v ?? 0}ms`, 'Latence']} />
-                          <Line type="monotone" dataKey="Latence" stroke="#1A1A1A" strokeWidth={2} dot={false} />
+                          <Line type="monotone" dataKey="Latence" stroke={CU.accent} strokeWidth={2} dot={false} />
                         </LineChart>
                       </ResponsiveContainer>
                     </>

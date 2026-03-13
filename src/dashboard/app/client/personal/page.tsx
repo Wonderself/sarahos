@@ -17,6 +17,7 @@ import {
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import HelpBubble from '../../../components/HelpBubble';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar, searchInput } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Mes agents persos (merged page)
@@ -24,23 +25,6 @@ import HelpBubble from '../../../components/HelpBubble';
 //  Section 2: Mes assistants personnalises (personal by category)
 //  Section 3: Recruter de nouveaux assistants
 // ═══════════════════════════════════════════════════
-
-// ─── ClickUp-style design tokens ─────────────────────────────────────────────
-
-const CU = {
-  card: {
-    background: '#fff',
-    border: '1px solid #E5E5E5' as const,
-    borderRadius: 8,
-  },
-  text: '#1A1A1A',
-  textSecondary: '#6B6B6B',
-  textMuted: '#9B9B9B',
-  accent: '#1A1A1A',
-  border: '#E5E5E5',
-  bg: '#fff',
-  bgSecondary: '#F7F7F7',
-};
 
 // ─── Person emoji overrides (replace generic object emojis with person emojis) ───
 const PERSON_EMOJIS: Record<string, string> = {
@@ -251,13 +235,13 @@ export default function PersonalAgentsPage() {
   const totalActive = activeBusinessIds.length + activePersonalIds.length;
 
   return (
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* ─── Header ─── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'nowrap' }}>
-        <span style={{ fontSize: 20 }}>{PAGE_META.personal.emoji}</span>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{PAGE_META.personal.emoji}</span>
         <div>
-          <h1 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>{PAGE_META.personal.title}</h1>
-          <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>— {totalActive} actifs · {activeBusinessIds.length} business + {activePersonalIds.length} perso</p>
+          <h1 style={CU.pageTitle}>{PAGE_META.personal.title}</h1>
+          <p style={CU.pageSubtitle}>— {totalActive} actifs · {activeBusinessIds.length} business + {activePersonalIds.length} perso</p>
         </div>
         <HelpBubble text={PAGE_META.personal.helpText} />
       </div>
@@ -276,7 +260,7 @@ export default function PersonalAgentsPage() {
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
             background: activeTab === 'equipe' ? CU.bg : 'transparent',
             color: activeTab === 'equipe' ? CU.text : CU.textMuted,
-            boxShadow: activeTab === 'equipe' ? 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' : 'none',
+            boxShadow: activeTab === 'equipe' ? '0 1px 3px rgba(0,0,0,0.04)' : 'none',
           }}
         >
           👥 Mon équipe
@@ -289,12 +273,13 @@ export default function PersonalAgentsPage() {
             border: 'none', cursor: 'pointer', transition: 'all 0.15s',
             background: activeTab === 'marketplace' ? CU.bg : 'transparent',
             color: activeTab === 'marketplace' ? CU.text : CU.textMuted,
-            boxShadow: activeTab === 'marketplace' ? 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' : 'none',
+            boxShadow: activeTab === 'marketplace' ? '0 1px 3px rgba(0,0,0,0.04)' : 'none',
           }}
         >
           🏪 Marketplace
           <span style={{
-            marginLeft: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
+            ...CU.badge,
+            marginLeft: 8,
             background: activeTab === 'marketplace' ? CU.accent : CU.bgSecondary,
             color: activeTab === 'marketplace' ? '#fff' : CU.textMuted,
           }}>
@@ -311,9 +296,8 @@ export default function PersonalAgentsPage() {
         <input
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          className="input"
           placeholder="🔍 Rechercher un assistant par nom ou role..."
-          style={{ width: '100%', maxWidth: isMobile ? '100%' : 400, borderRadius: 6, fontSize: 13, height: 36 }}
+          style={searchInput(isMobile)}
         />
       </div>
 
@@ -324,12 +308,12 @@ export default function PersonalAgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, background: 'rgba(0,0,0,0.04)', fontSize: 18,
+            borderRadius: 8, background: CU.accentLight, fontSize: 18,
           }}>
             🏢
           </div>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>Mon équipe</h2>
+            <h2 style={CU.sectionTitle}>Mon équipe</h2>
             <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
               {activeBusinessAgents.length} assistant{activeBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise actif{activeBusinessAgents.length > 1 ? 's' : ''} sur {teamAgents.length}
             </p>
@@ -337,9 +321,10 @@ export default function PersonalAgentsPage() {
         </div>
 
         {activeBusinessAgents.length === 0 && (
-          <div style={{ ...CU.card, padding: 24, textAlign: 'center' as const }}>
-            <p style={{ fontSize: 14, color: CU.textMuted, marginBottom: 8 }}>Aucun assistant d&apos;entreprise actif</p>
-            <p style={{ fontSize: 12, color: CU.textMuted }}>Recrutez des assistants dans la section ci-dessous</p>
+          <div style={CU.emptyState}>
+            <div style={CU.emptyEmoji}>🏢</div>
+            <p style={CU.emptyTitle}>Aucun assistant d&apos;entreprise actif</p>
+            <p style={CU.emptyDesc}>Recrutez des assistants dans la section ci-dessous</p>
           </div>
         )}
 
@@ -364,12 +349,12 @@ export default function PersonalAgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, background: 'rgba(0,0,0,0.04)', fontSize: 18,
+            borderRadius: 8, background: CU.accentLight, fontSize: 18,
           }}>
             👥
           </div>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>Mes assistants personnalises</h2>
+            <h2 style={CU.sectionTitle}>Mes assistants personnalises</h2>
             <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
               {activePersonalIds.length} assistant{activePersonalIds.length > 1 ? 's' : ''} perso actif{activePersonalIds.length > 1 ? 's' : ''} sur {PERSONAL_AGENTS.length}
             </p>
@@ -398,7 +383,7 @@ export default function PersonalAgentsPage() {
                   cursor: 'pointer', fontFamily: 'var(--font-sans)', marginBottom: 8,
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'var(--fz-bg-hover, #F1F5F9)'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = CU.accentLight; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = CU.bgSecondary; }}
               >
                 {cat.icon}
@@ -438,12 +423,12 @@ export default function PersonalAgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{
             width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, background: 'rgba(0,0,0,0.04)', fontSize: 18,
+            borderRadius: 8, background: CU.accentLight, fontSize: 18,
           }}>
             🚀
           </div>
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 600, color: CU.text, margin: 0 }}>Recruter de nouveaux assistants</h2>
+            <h2 style={CU.sectionTitle}>Recruter de nouveaux assistants</h2>
             <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
               {inactiveBusinessAgents.length} assistant{inactiveBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise disponible{inactiveBusinessAgents.length > 1 ? 's' : ''}
             </p>
@@ -451,10 +436,10 @@ export default function PersonalAgentsPage() {
         </div>
 
         {inactiveBusinessAgents.length === 0 && (
-          <div style={{ ...CU.card, padding: 24, textAlign: 'center' as const }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>Équipe au complet !</p>
-            <p style={{ fontSize: 12, color: CU.textMuted }}>
+          <div style={CU.emptyState}>
+            <div style={CU.emptyEmoji}>🎉</div>
+            <p style={CU.emptyTitle}>Équipe au complet !</p>
+            <p style={CU.emptyDesc}>
               Tous les assistants d&apos;entreprise sont actifs dans votre équipe.
             </p>
           </div>
@@ -477,28 +462,25 @@ export default function PersonalAgentsPage() {
       <div style={{
         ...CU.card,
         padding: 24,
-        background: '#F7F7F7',
+        background: CU.bgSecondary,
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: CU.text, marginBottom: 4 }}>Vos assistants sont prêts</h3>
-            <p style={{ fontSize: 13, color: CU.textSecondary }}>
+            <h3 style={{ ...CU.sectionTitle, marginBottom: 4 }}>Vos assistants sont prêts</h3>
+            <p style={{ fontSize: 13, color: CU.textSecondary, margin: 0 }}>
               Discutez avec votre équipe IA ou personnalisez leurs comportements en profondeur.
             </p>
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <Link href="/client/chat" style={{
-              textDecoration: 'none', height: 36, padding: '0 16px', borderRadius: 6,
-              fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center',
-              background: CU.accent, color: '#fff', border: 'none',
+              ...CU.btnPrimary,
+              textDecoration: 'none',
             }}>
               💬 Discuter avec mes assistants
             </Link>
             <Link href="/client/agents/customize" style={{
-              textDecoration: 'none', height: 36, padding: '0 16px', borderRadius: 6,
-              fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center',
-              background: CU.bgSecondary, color: CU.text,
-              border: `1px solid ${CU.border}`,
+              ...CU.btnGhost,
+              textDecoration: 'none',
             }}>
               🎨 Personnaliser mes assistants
             </Link>
@@ -522,10 +504,8 @@ export default function PersonalAgentsPage() {
               value={mpSearch}
               onChange={e => setMpSearch(e.target.value)}
               style={{
-                width: '100%', height: 40, padding: '0 16px 0 42px', borderRadius: 8,
-                border: `1px solid ${CU.border}`, background: CU.bg,
-                color: CU.text, fontSize: 13, outline: 'none', transition: 'border-color 0.2s',
-                boxShadow: 'none',
+                ...CU.input,
+                height: 40, paddingLeft: 42,
               }}
               onFocus={e => (e.target.style.borderColor = CU.accent)}
               onBlur={e => (e.target.style.borderColor = CU.border)}
@@ -539,9 +519,9 @@ export default function PersonalAgentsPage() {
                 key={cat}
                 onClick={() => setMpCategory(cat)}
                 style={{
-                  height: 32, padding: '0 14px', borderRadius: 6,
+                  height: 32, padding: '0 14px', borderRadius: 8,
                   border: mpCategory === cat ? `1.5px solid ${CU.accent}` : `1px solid ${CU.border}`,
-                  background: mpCategory === cat ? CU.accent + '10' : CU.bg,
+                  background: mpCategory === cat ? CU.accentLight : CU.bg,
                   color: mpCategory === cat ? CU.accent : CU.textSecondary,
                   fontSize: 13, fontWeight: mpCategory === cat ? 600 : 400,
                   cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
@@ -567,7 +547,7 @@ export default function PersonalAgentsPage() {
                   key={s.key}
                   onClick={() => setMpSort(s.key)}
                   style={{
-                    height: isMobile ? 36 : 30, padding: isMobile ? '0 10px' : '0 12px', borderRadius: 6, border: 'none',
+                    height: isMobile ? 36 : 30, padding: isMobile ? '0 10px' : '0 12px', borderRadius: 8, border: 'none',
                     background: mpSort === s.key ? CU.accent : CU.bgSecondary,
                     color: mpSort === s.key ? '#fff' : CU.textSecondary,
                     fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s',
@@ -589,23 +569,23 @@ export default function PersonalAgentsPage() {
                 <div
                   key={agent.id}
                   style={{
-                    ...CU.card,
-                    padding: 20, transition: 'transform 0.2s, box-shadow 0.2s',
+                    ...CU.cardHoverable,
+                    padding: 20,
                     display: 'flex', flexDirection: 'column',
                   }}
                   onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'none'; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                     <span style={{ fontSize: 32 }}>{agent.icon}</span>
                     <div style={{ display: 'flex', gap: 6 }}>
                       {agent.badge === 'populaire' && (
-                        <span style={{ padding: '2px 8px', borderRadius: 6, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600 }}>
+                        <span style={{ ...CU.badgeWarning, padding: '2px 8px', borderRadius: 8 }}>
                           🔥 Populaire
                         </span>
                       )}
                       {agent.badge === 'nouveau' && (
-                        <span style={{ padding: '2px 8px', borderRadius: 6, background: '#dbeafe', color: '#1e40af', fontSize: 11, fontWeight: 600 }}>
+                        <span style={{ padding: '2px 8px', borderRadius: 8, background: '#dbeafe', color: '#1e40af', fontSize: 11, fontWeight: 600 }}>
                           ✨ Nouveau
                         </span>
                       )}
@@ -613,14 +593,13 @@ export default function PersonalAgentsPage() {
                   </div>
                   <h3 style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>{agent.name}</h3>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-                    <span style={{ padding: '2px 10px', borderRadius: 6, background: catColor + '18', color: catColor, fontSize: 11, fontWeight: 600 }}>
+                    <span style={{ ...CU.badge, background: catColor + '18', color: catColor }}>
                       {agent.category}
                     </span>
                     <span style={{
-                      padding: '2px 10px', borderRadius: 6,
-                      background: agent.tier === 'free' ? 'rgba(22,163,74,0.1)' : 'rgba(147,51,234,0.1)',
-                      color: agent.tier === 'free' ? 'var(--success)' : 'var(--purple)',
-                      fontSize: 11, fontWeight: 600,
+                      ...CU.badge,
+                      background: agent.tier === 'free' ? '#F0FFF4' : 'rgba(147,51,234,0.1)',
+                      color: agent.tier === 'free' ? CU.success : '#9333ea',
                     }}>
                       {agent.tier === 'free' ? 'Gratuit' : 'Premium'}
                     </span>
@@ -634,12 +613,9 @@ export default function PersonalAgentsPage() {
                       onClick={() => handleMpToggleInstall(agent.id)}
                       disabled={isInstallingThis}
                       style={{
-                        height: isMobile ? 44 : 36, padding: '0 16px', borderRadius: 6,
-                        border: isInstalled ? `1px solid ${CU.border}` : 'none',
-                        background: isInstalled ? CU.bg : CU.accent,
-                        color: isInstalled ? CU.textSecondary : '#fff',
-                        fontSize: 13, fontWeight: 500, cursor: isInstallingThis ? 'wait' : 'pointer',
-                        transition: 'all 0.15s',
+                        ...(isInstalled ? CU.btnGhost : CU.btnPrimary),
+                        height: isMobile ? 44 : 36,
+                        cursor: isInstallingThis ? 'wait' : 'pointer',
                       }}
                     >
                       {isInstallingThis ? '...' : isInstalled ? <>✅ Installe</> : 'Installer'}
@@ -651,16 +627,12 @@ export default function PersonalAgentsPage() {
           </div>
 
           {mpFiltered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: CU.textMuted }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
-              <p style={{ fontSize: 14 }}>Aucun assistant ne correspond a votre recherche.</p>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>🔍</div>
+              <p style={CU.emptyTitle}>Aucun assistant ne correspond a votre recherche.</p>
               <button
                 onClick={() => { setMpSearch(''); setMpCategory('Tous'); }}
-                style={{
-                  marginTop: 12, height: 36, padding: '0 20px', borderRadius: 6,
-                  border: 'none', boxShadow: 'none',
-                  background: CU.bg, color: CU.accent, fontSize: 13, fontWeight: 500, cursor: 'pointer',
-                }}
+                style={CU.btnGhost}
               >
                 Reinitialiser les filtres
               </button>
@@ -671,7 +643,6 @@ export default function PersonalAgentsPage() {
           <div style={{
             marginTop: 40, padding: '16px 24px', borderRadius: 8,
             background: CU.bgSecondary, border: 'none',
-            boxShadow: 'none',
             display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 16,
           }}>
             {[
@@ -682,8 +653,8 @@ export default function PersonalAgentsPage() {
             ].map(stat => (
               <div key={stat.label} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 14, marginBottom: 2 }}>{stat.icon}</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: CU.accent }}>{stat.value}</div>
-                <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>{stat.label}</div>
+                <div style={CU.statValue}>{stat.value}</div>
+                <div style={CU.statLabel}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -717,9 +688,9 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
       {agent.isCustomized && (
         <span style={{
           position: 'absolute', top: 8, right: 10,
-          fontSize: 10, fontWeight: 600, color: CU.accent,
-          background: CU.accent + '15', padding: '2px 8px',
-          borderRadius: 6,
+          ...CU.badge,
+          background: CU.accentLight,
+          color: CU.accent,
         }}>
           Personnalise
         </span>
@@ -746,7 +717,7 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
           <span
             key={cap}
             style={{
-              padding: '2px 8px', borderRadius: 6, fontSize: 11,
+              ...CU.badge,
               background: `${agent.color}12`,
               color: agent.color,
               border: `1px solid ${agent.color}30`,
@@ -783,7 +754,6 @@ function BusinessAgentCard({ agent, isActive, onToggle }: {
             position: 'absolute', top: 2, left: isActive ? 20 : 2,
             width: 18, height: 18, borderRadius: '50%',
             background: 'white', transition: 'left 0.2s',
-            boxShadow: 'none',
           }} />
         </button>
       </div>
@@ -829,11 +799,9 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
           <span
             key={cap}
             style={{
-              padding: '2px 8px', borderRadius: 6, fontSize: 11,
+              ...CU.badge,
               background: CU.bgSecondary,
               color: CU.textMuted,
-              border: 'none',
-              boxShadow: 'none',
             }}
           >
             {cap}
@@ -849,12 +817,7 @@ function RecruitCard({ agent, onRecruit }: { agent: TeamAgent; onRecruit: () => 
         </div>
         <button
           onClick={onRecruit}
-          style={{
-            height: 36, padding: '0 14px', borderRadius: 6,
-            fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer',
-            background: CU.accent, color: '#fff',
-            transition: 'opacity 0.15s',
-          }}
+          style={CU.btnPrimary}
         >
           + Recruter
         </button>
@@ -906,7 +869,6 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
               position: 'absolute', top: 2, left: 20,
               width: 18, height: 18, borderRadius: '50%',
               background: 'white', transition: 'left 0.2s',
-              boxShadow: 'none',
             }} />
           </button>
         </div>
@@ -920,7 +882,7 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
           <span
             key={cap}
             style={{
-              padding: '2px 8px', borderRadius: 6, fontSize: 11,
+              ...CU.badge,
               background: `${agent.color}12`,
               color: agent.color,
               border: `1px solid ${agent.color}30`,
@@ -937,10 +899,8 @@ function PersonalActiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onTog
           <button
             key={mode.id}
             style={{
-              height: 36, padding: '0 12px', borderRadius: 6, fontSize: 11, fontWeight: 500,
-              background: CU.bgSecondary, color: CU.textSecondary,
-              border: `1px solid ${CU.border}`, cursor: 'pointer',
-              transition: 'background 0.12s',
+              ...CU.btnSmall,
+              fontSize: 11,
             }}
             title={mode.description}
           >
@@ -991,7 +951,6 @@ function PersonalInactiveCard({ agent, onToggle }: { agent: DefaultAgentDef; onT
             position: 'absolute', top: 2, left: 2,
             width: 18, height: 18, borderRadius: '50%',
             background: 'white', transition: 'left 0.2s',
-            boxShadow: 'none',
           }} />
         </button>
       </div>

@@ -34,7 +34,7 @@ function createCards(pairs: number = 8): Card[] {
   return cards;
 }
 
-const COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#7c3aed', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#16a34a', '#eab308', '#a855f7'];
+const COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#0EA5E9', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#16a34a', '#eab308', '#a855f7'];
 
 export default function MemoryGame() {
   const [cards, setCards] = useState<Card[]>([]);
@@ -216,7 +216,7 @@ export default function MemoryGame() {
             <button
               onClick={reset}
               style={{
-                background: '#7c3aed',
+                background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,

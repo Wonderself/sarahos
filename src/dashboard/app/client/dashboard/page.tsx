@@ -11,6 +11,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import PageExplanation from '../../../components/PageExplanation';
 import { QUICK_ACTIONS, FEATURE_SECTIONS, PAGE_META } from '../../../lib/emoji-map';
 import { isAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ─── Types ───
 
@@ -29,119 +30,6 @@ function uid(): string { return Math.random().toString(36).slice(2, 9); }
 function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
 }
-
-// ─── ClickUp-style shared styles ───
-
-const CU = {
-  card: {
-    background: '#fff',
-    border: '1px solid #E5E5E5',
-    borderRadius: 8,
-    transition: 'all 0.15s ease',
-  } as React.CSSProperties,
-  cardHover: {
-    background: '#fff',
-    border: '1px solid #E5E5E5',
-    borderRadius: 8,
-    transition: 'all 0.15s ease',
-    cursor: 'pointer',
-  } as React.CSSProperties,
-  sectionHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-  } as React.CSSProperties,
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#1A1A1A',
-    lineHeight: 1.3,
-  } as React.CSSProperties,
-  sectionSub: {
-    fontSize: 12,
-    color: '#9B9B9B',
-    lineHeight: 1.3,
-  } as React.CSSProperties,
-  kpiLabel: {
-    fontSize: 11,
-    fontWeight: 600,
-    color: '#9B9B9B',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.04em',
-  },
-  kpiValue: {
-    fontSize: 20,
-    fontWeight: 700,
-    color: '#1A1A1A',
-    lineHeight: 1.2,
-  } as React.CSSProperties,
-  kpiMeta: {
-    fontSize: 11,
-    color: '#9B9B9B',
-    marginTop: 2,
-  } as React.CSSProperties,
-  btn: {
-    height: 36,
-    minHeight: 36,
-    padding: '0 14px',
-    borderRadius: 8,
-    fontWeight: 500,
-    fontSize: 13,
-    border: '1px solid #E5E5E5',
-    background: '#fff',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 6,
-    transition: 'all 0.15s ease',
-  } as React.CSSProperties,
-  btnGhost: {
-    height: 36,
-    minHeight: 36,
-    padding: '0 14px',
-    borderRadius: 8,
-    fontWeight: 500,
-    fontSize: 13,
-    border: '1px solid #E5E5E5',
-    background: '#fff',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 6,
-    transition: 'all 0.15s ease',
-    color: '#6B6B6B',
-  } as React.CSSProperties,
-  btnPrimary: {
-    height: 36,
-    minHeight: 36,
-    padding: '0 14px',
-    borderRadius: 8,
-    fontWeight: 500,
-    fontSize: 13,
-    border: '1px solid #1A1A1A',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    transition: 'all 0.15s ease',
-    background: '#1A1A1A',
-    color: '#fff',
-    minWidth: 36,
-  } as React.CSSProperties,
-  input: {
-    height: 36,
-    padding: '0 10px',
-    borderRadius: 8,
-    border: '1px solid #E5E5E5',
-    background: '#fff',
-    color: '#1A1A1A',
-    fontSize: 13,
-    outline: 'none',
-    transition: 'border-color 0.15s ease',
-  } as React.CSSProperties,
-};
 
 // ─── Component ───
 
@@ -385,7 +273,7 @@ export default function ClientDashboard() {
 
   if (isVisitor) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px 32px' : '24px 32px 40px', maxWidth: 1100, margin: '0 auto' }}>
+      <div style={pageContainer(isMobile)}>
         <VisitorEmptyState
           icon="🚀"
           title="Bienvenue sur Freenzy.io"
@@ -403,27 +291,24 @@ export default function ClientDashboard() {
         {/* Feature Sections Grid — visible to visitors */}
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 16 }}>🧭</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>Explorez les fonctionnalités</span>
+            <span style={emojiIcon(16)}>🧭</span>
+            <span style={{ ...CU.sectionTitle, flex: 1 }}>Explorez les fonctionnalités</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {FEATURE_SECTIONS.map(section => (
               <div key={section.id} style={{
-                background: '#fff',
-                border: '1px solid #E5E5E5',
-                borderRadius: 8,
-                overflow: 'hidden',
+                ...CU.card, padding: 0, overflow: 'hidden',
               }}>
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 10,
                   padding: '12px 16px',
-                  borderBottom: '1px solid #E5E5E5',
-                  background: '#F7F7F7',
+                  borderBottom: `1px solid ${CU.border}`,
+                  background: CU.bgSecondary,
                 }}>
                   <span style={{ fontSize: 16 }}>{section.emoji}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>{section.title}</div>
-                    <div style={{ fontSize: 12, color: '#9B9B9B' }}>{section.subtitle}</div>
+                    <div style={CU.sectionTitle}>{section.title}</div>
+                    <div style={CU.pageSubtitle}>{section.subtitle}</div>
                   </div>
                 </div>
                 <div style={{
@@ -435,13 +320,13 @@ export default function ClientDashboard() {
                     <div key={item.id} style={{
                       display: 'flex', alignItems: 'center', gap: 10,
                       padding: '12px 16px',
-                      borderBottom: '1px solid #E5E5E5',
+                      borderBottom: `1px solid ${CU.border}`,
                       opacity: 0.7,
                     }}>
                       <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{item.label}</div>
-                        <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 1 }}>{item.desc}</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{item.label}</div>
+                        <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 1 }}>{item.desc}</div>
                       </div>
                     </div>
                   ))}
@@ -455,19 +340,19 @@ export default function ClientDashboard() {
   }
 
   return (
-    <div style={{ padding: isMobile ? '16px 12px 32px' : '24px 32px 40px', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {showWelcome && (
         <FreenzyWelcome userName={userName} tier={session.tier || 'guest'} onDismiss={() => setShowWelcome(false)} />
       )}
 
       {/* ── Greeting Header — compact single row ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-        <span style={{ fontSize: 20, lineHeight: 1 }}>👋</span>
+      <div style={headerRow()}>
+        <span style={emojiIcon(20)}>👋</span>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', lineHeight: 1.3 }}>
+          <span style={{ ...CU.pageTitle, fontSize: 16 }}>
             {greeting}, {userName || 'cher client'}
           </span>
-          <span style={{ fontSize: 12, color: '#9B9B9B', lineHeight: 1.3 }}>
+          <span style={CU.pageSubtitle}>
             {todayStr}
           </span>
         </div>
@@ -478,15 +363,15 @@ export default function ClientDashboard() {
       {!hasProfile && !isDismissed('onboarding') && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', marginBottom: 12,
-          background: 'rgba(0,0,0,0.04)', borderRadius: 8,
-          border: '1px solid #E5E5E5',
+          background: CU.accentLight, borderRadius: 8,
+          border: `1px solid ${CU.border}`,
         }}>
           <span style={{ fontSize: 16 }}>🏗️</span>
-          <span style={{ flex: 1, fontSize: 12, color: '#6B6B6B' }}>Complétez votre profil pour des résultats optimaux</span>
-          <Link href="/client/onboarding" style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          <span style={{ flex: 1, fontSize: 12, color: CU.textSecondary }}>Complétez votre profil pour des résultats optimaux</span>
+          <Link href="/client/onboarding" style={{ fontSize: 13, fontWeight: 600, color: CU.accent, textDecoration: 'none', whiteSpace: 'nowrap' }}>
             Configurer →
           </Link>
-          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: '#9B9B9B' }}>×</button>
+          <button onClick={() => dismissFor('onboarding', 3)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', fontSize: 14, color: CU.textMuted }}>×</button>
         </div>
       )}
 
@@ -498,14 +383,14 @@ export default function ClientDashboard() {
         marginBottom: 16,
       }}>
         <Link href="/client/account" style={{
-          ...CU.cardHover, textDecoration: 'none', padding: '12px 14px',
+          ...CU.cardHoverable, textDecoration: 'none', padding: '12px 14px',
           display: 'flex', alignItems: 'flex-start', gap: 10,
         }}>
           <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>💰</span>
           <div>
-            <div style={CU.kpiLabel}>Crédits</div>
-            <div style={CU.kpiValue}>{credits.toFixed(1)}</div>
-            <div style={CU.kpiMeta}>
+            <div style={CU.statLabel}>Crédits</div>
+            <div style={CU.statValue}>{credits.toFixed(1)}</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>
               {daysLeft > 0 ? `~${daysLeft}j · ${averageDaily}/j` : 'Rechargez'}
             </div>
           </div>
@@ -513,28 +398,28 @@ export default function ClientDashboard() {
         <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
           <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>💬</span>
           <div>
-            <div style={CU.kpiLabel}>Messages</div>
-            <div style={CU.kpiValue}>{stats.totalMessages}</div>
-            <div style={CU.kpiMeta}>Conversations</div>
+            <div style={CU.statLabel}>Messages</div>
+            <div style={CU.statValue}>{stats.totalMessages}</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>Conversations</div>
           </div>
         </div>
         <Link href="/client/agents" style={{
-          ...CU.cardHover, textDecoration: 'none', padding: '12px 14px',
+          ...CU.cardHoverable, textDecoration: 'none', padding: '12px 14px',
           display: 'flex', alignItems: 'flex-start', gap: 10,
         }}>
           <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>🤖</span>
           <div>
-            <div style={CU.kpiLabel}>Assistants</div>
-            <div style={CU.kpiValue}>{activeAgents.length}</div>
-            <div style={CU.kpiMeta}>sur {DEFAULT_AGENTS.length}</div>
+            <div style={CU.statLabel}>Assistants</div>
+            <div style={CU.statValue}>{activeAgents.length}</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>sur {DEFAULT_AGENTS.length}</div>
           </div>
         </Link>
         <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
           <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>🔥</span>
           <div>
-            <div style={CU.kpiLabel}>Streak</div>
-            <div style={CU.kpiValue}>{stats.streak}j</div>
-            <div style={CU.kpiMeta}>Jours consécutifs</div>
+            <div style={CU.statLabel}>Streak</div>
+            <div style={CU.statValue}>{stats.streak}j</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>Jours consécutifs</div>
           </div>
         </div>
       </div>
@@ -544,11 +429,11 @@ export default function ClientDashboard() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 16 }}>🧠</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>Briefing IA du jour</span>
+            <span style={CU.sectionTitle}>Briefing IA du jour</span>
             <HelpBubble text="Chaque matin, votre IA analyse votre activité et vous propose un résumé actionnable." />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {briefingTime && <span style={{ fontSize: 11, color: '#9B9B9B' }}>Mis à jour à {briefingTime}</span>}
+            {briefingTime && <span style={{ fontSize: 11, color: CU.textMuted }}>Mis à jour à {briefingTime}</span>}
             <button
               onClick={refreshBriefing}
               disabled={briefingLoading}
@@ -562,22 +447,22 @@ export default function ClientDashboard() {
           </div>
         </div>
         {briefingLoading && !briefingLoaded ? (
-          <div style={{ padding: '12px 0', color: '#9B9B9B', fontSize: 13, fontStyle: 'italic' }}>
+          <div style={{ padding: '12px 0', color: CU.textMuted, fontSize: 13, fontStyle: 'italic' }}>
             ⏳ Votre briefing IA est en cours de génération...
           </div>
         ) : briefing ? (
           <div style={{
-            fontSize: 13, lineHeight: 1.7, color: '#6B6B6B',
-            background: '#F7F7F7', borderRadius: 8, padding: '12px 16px',
+            fontSize: 13, lineHeight: 1.7, color: CU.textSecondary,
+            background: CU.bgSecondary, borderRadius: 8, padding: '12px 16px',
             whiteSpace: 'pre-wrap',
           }}>
             {briefing}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '24px 0' }}>
-            <div style={{ fontSize: 40, marginBottom: 8 }}>🧠</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', marginBottom: 4 }}>Briefing IA</div>
-            <div style={{ fontSize: 13, color: '#9B9B9B' }}>
+          <div style={CU.emptyState}>
+            <div style={CU.emptyEmoji}>🧠</div>
+            <div style={CU.emptyTitle}>Briefing IA</div>
+            <div style={CU.emptyDesc}>
               Connectez-vous pour recevoir votre briefing quotidien.
             </div>
           </div>
@@ -588,23 +473,19 @@ export default function ClientDashboard() {
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ fontSize: 16 }}>⚡</span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>Actions rapides</span>
+          <span style={{ ...CU.sectionTitle, flex: 1 }}>Actions rapides</span>
           <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
         </div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-          gap: 12,
-        }}>
+        <div style={cardGrid(isMobile, 3)}>
           {QUICK_ACTIONS.map(action => (
             <Link key={action.href} href={action.href} style={{
-              ...CU.cardHover, textDecoration: 'none', padding: '14px 16px',
+              ...CU.cardHoverable, textDecoration: 'none', padding: '14px 16px',
               display: 'flex', alignItems: 'center', gap: 12,
             }}>
               <span style={{ fontSize: 28, flexShrink: 0 }}>{action.emoji}</span>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{action.label}</div>
-                <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>{action.desc}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{action.label}</div>
+                <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{action.desc}</div>
               </div>
             </Link>
           ))}
@@ -614,11 +495,11 @@ export default function ClientDashboard() {
       {/* ── Todos & Priorities ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, marginBottom: 24 }}>
         {/* Todos */}
-        <div style={{ ...CU.card, padding: '16px' }}>
+        <div style={{ ...CU.card, padding: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <span style={{ fontSize: 16 }}>✅</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>
-              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: '#9B9B9B' }}>({todosDone}/{todosTotal})</span>}
+            <span style={{ ...CU.sectionTitle, flex: 1 }}>
+              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: CU.textMuted }}>({todosDone}/{todosTotal})</span>}
             </span>
             <HelpBubble text="Ajoutez vos tâches pour la journée. Elles sont sauvegardées automatiquement." />
           </div>
@@ -636,15 +517,15 @@ export default function ClientDashboard() {
           <div style={{ maxHeight: 200, overflowY: 'auto' }}>
             {todos.length === 0 && (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                <div style={{ fontSize: 40, marginBottom: 4 }}>✅</div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', marginBottom: 2 }}>Aucune tâche</div>
-                <div style={{ fontSize: 13, color: '#9B9B9B' }}>Ajoutez-en une ci-dessus</div>
+                <div style={CU.emptyEmoji}>✅</div>
+                <div style={CU.emptyTitle}>Aucune tâche</div>
+                <div style={{ fontSize: 13, color: CU.textMuted }}>Ajoutez-en une ci-dessus</div>
               </div>
             )}
             {todos.map(todo => (
               <div key={todo.id} style={{
                 display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
-                borderBottom: '1px solid #E5E5E5',
+                borderBottom: `1px solid ${CU.border}`,
               }}>
                 <button onClick={() => toggleTodo(todo.id)} style={{
                   background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, padding: 0,
@@ -652,14 +533,14 @@ export default function ClientDashboard() {
                   {todo.done ? '✅' : '⬜'}
                 </button>
                 <span style={{
-                  flex: 1, fontSize: 13, color: '#1A1A1A',
+                  flex: 1, fontSize: 13, color: CU.text,
                   textDecoration: todo.done ? 'line-through' : 'none',
                   opacity: todo.done ? 0.5 : 1,
                 }}>
                   {todo.text}
                 </span>
                 <button onClick={() => removeTodo(todo.id)} style={{
-                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#9B9B9B',
+                  background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: CU.textMuted,
                   padding: '0 4px',
                 }}>
                   ×
@@ -670,17 +551,17 @@ export default function ClientDashboard() {
         </div>
 
         {/* Priorities */}
-        <div style={{ ...CU.card, padding: '16px' }}>
+        <div style={{ ...CU.card, padding: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <span style={{ fontSize: 16 }}>🎯</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>3 priorités du jour</span>
+            <span style={{ ...CU.sectionTitle, flex: 1 }}>3 priorités du jour</span>
             <HelpBubble text="Définissez vos 3 objectifs principaux. Restez concentré sur l'essentiel." />
           </div>
           {[0, 1, 2].map(idx => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <span style={{
                 width: 24, height: 24, borderRadius: '50%',
-                background: '#1A1A1A',
+                background: CU.accent,
                 color: '#fff', fontSize: 12, fontWeight: 800,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
@@ -703,29 +584,27 @@ export default function ClientDashboard() {
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ fontSize: 16 }}>🧭</span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1 }}>Toutes vos fonctionnalités</span>
+          <span style={{ ...CU.sectionTitle, flex: 1 }}>Toutes vos fonctionnalités</span>
           <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {FEATURE_SECTIONS.map(section => (
             <div key={section.id} style={{
-              ...CU.card,
-              padding: 0,
-              overflow: 'hidden',
+              ...CU.card, padding: 0, overflow: 'hidden',
             }}>
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '12px 16px',
-                borderBottom: '1px solid #E5E5E5',
-                background: '#F7F7F7',
+                borderBottom: `1px solid ${CU.border}`,
+                background: CU.bgSecondary,
               }}>
                 <span style={{ fontSize: 16 }}>{section.emoji}</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>
+                  <div style={CU.sectionTitle}>
                     {section.title}
-                    {section.proOnly && <span style={{ fontSize: 10, fontWeight: 700, color: '#1A1A1A', marginLeft: 8, padding: '1px 6px', background: 'rgba(0,0,0,0.06)', borderRadius: 4 }}>PRO</span>}
+                    {section.proOnly && <span style={{ ...CU.badge, fontSize: 10, fontWeight: 700, marginLeft: 8 }}>PRO</span>}
                   </div>
-                  <div style={{ fontSize: 12, color: '#9B9B9B' }}>{section.subtitle}</div>
+                  <div style={CU.pageSubtitle}>{section.subtitle}</div>
                 </div>
               </div>
               <div style={{
@@ -738,14 +617,14 @@ export default function ClientDashboard() {
                     textDecoration: 'none',
                     display: 'flex', alignItems: 'center', gap: 10,
                     padding: '12px 16px',
-                    borderBottom: '1px solid #E5E5E5',
+                    borderBottom: `1px solid ${CU.border}`,
                     transition: 'background 0.15s ease',
                     color: 'inherit',
                   }}>
                     <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{item.label}</div>
-                      <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 1 }}>{item.desc}</div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{item.label}</div>
+                      <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 1 }}>{item.desc}</div>
                     </div>
                   </Link>
                 ))}
@@ -760,16 +639,16 @@ export default function ClientDashboard() {
         <div style={{
           ...CU.card,
           display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', marginBottom: 16,
-          background: '#F7F7F7',
+          background: CU.bgSecondary,
         }}>
           <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, textDecoration: 'none', color: 'inherit' }}>
             <span style={{ fontSize: 28 }}>🎁</span>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>Invitez un ami, gagnez 20€</div>
-              <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
+              <div style={{ ...CU.sectionTitle, fontSize: 14 }}>Invitez un ami, gagnez 20€</div>
+              <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
             </div>
           </Link>
-          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: '#9B9B9B' }}>
+          <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: CU.textMuted }}>
             ×
           </button>
         </div>

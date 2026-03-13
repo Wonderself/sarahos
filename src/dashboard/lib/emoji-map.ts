@@ -179,6 +179,12 @@ export const PAGE_META: Record<string, PageMeta> = {
     subtitle: 'Votre équipe d\'assistants',
     helpText: 'Gérez vos assistants actifs, créez des assistants personnalisés, configurez leurs comportements.',
   },
+  'agents-create': {
+    emoji: '✨',
+    title: 'Créer un assistant',
+    subtitle: 'Configurez votre assistant IA personnalisé',
+    helpText: 'Créez un assistant IA sur mesure en quelques étapes : identité, domaine, comportement, test et déploiement.',
+  },
   formations: {
     emoji: '🎓',
     title: 'Formations',

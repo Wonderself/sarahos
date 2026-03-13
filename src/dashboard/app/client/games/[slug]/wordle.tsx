@@ -275,7 +275,7 @@ export default function WordleGame() {
           <button
             onClick={reset}
             style={{
-              background: '#7c3aed',
+              background: 'var(--accent)',
               color: '#fff',
               border: 'none',
               borderRadius: 10,

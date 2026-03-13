@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Notes rapides
@@ -128,68 +129,66 @@ export default function NotesPage() {
 
   if (!mounted) return null;
 
-  const inputStyle: React.CSSProperties = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 };
-  const btnStyle: React.CSSProperties = { padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 };
-
   return (
-    <div style={{ padding: isMobile ? 16 : 32, maxWidth: 1100, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-        <span style={{ fontSize: 28 }}>{meta.emoji}</span>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{meta.title}</h1>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{meta.emoji}</span>
+        <h1 style={CU.pageTitle}>{meta.title}</h1>
         <PageExplanation pageId="notes" text={meta.helpText} />
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 20, fontSize: 14 }}>{meta.subtitle}</p>
+      <p style={{ ...CU.pageSubtitle, marginBottom: 20 }}>{meta.subtitle}</p>
 
       {/* Toolbar */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 20, alignItems: 'center' }}>
-        <input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} style={{ ...inputStyle, maxWidth: 240 }} />
+      <div style={toolbar()}>
+        <input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} style={{ ...CU.input, maxWidth: 240 }} />
         {allTags.length > 0 && (
-          <select value={filterTag} onChange={e => setFilterTag(e.target.value)} style={{ ...inputStyle, maxWidth: 160 }}>
+          <select value={filterTag} onChange={e => setFilterTag(e.target.value)} style={{ ...CU.select, maxWidth: 160 }}>
             <option value="">Tous les tags</option>
             {allTags.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         )}
-        <button onClick={() => setShowNew(!showNew)} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>+ Nouvelle note</button>
+        <button onClick={() => setShowNew(!showNew)} style={CU.btnPrimary}>+ Nouvelle note</button>
       </div>
 
       {/* New note form */}
       {showNew && (
-        <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, marginBottom: 20, border: '1px solid var(--border-primary)' }}>
-          <input placeholder="Titre" value={newTitle} onChange={e => setNewTitle(e.target.value)} style={{ ...inputStyle, marginBottom: 10, fontWeight: 600 }} />
-          <textarea placeholder="Contenu..." value={newContent} onChange={e => setNewContent(e.target.value)} rows={4} style={{ ...inputStyle, marginBottom: 10, resize: 'vertical' }} />
+        <div style={{ ...CU.card, padding: isMobile ? 16 : 20, marginBottom: 20 }}>
+          <input placeholder="Titre" value={newTitle} onChange={e => setNewTitle(e.target.value)} style={{ ...CU.input, marginBottom: 10, fontWeight: 600 }} />
+          <textarea placeholder="Contenu..." value={newContent} onChange={e => setNewContent(e.target.value)} rows={4} style={{ ...CU.textarea, marginBottom: 10 }} />
           <div style={{ display: 'flex', gap: 8, marginBottom: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Couleur :</span>
+            <span style={CU.label}>Couleur :</span>
             {COLORS.map(c => (
-              <button key={c.value} onClick={() => setNewColor(c.value)} style={{ width: 28, height: 28, borderRadius: '50%', background: c.value, border: newColor === c.value ? '3px solid var(--accent)' : '2px solid var(--border-primary)', cursor: 'pointer' }} title={c.name} />
+              <button key={c.value} onClick={() => setNewColor(c.value)} style={{ width: 28, height: 28, borderRadius: '50%', background: c.value, border: newColor === c.value ? `3px solid ${CU.accent}` : `2px solid ${CU.border}`, cursor: 'pointer' }} title={c.name} />
             ))}
           </div>
           <div style={{ display: 'flex', gap: 8, marginBottom: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-            <input placeholder="Ajouter un tag..." value={newTag} onChange={e => setNewTag(e.target.value)} onKeyDown={e => e.key === 'Enter' && addNewTag()} style={{ ...inputStyle, maxWidth: 160 }} />
-            <button onClick={addNewTag} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)' }}>+</button>
+            <input placeholder="Ajouter un tag..." value={newTag} onChange={e => setNewTag(e.target.value)} onKeyDown={e => e.key === 'Enter' && addNewTag()} style={{ ...CU.input, maxWidth: 160 }} />
+            <button onClick={addNewTag} style={CU.btnGhost}>+</button>
             {newTags.map(t => (
-              <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 10px', borderRadius: 12, background: 'var(--accent)', color: '#fff', fontSize: 12 }}>
+              <span key={t} style={{ ...CU.badge, gap: 4 }}>
                 {t} <span style={{ cursor: 'pointer' }} onClick={() => setNewTags(newTags.filter(x => x !== t))}>x</span>
               </span>
             ))}
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={createNote} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>Enregistrer</button>
-            <button onClick={() => setShowNew(false)} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)' }}>Annuler</button>
+            <button onClick={createNote} style={CU.btnPrimary}>Enregistrer</button>
+            <button onClick={() => setShowNew(false)} style={CU.btnGhost}>Annuler</button>
           </div>
         </div>
       )}
 
       {/* Notes grid */}
       {filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📝</div>
-          <p style={{ fontSize: 16 }}>Aucune note trouvée. Créez votre première note !</p>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>📝</div>
+          <div style={CU.emptyTitle}>Aucune note trouvée</div>
+          <div style={CU.emptyDesc}>Créez votre première note !</div>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
+        <div style={cardGrid(isMobile, 2)}>
           {filtered.map(n => (
-            <div key={n.id} style={{ background: n.color, borderRadius: 12, padding: isMobile ? 16 : 20, position: 'relative', border: '1px solid var(--border-primary)' }}>
+            <div key={n.id} style={{ background: n.color, borderRadius: 8, padding: isMobile ? 16 : 20, position: 'relative', border: `1px solid ${CU.border}` }}>
               {/* Pin + Delete */}
               <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', gap: 6 }}>
                 <button onClick={() => togglePin(n.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: n.isPinned ? 1 : 0.4 }} title={n.isPinned ? 'Désépingler' : 'Épingler'}>📌</button>
@@ -197,11 +196,11 @@ export default function NotesPage() {
               </div>
               {editingId === n.id ? (
                 <div>
-                  <input value={editTitle} onChange={e => setEditTitle(e.target.value)} style={{ ...inputStyle, marginBottom: 8, fontWeight: 600, background: 'rgba(255,255,255,0.6)' }} />
-                  <textarea value={editContent} onChange={e => setEditContent(e.target.value)} rows={4} style={{ ...inputStyle, marginBottom: 8, resize: 'vertical', background: 'rgba(255,255,255,0.6)' }} />
+                  <input value={editTitle} onChange={e => setEditTitle(e.target.value)} style={{ ...CU.input, marginBottom: 8, fontWeight: 600, background: 'rgba(255,255,255,0.6)' }} />
+                  <textarea value={editContent} onChange={e => setEditContent(e.target.value)} rows={4} style={{ ...CU.textarea, marginBottom: 8, background: 'rgba(255,255,255,0.6)' }} />
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => saveEdit(n.id)} style={{ ...btnStyle, background: '#333', color: '#fff', fontSize: 12 }}>Sauvegarder</button>
-                    <button onClick={() => setEditingId(null)} style={{ ...btnStyle, background: 'rgba(255,255,255,0.6)', color: '#333', fontSize: 12, border: '1px solid #ccc' }}>Annuler</button>
+                    <button onClick={() => saveEdit(n.id)} style={{ ...CU.btnPrimary, fontSize: 12, height: 30 }}>Sauvegarder</button>
+                    <button onClick={() => setEditingId(null)} style={{ ...CU.btnGhost, fontSize: 12, height: 30 }}>Annuler</button>
                   </div>
                 </div>
               ) : (
@@ -213,7 +212,7 @@ export default function NotesPage() {
               {n.tags.length > 0 && (
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
                   {n.tags.map(t => (
-                    <span key={t} style={{ padding: '2px 8px', borderRadius: 10, background: 'rgba(0,0,0,0.1)', fontSize: 11, color: '#444' }}>{t}</span>
+                    <span key={t} style={{ ...CU.badge, background: 'rgba(0,0,0,0.1)', color: '#444' }}>{t}</span>
                   ))}
                 </div>
               )}

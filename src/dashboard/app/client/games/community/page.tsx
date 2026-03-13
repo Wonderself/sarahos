@@ -3,6 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import StarRating from '@/components/StarRating';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import {
   loadCommunityGames,
   rateGame,
@@ -14,6 +18,8 @@ import {
 type SortMode = 'recent' | 'rated' | 'played';
 
 export default function CommunityPage() {
+  const isMobile = useIsMobile();
+  const meta = PAGE_META['games-community'];
   const [games, setGames] = useState<UserGame[]>([]);
   const [sort, setSort] = useState<SortMode>('recent');
   const [playing, setPlaying] = useState<UserGame | null>(null);
@@ -91,13 +97,12 @@ export default function CommunityPage() {
     if (finished) {
       const alreadyRated = hasRated(playing.id);
       return (
-        <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '32px 24px' }}>
-          <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-            <span style={{ fontSize: 44, marginBottom: 12, display: 'block' }}>
+        <div style={{ ...pageContainer(isMobile), maxWidth: 600, textAlign: 'center' }}>
+            <span style={CU.emptyEmoji}>
               🏆
             </span>
-            <h2 style={{ color: 'var(--fz-text, #1E293B)', margin: '0 0 8px 0' }}>Jeu terminé !</h2>
-            <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14, marginBottom: 8 }}>
+            <h2 style={{ color: CU.text, margin: '0 0 8px 0' }}>Jeu terminé !</h2>
+            <p style={{ color: CU.textMuted, fontSize: 14, marginBottom: 8 }}>
               {playing.title}
             </p>
             <div style={{ color: '#f59e0b', fontSize: 22, fontWeight: 700, marginBottom: 24 }}>
@@ -106,7 +111,7 @@ export default function CommunityPage() {
 
             {!alreadyRated && (
               <div style={{ marginBottom: 24 }}>
-                <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, marginBottom: 10 }}>
+                <p style={{ color: CU.textMuted, fontSize: 13, marginBottom: 10 }}>
                   Notez ce jeu :
                 </p>
                 <StarRating value={0} size={32} onChange={(r) => handleRate(playing.id, r)} />
@@ -116,59 +121,39 @@ export default function CommunityPage() {
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
               <button
                 onClick={() => startGame(playing)}
-                style={{
-                  background: 'var(--fz-border, #E2E8F0)',
-                  color: 'var(--fz-text, #1E293B)',
-                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-                  borderRadius: 10,
-                  padding: '10px 20px',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
+                style={CU.btnGhost}
               >
                 Rejouer
               </button>
               <button
                 onClick={() => { setPlaying(null); loadGames(); }}
-                style={{
-                  background: 'var(--fz-accent, #0EA5E9)',
-                  color: 'var(--fz-text, #1E293B)',
-                  border: 'none',
-                  borderRadius: 10,
-                  padding: '10px 20px',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
+                style={CU.btnPrimary}
               >
                 Retour
               </button>
             </div>
-          </div>
         </div>
       );
     }
 
     const q = playing.questions[current];
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '32px 24px' }}>
-        <div style={{ maxWidth: 600, margin: '0 auto' }}>
+      <div style={{ ...pageContainer(isMobile), maxWidth: 600 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-            <span style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>
+            <span style={{ color: CU.textMuted, fontSize: 13 }}>
               {playing.title}
             </span>
-            <span style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13 }}>
+            <span style={{ color: CU.textMuted, fontSize: 13 }}>
               {current + 1}/{playing.questions.length}
             </span>
           </div>
 
-          <div style={{ height: 3, background: 'var(--fz-border, #E2E8F0)', borderRadius: 2, marginBottom: 24 }}>
+          <div style={{ height: 3, background: CU.border, borderRadius: 2, marginBottom: 24 }}>
             <div
               style={{
                 height: '100%',
                 width: `${((current + 1) / playing.questions.length) * 100}%`,
-                background: 'var(--fz-accent, #0EA5E9)',
+                background: CU.accent,
                 borderRadius: 2,
                 transition: 'width 0.3s',
               }}
@@ -177,21 +162,21 @@ export default function CommunityPage() {
 
           <div
             style={{
-              background: 'var(--fz-bg-secondary, #F8FAFC)',
-              borderRadius: 14,
+              background: CU.bgSecondary,
+              borderRadius: 8,
               padding: '24px 20px',
               marginBottom: 16,
             }}
           >
-            <p style={{ color: 'var(--fz-text, #1E293B)', fontSize: 16, fontWeight: 600, margin: 0, lineHeight: 1.5 }}>
+            <p style={{ color: CU.text, fontSize: 16, fontWeight: 600, margin: 0, lineHeight: 1.5 }}>
               {q.question}
             </p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {q.choices.map((choice, idx) => {
-              let bg = 'var(--fz-bg-secondary, #F8FAFC)';
-              let border = 'var(--fz-border, #E2E8F0)';
+              let bg = CU.bgSecondary;
+              let border = CU.border;
               if (showResult) {
                 if (choice === q.answer) { bg = 'rgba(34,197,94,0.15)'; border = '#22c55e'; }
                 else if (idx === selected && choice !== q.answer) { bg = 'rgba(239,68,68,0.15)'; border = '#ef4444'; }
@@ -203,9 +188,9 @@ export default function CommunityPage() {
                   style={{
                     background: bg,
                     border: `1px solid ${border}`,
-                    borderRadius: 10,
+                    borderRadius: 8,
                     padding: '14px 16px',
-                    color: 'var(--fz-text, #1E293B)',
+                    color: CU.text,
                     fontSize: 14,
                     textAlign: 'left',
                     cursor: showResult ? 'default' : 'pointer',
@@ -218,20 +203,18 @@ export default function CommunityPage() {
             })}
           </div>
         </div>
-      </div>
     );
   }
 
   // Games list
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '32px 24px' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        {/* Header */}
+    <div style={pageContainer(isMobile)}>
+        {/* Breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
           <Link
             href="/client/games"
             style={{
-              color: 'var(--fz-text-muted, #94A3B8)',
+              color: CU.textMuted,
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -242,20 +225,20 @@ export default function CommunityPage() {
             ←
             Arcade
           </Link>
-          <span style={{ color: 'var(--fz-border, #E2E8F0)' }}>/</span>
-          <span style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600 }}>Communauté</span>
+          <span style={{ color: CU.border }}>/</span>
+          <span style={{ color: CU.text, fontWeight: 600 }}>Communauté</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-          <span style={{ fontSize: 28 }}>
-            👥
-          </span>
-          <div>
-            <h1 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 22, fontWeight: 700, margin: 0 }}>Jeux de la communauté</h1>
-            <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, margin: 0 }}>
-              Jouez aux créations des autres joueurs
-            </p>
+        {/* Header */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{meta.emoji}</span>
+            <h1 style={CU.pageTitle}>Jeux de la communauté</h1>
+            <PageExplanation pageId="games-community" />
           </div>
+          <p style={CU.pageSubtitle}>
+            {meta.subtitle}
+          </p>
         </div>
 
         {/* Sort */}
@@ -265,14 +248,10 @@ export default function CommunityPage() {
               key={opt.value}
               onClick={() => setSort(opt.value)}
               style={{
-                background: sort === opt.value ? 'rgba(245,158,11,0.15)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                border: `1px solid ${sort === opt.value ? '#f59e0b' : 'var(--fz-border, #E2E8F0)'}`,
-                borderRadius: 8,
-                padding: '6px 14px',
-                color: sort === opt.value ? '#f59e0b' : 'var(--fz-text-muted, #94A3B8)',
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: 'pointer',
+                ...CU.btnSmall,
+                background: sort === opt.value ? CU.accentLight : CU.bg,
+                border: `1px solid ${sort === opt.value ? CU.accent : CU.border}`,
+                color: sort === opt.value ? CU.text : CU.textMuted,
               }}
             >
               {opt.label}
@@ -282,14 +261,13 @@ export default function CommunityPage() {
 
         {/* Games grid */}
         {games.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 60 }}>
-            <span style={{ fontSize: 44, color: 'var(--fz-text-muted, #94A3B8)', display: 'block', marginBottom: 12 }}>
-              🎮
-            </span>
-            <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>
+          <div style={CU.emptyState}>
+            <span style={CU.emptyEmoji}>🎮</span>
+            <div style={CU.emptyTitle}>Aucun jeu publié</div>
+            <div style={CU.emptyDesc}>
               Aucun jeu publié pour le moment.
-            </p>
-            <Link href="/client/games/create" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontSize: 13 }}>
+            </div>
+            <Link href="/client/games/create" style={{ color: CU.accent, textDecoration: 'none', fontSize: 13 }}>
               Créez le premier !
             </Link>
           </div>
@@ -306,33 +284,29 @@ export default function CommunityPage() {
                 key={game.id}
                 onClick={() => startGame(game)}
                 style={{
-                  background: 'var(--fz-bg-secondary, #F8FAFC)',
-                  border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-                  borderRadius: 14,
-                  padding: '18px 16px',
-                  cursor: 'pointer',
-                  transition: 'border-color 0.2s, transform 0.15s',
+                  ...CU.cardHoverable,
+                  background: CU.bgSecondary,
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.borderColor = '#f59e0b';
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--fz-border, #E2E8F0)';
+                  (e.currentTarget as HTMLElement).style.borderColor = CU.border;
                   (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                  <h3 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 15, fontWeight: 600, margin: 0, flex: 1 }}>
+                  <h3 style={{ color: CU.text, fontSize: 15, fontWeight: 600, margin: 0, flex: 1 }}>
                     {game.title}
                   </h3>
                   <span
                     style={{
                       fontSize: 10,
                       padding: '2px 8px',
-                      borderRadius: 10,
+                      borderRadius: 8,
                       background: game.type === 'quiz' ? 'rgba(245,158,11,0.15)' : game.type === 'enigma' ? 'rgba(14,165,233,0.15)' : 'rgba(6,182,212,0.15)',
-                      color: game.type === 'quiz' ? '#f59e0b' : game.type === 'enigma' ? 'var(--fz-accent, #0EA5E9)' : '#06b6d4',
+                      color: game.type === 'quiz' ? '#f59e0b' : game.type === 'enigma' ? CU.accent : '#06b6d4',
                       marginLeft: 8,
                       whiteSpace: 'nowrap',
                     }}
@@ -341,13 +315,13 @@ export default function CommunityPage() {
                   </span>
                 </div>
 
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 10 }}>
+                <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 10 }}>
                   par {game.authorName} — {game.questions.length} questions
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <StarRating value={game.averageRating} size={14} readonly showCount count={game.ratings.length} />
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>
+                  <div style={{ fontSize: 11, color: CU.textMuted }}>
                     <span style={{ fontSize: 13, verticalAlign: 'middle', marginRight: 3 }}>
                       ▶️
                     </span>
@@ -358,7 +332,6 @@ export default function CommunityPage() {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 }

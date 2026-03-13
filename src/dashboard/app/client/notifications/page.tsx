@@ -7,6 +7,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import AuthRequired from '../../../components/AuthRequired';
+import { CU, pageContainer, headerRow, emojiIcon, toolbar } from '../../../lib/page-styles';
 
 const NOTIF_READ_KEY = 'fz_notif_read';
 
@@ -46,47 +47,6 @@ const FILTER_LABELS: { id: FilterType; label: string }[] = [
   { id: 'update', label: 'Mises à jour' },
   { id: 'info', label: 'Infos' },
 ];
-
-// ── ClickUp-style tokens ──────────────────────────────────────────────────────
-const CU = {
-  card: {
-    border: '1px solid #E5E5E5' as const,
-    borderRadius: 8,
-    background: '#fff',
-  },
-  btn: {
-    height: 36,
-    padding: '0 14px',
-    borderRadius: 8,
-    fontWeight: 500 as const,
-    fontSize: 13,
-    cursor: 'pointer' as const,
-    border: '1px solid #E5E5E5' as const,
-    background: '#fff' as const,
-  },
-  btnPrimary: {
-    height: 36,
-    padding: '0 14px',
-    borderRadius: 8,
-    fontWeight: 500 as const,
-    fontSize: 13,
-    cursor: 'pointer' as const,
-    border: '1px solid #E5E5E5' as const,
-    background: '#fff',
-    color: '#1A1A1A',
-  },
-  btnGhost: {
-    height: 36,
-    padding: '0 14px',
-    borderRadius: 8,
-    fontWeight: 500 as const,
-    fontSize: 13,
-    cursor: 'pointer' as const,
-    border: '1px solid #E5E5E5',
-    background: '#fff',
-    color: '#6B6B6B',
-  },
-};
 
 function getReadIds(): string[] {
   try { return JSON.parse(localStorage.getItem(NOTIF_READ_KEY) ?? '[]'); } catch { return []; }
@@ -261,31 +221,25 @@ export default function NotificationsPage() {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  const typeColor: Record<NotifType, string> = {
-    alert: '#1A1A1A',
-    session: '#1A1A1A',
-    update: '#1A1A1A',
-    info: '#1A1A1A',
-  };
-
   const pageMeta = PAGE_META.notifications;
 
   return (
     <AuthRequired pageName="Notifications">
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: isMobile ? 8 : 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 22 }}>{pageMeta.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(22)}>{pageMeta.emoji}</span>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>
+              <h1 style={CU.pageTitle}>
                 <span className="fz-logo-word">{pageMeta.title}</span>
               </h1>
               {unreadCount > 0 && (
                 <span style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  ...CU.badgeDanger,
                   minWidth: 20, height: 20, borderRadius: 10,
+                  justifyContent: 'center',
                   background: '#ef4444', color: '#fff', fontSize: 11, fontWeight: 700, padding: '0 6px',
                 }}>
                   {unreadCount}
@@ -293,7 +247,7 @@ export default function NotificationsPage() {
               )}
               <HelpBubble text={pageMeta.helpText} />
             </div>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>
+            <p style={CU.pageSubtitle}>
               {unreadCount > 0
                 ? <>{unreadCount} notification{unreadCount > 1 ? 's' : ''} non lue{unreadCount > 1 ? 's' : ''}</>
                 : <><span className="fz-logo-word">Tout est à jour</span></>}
@@ -309,20 +263,16 @@ export default function NotificationsPage() {
       <PageExplanation pageId="notifications" text={PAGE_META.notifications?.helpText} />
 
       {/* Filter chips */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
+      <div style={toolbar()}>
         {FILTER_LABELS.map(f => (
           <button
             key={f.id}
             onClick={() => setFilter(f.id)}
-            style={{
-              ...CU.btn,
-              background: filter === f.id ? '#1A1A1A' : '#fff',
-              color: filter === f.id ? '#fff' : '#6B6B6B',
-              border: filter === f.id ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
-              height: isMobile ? 28 : 32,
-              fontSize: isMobile ? 11 : 12,
-              padding: isMobile ? '0 8px' : '0 12px',
-            }}
+            style={
+              filter === f.id
+                ? { ...CU.btnPrimary, height: isMobile ? 28 : 32, fontSize: isMobile ? 11 : 12, padding: isMobile ? '0 8px' : '0 12px' }
+                : { ...CU.btnGhost, height: isMobile ? 28 : 32, fontSize: isMobile ? 11 : 12, padding: isMobile ? '0 8px' : '0 12px' }
+            }
           >
             {f.label}
             {f.id !== 'all' && (
@@ -336,15 +286,15 @@ export default function NotificationsPage() {
 
       {/* Content */}
       {loading ? (
-        <div style={{ textAlign: 'center', color: 'var(--fz-text-muted, #94A3B8)', padding: 60 }}>
+        <div style={{ ...CU.emptyState }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>🔔</div>
-          <div>Chargement des notifications...</div>
+          <div style={{ color: CU.textMuted }}>Chargement des notifications...</div>
         </div>
       ) : filtered.length === 0 ? (
-        <div style={{ ...CU.card, textAlign: 'center', padding: '60px 24px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Tout est parfait !</div>
-          <div style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)' }}>Aucune notification dans cette catégorie.</div>
+        <div style={{ ...CU.card, ...CU.emptyState }}>
+          <div style={CU.emptyEmoji}>✅</div>
+          <div style={CU.emptyTitle}>Tout est parfait !</div>
+          <div style={CU.emptyDesc}>Aucune notification dans cette catégorie.</div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -357,10 +307,9 @@ export default function NotificationsPage() {
                 onMouseLeave={() => setHoveredId(null)}
                 style={{
                   ...CU.card,
-                  padding: '14px 16px',
-                  borderLeft: `3px solid ${typeColor[notif.type]}`,
+                  borderLeft: `3px solid ${CU.text}`,
                   opacity: notif.read ? 0.6 : 1,
-                  background: isHovered ? 'var(--fz-bg-secondary, #F8FAFC)' : 'var(--fz-bg, #FFFFFF)',
+                  background: isHovered ? CU.bgSecondary : CU.bg,
                   transition: 'opacity 0.15s, background 0.15s',
                   minHeight: 56,
                 }}
@@ -370,7 +319,7 @@ export default function NotificationsPage() {
                   <div style={{
                     width: 40, height: 40, borderRadius: 8, flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: typeColor[notif.type] + '12', fontSize: 20,
+                    background: CU.accentLight, fontSize: 20,
                   }}>
                     {TYPE_EMOJIS[notif.type]}
                   </div>
@@ -379,33 +328,29 @@ export default function NotificationsPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                        <span style={{
-                          padding: '2px 6px', borderRadius: 4,
-                          background: typeColor[notif.type] + '12', color: typeColor[notif.type],
-                          fontSize: 11, fontWeight: 600,
-                        }}>
+                        <span style={{ ...CU.badge, background: CU.accentLight, color: CU.text }}>
                           {TYPE_LABELS[notif.type]}
                         </span>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{notif.title}</span>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: CU.text }}>{notif.title}</span>
                         {!notif.read && (
                           <span style={{
                             display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-                            background: typeColor[notif.type],
+                            background: CU.accent,
                           }} />
                         )}
                       </div>
-                      <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: 11, color: CU.textMuted, flexShrink: 0, whiteSpace: 'nowrap' }}>
                         {relativeDate(notif.date)}
                       </span>
                     </div>
 
-                    <p style={{ fontSize: 13, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, margin: '6px 0 10px' }}>
+                    <p style={{ fontSize: 13, color: CU.textSecondary, lineHeight: 1.6, margin: '6px 0 10px' }}>
                       {notif.body}
                     </p>
 
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                       {notif.actionLabel && notif.actionHref && (
-                        <Link href={notif.actionHref} style={{ ...CU.btnPrimary, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', height: isMobile ? 40 : 30, fontSize: 12 }}>
+                        <Link href={notif.actionHref} style={{ ...CU.btnPrimary, textDecoration: 'none', height: isMobile ? 40 : 30, fontSize: 12 }}>
                           {notif.actionLabel}
                         </Link>
                       )}
@@ -430,18 +375,17 @@ export default function NotificationsPage() {
       {!loading && notifications.filter(n => n.type === 'alert').length === 0 && (
         <div style={{
           ...CU.card, textAlign: 'center', marginTop: 16, padding: '24px 20px',
-          borderLeft: '3px solid #1A1A1A', background: '#fff',
+          borderLeft: `3px solid ${CU.accent}`,
         }}>
           <span style={{ fontSize: 24 }}>✅</span>
-          <div style={{ fontSize: 14, fontWeight: 600, marginTop: 6, color: '#1A1A1A' }}>
+          <div style={{ fontSize: 14, fontWeight: 600, marginTop: 6, color: CU.text }}>
             Aucune alerte active — Votre compte est en bonne santé
           </div>
-          <div style={{ fontSize: 12, color: '#6B6B6B', marginTop: 4 }}>
+          <div style={{ fontSize: 12, color: CU.textSecondary, marginTop: 4 }}>
             Vos crédits sont suffisants et vos assistants sont opérationnels.
           </div>
           <Link href="/client/dashboard" style={{
-            ...CU.btnPrimary, display: 'inline-flex', alignItems: 'center',
-            marginTop: 12, textDecoration: 'none',
+            ...CU.btnPrimary, marginTop: 12, textDecoration: 'none',
           }}>
             Voir mon dashboard →
           </Link>

@@ -8,6 +8,7 @@ import {
 import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
 import PageExplanation from '../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -52,41 +53,6 @@ function getModelIcon(model: string) {
   const entry = MODEL_LABELS[model];
   return entry ? entry.icon : '🤖';
 }
-
-// ── ClickUp-style tokens ──────────────────────────────────────────────────────
-const CU = {
-  card: {
-    border: '1px solid #E5E5E5' as const,
-    borderRadius: 8,
-    background: '#fff',
-  },
-  sectionCard: {
-    border: '1px solid #E5E5E5' as const,
-    borderRadius: 8,
-    padding: '16px 24px',
-    background: '#fff',
-  },
-  statCard: {
-    border: '1px solid #E5E5E5' as const,
-    borderRadius: 8,
-    padding: '16px 20px',
-    background: '#fff',
-    display: 'flex' as const,
-    flexDirection: 'column' as const,
-    gap: 4,
-  },
-  statValue: { fontSize: 20, fontWeight: 700 as const },
-  statLabel: { fontSize: 12, color: '#9B9B9B' },
-  btn: {
-    height: 36,
-    padding: '0 12px',
-    borderRadius: 6,
-    fontWeight: 500 as const,
-    fontSize: 13,
-    cursor: 'pointer' as const,
-    border: '1px solid #E5E5E5' as const,
-  },
-};
 
 // ─── API helper ───────────────────────────────────────────────────────────────
 
@@ -161,22 +127,22 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
-        <div style={{ fontSize: 40 }}>📊</div>
-        <div style={{ fontSize: 13, color: '#9B9B9B' }}>Chargement des analytics...</div>
+      <div style={{ ...CU.emptyState, minHeight: 400 }}>
+        <div style={CU.emptyEmoji}>📊</div>
+        <div style={{ fontSize: 13, color: CU.textMuted }}>Chargement des analytics...</div>
       </div>
     );
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={{ ...pageContainer(isMobile), maxWidth: 1000 }}>
       {/* Page Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 22 }}>{PAGE_META.analytics.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.analytics.emoji}</span>
           <div style={{ flex: 1 }}>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.analytics.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.analytics.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.analytics.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.analytics.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.analytics.helpText} />
         </div>
@@ -184,20 +150,12 @@ export default function AnalyticsPage() {
       <PageExplanation pageId="analytics" text={PAGE_META.analytics?.helpText} />
 
       {/* Period selector */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
+      <div style={tabBar()}>
         {PERIOD_OPTIONS.map(p => (
           <button
             key={p.days}
             onClick={() => setPeriod(p.days)}
-            style={{
-              ...CU.btn,
-              height: 32,
-              fontSize: 12,
-              fontWeight: 600,
-              background: period === p.days ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: period === p.days ? '#fff' : 'var(--fz-text, #1E293B)',
-              border: period === p.days ? 'none' : '1px solid #E5E5E5',
-            }}
+            style={period === p.days ? CU.tabActive : CU.tab}
           >
             {p.label}
           </button>
@@ -206,8 +164,8 @@ export default function AnalyticsPage() {
 
       {error && (
         <div style={{
-          ...CU.card, marginBottom: 20, padding: '12px 16px',
-          borderLeft: '3px solid #ef4444', color: 'var(--danger)', fontSize: 13,
+          ...CU.card, marginBottom: 20,
+          borderLeft: `3px solid ${CU.danger}`, color: CU.danger, fontSize: 13,
         }}>
           {error}
         </div>
@@ -216,53 +174,55 @@ export default function AnalyticsPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '130px' : '180px'}, 1fr))`, gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤', color: '#1A1A1A' },
-          { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: '📨', color: '#1A1A1A' },
-          { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: '💰', color: '#1A1A1A' },
-          { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: '🤖', color: '#1A1A1A' },
+          { label: 'Tokens consommés', value: totalTokens >= 1000000 ? `${(totalTokens / 1000000).toFixed(1)}M` : totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(0)}k` : String(totalTokens), icon: '🔤' },
+          { label: 'Requêtes', value: totalRequests.toLocaleString('fr-FR'), icon: '📨' },
+          { label: 'Coût total', value: `${(totalCost / 1_000_000).toFixed(2)} cr`, icon: '💰' },
+          { label: 'Modèle principal', value: topModel ? getModelLabel(topModel.model).split(' ').slice(1).join(' ').slice(0, 20) : '—', icon: '🤖' },
         ].map(s => (
-          <div key={s.label} style={CU.statCard}>
-            <span style={{ fontSize: 20 }}>{s.icon}</span>
-            <span style={{ ...CU.statValue, fontSize: isMobile ? 16 : 20, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</span>
+          <div key={s.label} style={{ ...CU.card, display: 'flex', flexDirection: 'column' as const, gap: 4 }}>
+            <span style={emojiIcon(20)}>{s.icon}</span>
+            <span style={{ ...CU.statValue, fontSize: isMobile ? 16 : 20, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</span>
             <span style={CU.statLabel}>{s.label}</span>
           </div>
         ))}
       </div>
 
       {totalRequests === 0 ? (
-        <div style={{ ...CU.card, textAlign: 'center', padding: '60px 40px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
-          <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8, color: '#1A1A1A' }}>Aucune donnée sur cette période</div>
-          <div style={{ fontSize: 13, color: '#9B9B9B' }}>
-            Utilisez vos agents pour voir apparaître les <span className="fz-logo-word">analytics</span> ici
+        <div style={CU.card}>
+          <div style={CU.emptyState}>
+            <div style={CU.emptyEmoji}>📊</div>
+            <div style={CU.emptyTitle}>Aucune donnée sur cette période</div>
+            <div style={CU.emptyDesc}>
+              Utilisez vos agents pour voir apparaître les <span className="fz-logo-word">analytics</span> ici
+            </div>
           </div>
         </div>
       ) : (
         <>
           {/* Daily chart */}
           {last30Days.length > 0 && (
-            <div style={{ ...CU.sectionCard, padding: isMobile ? 12 : 24, marginBottom: 20, overflowX: 'auto' as const, WebkitOverflowScrolling: 'touch' as const }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#1A1A1A', margin: '0 0 16px' }}>Activité quotidienne</h3>
+            <div style={{ ...CU.card, padding: isMobile ? 12 : 24, marginBottom: 20, overflowX: 'auto' as const, WebkitOverflowScrolling: 'touch' as const }}>
+              <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>Activité quotidienne</h3>
               <ResponsiveContainer width="100%" height={isMobile ? 200 : 240}>
                 <BarChart data={last30Days} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5" />
-                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
-                  <YAxis tick={{ fontSize: 10, fill: 'var(--fz-text-muted, #94A3B8)' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={CU.border} />
+                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: CU.textMuted }} />
+                  <YAxis tick={{ fontSize: 10, fill: CU.textMuted }} />
                   <Tooltip />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="Tokens" fill="#1A1A1A" radius={[3, 3, 0, 0]} />
-                  <Bar dataKey="Requêtes" fill="#9B9B9B" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="Tokens" fill={CU.accent} radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="Requêtes" fill={CU.textMuted} radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-              <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 8, textAlign: 'center' }}>Tokens en milliers (k)</div>
+              <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 8, textAlign: 'center' }}>Tokens en milliers (k)</div>
             </div>
           )}
 
           <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 && !isMobile ? '1fr 1fr' : '1fr', gap: 16 }}>
             {/* Pie chart */}
             {pieData.length > 0 && (
-              <div style={{ ...CU.sectionCard, padding: 24 }}>
-                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#1A1A1A', margin: '0 0 16px' }}>Répartition par modèle</h3>
+              <div style={{ ...CU.card, padding: 24 }}>
+                <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>Répartition par modèle</h3>
                 <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
                     <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ percent }: { percent?: number }) => `${((percent ?? 0) * 100).toFixed(0)}%`} labelLine={false}>
@@ -276,14 +236,14 @@ export default function AnalyticsPage() {
             )}
 
             {/* Table by model */}
-            <div style={{ ...CU.sectionCard, padding: 24 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#1A1A1A', margin: '0 0 16px' }}>Détail par modèle</h3>
+            <div style={{ ...CU.card, padding: 24 }}>
+              <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>Détail par modèle</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {usageByModel.map((m, i) => (
                   <div key={m.model} style={{
                     display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '8px 10px', borderRadius: 6,
-                    background: '#F7F7F7',
+                    padding: '8px 10px', borderRadius: 8,
+                    background: CU.bgSecondary,
                     transition: 'background 0.15s',
                   }}>
                     <div style={{
@@ -291,14 +251,14 @@ export default function AnalyticsPage() {
                       background: PIE_COLORS[i % PIE_COLORS.length],
                     }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4, color: '#1A1A1A' }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4, color: CU.text }}>
                         <span style={{ fontSize: 14 }}>{getModelIcon(m.model)}</span> {getModelLabel(m.model)}
                       </div>
-                      <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 1 }}>
+                      <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 1 }}>
                         {m.totalRequests} req · {(m.totalTokens / 1000).toFixed(0)}k tokens
                       </div>
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', flexShrink: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: CU.text, flexShrink: 0 }}>
                       {(m.totalCost / 1_000_000).toFixed(3)} cr
                     </div>
                   </div>

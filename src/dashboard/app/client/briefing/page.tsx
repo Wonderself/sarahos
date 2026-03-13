@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react';
 import { Skeleton } from '../../../components/Skeleton';
 import { useToast } from '../../../components/Toast';
+import { useIsMobile } from '../../../lib/use-media-query';
+import { PAGE_META } from '../../../lib/emoji-map';
+import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -78,6 +82,7 @@ function sectionIcon(title: string): string {
 
 export default function BriefingPage() {
   const { showError, showSuccess } = useToast();
+  const isMobile = useIsMobile();
   const [briefing, setBriefing] = useState<BriefingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -156,15 +161,17 @@ export default function BriefingPage() {
   const sections = briefing ? parseSections(briefing.content) : [];
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 760, margin: '0 auto', padding: '24px 0' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 760 }}>
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>
-            ☀️ <span className="fz-logo-word">Briefing</span> du jour
-          </h1>
-          <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14 }}>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>☀️</span>
+            <h1 style={CU.pageTitle}>Briefing du jour</h1>
+            <PageExplanation pageId="briefing" text={PAGE_META.briefing?.helpText} />
+          </div>
+          <p style={CU.pageSubtitle}>
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             {briefing?.generated_at ? ` · Généré à ${briefing.generated_at}` : ''}
           </p>
@@ -172,8 +179,7 @@ export default function BriefingPage() {
         <button
           onClick={() => generateBriefing(true)}
           disabled={generating || loading}
-          className="btn btn-primary btn-sm"
-          style={{ minHeight: 44, flexShrink: 0 }}
+          style={{ ...CU.btnPrimary, opacity: (generating || loading) ? 0.5 : 1 }}
         >
           {generating ? <>⌛ Génération...</> : briefing ? <>🔄 Rafraîchir</> : <>✨ Générer</>}
         </button>
@@ -183,7 +189,7 @@ export default function BriefingPage() {
       {loading && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div key={i} style={{ ...CU.card, display: 'flex', flexDirection: 'column', gap: 10 }}>
               <Skeleton width="40%" height={20} />
               <Skeleton width="100%" height={14} />
               <Skeleton width="85%" height={14} />
@@ -196,20 +202,19 @@ export default function BriefingPage() {
       {/* Empty state */}
       {!loading && !briefing && !generating && (
         <div style={{
-          textAlign: 'center', padding: '60px 40px',
-          background: 'var(--fz-bg, #fff)', borderRadius: 20,
-          border: '2px dashed var(--fz-border, #E5E5E5)',
+          ...CU.emptyState,
+          border: `2px dashed ${CU.border}`,
+          borderRadius: 8,
         }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}>☀️</div>
-          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1A1A1A)' }}>Pas encore de briefing</h2>
-          <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-            Générez votre briefing <span className="fz-logo-word">IA</span> quotidien — priorités du jour, insights business et conseils personnalisés.
-          </p>
+          <div style={CU.emptyEmoji}>☀️</div>
+          <div style={CU.emptyTitle}>Pas encore de briefing</div>
+          <div style={CU.emptyDesc}>
+            Générez votre briefing IA quotidien — priorités du jour, insights business et conseils personnalisés.
+          </div>
           <button
             onClick={() => generateBriefing(true)}
             disabled={generating}
-            className="btn btn-primary"
-            style={{ minHeight: 44 }}
+            style={{ ...CU.btnPrimary, opacity: generating ? 0.5 : 1 }}
           >
             {generating ? <>⌛ Génération en cours...</> : <>✨ Générer mon briefing</>}
           </button>
@@ -220,7 +225,7 @@ export default function BriefingPage() {
       {generating && !briefing && (
         <div style={{ textAlign: 'center', padding: '60px 40px' }}>
           <div style={{ fontSize: 40, marginBottom: 12 }} className="animate-pulse">✨</div>
-          <p style={{ color: 'var(--fz-text-secondary, #6B6B6B)', fontSize: 14 }}>
+          <p style={{ color: CU.textSecondary, fontSize: 14 }}>
             Maëva analyse votre contexte et prépare votre briefing...
           </p>
         </div>
@@ -232,23 +237,20 @@ export default function BriefingPage() {
           {sections.map((section, i) => (
             <div
               key={i}
-              className="card"
               style={{
-                background: i === 0
-                  ? 'rgba(0,0,0,0.02)'
-                  : 'var(--fz-bg, #fff)',
-                borderColor: i === 0 ? '#E5E5E5' : 'var(--fz-border, #E5E5E5)',
+                ...CU.card,
+                background: i === 0 ? 'rgba(0,0,0,0.02)' : CU.bg,
               }}
             >
               {section.title && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                   <span style={{ fontSize: 18 }}>{sectionIcon(section.title)}</span>
-                  <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--fz-text, #1A1A1A)' }}>{section.title}</span>
+                  <span style={{ fontWeight: 700, fontSize: 15, color: CU.text }}>{section.title}</span>
                 </div>
               )}
               <div style={{
                 fontSize: 14,
-                color: 'var(--fz-text-secondary, #6B6B6B)',
+                color: CU.textSecondary,
                 lineHeight: 1.7,
                 whiteSpace: 'pre-wrap',
               }}>
@@ -261,8 +263,8 @@ export default function BriefingPage() {
 
       {/* Raw fallback if no sections parsed */}
       {!loading && briefing && sections.length === 0 && (
-        <div className="card">
-          <div style={{ fontSize: 14, color: 'var(--fz-text-secondary, #6B6B6B)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
+        <div style={CU.card}>
+          <div style={{ fontSize: 14, color: CU.textSecondary, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
             {briefing.content}
           </div>
         </div>

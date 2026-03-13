@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Suivi des habitudes
@@ -168,63 +169,61 @@ export default function HabitudesPage() {
 
   if (!mounted) return null;
 
-  const inputStyle: React.CSSProperties = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 };
-  const btnStyle: React.CSSProperties = { padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 };
-
   return (
-    <div style={{ padding: isMobile ? 16 : 32, maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-        <span style={{ fontSize: 28 }}>{meta.emoji}</span>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{meta.title}</h1>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{meta.emoji}</span>
+        <h1 style={CU.pageTitle}>{meta.title}</h1>
         <PageExplanation pageId="habitudes" text={meta.helpText} />
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 20, fontSize: 14 }}>{meta.subtitle}</p>
+      <p style={{ ...CU.pageSubtitle, marginBottom: 20 }}>{meta.subtitle}</p>
 
       {/* Daily progress */}
-      <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, marginBottom: 20, border: '1px solid var(--border-primary)' }}>
+      <div style={{ ...CU.card, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>Progression du jour</span>
-          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--accent)' }}>{todayDone}/{todayTotal} ({pct}%)</span>
+          <span style={CU.sectionTitle}>Progression du jour</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: CU.accent }}>{todayDone}/{todayTotal} ({pct}%)</span>
         </div>
-        <div style={{ width: '100%', height: 10, borderRadius: 5, background: 'var(--border-primary)', overflow: 'hidden' }}>
-          <div style={{ width: `${pct}%`, height: '100%', borderRadius: 5, background: 'var(--accent)', transition: 'width 0.3s ease' }} />
+        <div style={{ width: '100%', height: 10, borderRadius: 5, background: CU.border, overflow: 'hidden' }}>
+          <div style={{ width: `${pct}%`, height: '100%', borderRadius: 5, background: CU.accent, transition: 'width 0.3s ease' }} />
         </div>
       </div>
 
       {/* Add button */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-        <button onClick={() => setShowAdd(!showAdd)} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>+ Nouvelle habitude</button>
+        <button onClick={() => setShowAdd(!showAdd)} style={CU.btnPrimary}>+ Nouvelle habitude</button>
       </div>
 
       {/* Add form */}
       {showAdd && (
-        <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, marginBottom: 20, border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Ajouter une habitude</h3>
+        <div style={{ ...CU.card, marginBottom: 20 }}>
+          <h3 style={{ margin: '0 0 12px', ...CU.sectionTitle }}>Ajouter une habitude</h3>
           <div style={{ display: 'flex', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-            <input placeholder="Nom" value={newName} onChange={e => setNewName(e.target.value)} style={{ ...inputStyle, flex: 1, minWidth: 150 }} />
-            <input placeholder="Emoji" value={newEmoji} onChange={e => setNewEmoji(e.target.value)} style={{ ...inputStyle, width: 60 }} />
-            <input type="color" value={newColor} onChange={e => setNewColor(e.target.value)} style={{ width: 40, height: 36, borderRadius: 8, border: '1px solid var(--border-primary)', cursor: 'pointer', padding: 0 }} />
+            <input placeholder="Nom" value={newName} onChange={e => setNewName(e.target.value)} style={{ ...CU.input, flex: 1, minWidth: 150 }} />
+            <input placeholder="Emoji" value={newEmoji} onChange={e => setNewEmoji(e.target.value)} style={{ ...CU.input, width: 60, flex: 'none' }} />
+            <input type="color" value={newColor} onChange={e => setNewColor(e.target.value)} style={{ width: 40, height: 36, borderRadius: 8, border: `1px solid ${CU.border}`, cursor: 'pointer', padding: 0 }} />
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
             {PRESET_HABITS.map(p => (
-              <button key={p.name} onClick={() => addHabit(p.name, p.emoji, p.color)} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)', fontSize: 12 }}>
+              <button key={p.name} onClick={() => addHabit(p.name, p.emoji, p.color)} style={CU.btnSmall}>
                 {p.emoji} {p.name}
               </button>
             ))}
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={() => { if (newName.trim()) addHabit(newName.trim(), newEmoji, newColor); }} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>Ajouter</button>
-            <button onClick={() => setShowAdd(false)} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)' }}>Annuler</button>
+            <button onClick={() => { if (newName.trim()) addHabit(newName.trim(), newEmoji, newColor); }} style={CU.btnPrimary}>Ajouter</button>
+            <button onClick={() => setShowAdd(false)} style={CU.btnGhost}>Annuler</button>
           </div>
         </div>
       )}
 
       {/* Habits list */}
       {state.habits.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
-          <p>Aucune habitude créée. Commencez par en ajouter une !</p>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>✅</div>
+          <div style={CU.emptyTitle}>Aucune habitude créée</div>
+          <div style={CU.emptyDesc}>Commencez par en ajouter une !</div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -234,18 +233,18 @@ export default function HabitudesPage() {
             const bestSt = getBestStreak(h);
             const rate = getCompletionRate(h);
             return (
-              <div key={h.id} style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 14 : 18, border: '1px solid var(--border-primary)', borderLeft: `4px solid ${h.color}` }}>
+              <div key={h.id} style={{ ...CU.card, borderLeft: `4px solid ${h.color}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <button onClick={() => toggleToday(h.id)} style={{ width: 32, height: 32, borderRadius: 8, border: `2px solid ${h.color}`, background: isDone ? h.color : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: isDone ? '#fff' : 'transparent' }}>
                       {isDone ? '✓' : ''}
                     </button>
                     <span style={{ fontSize: 20 }}>{h.emoji}</span>
-                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', textDecoration: isDone ? 'line-through' : 'none', opacity: isDone ? 0.7 : 1 }}>{h.name}</span>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: CU.text, textDecoration: isDone ? 'line-through' : 'none', opacity: isDone ? 0.7 : 1 }}>{h.name}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                     {streak > 0 && <span style={{ fontSize: 13, color: '#F59E0B', fontWeight: 600 }}>🔥 {streak}j</span>}
-                    <button onClick={() => setEditingId(editingId === h.id ? null : h.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--text-secondary)' }}>📊</button>
+                    <button onClick={() => setEditingId(editingId === h.id ? null : h.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: CU.textSecondary }}>📊</button>
                     <button onClick={() => deleteHabit(h.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, opacity: 0.5 }}>🗑️</button>
                   </div>
                 </div>
@@ -257,8 +256,8 @@ export default function HabitudesPage() {
                     const isToday = d === today();
                     return (
                       <div key={d} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                        <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{dayLabels[new Date(d).getDay()]}</span>
-                        <div style={{ width: isMobile ? 28 : 32, height: isMobile ? 28 : 32, borderRadius: 6, background: done ? h.color : 'var(--bg-primary)', border: isToday ? `2px solid var(--accent)` : '1px solid var(--border-primary)', opacity: done ? 1 : 0.4 }} />
+                        <span style={{ fontSize: 10, color: CU.textSecondary }}>{dayLabels[new Date(d).getDay()]}</span>
+                        <div style={{ width: isMobile ? 28 : 32, height: isMobile ? 28 : 32, borderRadius: 6, background: done ? h.color : CU.bg, border: isToday ? `2px solid ${CU.accent}` : `1px solid ${CU.border}`, opacity: done ? 1 : 0.4 }} />
                       </div>
                     );
                   })}
@@ -267,17 +266,17 @@ export default function HabitudesPage() {
                 {/* Expanded stats */}
                 {editingId === h.id && (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 8 }}>
-                    <div style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
+                    <div style={{ ...CU.card, textAlign: 'center' as const }}>
                       <div style={{ fontSize: 20, fontWeight: 700, color: h.color }}>{streak}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Streak actuel</div>
+                      <div style={{ fontSize: 11, color: CU.textSecondary }}>Streak actuel</div>
                     </div>
-                    <div style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
+                    <div style={{ ...CU.card, textAlign: 'center' as const }}>
                       <div style={{ fontSize: 20, fontWeight: 700, color: h.color }}>{bestSt}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Meilleur streak</div>
+                      <div style={{ fontSize: 11, color: CU.textSecondary }}>Meilleur streak</div>
                     </div>
-                    <div style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
+                    <div style={{ ...CU.card, textAlign: 'center' as const }}>
                       <div style={{ fontSize: 20, fontWeight: 700, color: h.color }}>{rate}%</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Taux réussite</div>
+                      <div style={{ fontSize: 11, color: CU.textSecondary }}>Taux réussite</div>
                     </div>
                   </div>
                 )}

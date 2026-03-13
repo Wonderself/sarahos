@@ -10,7 +10,7 @@ const ROWS = 20;
 const PIECES: { shape: number[][]; color: string }[] = [
   { shape: [[1,1,1,1]], color: '#06b6d4' },        // I
   { shape: [[1,1],[1,1]], color: '#eab308' },        // O
-  { shape: [[0,1,0],[1,1,1]], color: '#7c3aed' },    // T
+  { shape: [[0,1,0],[1,1,1]], color: '#0EA5E9' },    // T
   { shape: [[0,1,1],[1,1,0]], color: '#22c55e' },    // S
   { shape: [[1,1,0],[0,1,1]], color: '#ef4444' },    // Z
   { shape: [[1,0,0],[1,1,1]], color: '#3b82f6' },    // J
@@ -332,7 +332,7 @@ export default function TetrisGame() {
         <button
           onClick={startGame}
           style={{
-            background: '#7c3aed',
+            background: 'var(--accent)',
             color: '#fff',
             border: 'none',
             borderRadius: 10,
@@ -356,7 +356,7 @@ export default function TetrisGame() {
           <button
             onClick={startGame}
             style={{
-              background: '#7c3aed',
+              background: 'var(--accent)',
               color: '#fff',
               border: 'none',
               borderRadius: 10,
@@ -387,7 +387,7 @@ export default function TetrisGame() {
             style={{
               width: 56, height: 44, borderRadius: 8,
               background: 'rgba(124,58,237,0.2)', border: '1px solid rgba(124,58,237,0.3)',
-              color: '#7c3aed', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+              color: 'var(--accent)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
             }}
           >

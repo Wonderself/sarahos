@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — QR Codes
@@ -51,7 +52,7 @@ function seedDemoQRCodes(): QRCode[] {
     {
       id: 'demo-qr-2', type: 'wifi', label: 'WiFi Bureau',
       data: 'WIFI:T:WPA;S:FreenzyOffice;P:SecurePass123;;',
-      fgColor: '#7c3aed', bgColor: '#ffffff',
+      fgColor: '#0EA5E9', bgColor: '#ffffff',
       size: 'medium', createdAt: new Date(Date.now() - 172800000).toISOString(),
     },
   ];
@@ -71,7 +72,6 @@ function buildQRData(type: QRType, fields: Record<string, string>): string {
 
 // Simple QR placeholder renderer (SVG-based pattern)
 function QRPlaceholder({ data, fgColor, bgColor, size }: { data: string; fgColor: string; bgColor: string; size: number }) {
-  // Generate a deterministic pattern from the data string
   const hash = data.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   const gridSize = 21;
   const cellSize = size / gridSize;
@@ -79,22 +79,17 @@ function QRPlaceholder({ data, fgColor, bgColor, size }: { data: string; fgColor
 
   for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
-      // Position patterns (finder patterns at corners)
       const isFinderTL = row < 7 && col < 7;
       const isFinderTR = row < 7 && col >= gridSize - 7;
       const isFinderBL = row >= gridSize - 7 && col < 7;
 
       if (isFinderTL || isFinderTR || isFinderBL) {
-        // Finder pattern borders and center
-        const lr = isFinderTL ? 0 : isFinderBL ? gridSize - 7 : 0;
-        const lc = isFinderTL ? 0 : isFinderTR ? gridSize - 7 : 0;
         const rr = row - (isFinderTL ? 0 : isFinderBL ? gridSize - 7 : 0);
         const rc = col - (isFinderTL ? 0 : isFinderTR ? gridSize - 7 : 0);
         if (rr === 0 || rr === 6 || rc === 0 || rc === 6 || (rr >= 2 && rr <= 4 && rc >= 2 && rc <= 4)) {
           cells.push({ x: col, y: row });
         }
       } else {
-        // Data area — pseudo-random based on hash
         const seed = (hash + row * 37 + col * 53) % 100;
         if (seed < 45) {
           cells.push({ x: col, y: row });
@@ -166,7 +161,6 @@ export default function QRCodePage() {
   }
 
   function handleDownload() {
-    // Download SVG as PNG placeholder
     const svgEl = document.querySelector('#qr-preview svg');
     if (!svgEl) return;
     const svgData = new XMLSerializer().serializeToString(svgEl);
@@ -188,40 +182,30 @@ export default function QRCodePage() {
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   }
 
-  const cardStyle: React.CSSProperties = {
-    background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20,
-    border: '1px solid var(--border-primary)',
-  };
-
-  const inputStyle: React.CSSProperties = {
-    padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-    background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13, width: '100%',
-  };
-
   const sizePx = SIZES.find(s => s.id === size)?.px || 250;
 
   function renderFields() {
     switch (qrType) {
       case 'url':
-        return <input placeholder="https://example.com" value={fields.url || ''} onChange={e => updateField('url', e.target.value)} style={inputStyle} />;
+        return <input placeholder="https://example.com" value={fields.url || ''} onChange={e => updateField('url', e.target.value)} style={CU.input} />;
       case 'text':
-        return <textarea placeholder="Votre texte ici..." value={fields.text || ''} onChange={e => updateField('text', e.target.value)} rows={4} style={{ ...inputStyle, resize: 'vertical', fontFamily: 'inherit' }} />;
+        return <textarea placeholder="Votre texte ici..." value={fields.text || ''} onChange={e => updateField('text', e.target.value)} rows={4} style={CU.textarea} />;
       case 'email':
         return (
           <>
-            <input placeholder="Email" value={fields.email || ''} onChange={e => updateField('email', e.target.value)} style={inputStyle} />
-            <input placeholder="Objet" value={fields.subject || ''} onChange={e => updateField('subject', e.target.value)} style={inputStyle} />
-            <textarea placeholder="Corps du message" value={fields.body || ''} onChange={e => updateField('body', e.target.value)} rows={3} style={{ ...inputStyle, resize: 'vertical', fontFamily: 'inherit' }} />
+            <input placeholder="Email" value={fields.email || ''} onChange={e => updateField('email', e.target.value)} style={CU.input} />
+            <input placeholder="Objet" value={fields.subject || ''} onChange={e => updateField('subject', e.target.value)} style={CU.input} />
+            <textarea placeholder="Corps du message" value={fields.body || ''} onChange={e => updateField('body', e.target.value)} rows={3} style={CU.textarea} />
           </>
         );
       case 'phone':
-        return <input placeholder="+33 6 12 34 56 78" value={fields.phone || ''} onChange={e => updateField('phone', e.target.value)} style={inputStyle} />;
+        return <input placeholder="+33 6 12 34 56 78" value={fields.phone || ''} onChange={e => updateField('phone', e.target.value)} style={CU.input} />;
       case 'wifi':
         return (
           <>
-            <input placeholder="Nom du réseau (SSID)" value={fields.ssid || ''} onChange={e => updateField('ssid', e.target.value)} style={inputStyle} />
-            <input placeholder="Mot de passe" type="password" value={fields.password || ''} onChange={e => updateField('password', e.target.value)} style={inputStyle} />
-            <select value={fields.encryption || 'WPA'} onChange={e => updateField('encryption', e.target.value)} style={inputStyle}>
+            <input placeholder="Nom du réseau (SSID)" value={fields.ssid || ''} onChange={e => updateField('ssid', e.target.value)} style={CU.input} />
+            <input placeholder="Mot de passe" type="password" value={fields.password || ''} onChange={e => updateField('password', e.target.value)} style={CU.input} />
+            <select value={fields.encryption || 'WPA'} onChange={e => updateField('encryption', e.target.value)} style={CU.select}>
               <option value="WPA">WPA/WPA2</option>
               <option value="WEP">WEP</option>
               <option value="nopass">Aucun</option>
@@ -231,41 +215,35 @@ export default function QRCodePage() {
       case 'vcard':
         return (
           <>
-            <input placeholder="Nom complet" value={fields.name || ''} onChange={e => updateField('name', e.target.value)} style={inputStyle} />
-            <input placeholder="Téléphone" value={fields.phone || ''} onChange={e => updateField('phone', e.target.value)} style={inputStyle} />
-            <input placeholder="Email" value={fields.email || ''} onChange={e => updateField('email', e.target.value)} style={inputStyle} />
-            <input placeholder="Entreprise" value={fields.company || ''} onChange={e => updateField('company', e.target.value)} style={inputStyle} />
-            <input placeholder="Poste" value={fields.title || ''} onChange={e => updateField('title', e.target.value)} style={inputStyle} />
+            <input placeholder="Nom complet" value={fields.name || ''} onChange={e => updateField('name', e.target.value)} style={CU.input} />
+            <input placeholder="Téléphone" value={fields.phone || ''} onChange={e => updateField('phone', e.target.value)} style={CU.input} />
+            <input placeholder="Email" value={fields.email || ''} onChange={e => updateField('email', e.target.value)} style={CU.input} />
+            <input placeholder="Entreprise" value={fields.company || ''} onChange={e => updateField('company', e.target.value)} style={CU.input} />
+            <input placeholder="Poste" value={fields.title || ''} onChange={e => updateField('title', e.target.value)} style={CU.input} />
           </>
         );
     }
   }
 
   return (
-    <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{
-          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--text-primary)',
-          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
-        }}>
-          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta?.emoji}</span>
-          {meta?.title}
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta?.emoji}</span>
+          <h1 style={CU.pageTitle}>
+            {meta?.title}
+          </h1>
           <HelpBubble text={meta?.helpText || ''} />
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{meta?.subtitle}</p>
+        </div>
+        <p style={CU.pageSubtitle}>{meta?.subtitle}</p>
       </div>
       <PageExplanation pageId="qrcode" text={PAGE_META.qrcode?.helpText} />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      <div style={tabBar()}>
         {[{ id: 'generate' as const, label: 'Générer', emoji: '🔳' }, { id: 'history' as const, label: 'Historique', emoji: '📜' }].map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-            padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border-primary)',
-            background: activeTab === tab.id ? 'var(--accent)' : 'var(--bg-secondary)',
-            color: activeTab === tab.id ? '#fff' : 'var(--text-primary)',
-            cursor: 'pointer', fontWeight: 600, fontSize: 13,
-          }}>
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={activeTab === tab.id ? CU.tabActive : CU.tab}>
             {tab.emoji} {tab.label}
           </button>
         ))}
@@ -274,18 +252,17 @@ export default function QRCodePage() {
       {activeTab === 'generate' && (
         <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 16 }}>
           {/* Form */}
-          <div style={{ flex: 1, ...cardStyle }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>
+          <div style={{ flex: 1, ...CU.card, padding: isMobile ? 16 : 20 }}>
+            <h3 style={CU.sectionTitle}>
               🔳 Type de QR Code
             </h3>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '12px 0 16px' }}>
               {QR_TYPES.map(t => (
-                <button key={t.id} onClick={() => { setQrType(t.id); setFields({}); setGeneratedData(null); }} style={{
-                  padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                  background: qrType === t.id ? 'var(--accent)' : 'var(--bg-primary)',
-                  color: qrType === t.id ? '#fff' : 'var(--text-primary)',
-                  fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                }}>
+                <button key={t.id} onClick={() => { setQrType(t.id); setFields({}); setGeneratedData(null); }}
+                  style={qrType === t.id
+                    ? { ...CU.btnPrimary, height: 28, fontSize: 12, padding: '0 10px' }
+                    : { ...CU.btnSmall }
+                  }>
                   {t.emoji} {t.label}
                 </button>
               ))}
@@ -298,84 +275,77 @@ export default function QRCodePage() {
             {/* Colors */}
             <div style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Premier plan</div>
+                <div style={CU.label}>Premier plan</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <input type="color" value={fgColor} onChange={e => setFgColor(e.target.value)} style={{ width: 32, height: 32, border: 'none', cursor: 'pointer' }} />
-                  <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{fgColor}</span>
+                  <span style={{ fontSize: 12, color: CU.textSecondary }}>{fgColor}</span>
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>Arrière-plan</div>
+                <div style={CU.label}>Arrière-plan</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <input type="color" value={bgColor} onChange={e => setBgColor(e.target.value)} style={{ width: 32, height: 32, border: 'none', cursor: 'pointer' }} />
-                  <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{bgColor}</span>
+                  <span style={{ fontSize: 12, color: CU.textSecondary }}>{bgColor}</span>
                 </div>
               </div>
             </div>
 
             {/* Size */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Taille</div>
+              <div style={CU.label}>Taille</div>
               <div style={{ display: 'flex', gap: 6 }}>
                 {SIZES.map(s => (
-                  <button key={s.id} onClick={() => setSize(s.id)} style={{
-                    padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                    background: size === s.id ? 'var(--accent)' : 'var(--bg-primary)',
-                    color: size === s.id ? '#fff' : 'var(--text-primary)',
-                    fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                  }}>
+                  <button key={s.id} onClick={() => setSize(s.id)}
+                    style={size === s.id
+                      ? { ...CU.btnPrimary, height: 28, fontSize: 12, padding: '0 10px' }
+                      : { ...CU.btnSmall }
+                    }>
                     {s.label} ({s.px}px)
                   </button>
                 ))}
               </div>
             </div>
 
-            <button onClick={handleGenerate} style={{
-              width: '100%', padding: '10px 16px', borderRadius: 8, border: 'none',
-              background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
-            }}>
+            <button onClick={handleGenerate} style={{ ...CU.btnPrimary, width: '100%' }}>
               ✨ Générer le QR Code
             </button>
           </div>
 
           {/* Preview */}
-          <div style={{ flex: 1, ...cardStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16, alignSelf: 'flex-start' }}>
+          <div style={{ flex: 1, ...CU.card, padding: isMobile ? 16 : 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h3 style={{ ...CU.sectionTitle, alignSelf: 'flex-start', marginBottom: 16 }}>
               👁️ Aperçu
             </h3>
             <div id="qr-preview" style={{
-              background: bgColor, borderRadius: 12, padding: 20, border: '1px solid var(--border-primary)',
+              background: bgColor, borderRadius: 8, padding: 20, border: `1px solid ${CU.border}`,
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
             }}>
               {generatedData ? (
                 <>
                   <QRPlaceholder data={generatedData} fgColor={fgColor} bgColor={bgColor} size={sizePx} />
-                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', textAlign: 'center', maxWidth: sizePx, wordBreak: 'break-all' }}>
+                  <div style={{ fontSize: 11, color: CU.textSecondary, textAlign: 'center', maxWidth: sizePx, wordBreak: 'break-all' }}>
                     {generatedData.length > 100 ? generatedData.slice(0, 100) + '...' : generatedData}
                   </div>
                 </>
               ) : (
                 <div style={{
                   width: sizePx, height: sizePx, borderRadius: 8,
-                  background: 'var(--bg-primary)', border: '2px dashed var(--border-primary)',
+                  background: CU.bgSecondary, border: `2px dashed ${CU.border}`,
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <span style={{ fontSize: 48 }}>🔳</span>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 8 }}>Votre QR code apparaîtra ici</p>
+                  <span style={CU.emptyEmoji}>🔳</span>
+                  <p style={{ color: CU.textMuted, fontSize: 13, marginTop: 8 }}>Votre QR code apparaîtra ici</p>
                 </div>
               )}
             </div>
             {generatedData && (
               <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                <button onClick={handleDownload} style={{
-                  padding: '8px 16px', borderRadius: 8, border: 'none',
-                  background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer',
-                }}>
+                <button onClick={handleDownload} style={CU.btnPrimary}>
                   📥 Télécharger PNG
                 </button>
               </div>
             )}
-            <p style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 12, textAlign: 'center' }}>
+            <p style={{ fontSize: 11, color: CU.textMuted, marginTop: 12, textAlign: 'center' }}>
               Connectez l'API pour les vrais QR codes scannables
             </p>
           </div>
@@ -386,33 +356,30 @@ export default function QRCodePage() {
       {activeTab === 'history' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {qrCodes.length === 0 && (
-            <div style={{ ...cardStyle, textAlign: 'center', padding: 40 }}>
-              <span style={{ fontSize: 40 }}>🔳</span>
-              <p style={{ color: 'var(--text-secondary)', marginTop: 12 }}>Aucun QR code généré</p>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <span style={CU.emptyEmoji}>🔳</span>
+              <p style={CU.emptyDesc}>Aucun QR code généré</p>
             </div>
           )}
           {qrCodes.map(qr => {
             const typeInfo = QR_TYPES.find(t => t.id === qr.type);
             return (
-              <div key={qr.id} style={{ ...cardStyle, display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div key={qr.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 16 }}>
                 <div style={{ flexShrink: 0 }}>
                   <QRPlaceholder data={qr.data} fgColor={qr.fgColor} bgColor={qr.bgColor} size={60} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: CU.text }}>
                     {typeInfo?.emoji} {qr.label}
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 12, color: CU.textSecondary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {qr.data}
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>
                     {typeInfo?.label} — {new Date(qr.createdAt).toLocaleDateString('fr-FR')}
                   </div>
                 </div>
-                <button onClick={() => handleDelete(qr.id)} style={{
-                  padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-primary)', fontSize: 12, cursor: 'pointer', color: '#ef4444',
-                }}>🗑️</button>
+                <button onClick={() => handleDelete(qr.id)} style={{ ...CU.btnSmall, color: CU.danger }}>🗑️</button>
               </div>
             );
           })}

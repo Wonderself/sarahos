@@ -2,6 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 import {
   saveUserGame,
   publishGame,
@@ -53,6 +57,8 @@ const SAMPLE_QUESTIONS: Record<string, GeneratedQuestion[]> = {
 type GameType = 'quiz' | 'enigma' | 'challenge';
 
 export default function CreateGamePage() {
+  const isMobile = useIsMobile();
+  const meta = PAGE_META['games-create'];
   const [prompt, setPrompt] = useState('');
   const [type, setType] = useState<GameType>('quiz');
   const [generating, setGenerating] = useState(false);
@@ -108,14 +114,13 @@ export default function CreateGamePage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '32px 24px' }}>
-      <div style={{ maxWidth: 700, margin: '0 auto' }}>
-        {/* Header */}
+    <div style={{ ...pageContainer(isMobile), maxWidth: 700 }}>
+        {/* Breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
           <Link
             href="/client/games"
             style={{
-              color: 'var(--fz-text-muted, #94A3B8)',
+              color: CU.textMuted,
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -126,24 +131,25 @@ export default function CreateGamePage() {
             ←
             Arcade
           </Link>
-          <span style={{ color: 'var(--fz-border, #E2E8F0)' }}>/</span>
-          <span style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600 }}>Créer un jeu</span>
+          <span style={{ color: CU.border }}>/</span>
+          <span style={{ color: CU.text, fontWeight: 600 }}>Créer un jeu</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-          <span style={{ fontSize: 28, color: 'var(--fz-accent, #0EA5E9)' }}>
-            ✨</span>
-          <div>
-            <h1 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 22, fontWeight: 700, margin: 0 }}>Créer un jeu avec l&apos;IA</h1>
-            <p style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 13, margin: 0 }}>
-              Décrivez votre jeu et l&apos;IA génère les questions
-            </p>
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{meta.emoji}</span>
+            <h1 style={CU.pageTitle}>Créer un jeu avec l&apos;IA</h1>
+            <PageExplanation pageId="games-create" />
           </div>
+          <p style={CU.pageSubtitle}>
+            {meta.subtitle}
+          </p>
         </div>
 
         {/* Type selector */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 12, display: 'block', marginBottom: 8 }}>
+          <label style={{ color: CU.textMuted, fontSize: 12, display: 'block', marginBottom: 8 }}>
             Type de jeu
           </label>
           <div style={{ display: 'flex', gap: 10 }}>
@@ -153,12 +159,12 @@ export default function CreateGamePage() {
                 onClick={() => setType(opt.value)}
                 style={{
                   flex: 1,
-                  background: type === opt.value ? 'rgba(14,165,233,0.15)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                  border: `1px solid ${type === opt.value ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-border, #E2E8F0)'}`,
-                  borderRadius: 10,
+                  background: type === opt.value ? 'rgba(14,165,233,0.15)' : CU.bgSecondary,
+                  border: `1px solid ${type === opt.value ? CU.accent : CU.border}`,
+                  borderRadius: 8,
                   padding: '12px 16px',
                   cursor: 'pointer',
-                  color: type === opt.value ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-muted, #94A3B8)',
+                  color: type === opt.value ? CU.accent : CU.textMuted,
                   fontSize: 13,
                   fontWeight: 600,
                   display: 'flex',
@@ -176,7 +182,7 @@ export default function CreateGamePage() {
 
         {/* Prompt input */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ color: 'var(--fz-text-muted, #94A3B8)', fontSize: 12, display: 'block', marginBottom: 8 }}>
+          <label style={{ color: CU.textMuted, fontSize: 12, display: 'block', marginBottom: 8 }}>
             Décrivez votre jeu
           </label>
           <textarea
@@ -185,17 +191,8 @@ export default function CreateGamePage() {
             placeholder="Ex: Un quiz sur l'histoire de l'intelligence artificielle, des origines à nos jours..."
             rows={4}
             style={{
-              width: '100%',
-              background: 'var(--fz-bg-secondary, #F8FAFC)',
-              border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-              borderRadius: 10,
-              padding: '14px 16px',
-              color: 'var(--fz-text, #1E293B)',
-              fontSize: 14,
-              resize: 'vertical',
-              outline: 'none',
-              boxSizing: 'border-box',
-              lineHeight: 1.5,
+              ...CU.textarea,
+              background: CU.bgSecondary,
             }}
           />
         </div>
@@ -205,19 +202,12 @@ export default function CreateGamePage() {
           onClick={handleGenerate}
           disabled={!prompt.trim() || generating}
           style={{
-            background: generating ? 'rgba(14,165,233,0.3)' : 'linear-gradient(135deg, var(--fz-accent, #0EA5E9), #06b6d4)',
-            color: 'var(--fz-text, #1E293B)',
-            border: 'none',
-            borderRadius: 10,
-            padding: '12px 28px',
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: generating ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
+            ...CU.btnPrimary,
+            padding: '0 28px',
+            height: 42,
             marginBottom: 24,
-            opacity: !prompt.trim() ? 0.5 : 1,
+            opacity: !prompt.trim() || generating ? 0.5 : 1,
+            cursor: generating ? 'not-allowed' : 'pointer',
           }}
         >
           <span style={{ fontSize: 16, animation: generating ? 'spin 1s linear infinite' : 'none', display: 'inline-block' }}>
@@ -231,9 +221,9 @@ export default function CreateGamePage() {
           <div
             style={{
               background: published ? 'rgba(34,197,94,0.1)' : 'rgba(14,165,233,0.1)',
-              color: published ? '#22c55e' : 'var(--fz-accent, #0EA5E9)',
+              color: published ? '#22c55e' : CU.accent,
               padding: '10px 16px',
-              borderRadius: 10,
+              borderRadius: 8,
               fontSize: 13,
               fontWeight: 600,
               marginBottom: 20,
@@ -246,7 +236,7 @@ export default function CreateGamePage() {
         {/* Preview */}
         {game && (
           <div style={{ marginBottom: 24 }}>
-            <h3 style={{ color: 'var(--fz-text, #1E293B)', fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
+            <h3 style={{ color: CU.text, fontSize: 16, fontWeight: 600, marginBottom: 16 }}>
               Aperçu ({game.questions.length} questions)
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -254,21 +244,19 @@ export default function CreateGamePage() {
                 <div
                   key={i}
                   style={{
-                    background: 'var(--fz-bg-secondary, #F8FAFC)',
-                    borderRadius: 10,
-                    padding: '14px 16px',
-                    border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                    ...CU.card,
+                    background: CU.bgSecondary,
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ color: 'var(--fz-text, #1E293B)', fontSize: 13, fontWeight: 600 }}>
+                    <span style={{ color: CU.text, fontSize: 13, fontWeight: 600 }}>
                       {i + 1}. {q.question}
                     </span>
                     <span
                       style={{
                         fontSize: 10,
                         padding: '2px 8px',
-                        borderRadius: 10,
+                        borderRadius: 8,
                         background: q.difficulty === 1 ? 'rgba(34,197,94,0.15)' : q.difficulty === 2 ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)',
                         color: q.difficulty === 1 ? '#22c55e' : q.difficulty === 2 ? '#f59e0b' : '#ef4444',
                       }}
@@ -284,8 +272,8 @@ export default function CreateGamePage() {
                           fontSize: 11,
                           padding: '3px 10px',
                           borderRadius: 6,
-                          background: c === q.answer ? 'rgba(34,197,94,0.12)' : 'var(--fz-bg-secondary, #F8FAFC)',
-                          color: c === q.answer ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)',
+                          background: c === q.answer ? 'rgba(34,197,94,0.12)' : CU.bgSecondary,
+                          color: c === q.answer ? '#22c55e' : CU.textMuted,
                           border: c === q.answer ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
@@ -301,17 +289,10 @@ export default function CreateGamePage() {
               <button
                 onClick={handlePublish}
                 style={{
-                  background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                  color: 'var(--fz-text, #1E293B)',
-                  border: 'none',
-                  borderRadius: 10,
-                  padding: '12px 28px',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
+                  ...CU.btnPrimary,
+                  background: CU.success,
+                  padding: '0 28px',
+                  height: 42,
                   marginTop: 20,
                 }}
               >
@@ -321,7 +302,6 @@ export default function CreateGamePage() {
             )}
           </div>
         )}
-      </div>
 
       <style>{`
         @keyframes spin {

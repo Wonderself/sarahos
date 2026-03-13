@@ -7,6 +7,8 @@ import { PAGE_META, REVEIL_MODE_EMOJIS } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
+import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════════
 //  Freenzy.io — Reveil Intelligent (Smart Alarm)
@@ -54,14 +56,14 @@ interface TestResult {
 // ─── Constants ───
 
 const ALARM_MODES = [
-  { id: 'doux',       emoji: '🌸', label: 'Doux',       color: '#6B6B6B', desc: 'Un reveil tout en douceur pour commencer la journee sereinement' },
-  { id: 'dur',        emoji: '🔥', label: 'Dur',        color: '#1A1A1A', desc: 'Pas de pitie ! Un reveil direct et sans concession' },
-  { id: 'sympa',      emoji: '😊', label: 'Sympa',      color: '#1A1A1A', desc: 'Un reveil amical et bienveillant, comme un bon ami' },
-  { id: 'drole',      emoji: '😂', label: 'Drole',      color: '#6B6B6B', desc: 'Commencez la journee en riant avec humour et blagues' },
-  { id: 'fou',        emoji: '🤪', label: 'Fou',        color: '#1A1A1A', desc: 'Un reveil completement delirant et imprevisible' },
-  { id: 'motivant',   emoji: '💪', label: 'Motivant',   color: '#1A1A1A', desc: 'Boost d\'energie et motivation pour attaquer la journee' },
-  { id: 'zen',        emoji: '🧘', label: 'Zen',        color: '#6B6B6B', desc: 'Meditation, respiration, calme interieur' },
-  { id: 'energique',  emoji: '⚡', label: 'Energique',  color: '#1A1A1A', desc: 'Reveil dynamique et plein d\'energie des le matin' },
+  { id: 'doux',       emoji: '🌸', label: 'Doux',       color: CU.textSecondary, desc: 'Un reveil tout en douceur pour commencer la journee sereinement' },
+  { id: 'dur',        emoji: '🔥', label: 'Dur',        color: CU.text, desc: 'Pas de pitie ! Un reveil direct et sans concession' },
+  { id: 'sympa',      emoji: '😊', label: 'Sympa',      color: CU.text, desc: 'Un reveil amical et bienveillant, comme un bon ami' },
+  { id: 'drole',      emoji: '😂', label: 'Drole',      color: CU.textSecondary, desc: 'Commencez la journee en riant avec humour et blagues' },
+  { id: 'fou',        emoji: '🤪', label: 'Fou',        color: CU.text, desc: 'Un reveil completement delirant et imprevisible' },
+  { id: 'motivant',   emoji: '💪', label: 'Motivant',   color: CU.text, desc: 'Boost d\'energie et motivation pour attaquer la journee' },
+  { id: 'zen',        emoji: '🧘', label: 'Zen',        color: CU.textSecondary, desc: 'Meditation, respiration, calme interieur' },
+  { id: 'energique',  emoji: '⚡', label: 'Energique',  color: CU.text, desc: 'Reveil dynamique et plein d\'energie des le matin' },
 ];
 
 const RUBRICS = [
@@ -231,6 +233,7 @@ function getNextAlarmLabel(alarm: AlarmConfig | null): string {
 // ═══════════════════════════════════════════════════════
 
 export default function ReveilPage() {
+  const isMobile = useIsMobile();
   const { requireAuth, LoginModalComponent } = useAuthGuard();
 
   // ─── Visitor draft — persist key fields to localStorage for visitors ───
@@ -482,7 +485,7 @@ export default function ReveilPage() {
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-        <div className="animate-pulse text-md" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>Chargement du reveil...</div>
+        <div className="animate-pulse" style={{ fontSize: 14, color: CU.textMuted }}>Chargement du reveil...</div>
       </div>
     );
   }
@@ -492,26 +495,13 @@ export default function ReveilPage() {
   // ═══════════════════════════════════════════════════════
 
   return (
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* ─── PAGE HEADER ─── */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 14,
-        marginBottom: 24, paddingBottom: 16,
-        borderBottom: '1px solid var(--fz-border, #E5E5E5)',
-      }}>
-        <span style={{ fontSize: 32 }}>{pageMeta.emoji}</span>
+      <div style={{ ...headerRow(), gap: 14, marginBottom: 24, paddingBottom: 16, borderBottom: `1px solid ${CU.border}` }}>
+        <span style={emojiIcon(32)}>{pageMeta.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{
-            fontSize: 22, fontWeight: 700, margin: 0,
-            color: 'var(--fz-text, #1A1A1A)',
-          }}>
-            {pageMeta.title}
-          </h1>
-          <p style={{
-            fontSize: 14, margin: '2px 0 0', color: 'var(--fz-text-secondary, #6B6B6B)',
-          }}>
-            {pageMeta.subtitle}
-          </p>
+          <h1 style={CU.pageTitle}>{pageMeta.title}</h1>
+          <p style={CU.pageSubtitle}>{pageMeta.subtitle}</p>
         </div>
         <HelpBubble text={pageMeta.helpText} />
       </div>
@@ -541,48 +531,48 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       {/*  1. HEADER                                     */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="page-header" style={{ textAlign: 'center', flexDirection: 'column', paddingBottom: 8 }}>
+      <div style={{ textAlign: 'center', paddingBottom: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <span style={{ fontSize: 48, marginBottom: 8, display: 'block' }}>☕</span>
         <div style={{
-          fontSize: 42, fontWeight: 200, color: 'var(--fz-text-muted, #9B9B9B)',
-          letterSpacing: '-0.03em', fontFamily: 'var(--font-sans)',
+          fontSize: 42, fontWeight: 200, color: CU.textMuted,
+          letterSpacing: '-0.03em',
         }}>
           {currentTime}
         </div>
-        <h1 className="page-title" style={{ marginTop: 8, marginBottom: 4, fontSize: 22, color: 'var(--fz-text, #1A1A1A)' }}>
+        <h1 style={{ marginTop: 8, marginBottom: 4, fontSize: 22, fontWeight: 700, color: CU.text }}>
           {greeting}{session.displayName ? `, ${session.displayName}` : ''} !
         </h1>
-        <p className="page-subtitle" style={{ textTransform: 'capitalize', marginBottom: 4, color: 'var(--fz-text-secondary, #6B6B6B)' }}>
+        <p style={{ textTransform: 'capitalize', marginBottom: 4, fontSize: 13, color: CU.textSecondary, margin: 0 }}>
           {currentDate}
         </p>
-        <p className="text-sm" style={{ color: 'var(--accent)', fontWeight: 500 }}>
+        <p style={{ fontSize: 13, color: CU.accent, fontWeight: 500, margin: '4px 0 0' }}>
           {getNextAlarmLabel(alarm)}
         </p>
-        <p className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>Votre assistant <span className="fz-logo-word">IA</span> personnalise votre matin</p>
+        <p style={{ fontSize: 12, color: CU.textMuted, marginTop: 4 }}>Votre assistant <span className="fz-logo-word">IA</span> personnalise votre matin</p>
       </div>
 
       {/* ═══════════════════════════════════════════════ */}
       {/*  2. MAIN ALARM TOGGLE                          */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="section">
-        <div className="card" style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      <div style={{ marginBottom: 20 }}>
+        <div style={{
+          ...CU.card, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '20px 24px',
         }}>
-          <div className="flex items-center gap-16">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <div style={{
-              width: 48, height: 48, borderRadius: 'var(--radius-md)',
-              background: alarm?.enabled ? 'var(--success-muted)' : 'var(--fz-bg-secondary, #F7F7F7)',
+              width: 48, height: 48, borderRadius: 8,
+              background: alarm?.enabled ? '#F0FFF4' : CU.bgSecondary,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 24, transition: 'background 0.3s',
             }}>
               <span style={{ fontSize: 24 }}>{alarm?.enabled ? '🔔' : '🔕'}</span>
             </div>
             <div>
-              <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: CU.text }}>
                 <span className="fz-logo-word">Reveil Intelligent</span>
               </div>
-              <div className="text-sm" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
+              <div style={{ fontSize: 13, color: CU.textMuted }}>
                 {alarm?.enabled ? 'Actif — votre IA vous reveille chaque matin' : 'Inactif — activez votre reveil IA'}
               </div>
             </div>
@@ -593,9 +583,9 @@ export default function ReveilPage() {
             onClick={() => updateAlarm({ enabled: !alarm?.enabled })}
             style={{
               position: 'relative', width: 56, height: 30, borderRadius: 15,
-              background: alarm?.enabled ? 'var(--success)' : 'var(--fz-bg-secondary, #F7F7F7)',
+              background: alarm?.enabled ? CU.success : CU.bgSecondary,
               border: '2px solid transparent',
-              borderColor: alarm?.enabled ? 'var(--success)' : 'var(--fz-border, #E5E5E5)',
+              borderColor: alarm?.enabled ? CU.success : CU.border,
               cursor: 'pointer', transition: 'all 0.3s ease', flexShrink: 0,
             }}
             title={alarm?.enabled ? 'Desactiver le reveil' : 'Activer le reveil'}
@@ -612,34 +602,33 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       {/*  3. TIME & SCHEDULE                            */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="section">
-        <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Horaire et jours</div>
-        <div className="card" style={{ padding: '20px 24px' }}>
+      <div style={{ marginBottom: 20 }}>
+        <h3 style={{ ...CU.sectionTitle, marginBottom: 10 }}>Horaire et jours</h3>
+        <div style={{ ...CU.card, padding: '20px 24px' }}>
           {/* Time picker */}
-          <div className="flex items-center gap-16 mb-16" style={{ flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
             <div>
-              <label className="text-sm mb-4" style={{ display: 'block', color: 'var(--fz-text-muted, #9B9B9B)' }}>Heure du reveil</label>
+              <label style={{ ...CU.label, display: 'block' }}>Heure du reveil</label>
               <input
                 type="time"
                 value={alarm?.time ?? '07:00'}
                 onChange={e => updateAlarm({ time: e.target.value })}
-                className="input"
                 style={{
-                  width: 140, fontSize: 20, fontWeight: 600, padding: '10px 14px',
+                  ...CU.input, width: 140, fontSize: 20, fontWeight: 600, padding: '10px 14px',
                   textAlign: 'center', letterSpacing: '0.02em',
                 }}
               />
             </div>
             <div style={{ flex: 1 }}>
-              <label className="text-sm mb-4" style={{ display: 'block', color: 'var(--fz-text-muted, #9B9B9B)' }}>Fuseau horaire</label>
-              <div className="text-md" style={{ padding: '12px 0', color: 'var(--fz-text-secondary, #6B6B6B)' }}>
+              <label style={{ ...CU.label, display: 'block' }}>Fuseau horaire</label>
+              <div style={{ padding: '12px 0', fontSize: 14, color: CU.textSecondary }}>
                 {alarm?.timezone ?? 'Europe/Paris'}
               </div>
             </div>
           </div>
 
           {/* Day selector */}
-          <label className="text-sm mb-8" style={{ display: 'block', color: 'var(--fz-text-muted, #9B9B9B)' }}>Jours actifs</label>
+          <label style={{ ...CU.label, display: 'block', marginBottom: 8 }}>Jours actifs</label>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {DAY_LABELS.map(day => {
               const isActive = alarm?.days.includes(day.index) ?? false;
@@ -657,10 +646,9 @@ export default function ReveilPage() {
                     width: 42, height: 42, borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 14, fontWeight: 600,
-                    fontFamily: 'var(--font-sans)',
-                    background: isActive ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
-                    color: isActive ? 'white' : 'var(--fz-text-muted, #9B9B9B)',
-                    border: isActive ? '2px solid var(--accent)' : '2px solid var(--fz-border, #E5E5E5)',
+                    background: isActive ? CU.accent : CU.bgSecondary,
+                    color: isActive ? 'white' : CU.textMuted,
+                    border: isActive ? `2px solid ${CU.accent}` : `2px solid ${CU.border}`,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
@@ -676,8 +664,8 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       {/*  4. MODE SELECTOR                              */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="section">
-        <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Mode du reveil</div>
+      <div style={{ marginBottom: 20 }}>
+        <h3 style={{ ...CU.sectionTitle, marginBottom: 10 }}>Mode du reveil</h3>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(160px, 100%), 1fr))',
@@ -692,13 +680,12 @@ export default function ReveilPage() {
                 onClick={() => updateAlarm({ mode: mode.id })}
                 style={{
                   padding: '16px 14px',
-                  borderRadius: 'var(--radius-md)',
-                  border: `2px solid ${isSelected ? '#1A1A1A' : '#E5E5E5'}`,
-                  background: isSelected ? 'rgba(0,0,0,0.04)' : '#fff',
+                  borderRadius: 8,
+                  border: `2px solid ${isSelected ? CU.accent : CU.border}`,
+                  background: isSelected ? CU.accentLight : CU.bg,
                   cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'all 0.2s ease',
-                  fontFamily: 'var(--font-sans)',
                   position: 'relative',
                   overflow: 'hidden',
                 }}
@@ -707,7 +694,7 @@ export default function ReveilPage() {
                   <div style={{
                     position: 'absolute', top: 6, right: 8,
                     width: 18, height: 18, borderRadius: '50%',
-                    background: '#1A1A1A', display: 'flex',
+                    background: CU.accent, display: 'flex',
                     alignItems: 'center', justifyContent: 'center',
                     color: 'white', fontSize: 10, fontWeight: 700,
                   }}>
@@ -715,10 +702,10 @@ export default function ReveilPage() {
                   </div>
                 )}
                 <span style={{ fontSize: 28, marginBottom: 6, display: 'block' }}>{modeEmoji}</span>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', marginBottom: 2 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 2 }}>
                   {mode.label}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.4 }}>
+                <div style={{ fontSize: 11, color: CU.textMuted, lineHeight: 1.4 }}>
                   {mode.desc}
                 </div>
               </button>
@@ -730,13 +717,13 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       {/*  5. RUBRICS GRID                               */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="section">
-        <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+      <div style={{ marginBottom: 20 }}>
+        <h3 style={{ ...CU.sectionTitle, marginBottom: 10 }}>
           Rubriques
-          <span className="text-sm" style={{ fontWeight: 400, marginLeft: 8, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+          <span style={{ fontWeight: 400, marginLeft: 8, fontSize: 13, color: CU.textMuted }}>
             {alarm?.rubrics.length ?? 0} active{(alarm?.rubrics.length ?? 0) > 1 ? 's' : ''}
           </span>
-        </div>
+        </h3>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
@@ -757,12 +744,11 @@ export default function ReveilPage() {
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10,
                   padding: '12px 14px',
-                  borderRadius: 'var(--radius-sm)',
-                  border: `1px solid ${isActive ? 'var(--accent)' : 'var(--fz-border, #E5E5E5)'}`,
-                  background: isActive ? 'var(--accent-muted)' : 'var(--fz-bg, #fff)',
+                  borderRadius: 8,
+                  border: `1px solid ${isActive ? CU.accent : CU.border}`,
+                  background: isActive ? CU.accentLight : CU.bg,
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
-                  fontFamily: 'var(--font-sans)',
                   textAlign: 'left',
                   width: '100%',
                 }}
@@ -770,14 +756,14 @@ export default function ReveilPage() {
                 <span style={{ fontSize: 20, flexShrink: 0 }}>{rubric.emoji}</span>
                 <span style={{
                   flex: 1, fontSize: 13, fontWeight: 500,
-                  color: isActive ? 'var(--accent-hover)' : 'var(--fz-text-secondary, #6B6B6B)',
+                  color: isActive ? CU.accent : CU.textSecondary,
                 }}>
                   {rubric.label}
                 </span>
                 {/* Mini toggle */}
                 <div style={{
                   position: 'relative', width: 34, height: 18, borderRadius: 9,
-                  background: isActive ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
+                  background: isActive ? CU.accent : CU.bgSecondary,
                   flexShrink: 0, transition: 'background 0.2s',
                 }}>
                   <span style={{
@@ -797,10 +783,10 @@ export default function ReveilPage() {
             marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10,
           }}>
             {(hasAstro || hasHoroscope) && (
-              <div className="card" style={{ padding: '14px 18px' }}>
-                <div className="flex items-center gap-8 mb-8">
+              <div style={{ ...CU.card, padding: '14px 18px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                   <span style={{ fontSize: 18 }}>{hasAstro ? '🌟' : '🐾'}</span>
-                  <span className="text-md font-semibold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>
                     {hasAstro && hasHoroscope
                       ? 'Date de naissance (Astrologie & Horoscope chinois)'
                       : hasAstro
@@ -812,27 +798,22 @@ export default function ReveilPage() {
                   type="date"
                   value={alarm?.birthDate ?? ''}
                   onChange={e => updateAlarm({ birthDate: e.target.value })}
-                  className="input"
-                  style={{ maxWidth: 220 }}
+                  style={{ ...CU.input, maxWidth: 220 }}
                 />
               </div>
             )}
 
             {hasAnnonce && (
-              <div className="card" style={{ padding: '14px 18px' }}>
-                <div className="flex items-center gap-8 mb-8">
+              <div style={{ ...CU.card, padding: '14px 18px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                   <span style={{ fontSize: 18 }}>📢</span>
-                  <span className="text-md font-semibold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Annonce personnalisee</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>Annonce personnalisee</span>
                 </div>
                 <textarea
                   value={alarm?.customAnnouncement ?? ''}
                   onChange={e => updateAlarm({ customAnnouncement: e.target.value })}
                   placeholder="Ecrivez ici votre annonce personnalisee qui sera lue chaque matin..."
-                  className="input"
-                  style={{
-                    minHeight: 80, resize: 'vertical',
-                    fontFamily: 'var(--font-sans)',
-                  }}
+                  style={CU.textarea}
                 />
               </div>
             )}
@@ -843,10 +824,8 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       {/*  5b. PRESETS                                    */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="section">
-        <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
-          Profil de reveil
-        </div>
+      <div style={{ marginBottom: 20 }}>
+        <h3 style={{ ...CU.sectionTitle, marginBottom: 10 }}>Profil de reveil</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 10 }}>
           {PRESETS.map(p => {
             const isSelected = (alarm?.preset ?? 'custom') === p.id;
@@ -865,17 +844,16 @@ export default function ReveilPage() {
                   updateAlarm({ preset: p.id, contentModules: modules });
                 }}
                 style={{
-                  padding: '16px 14px', borderRadius: 'var(--radius-md)',
-                  border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--fz-border, #E5E5E5)'}`,
-                  background: isSelected ? 'var(--accent-muted)' : 'var(--fz-bg, #fff)',
+                  padding: '16px 14px', borderRadius: 8,
+                  border: `2px solid ${isSelected ? CU.accent : CU.border}`,
+                  background: isSelected ? CU.accentLight : CU.bg,
                   cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s',
-                  fontFamily: 'var(--font-sans)',
                 }}
               >
                 <span style={{ fontSize: 28, marginBottom: 6, display: 'block' }}>{p.emoji}</span>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', marginBottom: 2 }}>{p.label}</div>
-                <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>{p.duration}</div>
-                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.4 }}>{p.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 2 }}>{p.label}</div>
+                <div style={{ fontSize: 12, color: CU.accent, fontWeight: 600, marginBottom: 4 }}>{p.duration}</div>
+                <div style={{ fontSize: 11, color: CU.textMuted, lineHeight: 1.4 }}>{p.desc}</div>
               </button>
             );
           })}
@@ -885,16 +863,16 @@ export default function ReveilPage() {
       {/* ═══════════════════════════════════════════════ */}
       {/*  5c. CONTENT MODULES                            */}
       {/* ═══════════════════════════════════════════════ */}
-      <div className="section">
-        <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+      <div style={{ marginBottom: 20 }}>
+        <h3 style={{ ...CU.sectionTitle, marginBottom: 10 }}>
           Contenu du reveil
           <span style={{
             marginLeft: 10, fontSize: 11, fontWeight: 600, padding: '3px 10px',
-            borderRadius: 12, background: 'var(--accent-muted)', color: 'var(--accent)',
+            borderRadius: 12, background: CU.accentLight, color: CU.accent,
           }}>
             {computeEstimatedDuration(alarm?.contentModules ?? getDefaultContentModules())}
           </span>
-        </div>
+        </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: 10 }}>
           {CONTENT_MODULES.map(mod => {
             const modules = alarm?.contentModules ?? getDefaultContentModules();
@@ -902,9 +880,9 @@ export default function ReveilPage() {
             const isEnabled = modConfig?.enabled ?? false;
             return (
               <div key={mod.id} style={{
-                borderRadius: 'var(--radius-md)',
-                border: `1px solid ${isEnabled ? 'var(--accent)' : 'var(--fz-border, #E5E5E5)'}`,
-                background: isEnabled ? 'var(--accent-muted)' : 'var(--fz-bg, #fff)',
+                borderRadius: 8,
+                border: `1px solid ${isEnabled ? CU.accent : CU.border}`,
+                background: isEnabled ? CU.accentLight : CU.bg,
                 overflow: 'hidden', transition: 'all 0.2s',
               }}>
                 {/* Module header */}
@@ -922,12 +900,12 @@ export default function ReveilPage() {
                 >
                   <span style={{ fontSize: 24, flexShrink: 0 }}>{mod.emoji}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{mod.label}</div>
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{mod.desc}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{mod.label}</div>
+                    <div style={{ fontSize: 11, color: CU.textMuted }}>{mod.desc}</div>
                   </div>
                   <div style={{
                     position: 'relative', width: 40, height: 22, borderRadius: 11,
-                    background: isEnabled ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
+                    background: isEnabled ? CU.accent : CU.bgSecondary,
                     flexShrink: 0, transition: 'background 0.2s',
                   }}>
                     <span style={{
@@ -941,13 +919,13 @@ export default function ReveilPage() {
                 {/* Sub-options when enabled */}
                 {isEnabled && (
                   <div style={{
-                    padding: '0 16px 14px', borderTop: '1px solid var(--fz-border, #E5E5E5)',
+                    padding: '0 16px 14px', borderTop: `1px solid ${CU.border}`,
                     paddingTop: 12,
                   }}>
                     {mod.id === 'meteo' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         <div>
-                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #9B9B9B)' }}>Ville</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: CU.textMuted }}>Ville</label>
                           <input
                             type="text" className="input input-sm" style={{ width: '100%' }}
                             value={(modules.meteo as ContentModules['meteo']).city}
@@ -984,7 +962,7 @@ export default function ReveilPage() {
                     {mod.id === 'astrologie' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         <div>
-                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #9B9B9B)' }}>Signe zodiacal</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: CU.textMuted }}>Signe zodiacal</label>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                             {ZODIAC_SIGNS.map(z => (
                               <button key={z.id} onClick={() => { const u = { ...modules }; u.astrologie = { ...u.astrologie, zodiacSign: z.id }; updateAlarm({ contentModules: u, preset: 'custom' }); }}
@@ -1002,7 +980,7 @@ export default function ReveilPage() {
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #9B9B9B)' }}>Niveau de detail</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: CU.textMuted }}>Niveau de detail</label>
                           <div className="flex gap-4">
                             {(['court', 'moyen', 'detaille'] as const).map(lvl => (
                               <button key={lvl} onClick={() => { const u = { ...modules }; u.astrologie = { ...u.astrologie, detailLevel: lvl }; updateAlarm({ contentModules: u, preset: 'custom' }); }}
@@ -1033,7 +1011,7 @@ export default function ReveilPage() {
                     {mod.id === 'briefing' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         <div>
-                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #9B9B9B)' }}>Categories d&apos;actualites</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: CU.textMuted }}>Categories d&apos;actualites</label>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                             {BRIEFING_CATEGORIES.map(cat => {
                               const isActive = modules.briefing.categories.includes(cat.id);
@@ -1057,7 +1035,7 @@ export default function ReveilPage() {
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: 'var(--fz-text-muted, #9B9B9B)' }}>Nombre d&apos;articles</label>
+                          <label className="text-xs" style={{ display: 'block', marginBottom: 4, color: CU.textMuted }}>Nombre d&apos;articles</label>
                           <div className="flex gap-4">
                             {[3, 5, 10].map(n => (
                               <button key={n} onClick={() => { const u = { ...modules }; u.briefing = { ...u.briefing, itemCount: n }; updateAlarm({ contentModules: u, preset: 'custom' }); }}
@@ -1188,7 +1166,7 @@ export default function ReveilPage() {
                 <span style={{ fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>
                   <span style={{ fontSize: 16, verticalAlign: 'middle' }}>{modeEmoji}</span> {greeting}{session.displayName ? ` ${session.displayName}` : ''} !
                 </span>
-                <span style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}> — Mode {mode.label}</span>
+                <span style={{ color: CU.textMuted }}> — Mode {mode.label}</span>
                 <br />
                 {enabledModules.map(m => (
                   <span key={m.id}>
@@ -1205,7 +1183,7 @@ export default function ReveilPage() {
                   </span>
                 ))}
               </div>
-              <div className="text-xs" style={{ marginTop: 8, fontStyle: 'italic', color: 'var(--fz-text-muted, #9B9B9B)' }}>
+              <div className="text-xs" style={{ marginTop: 8, fontStyle: 'italic', color: CU.textMuted }}>
                 Apercu indicatif — le contenu reel sera genere par l&apos;IA selon vos parametres
               </div>
             </div>
@@ -1220,7 +1198,7 @@ export default function ReveilPage() {
         <div className="section-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Voix et livraison</div>
         <div className="card" style={{ padding: '20px 24px' }}>
           {/* Voice selector */}
-          <label className="text-sm mb-8" style={{ display: 'block', color: 'var(--fz-text-muted, #9B9B9B)' }}>Voix de l&apos;agent</label>
+          <label className="text-sm mb-8" style={{ display: 'block', color: CU.textMuted }}>Voix de l&apos;agent</label>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             {[
               { id: 'sarah' as const, label: 'Maëva', emoji: '👩', desc: 'Voix feminine chaleureuse' },
@@ -1249,7 +1227,7 @@ export default function ReveilPage() {
                       }}>
                         {v.label}
                       </div>
-                      <div className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{v.desc}</div>
+                      <div className="text-xs" style={{ color: CU.textMuted }}>{v.desc}</div>
                     </div>
                   </div>
                 </button>
@@ -1258,7 +1236,7 @@ export default function ReveilPage() {
           </div>
 
           {/* Delivery method */}
-          <label className="text-sm mb-8" style={{ display: 'block', color: 'var(--fz-text-muted, #9B9B9B)' }}>Mode de livraison</label>
+          <label className="text-sm mb-8" style={{ display: 'block', color: CU.textMuted }}>Mode de livraison</label>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             {[
               { id: 'call' as const, label: 'Appel telephonique', emoji: '📞', desc: 'L\'IA vous appelle' },
@@ -1287,7 +1265,7 @@ export default function ReveilPage() {
                       }}>
                         {d.label}
                       </div>
-                      <div className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{d.desc}</div>
+                      <div className="text-xs" style={{ color: CU.textMuted }}>{d.desc}</div>
                     </div>
                   </div>
                 </button>
@@ -1296,7 +1274,7 @@ export default function ReveilPage() {
           </div>
 
           {/* Phone number */}
-          <label className="text-sm mb-4" style={{ display: 'block', color: 'var(--fz-text-muted, #9B9B9B)' }}>Numero de telephone</label>
+          <label className="text-sm mb-4" style={{ display: 'block', color: CU.textMuted }}>Numero de telephone</label>
           <input
             type="tel"
             value={alarm?.phone ?? session.phone ?? ''}
@@ -1305,7 +1283,7 @@ export default function ReveilPage() {
             className="input"
             style={{ maxWidth: 280 }}
           />
-          <div className="text-xs mt-4" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
+          <div className="text-xs mt-4" style={{ color: CU.textMuted }}>
             Numero ou vous recevrez l&apos;appel ou le message WhatsApp
           </div>
         </div>
@@ -1408,7 +1386,7 @@ export default function ReveilPage() {
               Un numero de telephone IA{'\u00A0'}rien{'\u00A0'}que{'\u00A0'}pour{'\u00A0'}vous
             </h3>
 
-            <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.7, marginBottom: 24, maxWidth: 600 }}>
+            <p style={{ fontSize: 14, color: CU.textMuted, lineHeight: 1.7, marginBottom: 24, maxWidth: 600 }}>
               Commandez un <strong style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>numero supplementaire via Twilio</strong> et debloquez
               un assistant telephonique IA complet, disponible 24h/24 et 7j/7.
             </p>
@@ -1436,7 +1414,7 @@ export default function ReveilPage() {
                   <span style={{ fontSize: 22, flexShrink: 0 }}>{feature.emoji}</span>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', marginBottom: 3 }}>{feature.title}</div>
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.5 }}>{feature.desc}</div>
+                    <div style={{ fontSize: 11, color: CU.textMuted, lineHeight: 1.5 }}>{feature.desc}</div>
                   </div>
                 </div>
               ))}
@@ -1451,10 +1429,10 @@ export default function ReveilPage() {
               <span style={{ fontSize: 22 }}>💰</span>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>Tarif Twilio transparent</div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 12, color: CU.textMuted, lineHeight: 1.6 }}>
                   Numero francais : ~1€/mois · Appels sortants : ~0.01€/min · SMS : ~0.04€/msg
                   <br />
-                  <span style={{ color: 'var(--fz-text-muted, #9B9B9B)', opacity: 0.7 }}>Facturation directe Twilio, aucune commission Freenzy.</span>
+                  <span style={{ color: CU.textMuted, opacity: 0.7 }}>Facturation directe Twilio, aucune commission Freenzy.</span>
                 </div>
               </div>
             </div>
@@ -1514,7 +1492,7 @@ export default function ReveilPage() {
               <>🔔 Tester mon reveil maintenant</>
             )}
           </button>
-          <div className="text-xs mt-8" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
+          <div className="text-xs mt-8" style={{ color: CU.textMuted }}>
             Genere et envoie un reveil de test avec vos parametres actuels
           </div>
         </div>
@@ -1550,7 +1528,7 @@ export default function ReveilPage() {
       <div className="section">
         <div className="flex-between items-center mb-12">
           <div className="section-title" style={{ margin: 0, color: 'var(--fz-text, #1A1A1A)' }}>Routine du matin</div>
-          <span className="text-sm" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{routineDone}/{routineTotal} — {routinePct}%</span>
+          <span className="text-sm" style={{ color: CU.textMuted }}>{routineDone}/{routineTotal} — {routinePct}%</span>
         </div>
         <div className="progress-bar mb-12" style={{ height: 4 }}>
           <div className="progress-fill" style={{

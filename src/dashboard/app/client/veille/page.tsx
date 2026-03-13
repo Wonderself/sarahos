@@ -5,6 +5,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, searchInput } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,18 +41,6 @@ interface VeilleData {
 const STORAGE_KEY = 'fz_veille';
 
 const CATEGORIES: Category[] = ['Tech', 'Business', 'Marketing', 'IA', 'Startup', 'Général'];
-
-const CU = {
-  card: { border: '1px solid #E5E5E5' as const, borderRadius: 8, background: '#fff' },
-  btn: {
-    height: 36, padding: '0 14px', borderRadius: 8, fontWeight: 500 as const,
-    fontSize: 13, cursor: 'pointer' as const, border: '1px solid #E5E5E5' as const, background: '#fff' as const,
-  },
-  btnPrimary: {
-    height: 36, padding: '0 14px', borderRadius: 8, fontWeight: 500 as const,
-    fontSize: 13, cursor: 'pointer' as const, border: 'none' as const, background: '#1A1A1A', color: '#fff',
-  },
-};
 
 type FilterMode = 'all' | 'unread' | 'bookmarked';
 
@@ -133,11 +122,6 @@ export default function VeillePage() {
 
   const persist = useCallback((d: VeilleData) => { setData(d); saveData(d); }, []);
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #E5E5E5',
-    fontSize: 13, background: '#fff', color: '#1A1A1A', outline: 'none',
-  };
-
   // ── Actions ──
   const toggleRead = (id: string) => {
     persist({ ...data, articles: data.articles.map(a => a.id === id ? { ...a, read: !a.read } : a) });
@@ -155,9 +139,57 @@ export default function VeillePage() {
   const deleteSource = (id: string) => {
     persist({ ...data, sources: data.sources.filter(s => s.id !== id), articles: data.articles.filter(a => a.sourceId !== id) });
   };
-  const simulateRefresh = () => {
+  const refreshFeed = async () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1500);
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
+      if (!session.token) { setRefreshing(false); return; }
+
+      const sourceNames = data.sources.map(s => `${s.name} (${s.category})`).join(', ');
+      const prompt = `Tu es un assistant de veille technologique. Génère 3 articles d'actualité récents et réalistes pour les sources suivantes : ${sourceNames}.
+
+Réponds UNIQUEMENT en JSON valide (pas de markdown) avec ce format :
+[
+  {"sourceIndex": 0, "title": "Titre article", "excerpt": "Résumé en 1-2 phrases"},
+  {"sourceIndex": 1, "title": "Titre article", "excerpt": "Résumé en 1-2 phrases"},
+  {"sourceIndex": 2, "title": "Titre article", "excerpt": "Résumé en 1-2 phrases"}
+]
+
+sourceIndex = index dans la liste des sources (0 = première source).
+Les articles doivent être crédibles et datés d'aujourd'hui.`;
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: session.token,
+          model: 'claude-haiku-4-5-20251001',
+          messages: [{ role: 'user', content: prompt }],
+          maxTokens: 1024,
+          agentName: 'fz-veille',
+        }),
+      });
+
+      if (res.ok) {
+        const aiData = await res.json();
+        const text = aiData.content || aiData.message || aiData.text || '';
+        try {
+          const newItems = JSON.parse(text) as { sourceIndex: number; title: string; excerpt: string }[];
+          const newArticles: FeedArticle[] = newItems.map(item => ({
+            id: uid(),
+            sourceId: data.sources[item.sourceIndex]?.id ?? data.sources[0]?.id ?? 's1',
+            title: item.title,
+            excerpt: item.excerpt,
+            link: '#',
+            date: new Date().toISOString().slice(0, 10),
+            read: false,
+            bookmarked: false,
+          }));
+          persist({ ...data, articles: [...newArticles, ...data.articles] });
+        } catch { /* JSON parse error — skip */ }
+      }
+    } catch { /* network error — skip */ }
+    setRefreshing(false);
   };
 
   // ── Filtering ──
@@ -177,26 +209,24 @@ export default function VeillePage() {
   const unreadCount = data.articles.filter(a => !a.read).length;
   const bookmarkedCount = data.articles.filter(a => a.bookmarked).length;
 
-  if (!loaded) return <div style={{ padding: 40, textAlign: 'center', color: '#6B6B6B' }}>Chargement...</div>;
+  if (!loaded) return <div style={{ padding: 40, textAlign: 'center', color: CU.textSecondary }}>Chargement...</div>;
 
   return (
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: isMobile ? 8 : 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 22 }}>{pageMeta.emoji}</span>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>
-                <span className="fz-logo-word">{pageMeta.title}</span>
-              </h1>
-              <HelpBubble text={pageMeta.helpText} />
-            </div>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{pageMeta.subtitle}</p>
+        <div>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{pageMeta.emoji}</span>
+            <h1 style={CU.pageTitle}>
+              <span className="fz-logo-word">{pageMeta.title}</span>
+            </h1>
+            <HelpBubble text={pageMeta.helpText} />
           </div>
+          <p style={CU.pageSubtitle}>{pageMeta.subtitle}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <button onClick={simulateRefresh} disabled={refreshing} style={{ ...CU.btn, opacity: refreshing ? 0.6 : 1 }}>
+          <button onClick={refreshFeed} disabled={refreshing} style={{ ...CU.btnGhost, opacity: refreshing ? 0.6 : 1 }}>
             {refreshing ? '⏳ Actualisation...' : '🔄 Actualiser'}
           </button>
           <button onClick={() => setShowSourceForm(true)} style={CU.btnPrimary}>➕ Source</button>
@@ -219,27 +249,27 @@ export default function VeillePage() {
         ].map(s => (
           <div key={s.label} style={{ ...CU.card, padding: 12, textAlign: 'center' }}>
             <div style={{ fontSize: 18 }}>{s.emoji}</div>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: '#6B6B6B' }}>{s.label}</div>
+            <div style={CU.statValue}>{s.value}</div>
+            <div style={CU.statLabel}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍 Rechercher..." style={{ ...inputStyle, maxWidth: 200, flex: isMobile ? 1 : undefined }} />
-        <select value={filterSource} onChange={e => setFilterSource(e.target.value)} style={{ ...CU.btn, height: 32, fontSize: 11, padding: '0 6px' }}>
+      <div style={toolbar()}>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍 Rechercher..." style={{ ...searchInput(isMobile), maxWidth: 200 }} />
+        <select value={filterSource} onChange={e => setFilterSource(e.target.value)} style={{ ...CU.select, height: 32, fontSize: 11, padding: '0 6px' }}>
           <option value="all">Toutes les sources</option>
           {data.sources.map(s => <option key={s.id} value={s.id}>{s.emoji} {s.name}</option>)}
         </select>
-        <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)} style={{ ...CU.btn, height: 32, fontSize: 11, padding: '0 6px' }}>
+        <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)} style={{ ...CU.select, height: 32, fontSize: 11, padding: '0 6px' }}>
           <option value="all">Toutes catégories</option>
           {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
         <div style={{ display: 'flex', gap: 4 }}>
           {([['all', 'Tous'], ['unread', 'Non lus'], ['bookmarked', 'Favoris']] as [FilterMode, string][]).map(([mode, label]) => (
             <button key={mode} onClick={() => setFilterMode(mode)}
-              style={{ ...CU.btn, height: 28, fontSize: 11, background: filterMode === mode ? '#1A1A1A' : '#fff', color: filterMode === mode ? '#fff' : '#6B6B6B', border: filterMode === mode ? '1px solid #1A1A1A' : '1px solid #E5E5E5' }}>
+              style={filterMode === mode ? { ...CU.btnSmall, background: CU.accent, color: '#fff', border: `1px solid ${CU.accent}` } : CU.btnSmall}>
               {label}
             </button>
           ))}
@@ -248,25 +278,25 @@ export default function VeillePage() {
 
       {/* Source form */}
       {showSourceForm && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={() => setShowSourceForm(false)}>
-          <div style={{ background: '#fff', borderRadius: 12, padding: isMobile ? 16 : 24, maxWidth: 450, width: '100%' }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600 }}>Ajouter une source</h2>
+        <div style={CU.overlay} onClick={() => setShowSourceForm(false)}>
+          <div style={{ ...CU.modal, maxWidth: 450 }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 16 }}>Ajouter une source</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Nom</label><input value={srcName} onChange={e => setSrcName(e.target.value)} style={inputStyle} placeholder="Ex: Mon Blog Tech" /></div>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>URL du flux RSS</label><input value={srcUrl} onChange={e => setSrcUrl(e.target.value)} style={inputStyle} placeholder="https://example.com/rss" /></div>
+              <div><label style={CU.label}>Nom</label><input value={srcName} onChange={e => setSrcName(e.target.value)} style={CU.input} placeholder="Ex: Mon Blog Tech" /></div>
+              <div><label style={CU.label}>URL du flux RSS</label><input value={srcUrl} onChange={e => setSrcUrl(e.target.value)} style={CU.input} placeholder="https://example.com/rss" /></div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Catégorie</label>
-                  <select value={srcCategory} onChange={e => setSrcCategory(e.target.value as Category)} style={inputStyle}>
+                <div><label style={CU.label}>Catégorie</label>
+                  <select value={srcCategory} onChange={e => setSrcCategory(e.target.value as Category)} style={{ ...CU.select, width: '100%' }}>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
-                <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Emoji</label>
-                  <input value={srcEmoji} onChange={e => setSrcEmoji(e.target.value)} style={inputStyle} maxLength={2} />
+                <div><label style={CU.label}>Emoji</label>
+                  <input value={srcEmoji} onChange={e => setSrcEmoji(e.target.value)} style={CU.input} maxLength={2} />
                 </div>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-              <button onClick={() => setShowSourceForm(false)} style={CU.btn}>Annuler</button>
+              <button onClick={() => setShowSourceForm(false)} style={CU.btnGhost}>Annuler</button>
               <button onClick={addSource} style={CU.btnPrimary}>Ajouter</button>
             </div>
           </div>
@@ -277,8 +307,8 @@ export default function VeillePage() {
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '220px 1fr', gap: 16 }}>
         {/* Sources list */}
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Sources ({data.sources.length})</div>
-          <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: 6, overflowX: isMobile ? 'auto' : undefined, flexWrap: isMobile ? 'nowrap' : undefined }}>
+          <div style={CU.sectionTitle}>Sources ({data.sources.length})</div>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', gap: 6, overflowX: isMobile ? 'auto' : undefined, flexWrap: isMobile ? 'nowrap' : undefined, marginTop: 8 }}>
             {data.sources.map(s => {
               const articleCount = data.articles.filter(a => a.sourceId === s.id).length;
               const unread = data.articles.filter(a => a.sourceId === s.id && !a.read).length;
@@ -286,13 +316,13 @@ export default function VeillePage() {
                 <div key={s.id} style={{
                   ...CU.card, padding: '8px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   minWidth: isMobile ? 160 : undefined, cursor: 'pointer',
-                  background: filterSource === s.id ? '#f8f8f8' : '#fff',
+                  background: filterSource === s.id ? CU.bgSecondary : CU.bg,
                 }} onClick={() => setFilterSource(filterSource === s.id ? 'all' : s.id)}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span>{s.emoji}</span>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 500 }}>{s.name}</div>
-                      <div style={{ fontSize: 10, color: '#9B9B9B' }}>{articleCount} articles{unread > 0 ? ` (${unread} new)` : ''}</div>
+                      <div style={{ fontSize: 12, fontWeight: 500, color: CU.text }}>{s.name}</div>
+                      <div style={{ fontSize: 10, color: CU.textMuted }}>{articleCount} articles{unread > 0 ? ` (${unread} new)` : ''}</div>
                     </div>
                   </div>
                   <button onClick={e => { e.stopPropagation(); deleteSource(s.id); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, color: '#ef4444' }}>🗑️</button>
@@ -304,13 +334,16 @@ export default function VeillePage() {
 
         {/* Articles */}
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+          <div style={CU.sectionTitle}>
             Articles ({filteredArticles.length})
           </div>
           {filteredArticles.length === 0 ? (
-            <div style={{ ...CU.card, padding: 40, textAlign: 'center', color: '#6B6B6B' }}>Aucun article trouvé</div>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <span style={CU.emptyEmoji}>📄</span>
+              <div style={CU.emptyTitle}>Aucun article trouvé</div>
+            </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
               {filteredArticles.map(article => (
                 <div key={article.id} style={{
                   ...CU.card, padding: isMobile ? 12 : 16,
@@ -321,14 +354,14 @@ export default function VeillePage() {
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                         <span style={{ fontSize: 14 }}>{getSourceEmoji(article.sourceId)}</span>
-                        <span style={{ fontSize: 11, color: '#6B6B6B' }}>{getSourceName(article.sourceId)}</span>
-                        <span style={{ fontSize: 10, color: '#9B9B9B' }}>{article.date}</span>
+                        <span style={{ fontSize: 11, color: CU.textSecondary }}>{getSourceName(article.sourceId)}</span>
+                        <span style={{ fontSize: 10, color: CU.textMuted }}>{article.date}</span>
                         {!article.read && <span style={{ width: 6, height: 6, borderRadius: 3, background: '#3b82f6', display: 'inline-block' }} />}
                       </div>
-                      <a href={article.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', textDecoration: 'none', display: 'block', marginBottom: 4 }}>
+                      <a href={article.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color: CU.text, textDecoration: 'none', display: 'block', marginBottom: 4 }}>
                         {article.title}
                       </a>
-                      <div style={{ fontSize: 12, color: '#6B6B6B', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <div style={{ fontSize: 12, color: CU.textSecondary, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {article.excerpt}
                       </div>
                     </div>

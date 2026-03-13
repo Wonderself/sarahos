@@ -383,7 +383,7 @@ export default function SnakeGame() {
           <button
             onClick={startGame}
             style={{
-              background: '#7c3aed',
+              background: 'var(--accent)',
               color: '#fff',
               border: 'none',
               borderRadius: 10,

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import PageExplanation from '@/components/PageExplanation';
 import { useIsMobile } from '@/lib/use-media-query';
 import { PAGE_META } from '@/lib/emoji-map';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar } from '@/lib/page-styles';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -188,441 +189,320 @@ export default function PhotosPage() {
   const totalCollections = store.collections.length;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: isMobile ? '16px 12px' : '32px 24px' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 22 }}>{PAGE_META.photos.emoji}</span>
+    <div style={pageContainer(isMobile)}>
+      {/* Header */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.photos.emoji}</span>
+          <div>
+            <h1 style={CU.pageTitle}>{PAGE_META.photos.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.photos.subtitle}</p>
+          </div>
+        </div>
+      </div>
+      <PageExplanation pageId="photos" text={PAGE_META.photos?.helpText} />
+
+      {/* Banner */}
+      <div style={{
+        ...CU.card,
+        background: CU.accentLight,
+        marginBottom: 20,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        fontSize: 13,
+        color: CU.textSecondary,
+      }}>
+        <span style={{ fontSize: 18 }}>🔗</span>
+        Connectez l&apos;API Unsplash pour acc&eacute;der &agrave; des millions d&apos;images gratuites
+      </div>
+
+      {/* Stats */}
+      <div style={{ ...cardGrid(isMobile, 3), marginBottom: 20 }}>
+        {[
+          { emoji: '🖼️', label: 'Images sauvegardées', value: store.photos.length },
+          { emoji: '❤️', label: 'Favoris', value: favCount },
+          { emoji: '📁', label: 'Collections', value: totalCollections },
+        ].map(s => (
+          <div key={s.label} style={{
+            ...CU.card,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: isMobile ? 14 : 18,
+          }}>
+            <span style={{ fontSize: 24 }}>{s.emoji}</span>
             <div>
-              <h1 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{PAGE_META.photos.title}</h1>
-              <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: '2px 0 0' }}>{PAGE_META.photos.subtitle}</p>
+              <div style={CU.statValue}>{s.value}</div>
+              <div style={CU.statLabel}>{s.label}</div>
             </div>
           </div>
-        </div>
-        <PageExplanation pageId="photos" text={PAGE_META.photos?.helpText} />
+        ))}
+      </div>
 
-        {/* Banner */}
-        <div style={{
-          background: 'linear-gradient(135deg, #dbeafe, #ede9fe)',
-          borderRadius: 12,
-          padding: isMobile ? 14 : 18,
-          marginBottom: 20,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          fontSize: 13,
-          color: '#3730a3',
-        }}>
-          <span style={{ fontSize: 18 }}>🔗</span>
-          Connectez l&apos;API Unsplash pour acc&eacute;der &agrave; des millions d&apos;images gratuites
-        </div>
+      {/* Search */}
+      <div style={{ marginBottom: 16 }}>
+        <input
+          type="text"
+          placeholder="Rechercher des images..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={CU.input}
+        />
+      </div>
 
-        {/* Stats */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-          {[
-            { emoji: '🖼️', label: 'Images sauvegardées', value: store.photos.length },
-            { emoji: '❤️', label: 'Favoris', value: favCount },
-            { emoji: '📁', label: 'Collections', value: totalCollections },
-          ].map(s => (
-            <div key={s.label} style={{
-              flex: '1 1 140px',
-              background: 'var(--bg-secondary)',
-              borderRadius: 12,
-              padding: isMobile ? 14 : 18,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              border: '1px solid var(--border-primary)',
-            }}>
-              <span style={{ fontSize: 24 }}>{s.emoji}</span>
-              <div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>{s.value}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{s.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Category buttons */}
+      <div style={toolbar()}>
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setCategory(cat)}
+            style={category === cat
+              ? { ...CU.btnSmall, background: CU.accent, color: '#fff', border: `1px solid ${CU.accent}`, borderRadius: 20 }
+              : { ...CU.btnSmall, borderRadius: 20 }
+            }
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
-        {/* Search */}
-        <div style={{ marginBottom: 16 }}>
-          <input
-            type="text"
-            placeholder="Rechercher des images..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px 14px',
-              borderRadius: 10,
-              border: '1px solid var(--border-primary)',
-              background: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              fontSize: 14,
-              outline: 'none',
-              boxSizing: 'border-box',
-            }}
-          />
-        </div>
+      {/* Filter buttons */}
+      <div style={{ ...toolbar(), marginBottom: 20 }}>
+        {FILTERS.map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            style={filter === f
+              ? { ...CU.btnSmall, background: CU.accent, color: '#fff', border: `1px solid ${CU.accent}` }
+              : CU.btnSmall
+            }
+          >
+            {f}
+          </button>
+        ))}
+      </div>
 
-        {/* Category buttons */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              style={{
-                background: category === cat ? 'var(--accent)' : 'var(--bg-secondary)',
-                color: category === cat ? '#fff' : 'var(--text-secondary)',
-                border: category === cat ? 'none' : '1px solid var(--border-primary)',
-                borderRadius: 20,
-                padding: '6px 14px',
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              {cat}
+      {/* Collections */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <span style={emojiIcon(16)}>📁</span>
+          <span style={CU.sectionTitle}>Collections</span>
+          <button
+            onClick={() => setShowNewCollection(!showNewCollection)}
+            style={{ ...CU.btnSmall, background: CU.accent, color: '#fff', border: `1px solid ${CU.accent}`, marginLeft: 'auto' }}
+          >
+            + Nouvelle
+          </button>
+        </div>
+        {showNewCollection && (
+          <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+            <input
+              type="text"
+              placeholder="Nom de la collection..."
+              value={newCollectionName}
+              onChange={e => setNewCollectionName(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && createCollection()}
+              style={{ ...CU.input, flex: 1 }}
+            />
+            <button onClick={createCollection} style={CU.btnPrimary}>
+              Cr&eacute;er
             </button>
-          ))}
-        </div>
-
-        {/* Filter buttons */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-          {FILTERS.map(f => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              style={{
-                background: filter === f ? '#1A1A1A' : 'transparent',
-                color: filter === f ? '#fff' : 'var(--text-secondary)',
-                border: filter === f ? 'none' : '1px solid var(--border-primary)',
-                borderRadius: 8,
-                padding: '5px 12px',
-                fontSize: 11,
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        {/* Collections */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-            <span style={{ fontSize: 16 }}>📁</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Collections</span>
-            <button
-              onClick={() => setShowNewCollection(!showNewCollection)}
-              style={{
-                background: 'var(--accent)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 6,
-                padding: '3px 10px',
-                fontSize: 11,
-                fontWeight: 600,
-                cursor: 'pointer',
-                marginLeft: 'auto',
-              }}
-            >
-              + Nouvelle
-            </button>
-          </div>
-          {showNewCollection && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-              <input
-                type="text"
-                placeholder="Nom de la collection..."
-                value={newCollectionName}
-                onChange={e => setNewCollectionName(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && createCollection()}
-                style={{
-                  flex: 1,
-                  padding: '8px 12px',
-                  borderRadius: 8,
-                  border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-secondary)',
-                  color: 'var(--text-primary)',
-                  fontSize: 13,
-                  outline: 'none',
-                }}
-              />
-              <button
-                onClick={createCollection}
-                style={{
-                  background: 'var(--accent)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 8,
-                  padding: '8px 16px',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                Cr&eacute;er
-              </button>
-            </div>
-          )}
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-            {store.collections.map(col => (
-              <div key={col.id} style={{
-                flexShrink: 0,
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--border-primary)',
-                borderRadius: 10,
-                padding: '8px 14px',
-                minWidth: 100,
-              }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{col.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{col.photoIds.length} images</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Image Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-          gap: 14,
-        }}>
-          {filtered.map(photo => (
-            <div
-              key={photo.id}
-              style={{
-                background: 'var(--bg-secondary)',
-                borderRadius: 12,
-                overflow: 'hidden',
-                border: '1px solid var(--border-primary)',
-                cursor: 'pointer',
-                transition: 'transform 0.15s',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
-            >
-              {/* Gradient placeholder */}
-              <div
-                onClick={() => setSelectedPhoto(photo)}
-                style={{
-                  background: photo.gradient,
-                  height: isMobile ? 120 : 160,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative',
-                }}
-              >
-                <span style={{ fontSize: 32, opacity: 0.4 }}>🖼️</span>
-                {/* Favorite */}
-                <button
-                  onClick={e => { e.stopPropagation(); toggleFavorite(photo.id); }}
-                  style={{
-                    position: 'absolute',
-                    top: 8,
-                    right: 8,
-                    background: 'rgba(0,0,0,0.3)',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: 30,
-                    height: 30,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    fontSize: 16,
-                  }}
-                >
-                  {photo.favorite ? '❤️' : '🤍'}
-                </button>
-              </div>
-              {/* Info */}
-              <div style={{ padding: isMobile ? 10 : 12 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {photo.title}
-                </div>
-                <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4 }}>
-                  {photo.photographer}
-                </div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
-                  {photo.width} x {photo.height}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)', fontSize: 14 }}>
-            Aucune image trouv&eacute;e pour cette recherche.
           </div>
         )}
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+          {store.collections.map(col => (
+            <div key={col.id} style={{
+              ...CU.card,
+              flexShrink: 0,
+              padding: '8px 14px',
+              minWidth: 100,
+            }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{col.name}</div>
+              <div style={{ fontSize: 11, color: CU.textSecondary }}>{col.photoIds.length} images</div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-        {/* Detail Modal */}
-        {selectedPhoto && (
+      {/* Image Grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+        gap: 14,
+      }}>
+        {filtered.map(photo => (
           <div
-            onClick={() => { setSelectedPhoto(null); setAddToCollectionPhotoId(null); }}
+            key={photo.id}
             style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.6)',
-              zIndex: 1000,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20,
+              ...CU.cardHoverable,
+              padding: 0,
+              overflow: 'hidden',
             }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
           >
+            {/* Gradient placeholder */}
             <div
-              onClick={e => e.stopPropagation()}
+              onClick={() => setSelectedPhoto(photo)}
               style={{
-                background: 'var(--bg-primary)',
-                borderRadius: 16,
-                maxWidth: 600,
-                width: '100%',
-                maxHeight: '90vh',
-                overflow: 'auto',
-              }}
-            >
-              {/* Large preview */}
-              <div style={{
-                background: selectedPhoto.gradient,
-                height: isMobile ? 200 : 320,
-                borderRadius: '16px 16px 0 0',
+                background: photo.gradient,
+                height: isMobile ? 120 : 160,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-              }}>
-                <span style={{ fontSize: 64, opacity: 0.3 }}>🖼️</span>
+                position: 'relative',
+              }}
+            >
+              <span style={{ fontSize: 32, opacity: 0.4 }}>🖼️</span>
+              {/* Favorite */}
+              <button
+                onClick={e => { e.stopPropagation(); toggleFavorite(photo.id); }}
+                style={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  background: 'rgba(0,0,0,0.3)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 30,
+                  height: 30,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontSize: 16,
+                }}
+              >
+                {photo.favorite ? '❤️' : '🤍'}
+              </button>
+            </div>
+            {/* Info */}
+            <div style={{ padding: isMobile ? 10 : 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: CU.text, marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {photo.title}
               </div>
-              <div style={{ padding: isMobile ? 16 : 24 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{selectedPhoto.title}</h2>
-                  <button
-                    onClick={() => toggleFavorite(selectedPhoto.id)}
-                    style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer' }}
-                  >
-                    {selectedPhoto.favorite ? '❤️' : '🤍'}
-                  </button>
-                </div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 4 }}>
-                  Par {selectedPhoto.photographer}
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 16 }}>
-                  {selectedPhoto.width} x {selectedPhoto.height} &bull; {selectedPhoto.category}
-                </div>
-
-                {/* Actions */}
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-                  <button
-                    onClick={() => copyLink(selectedPhoto)}
-                    style={{
-                      background: 'var(--accent)',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: 8,
-                      padding: '8px 16px',
-                      fontSize: 13,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Copier le lien
-                  </button>
-                  <button
-                    onClick={() => setAddToCollectionPhotoId(addToCollectionPhotoId === selectedPhoto.id ? null : selectedPhoto.id)}
-                    style={{
-                      background: 'var(--bg-secondary)',
-                      color: 'var(--text-primary)',
-                      border: '1px solid var(--border-primary)',
-                      borderRadius: 8,
-                      padding: '8px 16px',
-                      fontSize: 13,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Ajouter &agrave; une collection
-                  </button>
-                  <button
-                    style={{
-                      background: '#1A1A1A',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: 8,
-                      padding: '8px 16px',
-                      fontSize: 13,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    T&eacute;l&eacute;charger
-                  </button>
-                </div>
-
-                {/* Collection picker */}
-                {addToCollectionPhotoId === selectedPhoto.id && (
-                  <div style={{
-                    background: 'var(--bg-secondary)',
-                    borderRadius: 10,
-                    padding: 12,
-                    border: '1px solid var(--border-primary)',
-                  }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
-                      Choisir une collection :
-                    </div>
-                    {store.collections.map(col => {
-                      const isIn = col.photoIds.includes(selectedPhoto.id);
-                      return (
-                        <button
-                          key={col.id}
-                          onClick={() => addToCollection(col.id, selectedPhoto.id)}
-                          style={{
-                            display: 'block',
-                            width: '100%',
-                            textAlign: 'left',
-                            background: isIn ? 'rgba(124,58,237,0.1)' : 'transparent',
-                            border: 'none',
-                            borderRadius: 6,
-                            padding: '6px 10px',
-                            fontSize: 13,
-                            color: 'var(--text-primary)',
-                            cursor: 'pointer',
-                            marginBottom: 4,
-                          }}
-                        >
-                          {isIn ? '✅ ' : ''}{col.name} ({col.photoIds.length})
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Close */}
-                <div style={{ textAlign: 'right', marginTop: 12 }}>
-                  <button
-                    onClick={() => { setSelectedPhoto(null); setAddToCollectionPhotoId(null); }}
-                    style={{
-                      background: 'transparent',
-                      border: '1px solid var(--border-primary)',
-                      borderRadius: 8,
-                      padding: '8px 16px',
-                      fontSize: 13,
-                      color: 'var(--text-secondary)',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Fermer
-                  </button>
-                </div>
+              <div style={{ fontSize: 11, color: CU.textSecondary, marginBottom: 4 }}>
+                {photo.photographer}
+              </div>
+              <div style={{ fontSize: 10, color: CU.textMuted }}>
+                {photo.width} x {photo.height}
               </div>
             </div>
           </div>
-        )}
+        ))}
       </div>
+
+      {filtered.length === 0 && (
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>🖼️</div>
+          <div style={CU.emptyTitle}>Aucune image trouv&eacute;e</div>
+          <div style={CU.emptyDesc}>Aucune image trouv&eacute;e pour cette recherche.</div>
+        </div>
+      )}
+
+      {/* Detail Modal */}
+      {selectedPhoto && (
+        <div onClick={() => { setSelectedPhoto(null); setAddToCollectionPhotoId(null); }} style={CU.overlay}>
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              ...CU.modal,
+              maxWidth: 600,
+              padding: 0,
+              overflow: 'hidden',
+              maxHeight: '90vh',
+            }}
+          >
+            {/* Large preview */}
+            <div style={{
+              background: selectedPhoto.gradient,
+              height: isMobile ? 200 : 320,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: 64, opacity: 0.3 }}>🖼️</span>
+            </div>
+            <div style={{ padding: isMobile ? 16 : 24, overflowY: 'auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <h2 style={{ ...CU.sectionTitle, fontSize: 18 }}>{selectedPhoto.title}</h2>
+                <button
+                  onClick={() => toggleFavorite(selectedPhoto.id)}
+                  style={{ background: 'none', border: 'none', fontSize: 22, cursor: 'pointer' }}
+                >
+                  {selectedPhoto.favorite ? '❤️' : '🤍'}
+                </button>
+              </div>
+              <div style={{ fontSize: 13, color: CU.textSecondary, marginBottom: 4 }}>
+                Par {selectedPhoto.photographer}
+              </div>
+              <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 16 }}>
+                {selectedPhoto.width} x {selectedPhoto.height} &bull; {selectedPhoto.category}
+              </div>
+
+              {/* Actions */}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+                <button onClick={() => copyLink(selectedPhoto)} style={CU.btnPrimary}>
+                  Copier le lien
+                </button>
+                <button
+                  onClick={() => setAddToCollectionPhotoId(addToCollectionPhotoId === selectedPhoto.id ? null : selectedPhoto.id)}
+                  style={CU.btnGhost}
+                >
+                  Ajouter &agrave; une collection
+                </button>
+                <button style={CU.btnPrimary}>
+                  T&eacute;l&eacute;charger
+                </button>
+              </div>
+
+              {/* Collection picker */}
+              {addToCollectionPhotoId === selectedPhoto.id && (
+                <div style={{ ...CU.card, background: CU.bgSecondary, padding: 12 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: CU.text, marginBottom: 8 }}>
+                    Choisir une collection :
+                  </div>
+                  {store.collections.map(col => {
+                    const isIn = col.photoIds.includes(selectedPhoto.id);
+                    return (
+                      <button
+                        key={col.id}
+                        onClick={() => addToCollection(col.id, selectedPhoto.id)}
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          textAlign: 'left',
+                          background: isIn ? CU.accentLight : 'transparent',
+                          border: 'none',
+                          borderRadius: 6,
+                          padding: '6px 10px',
+                          fontSize: 13,
+                          color: CU.text,
+                          cursor: 'pointer',
+                          marginBottom: 4,
+                        }}
+                      >
+                        {isIn ? '✅ ' : ''}{col.name} ({col.photoIds.length})
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Close */}
+              <div style={{ textAlign: 'right', marginTop: 12 }}>
+                <button
+                  onClick={() => { setSelectedPhoto(null); setAddToCollectionPhotoId(null); }}
+                  style={CU.btnGhost}
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { GAME_CATALOG, getPointsEarnedThisGame, getBadgesEarnedThisGame } from '@/lib/games-engine';
 import { getBadgeDefinitions, Badge } from '@/lib/arcade-profile';
 import BadgeUnlockPopup from '@/components/BadgeUnlockPopup';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
 import WordleGame from './wordle';
 import SudokuGame from './sudoku';
 import SnakeGame from './snake';
@@ -35,6 +38,7 @@ export default function GamePage() {
   const slug = params?.slug as string;
   const config = GAME_CATALOG.find((g) => g.slug === slug);
   const GameComponent = GAME_MAP[slug];
+  const isMobile = useIsMobile();
 
   const [sessionPoints, setSessionPoints] = useState(0);
   const [sessionBadgeIds, setSessionBadgeIds] = useState<string[]>([]);
@@ -60,14 +64,14 @@ export default function GamePage() {
 
   if (!config || !GameComponent) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '40px 24px', textAlign: 'center' }}>
-        <p style={{ color: 'var(--fz-text, #1E293B)', fontSize: 18, marginBottom: 16 }}>Jeu introuvable</p>
-        <Link href="/client/games" style={{ color: 'var(--fz-accent, #0EA5E9)', textDecoration: 'none', fontSize: 14 }}>
-          <span style={{ fontSize: 14, verticalAlign: 'middle', marginRight: 4 }}>
-            ←
-          </span>
-          Retour à l&apos;Arcade
-        </Link>
+      <div style={{ ...pageContainer(isMobile), textAlign: 'center' }}>
+        <div style={CU.emptyState}>
+          <span style={CU.emptyEmoji}>🎮</span>
+          <div style={CU.emptyTitle}>Jeu introuvable</div>
+          <Link href="/client/games" style={{ color: CU.accent, textDecoration: 'none', fontSize: 13 }}>
+            ← Retour à l&apos;Arcade
+          </Link>
+        </div>
       </div>
     );
   }
@@ -77,14 +81,13 @@ export default function GamePage() {
     .filter(Boolean) as Badge[];
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--fz-bg, #FFFFFF)', padding: '24px' }}>
+    <div style={pageContainer(isMobile)}>
       <BadgeUnlockPopup />
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Link
             href="/client/games"
             style={{
-              color: 'var(--fz-text-muted, #94A3B8)',
+              color: CU.textMuted,
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -95,12 +98,10 @@ export default function GamePage() {
             ←
             Arcade
           </Link>
-          <span style={{ color: 'var(--fz-border, #E2E8F0)' }}>/</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 18, color: config.color }}>
-              {config.icon}
-            </span>
-            <span style={{ color: 'var(--fz-text, #1E293B)', fontWeight: 600, fontSize: 16 }}>{config.name}</span>
+          <span style={{ color: CU.border }}>/</span>
+          <div style={headerRow()}>
+            <span style={emojiIcon(18)}>{config.icon}</span>
+            <span style={{ color: CU.text, fontWeight: 600, fontSize: 16 }}>{config.name}</span>
           </div>
         </div>
 
@@ -113,7 +114,7 @@ export default function GamePage() {
               marginTop: 20,
               background: 'rgba(14,165,233,0.08)',
               border: '1px solid rgba(14,165,233,0.2)',
-              borderRadius: 12,
+              borderRadius: 8,
               padding: '16px 20px',
               display: 'flex',
               alignItems: 'center',
@@ -127,10 +128,10 @@ export default function GamePage() {
                 ⭐
               </span>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>
+                <div style={{ fontSize: 18, fontWeight: 700, color: CU.text }}>
                   +{sessionPoints} pts
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
+                <div style={{ fontSize: 12, color: CU.textMuted }}>
                   Points gagnés cette partie
                 </div>
               </div>
@@ -168,7 +169,7 @@ export default function GamePage() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--fz-text-muted, #94A3B8)',
+                color: CU.textMuted,
                 cursor: 'pointer',
                 fontSize: 18,
                 padding: 4,
@@ -179,7 +180,6 @@ export default function GamePage() {
             </button>
           </div>
         )}
-      </div>
     </div>
   );
 }

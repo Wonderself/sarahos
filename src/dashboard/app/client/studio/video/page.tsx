@@ -18,6 +18,10 @@ import AgentRequestQueue from '../../../../components/studio/AgentRequestQueue';
 import VideoLibrary from '../../../../components/studio/VideoLibrary';
 import { useAuthGuard } from '../../../../lib/useAuthGuard';
 import { useVisitorDraft } from '../../../../lib/useVisitorDraft';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 
 function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
@@ -175,23 +179,23 @@ function VideoStudioContent() {
     <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column' }}>
       {/* Top bar */}
       <div style={{
-        padding: '8px 16px', borderBottom: '1px solid var(--fz-border, #E2E8F0)',
-        display: 'flex', alignItems: 'center', gap: 10, background: 'var(--fz-bg, #FFFFFF)', flexWrap: 'wrap',
+        padding: '8px 16px', borderBottom: `1px solid ${CU.border}`,
+        display: 'flex', alignItems: 'center', gap: 10, background: CU.bg, flexWrap: 'wrap',
       }}>
-        <a href="/client/studio" style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', textDecoration: 'none' }}>
+        <a href="/client/studio" style={{ fontSize: 12, color: CU.textSecondary, textDecoration: 'none' }}>
           ← Studio
         </a>
-        <span style={{ color: '#d1d5db' }}>|</span>
+        <span style={{ color: CU.border }}>|</span>
 
         {/* Mode tabs */}
-        <div style={{ display: 'flex', gap: 2, background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, padding: 3 }}>
+        <div style={{ display: 'flex', gap: 2, background: CU.bgSecondary, borderRadius: 8, padding: 3 }}>
           <button
             onClick={() => setMode('free')}
             style={{
               padding: '4px 12px', borderRadius: 6, border: 'none', fontSize: 11, fontWeight: 600,
               cursor: 'pointer',
-              background: mode === 'free' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-              color: mode === 'free' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
+              background: mode === 'free' ? CU.bg : 'transparent',
+              color: mode === 'free' ? CU.accent : CU.textSecondary,
               boxShadow: mode === 'free' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
             }}
           >
@@ -202,8 +206,8 @@ function VideoStudioContent() {
             style={{
               padding: '4px 12px', borderRadius: 6, border: 'none', fontSize: 11, fontWeight: 600,
               cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
-              background: mode === 'request' ? 'var(--fz-bg, #FFFFFF)' : 'transparent',
-              color: mode === 'request' ? 'var(--fz-accent, #0EA5E9)' : 'var(--fz-text-secondary, #64748B)',
+              background: mode === 'request' ? CU.bg : 'transparent',
+              color: mode === 'request' ? CU.accent : CU.textSecondary,
               boxShadow: mode === 'request' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
             }}
           >
@@ -220,7 +224,7 @@ function VideoStudioContent() {
           </button>
         </div>
 
-        <span style={{ color: '#d1d5db' }}>|</span>
+        <span style={{ color: CU.border }}>|</span>
 
         {/* Workflow selector */}
         <select
@@ -234,8 +238,8 @@ function VideoStudioContent() {
             setVideoUrl(null);
           }}
           style={{
-            padding: '4px 8px', borderRadius: 6, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
-            fontSize: 12, background: 'var(--fz-bg, #FFFFFF)', outline: 'none',
+            padding: '4px 8px', borderRadius: 6, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+            fontSize: 12, background: CU.bg, outline: 'none',
           }}
         >
           {VIDEO_WORKFLOWS.map(wf => (
@@ -276,7 +280,7 @@ function VideoStudioContent() {
             onClick={() => { setActiveRequest(null); reloadPending(); }}
             style={{
               fontSize: 10, padding: '3px 8px', borderRadius: 5, border: '1px solid #fbbf24',
-              background: 'var(--fz-bg, #FFFFFF)', color: '#92400e', cursor: 'pointer', fontWeight: 600,
+              background: CU.bg, color: '#92400e', cursor: 'pointer', fontWeight: 600,
             }}
           >
             Annuler
@@ -321,13 +325,13 @@ function VideoStudioContent() {
           />
 
           {/* Advanced Questions — compact 2-col grid */}
-          <div style={{ padding: '0 20px 12px', background: 'var(--fz-bg-secondary, #F8FAFC)' }}>
+          <div style={{ padding: '0 20px 12px', background: CU.bgSecondary }}>
             <button
               onClick={() => setAdvancedOpen(!advancedOpen)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 6, width: '100%',
                 padding: '8px 0', border: 'none', background: 'none', cursor: 'pointer',
-                fontSize: 11, fontWeight: 600, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'left',
+                fontSize: 11, fontWeight: 600, color: CU.textMuted, textAlign: 'left',
               }}
             >
               <span style={{
@@ -341,25 +345,25 @@ function VideoStudioContent() {
             {advancedOpen && (
               <div style={{
                 display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10,
-                padding: 14, background: 'var(--fz-bg, #FFFFFF)', borderRadius: 10,
-                border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))',
+                padding: 14, background: CU.bg, borderRadius: 10,
+                border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}>
                 {/* Public cible */}
                 <div>
-                  <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: CU.textSecondary, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
                     Public cible
                   </label>
                   <input type="text" value={advPublicCible} onChange={e => setAdvPublicCible(e.target.value)}
-                    placeholder="Entrepreneurs, mamans..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
+                    placeholder="Entrepreneurs, mamans..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
                 </div>
 
                 {/* Objectif */}
                 <div>
-                  <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: CU.textSecondary, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
                     Objectif
                   </label>
                   <select value={advObjectif} onChange={e => setAdvObjectif(e.target.value)}
-                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
+                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 11, outline: 'none', background: CU.bg, boxSizing: 'border-box' }}>
                     <option value="">— Choisir —</option>
                     <option value="Informer">Informer</option>
                     <option value="Vendre">Vendre</option>
@@ -371,11 +375,11 @@ function VideoStudioContent() {
 
                 {/* Ton */}
                 <div>
-                  <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: CU.textSecondary, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
                     Ton
                   </label>
                   <select value={advTon} onChange={e => setAdvTon(e.target.value)}
-                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
+                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 11, outline: 'none', background: CU.bg, boxSizing: 'border-box' }}>
                     <option value="">— Choisir —</option>
                     <option value="Professionnel">Professionnel</option>
                     <option value="Décontracté">Décontracté</option>
@@ -387,11 +391,11 @@ function VideoStudioContent() {
 
                 {/* Durée */}
                 <div>
-                  <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: CU.textSecondary, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
                     Durée
                   </label>
                   <select value={advDuree} onChange={e => setAdvDuree(e.target.value)}
-                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box' }}>
+                    style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 11, outline: 'none', background: CU.bg, boxSizing: 'border-box' }}>
                     <option value="">— Choisir —</option>
                     <option value="< 30s">{'< 30s'}</option>
                     <option value="30s-1min">30s–1min</option>
@@ -403,27 +407,27 @@ function VideoStudioContent() {
 
                 {/* Musique */}
                 <div>
-                  <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: CU.textSecondary, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
                     Musique / ambiance
                   </label>
                   <input type="text" value={advMusique} onChange={e => setAdvMusique(e.target.value)}
-                    placeholder="Corporate, énergique..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
+                    placeholder="Corporate, énergique..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
                 </div>
 
                 {/* Contraintes */}
                 <div>
-                  <label style={{ fontSize: 10, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: CU.textSecondary, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.3 }}>
                     Contraintes
                   </label>
                   <input type="text" value={advContraintes} onChange={e => setAdvContraintes(e.target.value)}
-                    placeholder="Texte obligatoire, logo..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
+                    placeholder="Texte obligatoire, logo..." style={{ width: '100%', padding: '6px 9px', borderRadius: 7, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 11, outline: 'none', boxSizing: 'border-box' }} />
                 </div>
               </div>
             )}
           </div>
 
           {/* Bottom panel: Agent requests + Video library */}
-          <div style={{ maxHeight: '36vh', overflowY: 'auto', borderTop: '2px solid var(--fz-border, #E2E8F0)' }}>
+          <div style={{ maxHeight: '36vh', overflowY: 'auto', borderTop: `2px solid ${CU.border}` }}>
             <AgentRequestQueue
               type="video"
               activeRequestId={activeRequest?.id ?? null}

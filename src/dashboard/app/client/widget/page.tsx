@@ -7,6 +7,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 export default function WidgetPage() {
   const isMobile = useIsMobile();
@@ -36,15 +37,15 @@ export default function WidgetPage() {
   const meta = PAGE_META.widget;
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1A1A1A)', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta.emoji}</span>
-          {meta.title}
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta.emoji}</span>
+          <h1 style={CU.pageTitle}>{meta.title}</h1>
           <HelpBubble text={meta.helpText} />
-        </h1>
-        <p style={{ color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 14 }}>
+        </div>
+        <p style={CU.pageSubtitle}>
           {meta.subtitle}
         </p>
       </div>
@@ -53,22 +54,18 @@ export default function WidgetPage() {
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20 }}>
         {/* Left: Configuration */}
         <div>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', marginBottom: 16 }}>
-            <span style={{ fontSize: 20, verticalAlign: 'middle', marginRight: 6 }}>⚙️</span>
+          <h2 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
+            <span style={{ ...emojiIcon(20), verticalAlign: 'middle', marginRight: 6 }}>⚙️</span>
             Configuration
           </h2>
 
           {/* Agent selection */}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Agent</label>
+            <label style={CU.label}>Agent</label>
             <select
               value={config.agentId}
               onChange={e => updateConfig({ agentId: e.target.value })}
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8,
-                background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                color: 'var(--fz-text, #1A1A1A)', fontSize: 13, outline: 'none',
-              }}
+              style={{ ...CU.select, width: '100%' }}
             >
               {ALL_AGENTS.slice(0, 34).map(a => (
                 <option key={a.id} value={a.id}>{a.name} — {a.role}</option>
@@ -78,7 +75,7 @@ export default function WidgetPage() {
 
           {/* Color */}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>🎨 Couleur principale</label>
+            <label style={CU.label}>🎨 Couleur principale</label>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <input
                 type="color"
@@ -90,29 +87,23 @@ export default function WidgetPage() {
                 type="text"
                 value={config.primaryColor}
                 onChange={e => updateConfig({ primaryColor: e.target.value })}
-                style={{
-                  flex: 1, padding: '8px 12px', borderRadius: 8,
-                  background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                  color: 'var(--fz-text, #1A1A1A)', fontSize: 13, fontFamily: 'monospace', outline: 'none',
-                }}
+                style={{ ...CU.input, flex: 1, fontFamily: 'monospace' }}
               />
             </div>
           </div>
 
           {/* Position */}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Position</label>
+            <label style={CU.label}>Position</label>
             <div style={{ display: 'flex', gap: 8 }}>
               {(['bottom-right', 'bottom-left'] as const).map(pos => (
                 <button
                   key={pos}
                   onClick={() => updateConfig({ position: pos })}
-                  style={{
-                    flex: 1, padding: '10px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    background: config.position === pos ? '#1A1A1A' : 'var(--fz-bg-secondary, #F7F7F7)',
-                    color: config.position === pos ? '#fff' : 'var(--fz-text-muted, #9B9B9B)',
-                    fontSize: 12, fontWeight: 700,
-                  }}
+                  style={config.position === pos
+                    ? { ...CU.btnPrimary, flex: 1 }
+                    : { ...CU.btnGhost, flex: 1, color: CU.textMuted }
+                  }
                 >
                   {pos === 'bottom-right' ? 'Bas-droite' : 'Bas-gauche'}
                 </button>
@@ -122,62 +113,46 @@ export default function WidgetPage() {
 
           {/* Header title */}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Titre du widget</label>
+            <label style={CU.label}>Titre du widget</label>
             <input
               type="text"
               value={config.headerTitle}
               onChange={e => updateConfig({ headerTitle: e.target.value })}
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8,
-                background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                color: 'var(--fz-text, #1A1A1A)', fontSize: 13, outline: 'none',
-              }}
+              style={CU.input}
             />
           </div>
 
           {/* Welcome message */}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Message d'accueil</label>
+            <label style={CU.label}>Message d'accueil</label>
             <textarea
               value={config.welcomeMessage}
               onChange={e => updateConfig({ welcomeMessage: e.target.value })}
               rows={3}
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8, resize: 'vertical',
-                background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                color: 'var(--fz-text, #1A1A1A)', fontSize: 13, outline: 'none',
-              }}
+              style={CU.textarea}
             />
           </div>
 
           {/* Size */}
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, marginBottom: 16 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Largeur (px)</label>
+              <label style={CU.label}>Largeur (px)</label>
               <input
                 type="number"
                 value={config.width}
                 onChange={e => updateConfig({ width: Number(e.target.value) })}
                 min={300} max={500}
-                style={{
-                  width: '100%', padding: '10px 12px', borderRadius: 8,
-                  background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                  color: 'var(--fz-text, #1A1A1A)', fontSize: 13, outline: 'none',
-                }}
+                style={CU.input}
               />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-muted, #9B9B9B)', display: 'block', marginBottom: 6 }}>Hauteur (px)</label>
+              <label style={CU.label}>Hauteur (px)</label>
               <input
                 type="number"
                 value={config.height}
                 onChange={e => updateConfig({ height: Number(e.target.value) })}
                 min={400} max={700}
-                style={{
-                  width: '100%', padding: '10px 12px', borderRadius: 8,
-                  background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                  color: 'var(--fz-text, #1A1A1A)', fontSize: 13, outline: 'none',
-                }}
+                style={CU.input}
               />
             </div>
           </div>
@@ -185,23 +160,23 @@ export default function WidgetPage() {
 
         {/* Right: Preview */}
         <div>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', marginBottom: 16 }}>
-            <span style={{ fontSize: 20, verticalAlign: 'middle', marginRight: 6 }}>👁️</span>
+          <h2 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
+            <span style={{ ...emojiIcon(20), verticalAlign: 'middle', marginRight: 6 }}>👁️</span>
             Aperçu
           </h2>
 
           {/* Widget preview */}
           <div style={{
             position: 'relative', height: 500,
-            background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-            borderRadius: 14, overflow: 'hidden',
+            background: CU.bgSecondary, border: `1px solid ${CU.border}`,
+            borderRadius: 8, overflow: 'hidden',
           }}>
             {/* Fake website background */}
             <div style={{ padding: 20 }}>
-              <div style={{ width: 120, height: 16, background: 'var(--fz-border, #E5E5E5)', borderRadius: 4, marginBottom: 12 }} />
-              <div style={{ width: '80%', height: 10, background: 'var(--fz-bg-hover, #F0F0F0)', borderRadius: 3, marginBottom: 8 }} />
-              <div style={{ width: '60%', height: 10, background: 'var(--fz-bg-hover, #F0F0F0)', borderRadius: 3, marginBottom: 8 }} />
-              <div style={{ width: '70%', height: 10, background: 'var(--fz-bg-hover, #F0F0F0)', borderRadius: 3 }} />
+              <div style={{ width: 120, height: 16, background: CU.border, borderRadius: 4, marginBottom: 12 }} />
+              <div style={{ width: '80%', height: 10, background: CU.accentLight, borderRadius: 3, marginBottom: 8 }} />
+              <div style={{ width: '60%', height: 10, background: CU.accentLight, borderRadius: 3, marginBottom: 8 }} />
+              <div style={{ width: '70%', height: 10, background: CU.accentLight, borderRadius: 3 }} />
             </div>
 
             {/* Widget bubble */}
@@ -216,7 +191,7 @@ export default function WidgetPage() {
                   borderRadius: config.borderRadius, overflow: 'hidden',
                   background: '#0f0720', border: '1px solid rgba(255,255,255,0.12)',
                   display: 'flex', flexDirection: 'column',
-                  
+
                 }}>
                   {/* Header */}
                   <div style={{
@@ -275,7 +250,7 @@ export default function WidgetPage() {
                     width: 56, height: 56, borderRadius: '50%', border: 'none',
                     background: config.primaryColor, cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    
+
                     fontSize: 28,
                   }}
                 >
@@ -289,21 +264,20 @@ export default function WidgetPage() {
 
       {/* Embed code */}
       <div style={{ marginTop: 28 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', marginBottom: 12 }}>
-          <span style={{ fontSize: 20, verticalAlign: 'middle', marginRight: 6 }}>🔌</span>
+        <h2 style={{ ...CU.sectionTitle, marginBottom: 12 }}>
+          <span style={{ ...emojiIcon(20), verticalAlign: 'middle', marginRight: 6 }}>🔌</span>
           Code d'intégration
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 12 }}>
+        <p style={{ ...CU.pageSubtitle, marginBottom: 12 }}>
           Copiez ce code et collez-le juste avant la balise &lt;/body&gt; de votre site web.
         </p>
 
         <div style={{
           position: 'relative',
-          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-          borderRadius: 12, padding: '16px 20px',
+          ...CU.card, background: CU.bgSecondary,
         }}>
           <pre style={{
-            fontSize: 12, color: '#1A1A1A', fontFamily: 'monospace',
+            fontSize: 12, color: CU.text, fontFamily: 'monospace',
             whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0, lineHeight: 1.6,
           }}>
             {embedCode}
@@ -311,12 +285,9 @@ export default function WidgetPage() {
           <button
             onClick={handleCopy}
             style={{
+              ...CU.btnPrimary,
               position: 'absolute', top: 12, right: 12,
-              padding: '6px 14px', borderRadius: 6, border: 'none',
-              background: '#1A1A1A', color: '#fff',
-              fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 4,
-              minHeight: 44,
+              fontSize: 12,
             }}
           >
             {copied ? '✅' : '📋'}
@@ -326,18 +297,15 @@ export default function WidgetPage() {
       </div>
 
       {/* Instructions */}
-      <div style={{
-        marginTop: 20, padding: '16px 20px', borderRadius: 14,
-        background: '#F7F7F7', border: '1px solid #E5E5E5',
-      }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', marginBottom: 10 }}>
-          <span style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6 }}>❓</span>
+      <div style={{ ...CU.card, marginTop: 20, background: CU.bgSecondary }}>
+        <div style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 10 }}>
+          <span style={{ ...emojiIcon(18), verticalAlign: 'middle', marginRight: 6 }}>❓</span>
           Comment ça marche ?
         </div>
-        <ol style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 2 }}>
+        <ol style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: CU.textMuted, lineHeight: 2 }}>
           <li>Configurez l'apparence et choisissez l'agent ci-dessus</li>
           <li>Copiez le code d'intégration</li>
-          <li>Collez-le dans le HTML de votre site, juste avant <code style={{ color: '#1A1A1A' }}>&lt;/body&gt;</code></li>
+          <li>Collez-le dans le HTML de votre site, juste avant <code style={{ color: CU.text }}>&lt;/body&gt;</code></li>
           <li>Le widget apparaîtra automatiquement en bas de page</li>
         </ol>
       </div>

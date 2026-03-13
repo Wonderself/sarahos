@@ -284,7 +284,7 @@ export default function LoginModal({ open, onClose, message, onAuthenticated }: 
             fontSize: 20,
             fontWeight: 700,
             fontFamily: 'var(--font-display)',
-            background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+            background: 'var(--accent)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             letterSpacing: '-0.02em',
@@ -474,7 +474,7 @@ export default function LoginModal({ open, onClose, message, onAuthenticated }: 
                 rel="noopener noreferrer"
                 style={{
                   fontSize: 12,
-                  color: '#7c3aed',
+                  color: 'var(--accent)',
                   textDecoration: 'none',
                   fontFamily: 'var(--font-sans)',
                 }}
@@ -519,7 +519,7 @@ export default function LoginModal({ open, onClose, message, onAuthenticated }: 
                   onChange={e => setTermsAccepted(e.target.checked)}
                   style={{
                     marginTop: 2,
-                    accentColor: '#7c3aed',
+                    accentColor: 'var(--accent)',
                     width: 16,
                     height: 16,
                     minWidth: 16,
@@ -528,10 +528,10 @@ export default function LoginModal({ open, onClose, message, onAuthenticated }: 
                 />
                 <span>
                   J&apos;accepte les{' '}
-                  <a href="/legal/cgu" target="_blank" rel="noopener noreferrer" style={{ color: '#7c3aed', textDecoration: 'underline' }}>
+                  <a href="/legal/cgu" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>
                     CGU
                   </a>{' '}et la{' '}
-                  <a href="/legal/confidentialite" target="_blank" rel="noopener noreferrer" style={{ color: '#7c3aed', textDecoration: 'underline' }}>
+                  <a href="/legal/confidentialite" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>
                     Politique de Confidentialite
                   </a>.
                 </span>
@@ -568,7 +568,7 @@ export default function LoginModal({ open, onClose, message, onAuthenticated }: 
               fontWeight: 600,
               border: 'none',
               cursor: loading || (mode === 'register' && !termsAccepted) ? 'not-allowed' : 'pointer',
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              background: 'var(--accent)',
               color: '#fff',
               fontFamily: 'var(--font-sans)',
               boxShadow: '0 0 30px rgba(124, 58, 237, 0.25)',

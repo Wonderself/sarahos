@@ -6,6 +6,10 @@ import { ALL_AGENTS } from '../../../../lib/agent-config';
 import AgentAvatar from '../../../../components/visio/AgentAvatar';
 import VisioControls from '../../../../components/visio/VisioControls';
 import TranscriptPanel, { TranscriptMessage } from '../../../../components/visio/TranscriptPanel';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 
 function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
@@ -334,8 +338,8 @@ export default function VisioCallPage() {
   if (!agent) {
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
-        <div style={{ fontSize: 15, color: 'var(--fz-text-secondary, #64748B)' }}>Agent non trouve</div>
-        <a href="/client/visio" style={{ fontSize: 13, color: 'var(--fz-accent, #0EA5E9)', marginTop: 12, display: 'inline-block' }}>Retour a la liste</a>
+        <div style={{ fontSize: 15, color: CU.textSecondary }}>Agent non trouve</div>
+        <a href="/client/visio" style={{ fontSize: 13, color: CU.accent, marginTop: 12, display: 'inline-block' }}>Retour a la liste</a>
       </div>
     );
   }
@@ -364,7 +368,7 @@ export default function VisioCallPage() {
             </span>
           )}
           {listeningStatus === 'processing' && <span style={{ color: '#f59e0b' }}>Transcription...</span>}
-          {listeningStatus === 'speaking' && <span style={{ color: 'var(--fz-accent, #0EA5E9)' }}>Parle...</span>}
+          {listeningStatus === 'speaking' && <span style={{ color: CU.accent }}>Parle...</span>}
         </div>
       </div>
 
@@ -376,7 +380,7 @@ export default function VisioCallPage() {
         }}>
           🎤
           <span style={{ flex: 1, fontSize: 13, color: '#991b1b', lineHeight: 1.5 }}>{micError}</span>
-          <button onClick={retryMic} style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #dc2626', background: 'var(--fz-bg, #FFFFFF)', color: '#dc2626', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+          <button onClick={retryMic} style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #dc2626', background: CU.bg, color: '#dc2626', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
             Reessayer
           </button>
         </div>
@@ -409,7 +413,7 @@ export default function VisioCallPage() {
           {/* Drag handle for mobile */}
           <button className="visio-transcript-handle" onClick={() => setShowTranscript(v => !v)}>
             <div style={{ width: 36, height: 4, background: '#d1d5db', borderRadius: 2, margin: '0 auto' }} />
-            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--fz-text-secondary, #64748B)', marginTop: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: CU.textSecondary, marginTop: 6 }}>
               Transcription {messages.length > 0 ? `(${messages.length})` : ''}
             </span>
           </button>
@@ -422,7 +426,7 @@ export default function VisioCallPage() {
           />
 
           {/* Text input */}
-          <div style={{ padding: '8px 12px', borderTop: '1px solid var(--fz-border, #E2E8F0)', display: 'flex', gap: 8, flexShrink: 0 }}>
+          <div style={{ padding: '8px 12px', borderTop: `1px solid ${CU.border}`, display: 'flex', gap: 8, flexShrink: 0 }}>
             <input
               type="text"
               value={textInput}
@@ -430,12 +434,12 @@ export default function VisioCallPage() {
               onKeyDown={e => { if (e.key === 'Enter') sendTextMessage(); }}
               placeholder={isTextMode ? 'Tapez votre message...' : 'Ou tapez ici...'}
               disabled={processing}
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', fontSize: 14, outline: 'none' }}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', fontSize: 14, outline: 'none' }}
             />
             <button
               onClick={sendTextMessage}
               disabled={processing || !textInput.trim()}
-              style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'var(--fz-accent, #0EA5E9)', color: 'white', fontSize: 12, fontWeight: 700, cursor: processing ? 'wait' : 'pointer', opacity: processing ? 0.6 : 1 }}
+              style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: CU.accent, color: 'white', fontSize: 12, fontWeight: 700, cursor: processing ? 'wait' : 'pointer', opacity: processing ? 0.6 : 1 }}
             >
               ↵
             </button>

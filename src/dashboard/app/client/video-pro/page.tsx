@@ -6,6 +6,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 const SERVICES = [
   {
@@ -143,121 +144,118 @@ export default function VideoProPage() {
 
   if (submitted) {
     return (
-      <div style={{ maxWidth: 600, margin: '80px auto', textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16, color: '#10b981' }}>\u2705</div>
-        <h2 style={{ fontSize: 24, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 8 }}>
-          Demande envoyee avec succes !
-        </h2>
-        <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1.6, marginBottom: 24 }}>
-          Notre equipe de production va etudier votre brief et vous recontacter sous 24 a 48h
-          avec une proposition detaillee et un planning de realisation.
-        </p>
-        <button
-          onClick={() => {
-            setSubmitted(false);
-            setForm({ name: '', email: '', phone: '', service: '', brief: '', budget: '' });
-          }}
-          style={{
-            padding: '10px 24px', fontSize: 14, fontWeight: 600, borderRadius: 8,
-            background: '#1A1A1A', color: '#fff', border: '1px solid #E5E5E5', cursor: 'pointer',
-          }}
-        >
-          Retour aux services
-        </button>
+      <div style={pageContainer(isMobile)}>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>✅</div>
+          <div style={CU.emptyTitle}>Demande envoyee avec succes !</div>
+          <div style={CU.emptyDesc}>
+            Notre equipe de production va etudier votre brief et vous recontacter sous 24 a 48h
+            avec une proposition detaillee et un planning de realisation.
+          </div>
+          <button
+            onClick={() => {
+              setSubmitted(false);
+              setForm({ name: '', email: '', phone: '', service: '', brief: '', budget: '' });
+            }}
+            style={CU.btnPrimary}
+          >
+            Retour aux services
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? 12 : undefined }}>
+    <div style={pageContainer(isMobile)}>
 
       {/* Page Header */}
-      <div className="page-header" style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+      <div style={{ marginBottom: 24 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta.emoji}</span>
           <div>
-            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{meta.title}</h1>
-            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{meta.subtitle}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h1 style={CU.pageTitle}>{meta.title}</h1>
+              <HelpBubble text={meta.helpText} />
+            </div>
+            <p style={CU.pageSubtitle}>{meta.subtitle}</p>
           </div>
-          <HelpBubble text={meta.helpText} />
         </div>
       </div>
       <PageExplanation pageId="video-pro" text={PAGE_META['video-pro']?.helpText} />
 
       {/* Hero Section */}
       <div style={{
-        background: '#F7F7F7',
+        background: CU.bgSecondary,
         borderRadius: 8, padding: isMobile ? '28px 18px' : '48px 36px', marginBottom: 36,
-        border: '1px solid #E5E5E5',
+        border: `1px solid ${CU.border}`,
       }}>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#9B9B9B', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: CU.textMuted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 }}>
             Freenzy.io Production
           </div>
-          <h1 style={{ fontSize: 32, fontWeight: 800, color: '#1A1A1A', marginBottom: 8, letterSpacing: '-0.03em' }}>
-            <span className="fz-logo-word">Video Pro</span>
-          </h1>
-          <p style={{ fontSize: 16, color: '#6B6B6B', lineHeight: 1.6, maxWidth: 560, margin: 0 }}>
-            Productions video professionnelles assistees par <span className="fz-logo-word">IA</span>.
-            De l&apos;idee au produit fini, nos <span className="fz-logo-word">assistants</span> et nos experts creent vos contenus video avec qualite et rapidite.
+          <h2 style={{ fontSize: 32, fontWeight: 800, color: CU.text, marginBottom: 8, letterSpacing: '-0.03em' }}>
+            Video Pro
+          </h2>
+          <p style={{ fontSize: 16, color: CU.textSecondary, lineHeight: 1.6, maxWidth: 560, margin: 0 }}>
+            Productions video professionnelles assistees par IA.
+            De l&apos;idee au produit fini, nos assistants et nos experts creent vos contenus video avec qualite et rapidite.
           </p>
         </div>
       </div>
 
       {/* Service Cards Grid */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
-        gap: 16, marginBottom: 36,
+        ...cardGrid(isMobile, 2),
+        gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
+        marginBottom: 36,
       }}>
         {SERVICES.map(svc => (
           <div
             key={svc.id}
             style={{
-              background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5',
-              padding: '24px 20px', display: 'flex', flexDirection: 'column',
-              transition: 'all 0.2s ease',
+              ...CU.cardHoverable, padding: '24px 20px', display: 'flex', flexDirection: 'column',
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLDivElement).style.background = '#F7F7F7';
+              (e.currentTarget as HTMLDivElement).style.background = CU.bgSecondary;
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLDivElement).style.background = '#fff';
+              (e.currentTarget as HTMLDivElement).style.background = CU.bg;
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 12 }}>{svc.icon}</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 2 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, marginBottom: 2 }}>
               {svc.title}
             </div>
-            <div style={{ fontSize: 12, color: '#6B6B6B', fontWeight: 600, marginBottom: 10 }}>
+            <div style={{ fontSize: 12, color: CU.textSecondary, fontWeight: 600, marginBottom: 10 }}>
               {svc.subtitle}
             </div>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
+            <p style={{ fontSize: 12, color: CU.textMuted, lineHeight: 1.6, flex: 1, margin: '0 0 16px 0' }}>
               {svc.description}
             </p>
             <div style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '10px 0', borderTop: '1px solid var(--fz-border, #E2E8F0)', marginBottom: 12,
+              padding: '10px 0', borderTop: `1px solid ${CU.border}`, marginBottom: 12,
             }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)' }}>{svc.price}</div>
-                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{svc.delivery}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: CU.text }}>{svc.price}</div>
+                <div style={{ fontSize: 11, color: CU.textMuted }}>{svc.delivery}</div>
               </div>
             </div>
             <button
               onClick={() => handleOrder(svc.id)}
               style={{
-                width: '100%', padding: '10px 0', fontSize: 13, fontWeight: 600, minHeight: 44,
-                borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff',
-                color: '#1A1A1A', cursor: 'pointer', transition: 'all 0.15s',
-                fontFamily: 'var(--font-sans)',
+                ...CU.btnGhost,
+                width: '100%', padding: '10px 0', minHeight: 44,
+                justifyContent: 'center',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#1A1A1A';
+                (e.currentTarget as HTMLButtonElement).style.background = CU.accent;
                 (e.currentTarget as HTMLButtonElement).style.color = '#fff';
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#fff';
-                (e.currentTarget as HTMLButtonElement).style.color = '#1A1A1A';
+                (e.currentTarget as HTMLButtonElement).style.background = CU.bg;
+                (e.currentTarget as HTMLButtonElement).style.color = CU.textSecondary;
               }}
             >
               Commander
@@ -268,28 +266,27 @@ export default function VideoProPage() {
 
       {/* Studio Creatif Link */}
       <div style={{
-        background: '#F7F7F7', borderRadius: 8, padding: '20px 24px',
+        background: CU.bgSecondary, borderRadius: 8, padding: '20px 24px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 12, marginBottom: 40,
-        border: '1px solid #E5E5E5',
+        border: `1px solid ${CU.border}`,
       }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
+          <div style={{ ...CU.sectionTitle, marginBottom: 4 }}>
             Ou creez vous-meme dans notre Studio Creatif
           </div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>
+          <div style={{ fontSize: 12, color: CU.textMuted }}>
             Generez vos propres videos et photos guidees par nos assistants IA, en toute autonomie.
           </div>
         </div>
         <Link
           href="/client/studio"
           style={{
-            padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-            background: '#1A1A1A', color: '#fff', textDecoration: 'none',
-            transition: 'background 0.15s', whiteSpace: 'nowrap',
+            ...CU.btnPrimary,
+            padding: '10px 20px', textDecoration: 'none', height: 'auto',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#333'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#1A1A1A'; }}
+          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.85'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1'; }}
         >
           Ouvrir le Studio
         </Link>
@@ -297,54 +294,39 @@ export default function VideoProPage() {
 
       {/* Devis Section */}
       <div id="devis-section" style={{
-        background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '1px solid #E5E5E5',
-        padding: '32px 28px', marginBottom: 40,
+        ...CU.card, padding: isMobile ? '24px 16px' : '32px 28px', marginBottom: 40,
       }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: CU.text, marginBottom: 4 }}>
           Demander un devis
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 24 }}>
+        <p style={{ fontSize: 13, color: CU.textMuted, marginBottom: 24 }}>
           Decrivez votre projet et recevez une proposition personnalisee sous 48h.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Name */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
-              Nom complet *
-            </label>
+            <label style={CU.label}>Nom complet *</label>
             <input
               value={form.name}
               onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
               placeholder="Votre nom"
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
-                outline: 'none', transition: 'border-color 0.15s',
-                boxSizing: 'border-box',
-              }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
+              style={CU.input}
+              onFocus={e => { e.currentTarget.style.borderColor = CU.accent; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
 
           {/* Email */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
-              Email *
-            </label>
+            <label style={CU.label}>Email *</label>
             <input
               type="email"
               value={form.email}
               onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
               placeholder="votre@email.com"
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
-                outline: 'none', transition: 'border-color 0.15s',
-                boxSizing: 'border-box',
-              }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
+              style={CU.input}
+              onFocus={e => { e.currentTarget.style.borderColor = CU.accent; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
@@ -353,39 +335,25 @@ export default function VideoProPage() {
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 14 }}>
           {/* Phone */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
-              Telephone (optionnel)
-            </label>
+            <label style={CU.label}>Telephone (optionnel)</label>
             <input
               value={form.phone}
               onChange={e => setForm(prev => ({ ...prev, phone: e.target.value }))}
               placeholder="+33 6 12 34 56 78"
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
-                outline: 'none', transition: 'border-color 0.15s',
-                boxSizing: 'border-box',
-              }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
+              style={CU.input}
+              onFocus={e => { e.currentTarget.style.borderColor = CU.accent; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             />
           </div>
 
           {/* Service Select */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
-              Service souhaite *
-            </label>
+            <label style={CU.label}>Service souhaite *</label>
             <select
               value={form.service}
               onChange={e => setForm(prev => ({ ...prev, service: e.target.value }))}
-              style={{
-                width: '100%', padding: '10px 12px', borderRadius: 8,
-                border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
-                background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
-                boxSizing: 'border-box',
-              }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
+              style={{ ...CU.select, width: '100%' }}
+              onFocus={e => { e.currentTarget.style.borderColor = CU.accent; }}
               onBlur={e => { e.currentTarget.style.borderColor = ''; }}
             >
               <option value="">Selectionnez un service</option>
@@ -398,40 +366,26 @@ export default function VideoProPage() {
 
         {/* Brief */}
         <div style={{ marginBottom: 14 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
-            Brief du projet *
-          </label>
+          <label style={CU.label}>Brief du projet *</label>
           <textarea
             value={form.brief}
             onChange={e => setForm(prev => ({ ...prev, brief: e.target.value }))}
             placeholder="Decrivez votre projet : objectif de la video, public cible, messages cles, references visuelles, contraintes particulieres..."
             rows={4}
-            style={{
-              width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
-              resize: 'vertical', outline: 'none', transition: 'border-color 0.15s',
-              boxSizing: 'border-box',
-            }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
+            style={CU.textarea}
+            onFocus={e => { e.currentTarget.style.borderColor = CU.accent; }}
             onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           />
         </div>
 
         {/* Budget */}
         <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4, display: 'block' }}>
-            Budget estimatif
-          </label>
+          <label style={CU.label}>Budget estimatif</label>
           <select
             value={form.budget}
             onChange={e => setForm(prev => ({ ...prev, budget: e.target.value }))}
-            style={{
-              width: '100%', padding: '10px 12px', borderRadius: 8,
-              border: '1px solid #E5E5E5', fontSize: 13, fontFamily: 'var(--font-sans)',
-              background: 'var(--fz-bg, #FFFFFF)', outline: 'none', transition: 'border-color 0.15s',
-              boxSizing: 'border-box',
-            }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#1A1A1A'; }}
+            style={{ ...CU.select, width: '100%' }}
+            onFocus={e => { e.currentTarget.style.borderColor = CU.accent; }}
             onBlur={e => { e.currentTarget.style.borderColor = ''; }}
           >
             {BUDGET_OPTIONS.map(b => (
@@ -444,7 +398,7 @@ export default function VideoProPage() {
         {error && (
           <div style={{
             padding: '10px 14px', borderRadius: 8, background: '#fef2f2',
-            color: '#dc2626', fontSize: 12, fontWeight: 500, marginBottom: 14,
+            color: CU.danger, fontSize: 12, fontWeight: 500, marginBottom: 14,
           }}>
             {error}
           </div>
@@ -455,18 +409,18 @@ export default function VideoProPage() {
           onClick={handleSubmit}
           disabled={submitting}
           style={{
+            ...CU.btnPrimary,
             width: '100%', padding: '13px 0', fontSize: 14, fontWeight: 700, minHeight: 44,
-            borderRadius: 8, background: '#1A1A1A', color: '#fff', border: '1px solid #E5E5E5',
+            height: 'auto',
             cursor: submitting ? 'wait' : 'pointer', opacity: submitting ? 0.7 : 1,
-            transition: 'background 0.15s', fontFamily: 'var(--font-sans)',
           }}
-          onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLButtonElement).style.background = '#333'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1A1A1A'; }}
+          onMouseEnter={e => { if (!submitting) (e.currentTarget as HTMLButtonElement).style.opacity = '0.85'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = submitting ? '0.7' : '1'; }}
         >
           {submitting ? 'Envoi en cours...' : 'Envoyer la demande de devis'}
         </button>
 
-        <p style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', textAlign: 'center', marginTop: 12, marginBottom: 0 }}>
+        <p style={{ fontSize: 11, color: CU.textMuted, textAlign: 'center', marginTop: 12, marginBottom: 0 }}>
           Notre equipe de production analysera votre brief et vous enverra une proposition detaillee sous 48h.
         </p>
       </div>

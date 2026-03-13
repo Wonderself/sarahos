@@ -6,6 +6,8 @@ import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
 import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -66,6 +68,7 @@ const LANG_LEVELS: Language['level'][] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'n
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function CVPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [profile, setProfile] = useState<CVProfile>({});
   const [loading, setLoading] = useState(true);
@@ -201,20 +204,20 @@ export default function CVPage() {
   }
 
   const AccordionSection = ({ id, title, icon, children }: { id: string; title: string; icon: string; children: React.ReactNode }) => (
-    <div className="card" style={{ marginBottom: 12, overflow: 'hidden' }}>
+    <div style={{ ...CU.card, marginBottom: 12, overflow: 'hidden' }}>
       <button
         onClick={() => setOpenSection(openSection === id ? null : id)}
         style={{
           width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer',
-          color: 'var(--fz-text, #1E293B)', fontWeight: 700, fontSize: 14,
+          color: CU.text, fontWeight: 700, fontSize: 14,
         }}
       >
         <span>{icon} {title}</span>
         <span style={{ fontSize: 18, transform: openSection === id ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▾</span>
       </button>
       {openSection === id && (
-        <div style={{ padding: '0 20px 20px', borderTop: '1px solid var(--fz-border, #E2E8F0)' }}>
+        <div style={{ padding: '0 20px 20px', borderTop: `1px solid ${CU.border}` }}>
           <div style={{ paddingTop: 16 }}>{children}</div>
         </div>
       )}
@@ -222,37 +225,40 @@ export default function CVPage() {
   );
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 20 }}>
         <div>
-          <div style={{ marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>← Agents personnels</Link>
+          <div style={{ marginBottom: 6 }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: CU.textMuted, textDecoration: 'none' }}>← Agents personnels</Link>
           </div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.cv.emoji} {PAGE_META.cv.title}</h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.cv.subtitle}</p>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{PAGE_META.cv.emoji}</span>
+            <h1 style={CU.pageTitle}>{PAGE_META.cv.title}</h1>
+          </div>
+          <p style={CU.pageSubtitle}>{PAGE_META.cv.subtitle}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <HelpBubble text={PAGE_META.cv.helpText} />
-          {saved && <span style={{ fontSize: 12, color: '#22c55e' }}>✅ Sauvegardé</span>}
-          {saving && <span style={{ fontSize: 12, color: '#f59e0b' }}>⏳ Sauvegarde...</span>}
-          <button onClick={copyMarkdown} className="btn btn-ghost btn-sm">{copied ? <>✅ Copié !</> : <>📋 Copier Markdown</>}</button>
-          <Link href="/client/chat?agent=fz-cv" className="btn btn-primary btn-sm">🤖 fz-cv</Link>
+          {saved && <span style={{ fontSize: 12, color: CU.success }}>✅ Sauvegardé</span>}
+          {saving && <span style={{ fontSize: 12, color: CU.warning }}>⏳ Sauvegarde...</span>}
+          <button onClick={copyMarkdown} style={CU.btnSmall}>{copied ? <>✅ Copié !</> : <>📋 Copier Markdown</>}</button>
+          <Link href="/client/chat?agent=fz-cv" style={{ ...CU.btnPrimary, fontSize: 12, height: 32, textDecoration: 'none' }}>🤖 fz-cv</Link>
         </div>
       </div>
       <PageExplanation pageId="cv" text={PAGE_META.cv?.helpText} />
 
-      {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
+      {error && <div style={{ ...CU.card, background: '#FFF5F5', color: CU.danger, marginBottom: 20, fontSize: 13 }}>{error}</div>}
 
       {/* Score */}
-      <div className="card" style={{ padding: '16px 20px', marginBottom: 24 }}>
+      <div style={{ ...CU.card, marginBottom: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <div style={{ fontWeight: 700, fontSize: 15 }}>Complétude du profil</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: comp.score >= 80 ? '#22c55e' : comp.score >= 50 ? '#f59e0b' : '#ef4444' }}>
             {comp.score}%
           </div>
         </div>
-        <div style={{ height: 8, borderRadius: 4, background: 'var(--fz-bg-secondary, #F8FAFC)', overflow: 'hidden', marginBottom: 12 }}>
+        <div style={{ height: 8, borderRadius: 4, background: CU.bgSecondary, overflow: 'hidden', marginBottom: 12 }}>
           <div style={{
             height: '100%', width: `${comp.score}%`, borderRadius: 4, transition: 'width 0.6s',
             background: comp.score >= 80 ? '#22c55e' : comp.score >= 50 ? '#f59e0b' : '#ef4444',
@@ -262,8 +268,8 @@ export default function CVPage() {
           {comp.items.map(item => (
             <span key={item.label} style={{
               fontSize: 11, padding: '2px 8px', borderRadius: 6, fontWeight: 600,
-              background: item.done ? '#22c55e20' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: item.done ? '#22c55e' : 'var(--fz-text-muted, #94A3B8)',
+              background: item.done ? '#22c55e20' : CU.bgSecondary,
+              color: item.done ? '#22c55e' : CU.textMuted,
             }}>
               {item.done ? '✅' : '○'} {item.label}
             </span>
@@ -284,9 +290,9 @@ export default function CVPage() {
             { key: 'location', label: 'Localisation', placeholder: 'Paris, France' },
           ].map(f => (
             <div key={f.key} style={{ gridColumn: f.key === 'title' ? 'span 2' : undefined }}>
-              <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.label}</label>
+              <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{f.label}</label>
               <input
-                className="input"
+                style={CU.input}
                 placeholder={f.placeholder}
                 value={(profile as Record<string, string>)[f.key] ?? ''}
                 onChange={e => update({ [f.key]: e.target.value })}
@@ -294,14 +300,14 @@ export default function CVPage() {
             </div>
           ))}
           <div style={{ gridColumn: 'span 2' }}>
-            <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Résumé professionnel</label>
+            <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Résumé professionnel</label>
             <textarea
-              className="input"
+              style={{ ...CU.textarea, resize: 'none' as const }}
               rows={3}
               placeholder="Décrivez votre profil en 3-5 lignes..."
               value={profile.summary ?? ''}
               onChange={e => update({ summary: e.target.value })}
-              style={{ resize: 'none' }}
+
             />
           </div>
         </div>
@@ -310,44 +316,44 @@ export default function CVPage() {
       <AccordionSection id="skills" title={`Compétences (${profile.skills?.length ?? 0})`} icon="💡">
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
           {(profile.skills ?? []).map((s, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, height: 36, padding: '0 12px', borderRadius: 20, background: 'var(--fz-bg-secondary, #F8FAFC)', border: 'none', boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, height: 36, padding: '0 12px', borderRadius: 20, background: CU.bgSecondary, border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
               <span style={{ fontSize: 13 }}>{s.name}</span>
               <select
                 value={s.level}
                 onChange={e => updateSkillLevel(i, e.target.value as Skill['level'])}
-                style={{ fontSize: 10, border: 'none', background: 'none', color: 'var(--fz-text-muted, #94A3B8)', cursor: 'pointer' }}
+                style={{ fontSize: 10, border: 'none', background: 'none', color: CU.textMuted, cursor: 'pointer' }}
               >
                 {SKILL_LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
               </select>
-              <button onClick={() => removeSkill(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', lineHeight: 1 }}>×</button>
+              <button onClick={() => removeSkill(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: CU.textMuted, lineHeight: 1 }}>×</button>
             </div>
           ))}
         </div>
-        <button onClick={addSkill} className="btn btn-ghost btn-sm">+ Ajouter une compétence</button>
+        <button onClick={addSkill} style={CU.btnSmall}>+ Ajouter une compétence</button>
       </AccordionSection>
 
       <AccordionSection id="experiences" title={`Expériences (${profile.experiences?.length ?? 0})`} icon="💼">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {(profile.experiences ?? []).map((e, i) => (
-            <div key={i} style={{ padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, position: 'relative' }}>
-              <button onClick={() => removeExperience(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+            <div key={i} style={{ padding: '12px 14px', background: CU.bgSecondary, borderRadius: 8, position: 'relative' }}>
+              <button onClick={() => removeExperience(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: CU.textMuted }}>×</button>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>POSTE</label>
-                  <input className="input" placeholder="Développeur Senior" value={e.title} onChange={ev => updateExperience(i, { title: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>POSTE</label>
+                  <input style={CU.input} placeholder="Développeur Senior" value={e.title} onChange={ev => updateExperience(i, { title: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>ENTREPRISE</label>
-                  <input className="input" placeholder="Nom de l'entreprise" value={e.employer} onChange={ev => updateExperience(i, { employer: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>ENTREPRISE</label>
+                  <input style={CU.input} placeholder="Nom de l'entreprise" value={e.employer} onChange={ev => updateExperience(i, { employer: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DÉBUT</label>
-                  <input className="input" placeholder="2022" value={e.start} onChange={ev => updateExperience(i, { start: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>DÉBUT</label>
+                  <input style={CU.input} placeholder="2022" value={e.start} onChange={ev => updateExperience(i, { start: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>FIN</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>FIN</label>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <input className="input" placeholder="2024" value={e.end ?? ''} disabled={!!e.current} onChange={ev => updateExperience(i, { end: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
+                    <input style={CU.input} placeholder="2024" value={e.end ?? ''} disabled={!!e.current} onChange={ev => updateExperience(i, { end: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                     <label style={{ fontSize: 11, display: 'flex', gap: 4, alignItems: 'center', whiteSpace: 'nowrap', cursor: 'pointer' }}>
                       <input type="checkbox" checked={!!e.current} onChange={ev => { updateExperience(i, { current: ev.target.checked, end: undefined }); update({ experiences: profile.experiences }); }} />
                       Actuel
@@ -355,43 +361,43 @@ export default function CVPage() {
                   </div>
                 </div>
                 <div style={{ gridColumn: 'span 2' }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DESCRIPTION</label>
-                  <textarea className="input" rows={2} placeholder="Missions, réalisations..." value={e.description ?? ''} onChange={ev => updateExperience(i, { description: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} style={{ resize: 'none' }} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>DESCRIPTION</label>
+                  <textarea style={{ ...CU.textarea, resize: 'none' as const }} rows={2} placeholder="Missions, réalisations..." value={e.description ?? ''} onChange={ev => updateExperience(i, { description: ev.target.value })} onBlur={() => update({ experiences: profile.experiences })} />
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <button onClick={addExperience} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une expérience</button>
+        <button onClick={addExperience} style={{ ...CU.btnSmall, marginTop: 12 }}>+ Ajouter une expérience</button>
       </AccordionSection>
 
       <AccordionSection id="education" title={`Formation (${profile.education?.length ?? 0})`} icon="🎓">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {(profile.education ?? []).map((e, i) => (
-            <div key={i} style={{ padding: '12px 14px', background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, position: 'relative' }}>
-              <button onClick={() => removeEducation(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+            <div key={i} style={{ padding: '12px 14px', background: CU.bgSecondary, borderRadius: 8, position: 'relative' }}>
+              <button onClick={() => removeEducation(i)} style={{ position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: CU.textMuted }}>×</button>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>DIPLÔME</label>
-                  <input className="input" placeholder="Master, Licence..." value={e.degree} onChange={ev => updateEducation(i, { degree: ev.target.value })} onBlur={() => update({ education: profile.education })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>DIPLÔME</label>
+                  <input style={CU.input} placeholder="Master, Licence..." value={e.degree} onChange={ev => updateEducation(i, { degree: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>ÉCOLE</label>
-                  <input className="input" placeholder="Nom de l'école" value={e.school} onChange={ev => updateEducation(i, { school: ev.target.value })} onBlur={() => update({ education: profile.education })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>ÉCOLE</label>
+                  <input style={CU.input} placeholder="Nom de l'école" value={e.school} onChange={ev => updateEducation(i, { school: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>SPÉCIALITÉ</label>
-                  <input className="input" placeholder="Informatique, Finance..." value={e.field ?? ''} onChange={ev => updateEducation(i, { field: ev.target.value })} onBlur={() => update({ education: profile.education })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>SPÉCIALITÉ</label>
+                  <input style={CU.input} placeholder="Informatique, Finance..." value={e.field ?? ''} onChange={ev => updateEducation(i, { field: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: 'var(--fz-text-muted, #94A3B8)' }}>ANNÉE</label>
-                  <input className="input" placeholder="2021" value={e.year ?? ''} onChange={ev => updateEducation(i, { year: ev.target.value })} onBlur={() => update({ education: profile.education })} />
+                  <label style={{ fontSize: 11, fontWeight: 700, display: 'block', marginBottom: 3, color: CU.textMuted }}>ANNÉE</label>
+                  <input style={CU.input} placeholder="2021" value={e.year ?? ''} onChange={ev => updateEducation(i, { year: ev.target.value })} onBlur={() => update({ education: profile.education })} />
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <button onClick={addEducation} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une formation</button>
+        <button onClick={addEducation} style={{ ...CU.btnSmall, marginTop: 12 }}>+ Ajouter une formation</button>
       </AccordionSection>
 
       <AccordionSection id="languages" title={`Langues (${profile.languages?.length ?? 0})`} icon="🌐">
@@ -399,37 +405,34 @@ export default function CVPage() {
           {(profile.languages ?? []).map((l, i) => (
             <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <input
-                className="input"
+                style={{ ...CU.input, flex: 1 }}
                 placeholder="Français"
                 value={l.name}
                 onChange={e => updateLanguage(i, { name: e.target.value })}
                 onBlur={() => update({ languages: profile.languages })}
-                style={{ flex: 1 }}
               />
               <select
-                className="input"
+                style={{ ...CU.select, width: 100 }}
                 value={l.level}
                 onChange={e => { updateLanguage(i, { level: e.target.value as Language['level'] }); update({ languages: profile.languages }); }}
-                style={{ width: 100 }}
               >
                 {LANG_LEVELS.map(v => <option key={v} value={v}>{v}</option>)}
               </select>
-              <button onClick={() => removeLanguage(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+              <button onClick={() => removeLanguage(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: CU.textMuted }}>×</button>
             </div>
           ))}
         </div>
-        <button onClick={addLanguage} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>+ Ajouter une langue</button>
+        <button onClick={addLanguage} style={{ ...CU.btnSmall, marginTop: 12 }}>+ Ajouter une langue</button>
       </AccordionSection>
 
       <AccordionSection id="goals" title="Objectifs de carrière" icon="🎯">
         <textarea
-          className="input"
+          style={{ ...CU.textarea, resize: 'none' as const, width: '100%' }}
           rows={4}
           placeholder="Décrivez vos objectifs professionnels à court et long terme..."
           value={profile.career_goals ?? ''}
           onChange={e => setProfile(p => ({ ...p, career_goals: e.target.value }))}
           onBlur={() => update({ career_goals: profile.career_goals })}
-          style={{ resize: 'none', width: '100%', boxSizing: 'border-box' }}
         />
       </AccordionSection>
     </div>

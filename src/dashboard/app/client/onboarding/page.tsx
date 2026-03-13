@@ -7,6 +7,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 interface CompanyProfile {
   // Step 1 — Identité
@@ -107,21 +108,21 @@ function OInput({ value, onChange, placeholder, type = 'text' }: {
   value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string; type?: string;
 }) {
-  return <input type={type} className="input" placeholder={placeholder} value={value} onChange={onChange} />;
+  return <input type={type} style={CU.input} placeholder={placeholder} value={value} onChange={onChange} />;
 }
 
 function OTextArea({ value, onChange, onFocus, placeholder, rows = 3 }: {
   value: string; onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onFocus?: () => void; placeholder: string; rows?: number;
 }) {
-  return <textarea className="input" placeholder={placeholder} rows={rows} value={value} onChange={onChange} onFocus={onFocus} style={{ resize: 'vertical' }} />;
+  return <textarea style={{ ...CU.textarea, minHeight: rows * 24 }} placeholder={placeholder} rows={rows} value={value} onChange={onChange} onFocus={onFocus} />;
 }
 
 function OLabel({ text, hint, compactMode }: { text: string; hint?: string; compactMode?: boolean }) {
   return (
     <label style={{ display: 'block', marginBottom: 6 }}>
-      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>{text}</span>
-      {hint && !compactMode && <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginLeft: 8 }}>{hint}</span>}
+      <span style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{text}</span>
+      {hint && !compactMode && <span style={{ fontSize: 11, color: CU.textMuted, marginLeft: 8 }}>{hint}</span>}
     </label>
   );
 }
@@ -293,50 +294,46 @@ export default function OnboardingPage() {
     try { localStorage.setItem('fz_onboarding_compact', String(next)); } catch { /* */ }
   }
 
-  if (!loaded) return <div className="animate-pulse p-24 text-center" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div>;
+  if (!loaded) return <div style={{ padding: 24, textAlign: 'center', color: CU.textMuted }}>Chargement...</div>;
 
   // Account type pre-step
   if (showAccountTypeStep) {
     return (
       <div style={{ maxWidth: 560, margin: '60px auto', padding: '0 16px' }}>
-        <div className="text-center mb-24">
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>👋</div>
-          <h1 className="page-title" style={{ marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Bienvenue sur <span className="fz-logo-word">Freenzy.io</span></h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Vous utilisez <span className="fz-logo-word">Freenzy.io</span> pour :</p>
+          <h1 style={{ ...CU.pageTitle, fontSize: 22, marginBottom: 8 }}>Bienvenue sur <span className="fz-logo-word">Freenzy.io</span></h1>
+          <p style={CU.pageSubtitle}>Vous utilisez <span className="fz-logo-word">Freenzy.io</span> pour :</p>
         </div>
-        <div className={isMobile ? 'grid' : 'grid grid-2'} style={{ gap: 16, marginBottom: 32 }}>
+        <div style={cardGrid(isMobile, 2)}>
           <button
             onClick={() => selectAccountType(false)}
-            className="card"
             style={{
-              cursor: 'pointer', textAlign: 'center', padding: '32px 24px',
-              border: '2px solid var(--fz-border, #E2E8F0)', borderRadius: 'var(--radius-xl)',
-              transition: 'all 0.2s', background: 'var(--fz-bg-secondary, #F8FAFC)',
+              ...CU.cardHoverable, textAlign: 'center', padding: '32px 24px',
+              border: `2px solid ${CU.border}`,
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#1A1A1A'; e.currentTarget.style.background = '#F7F7F7'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.background = '#F7F7F7'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = CU.accent; e.currentTarget.style.background = CU.accentLight; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = CU.border; e.currentTarget.style.background = CU.bg; }}
           >
             <div style={{ fontSize: 40, marginBottom: 12 }}>👤</div>
-            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>Usage personnel</div>
-            <div className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Productivité, projets perso, assistants IA</div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: CU.text }}>Usage personnel</div>
+            <div style={{ fontSize: 13, color: CU.textMuted }}>Productivité, projets perso, assistants IA</div>
           </button>
           <button
             onClick={() => selectAccountType(true)}
-            className="card"
             style={{
-              cursor: 'pointer', textAlign: 'center', padding: '32px 24px',
-              border: '2px solid var(--fz-border, #E2E8F0)', borderRadius: 'var(--radius-xl)',
-              transition: 'all 0.2s', background: 'var(--fz-bg-secondary, #F8FAFC)',
+              ...CU.cardHoverable, textAlign: 'center', padding: '32px 24px',
+              border: `2px solid ${CU.border}`,
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#1A1A1A'; e.currentTarget.style.background = '#F7F7F7'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.background = '#F7F7F7'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = CU.accent; e.currentTarget.style.background = CU.accentLight; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = CU.border; e.currentTarget.style.background = CU.bg; }}
           >
             <div style={{ fontSize: 40, marginBottom: 12 }}>🏢</div>
-            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: 'var(--fz-text, #1E293B)' }}>Mon entreprise</div>
-            <div className="text-sm" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Équipe, clients, automatisation business</div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6, color: CU.text }}>Mon entreprise</div>
+            <div style={{ fontSize: 13, color: CU.textMuted }}>Équipe, clients, automatisation business</div>
           </button>
         </div>
-        <p className="text-xs" style={{ textAlign: 'center', color: 'var(--fz-text-muted, #94A3B8)' }}>
+        <p style={{ textAlign: 'center', fontSize: 11, color: CU.textMuted, marginTop: 24 }}>
           Vous pourrez changer ce choix à tout moment dans Mon Compte
         </p>
       </div>
@@ -346,51 +343,52 @@ export default function OnboardingPage() {
   // Step 0: Quick analysis screen
   if (step === 0) {
     return (
-      <div style={{ maxWidth: 700, margin: '0 auto', padding: isMobile ? '0 12px' : undefined }}>
+      <div style={{ ...pageContainer(isMobile), maxWidth: 700 }}>
+        {/* Header */}
         <div style={{ marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 18 }}>{PAGE_META.onboarding.emoji}</span>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{PAGE_META.onboarding.emoji}</span>
             <div>
-              <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.onboarding.title}</h1>
-              <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.onboarding.subtitle}</p>
+              <h1 style={CU.pageTitle}>{PAGE_META.onboarding.title}</h1>
+              <p style={CU.pageSubtitle}>{PAGE_META.onboarding.subtitle}</p>
             </div>
             <HelpBubble text={PAGE_META.onboarding.helpText} />
           </div>
         </div>
         <PageExplanation pageId="onboarding" text={PAGE_META.onboarding?.helpText} />
 
-        <div className="text-center mb-24" style={{ marginBottom: 40 }}>
-          <h2 className="text-2xl font-bold" style={{ letterSpacing: '-0.03em', color: 'var(--fz-text, #1E293B)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.03em', color: CU.text, margin: 0 }}>
             Présentez votre entreprise à Freenzy
           </h2>
-          <p className="text-base mt-8" style={{ lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
+          <p style={{ fontSize: 14, lineHeight: 1.6, color: CU.textSecondary, marginTop: 8 }}>
             Choisissez la méthode qui vous convient le mieux pour commencer. Plus vous fournissez de contexte, mieux vos agents pourront vous aider.
           </p>
-          <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: '#F7F7F7', border: '1px solid #E5E5E5', fontSize: 12, color: '#1A1A1A', lineHeight: 1.5 }}>
+          <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 8, background: CU.accentLight, border: `1px solid ${CU.border}`, fontSize: 12, color: CU.text, lineHeight: 1.5 }}>
             🔒 <strong>Confidentialité garantie :</strong> Ces informations sont strictement privées et ne seront jamais partagées avec des tiers. Le Répondeur Intelligent et les agents externes n&apos;ont aucun accès à ces données.
           </div>
         </div>
 
         {/* Option 1: Quick Analysis */}
-        <div className="card p-24 mb-16" style={{ borderLeft: '4px solid #1A1A1A' }}>
-          <div className="flex items-center gap-12 mb-16">
+        <div style={{ ...CU.card, padding: 24, marginBottom: 16, borderLeft: `4px solid ${CU.accent}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 28 }}>⚡</span>
             <div>
-              <div className="text-xl font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>Remplissage express</div>
-              <div className="text-md" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: CU.text }}>Remplissage express</div>
+              <div style={{ fontSize: 13, color: CU.textSecondary }}>
                 <span className="fz-logo-word">Freenzy</span> analyse votre site web et pré-remplit le formulaire (~2-3 crédits)
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-12">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div>
-              <label className="text-md font-semibold" style={{ marginBottom: 6, display: 'block', color: 'var(--fz-text, #1E293B)' }}>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13 }}>
                 URL de votre site web
               </label>
               <input
                 type="url"
-                className="input"
+                style={CU.input}
                 placeholder="https://www.votre-entreprise.com"
                 value={analyzeUrl}
                 onChange={e => setAnalyzeUrl(e.target.value)}
@@ -398,59 +396,51 @@ export default function OnboardingPage() {
               />
             </div>
             <div>
-              <label className="text-md font-semibold" style={{ marginBottom: 6, display: 'block', color: 'var(--fz-text, #1E293B)' }}>
-                Description complémentaire <span className="font-medium" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>(optionnel)</span>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 6, fontWeight: 600, fontSize: 13 }}>
+                Description complémentaire <span style={{ fontWeight: 500, color: CU.textMuted }}>(optionnel)</span>
               </label>
               <textarea
-                className="input"
+                style={CU.textarea}
                 rows={3}
                 placeholder="Décrivez votre activité en quelques mots, ajoutez des infos que votre site ne mentionne pas..."
                 value={analyzeDesc}
                 onChange={e => setAnalyzeDesc(e.target.value)}
-                style={{ resize: 'vertical' }}
               />
             </div>
 
             {analyzeError && (
-              <div className="text-md text-danger rounded-sm" style={{ padding: '8px 12px', background: 'var(--danger-bg)' }}>
+              <div style={{ padding: '8px 12px', background: '#FFF5F5', borderRadius: 8, fontSize: 13, color: CU.danger }}>
                 {analyzeError}
               </div>
             )}
 
             <button
               onClick={handleQuickAnalysis}
-              className="btn btn-primary text-lg"
               disabled={analyzing}
-              style={{ height: 44 }}
+              style={{ ...CU.btnPrimary, height: 44, fontSize: 14 }}
             >
-              {analyzing ? (
-                <span className="flex items-center gap-8">
-                  <span className="animate-pulse">Analyse en cours...</span>
-                </span>
-              ) : (
-                'Analyser avec Freenzy'
-              )}
+              {analyzing ? 'Analyse en cours...' : 'Analyser avec Freenzy'}
             </button>
           </div>
 
-          <div className="text-xs mt-12" style={{ lineHeight: 1.5, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <div style={{ fontSize: 11, marginTop: 12, lineHeight: 1.5, color: CU.textMuted }}>
             Freenzy va lire votre site, extraire les informations clés et pré-remplir le formulaire.
             Vous pourrez ensuite vérifier et ajuster chaque champ.
           </div>
         </div>
 
         {/* Option 2: Manual */}
-        <div className="card card-lift text-center pointer p-24"
+        <div style={{ ...CU.cardHoverable, padding: 24, textAlign: 'center' }}
           onClick={() => setStep(1)}>
-          <div className="flex items-center flex-center gap-12">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
             <span style={{ fontSize: 24 }}>📝</span>
             <div style={{ textAlign: 'left' }}>
-              <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>Remplir manuellement</div>
-              <div className="text-md" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: CU.text }}>Remplir manuellement</div>
+              <div style={{ fontSize: 13, color: CU.textSecondary }}>
                 7 étapes, ~10 minutes. Formulaire guidé avec descriptions.
               </div>
             </div>
-            <span className="text-xl" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>&rarr;</span>
+            <span style={{ fontSize: 18, color: CU.textMuted }}>&rarr;</span>
           </div>
         </div>
       </div>
@@ -458,33 +448,33 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 800 }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.onboarding.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.onboarding.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.onboarding.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.onboarding.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.onboarding.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.onboarding.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.onboarding.helpText} />
         </div>
       </div>
 
-      <div className="text-center mb-24">
-        <div className="flex flex-center items-center gap-16 mb-12">
-          <h2 className="text-2xl font-bold" style={{ letterSpacing: '-0.03em', margin: 0, color: 'var(--fz-text, #1E293B)' }}>
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginBottom: 12 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.03em', margin: 0, color: CU.text }}>
             Présentez votre entreprise à Freenzy
           </h2>
         </div>
-        <p className="text-base mt-8" style={{ lineHeight: 1.6, color: 'var(--fz-text-secondary, #64748B)' }}>
+        <p style={{ fontSize: 14, marginTop: 8, lineHeight: 1.6, color: CU.textSecondary }}>
           Plus Freenzy vous connaît, plus vos agents seront efficaces. Remplissez ce formulaire en détail
           pour que votre équipe IA comprenne parfaitement vos besoins.
         </p>
         {/* Compact mode toggle + prefilled badge + voice input */}
-        <div className="flex flex-center items-center gap-12 mt-12">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 12 }}>
           {prefilled && (
-            <span style={{ fontSize: 11, height: 36, padding: '0 12px', borderRadius: 8, background: '#F0F0F0', color: '#1A1A1A', fontWeight: 600 }}>
+            <span style={{ ...CU.badge, height: 36, padding: '0 12px', fontWeight: 600, fontSize: 11 }}>
               Pré-rempli par IA — vérifiez et ajustez
             </span>
           )}
@@ -503,11 +493,11 @@ export default function OnboardingPage() {
           <button
             onClick={toggleCompactMode}
             style={{
-              fontSize: 11, height: 36, padding: '0 12px', borderRadius: 12, cursor: 'pointer',
-              background: compactMode ? '#1A1A1A' : '#fff',
-              color: compactMode ? '#fff' : '#9B9B9B',
-              border: `1px solid ${compactMode ? '#1A1A1A' : '#E5E5E5'}`,
-              fontFamily: 'var(--font-sans)',
+              ...CU.btnGhost,
+              fontSize: 11,
+              background: compactMode ? CU.accent : CU.bg,
+              color: compactMode ? '#fff' : CU.textMuted,
+              border: `1px solid ${compactMode ? CU.accent : CU.border}`,
             }}
           >
             {compactMode ? <>📋 Vue détaillée</> : <>⚡ Vue rapide</>}
@@ -516,28 +506,28 @@ export default function OnboardingPage() {
       </div>
 
       {/* Progress */}
-      <div className="mb-24">
-        <div className="flex flex-between mb-8">
-          <span className="text-sm" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Profil complété à {score}%</span>
-          <span className="text-sm text-accent">Étape {step}/7</span>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+          <span style={{ fontSize: 13, color: CU.textSecondary }}>Profil complété à {score}%</span>
+          <span style={{ fontSize: 13, color: CU.accent, fontWeight: 600 }}>Étape {step}/7</span>
         </div>
-        <div className="progress-bar progress-bar-lg">
-          <div className="progress-bar-fill" style={{ width: `${score}%`, background: '#1A1A1A' }} />
+        <div style={{ height: 6, background: CU.accentLight, borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ width: `${score}%`, height: '100%', background: CU.accent, borderRadius: 3, transition: 'width 0.3s' }} />
         </div>
       </div>
 
       {/* Steps Nav */}
-      <div className="flex gap-4 mb-24" style={{ overflowX: 'auto', paddingBottom: isMobile ? 8 : 4, gap: isMobile ? 2 : undefined }}>
+      <div style={{ display: 'flex', gap: isMobile ? 2 : 4, marginBottom: 24, overflowX: 'auto', paddingBottom: isMobile ? 8 : 4 }}>
         {STEPS.map(s => (
           <button
             key={s.id}
             onClick={() => { saveProfile(); setStep(s.id); }}
             style={{
-              flex: '1 0 auto', padding: isMobile ? '8px 6px' : '10px 12px', borderRadius: 'var(--radius-sm)',
-              background: step === s.id ? '#1A1A1A' : '#fff',
-              border: `1px solid ${step === s.id ? '#1A1A1A' : '#E5E5E5'}`,
-              color: step === s.id ? '#fff' : '#6B6B6B',
-              cursor: 'pointer', fontSize: isMobile ? 10 : 12, fontWeight: 600, fontFamily: 'var(--font-sans)',
+              flex: '1 0 auto', padding: isMobile ? '8px 6px' : '10px 12px', borderRadius: 8,
+              background: step === s.id ? CU.accent : CU.bg,
+              border: `1px solid ${step === s.id ? CU.accent : CU.border}`,
+              color: step === s.id ? '#fff' : CU.textSecondary,
+              cursor: 'pointer', fontSize: isMobile ? 10 : 12, fontWeight: 600,
               display: 'flex', alignItems: 'center', gap: isMobile ? 3 : 6, whiteSpace: 'nowrap',
             }}
           >
@@ -547,24 +537,24 @@ export default function OnboardingPage() {
       </div>
 
       {/* Form Content */}
-      <div className="card p-24">
-        <div className="text-xl font-bold mb-4" style={{ color: 'var(--fz-text, #1E293B)' }}>
+      <div style={{ ...CU.card, padding: 24 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: CU.text }}>
           <span style={{ fontSize: 22 }}>{STEP_EMOJIS[STEPS[step - 1].icon] ?? STEPS[step - 1].icon}</span> {STEPS[step - 1].title}
         </div>
         {!compactMode && (
-          <div className="text-md mb-24" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+          <div style={{ fontSize: 13, marginBottom: 24, color: CU.textSecondary }}>
             {STEPS[step - 1].subtitle}
           </div>
         )}
 
-        <div className="flex flex-col gap-20">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {step === 1 && <>
             <div><OLabel text="Nom de l'entreprise" compactMode={compactMode} /><OInput value={profile.companyName} onChange={e => updateField('companyName', e.target.value)} placeholder="Acme SAS" /></div>
-            <div className="grid-2">
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
               <div><OLabel text="Secteur d'activité" compactMode={compactMode} /><OInput value={profile.industry} onChange={e => updateField('industry', e.target.value)} placeholder="Tech, Santé, Finance..." /></div>
               <div><OLabel text="Nombre d'employés" compactMode={compactMode} /><OInput value={profile.employeeCount} onChange={e => updateField('employeeCount', e.target.value)} placeholder="1-10, 11-50, 51-200..." /></div>
             </div>
-            <div className="grid-2">
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
               <div><OLabel text="Année de création" compactMode={compactMode} /><OInput value={profile.foundedYear} onChange={e => updateField('foundedYear', e.target.value)} placeholder="2020" /></div>
               <div><OLabel text="Localisation" compactMode={compactMode} /><OInput value={profile.location} onChange={e => updateField('location', e.target.value)} placeholder="Paris, France" /></div>
             </div>
@@ -583,7 +573,7 @@ export default function OnboardingPage() {
             <div><OLabel text="Chiffre d'affaires actuel" hint="Approximatif, confidentiel" compactMode={compactMode} /><OInput value={profile.currentRevenue} onChange={e => updateField('currentRevenue', e.target.value)} placeholder="500K EUR/an, en croissance..." /></div>
             <div><OLabel text="Principaux défis" hint="Qu'est-ce qui vous empêche de dormir ?" compactMode={compactMode} /><OTextArea value={profile.mainChallenges} onChange={e => updateField('mainChallenges', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'mainChallenges'; }} placeholder="Acquisition client, rétention, scalabilité..." rows={4} /></div>
             <div><OLabel text="Concurrents principaux" compactMode={compactMode} /><OTextArea value={profile.competitors} onChange={e => updateField('competitors', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'competitors'; }} placeholder="Concurrent A (leader), Concurrent B (niche)..." /></div>
-            <div className="grid-2">
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
               <div><OLabel text="Forces" compactMode={compactMode} /><OTextArea value={profile.strengths} onChange={e => updateField('strengths', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'strengths'; }} placeholder="Équipe technique, produit unique..." /></div>
               <div><OLabel text="Faiblesses" compactMode={compactMode} /><OTextArea value={profile.weaknesses} onChange={e => updateField('weaknesses', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'weaknesses'; }} placeholder="Marketing, manque de process..." /></div>
             </div>
@@ -593,7 +583,7 @@ export default function OnboardingPage() {
             <div><OLabel text="Objectifs court terme" hint="3-6 mois" compactMode={compactMode} /><OTextArea value={profile.shortTermGoals} onChange={e => updateField('shortTermGoals', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'shortTermGoals'; }} placeholder="Lancer v2 du produit, doubler la base clients..." rows={4} /></div>
             <div><OLabel text="Objectifs long terme" hint="1-3 ans" compactMode={compactMode} /><OTextArea value={profile.longTermGoals} onChange={e => updateField('longTermGoals', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'longTermGoals'; }} placeholder="Devenir leader du marché, lever des fonds..." rows={4} /></div>
             <div><OLabel text="KPIs clés" hint="Comment mesurez-vous le succès ?" compactMode={compactMode} /><OTextArea value={profile.kpis} onChange={e => updateField('kpis', e.target.value)} onFocus={() => { lastFocusedFieldRef.current = 'kpis'; }} placeholder="MRR, churn rate, NPS, conversion..." /></div>
-            <div className="grid-2">
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
               <div><OLabel text="Budget IA mensuel" compactMode={compactMode} /><OInput value={profile.budget} onChange={e => updateField('budget', e.target.value)} placeholder="500 EUR/mois" /></div>
               <div><OLabel text="Timeline" compactMode={compactMode} /><OInput value={profile.timeline} onChange={e => updateField('timeline', e.target.value)} placeholder="Résultats attendus en 3 mois" /></div>
             </div>
@@ -610,17 +600,17 @@ export default function OnboardingPage() {
           {step === 6 && <>
             <div>
               <OLabel text="Priorités IA" hint="Sélectionnez tout ce qui vous intéresse" compactMode={compactMode} />
-              <div className="flex flex-wrap gap-6 mt-8">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
                 {AI_PRIORITIES.map(p => (
                   <button
                     key={p}
                     onClick={() => toggleArray('aiPriorities', p)}
                     style={{
                       padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                      background: profile.aiPriorities.includes(p) ? '#1A1A1A' : '#fff',
-                      color: profile.aiPriorities.includes(p) ? '#fff' : '#6B6B6B',
-                      border: `1px solid ${profile.aiPriorities.includes(p) ? '#1A1A1A' : '#E5E5E5'}`,
-                      cursor: 'pointer', fontFamily: 'var(--font-sans)', transition: 'all 0.15s',
+                      background: profile.aiPriorities.includes(p) ? CU.accent : CU.bg,
+                      color: profile.aiPriorities.includes(p) ? '#fff' : CU.textSecondary,
+                      border: `1px solid ${profile.aiPriorities.includes(p) ? CU.accent : CU.border}`,
+                      cursor: 'pointer', transition: 'all 0.15s',
                     }}
                   >
                     {p}
@@ -637,17 +627,17 @@ export default function OnboardingPage() {
           {step === 7 && <>
             <div>
               <OLabel text="Ton de communication" hint="Comment Freenzy doit communiquer en votre nom ?" compactMode={compactMode} />
-              <div className="flex flex-wrap gap-6 mt-8">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
                 {TONES.map(t => (
                   <button
                     key={t}
                     onClick={() => updateField('brandTone', t)}
                     style={{
                       padding: '8px 18px', borderRadius: 20, fontSize: 13, fontWeight: 500,
-                      background: profile.brandTone === t ? '#1A1A1A' : '#fff',
-                      color: profile.brandTone === t ? '#fff' : '#6B6B6B',
-                      border: `1px solid ${profile.brandTone === t ? '#1A1A1A' : '#E5E5E5'}`,
-                      cursor: 'pointer', fontFamily: 'var(--font-sans)',
+                      background: profile.brandTone === t ? CU.accent : CU.bg,
+                      color: profile.brandTone === t ? '#fff' : CU.textSecondary,
+                      border: `1px solid ${profile.brandTone === t ? CU.accent : CU.border}`,
+                      cursor: 'pointer',
                     }}
                   >
                     {t}
@@ -657,17 +647,17 @@ export default function OnboardingPage() {
             </div>
             <div>
               <OLabel text="Langues" hint="Dans quelles langues Freenzy doit communiquer ?" compactMode={compactMode} />
-              <div className="flex flex-wrap gap-6 mt-8">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
                 {LANGUAGES_LIST.map(l => (
                   <button
                     key={l}
                     onClick={() => toggleArray('languages', l)}
                     style={{
                       padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 500,
-                      background: profile.languages.includes(l) ? '#1A1A1A' : '#fff',
-                      color: profile.languages.includes(l) ? '#fff' : '#6B6B6B',
-                      border: `1px solid ${profile.languages.includes(l) ? '#1A1A1A' : '#E5E5E5'}`,
-                      cursor: 'pointer', fontFamily: 'var(--font-sans)',
+                      background: profile.languages.includes(l) ? CU.accent : CU.bg,
+                      color: profile.languages.includes(l) ? '#fff' : CU.textSecondary,
+                      border: `1px solid ${profile.languages.includes(l) ? CU.accent : CU.border}`,
+                      cursor: 'pointer',
                     }}
                   >
                     {l}
@@ -682,31 +672,30 @@ export default function OnboardingPage() {
       </div>
 
       {/* Navigation */}
-      <div className="flex flex-between flex-wrap gap-8 mt-24" style={{ padding: '0 4px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginTop: 24, padding: '0 4px' }}>
         <button
           onClick={() => { saveProfile(); setStep(s => Math.max(1, s - 1)); }}
-          className="btn btn-secondary"
+          style={{ ...CU.btnGhost, opacity: step === 1 ? 0.4 : 1 }}
           disabled={step === 1}
         >
           &larr; Précédent
         </button>
 
-        <div className="flex gap-8">
-          <button onClick={() => saveProfile()} className="btn btn-ghost" disabled={saving}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={() => saveProfile()} style={CU.btnGhost} disabled={saving}>
             {saving ? 'Sauvegarde...' : 'Sauvegarder'}
           </button>
           {step < 7 ? (
             <button
               onClick={() => { saveProfile(); setStep(s => Math.min(7, s + 1)); }}
-              className="btn btn-primary"
+              style={CU.btnPrimary}
             >
               Suivant &rarr;
             </button>
           ) : (
             <button
               onClick={() => saveProfile(true)}
-              className="btn btn-primary"
-              style={{ background: 'var(--success)' }}
+              style={{ ...CU.btnPrimary, background: CU.success }}
               disabled={saving}
             >
               {saving ? 'Finalisation...' : 'Terminer & Commencer →'}
@@ -716,37 +705,36 @@ export default function OnboardingPage() {
       </div>
 
       {/* WhatsApp Bonus Section */}
-      <div className="card p-24 mt-24" style={{
-        background: '#F7F7F7',
-        border: '1px solid #E5E5E5',
+      <div style={{
+        ...CU.card, padding: 24, marginTop: 24,
+        background: CU.bgSecondary,
       }}>
-        <div className="flex items-center gap-8 mb-12">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <span style={{ fontSize: 24 }}>📱</span>
           <div>
-            <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>Connectez WhatsApp <span className="text-sm font-medium" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>(optionnel)</span></div>
-            <div className="text-sm" style={{ lineHeight: 1.5, color: 'var(--fz-text-secondary, #64748B)' }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: CU.text }}>Connectez WhatsApp <span style={{ fontSize: 12, fontWeight: 500, color: CU.textMuted }}>(optionnel)</span></div>
+            <div style={{ fontSize: 13, lineHeight: 1.5, color: CU.textSecondary }}>
               Vos agents pourront vous envoyer des rappels, rapports et repondre a vos questions par WhatsApp.
             </div>
           </div>
         </div>
-        <div className="flex gap-8 items-center flex-wrap">
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <input
             type="tel"
-            className="input"
+            style={{ ...CU.input, flex: 1, minWidth: 200 }}
             placeholder="+33 6 12 34 56 78"
-            style={{ flex: 1, minWidth: 200 }}
             defaultValue={typeof window !== 'undefined' ? localStorage.getItem('fz_whatsapp_number') ?? '' : ''}
             onChange={e => {
               try { localStorage.setItem('fz_whatsapp_number', e.target.value); } catch { /* */ }
             }}
           />
-          <span className="text-xs" style={{ fontStyle: 'italic', color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <span style={{ fontSize: 11, fontStyle: 'italic', color: CU.textMuted }}>
             Cette fonctionnalite sera activee prochainement
           </span>
         </div>
       </div>
 
-      <div className="text-center text-sm mt-24" style={{ lineHeight: 1.6, color: 'var(--fz-text-muted, #94A3B8)' }}>
+      <div style={{ textAlign: 'center', fontSize: 13, marginTop: 24, lineHeight: 1.6, color: CU.textMuted }}>
         Vos données sont privées et sécurisées. Elles servent uniquement à personnaliser Freenzy pour votre entreprise.
         <br />Vous pouvez modifier ces informations à tout moment.
       </div>

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 interface Partner {
   name: string;
@@ -115,20 +117,21 @@ const PARTNER_CATEGORIES = [
 ];
 
 export default function PartnersPage() {
+  const isMobile = useIsMobile();
   const [expandedCategory, setExpandedCategory] = useState<number | null>(0);
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.partners.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.partners.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.partners.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.partners.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.partners.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.partners.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.partners.helpText} />
         </div>
-        <p style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.6, marginTop: 12 }}>
+        <p style={{ fontSize: 14, color: CU.textMuted, lineHeight: 1.6, marginTop: 12 }}>
           Decouvrez notre ecosysteme de partenaires de confiance. Des experts dans leur domaine pour completer les services de <span className="fz-logo-word">Freenzy.io</span>.
         </p>
       </div>
@@ -139,50 +142,50 @@ export default function PartnersPage() {
           <button
             onClick={() => setExpandedCategory(expandedCategory === catIdx ? null : catIdx)}
             style={{
+              ...CU.card,
               width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-              padding: '16px 20px', background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 12,
-              border: 'none', cursor: 'pointer', textAlign: 'left',
+              padding: '16px 20px', background: CU.bgSecondary,
+              cursor: 'pointer', textAlign: 'left' as const,
               fontFamily: 'var(--font-sans)',
             }}
           >
             <span style={{ fontSize: 24 }}>{CATEGORY_EMOJIS[cat.emoji] ?? cat.emoji}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{cat.title}</div>
-              <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{cat.subtitle}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: CU.text }}>{cat.title}</div>
+              <div style={{ fontSize: 12, color: CU.textMuted }}>{cat.subtitle}</div>
             </div>
-            <span style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', transform: expandedCategory === catIdx ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>{expandedCategory === catIdx ? '▼' : '▶'}</span>
+            <span style={{ fontSize: 14, color: CU.textMuted, transform: expandedCategory === catIdx ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>{expandedCategory === catIdx ? '▼' : '▶'}</span>
           </button>
 
           {expandedCategory === catIdx && (
             <div style={{ display: 'grid', gridTemplateColumns: cat.partners.length === 1 ? '1fr' : 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: 12, marginTop: 12, paddingLeft: 8 }}>
               {cat.partners.map(partner => (
                 <div key={partner.name} style={{
-                  padding: '20px', borderRadius: 12,
-                  border: '1px solid var(--border-primary, #E5E5E5)',
-                  background: 'var(--fz-bg, #fff)',
-                  position: 'relative',
+                  ...CU.card,
+                  padding: 20,
+                  position: 'relative' as const,
                 }}>
                   {partner.comingSoon && (
                     <span style={{
-                      position: 'absolute', top: 12, right: 12,
-                      fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
-                      background: '#F0F0F0', color: '#6B6B6B', border: '1px solid #E5E5E5',
+                      position: 'absolute' as const, top: 12, right: 12,
+                      ...CU.badge,
+                      fontSize: 10, padding: '3px 8px',
                     }}>A venir</span>
                   )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                     <div style={{
-                      width: 40, height: 40, borderRadius: 10,
-                      background: '#F0F0F0',
+                      width: 40, height: 40, borderRadius: 8,
+                      background: CU.accentLight,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
                       <span style={{ fontSize: 20 }}>{PARTNER_EMOJIS[partner.emoji] ?? partner.emoji}</span>
                     </div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{partner.name}</div>
-                      <div style={{ fontSize: 11, color: '#6B6B6B', fontWeight: 600 }}>{partner.category}</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: CU.text }}>{partner.name}</div>
+                      <div style={{ fontSize: 11, color: CU.textSecondary, fontWeight: 600 }}>{partner.category}</div>
                     </div>
                   </div>
-                  <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.6, margin: '0 0 14px' }}>
+                  <p style={{ fontSize: 12, color: CU.textMuted, lineHeight: 1.6, margin: '0 0 14px' }}>
                     {partner.description}
                   </p>
                   {partner.url && !partner.comingSoon && (
@@ -192,7 +195,7 @@ export default function PartnersPage() {
                       rel="noopener noreferrer"
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: 6,
-                        fontSize: 12, fontWeight: 600, color: '#6B6B6B',
+                        fontSize: 12, fontWeight: 600, color: CU.textSecondary,
                         textDecoration: 'none',
                       }}
                     >
@@ -200,7 +203,7 @@ export default function PartnersPage() {
                     </a>
                   )}
                   {!partner.url && !partner.comingSoon && (
-                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: CU.textMuted }}>
                       Contactez-nous pour en savoir plus
                     </span>
                   )}
@@ -213,13 +216,14 @@ export default function PartnersPage() {
 
       {/* Info box */}
       <div style={{
-        marginTop: 32, padding: '20px 24px', borderRadius: 12,
-        background: '#F7F7F7', border: '1px solid var(--border-primary, #E5E5E5)',
+        ...CU.card,
+        marginTop: 32, padding: '20px 24px',
+        background: CU.bgSecondary,
       }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', marginBottom: 6 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: CU.text, marginBottom: 6 }}>
           Devenir partenaire
         </div>
-        <p style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', lineHeight: 1.6, margin: 0 }}>
+        <p style={{ fontSize: 12, color: CU.textMuted, lineHeight: 1.6, margin: 0 }}>
           Vous souhaitez rejoindre notre ecosysteme de partenaires ? Contactez-nous pour decouvrir les opportunites de collaboration et beneficier de la visibilite aupres de nos utilisateurs.
         </p>
       </div>

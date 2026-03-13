@@ -10,6 +10,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 import { isAuthenticated as checkIsAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraft } from '../../../lib/useVisitorDraft';
@@ -813,26 +814,7 @@ const TEMPLATES: DocTemplate[] = [
 
 const CATEGORIES = ['Communication', 'Commercial', 'Stratégie', 'Marketing', 'Organisation', 'RH', 'Juridique', 'Finance', 'Personnel', 'Bien-être', 'Développement personnel', 'Loisirs', 'Organisation perso', 'Finance perso', 'Juridique perso'];
 
-/* ClickUp design tokens */
-const CU = {
-  card: {
-    background: '#fff',
-    border: '1px solid #E5E5E5',
-    borderRadius: 8,
-    transition: 'all 0.15s',
-  },
-  heading: { fontSize: 16, fontWeight: 600 as const, color: '#1A1A1A', margin: 0 },
-  sectionTitle: { fontSize: 14, fontWeight: 600 as const, color: '#1A1A1A', margin: 0 },
-  subtitle: { fontSize: 13, color: '#9B9B9B' },
-  btn: { height: 36, padding: '0 14px', borderRadius: 8, fontWeight: 500 as const, fontSize: 13, border: '1px solid #E5E5E5' as const, cursor: 'pointer' as const, transition: 'all 0.15s' },
-  btnPrimary: { background: '#1A1A1A', color: '#fff' },
-  btnGhost: { background: 'transparent', color: '#6B6B6B' },
-  text: '#1A1A1A',
-  textSec: '#6B6B6B',
-  textMuted: '#9B9B9B',
-  accent: '#1A1A1A',
-  border: '#E5E5E5',
-};
+/* Styles now imported from page-styles (CU, pageContainer, headerRow, emojiIcon) */
 
 export default function DocumentsPage() {
   const isMobile = useIsMobile();
@@ -981,19 +963,19 @@ export default function DocumentsPage() {
   // Viewing a document
   if (viewingDoc) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <button onClick={() => setViewingDoc(null)} style={{
-            ...CU.btn, ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
+            ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
           }}>← Retour</button>
           <div style={{ flex: 1, minWidth: 200 }}>
-            <h2 style={{ ...CU.heading, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>📄 {viewingDoc.title}</h2>
+            <h2 style={{ ...CU.pageTitle, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>📄 {viewingDoc.title}</h2>
             <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>
               {new Date(viewingDoc.createdAt).toLocaleString('fr-FR')} | {viewingDoc.tokens} tokens | {(viewingDoc.cost / 1_000_000).toFixed(4)} cr
             </div>
           </div>
           <button onClick={() => copyToClipboard(viewingDoc.content)} style={{
-            ...CU.btn, ...CU.btnPrimary, height: 32, fontSize: 12, fontFamily: 'inherit',
+            ...CU.btnPrimary, height: 32, fontSize: 12, fontFamily: 'inherit',
           }}>
             {copied ? <>✅ Copié !</> : '📋 Copier'}
           </button>
@@ -1006,9 +988,7 @@ export default function DocumentsPage() {
             a.click();
             URL.revokeObjectURL(url);
           }} style={{
-            ...CU.btn, height: 32, fontSize: 12, fontFamily: 'inherit',
-            background: '#fff', color: CU.textSec,
-            border: '1px solid #E5E5E5', borderRadius: 8,
+            ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
           }}>
             Exporter .txt
           </button>
@@ -1024,14 +1004,14 @@ export default function DocumentsPage() {
   // Template form
   if (selectedTemplate) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
           <button onClick={() => { setSelectedTemplate(null); setFieldValues({}); }} style={{
-            ...CU.btn, ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
+            ...CU.btnGhost, height: 32, fontSize: 12, fontFamily: 'inherit',
           }}>← Retour</button>
           <div style={{ flex: 1, minWidth: 200 }}>
-            <h2 style={{ ...CU.heading, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>📄 {selectedTemplate.title}</h2>
-            <div style={{ fontSize: 13, color: CU.textSec, marginTop: 2 }}>{selectedTemplate.description}</div>
+            <h2 style={{ ...CU.pageTitle, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>📄 {selectedTemplate.title}</h2>
+            <div style={{ fontSize: 13, color: CU.textSecondary, marginTop: 2 }}>{selectedTemplate.description}</div>
           </div>
           <VoiceInput
             onTranscript={(t) => {
@@ -1117,7 +1097,7 @@ export default function DocumentsPage() {
             onClick={generateDocument}
             disabled={generating}
             style={{
-              ...CU.btn, ...CU.btnPrimary,
+              ...CU.btnPrimary,
               width: '100%', height: 42, fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
             }}
           >
@@ -1137,7 +1117,7 @@ export default function DocumentsPage() {
 
   if (!checkIsAuthenticated()) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto' }}>
+      <div style={{ ...pageContainer(isMobile), maxWidth: 800 }}>
         <VisitorEmptyState
           icon="📄"
           title="Connectez-vous pour générer des documents"
@@ -1155,13 +1135,13 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1100 }}>
+    <div className="client-page-scrollable" style={pageContainer(isMobile)}>
       {/* ─── Page Header ─── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-        <span style={{ fontSize: 20 }}>{PAGE_META.documents.emoji}</span>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{PAGE_META.documents.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ ...CU.heading }}>{PAGE_META.documents.title}</h1>
-          <p style={{ ...CU.subtitle, margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
+          <h1 style={CU.pageTitle}>{PAGE_META.documents.title}</h1>
+          <p style={{ ...CU.pageSubtitle, margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
         </div>
         <HelpBubble text={PAGE_META.documents.helpText} />
       </div>
@@ -1210,13 +1190,13 @@ export default function DocumentsPage() {
                 <p style={{ margin: '0 0 6px', fontSize: 14, fontWeight: 600, color: CU.text }}>
                   📋 Complétez votre profil pour des documents parfaits
                 </p>
-                <p style={{ margin: '0 0 10px', fontSize: 13, color: CU.textSec, lineHeight: 1.6 }}>
+                <p style={{ margin: '0 0 10px', fontSize: 13, color: CU.textSecondary, lineHeight: 1.6 }}>
                   Vos informations (entreprise, secteur, objectifs) sont utilisées automatiquement dans chaque document généré. Plus votre profil est complet, plus vos documents seront pertinents et prêts à l&apos;emploi.
                 </p>
                 <a
                   href="/client/onboarding"
                   style={{
-                    ...CU.btn, ...CU.btnPrimary,
+                    ...CU.btnPrimary,
                     display: 'inline-flex', alignItems: 'center',
                     textDecoration: 'none', fontSize: 12,
                   }}
@@ -1292,7 +1272,7 @@ export default function DocumentsPage() {
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>{tpl.title}</div>
-              <div style={{ fontSize: 12, color: CU.textSec, lineHeight: 1.5 }}>{tpl.description}</div>
+              <div style={{ fontSize: 12, color: CU.textSecondary, lineHeight: 1.5 }}>{tpl.description}</div>
               <span style={{
                 display: 'inline-block', marginTop: 8, padding: '2px 8px', borderRadius: 6,
                 fontSize: 11, fontWeight: 600, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A',
@@ -1402,14 +1382,14 @@ export default function DocumentsPage() {
                   <div style={{ fontSize: 11, color: CU.textMuted }}>{new Date(doc.createdAt).toLocaleString('fr-FR')}</div>
                 </div>
                 <button onClick={() => setViewingDoc(doc)} style={{
-                  ...CU.btn, ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
+                  ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
                 }}>Voir</button>
                 <button onClick={() => copyToClipboard(doc.content)} style={{
-                  ...CU.btn, ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
+                  ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
                 }}>Copier</button>
                 <button onClick={() => { if (confirm('Supprimer ce document ? Cette action est irreversible.')) deleteDoc(doc.id); }} style={{
-                  ...CU.btn, height: 28, fontSize: 12, fontFamily: 'inherit',
-                  background: 'transparent', color: 'var(--danger)',
+                  ...CU.btnGhost, height: 28, fontSize: 12, fontFamily: 'inherit',
+                  color: 'var(--danger)',
                 }} aria-label="Supprimer le document">🗑️</button>
               </div>
             ))}

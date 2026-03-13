@@ -9,6 +9,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar } from '../../../lib/page-styles';
 
 // ─── Types ───
 
@@ -39,10 +40,10 @@ interface ActionStats {
 type KanbanColumn = 'proposed' | 'accepted' | 'in_progress' | 'completed';
 
 const COLUMNS: { id: KanbanColumn; label: string; color: string }[] = [
-  { id: 'proposed', label: 'Proposées', color: '#9B9B9B' },
-  { id: 'accepted', label: 'À faire', color: '#6B6B6B' },
-  { id: 'in_progress', label: 'En cours', color: '#1A1A1A' },
-  { id: 'completed', label: 'Terminées', color: '#1A1A1A' },
+  { id: 'proposed', label: 'Proposées', color: CU.textMuted },
+  { id: 'accepted', label: 'À faire', color: CU.textSecondary },
+  { id: 'in_progress', label: 'En cours', color: CU.text },
+  { id: 'completed', label: 'Terminées', color: CU.text },
 ];
 
 const ALL_TYPES = Object.keys(ACTION_TYPE_LABELS);
@@ -176,68 +177,64 @@ export default function ActionsPage() {
   const usedAgents = [...new Set(actions.map(a => a.sourceAgent).filter(Boolean))] as string[];
 
   return (
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.actions.emoji}</span>
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.actions.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.actions.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.actions.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.actions.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.actions.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.actions.helpText} />
         </div>
       </div>
       <PageExplanation pageId="actions" text={PAGE_META.actions?.helpText} />
-      <div className="flex flex-between items-center mb-8 flex-wrap gap-6">
-        <div />
-        <div className="flex gap-6 items-center">
-          <button
-            onClick={() => setViewMode(viewMode === 'kanban' ? 'list' : 'kanban')}
-            className="btn btn-secondary btn-sm"
-            style={isMobile ? { minHeight: 44 } : undefined}
-          >
-            {viewMode === 'kanban' ? '📋' : '📊'} {viewMode === 'kanban' ? 'Liste' : 'Kanban'}
-          </button>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="btn btn-sm"
-            style={{ background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', ...(isMobile ? { minHeight: 44 } : {}) }}
-          >
-            + Nouvelle action
-          </button>
-        </div>
+
+      {/* Toolbar */}
+      <div style={{ ...toolbar(), justifyContent: 'flex-end' }}>
+        <button
+          onClick={() => setViewMode(viewMode === 'kanban' ? 'list' : 'kanban')}
+          style={CU.btnGhost}
+        >
+          {viewMode === 'kanban' ? '📋' : '📊'} {viewMode === 'kanban' ? 'Liste' : 'Kanban'}
+        </button>
+        <button
+          onClick={() => setShowAddModal(true)}
+          style={CU.btnPrimary}
+        >
+          + Nouvelle action
+        </button>
       </div>
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(140px, 1fr))' }}>
+        <div style={cardGrid(isMobile, isMobile ? 2 : 6)}>
           {[
-            { label: 'Total', value: stats.total, color: '#1A1A1A' },
-            { label: 'Proposées', value: stats.proposed, color: '#9B9B9B' },
-            { label: 'À faire', value: stats.accepted, color: '#6B6B6B' },
-            { label: 'En cours', value: stats.inProgress, color: '#1A1A1A' },
-            { label: 'Terminées', value: stats.completed, color: '#1A1A1A' },
-            { label: 'En retard', value: overdueCount, color: '#EF4444' },
+            { label: 'Total', value: stats.total, color: CU.text },
+            { label: 'Proposées', value: stats.proposed, color: CU.textMuted },
+            { label: 'À faire', value: stats.accepted, color: CU.textSecondary },
+            { label: 'En cours', value: stats.inProgress, color: CU.text },
+            { label: 'Terminées', value: stats.completed, color: CU.text },
+            { label: 'En retard', value: overdueCount, color: CU.danger },
           ].map(s => (
-            <div key={s.label} className="rounded-sm" style={{
-              padding: '12px', background: '#F7F7F7', border: '1px solid #E5E5E5',
-              borderRadius: 8,
+            <div key={s.label} style={{
+              ...CU.card,
+              background: CU.bgSecondary,
             }}>
-              <div className="text-xs" style={{ color: '#6B6B6B' }}>{s.label}</div>
-              <div className="text-lg font-bold" style={{ color: s.color }}>{s.value}</div>
+              <div style={CU.statLabel}>{s.label}</div>
+              <div style={{ ...CU.statValue, fontSize: 20, color: s.color }}>{s.value}</div>
             </div>
           ))}
         </div>
       )}
 
       {/* Filters */}
-      <div className="flex gap-6 flex-wrap mb-8" style={isMobile ? { flexDirection: 'column' } : undefined}>
+      <div style={{ ...toolbar(), marginTop: 16, flexDirection: isMobile ? 'column' : 'row' }}>
         <select
           value={filterType}
           onChange={e => setFilterType(e.target.value)}
-          className="input"
-          style={{ fontSize: 12, padding: '4px 8px', width: isMobile ? '100%' : 'auto', minHeight: isMobile ? 44 : undefined }}
+          style={{ ...CU.select, width: isMobile ? '100%' : 'auto' }}
         >
           <option value="">Tous les types</option>
           {ALL_TYPES.map(t => (
@@ -247,8 +244,7 @@ export default function ActionsPage() {
         <select
           value={filterPriority}
           onChange={e => setFilterPriority(e.target.value)}
-          className="input"
-          style={{ fontSize: 12, padding: '4px 8px', width: isMobile ? '100%' : 'auto', minHeight: isMobile ? 44 : undefined }}
+          style={{ ...CU.select, width: isMobile ? '100%' : 'auto' }}
         >
           <option value="">Toutes priorités</option>
           {ALL_PRIORITIES.map(p => (
@@ -259,8 +255,7 @@ export default function ActionsPage() {
           <select
             value={filterAgent}
             onChange={e => setFilterAgent(e.target.value)}
-            className="input"
-            style={{ fontSize: 12, padding: '4px 8px', width: isMobile ? '100%' : 'auto', minHeight: isMobile ? 44 : undefined }}
+            style={{ ...CU.select, width: isMobile ? '100%' : 'auto' }}
           >
             <option value="">Tous les assistants</option>
             {usedAgents.map(a => (
@@ -272,39 +267,41 @@ export default function ActionsPage() {
 
       {/* Loading */}
       {loading && (
-        <div className="text-center" style={{ padding: '40px', color: '#6B6B6B' }}>
+        <div style={{ padding: 40, textAlign: 'center', color: CU.textSecondary, fontSize: 13 }}>
           Chargement...
         </div>
       )}
 
       {/* Empty state */}
       {!loading && actions.length === 0 && (
-        <div className="text-center" style={{
-          padding: '60px 20px', background: '#F7F7F7',
-          borderRadius: 8, border: '1px solid #E5E5E5',
-        }}>
-          <div style={{ marginBottom: 12, fontSize: 48 }}>⚡</div>
-          <h3 className="text-lg font-semibold mb-4" style={{ color: '#1A1A1A' }}>Aucune action pour le moment</h3>
-          <p className="text-sm" style={{ color: '#6B6B6B', maxWidth: 400, margin: '0 auto' }}>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>⚡</div>
+          <div style={CU.emptyTitle}>Aucune action pour le moment</div>
+          <div style={CU.emptyDesc}>
             Discutez avec vos assistants dans le chat — ils proposeront des actions concrètes
             à la fin de vos conversations.
-          </p>
+          </div>
         </div>
       )}
 
       {/* Kanban View */}
       {!loading && actions.length > 0 && viewMode === 'kanban' && (
-        <div className="grid gap-6" style={{ gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))', minHeight: 400 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))',
+          gap: 12,
+          minHeight: 400,
+        }}>
           {COLUMNS.map(col => (
             <div key={col.id}>
-              <div className="flex items-center gap-6 mb-6" style={{ padding: '0 4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 4px', marginBottom: 8 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
-                <span className="text-sm font-semibold">{col.label}</span>
-                <span className="text-xs" style={{ color: '#9B9B9B' }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{col.label}</span>
+                <span style={{ fontSize: 12, color: CU.textMuted }}>
                   {actionsForColumn(col.id).length}
                 </span>
               </div>
-              <div className="flex flex-col gap-6">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {actionsForColumn(col.id).map(action => (
                   <ActionCard
                     key={action.id}
@@ -321,39 +318,41 @@ export default function ActionsPage() {
 
       {/* List View */}
       {!loading && actions.length > 0 && viewMode === 'list' && (
-        <div className="flex flex-col gap-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {filteredActions.map(action => (
             <div
               key={action.id}
-              className="flex items-center gap-8 rounded-sm cursor-pointer"
               onClick={() => setSelectedAction(action)}
               style={{
-                padding: '10px 12px', background: '#F7F7F7',
-                border: '1px solid #E5E5E5', flexWrap: 'wrap',
-                minHeight: 44,
+                ...CU.cardHoverable,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                flexWrap: 'wrap',
               }}
             >
               <span style={{ fontSize: 16 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="text-sm font-medium">{action.title}</div>
-                <div className="text-xs" style={{ color: '#6B6B6B' }}>
+                <div style={{ fontSize: 13, fontWeight: 500, color: CU.text }}>{action.title}</div>
+                <div style={{ fontSize: 12, color: CU.textSecondary }}>
                   {ACTION_TYPE_LABELS[action.type] ?? action.type}
                   {action.sourceAgent && ` · ${getAgentEmoji(action.sourceAgent)} ${getAgentName(action.sourceAgent)}`}
                 </div>
               </div>
-              <span className="text-xs font-medium" style={{
-                padding: '2px 8px', borderRadius: 4,
+              <span style={{
+                ...CU.badge,
                 background: `${PRIORITY_COLORS[action.priority]}22`,
                 color: PRIORITY_COLORS[action.priority],
               }}>
                 {PRIORITY_LABELS[action.priority] ?? action.priority}
               </span>
-              <span className="text-xs" style={{ color: '#9B9B9B' }}>
+              <span style={{ fontSize: 12, color: CU.textMuted }}>
                 {COLUMNS.find(c => c.id === action.status)?.label ?? action.status}
               </span>
               {action.dueDate && (
-                <span className="text-xs" style={{
-                  color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--fz-text-muted, #94A3B8)',
+                <span style={{
+                  fontSize: 12,
+                  color: new Date(action.dueDate) < new Date() ? CU.danger : CU.textMuted,
                 }}>
                   {formatDueDate(action.dueDate)}
                 </span>
@@ -413,59 +412,55 @@ function ActionCard({
 
   return (
     <div
-      className="rounded-sm cursor-pointer"
       onClick={onClick}
       style={{
-        padding: '10px 12px',
-        background: '#F7F7F7',
-        border: isOverdue ? '1px solid #EF444444' : '1px solid var(--fz-border, #E2E8F0)',
-        borderRadius: 8,
+        ...CU.cardHoverable,
+        background: CU.bgSecondary,
+        borderColor: isOverdue ? `${CU.danger}44` : CU.border,
       }}
     >
-      <div className="flex items-center gap-6 mb-4">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
         <span style={{ fontSize: 14 }}>{ACTION_TYPE_ICONS[action.type] ?? '⚡'}</span>
-        <span className="text-sm font-medium" style={{ flex: 1, lineHeight: 1.3 }}>{action.title}</span>
+        <span style={{ flex: 1, fontSize: 13, fontWeight: 500, lineHeight: 1.3, color: CU.text }}>{action.title}</span>
       </div>
       {action.description && (
-        <p className="text-xs mb-4" style={{ color: '#6B6B6B', lineHeight: 1.3 }}>
+        <p style={{ fontSize: 12, color: CU.textSecondary, lineHeight: 1.3, margin: '0 0 6px' }}>
           {action.description.length > 80 ? action.description.slice(0, 80) + '...' : action.description}
         </p>
       )}
-      <div className="flex flex-between items-center">
-        <div className="flex gap-4 items-center">
-          <span className="text-xs" style={{
-            padding: '1px 6px', borderRadius: 4,
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          <span style={{
+            ...CU.badge,
             background: `${PRIORITY_COLORS[action.priority]}22`,
             color: PRIORITY_COLORS[action.priority],
           }}>
             {PRIORITY_LABELS[action.priority]}
           </span>
           {action.dueDate && (
-            <span className="text-xs" style={{ color: isOverdue ? '#EF4444' : 'var(--fz-text-muted, #94A3B8)' }}>
+            <span style={{ fontSize: 12, color: isOverdue ? CU.danger : CU.textMuted }}>
               {formatDueDate(action.dueDate)}
             </span>
           )}
         </div>
         {action.sourceAgent && (
-          <span className="text-xs" title={getAgentName(action.sourceAgent)}>
+          <span style={{ fontSize: 12 }} title={getAgentName(action.sourceAgent)}>
             {getAgentEmoji(action.sourceAgent) || '🤖'}
           </span>
         )}
       </div>
       {/* Quick status buttons */}
       {action.status === 'proposed' && (
-        <div className="flex gap-4 mt-6">
+        <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
           <button
             onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'accepted'); }}
-            className="btn btn-sm"
-            style={{ fontSize: 11, flex: 1, background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', minHeight: 44 }}
+            style={{ ...CU.btnPrimary, fontSize: 11, flex: 1, height: 32 }}
           >
             Accepter
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'cancelled'); }}
-            className="btn btn-ghost btn-sm"
-            style={{ fontSize: 11, minHeight: 44 }}
+            style={{ ...CU.btnGhost, fontSize: 11, height: 32 }}
           >
             Ignorer
           </button>
@@ -474,8 +469,7 @@ function ActionCard({
       {action.status === 'accepted' && (
         <button
           onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'in_progress'); }}
-          className="btn btn-sm mt-6"
-          style={{ fontSize: 11, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5', minHeight: 44 }}
+          style={{ ...CU.btnGhost, fontSize: 11, width: '100%', marginTop: 8, height: 32 }}
         >
           Démarrer
         </button>
@@ -483,8 +477,7 @@ function ActionCard({
       {action.status === 'in_progress' && (
         <button
           onClick={(e) => { e.stopPropagation(); onStatusChange(action.id, 'completed'); }}
-          className="btn btn-sm mt-6"
-          style={{ fontSize: 11, width: '100%', background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', borderColor: '#E5E5E5', minHeight: 44 }}
+          style={{ ...CU.btnGhost, fontSize: 11, width: '100%', marginTop: 8, height: 32 }}
         >
           Terminer
         </button>
@@ -504,25 +497,22 @@ function ActionDetailPanel({
   onStatusChange: (status: string) => void;
   onDelete: () => void;
 }) {
-  const statusFlow: string[] = ['proposed', 'accepted', 'in_progress', 'completed'];
-  const currentIdx = statusFlow.indexOf(action.status);
-
   return (
-    <div className="flex flex-col gap-8">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Status timeline */}
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Statut</label>
-        <div className="flex gap-4" style={{ flexWrap: 'wrap' }}>
-          {COLUMNS.map((col, i) => (
+        <label style={CU.label}>Statut</label>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {COLUMNS.map((col) => (
             <button
               key={col.id}
               onClick={() => onStatusChange(col.id)}
-              className="btn btn-sm"
               style={{
-                fontSize: 11, flex: '1 1 auto', minHeight: 44,
+                ...CU.btnSmall,
+                flex: '1 1 auto',
                 background: action.status === col.id ? `${col.color}22` : 'transparent',
-                color: action.status === col.id ? col.color : 'var(--fz-text-secondary, #64748B)',
-                borderColor: action.status === col.id ? `${col.color}44` : 'var(--fz-border, #E2E8F0)',
+                color: action.status === col.id ? col.color : CU.textSecondary,
+                borderColor: action.status === col.id ? `${col.color}44` : CU.border,
                 fontWeight: action.status === col.id ? 600 : 400,
               }}
             >
@@ -535,53 +525,54 @@ function ActionDetailPanel({
       {/* Description */}
       {action.description && (
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Description</label>
-          <p className="text-sm" style={{ lineHeight: 1.5 }}>{action.description}</p>
+          <label style={CU.label}>Description</label>
+          <p style={{ fontSize: 13, lineHeight: 1.5, color: CU.text, margin: 0 }}>{action.description}</p>
         </div>
       )}
 
       {/* Metadata */}
-      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
+      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))' }}>
         <div>
-          <label className="text-xs" style={{ color: '#9B9B9B' }}>Type</label>
-          <div className="text-sm">{ACTION_TYPE_ICONS[action.type]} {ACTION_TYPE_LABELS[action.type]}</div>
+          <label style={{ fontSize: 12, color: CU.textMuted }}>Type</label>
+          <div style={{ fontSize: 13, color: CU.text }}>{ACTION_TYPE_ICONS[action.type]} {ACTION_TYPE_LABELS[action.type]}</div>
         </div>
         <div>
-          <label className="text-xs" style={{ color: '#9B9B9B' }}>Priorité</label>
-          <div className="text-sm" style={{ color: PRIORITY_COLORS[action.priority] }}>
+          <label style={{ fontSize: 12, color: CU.textMuted }}>Priorité</label>
+          <div style={{ fontSize: 13, color: PRIORITY_COLORS[action.priority] }}>
             {PRIORITY_LABELS[action.priority]}
           </div>
         </div>
         {action.sourceAgent && (
           <div>
-            <label className="text-xs" style={{ color: '#9B9B9B' }}>Assistant source</label>
-            <div className="text-sm">{getAgentEmoji(action.sourceAgent)} {getAgentName(action.sourceAgent)}</div>
+            <label style={{ fontSize: 12, color: CU.textMuted }}>Assistant source</label>
+            <div style={{ fontSize: 13, color: CU.text }}>{getAgentEmoji(action.sourceAgent)} {getAgentName(action.sourceAgent)}</div>
           </div>
         )}
         {action.dueDate && (
           <div>
-            <label className="text-xs" style={{ color: '#9B9B9B' }}>Échéance</label>
-            <div className="text-sm" style={{
-              color: new Date(action.dueDate) < new Date() ? '#EF4444' : 'var(--fz-text, #1E293B)',
+            <label style={{ fontSize: 12, color: CU.textMuted }}>Échéance</label>
+            <div style={{
+              fontSize: 13,
+              color: new Date(action.dueDate) < new Date() ? CU.danger : CU.text,
             }}>
               {new Date(action.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
           </div>
         )}
         <div>
-          <label className="text-xs" style={{ color: '#9B9B9B' }}>Créée le</label>
-          <div className="text-sm">
+          <label style={{ fontSize: 12, color: CU.textMuted }}>Créée le</label>
+          <div style={{ fontSize: 13, color: CU.text }}>
             {new Date(action.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
           </div>
         </div>
       </div>
 
       {/* Danger Zone */}
-      <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', paddingTop: 16, marginTop: 8 }}>
+      <div style={{ ...CU.divider }} />
+      <div>
         <button
           onClick={onDelete}
-          className="btn btn-sm"
-          style={{ fontSize: 11, color: '#EF4444', borderColor: '#EF444444', background: '#EF444408' }}
+          style={{ ...CU.btnSmall, color: CU.danger, borderColor: `${CU.danger}44`, background: `${CU.danger}08` }}
         >
           Annuler cette action
         </button>
@@ -627,62 +618,58 @@ function AddActionForm({ onCreated }: { onCreated: (action: Action) => void }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Type</label>
-        <select value={type} onChange={e => setType(e.target.value)} className="input" style={{ fontSize: 13 }}>
+        <label style={CU.label}>Type</label>
+        <select value={type} onChange={e => setType(e.target.value)} style={CU.select}>
           {ALL_TYPES.map(t => (
             <option key={t} value={t}>{ACTION_TYPE_ICONS[t]} {ACTION_TYPE_LABELS[t]}</option>
           ))}
         </select>
       </div>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Titre *</label>
+        <label style={CU.label}>Titre *</label>
         <input
           value={title}
           onChange={e => setTitle(e.target.value)}
-          className="input"
           placeholder="Ex: Appeler le fournisseur X"
           maxLength={200}
-          style={{ fontSize: 13 }}
+          style={CU.input}
         />
       </div>
       <div>
-        <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Description</label>
+        <label style={CU.label}>Description</label>
         <textarea
           value={description}
           onChange={e => setDescription(e.target.value)}
-          className="input"
           rows={3}
           placeholder="Détails optionnels..."
-          style={{ fontSize: 13, resize: 'vertical' }}
+          style={CU.textarea}
         />
       </div>
-      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
+      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))' }}>
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Priorité</label>
-          <select value={priority} onChange={e => setPriority(e.target.value)} className="input" style={{ fontSize: 13 }}>
+          <label style={CU.label}>Priorité</label>
+          <select value={priority} onChange={e => setPriority(e.target.value)} style={CU.select}>
             {ALL_PRIORITIES.map(p => (
               <option key={p} value={p}>{PRIORITY_LABELS[p]}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="text-xs font-semibold mb-4" style={{ color: '#6B6B6B', display: 'block' }}>Échéance</label>
+          <label style={CU.label}>Échéance</label>
           <input
             type="date"
             value={dueDate}
             onChange={e => setDueDate(e.target.value)}
-            className="input"
-            style={{ fontSize: 13 }}
+            style={CU.input}
           />
         </div>
       </div>
       <button
         type="submit"
         disabled={!title.trim() || saving}
-        className="btn"
-        style={{ background: 'var(--accent)', color: 'white', borderColor: 'var(--accent)', fontSize: 13, minHeight: 44 }}
+        style={{ ...CU.btnPrimary, width: '100%', height: 40, fontSize: 13 }}
       >
         {saving ? 'Création...' : 'Créer l\'action'}
       </button>

@@ -7,6 +7,7 @@ import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -121,9 +122,9 @@ const SCENARIO_TEMPLATES = [
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 const CLASSIF_COLORS: Record<string, string> = {
-  urgent: '#1A1A1A', vip: '#1A1A1A', order: '#1A1A1A', complaint: '#1A1A1A',
-  appointment: '#6B6B6B', faq: '#6B6B6B', family: '#6B6B6B', spam: '#9B9B9B',
-  general: '#9B9B9B', blocked: '#9B9B9B',
+  urgent: CU.text, vip: CU.text, order: CU.text, complaint: CU.text,
+  appointment: CU.textSecondary, faq: CU.textSecondary, family: CU.textSecondary, spam: CU.textMuted,
+  general: CU.textMuted, blocked: CU.textMuted,
 };
 
 // ── API helper ────────────────────────────────────────────────────────────────
@@ -154,15 +155,12 @@ function timeAgo(iso: string): string {
 }
 
 // ── Shared sub-components ─────────────────────────────────────────────────────
-function StatCard({ emoji, value, label, color = '#1A1A1A' }: { emoji: string; value: number | string; label: string; color?: string }) {
+function StatCard({ emoji, value, label }: { emoji: string; value: number | string; label: string; color?: string }) {
   return (
-    <div style={{
-      background: '#fff', borderRadius: 8, padding: '16px 20px',
-      border: '1px solid #E5E5E5', flex: 1, minWidth: 100,
-    }}>
+    <div style={{ ...CU.card, flex: 1, minWidth: 100 }}>
       <div style={{ marginBottom: 4, fontSize: 22 }}>{emoji}</div>
-      <div style={{ fontSize: 24, fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>{label}</div>
+      <div style={{ ...CU.statValue, fontSize: 24, fontWeight: 800 }}>{value}</div>
+      <div style={{ ...CU.statLabel }}>{label}</div>
     </div>
   );
 }
@@ -171,16 +169,18 @@ function SaveBar({ saving, onSave, changed }: { saving: boolean; onSave: () => v
   if (!changed && !saving) return null;
   return (
     <div style={{
-      position: 'sticky', bottom: 0, background: '#fff', borderTop: '1px solid #E5E5E5',
+      position: 'sticky', bottom: 0, background: CU.bg, borderTop: `1px solid ${CU.border}`,
       padding: '10px 20px', display: 'flex', justifyContent: 'flex-end', zIndex: 10,
     }}>
       <button
         onClick={onSave}
         disabled={saving}
         style={{
-          padding: '8px 20px', borderRadius: 8, border: 'none',
-          background: saving ? '#9B9B9B' : '#1A1A1A', color: 'white',
-          fontSize: 13, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
+          ...CU.btnPrimary,
+          padding: '8px 20px',
+          background: saving ? CU.textMuted : CU.accent,
+          cursor: saving ? 'not-allowed' : 'pointer',
+          fontWeight: 600,
         }}
       >
         {saving ? 'Sauvegarde...' : 'Sauvegarder'}
@@ -278,8 +278,8 @@ export default function RepondeurPage() {
   if (loading) {
     return (
       <div style={{ padding: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #1A1A1A', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
-        <span style={{ fontSize: 14, color: '#6B6B6B' }}>Chargement du répondeur...</span>
+        <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${CU.accent}`, borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+        <span style={{ fontSize: 14, color: CU.textSecondary }}>Chargement du répondeur...</span>
       </div>
     );
   }
@@ -289,9 +289,9 @@ export default function RepondeurPage() {
     <div style={{
       position: 'fixed', top: 20, right: 20, zIndex: 1000,
       padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-      background: '#fff',
-      color: error ? 'var(--danger)' : '#1A1A1A',
-      border: '1px solid #E5E5E5',
+      background: CU.bg,
+      color: error ? CU.danger : CU.text,
+      border: `1px solid ${CU.border}`,
     }}>
       {error || success}
     </div>
@@ -300,13 +300,13 @@ export default function RepondeurPage() {
   // ── Wizard ────────────────────────────────────────────────────────────────
   if (!config) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px' : '32px 24px', maxWidth: 700, margin: '0 auto' }}>
+      <div style={{ ...pageContainer(isMobile), maxWidth: 700 }}>
         {toast}
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{ marginBottom: 12, fontSize: 48 }}>{PAGE_META.repondeur.emoji}</div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0, color: '#1A1A1A' }}>Configurer votre répondeur <span className="fz-logo-word">IA</span></h1>
-          <p style={{ fontSize: 14, color: '#6B6B6B', marginTop: 8 }}>
+          <h1 style={{ ...CU.pageTitle, fontSize: 22, fontWeight: 800 }}>Configurer votre répondeur <span className="fz-logo-word">IA</span></h1>
+          <p style={{ ...CU.pageSubtitle, marginTop: 8, fontSize: 14 }}>
             Votre assistant répondra automatiquement à vos messages WhatsApp
           </p>
           {/* Progress */}
@@ -316,10 +316,10 @@ export default function RepondeurPage() {
                 <div style={{
                   width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 11, fontWeight: 700,
-                  background: wizardStep >= s ? '#1A1A1A' : '#F7F7F7',
-                  color: wizardStep >= s ? 'white' : '#9B9B9B',
+                  background: wizardStep >= s ? CU.accent : CU.accentLight,
+                  color: wizardStep >= s ? 'white' : CU.textMuted,
                 }}>{s}</div>
-                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? '#1A1A1A' : '#E5E5E5' }} />}
+                {s < 3 && <div style={{ width: 40, height: 2, background: wizardStep > s ? CU.accent : CU.border }} />}
               </div>
             ))}
           </div>
@@ -328,24 +328,24 @@ export default function RepondeurPage() {
         {/* Step 1: Scenario */}
         {wizardStep === 1 && (
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
               1 — Quel est votre cas d'usage ?
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
+            <div style={cardGrid(isMobile, 2)}>
               {SCENARIO_TEMPLATES.map(s => (
                 <button
                   key={s.id}
                   onClick={() => setWizardScenario(s.id)}
                   style={{
                     padding: 16, borderRadius: 8, cursor: 'pointer', textAlign: 'left',
-                    border: `2px solid ${wizardScenario === s.id ? '#1A1A1A' : '#E5E5E5'}`,
-                    background: wizardScenario === s.id ? 'rgba(0,0,0,0.04)' : '#fff',
+                    border: `2px solid ${wizardScenario === s.id ? CU.accent : CU.border}`,
+                    background: wizardScenario === s.id ? CU.accentLight : CU.bg,
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{ marginBottom: 6, fontSize: 24 }}>{REPONDEUR_SCENARIO_EMOJIS[s.id] ?? '📞'}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A' }}>{s.label}</div>
-                  <div style={{ fontSize: 11, color: '#6B6B6B', marginTop: 2 }}>{s.desc}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: CU.text }}>{s.label}</div>
+                  <div style={{ fontSize: 11, color: CU.textSecondary, marginTop: 2 }}>{s.desc}</div>
                 </button>
               ))}
             </div>
@@ -354,9 +354,10 @@ export default function RepondeurPage() {
                 onClick={() => wizardScenario && setWizardStep(2)}
                 disabled={!wizardScenario}
                 style={{
-                  padding: '10px 32px', borderRadius: 8, border: 'none', minHeight: 44,
-                  background: wizardScenario ? '#1A1A1A' : '#E5E5E5',
-                  color: wizardScenario ? 'white' : '#9B9B9B',
+                  ...CU.btnPrimary,
+                  padding: '10px 32px', minHeight: 44,
+                  background: wizardScenario ? CU.accent : CU.border,
+                  color: wizardScenario ? 'white' : CU.textMuted,
                   fontSize: 14, fontWeight: 600, cursor: wizardScenario ? 'pointer' : 'not-allowed',
                 }}
               >
@@ -369,14 +370,14 @@ export default function RepondeurPage() {
         {/* Step 2: Boss phone */}
         {wizardStep === 2 && (
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
               2 — Numéro d'alerte patron
             </h2>
-            <p style={{ fontSize: 12, color: '#9B9B9B', textAlign: 'center', marginBottom: 20 }}>
+            <p style={{ ...CU.pageSubtitle, textAlign: 'center', marginBottom: 20, fontSize: 12 }}>
               Pour les messages urgents, le répondeur vous envoie immédiatement une alerte WhatsApp.
             </p>
-            <div style={{ background: '#F7F7F7', borderRadius: 8, padding: 20, border: '1px solid #E5E5E5' }}>
-              <label style={{ fontSize: 12, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 8 }}>
+            <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 20, border: `1px solid ${CU.border}` }}>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 8, fontWeight: 700 }}>
                 Votre numéro WhatsApp
               </label>
               <input
@@ -384,20 +385,17 @@ export default function RepondeurPage() {
                 value={wizardPhone}
                 onChange={e => setWizardPhone(e.target.value)}
                 placeholder="+33 6 12 34 56 78"
-                style={{
-                  width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #d1d5db',
-                  fontSize: 14, outline: 'none', boxSizing: 'border-box',
-                }}
+                style={{ ...CU.input, fontSize: 14, padding: '10px 14px' }}
               />
-              <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 6 }}>
+              <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 6 }}>
                 Optionnel — vous pouvez l'ajouter plus tard dans Paramètres
               </div>
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 24 }}>
-              <button onClick={() => setWizardStep(1)} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff', cursor: 'pointer', fontSize: 13 }}>
+              <button onClick={() => setWizardStep(1)} style={{ ...CU.btnGhost, padding: '10px 20px', fontFamily: 'inherit' }}>
                 ← Retour
               </button>
-              <button onClick={() => setWizardStep(3)} style={{ padding: '10px 28px', borderRadius: 8, border: 'none', background: '#1A1A1A', color: 'white', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => setWizardStep(3)} style={{ ...CU.btnPrimary, padding: '10px 28px', fontSize: 14, fontWeight: 600, fontFamily: 'inherit' }}>
                 Continuer →
               </button>
             </div>
@@ -407,41 +405,43 @@ export default function RepondeurPage() {
         {/* Step 3: Summary */}
         {wizardStep === 3 && (
           <div>
-            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
               3 — Prêt à démarrer !
             </h2>
-            <div style={{ background: '#F7F7F7', borderRadius: 8, padding: 20, border: '1px solid #E5E5E5', marginBottom: 20 }}>
+            <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 20, border: `1px solid ${CU.border}`, marginBottom: 20 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <span style={{ fontSize: 20 }}>{REPONDEUR_SCENARIO_EMOJIS[wizardScenario] ?? '📞'}</span>
+                  <span style={emojiIcon(20)}>{REPONDEUR_SCENARIO_EMOJIS[wizardScenario] ?? '📞'}</span>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>Scénario</div>
-                    <div style={{ fontSize: 12, color: '#9B9B9B' }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: CU.text }}>Scénario</div>
+                    <div style={{ fontSize: 12, color: CU.textMuted }}>{SCENARIO_TEMPLATES.find(s => s.id === wizardScenario)?.label}</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <span style={{ fontSize: 20 }}>📞</span>
+                  <span style={emojiIcon(20)}>📞</span>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#1A1A1A' }}>Numéro d'alerte</div>
-                    <div style={{ fontSize: 12, color: '#9B9B9B' }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: CU.text }}>Numéro d'alerte</div>
+                    <div style={{ fontSize: 12, color: CU.textMuted }}>{wizardPhone || 'Non défini (à configurer plus tard)'}</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ background: 'rgba(0,0,0,0.04)', borderRadius: 8, padding: 14, fontSize: 12, color: '#1A1A1A', marginBottom: 20 }}>
+            <div style={{ background: CU.accentLight, borderRadius: 8, padding: 14, fontSize: 12, color: CU.text, marginBottom: 20 }}>
               💡 Après activation, vous pouvez tout personnaliser : modes, styles, FAQ, VIP, planning...
             </div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button onClick={() => setWizardStep(2)} style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #E5E5E5', background: '#fff', cursor: 'pointer', fontSize: 13 }}>
+              <button onClick={() => setWizardStep(2)} style={{ ...CU.btnGhost, padding: '10px 20px', fontFamily: 'inherit' }}>
                 ← Retour
               </button>
               <button
                 onClick={finishWizard}
                 disabled={saving}
                 style={{
-                  padding: '10px 32px', borderRadius: 8, border: 'none', minHeight: 44,
-                  background: saving ? '#9B9B9B' : '#1A1A1A', color: 'white',
+                  ...CU.btnPrimary,
+                  padding: '10px 32px', minHeight: 44,
+                  background: saving ? CU.textMuted : CU.accent,
                   fontSize: 14, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
+                  fontFamily: 'inherit',
                 }}
               >
                 {saving ? 'Activation...' : 'Activer le répondeur'}
@@ -470,29 +470,30 @@ export default function RepondeurPage() {
       {toast}
 
       {/* Page header */}
-      <div style={{ padding: '16px 20px 0', background: '#fff', borderBottom: '1px solid #E5E5E5' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.repondeur.emoji}</span>
+      <div style={{ padding: '16px 20px 0', background: CU.bg, borderBottom: `1px solid ${CU.border}` }}>
+        <div style={{ ...headerRow(), marginBottom: 12, gap: 14 }}>
+          <span style={emojiIcon(18)}>{PAGE_META.repondeur.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: '#1A1A1A' }}>
+            <h1 style={{ ...CU.pageTitle, fontSize: 18, fontWeight: 800 }}>
               {PAGE_META.repondeur.title}
               <HelpBubble text={PAGE_META.repondeur.helpText} />
             </h1>
-            <p style={{ fontSize: 12, color: '#9B9B9B', margin: 0 }}>
+            <p style={{ ...CU.pageSubtitle, fontSize: 12 }}>
               {PAGE_META.repondeur.subtitle}
             </p>
           </div>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 12, color: config.isActive ? '#1A1A1A' : '#dc2626', fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: config.isActive ? CU.text : CU.danger, fontWeight: 600 }}>
               {config.isActive ? '● Actif' : '● Inactif'}
             </span>
             <button
               onClick={() => updateConfig({ isActive: !config.isActive })}
               style={{
-                padding: '10px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 700,
-                cursor: 'pointer', minHeight: 44,
-                background: config.isActive ? '#fef2f2' : '#fff',
-                color: config.isActive ? 'var(--danger)' : '#1A1A1A',
+                ...(config.isActive ? CU.btnDanger : CU.btnGhost),
+                padding: '10px 14px', fontSize: 12, fontWeight: 700,
+                minHeight: 44, fontFamily: 'inherit',
+                background: config.isActive ? '#fef2f2' : CU.bg,
+                color: config.isActive ? CU.danger : CU.text,
               }}
             >
               {config.isActive ? 'Désactiver' : 'Activer'}
@@ -502,18 +503,12 @@ export default function RepondeurPage() {
         <PageExplanation pageId="repondeur" text={PAGE_META.repondeur?.helpText} />
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: 2 }}>
+        <div style={tabBar()}>
           {TABS.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              style={{
-                padding: '8px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600,
-                background: tab === t.id ? '#fff' : 'transparent',
-                color: tab === t.id ? '#1A1A1A' : '#6B6B6B',
-                borderRadius: '8px 8px 0 0',
-                borderBottom: tab === t.id ? '2px solid #1A1A1A' : '2px solid transparent',
-              }}
+              style={tab === t.id ? { ...CU.tabActive, fontSize: 12 } : { ...CU.tab, fontSize: 12 }}
             >
               {t.emoji} {t.label}
             </button>
@@ -586,42 +581,39 @@ function OverviewTab({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 800 }}>
       {/* Stat cards */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        <StatCard emoji="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" color="#1A1A1A" />
-        <StatCard emoji="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" color="#1A1A1A" />
-        <StatCard emoji="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" color="#1A1A1A" />
-        <StatCard emoji="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" color="#1A1A1A" />
+        <StatCard emoji="💬" value={stats?.messages.today ?? stats?.messages.inbound ?? 0} label="Messages aujourd'hui" />
+        <StatCard emoji="🛒" value={stats?.orders.pending ?? 0} label="Commandes en attente" />
+        <StatCard emoji="🚨" value={stats?.messages.urgent ?? 0} label="Alertes urgentes" />
+        <StatCard emoji="⭐" value={stats?.messages.vip ?? 0} label="VIP détectés" />
       </div>
 
       {/* Current mode */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+      <div style={CU.card}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A' }}>Mode actif</span>
-          <button
-            style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, border: '1px solid #E5E5E5', background: '#fff', cursor: 'pointer', color: '#6B6B6B' }}
-            onClick={() => { /* switch to config tab is done externally */ }}
-          >
+          <span style={{ ...CU.sectionTitle, fontSize: 13 }}>Mode actif</span>
+          <button style={{ ...CU.btnSmall }} onClick={() => { /* switch to config tab is done externally */ }}>
             Changer
           </button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{REPONDEUR_MODE_EMOJIS[config.activeMode] ?? '📞'}</span>
+          <span style={emojiIcon(28)}>{REPONDEUR_MODE_EMOJIS[config.activeMode] ?? '📞'}</span>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1A1A' }}>{mode?.label ?? config.activeMode}</div>
-            <div style={{ fontSize: 12, color: '#6B6B6B' }}>{mode?.desc ?? ''}</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: CU.text }}>{mode?.label ?? config.activeMode}</div>
+            <div style={{ fontSize: 12, color: CU.textSecondary }}>{mode?.desc ?? ''}</div>
           </div>
         </div>
         {config.greetingMessage && (
-          <div style={{ marginTop: 10, padding: '8px 12px', background: '#F7F7F7', borderRadius: 8, fontSize: 12, color: '#6B6B6B', borderLeft: '3px solid #1A1A1A' }}>
+          <div style={{ marginTop: 10, padding: '8px 12px', background: CU.bgSecondary, borderRadius: 8, fontSize: 12, color: CU.textSecondary, borderLeft: `3px solid ${CU.accent}` }}>
             "{config.greetingMessage}"
           </div>
         )}
       </div>
 
       {/* Test zone */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10, color: '#1A1A1A' }}>🧪 Tester le répondeur</div>
+      <div style={CU.card}>
+        <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 10 }}>🧪 Tester le répondeur</div>
         {testSent ? (
-          <div style={{ padding: '10px 14px', background: '#fff', borderRadius: 8, fontSize: 13, color: '#1A1A1A', fontWeight: 600 }}>
+          <div style={{ padding: '10px 14px', background: CU.bg, borderRadius: 8, fontSize: 13, color: CU.text, fontWeight: 600 }}>
             ✅ Message envoyé ! Le répondeur va traiter et répondre.
           </div>
         ) : (
@@ -632,15 +624,16 @@ function OverviewTab({
               onChange={e => setTestMessage(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && sendTest()}
               placeholder="Ex: Bonjour, je voudrais un devis..."
-              style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }}
+              style={{ ...CU.input, flex: 1 }}
             />
             <button
               onClick={sendTest}
               disabled={!testMessage.trim()}
               style={{
-                padding: '8px 16px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: 600,
-                background: testMessage.trim() ? '#1A1A1A' : '#E5E5E5',
-                color: testMessage.trim() ? 'white' : '#9B9B9B',
+                ...CU.btnPrimary,
+                fontFamily: 'inherit',
+                background: testMessage.trim() ? CU.accent : CU.border,
+                color: testMessage.trim() ? 'white' : CU.textMuted,
                 cursor: testMessage.trim() ? 'pointer' : 'not-allowed',
               }}
             >
@@ -652,27 +645,28 @@ function OverviewTab({
 
       {/* Recent messages */}
       {recentMessages.length > 0 && (
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>📨 Activité récente</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>📨 Activité récente</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {recentMessages.map(m => (
               <div key={m.id} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0',
-                borderBottom: '1px solid #F7F7F7',
+                borderBottom: `1px solid ${CU.bgSecondary}`,
               }}>
                 <span style={{
-                  fontSize: 10, padding: '2px 7px', borderRadius: 8, fontWeight: 600, flexShrink: 0, marginTop: 1,
-                  background: `${CLASSIF_COLORS[m.classification] ?? '#9B9B9B'}18`,
-                  color: CLASSIF_COLORS[m.classification] ?? '#9B9B9B',
+                  ...CU.badge,
+                  fontSize: 10, padding: '2px 7px', flexShrink: 0, marginTop: 1,
+                  background: `${CLASSIF_COLORS[m.classification] ?? CU.textMuted}18`,
+                  color: CLASSIF_COLORS[m.classification] ?? CU.textMuted,
                 }}>
                   {m.classification}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 12, color: CU.textSecondary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {m.content}
                   </div>
                 </div>
-                <span style={{ fontSize: 10, color: '#9B9B9B', flexShrink: 0 }}>{timeAgo(m.createdAt)}</span>
+                <span style={{ fontSize: 10, color: CU.textMuted, flexShrink: 0 }}>{timeAgo(m.createdAt)}</span>
               </div>
             ))}
           </div>
@@ -721,18 +715,18 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
     <div style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Presets */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>⚡ Presets rapides</div>
+      <div style={CU.card}>
+        <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>⚡ Presets rapides</div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {PRESETS.map(p => (
             <button
               key={p.id}
               onClick={() => applyPreset(p)}
               style={{
-                padding: '10px 14px', borderRadius: 20, border: '1px solid #E5E5E5', minHeight: 44,
-                background: mode === p.mode ? 'rgba(0,0,0,0.04)' : '#fff',
-                color: mode === p.mode ? '#1A1A1A' : '#6B6B6B',
-                fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                padding: '10px 14px', borderRadius: 20, border: `1px solid ${CU.border}`, minHeight: 44,
+                background: mode === p.mode ? CU.accentLight : CU.bg,
+                color: mode === p.mode ? CU.text : CU.textSecondary,
+                fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
               }}
             >
               {p.emoji} {p.label}
@@ -742,8 +736,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       </div>
 
       {/* Mode selector */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>🎭 Mode de réponse</div>
+      <div style={CU.card}>
+        <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>🎭 Mode de réponse</div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
           {MODES.map(m => (
             <button
@@ -751,13 +745,14 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onClick={() => { setMode(m.value); markChanged(); }}
               style={{
                 padding: '12px 10px', borderRadius: 8, cursor: 'pointer', textAlign: 'left',
-                border: `2px solid ${mode === m.value ? '#1A1A1A' : '#E5E5E5'}`,
-                background: mode === m.value ? 'rgba(0,0,0,0.04)' : '#F7F7F7',
+                border: `2px solid ${mode === m.value ? CU.accent : CU.border}`,
+                background: mode === m.value ? CU.accentLight : CU.bgSecondary,
+                fontFamily: 'inherit',
               }}
             >
               <div style={{ marginBottom: 4, fontSize: 20 }}>{REPONDEUR_MODE_EMOJIS[m.value] ?? '📞'}</div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A' }}>{m.label}</div>
-              <div style={{ fontSize: 10, color: '#9B9B9B', marginTop: 2, lineHeight: 1.3 }}>{m.desc}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: CU.text }}>{m.label}</div>
+              <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 2, lineHeight: 1.3 }}>{m.desc}</div>
             </button>
           ))}
         </div>
@@ -766,12 +761,12 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       {/* Style + Skills */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         {/* Style */}
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>🎨 Style de réponse</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>🎨 Style de réponse</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {STYLES.map(s => (
-              <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? 'rgba(0,0,0,0.04)' : 'transparent' }}>
-                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: '#1A1A1A' }} />
+              <label key={s.value} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: style === s.value ? CU.accentLight : 'transparent' }}>
+                <input type="radio" checked={style === s.value} onChange={() => { setStyle(s.value); markChanged(); }} style={{ accentColor: CU.accent }} />
                 <span style={{ fontSize: 12, fontWeight: style === s.value ? 600 : 400 }}>{s.label}</span>
               </label>
             ))}
@@ -779,8 +774,8 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
         </div>
 
         {/* Skills */}
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>🔧 Compétences actives</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>🔧 Compétences actives</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {SKILLS.map(s => {
               const active = s.always || skills.includes(s.value);
@@ -791,18 +786,18 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
                   style={{
                     display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', borderRadius: 6,
                     border: 'none', cursor: s.always ? 'default' : 'pointer', textAlign: 'left', width: '100%',
-                    background: active ? '#fff' : '#F7F7F7',
+                    background: active ? CU.bg : CU.bgSecondary, fontFamily: 'inherit',
                   }}
                 >
                   <div style={{
                     width: 16, height: 16, borderRadius: 4, flexShrink: 0,
-                    background: active ? '#1A1A1A' : '#E5E5E5',
+                    background: active ? CU.accent : CU.border,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     {active && <span style={{ color: 'white', fontSize: 9, fontWeight: 700 }}>✓</span>}
                   </div>
                   <span style={{ fontSize: 12 }}>{s.emoji}</span>
-                  <span style={{ fontSize: 11, fontWeight: active ? 600 : 400, color: active ? '#1A1A1A' : '#6B6B6B' }}>
+                  <span style={{ fontSize: 11, fontWeight: active ? 600 : 400, color: active ? CU.text : CU.textSecondary }}>
                     {s.label}{s.always ? ' (toujours)' : ''}
                   </span>
                 </button>
@@ -813,11 +808,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
       </div>
 
       {/* Messages */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#1A1A1A' }}>💬 Messages</div>
+      <div style={CU.card}>
+        <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>💬 Messages</div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <label style={{ ...CU.label, display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3, fontWeight: 700, fontSize: 11 }}>
               Message d'accueil
             </label>
             <textarea
@@ -825,11 +820,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onChange={e => { setGreeting(e.target.value); markChanged(); }}
               placeholder="Bonjour, je suis le répondeur de [nom]..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ ...CU.textarea, fontSize: 12, padding: '8px 10px', minHeight: 'auto' }}
             />
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+            <label style={{ ...CU.label, display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3, fontWeight: 700, fontSize: 11 }}>
               Message d'absence
             </label>
             <textarea
@@ -837,12 +832,12 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
               onChange={e => { setAbsence(e.target.value); markChanged(); }}
               placeholder="Je suis actuellement indisponible..."
               rows={3}
-              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+              style={{ ...CU.textarea, fontSize: 12, padding: '8px 10px', minHeight: 'auto' }}
             />
           </div>
         </div>
         <div style={{ marginTop: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+          <label style={{ ...CU.label, display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3, fontWeight: 700, fontSize: 11 }}>
             📞 Numéro patron (alertes urgences)
           </label>
           <input
@@ -850,11 +845,11 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
             value={phone}
             onChange={e => { setPhone(e.target.value); markChanged(); }}
             placeholder="+33 6 12 34 56 78"
-            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+            style={{ ...CU.input, padding: '8px 10px' }}
           />
         </div>
         <div style={{ marginTop: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: '#6B6B6B', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3 }}>
+          <label style={{ ...CU.label, display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.3, fontWeight: 700, fontSize: 11 }}>
             Instructions personnalisées
           </label>
           <textarea
@@ -862,7 +857,7 @@ function ConfigTab({ config, onUpdate, saving }: { config: RepondeurConfig; onUp
             onChange={e => { setInstructions(e.target.value); markChanged(); }}
             placeholder="Toujours mentionner notre délai de livraison de 48h..."
             rows={2}
-            style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+            style={{ ...CU.textarea, fontSize: 12, padding: '8px 10px', minHeight: 'auto' }}
           />
         </div>
       </div>
@@ -932,21 +927,20 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
   return (
     <div style={{ maxWidth: 760 }}>
       {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: '#F7F7F7', borderRadius: 8, padding: 4, width: isMobile ? '100%' : 'fit-content', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: CU.bgSecondary, borderRadius: 8, padding: 4, width: isMobile ? '100%' : 'fit-content', flexWrap: 'wrap' }}>
         {([['faq', '❓', 'FAQ', config.faqEntries.length], ['vip', '⭐', 'VIP', config.vipContacts.length], ['blocked', '🚫', 'Bloqués', config.blockedContacts.length]] as [string, string, string, number][]).map(([id, tabIcon, label, count]) => (
           <button
             key={id}
             onClick={() => setSubTab(id as 'vip' | 'faq' | 'blocked')}
             style={{
               padding: '10px 14px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              minHeight: 44, background: subTab === id ? '#fff' : 'transparent',
-              color: subTab === id ? '#1A1A1A' : '#6B6B6B',
-              boxShadow: subTab === id ? 'none' : 'none',
-              display: 'flex', alignItems: 'center', gap: 6,
+              minHeight: 44, background: subTab === id ? CU.bg : 'transparent',
+              color: subTab === id ? CU.text : CU.textSecondary,
+              display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit',
             }}
           >
             {tabIcon} {label}
-            <span style={{ background: '#E5E5E5', borderRadius: 8, padding: '0 6px', fontSize: 10 }}>{count}</span>
+            <span style={{ ...CU.badge, borderRadius: 8, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
       </div>
@@ -955,27 +949,34 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {subTab === 'faq' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Add form */}
-          <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: '#6B6B6B' }}>➕ Ajouter une entrée FAQ</div>
+          <div style={CU.card}>
+            <div style={{ ...CU.label, fontWeight: 700, marginBottom: 10 }}>➕ Ajouter une entrée FAQ</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }} />
+              <input type="text" value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Question (ex: Quels sont vos horaires ?)" style={CU.input} />
               <div style={{ display: 'flex', gap: 8 }}>
-                <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
-                <button onClick={addFaq} disabled={!newQ || !newA} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: newQ && newA ? '#1A1A1A' : '#E5E5E5', color: newQ && newA ? 'white' : '#9B9B9B', fontSize: 12, fontWeight: 600, cursor: newQ && newA ? 'pointer' : 'not-allowed' }}>Ajouter</button>
+                <input type="text" value={newA} onChange={e => setNewA(e.target.value)} placeholder="Réponse complète..." style={{ ...CU.input, flex: 1 }} onKeyDown={e => e.key === 'Enter' && addFaq()} />
+                <button onClick={addFaq} disabled={!newQ || !newA} style={{
+                  ...CU.btnPrimary, fontFamily: 'inherit',
+                  background: newQ && newA ? CU.accent : CU.border,
+                  color: newQ && newA ? 'white' : CU.textMuted,
+                  cursor: newQ && newA ? 'pointer' : 'not-allowed',
+                }}>Ajouter</button>
               </div>
             </div>
           </div>
           {/* List */}
           {config.faqEntries.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: '#9B9B9B', fontSize: 13 }}>Aucune entrée FAQ</div>
+            <div style={{ ...CU.emptyState, padding: 32 }}>
+              <div style={CU.emptyDesc}>Aucune entrée FAQ</div>
+            </div>
           ) : (
             config.faqEntries.map(f => (
-              <div key={f.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div key={f.id} style={{ ...CU.card, display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A' }}>❓ {f.question}</div>
-                  <div style={{ fontSize: 12, color: '#6B6B6B', marginTop: 4 }}>{f.answer}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: CU.text }}>❓ {f.question}</div>
+                  <div style={{ fontSize: 12, color: CU.textSecondary, marginTop: 4 }}>{f.answer}</div>
                 </div>
-                <button onClick={() => deleteFaq(f.id)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: 'var(--danger)', background: '#fff', cursor: 'pointer', flexShrink: 0 }}>Suppr.</button>
+                <button onClick={() => deleteFaq(f.id)} style={{ ...CU.btnSmall, color: CU.danger, fontFamily: 'inherit' }}>Suppr.</button>
               </div>
             ))
           )}
@@ -985,26 +986,31 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {/* VIP */}
       {subTab === 'vip' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>➕ Ajouter un contact VIP</div>
+          <div style={CU.card}>
+            <div style={{ ...CU.label, fontWeight: 700, marginBottom: 10 }}>➕ Ajouter un contact VIP</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', flex: '1 1 120px', minWidth: 0, minHeight: 44 }} />
-              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ flex: '1 1 100px', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 0, minHeight: 44 }} />
-              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ flex: '1 1 120px', padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none', minWidth: 0, minHeight: 44 }} />
-              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newVipPhone && newVipName ? '#1A1A1A' : '#E5E5E5', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer', minHeight: 44 }}>Ajouter</button>
+              <input type="tel" value={newVipPhone} onChange={e => setNewVipPhone(e.target.value)} placeholder="+33 6..." style={{ ...CU.input, flex: '1 1 120px', minWidth: 0, minHeight: 44 }} />
+              <input type="text" value={newVipName} onChange={e => setNewVipName(e.target.value)} placeholder="Nom" style={{ ...CU.input, flex: '1 1 100px', minWidth: 0, minHeight: 44 }} />
+              <input type="text" value={newVipRel} onChange={e => setNewVipRel(e.target.value)} placeholder="Relation (ex: Client, Ami...)" style={{ ...CU.input, flex: '1 1 120px', minWidth: 0, minHeight: 44 }} />
+              <button onClick={addVip} disabled={!newVipPhone || !newVipName} style={{
+                ...CU.btnPrimary, minHeight: 44, fontFamily: 'inherit',
+                background: newVipPhone && newVipName ? CU.accent : CU.border,
+              }}>Ajouter</button>
             </div>
           </div>
           {config.vipContacts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: '#9B9B9B', fontSize: 13 }}>Aucun contact VIP</div>
+            <div style={{ ...CU.emptyState, padding: 32 }}>
+              <div style={CU.emptyDesc}>Aucun contact VIP</div>
+            </div>
           ) : (
             config.vipContacts.map((v, i) => (
-              <div key={i} style={{ background: '#fff', borderRadius: 8, padding: '10px 14px', border: '1px solid rgba(0,0,0,0.04)', display: 'flex', gap: 10, alignItems: 'center' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⭐</div>
+              <div key={i} style={{ ...CU.card, display: 'flex', gap: 10, alignItems: 'center' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: CU.accentLight, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⭐</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>{v.name}</div>
-                  <div style={{ fontSize: 11, color: '#9B9B9B' }}>{v.phone}{v.relationship ? ` · ${v.relationship}` : ''}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: CU.text }}>{v.name}</div>
+                  <div style={{ fontSize: 11, color: CU.textMuted }}>{v.phone}{v.relationship ? ` · ${v.relationship}` : ''}</div>
                 </div>
-                <button onClick={() => removeVip(v.phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: 'var(--danger)', background: '#fff', cursor: 'pointer' }}>Retirer</button>
+                <button onClick={() => removeVip(v.phone)} style={{ ...CU.btnSmall, color: CU.danger, fontFamily: 'inherit' }}>Retirer</button>
               </div>
             ))
           )}
@@ -1014,21 +1020,26 @@ function ContactsTab({ config, onReload, showError, showSuccess }: {
       {/* Blocked */}
       {subTab === 'blocked' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>🚫 Bloquer un numéro</div>
+          <div style={CU.card}>
+            <div style={{ ...CU.label, fontWeight: 700, marginBottom: 10 }}>🚫 Bloquer un numéro</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <input type="tel" value={newBlocked} onChange={e => setNewBlocked(e.target.value)} placeholder="+33 6 00 00 00 00" style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: '1px solid #E5E5E5', fontSize: 13, outline: 'none' }} onKeyDown={e => e.key === 'Enter' && addBlocked()} />
-              <button onClick={addBlocked} disabled={!newBlocked} style={{ padding: '8px 14px', borderRadius: 8, border: 'none', background: newBlocked ? '#1A1A1A' : '#E5E5E5', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Bloquer</button>
+              <input type="tel" value={newBlocked} onChange={e => setNewBlocked(e.target.value)} placeholder="+33 6 00 00 00 00" style={{ ...CU.input, flex: 1 }} onKeyDown={e => e.key === 'Enter' && addBlocked()} />
+              <button onClick={addBlocked} disabled={!newBlocked} style={{
+                ...CU.btnPrimary, fontFamily: 'inherit',
+                background: newBlocked ? CU.accent : CU.border,
+              }}>Bloquer</button>
             </div>
           </div>
           {config.blockedContacts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 32, color: '#9B9B9B', fontSize: 13 }}>Aucun numéro bloqué</div>
+            <div style={{ ...CU.emptyState, padding: 32 }}>
+              <div style={CU.emptyDesc}>Aucun numéro bloqué</div>
+            </div>
           ) : (
-            <div style={{ background: '#fff', borderRadius: 8, border: '1px solid #E5E5E5', overflow: 'hidden' }}>
+            <div style={{ ...CU.card, padding: 0, overflow: 'hidden' }}>
               {config.blockedContacts.map((phone, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: i < config.blockedContacts.length - 1 ? '1px solid #F7F7F7' : 'none' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: i < config.blockedContacts.length - 1 ? `1px solid ${CU.bgSecondary}` : 'none' }}>
                   <span style={{ fontSize: 12, flex: 1 }}>🚫 {phone}</span>
-                  <button onClick={() => removeBlocked(phone)} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: '#6B6B6B', background: '#fff', cursor: 'pointer' }}>Débloquer</button>
+                  <button onClick={() => removeBlocked(phone)} style={{ ...CU.btnSmall, fontFamily: 'inherit' }}>Débloquer</button>
                 </div>
               ))}
             </div>
@@ -1099,8 +1110,14 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
         {([['messages', '💬', 'Messages', messages.length], ['orders', '🛒', 'Commandes', orders.length], ['summaries', '📋', 'Résumés', summaries.length]] as [string, string, string, number][]).map(([id, icon, label, count]) => (
-          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{ padding: '7px 14px', borderRadius: 8, border: `1px solid ${inboxTab === id ? '#1A1A1A' : '#E5E5E5'}`, background: inboxTab === id ? 'rgba(0,0,0,0.04)' : '#fff', color: inboxTab === id ? '#1A1A1A' : '#6B6B6B', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center' }}>
-            {icon} {label} <span style={{ background: '#E5E5E5', borderRadius: 8, padding: '0 6px', fontSize: 10 }}>{count}</span>
+          <button key={id} onClick={() => setInboxTab(id as 'messages' | 'orders' | 'summaries')} style={{
+            padding: '7px 14px', borderRadius: 8,
+            border: `1px solid ${inboxTab === id ? CU.accent : CU.border}`,
+            background: inboxTab === id ? CU.accentLight : CU.bg,
+            color: inboxTab === id ? CU.text : CU.textSecondary,
+            fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center', fontFamily: 'inherit',
+          }}>
+            {icon} {label} <span style={{ ...CU.badge, borderRadius: 8, padding: '0 6px', fontSize: 10 }}>{count}</span>
           </button>
         ))}
       </div>
@@ -1110,26 +1127,44 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Filter chips */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <button onClick={() => setMsgFilter('all')} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === 'all' ? '#1A1A1A' : '#E5E5E5'}`, background: msgFilter === 'all' ? 'rgba(0,0,0,0.04)' : '#fff', color: msgFilter === 'all' ? '#1A1A1A' : '#6B6B6B', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={() => setMsgFilter('all')} style={{
+              padding: '4px 12px', borderRadius: 20,
+              border: `1px solid ${msgFilter === 'all' ? CU.accent : CU.border}`,
+              background: msgFilter === 'all' ? CU.accentLight : CU.bg,
+              color: msgFilter === 'all' ? CU.text : CU.textSecondary,
+              fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+            }}>
               Tous ({messages.length})
             </button>
             {Object.entries(classifCounts).map(([c, n]) => (
-              <button key={c} onClick={() => setMsgFilter(c)} style={{ padding: '4px 12px', borderRadius: 20, border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? '#1A1A1A' : '#E5E5E5'}`, background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? '#1A1A1A'}12` : '#fff', color: msgFilter === c ? (CLASSIF_COLORS[c] ?? '#1A1A1A') : '#6B6B6B', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}>
+              <button key={c} onClick={() => setMsgFilter(c)} style={{
+                padding: '4px 12px', borderRadius: 20,
+                border: `1px solid ${msgFilter === c ? CLASSIF_COLORS[c] ?? CU.accent : CU.border}`,
+                background: msgFilter === c ? `${CLASSIF_COLORS[c] ?? CU.accent}12` : CU.bg,
+                color: msgFilter === c ? (CLASSIF_COLORS[c] ?? CU.accent) : CU.textSecondary,
+                fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+              }}>
                 {c} ({n})
               </button>
             ))}
           </div>
           {filteredMessages.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#9B9B9B', fontSize: 13 }}>Aucun message</div>
+            <div style={{ ...CU.emptyState, padding: 40 }}>
+              <div style={CU.emptyDesc}>Aucun message</div>
+            </div>
           ) : (
             filteredMessages.map(m => (
-              <div key={m.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <span style={{ padding: '3px 8px', borderRadius: 8, fontSize: 10, fontWeight: 700, flexShrink: 0, background: `${CLASSIF_COLORS[m.classification] ?? '#9B9B9B'}18`, color: CLASSIF_COLORS[m.classification] ?? '#9B9B9B' }}>
+              <div key={m.id} style={{ ...CU.card, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <span style={{
+                  ...CU.badge, padding: '3px 8px', fontSize: 10, fontWeight: 700, flexShrink: 0,
+                  background: `${CLASSIF_COLORS[m.classification] ?? CU.textMuted}18`,
+                  color: CLASSIF_COLORS[m.classification] ?? CU.textMuted,
+                }}>
                   {m.classification}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, color: '#6B6B6B', marginBottom: 2 }}>{m.content}</div>
-                  <div style={{ fontSize: 10, color: '#9B9B9B' }}>{m.direction === 'inbound' ? '← Reçu' : '→ Envoyé'} · {timeAgo(m.createdAt)}</div>
+                  <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 2 }}>{m.content}</div>
+                  <div style={{ fontSize: 10, color: CU.textMuted }}>{m.direction === 'inbound' ? '← Reçu' : '→ Envoyé'} · {timeAgo(m.createdAt)}</div>
                 </div>
               </div>
             ))
@@ -1141,21 +1176,32 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'orders' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {orders.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#9B9B9B', fontSize: 13 }}>Aucune commande</div>
+            <div style={{ ...CU.emptyState, padding: 40 }}>
+              <div style={CU.emptyDesc}>Aucune commande</div>
+            </div>
           ) : (
             orders.map(o => (
-              <div key={o.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5', display: 'flex', gap: 12, alignItems: 'center' }}>
+              <div key={o.id} style={{ ...CU.card, display: 'flex', gap: 12, alignItems: 'center' }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700 }}>{o.items}</div>
-                  <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 2 }}>{o.total} · {timeAgo(o.createdAt)}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: CU.text }}>{o.items}</div>
+                  <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{o.total} · {timeAgo(o.createdAt)}</div>
                 </div>
-                <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 8, background: o.status === 'pending' ? 'rgba(0,0,0,0.04)' : o.status === 'confirmed' ? 'rgba(0,0,0,0.04)' : '#F7F7F7', color: o.status === 'pending' ? '#1A1A1A' : o.status === 'confirmed' ? '#1A1A1A' : '#6B6B6B', fontWeight: 600 }}>
+                <span style={{
+                  ...CU.badge, fontSize: 10, padding: '3px 8px',
+                  background: o.status === 'pending' ? CU.accentLight : o.status === 'confirmed' ? CU.accentLight : CU.bgSecondary,
+                  color: o.status === 'pending' ? CU.text : o.status === 'confirmed' ? CU.text : CU.textSecondary,
+                  fontWeight: 600,
+                }}>
                   {o.status}
                 </span>
                 {o.status === 'pending' && (
                   <div style={{ display: 'flex', gap: 4 }}>
-                    <button onClick={() => updateOrder(o.id, 'confirmed')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: 'none', background: '#1A1A1A', color: 'white', cursor: 'pointer', fontWeight: 600 }}>Confirmer</button>
-                    <button onClick={() => updateOrder(o.id, 'cancelled')} style={{ fontSize: 10, padding: '4px 8px', borderRadius: 6, border: '1px solid #E5E5E5', color: 'var(--danger)', background: '#fff', cursor: 'pointer' }}>Annuler</button>
+                    <button onClick={() => updateOrder(o.id, 'confirmed')} style={{
+                      ...CU.btnPrimary, fontSize: 10, padding: '4px 8px', height: 'auto', fontFamily: 'inherit',
+                    }}>Confirmer</button>
+                    <button onClick={() => updateOrder(o.id, 'cancelled')} style={{
+                      ...CU.btnSmall, color: CU.danger, fontSize: 10, fontFamily: 'inherit',
+                    }}>Annuler</button>
                   </div>
                 )}
               </div>
@@ -1168,20 +1214,22 @@ function InboxTab({ showError, showSuccess, onUpdate, saving }: {
       {inboxTab === 'summaries' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={generateSummary} disabled={generatingSummary} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#1A1A1A', color: 'white', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+            <button onClick={generateSummary} disabled={generatingSummary} style={{ ...CU.btnPrimary, fontFamily: 'inherit' }}>
               {generatingSummary ? 'Génération...' : 'Générer un résumé maintenant'}
             </button>
           </div>
           {summaries.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#9B9B9B', fontSize: 13 }}>Aucun résumé généré</div>
+            <div style={{ ...CU.emptyState, padding: 40 }}>
+              <div style={CU.emptyDesc}>Aucun résumé généré</div>
+            </div>
           ) : (
             summaries.map(s => (
-              <div key={s.id} style={{ background: '#fff', borderRadius: 8, padding: '12px 14px', border: '1px solid #E5E5E5' }}>
+              <div key={s.id} style={CU.card}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#1A1A1A', textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
-                  <span style={{ fontSize: 10, color: '#9B9B9B' }}>{timeAgo(s.createdAt)}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: CU.text, textTransform: 'uppercase', letterSpacing: 0.4 }}>{s.type}</span>
+                  <span style={{ fontSize: 10, color: CU.textMuted }}>{timeAgo(s.createdAt)}</span>
                 </div>
-                <pre style={{ fontSize: 11, color: '#6B6B6B', fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
+                <pre style={{ fontSize: 11, color: CU.textSecondary, fontFamily: 'inherit', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>{s.content}</pre>
               </div>
             ))
           )}
@@ -1241,22 +1289,22 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
     <div style={{ maxWidth: 760, display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Planning */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
+      <div style={CU.card}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <div style={{ fontSize: 13, fontWeight: 700 }}>📅 Planning de disponibilité</div>
+          <div style={{ ...CU.sectionTitle, fontSize: 13 }}>📅 Planning de disponibilité</div>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-            <span style={{ fontSize: 12, color: '#6B6B6B' }}>Toujours actif</span>
+            <span style={{ fontSize: 12, color: CU.textSecondary }}>Toujours actif</span>
             <div
               onClick={() => { setAlwaysOn(!alwaysOn); mark(); }}
               style={{
                 width: 36, height: 20, borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s',
-                background: alwaysOn ? '#1A1A1A' : '#E5E5E5', position: 'relative',
+                background: alwaysOn ? CU.accent : CU.border, position: 'relative',
               }}
             >
               <div style={{
                 position: 'absolute', top: 2, left: alwaysOn ? 18 : 2,
-                width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'all 0.2s',
-                border: '1px solid #E5E5E5',
+                width: 16, height: 16, borderRadius: '50%', background: CU.bg, transition: 'all 0.2s',
+                border: `1px solid ${CU.border}`,
               }} />
             </div>
           </label>
@@ -1269,15 +1317,15 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
                 const active = rule?.isActive ?? false;
                 return (
                   <button key={i} onClick={() => toggleDay(i + 1)} style={{
-                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? '#1A1A1A' : '#E5E5E5'}`,
-                    background: active ? 'rgba(0,0,0,0.04)' : '#fff', color: active ? '#1A1A1A' : '#9B9B9B',
-                    fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                    padding: '6px 10px', borderRadius: 8, border: `1px solid ${active ? CU.accent : CU.border}`,
+                    background: active ? CU.accentLight : CU.bg, color: active ? CU.text : CU.textMuted,
+                    fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                   }}>{day}</button>
                 );
               })}
             </div>
             {schedule.filter(r => r.isActive).length > 0 && (
-              <div style={{ fontSize: 11, color: '#6B6B6B' }}>
+              <div style={{ fontSize: 11, color: CU.textSecondary }}>
                 Horaires : {schedule.filter(r => r.isActive).map(r => `${DAYS[r.dayOfWeek - 1] ?? ''} ${r.startTime}–${r.endTime}`).join(', ')}
               </div>
             )}
@@ -1287,12 +1335,12 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
 
       {/* Résumés + Langue */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📋 Résumés</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>📋 Résumés</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Fréquence</label>
-              <select value={summaryFreq} onChange={e => { setSummaryFreq(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', background: '#fff' }}>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 4 }}>Fréquence</label>
+              <select value={summaryFreq} onChange={e => { setSummaryFreq(e.target.value); mark(); }} style={{ ...CU.select, width: '100%' }}>
                 <option value="realtime">Temps réel (urgences)</option>
                 <option value="hourly">Toutes les heures</option>
                 <option value="daily">Quotidien (20h)</option>
@@ -1300,8 +1348,8 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Canal de livraison</label>
-              <select value={summaryChannel} onChange={e => { setSummaryChannel(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', background: '#fff' }}>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 4 }}>Canal de livraison</label>
+              <select value={summaryChannel} onChange={e => { setSummaryChannel(e.target.value); mark(); }} style={{ ...CU.select, width: '100%' }}>
                 <option value="whatsapp">WhatsApp</option>
                 <option value="sms">SMS</option>
                 <option value="email">Email</option>
@@ -1311,12 +1359,12 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
           </div>
         </div>
 
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🌐 Langue & Format</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>🌐 Langue & Format</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Langue</label>
-              <select value={language} onChange={e => { setLanguage(e.target.value); mark(); }} style={{ width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 12, outline: 'none', background: '#fff' }}>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 4 }}>Langue</label>
+              <select value={language} onChange={e => { setLanguage(e.target.value); mark(); }} style={{ ...CU.select, width: '100%' }}>
                 <option value="auto">Auto-détection</option>
                 <option value="fr">Français</option>
                 <option value="en">English</option>
@@ -1325,10 +1373,10 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
+              <label style={{ ...CU.label, display: 'block', marginBottom: 4 }}>Longueur max réponse</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#1A1A1A' }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: '#1A1A1A', minWidth: 50 }}>{maxLen} car.</span>
+                <input type="range" min={100} max={2000} step={100} value={maxLen} onChange={e => { setMaxLen(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: CU.accent }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: CU.text, minWidth: 50 }}>{maxLen} car.</span>
               </div>
             </div>
           </div>
@@ -1336,59 +1384,59 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       </div>
 
       {/* Téléphonie */}
-      <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>📞 Intégration téléphonie</div>
+      <div style={CU.card}>
+        <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>📞 Intégration téléphonie</div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 10 }}>
           {[
             { id: 'A', label: 'Numéro IA perso', price: '~1-2€/mois', desc: 'Numéro dédié, renvoi conditionnel depuis votre tel', badge: 'Recommandé' },
             { id: 'B', label: 'Numéro IA dédié', price: 'Dès 5€/mois', desc: 'Numéro professionnel séparé pour votre business' },
             { id: 'C', label: 'SIP Trunking', price: 'Sur devis', desc: 'Intégration IPBX pour grandes entreprises' },
           ].map(opt => (
-            <div key={opt.id} style={{ padding: 14, borderRadius: 8, border: '1px solid #E5E5E5', background: '#F7F7F7' }}>
+            <div key={opt.id} style={{ padding: 14, borderRadius: 8, border: `1px solid ${CU.border}`, background: CU.bgSecondary }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontSize: 12, fontWeight: 700 }}>Option {opt.id}</span>
-                {opt.badge && <span style={{ fontSize: 9, fontWeight: 700, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', padding: '2px 6px', borderRadius: 8 }}>{opt.badge}</span>}
+                <span style={{ fontSize: 12, fontWeight: 700, color: CU.text }}>Option {opt.id}</span>
+                {opt.badge && <span style={{ ...CU.badge, fontSize: 9, fontWeight: 700 }}>{opt.badge}</span>}
               </div>
-              <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4 }}>{opt.label}</div>
-              <div style={{ fontSize: 11, color: '#1A1A1A', fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
-              <div style={{ fontSize: 10, color: '#9B9B9B' }}>{opt.desc}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, color: CU.text }}>{opt.label}</div>
+              <div style={{ fontSize: 11, color: CU.text, fontWeight: 700, marginBottom: 4 }}>{opt.price}</div>
+              <div style={{ fontSize: 10, color: CU.textMuted }}>{opt.desc}</div>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 10, fontSize: 11, color: '#6B6B6B' }}>
-          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: '#1A1A1A' }}>support@freenzy.io</a>
+        <div style={{ marginTop: 10, fontSize: 11, color: CU.textSecondary }}>
+          Pour activer : contactez <a href="mailto:support@freenzy.io" style={{ color: CU.accent }}>support@freenzy.io</a>
         </div>
       </div>
 
       {/* GDPR + Webhooks */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔒 RGPD</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>🔒 RGPD</div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 600, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Rétention des données</label>
+            <label style={{ ...CU.label, display: 'block', marginBottom: 4 }}>Rétention des données</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: '#1A1A1A' }} />
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#1A1A1A', minWidth: 55 }}>{retention} jours</span>
+              <input type="range" min={7} max={365} step={7} value={retention} onChange={e => { setRetention(parseInt(e.target.value)); mark(); }} style={{ flex: 1, accentColor: CU.accent }} />
+              <span style={{ fontSize: 11, fontWeight: 600, color: CU.text, minWidth: 55 }}>{retention} jours</span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
             <button
               onClick={() => fetchAPI('/repondeur/gdpr/export', { method: 'POST', body: '{}' }).then(() => alert('Export en cours...')).catch(() => {})}
-              style={{ flex: 1, padding: '7px 0', borderRadius: 7, border: '1px solid #E5E5E5', background: '#fff', fontSize: 11, cursor: 'pointer', fontWeight: 600 }}
+              style={{ ...CU.btnGhost, flex: 1, fontFamily: 'inherit' }}
             >
               ⬆️ Exporter
             </button>
           </div>
         </div>
 
-        <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #E5E5E5' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>🔗 Webhook</div>
-          <div style={{ fontSize: 11, color: '#6B6B6B', marginBottom: 8 }}>URL de notification des événements</div>
+        <div style={CU.card}>
+          <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>🔗 Webhook</div>
+          <div style={{ fontSize: 11, color: CU.textSecondary, marginBottom: 8 }}>URL de notification des événements</div>
           <div style={{ display: 'flex', gap: 6 }}>
-            <div style={{ flex: 1, padding: '7px 10px', borderRadius: 7, border: '1px solid #E5E5E5', fontSize: 10, color: '#6B6B6B', background: '#F7F7F7', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ flex: 1, padding: '7px 10px', borderRadius: 8, border: `1px solid ${CU.border}`, fontSize: 10, color: CU.textSecondary, background: CU.bgSecondary, fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {webhookUrl}
             </div>
-            <button onClick={copyWebhook} style={{ padding: '7px 12px', borderRadius: 7, border: '1px solid #E5E5E5', background: webhookCopied ? '#fff' : '#fff', color: webhookCopied ? '#1A1A1A' : '#6B6B6B', fontSize: 11, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
+            <button onClick={copyWebhook} style={{ ...CU.btnSmall, fontFamily: 'inherit' }}>
               {webhookCopied ? '✅' : 'Copier'}
             </button>
           </div>

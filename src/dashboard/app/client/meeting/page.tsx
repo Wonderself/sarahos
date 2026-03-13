@@ -7,6 +7,8 @@ import AudioPlayback from '../../../components/AudioPlayback';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import { useIsMobile } from '../../../lib/use-media-query';
 
 interface MeetingMessage {
   speaker: string;
@@ -44,6 +46,7 @@ const VALIDATION_SUGGESTIONS = [
 const meta = PAGE_META.meeting;
 
 export default function MeetingPage() {
+  const isMobile = useIsMobile();
   const [meetingAgents, setMeetingAgents] = useState<ResolvedAgent[]>([]);
   const [selectedAgents, setSelectedAgents] = useState<string[]>(['fz-dg', 'fz-marketing', 'fz-finance']);
   const [topic, setTopic] = useState('');
@@ -237,14 +240,14 @@ export default function MeetingPage() {
 
   if (!meetingStarted) {
     return (
-      <div className="client-page-scrollable">
-        <div className="page-header" style={{ marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+      <div style={pageContainer(isMobile)}>
+        <div style={{ marginBottom: 20 }}>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{meta.emoji}</span>
             <div>
-              <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Salle de <span className="fz-logo-word">Réunion</span></h1>
-              <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
-                Réunissez vos <span className="fz-logo-word">agents</span> pour des discussions stratégiques. Ils collaborent, débattent, et proposent des solutions <span className="fz-logo-word">ensemble</span>.
+              <h1 style={CU.pageTitle}>Salle de Réunion</h1>
+              <p style={CU.pageSubtitle}>
+                Réunissez vos agents pour des discussions stratégiques. Ils collaborent, débattent, et proposent des solutions ensemble.
               </p>
             </div>
             <HelpBubble text={meta.helpText} />
@@ -253,9 +256,9 @@ export default function MeetingPage() {
         <PageExplanation pageId="meeting" text={PAGE_META.meeting?.helpText} />
 
         {/* Agent Selection */}
-        <div className="card section">
-          <div className="section-title mb-16" style={{ color: 'var(--fz-text, #1A1A1A)' }}>👥 Participants ({selectedAgents.length}/5)</div>
-          <div className="flex flex-wrap" style={{ gap: 10 }}>
+        <div style={{ ...CU.card, marginBottom: 16 }}>
+          <div style={{ ...CU.sectionTitle, marginBottom: 14 }}>👥 Participants ({selectedAgents.length}/5)</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
             {meetingAgents.map(agent => {
               const selected = selectedAgents.includes(agent.id);
               return (
@@ -264,15 +267,15 @@ export default function MeetingPage() {
                   onClick={() => toggleAgent(agent.id)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 10, padding: '12px 18px',
-                    borderRadius: 'var(--radius-lg)', background: selected ? 'rgba(0,0,0,0.04)' : 'var(--fz-bg-secondary, #F7F7F7)',
-                    border: `2px solid ${selected ? '#1A1A1A' : 'var(--fz-border, #E5E5E5)'}`,
+                    borderRadius: 8, background: selected ? CU.accentLight : CU.bgSecondary,
+                    border: `2px solid ${selected ? CU.accent : CU.border}`,
                     cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
                   <span style={{ fontSize: 24 }}>🤖</span>
                   <div style={{ textAlign: 'left' }}>
-                    <div className="text-md font-semibold" style={{ color: '#1A1A1A' }}>{agent.role}</div>
-                    <div className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{selected ? 'Présent' : 'Inviter'}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{agent.role}</div>
+                    <div style={{ fontSize: 12, color: CU.textMuted }}>{selected ? 'Présent' : 'Inviter'}</div>
                   </div>
                 </button>
               );
@@ -281,8 +284,8 @@ export default function MeetingPage() {
         </div>
 
         {/* Topic */}
-        <div className="card section">
-          <div className="section-title flex items-center gap-8 mb-16" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+        <div style={{ ...CU.card, marginBottom: 16 }}>
+          <div style={{ ...CU.sectionTitle, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
             Sujet de la réunion
             <VoiceInput
               onTranscript={(t) => setTopic(prev => prev ? prev + ' ' + t : t)}
@@ -292,38 +295,32 @@ export default function MeetingPage() {
           <textarea
             value={topic}
             onChange={e => setTopic(e.target.value)}
-            className="input"
             rows={3}
             placeholder="Décrivez le sujet, la problématique, ou l'objectif de cette réunion..."
-            style={{ width: '100%', resize: 'vertical', marginBottom: 12 }}
+            style={{ ...CU.textarea, marginBottom: 12 }}
           />
 
           {/* Prompt Suggestions */}
-          <div className="flex gap-8 flex-wrap mb-16">
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
             {TOPIC_SUGGESTIONS.map(suggestion => (
               <button
                 key={suggestion}
                 onClick={() => setTopic(suggestion)}
                 style={{
-                  padding: '6px 14px',
+                  ...CU.btnSmall,
                   borderRadius: 20,
-                  border: '1px solid var(--border-primary, #E5E5E5)',
-                  background: 'var(--fz-bg-secondary, #F7F7F7)',
-                  cursor: 'pointer',
-                  fontSize: 12,
-                  minHeight: 44,
-                  color: 'var(--fz-text-secondary, #6B6B6B)',
-                  transition: 'all 0.2s',
+                  minHeight: 36,
+                  color: CU.textSecondary,
                 }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--fz-border, #E5E5E5)'; e.currentTarget.style.color = 'var(--fz-text-secondary, #6B6B6B)'; }}
+                onMouseOver={e => { e.currentTarget.style.borderColor = CU.accent; e.currentTarget.style.color = CU.accent; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = CU.border; e.currentTarget.style.color = CU.textSecondary; }}
               >
                 {suggestion}
               </button>
             ))}
           </div>
 
-          <div className="section-title text-md mb-12" style={{ color: 'var(--fz-text, #1A1A1A)' }}>Ou choisissez un template</div>
+          <div style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 12 }}>Ou choisissez un template</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(220px, 100%), 1fr))', gap: 10 }}>
             {MEETING_TEMPLATES.map(tpl => (
               <button
@@ -332,27 +329,26 @@ export default function MeetingPage() {
                   setTopic(tpl.topic);
                   setSelectedAgents(tpl.suggestedAgents);
                 }}
-                className="card"
                 style={{
-                  cursor: 'pointer', textAlign: 'left', padding: 14,
-                  border: topic === tpl.topic ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E5E5E5)',
-                  background: topic === tpl.topic ? 'var(--accent-muted)' : 'var(--fz-bg-secondary, #F7F7F7)',
+                  ...CU.cardHoverable,
+                  textAlign: 'left' as const, padding: 14,
+                  border: topic === tpl.topic ? `2px solid ${CU.accent}` : `1px solid ${CU.border}`,
+                  background: topic === tpl.topic ? CU.accentLight : CU.bgSecondary,
                 }}
               >
-                <div className="text-xl mb-4">{tpl.icon}</div>
-                <div className="text-md font-semibold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>{tpl.title}</div>
-                <div className="text-xs mt-4" style={{ lineHeight: 1.4, color: 'var(--fz-text-muted, #9B9B9B)' }}>{tpl.description}</div>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>{tpl.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{tpl.title}</div>
+                <div style={{ fontSize: 12, marginTop: 4, lineHeight: 1.4, color: CU.textMuted }}>{tpl.description}</div>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="text-center" style={{ padding: '20px 0' }}>
+        <div style={{ textAlign: 'center', padding: '20px 0' }}>
           <button
             onClick={startMeeting}
             disabled={!topic.trim() || selectedAgents.length < 2}
-            className="btn btn-primary text-lg"
-            style={{ padding: '14px 48px' }}
+            style={{ ...CU.btnPrimary, padding: '14px 48px', fontSize: 16, height: 'auto' }}
           >
             Lancer la réunion
           </button>
@@ -365,20 +361,20 @@ export default function MeetingPage() {
   const activeAgents = meetingAgents.filter(a => selectedAgents.includes(a.id));
 
   return (
-    <div className="chat-height flex flex-col client-page-scrollable">
+    <div style={{ ...pageContainer(isMobile), display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* Meeting Header */}
-      <div className="flex flex-between items-center flex-wrap gap-8" style={{ padding: '12px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, padding: '12px 0', borderBottom: `1px solid ${CU.border}` }}>
         <div>
-          <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1A1A1A)' }}>📞 Réunion en cours</div>
-          <div className="text-sm" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: CU.text }}>📞 Réunion en cours</div>
+          <div style={{ fontSize: 13, color: CU.textMuted }}>
             {activeAgents.length} participants | {messages.length} interventions | {totalTokens.toLocaleString()} tokens | {(totalCost / 1_000_000).toFixed(4)} cr
           </div>
         </div>
-        <div className="flex gap-8">
+        <div style={{ display: 'flex', gap: 8 }}>
           {activeAgents.map(a => (
             <span key={a.id} title={a.role} style={{
               width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 16, background: '#F0F0F0', border: '2px solid #E5E5E5',
+              fontSize: 16, background: CU.bgSecondary, border: `2px solid ${CU.border}`,
             }}>
               🤖
             </span>
@@ -387,36 +383,35 @@ export default function MeetingPage() {
       </div>
 
       {/* Topic Bar */}
-      <div className="text-md" style={{ padding: '10px 16px', borderBottom: '1px solid var(--fz-border, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)', color: 'var(--fz-text, #1A1A1A)' }}>
+      <div style={{ padding: '10px 16px', borderBottom: `1px solid ${CU.border}`, background: CU.bgSecondary, color: CU.text, fontSize: 14 }}>
         <strong>Sujet:</strong> {topic}
       </div>
 
       {/* Messages */}
-      <div className="flex-1" style={{ overflowY: 'auto', padding: '16px 0' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 0' }}>
         {messages.map((msg, i) => {
-          const agent = getAgentByRole(msg.speakerRole) ?? meetingAgents[0];
           return (
-            <div key={i} className="flex gap-12 mb-16" style={{ padding: '0 4px' }}>
+            <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 16, padding: '0 4px' }}>
               <div style={{
                 width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 20, background: '#F0F0F0', border: '2px solid #E5E5E5', flexShrink: 0,
+                fontSize: 20, background: CU.bgSecondary, border: `2px solid ${CU.border}`, flexShrink: 0,
               }}>
                 🤖
               </div>
-              <div className="flex-1">
-                <div className="flex gap-8 mb-4" style={{ alignItems: 'baseline' }}>
-                  <span className="text-md font-bold" style={{ color: '#1A1A1A' }}>{msg.speaker}</span>
-                  <span className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>{msg.speakerRole}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 4, alignItems: 'baseline' }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: CU.text }}>{msg.speaker}</span>
+                  <span style={{ fontSize: 12, color: CU.textMuted }}>{msg.speakerRole}</span>
                 </div>
                 <div style={{
-                  padding: '10px 14px', borderRadius: '4px 12px 12px 12px',
-                  background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                  fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap', color: 'var(--fz-text, #1A1A1A)',
+                  padding: '10px 14px', borderRadius: '4px 8px 8px 8px',
+                  background: CU.bgSecondary, border: `1px solid ${CU.border}`,
+                  fontSize: 14, lineHeight: 1.6, whiteSpace: 'pre-wrap', color: CU.text,
                 }}>
                   {msg.content}
                 </div>
-                <div className="flex items-center gap-6 mt-4">
-                  <div className="text-xs" style={{ color: 'var(--fz-text-muted, #9B9B9B)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                  <div style={{ fontSize: 12, color: CU.textMuted }}>
                     {msg.tokens} tokens | {(msg.cost / 1_000_000).toFixed(4)} cr
                   </div>
                   <AudioPlayback text={msg.content} gender={DEFAULT_AGENTS.find(a => a.name === msg.speaker || a.role === msg.speakerRole)?.gender ?? 'F'} size="sm" />
@@ -426,11 +421,11 @@ export default function MeetingPage() {
           );
         })}
         {running && (
-          <div className="flex gap-12 mb-16" style={{ padding: '0 4px' }}>
-            <div className="flex-center rounded-full" style={{ width: 40, height: 40, background: 'var(--fz-bg-secondary, #F7F7F7)' }}>
-              <span className="animate-pulse">...</span>
+          <div style={{ display: 'flex', gap: 12, marginBottom: 16, padding: '0 4px' }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: CU.bgSecondary }}>
+              <span style={{ animation: 'pulse 1.5s infinite' }}>...</span>
             </div>
-            <div className="animate-pulse" style={{ padding: '10px 14px', color: 'var(--fz-text-muted, #9B9B9B)' }}>
+            <div style={{ padding: '10px 14px', color: CU.textMuted, animation: 'pulse 1.5s infinite' }}>
               Un agent prend la parole...
             </div>
           </div>
@@ -441,19 +436,19 @@ export default function MeetingPage() {
           <div style={{
             margin: '16px 4px',
             padding: 20,
-            borderRadius: 'var(--radius-lg)',
-            border: '2px solid var(--accent)',
-            background: 'var(--accent-muted)',
+            borderRadius: 8,
+            border: `2px solid ${CU.accent}`,
+            background: CU.accentLight,
           }}>
-            <div className="text-lg font-bold mb-4" style={{ color: 'var(--fz-text, #1A1A1A)' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: CU.text }}>
               Votre avis est important
             </div>
-            <div className="text-sm" style={{ marginBottom: 14, color: 'var(--fz-text-secondary, #6B6B6B)' }}>
+            <div style={{ fontSize: 13, marginBottom: 14, color: CU.textSecondary }}>
               Un tour de table est terminé. Donnez une orientation pour la suite ou laissez continuer librement.
             </div>
 
             {/* Suggestion chips */}
-            <div className="flex gap-8 flex-wrap mb-12">
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
               {VALIDATION_SUGGESTIONS.map(suggestion => (
                 <button
                   key={suggestion}
@@ -461,12 +456,12 @@ export default function MeetingPage() {
                   style={{
                     padding: '6px 14px',
                     borderRadius: 20,
-                    border: userDirection === suggestion ? '1px solid var(--accent)' : '1px solid var(--fz-border, #E5E5E5)',
-                    background: userDirection === suggestion ? 'var(--accent)' : 'var(--fz-bg, #fff)',
-                    color: userDirection === suggestion ? '#fff' : 'var(--fz-text-secondary, #6B6B6B)',
+                    border: `1px solid ${userDirection === suggestion ? CU.accent : CU.border}`,
+                    background: userDirection === suggestion ? CU.accent : CU.bg,
+                    color: userDirection === suggestion ? '#fff' : CU.textSecondary,
                     cursor: 'pointer',
                     fontSize: 12,
-                    minHeight: 44,
+                    minHeight: 36,
                     transition: 'all 0.2s',
                   }}
                 >
@@ -476,14 +471,13 @@ export default function MeetingPage() {
             </div>
 
             {/* Free-form input */}
-            <div className="flex gap-8 items-center mb-12">
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
               <input
                 type="text"
                 value={userDirection}
                 onChange={e => setUserDirection(e.target.value)}
-                className="input flex-1 text-md"
                 placeholder="Ou tapez votre orientation libre..."
-                style={{ padding: '8px 12px' }}
+                style={{ ...CU.input, flex: 1 }}
                 onKeyDown={e => { if (e.key === 'Enter') handleValidationContinue(); }}
               />
               <VoiceInput
@@ -493,11 +487,11 @@ export default function MeetingPage() {
             </div>
 
             {/* Action buttons */}
-            <div className="flex gap-8">
-              <button onClick={handleValidationContinue} className="btn btn-primary flex-1">
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={handleValidationContinue} style={{ ...CU.btnPrimary, flex: 1 }}>
                 Continuer
               </button>
-              <button onClick={handleValidationStop} className="btn btn-danger" style={{ padding: '8px 20px' }}>
+              <button onClick={handleValidationStop} style={{ ...CU.btnDanger, padding: '8px 20px' }}>
                 Arrêter
               </button>
             </div>
@@ -508,18 +502,18 @@ export default function MeetingPage() {
       </div>
 
       {/* Controls */}
-      <div className="flex gap-8 items-center flex-wrap" style={{ padding: '12px 0', borderTop: '1px solid var(--fz-border, #E5E5E5)' }}>
-        <button onClick={() => nextTurn()} disabled={running || validationNeeded} className="btn btn-primary flex-1">
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', padding: '12px 0', borderTop: `1px solid ${CU.border}` }}>
+        <button onClick={() => nextTurn()} disabled={running || validationNeeded} style={{ ...CU.btnPrimary, flex: 1 }}>
           {running ? 'En cours...' : 'Tour suivant'}
         </button>
         <button
           onClick={autoMode ? () => { abortRef.current = true; } : runAutoMode}
           disabled={(running && !autoMode) || validationNeeded}
-          className={autoMode ? 'btn btn-danger flex-1' : 'btn btn-secondary flex-1'}
+          style={{ ...(autoMode ? CU.btnDanger : CU.btnGhost), flex: 1 }}
         >
           {autoMode ? 'Arrêter le mode auto' : 'Mode auto (2 tours)'}
         </button>
-        <button onClick={endMeeting} className="btn btn-ghost">
+        <button onClick={endMeeting} style={CU.btnGhost}>
           Terminer
         </button>
       </div>

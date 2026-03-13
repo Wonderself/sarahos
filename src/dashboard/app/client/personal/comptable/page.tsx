@@ -6,6 +6,8 @@ import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
 import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -72,6 +74,7 @@ async function portalCall<T>(path: string, method = 'GET', data?: unknown): Prom
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ComptablePage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [records, setRecords] = useState<AccountingRecord[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -202,56 +205,54 @@ export default function ComptablePage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 960, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 20 }}>
         <div>
-          <div style={{ marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>
+          <div style={{ marginBottom: 6 }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: CU.textMuted, textDecoration: 'none' }}>
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.comptable.emoji} {PAGE_META.comptable.title}</h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.comptable.subtitle}</p>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{PAGE_META.comptable.emoji}</span>
+            <h1 style={CU.pageTitle}>{PAGE_META.comptable.title}</h1>
+          </div>
+          <p style={CU.pageSubtitle}>{PAGE_META.comptable.subtitle}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <HelpBubble text={PAGE_META.comptable.helpText} />
-          <button onClick={exportCSV} className="btn btn-ghost btn-sm">⬇️ Export CSV</button>
-          <Link href="/client/chat?agent=fz-comptable" className="btn btn-primary btn-sm">💬 fz-comptable</Link>
+          <button onClick={exportCSV} style={CU.btnSmall}>⬇️ Export CSV</button>
+          <Link href="/client/chat?agent=fz-comptable" style={{ ...CU.btnPrimary, fontSize: 12, height: 32, textDecoration: 'none' }}>💬 fz-comptable</Link>
         </div>
       </div>
       <PageExplanation pageId="comptable" text={PAGE_META.comptable?.helpText} />
 
-      {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
+      {error && <div style={{ ...CU.card, background: '#FFF5F5', color: CU.danger, marginBottom: 20, fontSize: 13 }}>{error}</div>}
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
         {[
-          { label: `CA ${currentQ}`, value: fmt(totalCA), icon: '💰', color: '#22c55e' },
-          { label: `Charges ${currentQ}`, value: fmt(totalCharges), icon: '💸', color: '#ef4444' },
-          { label: 'Bénéfice net', value: fmt(benef), icon: '📊', color: benef >= 0 ? '#22c55e' : '#ef4444' },
-          { label: 'En retard', value: `${overdueCount} facture${overdueCount !== 1 ? 's' : ''}`, icon: '⚠️', color: overdueCount > 0 ? '#ef4444' : '#22c55e' },
+          { label: `CA ${currentQ}`, value: fmt(totalCA), icon: '💰', color: CU.success },
+          { label: `Charges ${currentQ}`, value: fmt(totalCharges), icon: '💸', color: CU.danger },
+          { label: 'Bénéfice net', value: fmt(benef), icon: '📊', color: benef >= 0 ? CU.success : CU.danger },
+          { label: 'En retard', value: `${overdueCount} facture${overdueCount !== 1 ? 's' : ''}`, icon: '⚠️', color: overdueCount > 0 ? CU.danger : CU.success },
         ].map(s => (
-          <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
+          <div key={s.label} style={CU.card}>
             <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{s.label}</div>
+            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${CU.border}`, marginBottom: 20 }}>
         {([['records', '📋', 'Enregistrements'], ['reminders', '⏰', 'Rappels fiscaux'], ['recap', '📊', 'Récap trimestriel']] as [string, string, string][]).map(([t, icon, label]) => (
           <button
             key={t}
             onClick={() => setActiveTab(t as 'records' | 'reminders' | 'recap')}
-            style={{
-              padding: '8px 16px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              border: activeTab === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
-              background: activeTab === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: activeTab === t ? '#fff' : 'var(--fz-text, #1E293B)',
-            }}
+            style={activeTab === t ? CU.tabActive : CU.tab}
           >
             {icon} {label}
           </button>
@@ -263,37 +264,37 @@ export default function ComptablePage() {
         <div>
           <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              <select className="input" style={{ fontSize: 12, padding: '6px 10px', width: 'auto' }} value={filterType} onChange={e => setFilterType(e.target.value as RecordType | 'all')}>
+              <select style={{ ...CU.select, fontSize: 12, padding: '6px 10px', width: 'auto' }} value={filterType} onChange={e => setFilterType(e.target.value as RecordType | 'all')}>
                 <option value="all">Tous types</option>
                 {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
-              <select className="input" style={{ fontSize: 12, padding: '6px 10px', width: 'auto' }} value={filterStatus} onChange={e => setFilterStatus(e.target.value as RecordStatus | 'all')}>
+              <select style={{ ...CU.select, fontSize: 12, padding: '6px 10px', width: 'auto' }} value={filterStatus} onChange={e => setFilterStatus(e.target.value as RecordStatus | 'all')}>
                 <option value="all">Tous statuts</option>
                 {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <button onClick={() => setShowRecordModal(true)} className="btn btn-primary btn-sm">+ Ajouter</button>
+            <button onClick={() => setShowRecordModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>+ Ajouter</button>
           </div>
 
           {displayed.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>🧾</div>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun enregistrement</div>
-              <button onClick={() => setShowRecordModal(true)} className="btn btn-primary btn-sm">+ Première entrée</button>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>🧾</div>
+              <div style={CU.emptyTitle}>Aucun enregistrement</div>
+              <button onClick={() => setShowRecordModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>+ Première entrée</button>
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+                  <tr style={{ borderBottom: `1px solid ${CU.border}` }}>
                     {['Type', 'Libellé', 'Montant', 'Statut', 'Date', 'Référence', ''].map(h => (
-                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--fz-text-muted, #94A3B8)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                      <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: CU.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {displayed.map(r => (
-                    <tr key={r.id} style={{ borderBottom: '1px solid var(--fz-border, #E2E8F0)' }}>
+                    <tr key={r.id} style={{ borderBottom: `1px solid ${CU.border}` }}>
                       <td style={{ padding: '10px 12px', fontSize: 13 }}>{TYPE_ICONS[r.type]} {TYPE_LABELS[r.type]}</td>
                       <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 600 }}>{r.label}</td>
                       <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: r.type === 'expense' ? '#ef4444' : '#22c55e' }}>
@@ -307,12 +308,12 @@ export default function ComptablePage() {
                           {STATUS_LABELS[r.status]}
                         </span>
                       </td>
-                      <td style={{ padding: '10px 12px', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
+                      <td style={{ padding: '10px 12px', fontSize: 12, color: CU.textMuted }}>
                         {new Date(r.date).toLocaleDateString('fr-FR')}
                       </td>
-                      <td style={{ padding: '10px 12px', fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>{r.reference ?? '—'}</td>
+                      <td style={{ padding: '10px 12px', fontSize: 12, color: CU.textMuted }}>{r.reference ?? '—'}</td>
                       <td style={{ padding: '10px 12px' }}>
-                        <button onClick={() => handleDeleteRecord(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 14 }}>×</button>
+                        <button onClick={() => handleDeleteRecord(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 14 }}>×</button>
                       </td>
                     </tr>
                   ))}
@@ -327,16 +328,16 @@ export default function ComptablePage() {
       {activeTab === 'reminders' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
-            <button onClick={() => setShowReminderModal(true)} className="btn btn-primary btn-sm">+ Rappel</button>
+            <button onClick={() => setShowReminderModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>+ Rappel</button>
           </div>
           {reminders.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>⏰</div>
-              <div style={{ fontWeight: 600, marginBottom: 8 }}>Aucun rappel fiscal</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>⏰</div>
+              <div style={CU.emptyTitle}>Aucun rappel fiscal</div>
+              <div style={CU.emptyDesc}>
                 TVA, IS, URSSAF... configurez vos rappels pour ne rien oublier
               </div>
-              <button onClick={() => setShowReminderModal(true)} className="btn btn-primary btn-sm">+ Ajouter un rappel</button>
+              <button onClick={() => setShowReminderModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>+ Ajouter un rappel</button>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -346,8 +347,8 @@ export default function ComptablePage() {
                 .map(r => {
                   const isOverdue = !r.is_done && new Date(r.due_date) < new Date();
                   return (
-                    <div key={r.id} className="card" style={{
-                      padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12,
+                    <div key={r.id} style={{
+                      ...CU.card, display: 'flex', alignItems: 'center', gap: 12,
                       opacity: r.is_done ? 0.6 : 1,
                       borderLeft: `3px solid ${isOverdue ? '#ef4444' : r.is_done ? '#22c55e' : '#f59e0b'}`,
                     }}>
@@ -357,12 +358,12 @@ export default function ComptablePage() {
                         style={{ width: 16, height: 16, cursor: 'pointer', flexShrink: 0 }}
                       />
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)', textDecoration: r.is_done ? 'line-through' : 'none' }}>
+                        <div style={{ fontWeight: 600, fontSize: 14, color: CU.text, textDecoration: r.is_done ? 'line-through' : 'none' }}>
                           {r.title}
                         </div>
-                        {r.note && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{r.note}</div>}
+                        {r.note && <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>{r.note}</div>}
                       </div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: isOverdue ? '#ef4444' : 'var(--fz-text-muted, #94A3B8)', flexShrink: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: isOverdue ? CU.danger : CU.textMuted, flexShrink: 0 }}>
                         📅 {new Date(r.due_date).toLocaleDateString('fr-FR')}
                         {isOverdue && <span style={{ marginLeft: 4, color: '#ef4444' }}>⚠️ En retard</span>}
                       </div>
@@ -384,18 +385,18 @@ export default function ComptablePage() {
             const charges = qRecordsFiltered.filter(r => r.type === 'expense').reduce((s, r) => s + r.amount_cents, 0);
             const net = ca - charges;
             return (
-              <div key={q} className="card" style={{ padding: '20px 24px' }}>
+              <div key={q} style={{ ...CU.card, padding: '20px 24px' }}>
                 <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 16 }}>{q} {year}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>CA Brut</span>
+                    <span style={{ color: CU.textSecondary }}>CA Brut</span>
                     <span style={{ fontWeight: 700, color: '#22c55e' }}>{fmt(ca)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                    <span style={{ color: 'var(--fz-text-secondary, #64748B)' }}>Charges</span>
+                    <span style={{ color: CU.textSecondary }}>Charges</span>
                     <span style={{ fontWeight: 700, color: '#ef4444' }}>{fmt(charges)}</span>
                   </div>
-                  <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', paddingTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+                  <div style={{ borderTop: `1px solid ${CU.border}`, paddingTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
                     <span style={{ fontWeight: 700 }}>Bénéfice net</span>
                     <span style={{ fontWeight: 700, color: net >= 0 ? '#22c55e' : '#ef4444' }}>{fmt(net)}</span>
                   </div>
@@ -408,46 +409,46 @@ export default function ComptablePage() {
 
       {/* Modal Record */}
       {showRecordModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-          <div className="card" style={{ width: '100%', maxWidth: 460, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Nouvel enregistrement</h3>
+        <div style={CU.overlay}>
+          <div style={{ ...CU.modal, maxWidth: 460 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>➕ Nouvel enregistrement</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Type</label>
-                  <select className="input" value={recordForm.type} onChange={e => setRecordForm(p => ({ ...p, type: e.target.value as RecordType }))}>
+                  <label style={CU.label}>Type</label>
+                  <select style={{ ...CU.select, width: '100%' }} value={recordForm.type} onChange={e => setRecordForm(p => ({ ...p, type: e.target.value as RecordType }))}>
                     {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{TYPE_ICONS[k as RecordType]} {v}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Statut</label>
-                  <select className="input" value={recordForm.status} onChange={e => setRecordForm(p => ({ ...p, status: e.target.value as RecordStatus }))}>
+                  <label style={CU.label}>Statut</label>
+                  <select style={{ ...CU.select, width: '100%' }} value={recordForm.status} onChange={e => setRecordForm(p => ({ ...p, status: e.target.value as RecordStatus }))}>
                     {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Libellé</label>
-                <input className="input" placeholder="Ex: Facture client X..." value={recordForm.label} onChange={e => setRecordForm(p => ({ ...p, label: e.target.value }))} />
+                <label style={CU.label}>Libellé</label>
+                <input style={CU.input} placeholder="Ex: Facture client X..." value={recordForm.label} onChange={e => setRecordForm(p => ({ ...p, label: e.target.value }))} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Montant (€)</label>
-                  <input className="input" type="number" placeholder="0.00" value={recordForm.amount} onChange={e => setRecordForm(p => ({ ...p, amount: e.target.value }))} />
+                  <label style={CU.label}>Montant (€)</label>
+                  <input style={CU.input} type="number" placeholder="0.00" value={recordForm.amount} onChange={e => setRecordForm(p => ({ ...p, amount: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Date</label>
-                  <input className="input" type="date" value={recordForm.date} onChange={e => setRecordForm(p => ({ ...p, date: e.target.value }))} />
+                  <label style={CU.label}>Date</label>
+                  <input style={CU.input} type="date" value={recordForm.date} onChange={e => setRecordForm(p => ({ ...p, date: e.target.value }))} />
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Référence (optionnel)</label>
-                <input className="input" placeholder="FAC-2026-001..." value={recordForm.reference} onChange={e => setRecordForm(p => ({ ...p, reference: e.target.value }))} />
+                <label style={CU.label}>Référence (optionnel)</label>
+                <input style={CU.input} placeholder="FAC-2026-001..." value={recordForm.reference} onChange={e => setRecordForm(p => ({ ...p, reference: e.target.value }))} />
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-              <button onClick={() => setShowRecordModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
-              <button onClick={handleAddRecord} className="btn btn-primary" style={{ flex: 1 }} disabled={recordSaving}>
+              <button onClick={() => setShowRecordModal(false)} style={{ ...CU.btnGhost, flex: 1 }}>Annuler</button>
+              <button onClick={handleAddRecord} style={{ ...CU.btnPrimary, flex: 1 }} disabled={recordSaving}>
                 {recordSaving ? 'Enregistrement...' : 'Ajouter'}
               </button>
             </div>
@@ -457,26 +458,26 @@ export default function ComptablePage() {
 
       {/* Modal Reminder */}
       {showReminderModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-          <div className="card" style={{ width: '100%', maxWidth: 380, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>⏰ Nouveau rappel fiscal</h3>
+        <div style={CU.overlay}>
+          <div style={{ ...CU.modal, maxWidth: 380 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>⏰ Nouveau rappel fiscal</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Titre</label>
-                <input className="input" placeholder="Ex: Déclaration TVA Q1..." value={reminderForm.title} onChange={e => setReminderForm(p => ({ ...p, title: e.target.value }))} />
+                <label style={CU.label}>Titre</label>
+                <input style={CU.input} placeholder="Ex: Déclaration TVA Q1..." value={reminderForm.title} onChange={e => setReminderForm(p => ({ ...p, title: e.target.value }))} />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Date limite</label>
-                <input className="input" type="date" value={reminderForm.due_date} onChange={e => setReminderForm(p => ({ ...p, due_date: e.target.value }))} />
+                <label style={CU.label}>Date limite</label>
+                <input style={CU.input} type="date" value={reminderForm.due_date} onChange={e => setReminderForm(p => ({ ...p, due_date: e.target.value }))} />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Note (optionnel)</label>
-                <input className="input" placeholder="Détails..." value={reminderForm.note} onChange={e => setReminderForm(p => ({ ...p, note: e.target.value }))} />
+                <label style={CU.label}>Note (optionnel)</label>
+                <input style={CU.input} placeholder="Détails..." value={reminderForm.note} onChange={e => setReminderForm(p => ({ ...p, note: e.target.value }))} />
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-              <button onClick={() => setShowReminderModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
-              <button onClick={handleAddReminder} className="btn btn-primary" style={{ flex: 1 }} disabled={reminderSaving}>
+              <button onClick={() => setShowReminderModal(false)} style={{ ...CU.btnGhost, flex: 1 }}>Annuler</button>
+              <button onClick={handleAddReminder} style={{ ...CU.btnPrimary, flex: 1 }} disabled={reminderSaving}>
                 {reminderSaving ? 'Création...' : 'Créer'}
               </button>
             </div>

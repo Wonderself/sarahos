@@ -6,9 +6,11 @@ import BriefingTab from './BriefingTab';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════════
-//  Freenzy.io — Ma Journée (My Day Dashboard)
+//  Freenzy.io — Ma Journee (My Day Dashboard)
 //  38 widgets in 6 categories, all toggleable
 // ═══════════════════════════════════════════════════════
 
@@ -88,234 +90,234 @@ interface WidgetMeta {
 // ─── Widget Registry ───
 
 const CATEGORIES = [
-  { id: 'productivite', emoji: '💼', label: 'Productivité' },
-  { id: 'agenda', emoji: '📅', label: 'Agenda & Organisation' },
-  { id: 'bienetre', emoji: '🧘', label: 'Bien-être' },
-  { id: 'information', emoji: '📰', label: 'Information' },
-  { id: 'business', emoji: '📊', label: 'Business / Freenzy' },
-  { id: 'personnel', emoji: '🏠', label: 'Personnel' },
+  { id: 'productivite', emoji: '\u{1F4BC}', label: 'Productivite' },
+  { id: 'agenda', emoji: '\u{1F4C5}', label: 'Agenda & Organisation' },
+  { id: 'bienetre', emoji: '\u{1F9D8}', label: 'Bien-etre' },
+  { id: 'information', emoji: '\u{1F4F0}', label: 'Information' },
+  { id: 'business', emoji: '\u{1F4CA}', label: 'Business / Freenzy' },
+  { id: 'personnel', emoji: '\u{1F3E0}', label: 'Personnel' },
 ];
 
 const WIDGETS: WidgetMeta[] = [
-  { id: 'todos', emoji: '✅', label: 'Tâches du jour', category: 'productivite', defaultVisible: true },
-  { id: 'objectifs', emoji: '🎯', label: 'Objectifs du jour', category: 'productivite', defaultVisible: true },
-  { id: 'priorites', emoji: '🏅', label: 'Priorités Top 3', category: 'productivite', defaultVisible: true },
-  { id: 'notes', emoji: '📝', label: 'Notes rapides', category: 'productivite', defaultVisible: true },
-  { id: 'pomodoro', emoji: '⏱️', label: 'Minuteur Pomodoro', category: 'productivite', defaultVisible: true },
-  { id: 'focus', emoji: '💡', label: 'Compteur Focus', category: 'productivite', defaultVisible: false },
-  { id: 'schedule', emoji: '🕐', label: 'Planning horaire', category: 'productivite', defaultVisible: false },
-  { id: 'calendrier', emoji: '📅', label: 'Calendrier du jour', category: 'agenda', defaultVisible: true },
-  { id: 'reunions', emoji: '👥', label: 'Réunions du jour', category: 'agenda', defaultVisible: true },
-  { id: 'rappels', emoji: '🔔', label: 'Rappels', category: 'agenda', defaultVisible: true },
-  { id: 'echeances', emoji: '⏰', label: 'Échéances', category: 'agenda', defaultVisible: false },
-  { id: 'semaine', emoji: '📆', label: 'Planning semaine', category: 'agenda', defaultVisible: false },
-  { id: 'humeur', emoji: '😊', label: 'Humeur du jour', category: 'bienetre', defaultVisible: true },
-  { id: 'hydratation', emoji: '💧', label: 'Tracker hydratation', category: 'bienetre', defaultVisible: true },
-  { id: 'activite', emoji: '🏃', label: 'Activité physique', category: 'bienetre', defaultVisible: false },
-  { id: 'meditation', emoji: '🧘', label: 'Méditation', category: 'bienetre', defaultVisible: false },
-  { id: 'sommeil', emoji: '🌙', label: 'Sommeil', category: 'bienetre', defaultVisible: true },
-  { id: 'gratitude', emoji: '❤️', label: 'Gratitude', category: 'bienetre', defaultVisible: false },
-  { id: 'affirmation', emoji: '✨', label: 'Affirmation du jour', category: 'bienetre', defaultVisible: false },
-  { id: 'meteo', emoji: '🌤️', label: 'Météo', category: 'information', defaultVisible: true },
-  { id: 'citation', emoji: '💬', label: 'Citation du jour', category: 'information', defaultVisible: true },
-  { id: 'horoscope', emoji: '🔮', label: 'Horoscope', category: 'information', defaultVisible: false },
-  { id: 'actualites', emoji: '📰', label: 'Actualités', category: 'information', defaultVisible: false },
-  { id: 'anniversaires', emoji: '🎂', label: 'Anniversaires', category: 'information', defaultVisible: false },
-  { id: 'ephemeride', emoji: '📖', label: 'Éphéméride', category: 'information', defaultVisible: false },
-  { id: 'credits', emoji: '💳', label: 'Crédits restants', category: 'business', defaultVisible: true },
-  { id: 'agents', emoji: '🤖', label: 'Agents actifs', category: 'business', defaultVisible: true },
-  { id: 'messagesNonLus', emoji: '🔔', label: 'Messages non lus', category: 'business', defaultVisible: false },
-  { id: 'projets', emoji: '📁', label: 'Projets actifs', category: 'business', defaultVisible: false },
-  { id: 'kpis', emoji: '📊', label: 'KPIs du jour', category: 'business', defaultVisible: false },
-  { id: 'resume', emoji: '📋', label: 'Résumé hier', category: 'business', defaultVisible: false },
-  { id: 'budget', emoji: '💰', label: 'Budget du jour', category: 'business', defaultVisible: false },
-  { id: 'repas', emoji: '🍽️', label: 'Menu du jour', category: 'personnel', defaultVisible: false },
-  { id: 'lecture', emoji: '📖', label: 'Lecture en cours', category: 'personnel', defaultVisible: false },
-  { id: 'habitudes', emoji: '🔥', label: 'Habitudes quotidiennes', category: 'personnel', defaultVisible: true },
-  { id: 'contactsFav', emoji: '📞', label: 'Contacts favoris', category: 'personnel', defaultVisible: false },
-  { id: 'playlist', emoji: '🎵', label: 'Playlist du jour', category: 'personnel', defaultVisible: false },
-  { id: 'journal', emoji: '🔒', label: 'Journal intime', category: 'personnel', defaultVisible: false },
+  { id: 'todos', emoji: '\u2705', label: 'Taches du jour', category: 'productivite', defaultVisible: true },
+  { id: 'objectifs', emoji: '\u{1F3AF}', label: 'Objectifs du jour', category: 'productivite', defaultVisible: true },
+  { id: 'priorites', emoji: '\u{1F3C5}', label: 'Priorites Top 3', category: 'productivite', defaultVisible: true },
+  { id: 'notes', emoji: '\u{1F4DD}', label: 'Notes rapides', category: 'productivite', defaultVisible: true },
+  { id: 'pomodoro', emoji: '\u23F1\uFE0F', label: 'Minuteur Pomodoro', category: 'productivite', defaultVisible: true },
+  { id: 'focus', emoji: '\u{1F4A1}', label: 'Compteur Focus', category: 'productivite', defaultVisible: false },
+  { id: 'schedule', emoji: '\u{1F550}', label: 'Planning horaire', category: 'productivite', defaultVisible: false },
+  { id: 'calendrier', emoji: '\u{1F4C5}', label: 'Calendrier du jour', category: 'agenda', defaultVisible: true },
+  { id: 'reunions', emoji: '\u{1F465}', label: 'Reunions du jour', category: 'agenda', defaultVisible: true },
+  { id: 'rappels', emoji: '\u{1F514}', label: 'Rappels', category: 'agenda', defaultVisible: true },
+  { id: 'echeances', emoji: '\u23F0', label: 'Echeances', category: 'agenda', defaultVisible: false },
+  { id: 'semaine', emoji: '\u{1F4C6}', label: 'Planning semaine', category: 'agenda', defaultVisible: false },
+  { id: 'humeur', emoji: '\u{1F60A}', label: 'Humeur du jour', category: 'bienetre', defaultVisible: true },
+  { id: 'hydratation', emoji: '\u{1F4A7}', label: 'Tracker hydratation', category: 'bienetre', defaultVisible: true },
+  { id: 'activite', emoji: '\u{1F3C3}', label: 'Activite physique', category: 'bienetre', defaultVisible: false },
+  { id: 'meditation', emoji: '\u{1F9D8}', label: 'Meditation', category: 'bienetre', defaultVisible: false },
+  { id: 'sommeil', emoji: '\u{1F319}', label: 'Sommeil', category: 'bienetre', defaultVisible: true },
+  { id: 'gratitude', emoji: '\u2764\uFE0F', label: 'Gratitude', category: 'bienetre', defaultVisible: false },
+  { id: 'affirmation', emoji: '\u2728', label: 'Affirmation du jour', category: 'bienetre', defaultVisible: false },
+  { id: 'meteo', emoji: '\u{1F324}\uFE0F', label: 'Meteo', category: 'information', defaultVisible: true },
+  { id: 'citation', emoji: '\u{1F4AC}', label: 'Citation du jour', category: 'information', defaultVisible: true },
+  { id: 'horoscope', emoji: '\u{1F52E}', label: 'Horoscope', category: 'information', defaultVisible: false },
+  { id: 'actualites', emoji: '\u{1F4F0}', label: 'Actualites', category: 'information', defaultVisible: false },
+  { id: 'anniversaires', emoji: '\u{1F382}', label: 'Anniversaires', category: 'information', defaultVisible: false },
+  { id: 'ephemeride', emoji: '\u{1F4D6}', label: 'Ephemeride', category: 'information', defaultVisible: false },
+  { id: 'credits', emoji: '\u{1F4B3}', label: 'Credits restants', category: 'business', defaultVisible: true },
+  { id: 'agents', emoji: '\u{1F916}', label: 'Agents actifs', category: 'business', defaultVisible: true },
+  { id: 'messagesNonLus', emoji: '\u{1F514}', label: 'Messages non lus', category: 'business', defaultVisible: false },
+  { id: 'projets', emoji: '\u{1F4C1}', label: 'Projets actifs', category: 'business', defaultVisible: false },
+  { id: 'kpis', emoji: '\u{1F4CA}', label: 'KPIs du jour', category: 'business', defaultVisible: false },
+  { id: 'resume', emoji: '\u{1F4CB}', label: 'Resume hier', category: 'business', defaultVisible: false },
+  { id: 'budget', emoji: '\u{1F4B0}', label: 'Budget du jour', category: 'business', defaultVisible: false },
+  { id: 'repas', emoji: '\u{1F37D}\uFE0F', label: 'Menu du jour', category: 'personnel', defaultVisible: false },
+  { id: 'lecture', emoji: '\u{1F4D6}', label: 'Lecture en cours', category: 'personnel', defaultVisible: false },
+  { id: 'habitudes', emoji: '\u{1F525}', label: 'Habitudes quotidiennes', category: 'personnel', defaultVisible: true },
+  { id: 'contactsFav', emoji: '\u{1F4DE}', label: 'Contacts favoris', category: 'personnel', defaultVisible: false },
+  { id: 'playlist', emoji: '\u{1F3B5}', label: 'Playlist du jour', category: 'personnel', defaultVisible: false },
+  { id: 'journal', emoji: '\u{1F512}', label: 'Journal intime', category: 'personnel', defaultVisible: false },
 ];
 
 // ─── Built-in Content ───
 
 const FRENCH_QUOTES = [
-  { text: "Le succès n'est pas final, l'échec n'est pas fatal : c'est le courage de continuer qui compte.", author: 'Winston Churchill' },
-  { text: "La vie, ce n'est pas d'attendre que l'orage passe, c'est d'apprendre à danser sous la pluie.", author: 'Sénèque' },
-  { text: "Il n'y a qu'une façon d'échouer, c'est d'abandonner avant d'avoir réussi.", author: 'Georges Clemenceau' },
-  { text: "Celui qui déplace une montagne commence par déplacer de petites pierres.", author: 'Confucius' },
-  { text: "La seule limite à notre épanouissement de demain sera nos doutes d'aujourd'hui.", author: 'Franklin Roosevelt' },
-  { text: "Le bonheur n'est pas quelque chose de prêt à l'emploi. Il vient de vos propres actions.", author: 'Dalaï Lama' },
+  { text: "Le succ\u00e8s n'est pas final, l'\u00e9chec n'est pas fatal : c'est le courage de continuer qui compte.", author: 'Winston Churchill' },
+  { text: "La vie, ce n'est pas d'attendre que l'orage passe, c'est d'apprendre \u00e0 danser sous la pluie.", author: 'S\u00e9n\u00e8que' },
+  { text: "Il n'y a qu'une fa\u00e7on d'\u00e9chouer, c'est d'abandonner avant d'avoir r\u00e9ussi.", author: 'Georges Clemenceau' },
+  { text: "Celui qui d\u00e9place une montagne commence par d\u00e9placer de petites pierres.", author: 'Confucius' },
+  { text: "La seule limite \u00e0 notre \u00e9panouissement de demain sera nos doutes d'aujourd'hui.", author: 'Franklin Roosevelt' },
+  { text: "Le bonheur n'est pas quelque chose de pr\u00eat \u00e0 l'emploi. Il vient de vos propres actions.", author: 'Dala\u00ef Lama' },
   { text: "Chaque matin nous renaissons. Ce que nous faisons aujourd'hui est ce qui compte le plus.", author: 'Bouddha' },
   { text: "L'imagination est plus importante que le savoir.", author: 'Albert Einstein' },
-  { text: "La simplicité est la sophistication suprême.", author: 'Léonard de Vinci' },
+  { text: "La simplicit\u00e9 est la sophistication supr\u00eame.", author: 'L\u00e9onard de Vinci' },
   { text: "Ce qui ne te tue pas te rend plus fort.", author: 'Friedrich Nietzsche' },
   { text: "Soyez le changement que vous voulez voir dans le monde.", author: 'Mahatma Gandhi' },
-  { text: "L'éducation est l'arme la plus puissante pour changer le monde.", author: 'Nelson Mandela' },
-  { text: "La plus grande gloire n'est pas de ne jamais tomber, mais de se relever à chaque chute.", author: 'Confucius' },
-  { text: "Il faut toujours viser la lune, car même en cas d'échec, on atterrit dans les étoiles.", author: 'Oscar Wilde' },
+  { text: "L'\u00e9ducation est l'arme la plus puissante pour changer le monde.", author: 'Nelson Mandela' },
+  { text: "La plus grande gloire n'est pas de ne jamais tomber, mais de se relever \u00e0 chaque chute.", author: 'Confucius' },
+  { text: "Il faut toujours viser la lune, car m\u00eame en cas d'\u00e9chec, on atterrit dans les \u00e9toiles.", author: 'Oscar Wilde' },
   { text: "Un voyage de mille lieues commence toujours par un premier pas.", author: 'Lao Tseu' },
-  { text: "Le meilleur moment pour planter un arbre était il y a vingt ans. Le deuxième meilleur moment est maintenant.", author: 'Proverbe chinois' },
-  { text: "La persévérance est la noblesse de l'obstination.", author: 'Adrien Decourcelle' },
-  { text: "On ne voit bien qu'avec le cœur. L'essentiel est invisible pour les yeux.", author: 'Antoine de Saint-Exupéry' },
-  { text: "Le génie est fait d'un pour cent d'inspiration et de quatre-vingt-dix-neuf pour cent de transpiration.", author: 'Thomas Edison' },
-  { text: "La folie, c'est de faire toujours la même chose et de s'attendre à un résultat différent.", author: 'Albert Einstein' },
-  { text: "Là où il y a une volonté, il y a un chemin.", author: 'Proverbe' },
-  { text: "Croyez en vous et en tout ce que vous êtes. Sachez qu'il y a quelque chose à l'intérieur de vous qui est plus grand que tout obstacle.", author: 'Christian Larson' },
-  { text: "Les grandes choses ne sont jamais faites par une seule personne. Elles sont faites par une équipe.", author: 'Steve Jobs' },
-  { text: "Le pessimiste se plaint du vent, l'optimiste espère qu'il va changer, le réaliste ajuste les voiles.", author: 'William Arthur Ward' },
-  { text: "N'attendez pas d'être parfait pour commencer quelque chose de bien.", author: 'Abbé Pierre' },
-  { text: "La créativité, c'est l'intelligence qui s'amuse.", author: 'Albert Einstein' },
-  { text: "Tout ce que l'esprit de l'homme peut concevoir et croire, il peut le réaliser.", author: 'Napoleon Hill' },
-  { text: "L'avenir appartient à ceux qui croient à la beauté de leurs rêves.", author: 'Eleanor Roosevelt' },
-  { text: "La connaissance s'acquiert par l'expérience, tout le reste n'est que de l'information.", author: 'Albert Einstein' },
-  { text: "Le talent gagne des matchs, mais le travail d'équipe gagne des championnats.", author: 'Michael Jordan' },
-  { text: "Faites de votre vie un rêve, et d'un rêve, une réalité.", author: 'Antoine de Saint-Exupéry' },
-  { text: "Le secret du changement consiste à concentrer toute votre énergie non pas à lutter contre le passé, mais à construire l'avenir.", author: 'Socrate' },
-  { text: "Agissez comme s'il était impossible d'échouer.", author: 'Dorothea Brande' },
-  { text: "La meilleure façon de prédire l'avenir est de le créer.", author: 'Peter Drucker' },
-  { text: "Ne jugez pas chaque journée par la récolte que vous faites, mais par les graines que vous plantez.", author: 'Robert Louis Stevenson' },
-  { text: "Tout est possible à qui rêve, ose, travaille et n'abandonne jamais.", author: 'Xavier Dolan' },
-  { text: "L'échec est simplement l'opportunité de recommencer, cette fois de façon plus intelligente.", author: 'Henry Ford' },
-  { text: "Ce que tu fais fait une différence, et tu dois décider quel genre de différence tu veux faire.", author: 'Jane Goodall' },
-  { text: "Le courage n'est pas l'absence de peur, mais la capacité de vaincre ce qui fait peur.", author: 'Nelson Mandela' },
-  { text: "La discipline est le pont entre les objectifs et la réalisation.", author: 'Jim Rohn' },
+  { text: "Le meilleur moment pour planter un arbre \u00e9tait il y a vingt ans. Le deuxi\u00e8me meilleur moment est maintenant.", author: 'Proverbe chinois' },
+  { text: "La pers\u00e9v\u00e9rance est la noblesse de l'obstination.", author: 'Adrien Decourcelle' },
+  { text: "On ne voit bien qu'avec le c\u0153ur. L'essentiel est invisible pour les yeux.", author: 'Antoine de Saint-Exup\u00e9ry' },
+  { text: "Le g\u00e9nie est fait d'un pour cent d'inspiration et de quatre-vingt-dix-neuf pour cent de transpiration.", author: 'Thomas Edison' },
+  { text: "La folie, c'est de faire toujours la m\u00eame chose et de s'attendre \u00e0 un r\u00e9sultat diff\u00e9rent.", author: 'Albert Einstein' },
+  { text: "L\u00e0 o\u00f9 il y a une volont\u00e9, il y a un chemin.", author: 'Proverbe' },
+  { text: "Croyez en vous et en tout ce que vous \u00eates. Sachez qu'il y a quelque chose \u00e0 l'int\u00e9rieur de vous qui est plus grand que tout obstacle.", author: 'Christian Larson' },
+  { text: "Les grandes choses ne sont jamais faites par une seule personne. Elles sont faites par une \u00e9quipe.", author: 'Steve Jobs' },
+  { text: "Le pessimiste se plaint du vent, l'optimiste esp\u00e8re qu'il va changer, le r\u00e9aliste ajuste les voiles.", author: 'William Arthur Ward' },
+  { text: "N'attendez pas d'\u00eatre parfait pour commencer quelque chose de bien.", author: 'Abb\u00e9 Pierre' },
+  { text: "La cr\u00e9ativit\u00e9, c'est l'intelligence qui s'amuse.", author: 'Albert Einstein' },
+  { text: "Tout ce que l'esprit de l'homme peut concevoir et croire, il peut le r\u00e9aliser.", author: 'Napoleon Hill' },
+  { text: "L'avenir appartient \u00e0 ceux qui croient \u00e0 la beaut\u00e9 de leurs r\u00eaves.", author: 'Eleanor Roosevelt' },
+  { text: "La connaissance s'acquiert par l'exp\u00e9rience, tout le reste n'est que de l'information.", author: 'Albert Einstein' },
+  { text: "Le talent gagne des matchs, mais le travail d'\u00e9quipe gagne des championnats.", author: 'Michael Jordan' },
+  { text: "Faites de votre vie un r\u00eave, et d'un r\u00eave, une r\u00e9alit\u00e9.", author: 'Antoine de Saint-Exup\u00e9ry' },
+  { text: "Le secret du changement consiste \u00e0 concentrer toute votre \u00e9nergie non pas \u00e0 lutter contre le pass\u00e9, mais \u00e0 construire l'avenir.", author: 'Socrate' },
+  { text: "Agissez comme s'il \u00e9tait impossible d'\u00e9chouer.", author: 'Dorothea Brande' },
+  { text: "La meilleure fa\u00e7on de pr\u00e9dire l'avenir est de le cr\u00e9er.", author: 'Peter Drucker' },
+  { text: "Ne jugez pas chaque journ\u00e9e par la r\u00e9colte que vous faites, mais par les graines que vous plantez.", author: 'Robert Louis Stevenson' },
+  { text: "Tout est possible \u00e0 qui r\u00eave, ose, travaille et n'abandonne jamais.", author: 'Xavier Dolan' },
+  { text: "L'\u00e9chec est simplement l'opportunit\u00e9 de recommencer, cette fois de fa\u00e7on plus intelligente.", author: 'Henry Ford' },
+  { text: "Ce que tu fais fait une diff\u00e9rence, et tu dois d\u00e9cider quel genre de diff\u00e9rence tu veux faire.", author: 'Jane Goodall' },
+  { text: "Le courage n'est pas l'absence de peur, mais la capacit\u00e9 de vaincre ce qui fait peur.", author: 'Nelson Mandela' },
+  { text: "La discipline est le pont entre les objectifs et la r\u00e9alisation.", author: 'Jim Rohn' },
 ];
 
 const AFFIRMATIONS = [
-  "Je suis capable de réaliser de grandes choses aujourd'hui.",
-  "Chaque défi est une opportunité de grandir.",
-  "Je mérite le succès et je travaille pour l'atteindre.",
-  "Mon énergie positive attire de bonnes choses dans ma vie.",
+  "Je suis capable de r\u00e9aliser de grandes choses aujourd'hui.",
+  "Chaque d\u00e9fi est une opportunit\u00e9 de grandir.",
+  "Je m\u00e9rite le succ\u00e8s et je travaille pour l'atteindre.",
+  "Mon \u00e9nergie positive attire de bonnes choses dans ma vie.",
   "Je suis reconnaissant pour ce que j'ai et enthousiaste pour ce qui vient.",
-  "Je choisis d'être heureux et de répandre la joie autour de moi.",
-  "Ma créativité est illimitée et mes idées ont de la valeur.",
-  "Je suis en paix avec mon passé et optimiste pour mon avenir.",
+  "Je choisis d'\u00eatre heureux et de r\u00e9pandre la joie autour de moi.",
+  "Ma cr\u00e9ativit\u00e9 est illimit\u00e9e et mes id\u00e9es ont de la valeur.",
+  "Je suis en paix avec mon pass\u00e9 et optimiste pour mon avenir.",
   "Chaque jour est une nouvelle chance de devenir meilleur.",
-  "Je suis fort, résilient et capable de surmonter tous les obstacles.",
-  "Mon potentiel est infini et je le libère chaque jour.",
-  "Je suis entouré d'amour, de soutien et d'abondance.",
+  "Je suis fort, r\u00e9silient et capable de surmonter tous les obstacles.",
+  "Mon potentiel est infini et je le lib\u00e8re chaque jour.",
+  "Je suis entour\u00e9 d'amour, de soutien et d'abondance.",
   "Je fais confiance au processus et j'avance avec conviction.",
   "Ma voix compte et mes contributions ont un impact.",
-  "Je suis la meilleure version de moi-même aujourd'hui.",
+  "Je suis la meilleure version de moi-m\u00eame aujourd'hui.",
   "L'univers conspire en ma faveur.",
-  "Je transforme mes rêves en objectifs et mes objectifs en réalité.",
-  "Je suis digne d'amour, de réussite et de bonheur.",
-  "Ma détermination est plus forte que mes doutes.",
-  "Je choisis la gratitude et l'optimisme à chaque instant.",
-  "Chaque respiration me remplit d'énergie positive.",
-  "Je suis un aimant pour les opportunités et l'abondance.",
+  "Je transforme mes r\u00eaves en objectifs et mes objectifs en r\u00e9alit\u00e9.",
+  "Je suis digne d'amour, de r\u00e9ussite et de bonheur.",
+  "Ma d\u00e9termination est plus forte que mes doutes.",
+  "Je choisis la gratitude et l'optimisme \u00e0 chaque instant.",
+  "Chaque respiration me remplit d'\u00e9nergie positive.",
+  "Je suis un aimant pour les opportunit\u00e9s et l'abondance.",
   "Mon travail a du sens et contribue au monde.",
-  "Je m'autorise à briller et à inspirer les autres.",
-  "Aujourd'hui sera une journée extraordinaire.",
-  "Je suis exactement là où je dois être dans mon parcours.",
-  "Ma persévérance est ma plus grande force.",
-  "Je cultive la paix intérieure dans tout ce que je fais.",
-  "Chaque petit pas me rapproche de mes grands rêves.",
-  "Je suis le créateur de ma propre réalité.",
+  "Je m'autorise \u00e0 briller et \u00e0 inspirer les autres.",
+  "Aujourd'hui sera une journ\u00e9e extraordinaire.",
+  "Je suis exactement l\u00e0 o\u00f9 je dois \u00eatre dans mon parcours.",
+  "Ma pers\u00e9v\u00e9rance est ma plus grande force.",
+  "Je cultive la paix int\u00e9rieure dans tout ce que je fais.",
+  "Chaque petit pas me rapproche de mes grands r\u00eaves.",
+  "Je suis le cr\u00e9ateur de ma propre r\u00e9alit\u00e9.",
 ];
 
 const ZODIAC_SIGNS = [
-  { id: 'belier', emoji: '♈', label: 'Bélier', dates: '21 mars - 19 avril' },
-  { id: 'taureau', emoji: '♉', label: 'Taureau', dates: '20 avril - 20 mai' },
-  { id: 'gemeaux', emoji: '♊', label: 'Gémeaux', dates: '21 mai - 20 juin' },
-  { id: 'cancer', emoji: '♋', label: 'Cancer', dates: '21 juin - 22 juillet' },
-  { id: 'lion', emoji: '♌', label: 'Lion', dates: '23 juillet - 22 août' },
-  { id: 'vierge', emoji: '♍', label: 'Vierge', dates: '23 août - 22 sept.' },
-  { id: 'balance', emoji: '♎', label: 'Balance', dates: '23 sept. - 22 oct.' },
-  { id: 'scorpion', emoji: '♏', label: 'Scorpion', dates: '23 oct. - 21 nov.' },
-  { id: 'sagittaire', emoji: '♐', label: 'Sagittaire', dates: '22 nov. - 21 déc.' },
-  { id: 'capricorne', emoji: '♑', label: 'Capricorne', dates: '22 déc. - 19 janv.' },
-  { id: 'verseau', emoji: '♒', label: 'Verseau', dates: '20 janv. - 18 fév.' },
-  { id: 'poissons', emoji: '♓', label: 'Poissons', dates: '19 fév. - 20 mars' },
+  { id: 'belier', emoji: '\u2648', label: 'B\u00e9lier', dates: '21 mars - 19 avril' },
+  { id: 'taureau', emoji: '\u2649', label: 'Taureau', dates: '20 avril - 20 mai' },
+  { id: 'gemeaux', emoji: '\u264A', label: 'G\u00e9meaux', dates: '21 mai - 20 juin' },
+  { id: 'cancer', emoji: '\u264B', label: 'Cancer', dates: '21 juin - 22 juillet' },
+  { id: 'lion', emoji: '\u264C', label: 'Lion', dates: '23 juillet - 22 ao\u00fbt' },
+  { id: 'vierge', emoji: '\u264D', label: 'Vierge', dates: '23 ao\u00fbt - 22 sept.' },
+  { id: 'balance', emoji: '\u264E', label: 'Balance', dates: '23 sept. - 22 oct.' },
+  { id: 'scorpion', emoji: '\u264F', label: 'Scorpion', dates: '23 oct. - 21 nov.' },
+  { id: 'sagittaire', emoji: '\u2650', label: 'Sagittaire', dates: '22 nov. - 21 d\u00e9c.' },
+  { id: 'capricorne', emoji: '\u2651', label: 'Capricorne', dates: '22 d\u00e9c. - 19 janv.' },
+  { id: 'verseau', emoji: '\u2652', label: 'Verseau', dates: '20 janv. - 18 f\u00e9v.' },
+  { id: 'poissons', emoji: '\u2653', label: 'Poissons', dates: '19 f\u00e9v. - 20 mars' },
 ];
 
 const ZODIAC_MESSAGES = [
-  "Les astres vous sourient aujourd'hui. Profitez de cette énergie positive pour avancer dans vos projets. Une rencontre inattendue pourrait changer votre perspective.",
-  "Journée favorable pour les décisions importantes. Votre intuition est votre meilleur guide. Côté cœur, une belle surprise vous attend.",
-  "Votre créativité est à son apogée. Laissez-vous porter par l'inspiration. Un message important arrivera dans l'après-midi.",
-  "Prenez soin de vous aujourd'hui. Le repos est aussi productif que l'action. Une opportunité financière se profile à l'horizon.",
-  "Votre charisme naturel brille de mille feux. C'est le moment idéal pour convaincre et inspirer votre entourage.",
-  "L'organisation est votre force aujourd'hui. Profitez-en pour mettre de l'ordre dans vos projets et vos idées.",
-  "L'harmonie règne dans vos relations. C'est le moment idéal pour résoudre un conflit en douceur ou renforcer des liens.",
-  "Votre détermination est sans faille. Les obstacles ne sont que des tremplins vers votre réussite. Foncez !",
-  "L'aventure vous appelle ! Osez sortir de votre zone de confort, les résultats dépasseront vos attentes.",
-  "Votre patience sera récompensée. Les efforts accumulés portent enfin leurs fruits. Restez concentré sur vos objectifs.",
-  "Votre originalité est votre plus grand atout. N'ayez pas peur d'être différent, c'est ce qui fait votre force.",
-  "Votre sensibilité est une force. Écoutez votre cœur et laissez votre imagination vous guider vers de nouveaux horizons.",
+  "Les astres vous sourient aujourd'hui. Profitez de cette \u00e9nergie positive pour avancer dans vos projets. Une rencontre inattendue pourrait changer votre perspective.",
+  "Journ\u00e9e favorable pour les d\u00e9cisions importantes. Votre intuition est votre meilleur guide. C\u00f4t\u00e9 c\u0153ur, une belle surprise vous attend.",
+  "Votre cr\u00e9ativit\u00e9 est \u00e0 son apog\u00e9e. Laissez-vous porter par l'inspiration. Un message important arrivera dans l'apr\u00e8s-midi.",
+  "Prenez soin de vous aujourd'hui. Le repos est aussi productif que l'action. Une opportunit\u00e9 financi\u00e8re se profile \u00e0 l'horizon.",
+  "Votre charisme naturel brille de mille feux. C'est le moment id\u00e9al pour convaincre et inspirer votre entourage.",
+  "L'organisation est votre force aujourd'hui. Profitez-en pour mettre de l'ordre dans vos projets et vos id\u00e9es.",
+  "L'harmonie r\u00e8gne dans vos relations. C'est le moment id\u00e9al pour r\u00e9soudre un conflit en douceur ou renforcer des liens.",
+  "Votre d\u00e9termination est sans faille. Les obstacles ne sont que des tremplins vers votre r\u00e9ussite. Foncez !",
+  "L'aventure vous appelle ! Osez sortir de votre zone de confort, les r\u00e9sultats d\u00e9passeront vos attentes.",
+  "Votre patience sera r\u00e9compens\u00e9e. Les efforts accumul\u00e9s portent enfin leurs fruits. Restez concentr\u00e9 sur vos objectifs.",
+  "Votre originalit\u00e9 est votre plus grand atout. N'ayez pas peur d'\u00eatre diff\u00e9rent, c'est ce qui fait votre force.",
+  "Votre sensibilit\u00e9 est une force. \u00c9coutez votre c\u0153ur et laissez votre imagination vous guider vers de nouveaux horizons.",
 ];
 
 const EPHEMERIDE: Record<string, string[]> = {
-  '01-01': ["Jour de l'An", "1804 : Haïti déclare son indépendance"],
-  '01-06': ["Épiphanie", "1412 : Naissance de Jeanne d'Arc"],
-  '01-27': ["Journée de la mémoire de l'Holocauste", "1756 : Naissance de Mozart"],
-  '02-14': ["Saint-Valentin", "1876 : Graham Bell dépose le brevet du téléphone"],
-  '03-03': ["Journée mondiale de la vie sauvage", "1847 : Naissance d'Alexander Graham Bell"],
-  '03-08': ["Journée internationale des droits des femmes"],
-  '03-14': ["Journée de Pi (3.14)", "1879 : Naissance d'Albert Einstein"],
-  '03-20': ["Équinoxe de printemps", "Journée internationale du bonheur"],
-  '03-21': ["Journée mondiale de la poésie", "Journée de la trisomie 21"],
+  '01-01': ["Jour de l'An", "1804 : Ha\u00efti d\u00e9clare son ind\u00e9pendance"],
+  '01-06': ["\u00c9piphanie", "1412 : Naissance de Jeanne d'Arc"],
+  '01-27': ["Journ\u00e9e de la m\u00e9moire de l'Holocauste", "1756 : Naissance de Mozart"],
+  '02-14': ["Saint-Valentin", "1876 : Graham Bell d\u00e9pose le brevet du t\u00e9l\u00e9phone"],
+  '03-03': ["Journ\u00e9e mondiale de la vie sauvage", "1847 : Naissance d'Alexander Graham Bell"],
+  '03-08': ["Journ\u00e9e internationale des droits des femmes"],
+  '03-14': ["Journ\u00e9e de Pi (3.14)", "1879 : Naissance d'Albert Einstein"],
+  '03-20': ["\u00c9quinoxe de printemps", "Journ\u00e9e internationale du bonheur"],
+  '03-21': ["Journ\u00e9e mondiale de la po\u00e9sie", "Journ\u00e9e de la trisomie 21"],
   '04-01': ["Poisson d'Avril", "1976 : Fondation d'Apple"],
   '04-22': ["Jour de la Terre"],
-  '05-01': ["Fête du Travail"],
+  '05-01': ["F\u00eate du Travail"],
   '05-04': ["May the 4th be with you (Star Wars)"],
-  '05-08': ["Victoire 1945", "Journée mondiale de la Croix-Rouge"],
-  '06-05': ["Journée mondiale de l'environnement"],
-  '06-21': ["Fête de la musique", "Solstice d'été"],
-  '07-04': ["Fête nationale américaine"],
-  '07-14': ["Fête nationale française — Prise de la Bastille 1789"],
+  '05-08': ["Victoire 1945", "Journ\u00e9e mondiale de la Croix-Rouge"],
+  '06-05': ["Journ\u00e9e mondiale de l'environnement"],
+  '06-21': ["F\u00eate de la musique", "Solstice d'\u00e9t\u00e9"],
+  '07-04': ["F\u00eate nationale am\u00e9ricaine"],
+  '07-14': ["F\u00eate nationale fran\u00e7aise \u2014 Prise de la Bastille 1789"],
   '07-20': ["1969 : Premier pas sur la Lune (Apollo 11)"],
   '08-15': ["Assomption"],
-  '09-21': ["Journée internationale de la paix"],
+  '09-21': ["Journ\u00e9e internationale de la paix"],
   '10-04': ["1957 : Lancement de Spoutnik"],
   '10-31': ["Halloween"],
   '11-01': ["Toussaint"],
   '11-09': ["1989 : Chute du mur de Berlin"],
   '11-11': ["Armistice 1918"],
-  '12-10': ["Journée des droits de l'homme", "Prix Nobel"],
+  '12-10': ["Journ\u00e9e des droits de l'homme", "Prix Nobel"],
   '12-21': ["Solstice d'hiver"],
-  '12-25': ["Noël"],
+  '12-25': ["No\u00ebl"],
   '12-31': ["Saint-Sylvestre"],
 };
 
 const SAINTS: Record<string, string> = {
-  '01-01': 'Marie', '01-15': 'Rémi', '01-20': 'Sébastien', '02-14': 'Valentin',
-  '03-01': 'Aubin', '03-03': 'Guénolé', '03-08': 'Jean de Dieu', '03-17': 'Patrick',
-  '03-19': 'Joseph', '04-01': 'Hugues', '04-23': 'Georges', '05-01': 'Jérémie',
-  '05-26': 'Bérengère', '06-13': 'Antoine', '06-24': 'Jean-Baptiste', '07-14': 'Camille',
-  '07-26': 'Anne', '08-15': 'Marie', '09-29': 'Michel', '10-04': 'François',
-  '10-15': 'Thérèse', '11-01': 'Toussaint', '11-11': 'Martin', '11-25': 'Catherine',
-  '12-06': 'Nicolas', '12-25': 'Noël', '12-26': 'Étienne', '12-31': 'Sylvestre',
+  '01-01': 'Marie', '01-15': 'R\u00e9mi', '01-20': 'S\u00e9bastien', '02-14': 'Valentin',
+  '03-01': 'Aubin', '03-03': 'Gu\u00e9nol\u00e9', '03-08': 'Jean de Dieu', '03-17': 'Patrick',
+  '03-19': 'Joseph', '04-01': 'Hugues', '04-23': 'Georges', '05-01': 'J\u00e9r\u00e9mie',
+  '05-26': 'B\u00e9reng\u00e8re', '06-13': 'Antoine', '06-24': 'Jean-Baptiste', '07-14': 'Camille',
+  '07-26': 'Anne', '08-15': 'Marie', '09-29': 'Michel', '10-04': 'Fran\u00e7ois',
+  '10-15': 'Th\u00e9r\u00e8se', '11-01': 'Toussaint', '11-11': 'Martin', '11-25': 'Catherine',
+  '12-06': 'Nicolas', '12-25': 'No\u00ebl', '12-26': '\u00c9tienne', '12-31': 'Sylvestre',
 };
 
 const DEFAULT_HABITS: HabitItem[] = [
-  { id: 'h1', label: 'Méditer', emoji: '🧘', streak: 0, doneToday: false },
-  { id: 'h2', label: 'Exercice', emoji: '🏃', streak: 0, doneToday: false },
-  { id: 'h3', label: 'Lire', emoji: '📖', streak: 0, doneToday: false },
-  { id: 'h4', label: 'Boire 2L', emoji: '💧', streak: 0, doneToday: false },
-  { id: 'h5', label: 'Écrire', emoji: '✏️', streak: 0, doneToday: false },
+  { id: 'h1', label: 'M\u00e9diter', emoji: '\u{1F9D8}', streak: 0, doneToday: false },
+  { id: 'h2', label: 'Exercice', emoji: '\u{1F3C3}', streak: 0, doneToday: false },
+  { id: 'h3', label: 'Lire', emoji: '\u{1F4D6}', streak: 0, doneToday: false },
+  { id: 'h4', label: 'Boire 2L', emoji: '\u{1F4A7}', streak: 0, doneToday: false },
+  { id: 'h5', label: '\u00c9crire', emoji: '\u270F\uFE0F', streak: 0, doneToday: false },
 ];
 
 const MOOD_OPTIONS = [
-  { emoji: '😫', label: 'Terrible', color: '#1A1A1A' },
-  { emoji: '😕', label: 'Pas top', color: '#6B6B6B' },
-  { emoji: '😐', label: 'Neutre', color: '#1A1A1A' },
-  { emoji: '😊', label: 'Bien', color: '#1A1A1A' },
-  { emoji: '🤩', label: 'Super !', color: '#1A1A1A' },
+  { emoji: '\u{1F62B}', label: 'Terrible', color: CU.danger },
+  { emoji: '\u{1F615}', label: 'Pas top', color: CU.warning },
+  { emoji: '\u{1F610}', label: 'Neutre', color: CU.textSecondary },
+  { emoji: '\u{1F60A}', label: 'Bien', color: CU.success },
+  { emoji: '\u{1F929}', label: 'Super !', color: CU.text },
 ];
 
 const NEWS_TABS = [
-  { id: 'tech', label: 'Tech', items: ["L'IA générative transforme les métiers créatifs", "Nouveau record de performance pour les puces quantiques", "Les véhicules autonomes progressent en Europe"] },
-  { id: 'business', label: 'Business', items: ["Les marchés mondiaux en hausse cette semaine", "La French Tech continue son expansion internationale", "Le télétravail s'installe durablement dans les entreprises"] },
-  { id: 'sport', label: 'Sport', items: ["Résultats marquants de la journée sportive", "Préparation olympique : les athlètes français se mobilisent", "Le e-sport reconnu comme discipline officielle"] },
-  { id: 'culture', label: 'Culture', items: ["Nouveau film français primé au festival international", "Exposition exceptionnelle au Grand Palais", "Le streaming musical bat des records d'écoute"] },
+  { id: 'tech', label: 'Tech', items: ["L'IA g\u00e9n\u00e9rative transforme les m\u00e9tiers cr\u00e9atifs", "Nouveau record de performance pour les puces quantiques", "Les v\u00e9hicules autonomes progressent en Europe"] },
+  { id: 'business', label: 'Business', items: ["Les march\u00e9s mondiaux en hausse cette semaine", "La French Tech continue son expansion internationale", "Le t\u00e9l\u00e9travail s'installe durablement dans les entreprises"] },
+  { id: 'sport', label: 'Sport', items: ["R\u00e9sultats marquants de la journ\u00e9e sportive", "Pr\u00e9paration olympique : les athl\u00e8tes fran\u00e7ais se mobilisent", "Le e-sport reconnu comme discipline officielle"] },
+  { id: 'culture', label: 'Culture', items: ["Nouveau film fran\u00e7ais prim\u00e9 au festival international", "Exposition exceptionnelle au Grand Palais", "Le streaming musical bat des records d'\u00e9coute"] },
 ];
 
 const PLAYLIST_PRESETS: Record<string, string> = {
-  concentration: 'Playlist Concentration : musique lo-fi, ambient, classique douce — parfait pour le deep work.',
-  energie: 'Playlist Énergie : pop dynamique, rock, électro — pour booster votre productivité !',
-  detente: 'Playlist Détente : jazz chill, bossa nova, sons de la nature — pour décompresser.',
-  motivation: 'Playlist Motivation : hip-hop inspirant, musique épique, discours motivants.',
+  concentration: 'Playlist Concentration : musique lo-fi, ambient, classique douce \u2014 parfait pour le deep work.',
+  energie: 'Playlist \u00c9nergie : pop dynamique, rock, \u00e9lectro \u2014 pour booster votre productivit\u00e9 !',
+  detente: 'Playlist D\u00e9tente : jazz chill, bossa nova, sons de la nature \u2014 pour d\u00e9compresser.',
+  motivation: 'Playlist Motivation : hip-hop inspirant, musique \u00e9pique, discours motivants.',
 };
 
 // ─── Helpers ───
@@ -331,13 +333,13 @@ function getGreeting(): string {
   const h = new Date().getHours();
   if (h < 6) return 'Bonne nuit';
   if (h < 12) return 'Bonjour';
-  if (h < 18) return 'Bon après-midi';
+  if (h < 18) return 'Bon apr\u00e8s-midi';
   return 'Bonsoir';
 }
 
 function formatFrenchDate(d: Date = new Date()): string {
   const days = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-  const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const months = ['janvier','f\u00e9vrier','mars','avril','mai','juin','juillet','ao\u00fbt','septembre','octobre','novembre','d\u00e9cembre'];
   return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
@@ -389,11 +391,10 @@ function getDefaultData(): JourneeData {
   };
 }
 
-// ─── Shared styles ───
+// ─── Shared styles (CU-based) ───
 
 const cardStyle: React.CSSProperties = {
-  background: 'var(--fz-bg, #fff)', border: '1px solid var(--border-primary, #E5E5E5)',
-  borderRadius: 12, overflow: 'hidden', transition: 'box-shadow 0.2s',
+  ...CU.card, overflow: 'hidden', transition: 'box-shadow 0.2s',
 };
 const cardHeaderStyle: React.CSSProperties = {
   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -401,23 +402,19 @@ const cardHeaderStyle: React.CSSProperties = {
   border: 'none', width: '100%', fontFamily: 'inherit', textAlign: 'left',
 };
 const cardBodyStyle: React.CSSProperties = {
-  padding: '0 16px 14px', borderTop: '1px solid var(--fz-border, #E5E5E5)',
+  padding: '0 16px 14px', borderTop: `1px solid ${CU.border}`,
 };
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 13,
-  border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg-secondary, #F7F7F7)',
-  color: 'var(--fz-text, #1A1A1A)', fontFamily: 'inherit', outline: 'none',
+  ...CU.input, background: CU.bgSecondary,
 };
 const btnSmStyle: React.CSSProperties = {
-  padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-  border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-  background: 'var(--accent)', color: '#fff',
+  ...CU.btnPrimary, height: 32, padding: '0 12px', fontSize: 12,
 };
 const btnGhostStyle: React.CSSProperties = {
-  ...btnSmStyle, background: 'var(--fz-bg-hover, #F0F0F0)', color: 'var(--fz-text, #1A1A1A)',
+  ...CU.btnGhost, height: 32, padding: '0 12px', fontSize: 12,
 };
 const progressBarOuter: React.CSSProperties = {
-  width: '100%', height: 6, borderRadius: 3, background: 'var(--fz-bg-hover, #F0F0F0)', overflow: 'hidden',
+  width: '100%', height: 6, borderRadius: 3, background: CU.accentLight, overflow: 'hidden',
 };
 
 // ═══════════════════════════════════════════════════════
@@ -425,6 +422,7 @@ const progressBarOuter: React.CSSProperties = {
 // ═══════════════════════════════════════════════════════
 
 export default function JourneePage() {
+  const isMobile = useIsMobile();
   const defaultVis: Record<string, boolean> = {};
   WIDGETS.forEach(w => { defaultVis[w.id] = w.defaultVisible; });
   const { data: visibility, setData: setVisibility } = useUserData<Record<string, boolean>>('journee_visibility', defaultVis, 'fz_journee_visibility');
@@ -595,9 +593,9 @@ export default function JourneePage() {
         <button onClick={() => toggleCollapse(id)} style={cardHeaderStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 16 }}>{meta.emoji}</span>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{meta.label}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{meta.label}</span>
           </div>
-          <span style={{ fontSize: 14, color: 'var(--fz-text-muted, #9B9B9B)', transform: isCol ? 'rotate(-90deg)' : 'rotate(0)', transition: 'transform 0.2s', display: 'inline-block' }}>{isCol ? '▸' : '▾'}</span>
+          <span style={{ fontSize: 14, color: CU.textMuted, transform: isCol ? 'rotate(-90deg)' : 'rotate(0)', transition: 'transform 0.2s', display: 'inline-block' }}>{isCol ? '\u25B8' : '\u25BE'}</span>
         </button>
         {!isCol && <div style={cardBodyStyle}>{children}</div>}
       </div>
@@ -615,20 +613,20 @@ export default function JourneePage() {
     return (
       <W id="todos">
         <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-          <input style={inputStyle} placeholder="Nouvelle tâche..." value={newTodoText} onChange={e => setNewTodoText(e.target.value)}
+          <input style={inputStyle} placeholder="Nouvelle t\u00e2che..." value={newTodoText} onChange={e => setNewTodoText(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && newTodoText.trim()) { updateData({ todos: [...data.todos, { id: uid(), text: newTodoText.trim(), done: false }] }); setNewTodoText(''); } }} />
           <button style={btnSmStyle} onClick={() => { if (newTodoText.trim()) { updateData({ todos: [...data.todos, { id: uid(), text: newTodoText.trim(), done: false }] }); setNewTodoText(''); } }}>+</button>
         </div>
         {total > 0 && <>
-          <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: 'var(--accent)', width: `${total ? (doneCount/total)*100 : 0}%`, transition: 'width 0.3s' }} /></div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4, marginBottom: 8 }}>{doneCount}/{total} terminées</div>
+          <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: CU.accent, width: `${total ? (doneCount/total)*100 : 0}%`, transition: 'width 0.3s' }} /></div>
+          <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 4, marginBottom: 8 }}>{doneCount}/{total} termin\u00e9es</div>
         </>}
         {data.todos.map(t => (
-          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
+          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: `1px solid ${CU.border}` }}>
             <input type="checkbox" checked={t.done} onChange={() => updateData({ todos: data.todos.map(x => x.id === t.id ? { ...x, done: !x.done } : x) })}
-              style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }} />
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)', textDecoration: t.done ? 'line-through' : 'none', opacity: t.done ? 0.5 : 1 }}>{t.text}</span>
-            <button onClick={() => updateData({ todos: data.todos.filter(x => x.id !== t.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 14 }}>✕</button>
+              style={{ width: 18, height: 18, accentColor: CU.accent, cursor: 'pointer' }} />
+            <span style={{ flex: 1, fontSize: 13, color: CU.text, textDecoration: t.done ? 'line-through' : 'none', opacity: t.done ? 0.5 : 1 }}>{t.text}</span>
+            <button onClick={() => updateData({ todos: data.todos.filter(x => x.id !== t.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 14 }}>{'\u2715'}</button>
           </div>
         ))}
         {total > 0 && <button onClick={() => updateData({ todos: [] })} style={{ ...btnGhostStyle, marginTop: 8, fontSize: 11 }}>Tout effacer</button>}
@@ -639,26 +637,26 @@ export default function JourneePage() {
   // ── W02: Objectifs ──
   function renderObjectifs() {
     const doneCount = data.objectifs.filter(o => o.done).length;
-    const colors = ['#1A1A1A', '#9B9B9B', '#6B6B6B'];
+    const colors = [CU.text, CU.textMuted, CU.textSecondary];
     return (
       <W id="objectifs">
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>{doneCount}/3 objectifs atteints</div>
+        <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 8 }}>{doneCount}/3 objectifs atteints</div>
         {data.objectifs.map((o, i) => (
           <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: o.done ? colors[i] : 'var(--fz-bg-hover, #F0F0F0)', color: o.done ? '#fff' : 'var(--fz-text-muted, #9B9B9B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', background: o.done ? colors[i] : CU.accentLight, color: o.done ? '#fff' : CU.textMuted, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
             <input style={{ ...inputStyle, flex: 1, textDecoration: o.done ? 'line-through' : 'none' }} placeholder={`Objectif ${i + 1}...`} value={o.text}
               onChange={e => { const next = [...data.objectifs]; next[i] = { ...next[i], text: e.target.value }; updateData({ objectifs: next }); }} />
             <input type="checkbox" checked={o.done} onChange={() => { const next = [...data.objectifs]; next[i] = { ...next[i], done: !next[i].done }; updateData({ objectifs: next }); }}
-              style={{ width: 20, height: 20, accentColor: 'var(--accent)', cursor: 'pointer' }} />
+              style={{ width: 20, height: 20, accentColor: CU.accent, cursor: 'pointer' }} />
           </div>
         ))}
       </W>
     );
   }
 
-  // ── W03: Priorités ──
+  // ── W03: Priorites ──
   function renderPriorites() {
-    const medals = ['🥇', '🥈', '🥉'];
+    const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
     const swap = (i: number, j: number) => {
       if (j < 0 || j > 2) return;
       const next = [...data.priorites];
@@ -671,10 +669,10 @@ export default function JourneePage() {
         {data.priorites.map((p, i) => (
           <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <span style={{ fontSize: 18 }}>{medals[i]}</span>
-            <input style={{ ...inputStyle, flex: 1 }} placeholder={`Priorité ${i + 1}...`} value={p.text}
+            <input style={{ ...inputStyle, flex: 1 }} placeholder={`Priorit\u00e9 ${i + 1}...`} value={p.text}
               onChange={e => { const next = [...data.priorites]; next[i] = { ...next[i], text: e.target.value }; updateData({ priorites: next }); }} />
-            <button onClick={() => swap(i, i - 1)} disabled={i === 0} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 0 ? 0.3 : 1 }}>↑</button>
-            <button onClick={() => swap(i, i + 1)} disabled={i === 2} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 2 ? 0.3 : 1 }}>↓</button>
+            <button onClick={() => swap(i, i - 1)} disabled={i === 0} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 0 ? 0.3 : 1 }}>{'\u2191'}</button>
+            <button onClick={() => swap(i, i + 1)} disabled={i === 2} style={{ ...btnGhostStyle, padding: '4px 6px', opacity: i === 2 ? 0.3 : 1 }}>{'\u2193'}</button>
           </div>
         ))}
       </W>
@@ -685,9 +683,9 @@ export default function JourneePage() {
   function renderNotes() {
     return (
       <W id="notes">
-        <textarea style={{ ...inputStyle, minHeight: 100, resize: 'vertical' }} placeholder="Vos notes rapides..." value={data.notes}
+        <textarea style={{ ...inputStyle, minHeight: 100, resize: 'vertical' as const }} placeholder="Vos notes rapides..." value={data.notes}
           onChange={e => updateData({ notes: e.target.value.slice(0, 5000) })} />
-        <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4, textAlign: 'right' }}>{data.notes.length}/5000</div>
+        <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 4, textAlign: 'right' as const }}>{data.notes.length}/5000</div>
       </W>
     );
   }
@@ -695,27 +693,27 @@ export default function JourneePage() {
   // ── W05: Pomodoro ──
   function renderPomodoro() {
     const isWork = data.pomodoroMode === 'work';
-    const accentCol = isWork ? '#1A1A1A' : '#6B6B6B';
+    const accentCol = isWork ? CU.text : CU.textSecondary;
     return (
       <W id="pomodoro">
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 11, fontWeight: 600, color: accentCol, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>
+        <div style={{ textAlign: 'center' as const }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: accentCol, marginBottom: 4, textTransform: 'uppercase' as const, letterSpacing: 1 }}>
             {isWork ? 'Travail' : 'Pause'}
           </div>
-          <div style={{ fontSize: 48, fontWeight: 200, color: 'var(--fz-text, #1A1A1A)', letterSpacing: -2, fontFamily: 'monospace' }}>
+          <div style={{ fontSize: 48, fontWeight: 200, color: CU.text, letterSpacing: -2, fontFamily: 'monospace' }}>
             {fmtTime(data.pomodoroTimeLeft)}
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12 }}>
             <button style={{ ...btnSmStyle, background: accentCol, minWidth: 80 }} onClick={() => updateData({ pomodoroRunning: !data.pomodoroRunning })}>
-              {data.pomodoroRunning ? <>⏸️ Pause</> : <>▶️ Start</>}
+              {data.pomodoroRunning ? <>{'\u23F8\uFE0F'} Pause</> : <>{'\u25B6\uFE0F'} Start</>}
             </button>
             <button style={btnGhostStyle} onClick={() => updateData({ pomodoroTimeLeft: isWork ? 25*60 : 5*60, pomodoroRunning: false })}>Reset</button>
             <button style={btnGhostStyle} onClick={() => {
               const nextMode = isWork ? 'break' : 'work';
               updateData({ pomodoroMode: nextMode, pomodoroTimeLeft: nextMode === 'work' ? 25*60 : 5*60, pomodoroRunning: false });
-            }}>Skip ⏭️</button>
+            }}>Skip {'\u23ED\uFE0F'}</button>
           </div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 10 }}>Sessions : {data.pomodoroSessions}/4</div>
+          <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 10 }}>Sessions : {data.pomodoroSessions}/4</div>
         </div>
       </W>
     );
@@ -728,13 +726,13 @@ export default function JourneePage() {
     const pct = Math.min(100, (mins / goal) * 100);
     return (
       <W id="focus">
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, fontWeight: 200, color: 'var(--fz-text, #1A1A1A)', fontFamily: 'monospace' }}>{mins} min</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>Objectif : {goal} min</div>
-          <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: 'var(--accent)', width: `${pct}%`, transition: 'width 0.5s' }} /></div>
-          <button style={{ ...btnSmStyle, marginTop: 12, background: data.focusRunning ? '#1A1A1A' : '#1A1A1A' }}
+        <div style={{ textAlign: 'center' as const }}>
+          <div style={{ fontSize: 36, fontWeight: 200, color: CU.text, fontFamily: 'monospace' }}>{mins} min</div>
+          <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 8 }}>Objectif : {goal} min</div>
+          <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: CU.accent, width: `${pct}%`, transition: 'width 0.5s' }} /></div>
+          <button style={{ ...btnSmStyle, marginTop: 12 }}
             onClick={() => updateData({ focusRunning: !data.focusRunning, focusStartedAt: data.focusRunning ? 0 : Date.now() })}>
-            {data.focusRunning ? <><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#fff', marginRight: 6, animation: 'pulse 1s infinite' }} />Stop</> : <>▶️ Démarrer focus</>}
+            {data.focusRunning ? <><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#fff', marginRight: 6, animation: 'pulse 1s infinite' }} />Stop</> : <>{'\u25B6\uFE0F'} D\u00e9marrer focus</>}
           </button>
         </div>
       </W>
@@ -747,11 +745,11 @@ export default function JourneePage() {
     const currentHour = currentTime.getHours();
     return (
       <W id="schedule">
-        <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+        <div style={{ maxHeight: 300, overflowY: 'auto' as const }}>
           {hours.map(h => (
-            <div key={h} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', borderLeft: h === currentHour ? '3px solid var(--accent)' : '3px solid transparent', paddingLeft: 8 }}>
-              <span style={{ fontSize: 12, color: h === currentHour ? 'var(--accent)' : 'var(--fz-text-muted, #9B9B9B)', fontWeight: h === currentHour ? 700 : 400, width: 40, flexShrink: 0 }}>{String(h).padStart(2, '0')}:00</span>
-              <input style={{ ...inputStyle, padding: '4px 8px', fontSize: 12 }} placeholder="—" value={data.schedule[h] || ''}
+            <div key={h} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', borderLeft: h === currentHour ? `3px solid ${CU.accent}` : '3px solid transparent', paddingLeft: 8 }}>
+              <span style={{ fontSize: 12, color: h === currentHour ? CU.accent : CU.textMuted, fontWeight: h === currentHour ? 700 : 400, width: 40, flexShrink: 0 }}>{String(h).padStart(2, '0')}:00</span>
+              <input style={{ ...inputStyle, padding: '4px 8px', fontSize: 12 }} placeholder="\u2014" value={data.schedule[h] || ''}
                 onChange={e => updateData({ schedule: { ...data.schedule, [h]: e.target.value } })} />
             </div>
           ))}
@@ -766,36 +764,36 @@ export default function JourneePage() {
     const dayNames = ['L','M','M','J','V','S','D'];
     return (
       <W id="calendrier">
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--accent)' }}>{d.getDate()}</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)', textTransform: 'capitalize' }}>{formatFrenchDate(d)}</div>
+        <div style={{ textAlign: 'center' as const }}>
+          <div style={{ fontSize: 42, fontWeight: 200, color: CU.accent }}>{d.getDate()}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: CU.text, textTransform: 'capitalize' as const }}>{formatFrenchDate(d)}</div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 12, margin: '12px 0' }}>
             {dayNames.map((name, i) => {
               const isToday = (d.getDay() + 6) % 7 === i;
-              return <div key={i} style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: isToday ? 700 : 400, background: isToday ? 'var(--accent)' : 'transparent', color: isToday ? '#fff' : 'var(--fz-text-muted, #9B9B9B)' }}>{name}</div>;
+              return <div key={i} style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: isToday ? 700 : 400, background: isToday ? CU.accent : 'transparent', color: isToday ? '#fff' : CU.textMuted }}>{name}</div>;
             })}
           </div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>Jour {dayOfYear()}/365 — Semaine {weekNumber()}</div>
+          <div style={{ fontSize: 11, color: CU.textMuted }}>Jour {dayOfYear()}/365 \u2014 Semaine {weekNumber()}</div>
         </div>
       </W>
     );
   }
 
-  // ── W09: Réunions ──
+  // ── W09: Reunions ──
   function renderReunions() {
     return (
       <W id="reunions">
-        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' as const }}>
           <input style={{ ...inputStyle, flex: 1, minWidth: 120 }} placeholder="Titre..." value={newReunionTitle} onChange={e => setNewReunionTitle(e.target.value)} />
           <input type="time" style={{ ...inputStyle, width: 100 }} value={newReunionTime} onChange={e => setNewReunionTime(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newReunionTitle.trim()) { updateData({ reunions: [...data.reunions, { id: uid(), title: newReunionTitle.trim(), time: newReunionTime || '09:00', duration: '30 min', participants: '' }] }); setNewReunionTitle(''); setNewReunionTime(''); } }}>+</button>
         </div>
-        {data.reunions.length === 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', textAlign: 'center', padding: 16 }}>Aucune réunion aujourd'hui</div>}
+        {data.reunions.length === 0 && <div style={{ fontSize: 12, color: CU.textMuted, textAlign: 'center' as const, padding: 16 }}>Aucune r\u00e9union aujourd'hui</div>}
         {data.reunions.sort((a, b) => a.time.localeCompare(b.time)).map(r => (
-          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', width: 45, flexShrink: 0 }}>{r.time}</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{r.title}</span>
-            <button onClick={() => updateData({ reunions: data.reunions.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
+          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: `1px solid ${CU.border}` }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: CU.accent, width: 45, flexShrink: 0 }}>{r.time}</span>
+            <span style={{ flex: 1, fontSize: 13, color: CU.text }}>{r.title}</span>
+            <button onClick={() => updateData({ reunions: data.reunions.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 13 }}>{'\u2715'}</button>
           </div>
         ))}
       </W>
@@ -813,30 +811,30 @@ export default function JourneePage() {
           <input type="time" style={{ ...inputStyle, width: 90 }} value={newRappelTime} onChange={e => setNewRappelTime(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newRappelText.trim()) { updateData({ rappels: [...data.rappels, { id: uid(), text: newRappelText.trim(), time: newRappelTime, done: false }] }); setNewRappelText(''); setNewRappelTime(''); } }}>+</button>
         </div>
-        {pending > 0 && <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 6 }}>{pending} rappel{pending > 1 ? 's' : ''} en attente</div>}
+        {pending > 0 && <div style={{ fontSize: 11, color: CU.textMuted, marginBottom: 6 }}>{pending} rappel{pending > 1 ? 's' : ''} en attente</div>}
         {[...data.rappels].sort((a, b) => Number(a.done) - Number(b.done)).map(r => (
-          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
+          <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: `1px solid ${CU.border}` }}>
             <input type="checkbox" checked={r.done} onChange={() => updateData({ rappels: data.rappels.map(x => x.id === r.id ? { ...x, done: !x.done } : x) })}
-              style={{ width: 18, height: 18, accentColor: 'var(--accent)', cursor: 'pointer' }} />
-            {r.time && <span style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 600 }}>{r.time}</span>}
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)', textDecoration: r.done ? 'line-through' : 'none', opacity: r.done ? 0.5 : 1 }}>{r.text}</span>
-            <button onClick={() => updateData({ rappels: data.rappels.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
+              style={{ width: 18, height: 18, accentColor: CU.accent, cursor: 'pointer' }} />
+            {r.time && <span style={{ fontSize: 11, color: CU.accent, fontWeight: 600 }}>{r.time}</span>}
+            <span style={{ flex: 1, fontSize: 13, color: CU.text, textDecoration: r.done ? 'line-through' : 'none', opacity: r.done ? 0.5 : 1 }}>{r.text}</span>
+            <button onClick={() => updateData({ rappels: data.rappels.filter(x => x.id !== r.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 13 }}>{'\u2715'}</button>
           </div>
         ))}
       </W>
     );
   }
 
-  // ── W11: Échéances ──
+  // ── W11: Echeances ──
   function renderEcheances() {
-    const prioColor = { haute: '#1A1A1A', moyenne: '#6B6B6B', basse: '#9B9B9B' };
+    const prioColor = { haute: CU.text, moyenne: CU.textSecondary, basse: CU.textMuted };
     const today = new Date().toISOString().slice(0, 10);
     return (
       <W id="echeances">
-        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
-          <input style={{ ...inputStyle, flex: 1, minWidth: 120 }} placeholder="Échéance..." value={newEcheanceText} onChange={e => setNewEcheanceText(e.target.value)} />
+        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' as const }}>
+          <input style={{ ...inputStyle, flex: 1, minWidth: 120 }} placeholder="\u00c9ch\u00e9ance..." value={newEcheanceText} onChange={e => setNewEcheanceText(e.target.value)} />
           <input type="date" style={{ ...inputStyle, width: 130 }} value={newEcheanceDate} onChange={e => setNewEcheanceDate(e.target.value)} />
-          <select style={{ ...inputStyle, width: 100 }} value={newEcheancePrio} onChange={e => setNewEcheancePrio(e.target.value as 'haute'|'moyenne'|'basse')}>
+          <select style={{ ...CU.select, width: 100 }} value={newEcheancePrio} onChange={e => setNewEcheancePrio(e.target.value as 'haute'|'moyenne'|'basse')}>
             <option value="haute">Haute</option><option value="moyenne">Moyenne</option><option value="basse">Basse</option>
           </select>
           <button style={btnSmStyle} onClick={() => { if (newEcheanceText.trim() && newEcheanceDate) { updateData({ echeances: [...data.echeances, { id: uid(), text: newEcheanceText.trim(), date: newEcheanceDate, priority: newEcheancePrio }] }); setNewEcheanceText(''); setNewEcheanceDate(''); } }}>+</button>
@@ -844,11 +842,11 @@ export default function JourneePage() {
         {[...data.echeances].sort((a, b) => a.date.localeCompare(b.date)).map(e => {
           const overdue = e.date < today;
           return (
-            <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)', background: overdue ? 'rgba(0,0,0,0.03)' : 'transparent' }}>
-              <span style={{ fontSize: 11, color: overdue ? '#1A1A1A' : 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, width: 75, flexShrink: 0 }}>{e.date}</span>
+            <div key={e.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: `1px solid ${CU.border}`, background: overdue ? 'rgba(0,0,0,0.03)' : 'transparent' }}>
+              <span style={{ fontSize: 11, color: overdue ? CU.danger : CU.textMuted, fontWeight: 600, width: 75, flexShrink: 0 }}>{e.date}</span>
               <span style={{ padding: '2px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600, color: '#fff', background: prioColor[e.priority], flexShrink: 0 }}>{e.priority}</span>
-              <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{e.text}</span>
-              <button onClick={() => updateData({ echeances: data.echeances.filter(x => x.id !== e.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
+              <span style={{ flex: 1, fontSize: 13, color: CU.text }}>{e.text}</span>
+              <button onClick={() => updateData({ echeances: data.echeances.filter(x => x.id !== e.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 13 }}>{'\u2715'}</button>
             </div>
           );
         })}
@@ -864,9 +862,9 @@ export default function JourneePage() {
       <W id="semaine">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
           {dayNames.map((name, i) => (
-            <div key={i} style={{ textAlign: 'center', padding: '8px 2px', borderRadius: 8, background: i === todayIdx ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: i === todayIdx ? '#fff' : 'var(--fz-text, #1A1A1A)' }}>
+            <div key={i} style={{ textAlign: 'center' as const, padding: '8px 2px', borderRadius: 8, background: i === todayIdx ? CU.accent : CU.accentLight, color: i === todayIdx ? '#fff' : CU.text }}>
               <div style={{ fontSize: 11, fontWeight: 600 }}>{name}</div>
-              <div style={{ fontSize: 18, marginTop: 2 }}>{i === todayIdx ? '📍' : '\u00B7'}</div>
+              <div style={{ fontSize: 18, marginTop: 2 }}>{i === todayIdx ? '\u{1F4CD}' : '\u00B7'}</div>
             </div>
           ))}
         </div>
@@ -882,11 +880,11 @@ export default function JourneePage() {
           {MOOD_OPTIONS.map((m, i) => (
             <button key={i} onClick={() => updateData({ mood: i })} style={{
               fontSize: data.mood === i ? 36 : 28, padding: 4, border: data.mood === i ? `2px solid ${m.color}` : '2px solid transparent',
-              borderRadius: 12, background: data.mood === i ? `${m.color}15` : 'transparent', cursor: 'pointer', transition: 'all 0.2s',
+              borderRadius: 8, background: data.mood === i ? `${m.color}15` : 'transparent', cursor: 'pointer', transition: 'all 0.2s',
             }}><span style={{ fontSize: data.mood === i ? 36 : 28 }}>{m.emoji}</span></button>
           ))}
         </div>
-        {data.mood >= 0 && <div style={{ textAlign: 'center', marginTop: 8, fontSize: 13, color: MOOD_OPTIONS[data.mood].color, fontWeight: 600 }}>
+        {data.mood >= 0 && <div style={{ textAlign: 'center' as const, marginTop: 8, fontSize: 13, color: MOOD_OPTIONS[data.mood].color, fontWeight: 600 }}>
           Aujourd'hui je me sens : {MOOD_OPTIONS[data.mood].label}
         </div>}
       </W>
@@ -898,21 +896,21 @@ export default function JourneePage() {
     const glasses = 8;
     return (
       <W id="hydratation">
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' as const }}>
           {Array.from({ length: glasses }, (_, i) => (
             <button key={i} onClick={() => updateData({ waterCount: data.waterCount === i + 1 ? i : i + 1 })} style={{
               fontSize: 24, padding: 4, border: 'none', background: 'transparent', cursor: 'pointer',
               opacity: i < data.waterCount ? 1 : 0.25, transition: 'opacity 0.2s',
-            }}><span style={{ fontSize: 24 }}>💧</span></button>
+            }}><span style={{ fontSize: 24 }}>{'\u{1F4A7}'}</span></button>
           ))}
         </div>
-        <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: '#1A1A1A', width: `${Math.min(100, (data.waterCount / glasses) * 100)}%`, transition: 'width 0.3s' }} /></div>
-        <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>{data.waterCount}/{glasses} verres ({(data.waterCount * 0.25).toFixed(1)}L)</div>
+        <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: CU.accent, width: `${Math.min(100, (data.waterCount / glasses) * 100)}%`, transition: 'width 0.3s' }} /></div>
+        <div style={{ textAlign: 'center' as const, fontSize: 12, color: CU.textMuted, marginTop: 4 }}>{data.waterCount}/{glasses} verres ({(data.waterCount * 0.25).toFixed(1)}L)</div>
       </W>
     );
   }
 
-  // ── W15: Activité physique ──
+  // ── W15: Activite physique ──
   function renderActivite() {
     return (
       <W id="activite">
@@ -923,35 +921,35 @@ export default function JourneePage() {
         </div>
         {data.exercises.map(ex => (
           <div key={ex.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
-            <span style={{ fontSize: 14 }}>🏃</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{ex.text}</span>
-            <button onClick={() => updateData({ exercises: data.exercises.filter(x => x.id !== ex.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
+            <span style={{ fontSize: 14 }}>{'\u{1F3C3}'}</span>
+            <span style={{ flex: 1, fontSize: 13, color: CU.text }}>{ex.text}</span>
+            <button onClick={() => updateData({ exercises: data.exercises.filter(x => x.id !== ex.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 13 }}>{'\u2715'}</button>
           </div>
         ))}
-        {data.exercises.length === 0 && <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', textAlign: 'center' }}>Aucune activité enregistrée</div>}
+        {data.exercises.length === 0 && <div style={{ fontSize: 12, color: CU.textMuted, textAlign: 'center' as const }}>Aucune activit\u00e9 enregistr\u00e9e</div>}
       </W>
     );
   }
 
-  // ── W16: Méditation ──
+  // ── W16: Meditation ──
   function renderMeditation() {
     const presets = [1, 5, 10, 15, 20];
     return (
       <W id="meditation">
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' as const }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 12 }}>
             {presets.map(p => (
               <button key={p} onClick={() => updateData({ meditationPreset: p, meditationTimeLeft: p * 60, meditationRunning: false })}
-                style={{ ...btnGhostStyle, background: data.meditationPreset === p ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: data.meditationPreset === p ? '#fff' : 'var(--fz-text, #1A1A1A)' }}>{p} min</button>
+                style={{ ...btnGhostStyle, background: data.meditationPreset === p ? CU.accent : CU.accentLight, color: data.meditationPreset === p ? '#fff' : CU.text }}>{p} min</button>
             ))}
           </div>
-          <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text, #1A1A1A)', fontFamily: 'monospace' }}>{fmtTime(data.meditationTimeLeft)}</div>
-          {data.meditationRunning && <div style={{ fontSize: 14, color: '#1A1A1A', marginTop: 6 }}>Respirez...</div>}
-          <button style={{ ...btnSmStyle, marginTop: 12, background: data.meditationRunning ? '#1A1A1A' : '#1A1A1A', minWidth: 100 }}
+          <div style={{ fontSize: 42, fontWeight: 200, color: CU.text, fontFamily: 'monospace' }}>{fmtTime(data.meditationTimeLeft)}</div>
+          {data.meditationRunning && <div style={{ fontSize: 14, color: CU.text, marginTop: 6 }}>Respirez...</div>}
+          <button style={{ ...btnSmStyle, marginTop: 12, minWidth: 100 }}
             onClick={() => updateData({ meditationRunning: !data.meditationRunning })}>
-            {data.meditationRunning ? <>⏸️ Stop</> : <>🧘 Méditer</>}
+            {data.meditationRunning ? <>{'\u23F8\uFE0F'} Stop</> : <>{'\u{1F9D8}'} M\u00e9diter</>}
           </button>
-          {data.meditationTotal > 0 && <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 8 }}>Total aujourd'hui : {data.meditationTotal} min</div>}
+          {data.meditationTotal > 0 && <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 8 }}>Total aujourd'hui : {data.meditationTotal} min</div>}
         </div>
       </W>
     );
@@ -960,16 +958,16 @@ export default function JourneePage() {
   // ── W17: Sommeil ──
   function renderSommeil() {
     const h = data.sleepHours;
-    const col = h < 6 ? '#1A1A1A' : h < 7 ? '#6B6B6B' : h <= 9 ? '#1A1A1A' : '#6B6B6B';
-    const sleepIcon = h < 5 ? '😴' : h < 7 ? '🌙' : h <= 9 ? '😊' : '💤';
+    const col = h < 6 ? CU.danger : h < 7 ? CU.warning : h <= 9 ? CU.success : CU.textSecondary;
+    const sleepIcon = h < 5 ? '\u{1F634}' : h < 7 ? '\u{1F319}' : h <= 9 ? '\u{1F60A}' : '\u{1F4A4}';
     return (
       <W id="sommeil">
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' as const }}>
           <div style={{ fontSize: 36 }}>{sleepIcon}</div>
           <div style={{ fontSize: 24, fontWeight: 600, color: col, margin: '6px 0' }}>{h}h</div>
           <input type="range" min={0} max={12} step={0.5} value={h} onChange={e => updateData({ sleepHours: parseFloat(e.target.value) })}
             style={{ width: '100%', accentColor: col }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)' }}><span>0h</span><span>6h</span><span>8h</span><span>12h</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: CU.textMuted }}><span>0h</span><span>6h</span><span>8h</span><span>12h</span></div>
         </div>
       </W>
     );
@@ -980,10 +978,10 @@ export default function JourneePage() {
     const filled = data.gratitude.filter(g => g.trim()).length;
     return (
       <W id="gratitude">
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>{filled}/3 gratitudes</div>
+        <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 8 }}>{filled}/3 gratitudes</div>
         {data.gratitude.map((g, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 14 }}>❤️</span>
+            <span style={{ fontSize: 14 }}>{'\u2764\uFE0F'}</span>
             <input style={inputStyle} placeholder="Aujourd'hui, je suis reconnaissant pour..." value={g}
               onChange={e => { const next = [...data.gratitude]; next[i] = e.target.value; updateData({ gratitude: next }); }} />
           </div>
@@ -998,32 +996,32 @@ export default function JourneePage() {
     const text = data.affirmation || AFFIRMATIONS[idx];
     return (
       <W id="affirmation">
-        <div style={{ background: 'rgba(0,0,0,0.03)', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-          <div style={{ fontSize: 24, marginBottom: 8 }}>✨</div>
-          <div style={{ fontSize: 15, fontStyle: 'italic', color: 'var(--fz-text, #1A1A1A)', lineHeight: 1.5 }}>{text}</div>
+        <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 16, textAlign: 'center' as const }}>
+          <div style={{ fontSize: 24, marginBottom: 8 }}>{'\u2728'}</div>
+          <div style={{ fontSize: 15, fontStyle: 'italic', color: CU.text, lineHeight: 1.5 }}>{text}</div>
         </div>
         <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
           <button style={btnGhostStyle} onClick={() => updateData({ affirmationIndex: (data.affirmationIndex + 1) % AFFIRMATIONS.length, affirmation: '' })}>Nouvelle affirmation</button>
-          <input style={{ ...inputStyle, flex: 1, fontSize: 12 }} placeholder="Ou écrivez la vôtre..." value={data.affirmation}
+          <input style={{ ...inputStyle, flex: 1, fontSize: 12 }} placeholder="Ou \u00e9crivez la v\u00f4tre..." value={data.affirmation}
             onChange={e => updateData({ affirmation: e.target.value })} />
         </div>
       </W>
     );
   }
 
-  // ── W20: Météo ──
+  // ── W20: Meteo ──
   function renderMeteo() {
     const h = currentTime.getHours();
-    const weatherIcon = h >= 6 && h < 20 ? '🌤️' : '🌙';
+    const weatherIcon = h >= 6 && h < 20 ? '\u{1F324}\uFE0F' : '\u{1F319}';
     return (
       <W id="meteo">
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' as const }}>
           <div style={{ fontSize: 48 }}>{weatherIcon}</div>
-          <input style={{ ...inputStyle, textAlign: 'center', maxWidth: 200, margin: '8px auto' }} placeholder="Votre ville..." value={data.weatherCity}
+          <input style={{ ...inputStyle, textAlign: 'center' as const, maxWidth: 200, margin: '8px auto' }} placeholder="Votre ville..." value={data.weatherCity}
             onChange={e => updateData({ weatherCity: e.target.value })} />
-          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>Données météo simulées pour {data.weatherCity || '...'}</div>
-          <div style={{ fontSize: 28, fontWeight: 300, color: 'var(--fz-text, #1A1A1A)', marginTop: 4 }}>22°C</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #6B6B6B)' }}>Partiellement nuageux</div>
+          <div style={{ fontSize: 13, color: CU.textMuted, marginTop: 4 }}>Donn\u00e9es m\u00e9t\u00e9o simul\u00e9es pour {data.weatherCity || '...'}</div>
+          <div style={{ fontSize: 28, fontWeight: 300, color: CU.text, marginTop: 4 }}>22\u00b0C</div>
+          <div style={{ fontSize: 12, color: CU.textSecondary }}>Partiellement nuageux</div>
         </div>
       </W>
     );
@@ -1035,9 +1033,9 @@ export default function JourneePage() {
     const q = FRENCH_QUOTES[idx];
     return (
       <W id="citation">
-        <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: 14 }}>
-          <div style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--fz-text, #1A1A1A)', lineHeight: 1.6 }}>&laquo; {q.text} &raquo;</div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginTop: 8 }}>— {q.author}</div>
+        <div style={{ borderLeft: `3px solid ${CU.accent}`, paddingLeft: 14 }}>
+          <div style={{ fontSize: 14, fontStyle: 'italic', color: CU.text, lineHeight: 1.6 }}>&laquo; {q.text} &raquo;</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: CU.accent, marginTop: 8 }}>\u2014 {q.author}</div>
         </div>
         <button style={{ ...btnGhostStyle, marginTop: 10, fontSize: 11 }} onClick={() => updateData({ quoteIndex: (data.quoteIndex + 1) % FRENCH_QUOTES.length })}>Autre citation</button>
       </W>
@@ -1050,25 +1048,25 @@ export default function JourneePage() {
     const signIdx = ZODIAC_SIGNS.findIndex(z => z.id === data.horoscopeSign);
     return (
       <W id="horoscope">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', marginBottom: 10 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 6, justifyContent: 'center', marginBottom: 10 }}>
           {ZODIAC_SIGNS.map(z => (
             <button key={z.id} onClick={() => updateData({ horoscopeSign: z.id })} style={{
-              padding: '4px 8px', borderRadius: 8, fontSize: 12, border: data.horoscopeSign === z.id ? '2px solid var(--accent)' : '1px solid var(--fz-border, #E5E5E5)',
-              background: data.horoscopeSign === z.id ? 'rgba(0,0,0,0.04)' : 'var(--fz-bg-hover, #F0F0F0)', cursor: 'pointer', color: 'var(--fz-text, #1A1A1A)',
+              padding: '4px 8px', borderRadius: 8, fontSize: 12, border: data.horoscopeSign === z.id ? `2px solid ${CU.accent}` : `1px solid ${CU.border}`,
+              background: data.horoscopeSign === z.id ? CU.accentLight : CU.bgSecondary, cursor: 'pointer', color: CU.text,
             }}>{z.emoji} {z.label}</button>
           ))}
         </div>
-        {sign && <div style={{ background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
+        {sign && <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 12, textAlign: 'center' as const }}>
           <div style={{ fontSize: 28 }}>{sign.emoji}</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{sign.label}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{sign.dates}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginTop: 8, lineHeight: 1.5 }}>{ZODIAC_MESSAGES[signIdx >= 0 ? signIdx : 0]}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{sign.label}</div>
+          <div style={{ fontSize: 11, color: CU.textMuted }}>{sign.dates}</div>
+          <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 8, lineHeight: 1.5 }}>{ZODIAC_MESSAGES[signIdx >= 0 ? signIdx : 0]}</div>
         </div>}
       </W>
     );
   }
 
-  // ── W23: Actualités ──
+  // ── W23: Actualites ──
   function renderActualites() {
     const tab = NEWS_TABS.find(t => t.id === data.newsTab) || NEWS_TABS[0];
     return (
@@ -1076,16 +1074,16 @@ export default function JourneePage() {
         <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
           {NEWS_TABS.map(t => (
             <button key={t.id} onClick={() => updateData({ newsTab: t.id })} style={{
-              ...btnGhostStyle, background: data.newsTab === t.id ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: data.newsTab === t.id ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11, flex: 1,
+              ...btnGhostStyle, background: data.newsTab === t.id ? CU.accent : CU.accentLight, color: data.newsTab === t.id ? '#fff' : CU.text, fontSize: 11, flex: 1,
             }}>{t.label}</button>
           ))}
         </div>
         {tab.items.map((item, i) => (
-          <div key={i} style={{ padding: '6px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)', fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>
-            📰 {item}
+          <div key={i} style={{ padding: '6px 0', borderBottom: `1px solid ${CU.border}`, fontSize: 13, color: CU.text }}>
+            {'\u{1F4F0}'} {item}
           </div>
         ))}
-        <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 6, fontStyle: 'italic' }}>Actualités simulées</div>
+        <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 6, fontStyle: 'italic' }}>Actualit\u00e9s simul\u00e9es</div>
       </W>
     );
   }
@@ -1101,48 +1099,48 @@ export default function JourneePage() {
           <input type="date" style={{ ...inputStyle, width: 130 }} value={newBdayDate} onChange={e => setNewBdayDate(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newBdayName.trim() && newBdayDate) { updateData({ birthdays: [...data.birthdays, { id: uid(), name: newBdayName.trim(), date: newBdayDate }] }); setNewBdayName(''); setNewBdayDate(''); } }}>+</button>
         </div>
-        {todayBdays.length > 0 && <div style={{ background: 'rgba(0,0,0,0.04)', borderRadius: 8, padding: 10, marginBottom: 8 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>🎂 Aujourd'hui !</div>
-          {todayBdays.map(b => <div key={b.id} style={{ fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{b.name}</div>)}
+        {todayBdays.length > 0 && <div style={{ background: CU.accentLight, borderRadius: 8, padding: 10, marginBottom: 8 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{'\u{1F382}'} Aujourd'hui !</div>
+          {todayBdays.map(b => <div key={b.id} style={{ fontSize: 13, color: CU.text }}>{b.name}</div>)}
         </div>}
         {data.birthdays.map(b => (
           <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 13 }}>
-            <span style={{ color: 'var(--fz-text, #1A1A1A)' }}>{b.name}</span>
-            <span style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{b.date}</span>
-            <button onClick={() => updateData({ birthdays: data.birthdays.filter(x => x.id !== b.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13, marginLeft: 'auto' }}>✕</button>
+            <span style={{ color: CU.text }}>{b.name}</span>
+            <span style={{ fontSize: 11, color: CU.textMuted }}>{b.date}</span>
+            <button onClick={() => updateData({ birthdays: data.birthdays.filter(x => x.id !== b.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 13, marginLeft: 'auto' }}>{'\u2715'}</button>
           </div>
         ))}
       </W>
     );
   }
 
-  // ── W25: Éphéméride ──
+  // ── W25: Ephemeride ──
   function renderEphemeride() {
     const key = todayKey();
-    const events = EPHEMERIDE[key] || ["Pas d'événement notable enregistré pour cette date."];
+    const events = EPHEMERIDE[key] || ["Pas d'\u00e9v\u00e9nement notable enregistr\u00e9 pour cette date."];
     const saint = SAINTS[key] || 'Inconnu';
     return (
       <W id="ephemeride">
         <div style={{ marginBottom: 8 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}>📖 Ce jour dans l'histoire</div>
-          {events.map((ev, i) => <div key={i} style={{ fontSize: 13, color: 'var(--fz-text, #1A1A1A)', padding: '3px 0' }}>{'\u2022'} {ev}</div>)}
+          <div style={{ fontSize: 12, fontWeight: 600, color: CU.accent, marginBottom: 4 }}>{'\u{1F4D6}'} Ce jour dans l'histoire</div>
+          {events.map((ev, i) => <div key={i} style={{ fontSize: 13, color: CU.text, padding: '3px 0' }}>{'\u2022'} {ev}</div>)}
         </div>
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', borderTop: '1px solid var(--fz-border, #E5E5E5)', paddingTop: 8 }}>
-          Saint du jour : <strong style={{ color: 'var(--fz-text, #1A1A1A)' }}>{saint}</strong>
+        <div style={{ fontSize: 12, color: CU.textMuted, borderTop: `1px solid ${CU.border}`, paddingTop: 8 }}>
+          Saint du jour : <strong style={{ color: CU.text }}>{saint}</strong>
         </div>
       </W>
     );
   }
 
-  // ── W26: Crédits ──
+  // ── W26: Credits ──
   function renderCredits() {
     const credits = walletBalance != null ? walletBalance / 1000000 : null;
-    const col = credits == null ? 'var(--fz-text-muted, #9B9B9B)' : credits > 50 ? '#1A1A1A' : credits > 10 ? '#6B6B6B' : '#1A1A1A';
+    const col = credits == null ? CU.textMuted : credits > 50 ? CU.success : credits > 10 ? CU.warning : CU.danger;
     return (
       <W id="credits">
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' as const }}>
           <div style={{ fontSize: 32, fontWeight: 600, color: col }}>{credits != null ? `${credits.toFixed(1)}` : '...'}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>crédits restants</div>
+          <div style={{ fontSize: 12, color: CU.textMuted }}>cr\u00e9dits restants</div>
         </div>
       </W>
     );
@@ -1152,10 +1150,10 @@ export default function JourneePage() {
   function renderAgents() {
     return (
       <W id="agents">
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>🤖</div>
-          <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--accent)' }}>28</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>agents disponibles</div>
+        <div style={{ textAlign: 'center' as const }}>
+          <div style={{ fontSize: 28 }}>{'\u{1F916}'}</div>
+          <div style={{ fontSize: 20, fontWeight: 600, color: CU.accent }}>28</div>
+          <div style={{ fontSize: 12, color: CU.textMuted }}>agents disponibles</div>
         </div>
       </W>
     );
@@ -1165,10 +1163,10 @@ export default function JourneePage() {
   function renderMessagesNonLus() {
     return (
       <W id="messagesNonLus">
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>{notifCount > 0 ? '🔔' : '✅'}</div>
-          <div style={{ fontSize: 20, fontWeight: 600, color: notifCount > 0 ? '#1A1A1A' : '#6B6B6B' }}>{notifCount}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{notifCount > 0 ? 'messages non lus' : 'Aucun message non lu'}</div>
+        <div style={{ textAlign: 'center' as const }}>
+          <div style={{ fontSize: 28 }}>{notifCount > 0 ? '\u{1F514}' : '\u2705'}</div>
+          <div style={{ fontSize: 20, fontWeight: 600, color: notifCount > 0 ? CU.text : CU.textSecondary }}>{notifCount}</div>
+          <div style={{ fontSize: 12, color: CU.textMuted }}>{notifCount > 0 ? 'messages non lus' : 'Aucun message non lu'}</div>
         </div>
       </W>
     );
@@ -1178,10 +1176,10 @@ export default function JourneePage() {
   function renderProjets() {
     return (
       <W id="projets">
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 28 }}>📁</div>
-          <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--accent)' }}>{projectCount}</div>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>projets actifs</div>
+        <div style={{ textAlign: 'center' as const }}>
+          <div style={{ fontSize: 28 }}>{'\u{1F4C1}'}</div>
+          <div style={{ fontSize: 20, fontWeight: 600, color: CU.accent }}>{projectCount}</div>
+          <div style={{ fontSize: 12, color: CU.textMuted }}>projets actifs</div>
         </div>
       </W>
     );
@@ -1193,15 +1191,15 @@ export default function JourneePage() {
       <W id="kpis">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))', gap: 8 }}>
           {[
-            { label: 'Messages', value: '0', emoji: '💬' },
-            { label: 'Documents', value: '0', emoji: '📄' },
-            { label: 'Connexion', value: `${Math.floor((Date.now() - (data.focusStartedAt || Date.now())) / 60000)} min`, emoji: '⏱️' },
-            { label: 'Crédits', value: walletBalance != null ? `${(walletBalance / 1000000).toFixed(1)}` : '...', emoji: '💳' },
+            { label: 'Messages', value: '0', emoji: '\u{1F4AC}' },
+            { label: 'Documents', value: '0', emoji: '\u{1F4C4}' },
+            { label: 'Connexion', value: `${Math.floor((Date.now() - (data.focusStartedAt || Date.now())) / 60000)} min`, emoji: '\u23F1\uFE0F' },
+            { label: 'Cr\u00e9dits', value: walletBalance != null ? `${(walletBalance / 1000000).toFixed(1)}` : '...', emoji: '\u{1F4B3}' },
           ].map((kpi, i) => (
-            <div key={i} style={{ background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 8, padding: 10, textAlign: 'center' }}>
+            <div key={i} style={{ background: CU.bgSecondary, borderRadius: 8, padding: 10, textAlign: 'center' as const }}>
               <div style={{ fontSize: 16 }}>{kpi.emoji}</div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1A1A1A)' }}>{kpi.value}</div>
-              <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)' }}>{kpi.label}</div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: CU.text }}>{kpi.value}</div>
+              <div style={{ fontSize: 10, color: CU.textMuted }}>{kpi.label}</div>
             </div>
           ))}
         </div>
@@ -1209,11 +1207,11 @@ export default function JourneePage() {
     );
   }
 
-  // ── W31: Résumé hier ──
+  // ── W31: Resume hier ──
   function renderResume() {
     return (
       <W id="resume">
-        <textarea style={{ ...inputStyle, minHeight: 80, resize: 'vertical', fontSize: 12 }} placeholder="Résumé de la journée d'hier..."
+        <textarea style={{ ...inputStyle, minHeight: 80, resize: 'vertical' as const, fontSize: 12 }} placeholder="R\u00e9sum\u00e9 de la journ\u00e9e d'hier..."
           value={data.yesterdaySummary} onChange={e => updateData({ yesterdaySummary: e.target.value })} />
       </W>
     );
@@ -1222,17 +1220,17 @@ export default function JourneePage() {
   // ── W32: Budget ──
   function renderBudget() {
     const pct = data.budgetLimit > 0 ? Math.min(100, (data.budgetSpent / data.budgetLimit) * 100) : 0;
-    const col = pct < 50 ? '#1A1A1A' : pct < 80 ? '#6B6B6B' : '#1A1A1A';
+    const col = pct < 50 ? CU.success : pct < 80 ? CU.warning : CU.danger;
     return (
       <W id="budget">
         <div style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', flexShrink: 0 }}>Limite :</div>
+          <div style={{ fontSize: 12, color: CU.textMuted, flexShrink: 0 }}>Limite :</div>
           <input type="number" style={{ ...inputStyle, width: 80 }} value={data.budgetLimit} onChange={e => updateData({ budgetLimit: parseFloat(e.target.value) || 0 })} />
-          <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', flexShrink: 0 }}>Dépensé :</div>
+          <div style={{ fontSize: 12, color: CU.textMuted, flexShrink: 0 }}>D\u00e9pens\u00e9 :</div>
           <input type="number" style={{ ...inputStyle, width: 80 }} value={data.budgetSpent} onChange={e => updateData({ budgetSpent: parseFloat(e.target.value) || 0 })} />
         </div>
         <div style={progressBarOuter}><div style={{ height: '100%', borderRadius: 3, background: col, width: `${pct}%`, transition: 'width 0.3s' }} /></div>
-        <div style={{ fontSize: 11, color: col, textAlign: 'center', marginTop: 4, fontWeight: 600 }}>{pct.toFixed(0)}% du budget utilisé</div>
+        <div style={{ fontSize: 11, color: col, textAlign: 'center' as const, marginTop: 4, fontWeight: 600 }}>{pct.toFixed(0)}% du budget utilis\u00e9</div>
       </W>
     );
   }
@@ -1240,17 +1238,17 @@ export default function JourneePage() {
   // ── W33: Repas ──
   function renderRepas() {
     const meals = [
-      { key: 'mealPetitDej' as const, label: 'Petit-déjeuner', emoji: '🥐' },
-      { key: 'mealDejeuner' as const, label: 'Déjeuner', emoji: '🍽️' },
-      { key: 'mealDiner' as const, label: 'Dîner', emoji: '🌙' },
-      { key: 'mealSnack' as const, label: 'Snack', emoji: '🍪' },
+      { key: 'mealPetitDej' as const, label: 'Petit-d\u00e9jeuner', emoji: '\u{1F950}' },
+      { key: 'mealDejeuner' as const, label: 'D\u00e9jeuner', emoji: '\u{1F37D}\uFE0F' },
+      { key: 'mealDiner' as const, label: 'D\u00eener', emoji: '\u{1F319}' },
+      { key: 'mealSnack' as const, label: 'Snack', emoji: '\u{1F36A}' },
     ];
     return (
       <W id="repas">
         {meals.map(m => (
           <div key={m.key} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ fontSize: 16 }}>{m.emoji}</span>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', width: 90, flexShrink: 0 }}>{m.label}</div>
+            <div style={{ fontSize: 12, color: CU.textMuted, width: 90, flexShrink: 0 }}>{m.label}</div>
             <input style={{ ...inputStyle, flex: 1, fontSize: 12 }} placeholder="..." value={data[m.key]}
               onChange={e => updateData({ [m.key]: e.target.value } as Partial<JourneeData>)} />
           </div>
@@ -1266,12 +1264,12 @@ export default function JourneePage() {
         <input style={{ ...inputStyle, marginBottom: 8 }} placeholder="Titre du livre ou article..." value={data.currentBook}
           onChange={e => updateData({ currentBook: e.target.value })} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>Progression</span>
+          <span style={{ fontSize: 12, color: CU.textMuted }}>Progression</span>
           <input type="range" min={0} max={100} value={data.bookProgress} onChange={e => updateData({ bookProgress: parseInt(e.target.value) })}
-            style={{ flex: 1, accentColor: 'var(--accent)' }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>{data.bookProgress}%</span>
+            style={{ flex: 1, accentColor: CU.accent }} />
+          <span style={{ fontSize: 12, fontWeight: 600, color: CU.accent }}>{data.bookProgress}%</span>
         </div>
-        <div style={{ ...progressBarOuter, marginTop: 6 }}><div style={{ height: '100%', borderRadius: 3, background: 'var(--accent)', width: `${data.bookProgress}%`, transition: 'width 0.3s' }} /></div>
+        <div style={{ ...progressBarOuter, marginTop: 6 }}><div style={{ height: '100%', borderRadius: 3, background: CU.accent, width: `${data.bookProgress}%`, transition: 'width 0.3s' }} /></div>
       </W>
     );
   }
@@ -1281,17 +1279,17 @@ export default function JourneePage() {
     return (
       <W id="habitudes">
         {data.habits.map(h => (
-          <div key={h.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
+          <div key={h.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: `1px solid ${CU.border}` }}>
             <span style={{ fontSize: 14 }}>{h.emoji}</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{h.label}</span>
-            {h.streak > 0 && <span style={{ fontSize: 11, color: '#6B6B6B', fontWeight: 600 }}>🔥{h.streak}j</span>}
+            <span style={{ flex: 1, fontSize: 13, color: CU.text }}>{h.label}</span>
+            {h.streak > 0 && <span style={{ fontSize: 11, color: CU.textSecondary, fontWeight: 600 }}>{'\u{1F525}'}{h.streak}j</span>}
             <button onClick={() => {
               const next = data.habits.map(x => x.id === h.id ? { ...x, doneToday: !x.doneToday, streak: !x.doneToday ? x.streak + 1 : Math.max(0, x.streak - 1) } : x);
               updateData({ habits: next });
-            }} style={{ height: 36, padding: '0 12px', borderRadius: 8, fontSize: 12, border: 'none', cursor: 'pointer', background: h.doneToday ? '#1A1A1A' : 'var(--fz-bg-hover, #F0F0F0)', color: h.doneToday ? '#fff' : 'var(--fz-text, #1A1A1A)', fontWeight: 600 }}>
-              {h.doneToday ? '✅' : 'Fait'}
+            }} style={{ ...CU.btnPrimary, height: 32, padding: '0 12px', fontSize: 12, background: h.doneToday ? CU.accent : CU.accentLight, color: h.doneToday ? '#fff' : CU.text }}>
+              {h.doneToday ? '\u2705' : 'Fait'}
             </button>
-            <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 12 }}>✕</button>
+            <button onClick={() => updateData({ habits: data.habits.filter(x => x.id !== h.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 12 }}>{'\u2715'}</button>
           </div>
         ))}
         <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
@@ -1308,15 +1306,15 @@ export default function JourneePage() {
       <W id="contactsFav">
         <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
           <input style={{ ...inputStyle, flex: 1 }} placeholder="Nom..." value={newContactName} onChange={e => setNewContactName(e.target.value)} />
-          <input style={{ ...inputStyle, width: 120 }} placeholder="Téléphone..." value={newContactPhone} onChange={e => setNewContactPhone(e.target.value)} />
+          <input style={{ ...inputStyle, width: 120 }} placeholder="T\u00e9l\u00e9phone..." value={newContactPhone} onChange={e => setNewContactPhone(e.target.value)} />
           <button style={btnSmStyle} onClick={() => { if (newContactName.trim()) { updateData({ contacts: [...data.contacts, { id: uid(), name: newContactName.trim(), phone: newContactPhone, emoji: 'person' }] }); setNewContactName(''); setNewContactPhone(''); } }}>+</button>
         </div>
         {data.contacts.map(c => (
-          <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: '1px solid var(--fz-border, #E5E5E5)' }}>
-            <span style={{ fontSize: 14 }}>{c.emoji === 'person' ? '👤' : c.emoji}</span>
-            <span style={{ flex: 1, fontSize: 13, color: 'var(--fz-text, #1A1A1A)' }}>{c.name}</span>
-            <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{c.phone}</span>
-            <button onClick={() => updateData({ contacts: data.contacts.filter(x => x.id !== c.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 13 }}>✕</button>
+          <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: `1px solid ${CU.border}` }}>
+            <span style={{ fontSize: 14 }}>{c.emoji === 'person' ? '\u{1F464}' : c.emoji}</span>
+            <span style={{ flex: 1, fontSize: 13, color: CU.text }}>{c.name}</span>
+            <span style={{ fontSize: 12, color: CU.textMuted }}>{c.phone}</span>
+            <button onClick={() => updateData({ contacts: data.contacts.filter(x => x.id !== c.id) })} style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 13 }}>{'\u2715'}</button>
           </div>
         ))}
       </W>
@@ -1327,15 +1325,15 @@ export default function JourneePage() {
   function renderPlaylist() {
     return (
       <W id="playlist">
-        <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' as const }}>
           {Object.entries(PLAYLIST_PRESETS).map(([key, _]) => (
             <button key={key} onClick={() => updateData({ playlistPreset: key, playlistNote: PLAYLIST_PRESETS[key] })}
-              style={{ ...btnGhostStyle, background: data.playlistPreset === key ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: data.playlistPreset === key ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11, textTransform: 'capitalize' }}>
+              style={{ ...btnGhostStyle, background: data.playlistPreset === key ? CU.accent : CU.accentLight, color: data.playlistPreset === key ? '#fff' : CU.text, fontSize: 11, textTransform: 'capitalize' as const }}>
               {key}
             </button>
           ))}
         </div>
-        <textarea style={{ ...inputStyle, minHeight: 60, resize: 'vertical', fontSize: 12 }} placeholder="Notes musicales du jour..."
+        <textarea style={{ ...inputStyle, minHeight: 60, resize: 'vertical' as const, fontSize: 12 }} placeholder="Notes musicales du jour..."
           value={data.playlistNote} onChange={e => updateData({ playlistNote: e.target.value })} />
       </W>
     );
@@ -1346,9 +1344,9 @@ export default function JourneePage() {
     const words = data.journal.trim() ? data.journal.trim().split(/\s+/).length : 0;
     return (
       <W id="journal">
-        <textarea style={{ ...inputStyle, minHeight: 120, resize: 'vertical' }} placeholder="Écrivez librement... Cet espace est privé."
+        <textarea style={{ ...inputStyle, minHeight: 120, resize: 'vertical' as const }} placeholder="\u00c9crivez librement... Cet espace est priv\u00e9."
           value={data.journal} onChange={e => updateData({ journal: e.target.value.slice(0, 10000) })} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: CU.textMuted, marginTop: 4 }}>
           <span>{words} mot{words > 1 ? 's' : ''}</span>
           <span>{data.journal.length}/10000</span>
         </div>
@@ -1364,15 +1362,15 @@ export default function JourneePage() {
     if (!showConfig) return null;
     const filtered = configFilter === 'all' ? WIDGETS : WIDGETS.filter(w => w.category === configFilter);
     return (
-      <div style={{ background: 'var(--fz-bg, #fff)', borderRadius: 8, border: '1px solid var(--border-primary, #E5E5E5)', padding: 16, marginBottom: 20 }}>
+      <div style={{ ...CU.card, padding: 16, marginBottom: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>Configurer mes widgets</span>
-          <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)' }}>✕</button>
+          <span style={CU.sectionTitle}>Configurer mes widgets</span>
+          <button onClick={() => setShowConfig(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: CU.textMuted }}>{'\u2715'}</button>
         </div>
-        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 12 }}>
-          <button onClick={() => setConfigFilter('all')} style={{ ...btnGhostStyle, background: configFilter === 'all' ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: configFilter === 'all' ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11 }}>Tous</button>
+        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' as const, marginBottom: 12 }}>
+          <button onClick={() => setConfigFilter('all')} style={{ ...btnGhostStyle, background: configFilter === 'all' ? CU.accent : CU.accentLight, color: configFilter === 'all' ? '#fff' : CU.text, fontSize: 11 }}>Tous</button>
           {CATEGORIES.map(c => (
-            <button key={c.id} onClick={() => setConfigFilter(c.id)} style={{ ...btnGhostStyle, background: configFilter === c.id ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', color: configFilter === c.id ? '#fff' : 'var(--fz-text, #1A1A1A)', fontSize: 11 }}>
+            <button key={c.id} onClick={() => setConfigFilter(c.id)} style={{ ...btnGhostStyle, background: configFilter === c.id ? CU.accent : CU.accentLight, color: configFilter === c.id ? '#fff' : CU.text, fontSize: 11 }}>
               {c.emoji} {c.label}
             </button>
           ))}
@@ -1381,22 +1379,22 @@ export default function JourneePage() {
           {filtered.map(w => (
             <button key={w.id} onClick={() => toggleVisibility(w.id)} style={{
               display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 8,
-              border: isVisible(w.id) ? '1px solid var(--accent)' : '1px solid var(--fz-border, #E5E5E5)',
-              background: isVisible(w.id) ? 'rgba(0,0,0,0.03)' : 'var(--fz-bg-secondary, #F7F7F7)',
-              cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
+              border: isVisible(w.id) ? `1px solid ${CU.accent}` : `1px solid ${CU.border}`,
+              background: isVisible(w.id) ? CU.accentLight : CU.bgSecondary,
+              cursor: 'pointer', textAlign: 'left' as const, fontFamily: 'inherit',
             }}>
               <span style={{ fontSize: 14 }}>{w.emoji}</span>
-              <span style={{ fontSize: 12, color: 'var(--fz-text, #1A1A1A)', flex: 1 }}>{w.label}</span>
-              <div style={{ width: 32, height: 18, borderRadius: 9, background: isVisible(w.id) ? 'var(--accent)' : 'var(--fz-bg-hover, #F0F0F0)', position: 'relative', transition: 'background 0.2s' }}>
-                <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: isVisible(w.id) ? 16 : 2, transition: 'left 0.2s',  }} />
+              <span style={{ fontSize: 12, color: CU.text, flex: 1 }}>{w.label}</span>
+              <div style={{ width: 32, height: 18, borderRadius: 9, background: isVisible(w.id) ? CU.accent : CU.accentLight, position: 'relative' as const, transition: 'background 0.2s' }}>
+                <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff', position: 'absolute' as const, top: 2, left: isVisible(w.id) ? 16 : 2, transition: 'left 0.2s' }} />
               </div>
             </button>
           ))}
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           <button style={btnSmStyle} onClick={() => { const next: Record<string, boolean> = {}; WIDGETS.forEach(w => { next[w.id] = true; }); setVisibility(next); }}>Tout activer</button>
-          <button style={btnGhostStyle} onClick={() => { const next: Record<string, boolean> = {}; WIDGETS.forEach(w => { next[w.id] = false; }); setVisibility(next); }}>Tout désactiver</button>
-          <button style={btnGhostStyle} onClick={() => { const next: Record<string, boolean> = {}; WIDGETS.forEach(w => { next[w.id] = w.defaultVisible; }); setVisibility(next); }}>Par défaut</button>
+          <button style={btnGhostStyle} onClick={() => { const next: Record<string, boolean> = {}; WIDGETS.forEach(w => { next[w.id] = false; }); setVisibility(next); }}>Tout d\u00e9sactiver</button>
+          <button style={btnGhostStyle} onClick={() => { const next: Record<string, boolean> = {}; WIDGETS.forEach(w => { next[w.id] = w.defaultVisible; }); setVisibility(next); }}>Par d\u00e9faut</button>
         </div>
       </div>
     );
@@ -1423,45 +1421,45 @@ export default function JourneePage() {
   const visibleCount = WIDGETS.filter(w => isVisible(w.id)).length;
 
   return (
-    <div className="page-container client-page-scrollable" style={{ maxWidth: 1200, margin: '0 auto', padding: '20px 16px' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 1200 }}>
       {/* Page Header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.journee.emoji}</span>
+      <div style={{ marginBottom: 4 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.journee.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.journee.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.journee.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.journee.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.journee.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.journee.helpText} />
         </div>
       </div>
       <PageExplanation pageId="journee" text={PAGE_META.journee?.helpText} />
       {/* Clock & Greeting */}
-      <div style={{ textAlign: 'center', marginBottom: 24 }}>
-        <div style={{ fontSize: 42, fontWeight: 200, color: 'var(--fz-text-muted, #9B9B9B)', letterSpacing: '-0.03em', fontFamily: 'monospace' }}>
+      <div style={{ textAlign: 'center' as const, marginBottom: 24 }}>
+        <div style={{ fontSize: 42, fontWeight: 200, color: CU.textMuted, letterSpacing: '-0.03em', fontFamily: 'monospace' }}>
           {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
         </div>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)', margin: '8px 0 4px', letterSpacing: '-0.02em' }}>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: CU.text, margin: '8px 0 4px', letterSpacing: '-0.02em' }}>
           {getGreeting()}{session.displayName ? `, ${session.displayName}` : ''} !
         </h1>
-        <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #6B6B6B)', textTransform: 'capitalize', margin: '0 0 4px' }}><span className="fz-logo-word">{formatFrenchDate()}</span></p>
-        <p style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500 }}>Votre journée <span className="fz-logo-word">intelligente</span> en un coup d&apos;œil</p>
+        <p style={{ fontSize: 14, color: CU.textSecondary, textTransform: 'capitalize' as const, margin: '0 0 4px' }}><span className="fz-logo-word">{formatFrenchDate()}</span></p>
+        <p style={{ fontSize: 13, color: CU.accent, fontWeight: 500 }}>Votre journ\u00e9e <span className="fz-logo-word">intelligente</span> en un coup d&apos;\u0153il</p>
       </div>
 
       {/* Tab switcher */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 20 }}>
         {[
-          { id: 'briefing', label: 'Briefing IA', icon: '☀️' },
-          { id: 'widgets', label: 'Ma Journée', icon: '📅' },
+          { id: 'briefing', label: 'Briefing IA', icon: '\u2600\uFE0F' },
+          { id: 'widgets', label: 'Ma Journ\u00e9e', icon: '\u{1F4C5}' },
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as 'briefing' | 'widgets')}
             style={{
               padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600,
-              border: activeTab === tab.id ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E5E5E5)',
-              background: activeTab === tab.id ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
-              color: activeTab === tab.id ? '#fff' : 'var(--fz-text-secondary, #6B6B6B)',
+              border: activeTab === tab.id ? `1.5px solid ${CU.accent}` : `1.5px solid ${CU.border}`,
+              background: activeTab === tab.id ? CU.accent : CU.bgSecondary,
+              color: activeTab === tab.id ? '#fff' : CU.textSecondary,
               cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s',
               display: 'flex', alignItems: 'center', gap: 6,
             }}
@@ -1474,12 +1472,12 @@ export default function JourneePage() {
       {/* Briefing IA tab */}
       {activeTab === 'briefing' && <BriefingTab />}
 
-      {/* Ma Journée tab — widgets */}
+      {/* Ma Journee tab — widgets */}
       {activeTab === 'widgets' && <>
         {/* Config button */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-          <button onClick={() => setShowConfig(!showConfig)} style={{ ...btnSmStyle, background: showConfig ? '#1A1A1A' : '#1A1A1A', fontSize: 13, padding: '8px 20px' }}>
-            {showConfig ? <>✕ Fermer</> : <>⚙️ Configurer mes widgets ({visibleCount}/{WIDGETS.length})</>}
+          <button onClick={() => setShowConfig(!showConfig)} style={{ ...btnSmStyle, fontSize: 13, padding: '8px 20px' }}>
+            {showConfig ? <>{'\u2715'} Fermer</> : <>{'\u2699\uFE0F'} Configurer mes widgets ({visibleCount}/{WIDGETS.length})</>}
           </button>
         </div>
 
@@ -1493,8 +1491,8 @@ export default function JourneePage() {
             <div key={cat.id} style={{ marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                 <span style={{ fontSize: 16 }}>{cat.emoji}</span>
-                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{cat.label}</span>
-                <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)' }}>{catWidgets.length} widget{catWidgets.length > 1 ? 's' : ''}</span>
+                <span style={{ ...CU.sectionTitle, fontSize: 16 }}>{cat.label}</span>
+                <span style={{ fontSize: 12, color: CU.textMuted }}>{catWidgets.length} widget{catWidgets.length > 1 ? 's' : ''}</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(340px, 100%), 1fr))', gap: 12 }}>
                 {catWidgets.map(w => {
@@ -1507,9 +1505,10 @@ export default function JourneePage() {
         })}
 
         {visibleCount === 0 && (
-          <div style={{ textAlign: 'center', padding: 60, color: 'var(--fz-text-muted, #9B9B9B)' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>💬</div>
-            <div style={{ fontSize: 15 }}>Aucun widget actif. Cliquez sur &quot;Configurer&quot; pour en activer.</div>
+          <div style={CU.emptyState}>
+            <div style={CU.emptyEmoji}>{'\u{1F4AC}'}</div>
+            <div style={CU.emptyTitle}>Aucun widget actif</div>
+            <div style={CU.emptyDesc}>Cliquez sur &quot;Configurer&quot; pour en activer.</div>
           </div>
         )}
       </>}

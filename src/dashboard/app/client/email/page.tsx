@@ -5,6 +5,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Email IA
@@ -54,10 +55,49 @@ const TONE_GREETINGS: Record<string, { opening: string; closing: string }> = {
   'Décontracté': { opening: 'Hey', closing: 'Ciao' },
 };
 
-function generateEmailBody(subject: string, tone: string, lang: string): string {
-  const g = TONE_GREETINGS[tone] || TONE_GREETINGS['Professionnel'];
-  const langTag = lang !== 'Français' ? `[${lang}] ` : '';
-  return `${langTag}${g.opening},\n\nJe vous écris au sujet de : "${subject}".\n\n[Contenu généré par l'IA — connectez l'API Anthropic pour une génération réelle]\n\nCe message a été rédigé en ton ${tone.toLowerCase()}.\n\n${g.closing},\n[Votre nom]`;
+async function generateEmailWithAI(subject: string, tone: string, lang: string, to: string): Promise<string> {
+  const session = JSON.parse(localStorage.getItem('fz_session') ?? '{}');
+  if (!session.token) {
+    // Fallback local si pas de session
+    const g = TONE_GREETINGS[tone] || TONE_GREETINGS['Professionnel'];
+    return `${g.opening},\n\nJe vous écris au sujet de : "${subject}".\n\nConnectez-vous pour générer un email complet avec l'IA.\n\n${g.closing},\n[Votre nom]`;
+  }
+
+  const prompt = `Tu es un rédacteur d'emails professionnel chez Freenzy.io. Rédige un email complet et prêt à envoyer.
+
+Paramètres :
+- Objet : ${subject}
+- Ton : ${tone}
+- Langue : ${lang}
+- Destinataire : ${to || 'non précisé'}
+
+Règles :
+- Rédige UNIQUEMENT le corps de l'email (pas d'objet, pas de métadonnées)
+- Adapte le style au ton demandé (${tone})
+- Rédige dans la langue demandée (${lang})
+- Inclus une formule d'ouverture et de clôture appropriée
+- Sois concis mais complet (150-300 mots)
+- Utilise [Votre nom] comme signature
+- Ne mets PAS de guillemets autour du texte`;
+
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token: session.token,
+      model: 'claude-haiku-4-5-20251001',
+      messages: [{ role: 'user', content: prompt }],
+      maxTokens: 1024,
+      agentName: 'fz-assistante',
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Erreur ${res.status}`);
+  }
+
+  const data = await res.json();
+  return data.content || data.message || data.text || '';
 }
 
 function seedDemoEmails(): GeneratedEmail[] {
@@ -95,6 +135,8 @@ export default function EmailPage() {
   const [emails, setEmails] = useState<GeneratedEmail[]>([]);
   const [activeTab, setActiveTab] = useState<'composer' | 'templates' | 'history'>('composer');
   const [copied, setCopied] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState('');
   const [previewEmail, setPreviewEmail] = useState<GeneratedEmail | null>(null);
 
   useEffect(() => {
@@ -115,20 +157,28 @@ export default function EmailPage() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch { /* */ }
   }
 
-  function handleGenerate() {
+  async function handleGenerate() {
     if (!subject.trim()) return;
-    const generated = generateEmailBody(subject, tone, language);
-    const email: GeneratedEmail = {
-      id: `email-${Date.now()}`,
-      to: to || 'destinataire@email.com',
-      subject,
-      body: generated,
-      tone,
-      language,
-      createdAt: new Date().toISOString(),
-    };
-    setBody(generated);
-    saveEmails([email, ...emails]);
+    setGenerating(true);
+    setGenError('');
+    try {
+      const generated = await generateEmailWithAI(subject, tone, language, to);
+      const email: GeneratedEmail = {
+        id: `email-${Date.now()}`,
+        to: to || 'destinataire@email.com',
+        subject,
+        body: generated,
+        tone,
+        language,
+        createdAt: new Date().toISOString(),
+      };
+      setBody(generated);
+      saveEmails([email, ...emails]);
+    } catch (err) {
+      setGenError(err instanceof Error ? err.message : 'Erreur de génération');
+    } finally {
+      setGenerating(false);
+    }
   }
 
   function handleCopy() {
@@ -156,36 +206,25 @@ export default function EmailPage() {
     { id: 'history' as const, label: 'Historique', emoji: '📜' },
   ];
 
-  const cardStyle: React.CSSProperties = {
-    background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20,
-    border: '1px solid var(--border-primary)',
-  };
-
   return (
-    <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 900, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{
-          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--text-primary)',
-          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
-        }}>
-          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta?.emoji}</span>
-          {meta?.title}
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta?.emoji}</span>
+          <h1 style={CU.pageTitle}>
+            {meta?.title}
+          </h1>
           <HelpBubble text={meta?.helpText || ''} />
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{meta?.subtitle}</p>
+        </div>
+        <p style={CU.pageSubtitle}>{meta?.subtitle}</p>
       </div>
       <PageExplanation pageId="email" text={PAGE_META.email?.helpText} />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+      <div style={tabBar()}>
         {TABS.map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-            padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border-primary)',
-            background: activeTab === tab.id ? 'var(--accent)' : 'var(--bg-secondary)',
-            color: activeTab === tab.id ? '#fff' : 'var(--text-primary)',
-            cursor: 'pointer', fontWeight: 600, fontSize: 13,
-          }}>
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={activeTab === tab.id ? CU.tabActive : CU.tab}>
             {tab.emoji} {tab.label}
           </button>
         ))}
@@ -194,42 +233,42 @@ export default function EmailPage() {
       {/* Composer */}
       {activeTab === 'composer' && (
         <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 16 }}>
-          <div style={{ flex: 1, ...cardStyle }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>
+          <div style={{ flex: 1, ...CU.card }}>
+            <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
               ✍️ Nouveau email
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <input type="email" placeholder="Destinataire (To)" value={to} onChange={e => setTo(e.target.value)}
-                style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 }} />
+                style={CU.input} />
               <input type="text" placeholder="Objet de l'email" value={subject} onChange={e => setSubject(e.target.value)}
-                style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 }} />
+                style={CU.input} />
 
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <select value={tone} onChange={e => setTone(e.target.value)}
-                  style={{ flex: 1, minWidth: 140, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13 }}>
+                  style={{ ...CU.select, flex: 1, minWidth: 140 }}>
                   {TONES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
                 <select value={language} onChange={e => setLanguage(e.target.value)}
-                  style={{ flex: 1, minWidth: 140, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13 }}>
+                  style={{ ...CU.select, flex: 1, minWidth: 140 }}>
                   {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
                 </select>
               </div>
 
               <textarea placeholder="Corps du message (optionnel — l'IA le génère pour vous)" value={body}
                 onChange={e => setBody(e.target.value)} rows={8}
-                style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14, resize: 'vertical', fontFamily: 'inherit' }} />
+                style={{ ...CU.textarea, fontFamily: 'inherit' }} />
+
+              {genError && (
+                <div style={{ padding: '8px 12px', borderRadius: 8, background: '#FEF2F2', border: `1px solid ${CU.danger}`, fontSize: 12, color: CU.danger }}>
+                  {genError}
+                </div>
+              )}
 
               <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={handleGenerate} style={{
-                  flex: 1, padding: '10px 16px', borderRadius: 8, border: 'none',
-                  background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
-                }}>
-                  ✨ Générer avec l'IA
+                <button onClick={handleGenerate} disabled={generating || !subject.trim()} style={{ ...CU.btnPrimary, flex: 1, opacity: generating ? 0.7 : 1 }}>
+                  {generating ? '⏳ Génération en cours...' : '✨ Générer avec l\'IA'}
                 </button>
-                <button onClick={handleCopy} style={{
-                  padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                  background: 'var(--bg-primary)', color: 'var(--text-primary)', fontWeight: 600, fontSize: 14, cursor: 'pointer',
-                }}>
+                <button onClick={handleCopy} style={CU.btnGhost}>
                   {copied ? '✅ Copié' : '📋 Copier'}
                 </button>
               </div>
@@ -238,18 +277,18 @@ export default function EmailPage() {
 
           {/* Preview */}
           {body && (
-            <div style={{ flex: 1, ...cardStyle }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>
+            <div style={{ flex: 1, ...CU.card }}>
+              <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
                 👁️ Aperçu
               </h3>
-              <div style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: 16, border: '1px solid var(--border-primary)' }}>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4 }}>
+              <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 16, border: `1px solid ${CU.border}` }}>
+                <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 4 }}>
                   <strong>À :</strong> {to || 'destinataire@email.com'}
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 12 }}>
+                <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 12 }}>
                   <strong>Objet :</strong> {subject || '(sans objet)'}
                 </div>
-                <div style={{ fontSize: 14, color: 'var(--text-primary)', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 14, color: CU.text, whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                   {body}
                 </div>
               </div>
@@ -260,19 +299,19 @@ export default function EmailPage() {
 
       {/* Templates */}
       {activeTab === 'templates' && (
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
+        <div style={cardGrid(isMobile, 2)}>
           {TEMPLATES.map(t => (
             <div key={t.id} onClick={() => handleTemplateClick(t)} style={{
-              ...cardStyle, cursor: 'pointer', transition: 'box-shadow 0.15s',
+              ...CU.cardHoverable,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                <span style={{ fontSize: 24 }}>{t.emoji}</span>
+                <span style={emojiIcon(24)}>{t.emoji}</span>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>{t.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Ton : {t.tone}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: CU.text }}>{t.title}</div>
+                  <div style={{ fontSize: 12, color: CU.textSecondary }}>Ton : {t.tone}</div>
                 </div>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: 13, color: CU.textSecondary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {t.subject}
               </div>
             </div>
@@ -284,32 +323,26 @@ export default function EmailPage() {
       {activeTab === 'history' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {emails.length === 0 && (
-            <div style={{ ...cardStyle, textAlign: 'center', padding: 40 }}>
-              <span style={{ fontSize: 40 }}>📭</span>
-              <p style={{ color: 'var(--text-secondary)', marginTop: 12 }}>Aucun email généré pour le moment</p>
+            <div style={CU.emptyState}>
+              <span style={CU.emptyEmoji}>📭</span>
+              <p style={CU.emptyDesc}>Aucun email généré pour le moment</p>
             </div>
           )}
           {emails.map(e => (
-            <div key={e.id} style={cardStyle}>
+            <div key={e.id} style={CU.card}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>{e.subject}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: CU.text }}>{e.subject}</div>
+                  <div style={{ fontSize: 12, color: CU.textSecondary }}>
                     À : {e.to} — {e.tone} — {e.language} — {new Date(e.createdAt).toLocaleDateString('fr-FR')}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  <button onClick={() => setPreviewEmail(e)} style={{
-                    padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                    background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 12, cursor: 'pointer',
-                  }}>👁️</button>
-                  <button onClick={() => handleDelete(e.id)} style={{
-                    padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                    background: 'var(--bg-primary)', color: '#ef4444', fontSize: 12, cursor: 'pointer',
-                  }}>🗑️</button>
+                  <button onClick={() => setPreviewEmail(e)} style={CU.btnSmall}>👁️</button>
+                  <button onClick={() => handleDelete(e.id)} style={{ ...CU.btnSmall, color: CU.danger }}>🗑️</button>
                 </div>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'pre-wrap', maxHeight: 80, overflow: 'hidden' }}>
+              <div style={{ fontSize: 13, color: CU.textSecondary, whiteSpace: 'pre-wrap', maxHeight: 80, overflow: 'hidden' }}>
                 {e.body}
               </div>
             </div>
@@ -319,35 +352,25 @@ export default function EmailPage() {
 
       {/* Preview Modal */}
       {previewEmail && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 9999, padding: 20,
-        }} onClick={() => setPreviewEmail(null)}>
-          <div onClick={e => e.stopPropagation()} style={{
-            background: 'var(--bg-primary)', borderRadius: 16, padding: 24,
-            maxWidth: 600, width: '100%', maxHeight: '80vh', overflow: 'auto',
-          }}>
+        <div style={CU.overlay} onClick={() => setPreviewEmail(null)}>
+          <div onClick={e => e.stopPropagation()} style={CU.modal}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>✉️ {previewEmail.subject}</h3>
+              <h3 style={CU.sectionTitle}>✉️ {previewEmail.subject}</h3>
               <button onClick={() => setPreviewEmail(null)} style={{
-                background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-secondary)',
+                background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: CU.textSecondary,
               }}>✕</button>
             </div>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12 }}>
+            <div style={{ fontSize: 13, color: CU.textSecondary, marginBottom: 12 }}>
               À : {previewEmail.to} | Ton : {previewEmail.tone} | Langue : {previewEmail.language}
             </div>
             <div style={{
-              background: 'var(--bg-secondary)', borderRadius: 8, padding: 16,
-              fontSize: 14, color: 'var(--text-primary)', whiteSpace: 'pre-wrap', lineHeight: 1.6,
+              background: CU.bgSecondary, borderRadius: 8, padding: 16,
+              fontSize: 14, color: CU.text, whiteSpace: 'pre-wrap', lineHeight: 1.6,
             }}>
               {previewEmail.body}
             </div>
             <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
-              <button onClick={handleCopy} style={{
-                padding: '8px 16px', borderRadius: 8, border: 'none',
-                background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer',
-              }}>
+              <button onClick={handleCopy} style={CU.btnPrimary}>
                 {copied ? '✅ Copié' : '📋 Copier le texte'}
               </button>
             </div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import PageExplanation from '@/components/PageExplanation';
 import { useIsMobile } from '@/lib/use-media-query';
 import { PAGE_META } from '@/lib/emoji-map';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -328,38 +329,6 @@ footer{background:${isDark ? '#111' : '#333'};color:#ccc;padding:20px;text-align
     { id: 'editor' as const, label: 'Éditeur' },
   ];
 
-  // Input style helper
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '8px 12px',
-    borderRadius: 8,
-    border: '1px solid var(--border-primary)',
-    background: 'var(--bg-secondary)',
-    color: 'var(--text-primary)',
-    fontSize: 13,
-    outline: 'none',
-    boxSizing: 'border-box',
-    marginBottom: 10,
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 12,
-    fontWeight: 600,
-    color: 'var(--text-secondary)',
-    display: 'block',
-    marginBottom: 4,
-  };
-
-  const sectionTitleStyle: React.CSSProperties = {
-    fontSize: 14,
-    fontWeight: 700,
-    color: 'var(--text-primary)',
-    marginBottom: 10,
-    marginTop: 16,
-    paddingBottom: 6,
-    borderBottom: '1px solid var(--border-primary)',
-  };
-
   // ─── Preview renderer ─────────────────────────────────────────────────────
 
   function renderPreview(page: LandingPage, compact: boolean = false) {
@@ -367,9 +336,9 @@ footer{background:${isDark ? '#111' : '#333'};color:#ccc;padding:20px;text-align
     const scale = compact ? 0.5 : 1;
     return (
       <div style={{
-        borderRadius: compact ? 8 : 12,
+        borderRadius: 8,
         overflow: 'hidden',
-        border: '1px solid var(--border-primary)',
+        border: `1px solid ${CU.border}`,
         fontSize: 14 * scale,
         lineHeight: 1.4,
         background: th.bg,
@@ -428,404 +397,318 @@ footer{background:${isDark ? '#111' : '#333'};color:#ccc;padding:20px;text-align
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: isMobile ? '16px 12px' : '32px 24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 22 }}>{meta.emoji}</span>
-            <div>
-              <h1 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{meta.title}</h1>
-              <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: '2px 0 0' }}>{meta.subtitle}</p>
-            </div>
-          </div>
-        </div>
-        <PageExplanation pageId="landing-builder" text={meta?.helpText} />
-
-        {/* Stats */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-          {[
-            { emoji: '📄', label: 'Pages créées', value: store.pages.length },
-            { emoji: '🎨', label: 'Templates', value: TEMPLATES.length },
-          ].map(s => (
-            <div key={s.label} style={{
-              flex: '1 1 140px',
-              background: 'var(--bg-secondary)',
-              borderRadius: 12,
-              padding: isMobile ? 14 : 18,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              border: '1px solid var(--border-primary)',
-            }}>
-              <span style={{ fontSize: 24 }}>{s.emoji}</span>
-              <div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>{s.value}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{s.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Tabs */}
-        <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid var(--border-primary)', paddingBottom: 0 }}>
-          {tabs.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                borderBottom: tab === t.id ? '2px solid var(--accent)' : '2px solid transparent',
-                padding: '10px 18px',
-                fontSize: 14,
-                fontWeight: tab === t.id ? 700 : 500,
-                color: tab === t.id ? 'var(--accent)' : 'var(--text-secondary)',
-                cursor: 'pointer',
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* TAB: Mes pages */}
-        {tab === 'pages' && (
+    <div style={pageContainer(isMobile)}>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta.emoji}</span>
           <div>
-            {store.pages.length === 0 && (
-              <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)', fontSize: 14 }}>
-                Aucune page cr&eacute;&eacute;e. Commencez par choisir un template !
-              </div>
-            )}
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 16 }}>
-              {store.pages.map(page => (
-                <div key={page.id} style={{
-                  background: 'var(--bg-secondary)',
-                  borderRadius: 12,
-                  padding: isMobile ? 16 : 20,
-                  border: '1px solid var(--border-primary)',
-                }}>
-                  <div style={{ marginBottom: 12 }}>
-                    {renderPreview(page, true)}
-                  </div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>{page.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 10 }}>
-                    Template : {TEMPLATES.find(t => t.id === page.templateId)?.name || page.templateId} &bull; {page.updatedAt}
-                  </div>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    <button
-                      onClick={() => { setEditingId(page.id); setTab('editor'); }}
-                      style={{
-                        background: 'var(--accent)',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: 8,
-                        padding: '6px 14px',
-                        fontSize: 12,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Modifier
-                    </button>
-                    <button
-                      onClick={() => duplicatePage(page.id)}
-                      style={{
-                        background: 'var(--bg-primary)',
-                        color: 'var(--text-primary)',
-                        border: '1px solid var(--border-primary)',
-                        borderRadius: 8,
-                        padding: '6px 14px',
-                        fontSize: 12,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Dupliquer
-                    </button>
-                    <button
-                      onClick={() => deletePage(page.id)}
-                      style={{
-                        background: 'transparent',
-                        color: '#ef4444',
-                        border: '1px solid #ef4444',
-                        borderRadius: 8,
-                        padding: '6px 14px',
-                        fontSize: 12,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <h1 style={CU.pageTitle}>{meta.title}</h1>
+            <p style={CU.pageSubtitle}>{meta.subtitle}</p>
+          </div>
+        </div>
+      </div>
+      <PageExplanation pageId="landing-builder" text={meta?.helpText} />
+
+      {/* Stats */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+        {[
+          { emoji: '📄', label: 'Pages créées', value: store.pages.length },
+          { emoji: '🎨', label: 'Templates', value: TEMPLATES.length },
+        ].map(s => (
+          <div key={s.label} style={{
+            flex: '1 1 140px',
+            ...CU.card,
+            padding: isMobile ? 14 : 18,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+          }}>
+            <span style={{ fontSize: 24 }}>{s.emoji}</span>
+            <div>
+              <div style={CU.statValue}>{s.value}</div>
+              <div style={CU.statLabel}>{s.label}</div>
             </div>
           </div>
-        )}
+        ))}
+      </div>
 
-        {/* TAB: Templates */}
-        {tab === 'templates' && (
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
-            {TEMPLATES.map(tpl => (
-              <div key={tpl.id} style={{
-                background: 'var(--bg-secondary)',
-                borderRadius: 12,
+      {/* Tabs */}
+      <div style={tabBar()}>
+        {tabs.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            style={tab === t.id ? CU.tabActive : CU.tab}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* TAB: Mes pages */}
+      {tab === 'pages' && (
+        <div>
+          {store.pages.length === 0 && (
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>📄</div>
+              <div style={CU.emptyTitle}>Aucune page créée</div>
+              <div style={CU.emptyDesc}>Commencez par choisir un template !</div>
+            </div>
+          )}
+          <div style={cardGrid(isMobile, 2)}>
+            {store.pages.map(page => (
+              <div key={page.id} style={{
+                ...CU.card,
                 padding: isMobile ? 16 : 20,
-                border: '1px solid var(--border-primary)',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <span style={{ fontSize: 28 }}>{tpl.emoji}</span>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>{tpl.name}</div>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>
-                  {tpl.description}
-                </div>
-                {/* Mini preview */}
                 <div style={{ marginBottom: 12 }}>
-                  {renderPreview({ ...DEMO_PAGE, ...tpl.defaults, id: tpl.id, name: tpl.name, templateId: tpl.id, createdAt: '', updatedAt: '' }, true)}
+                  {renderPreview(page, true)}
                 </div>
-                <button
-                  onClick={() => createFromTemplate(tpl)}
-                  style={{
-                    width: '100%',
-                    background: 'var(--accent)',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: 8,
-                    padding: '8px 0',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Utiliser ce template
-                </button>
+                <div style={{ fontSize: 15, fontWeight: 700, color: CU.text, marginBottom: 4 }}>{page.name}</div>
+                <div style={{ fontSize: 11, color: CU.textSecondary, marginBottom: 10 }}>
+                  Template : {TEMPLATES.find(t => t.id === page.templateId)?.name || page.templateId} &bull; {page.updatedAt}
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => { setEditingId(page.id); setTab('editor'); }}
+                    style={CU.btnPrimary}
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    onClick={() => duplicatePage(page.id)}
+                    style={CU.btnGhost}
+                  >
+                    Dupliquer
+                  </button>
+                  <button
+                    onClick={() => deletePage(page.id)}
+                    style={CU.btnDanger}
+                  >
+                    Supprimer
+                  </button>
+                </div>
               </div>
             ))}
           </div>
-        )}
+        </div>
+      )}
 
-        {/* TAB: Editor */}
-        {tab === 'editor' && editingPage && (
-          <div style={{ display: 'flex', gap: 20, flexDirection: isMobile ? 'column' : 'row' }}>
-            {/* Form panel */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              {/* Page name */}
-              <label style={labelStyle}>Nom de la page</label>
-              <input
-                type="text"
-                value={editingPage.name}
-                onChange={e => updatePage({ name: e.target.value })}
-                style={inputStyle}
-              />
-
-              {/* Theme picker */}
-              <label style={labelStyle}>Th&egrave;me couleur</label>
-              <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-                {THEMES.map(th => (
-                  <button
-                    key={th.id}
-                    onClick={() => updatePage({ theme: th.id, hero: { ...editingPage.hero, bgColor: th.primary } })}
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: '50%',
-                      background: th.primary,
-                      border: editingPage.theme === th.id ? '3px solid var(--text-primary)' : '2px solid var(--border-primary)',
-                      cursor: 'pointer',
-                      position: 'relative',
-                    }}
-                    title={th.label}
-                  />
-                ))}
+      {/* TAB: Templates */}
+      {tab === 'templates' && (
+        <div style={cardGrid(isMobile, 3)}>
+          {TEMPLATES.map(tpl => (
+            <div key={tpl.id} style={{
+              ...CU.card,
+              padding: isMobile ? 16 : 20,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <span style={{ fontSize: 28 }}>{tpl.emoji}</span>
+                <div style={{ fontSize: 16, fontWeight: 700, color: CU.text }}>{tpl.name}</div>
               </div>
-
-              {/* Hero */}
-              <div style={sectionTitleStyle}>Section Hero</div>
-              <label style={labelStyle}>Titre</label>
-              <input type="text" value={editingPage.hero.title} onChange={e => updateHero({ title: e.target.value })} style={inputStyle} />
-              <label style={labelStyle}>Sous-titre</label>
-              <input type="text" value={editingPage.hero.subtitle} onChange={e => updateHero({ subtitle: e.target.value })} style={inputStyle} />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Texte CTA</label>
-                  <input type="text" value={editingPage.hero.ctaText} onChange={e => updateHero({ ctaText: e.target.value })} style={inputStyle} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Lien CTA</label>
-                  <input type="text" value={editingPage.hero.ctaLink} onChange={e => updateHero({ ctaLink: e.target.value })} style={inputStyle} />
-                </div>
+              <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 12, lineHeight: 1.5 }}>
+                {tpl.description}
               </div>
+              {/* Mini preview */}
+              <div style={{ marginBottom: 12 }}>
+                {renderPreview({ ...DEMO_PAGE, ...tpl.defaults, id: tpl.id, name: tpl.name, templateId: tpl.id, createdAt: '', updatedAt: '' }, true)}
+              </div>
+              <button
+                onClick={() => createFromTemplate(tpl)}
+                style={{ ...CU.btnPrimary, width: '100%' }}
+              >
+                Utiliser ce template
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
-              {/* Features */}
-              <div style={sectionTitleStyle}>Features (x3)</div>
-              {editingPage.features.map((f, i) => (
-                <div key={i} style={{ background: 'var(--bg-secondary)', borderRadius: 10, padding: 12, marginBottom: 10, border: '1px solid var(--border-primary)' }}>
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-                    <div style={{ width: 50 }}>
-                      <label style={labelStyle}>Emoji</label>
-                      <input type="text" value={f.emoji} onChange={e => updateFeature(i, { emoji: e.target.value })} style={{ ...inputStyle, textAlign: 'center' }} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <label style={labelStyle}>Titre</label>
-                      <input type="text" value={f.title} onChange={e => updateFeature(i, { title: e.target.value })} style={inputStyle} />
-                    </div>
-                  </div>
-                  <label style={labelStyle}>Description</label>
-                  <input type="text" value={f.description} onChange={e => updateFeature(i, { description: e.target.value })} style={inputStyle} />
-                </div>
+      {/* TAB: Editor */}
+      {tab === 'editor' && editingPage && (
+        <div style={{ display: 'flex', gap: 20, flexDirection: isMobile ? 'column' : 'row' }}>
+          {/* Form panel */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Page name */}
+            <label style={CU.label}>Nom de la page</label>
+            <input
+              type="text"
+              value={editingPage.name}
+              onChange={e => updatePage({ name: e.target.value })}
+              style={{ ...CU.input, marginBottom: 10 }}
+            />
+
+            {/* Theme picker */}
+            <label style={CU.label}>Th&egrave;me couleur</label>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+              {THEMES.map(th => (
+                <button
+                  key={th.id}
+                  onClick={() => updatePage({ theme: th.id, hero: { ...editingPage.hero, bgColor: th.primary } })}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: th.primary,
+                    border: editingPage.theme === th.id ? `3px solid ${CU.text}` : `2px solid ${CU.border}`,
+                    cursor: 'pointer',
+                    position: 'relative',
+                  }}
+                  title={th.label}
+                />
               ))}
+            </div>
 
-              {/* Testimonial */}
-              <div style={sectionTitleStyle}>T&eacute;moignage</div>
-              <label style={labelStyle}>Citation</label>
-              <textarea
-                value={editingPage.testimonial.quote}
-                onChange={e => updateTestimonial({ quote: e.target.value })}
-                rows={2}
-                style={{ ...inputStyle, resize: 'vertical' }}
-              />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Auteur</label>
-                  <input type="text" value={editingPage.testimonial.authorName} onChange={e => updateTestimonial({ authorName: e.target.value })} style={inputStyle} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>R&ocirc;le</label>
-                  <input type="text" value={editingPage.testimonial.authorRole} onChange={e => updateTestimonial({ authorRole: e.target.value })} style={inputStyle} />
-                </div>
+            {/* Hero */}
+            <div style={{ ...CU.sectionTitle, marginTop: 16, marginBottom: 10, paddingBottom: 6, borderBottom: `1px solid ${CU.border}` }}>Section Hero</div>
+            <label style={CU.label}>Titre</label>
+            <input type="text" value={editingPage.hero.title} onChange={e => updateHero({ title: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+            <label style={CU.label}>Sous-titre</label>
+            <input type="text" value={editingPage.hero.subtitle} onChange={e => updateHero({ subtitle: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Texte CTA</label>
+                <input type="text" value={editingPage.hero.ctaText} onChange={e => updateHero({ ctaText: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
               </div>
-
-              {/* CTA Section */}
-              <div style={sectionTitleStyle}>Section CTA</div>
-              <label style={labelStyle}>Titre</label>
-              <input type="text" value={editingPage.cta.headline} onChange={e => updateCta({ headline: e.target.value })} style={inputStyle} />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Texte bouton</label>
-                  <input type="text" value={editingPage.cta.buttonText} onChange={e => updateCta({ buttonText: e.target.value })} style={inputStyle} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Lien bouton</label>
-                  <input type="text" value={editingPage.cta.buttonLink} onChange={e => updateCta({ buttonLink: e.target.value })} style={inputStyle} />
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div style={sectionTitleStyle}>Footer</div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Nom entreprise</label>
-                  <input type="text" value={editingPage.footer.companyName} onChange={e => updateFooter({ companyName: e.target.value })} style={inputStyle} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Liens (virgules)</label>
-                  <input type="text" value={editingPage.footer.links} onChange={e => updateFooter({ links: e.target.value })} style={inputStyle} />
-                </div>
-              </div>
-
-              {/* Action buttons */}
-              <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
-                <button
-                  onClick={copyHTML}
-                  style={{
-                    background: '#1A1A1A',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: 8,
-                    padding: '10px 20px',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Copier le HTML
-                </button>
-                <button
-                  onClick={() => setPreviewFull(true)}
-                  style={{
-                    background: 'var(--accent)',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: 8,
-                    padding: '10px 20px',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Pr&eacute;visualiser
-                </button>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Lien CTA</label>
+                <input type="text" value={editingPage.hero.ctaLink} onChange={e => updateHero({ ctaLink: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
               </div>
             </div>
 
-            {/* Live preview panel */}
-            {!isMobile && (
-              <div style={{ flex: 1, minWidth: 0, position: 'sticky', top: 20, alignSelf: 'flex-start' }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
-                  Aper&ccedil;u en direct
+            {/* Features */}
+            <div style={{ ...CU.sectionTitle, marginTop: 16, marginBottom: 10, paddingBottom: 6, borderBottom: `1px solid ${CU.border}` }}>Features (x3)</div>
+            {editingPage.features.map((f, i) => (
+              <div key={i} style={{ ...CU.card, padding: 12, marginBottom: 10 }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+                  <div style={{ width: 50 }}>
+                    <label style={CU.label}>Emoji</label>
+                    <input type="text" value={f.emoji} onChange={e => updateFeature(i, { emoji: e.target.value })} style={{ ...CU.input, textAlign: 'center', marginBottom: 10 }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={CU.label}>Titre</label>
+                    <input type="text" value={f.title} onChange={e => updateFeature(i, { title: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+                  </div>
                 </div>
-                {renderPreview(editingPage, false)}
+                <label style={CU.label}>Description</label>
+                <input type="text" value={f.description} onChange={e => updateFeature(i, { description: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
               </div>
-            )}
-          </div>
-        )}
+            ))}
 
-        {tab === 'editor' && !editingPage && (
-          <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)', fontSize: 14 }}>
-            Aucune page s&eacute;lectionn&eacute;e. Cr&eacute;ez-en une depuis l&apos;onglet Templates.
-          </div>
-        )}
+            {/* Testimonial */}
+            <div style={{ ...CU.sectionTitle, marginTop: 16, marginBottom: 10, paddingBottom: 6, borderBottom: `1px solid ${CU.border}` }}>T&eacute;moignage</div>
+            <label style={CU.label}>Citation</label>
+            <textarea
+              value={editingPage.testimonial.quote}
+              onChange={e => updateTestimonial({ quote: e.target.value })}
+              rows={2}
+              style={CU.textarea}
+            />
+            <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Auteur</label>
+                <input type="text" value={editingPage.testimonial.authorName} onChange={e => updateTestimonial({ authorName: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>R&ocirc;le</label>
+                <input type="text" value={editingPage.testimonial.authorRole} onChange={e => updateTestimonial({ authorRole: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+              </div>
+            </div>
 
-        {/* Full-screen preview modal */}
-        {previewFull && editingPage && (
+            {/* CTA Section */}
+            <div style={{ ...CU.sectionTitle, marginTop: 16, marginBottom: 10, paddingBottom: 6, borderBottom: `1px solid ${CU.border}` }}>Section CTA</div>
+            <label style={CU.label}>Titre</label>
+            <input type="text" value={editingPage.cta.headline} onChange={e => updateCta({ headline: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Texte bouton</label>
+                <input type="text" value={editingPage.cta.buttonText} onChange={e => updateCta({ buttonText: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Lien bouton</label>
+                <input type="text" value={editingPage.cta.buttonLink} onChange={e => updateCta({ buttonLink: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div style={{ ...CU.sectionTitle, marginTop: 16, marginBottom: 10, paddingBottom: 6, borderBottom: `1px solid ${CU.border}` }}>Footer</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Nom entreprise</label>
+                <input type="text" value={editingPage.footer.companyName} onChange={e => updateFooter({ companyName: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={CU.label}>Liens (virgules)</label>
+                <input type="text" value={editingPage.footer.links} onChange={e => updateFooter({ links: e.target.value })} style={{ ...CU.input, marginBottom: 10 }} />
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
+              <button
+                onClick={copyHTML}
+                style={CU.btnPrimary}
+              >
+                Copier le HTML
+              </button>
+              <button
+                onClick={() => setPreviewFull(true)}
+                style={CU.btnGhost}
+              >
+                Pr&eacute;visualiser
+              </button>
+            </div>
+          </div>
+
+          {/* Live preview panel */}
+          {!isMobile && (
+            <div style={{ flex: 1, minWidth: 0, position: 'sticky', top: 20, alignSelf: 'flex-start' }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: CU.textSecondary, marginBottom: 8 }}>
+                Aper&ccedil;u en direct
+              </div>
+              {renderPreview(editingPage, false)}
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === 'editor' && !editingPage && (
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>📝</div>
+          <div style={CU.emptyTitle}>Aucune page sélectionnée</div>
+          <div style={CU.emptyDesc}>Créez-en une depuis l&apos;onglet Templates.</div>
+        </div>
+      )}
+
+      {/* Full-screen preview modal */}
+      {previewFull && editingPage && (
+        <div
+          onClick={() => setPreviewFull(false)}
+          style={CU.overlay}
+        >
           <div
-            onClick={() => setPreviewFull(false)}
+            onClick={e => e.stopPropagation()}
             style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.7)',
-              zIndex: 1000,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20,
+              width: '100%',
+              maxWidth: 800,
+              maxHeight: '90vh',
+              overflow: 'auto',
+              borderRadius: 12,
             }}
           >
-            <div
-              onClick={e => e.stopPropagation()}
-              style={{
-                width: '100%',
-                maxWidth: 800,
-                maxHeight: '90vh',
-                overflow: 'auto',
-                borderRadius: 16,
-              }}
-            >
-              {renderPreview(editingPage, false)}
-              <div style={{ textAlign: 'center', marginTop: 12 }}>
-                <button
-                  onClick={() => setPreviewFull(false)}
-                  style={{
-                    background: '#fff',
-                    color: '#333',
-                    border: 'none',
-                    borderRadius: 8,
-                    padding: '10px 24px',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Fermer
-                </button>
-              </div>
+            {renderPreview(editingPage, false)}
+            <div style={{ textAlign: 'center', marginTop: 12 }}>
+              <button
+                onClick={() => setPreviewFull(false)}
+                style={CU.btnGhost}
+              >
+                Fermer
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

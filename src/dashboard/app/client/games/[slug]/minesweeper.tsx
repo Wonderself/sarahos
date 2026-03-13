@@ -298,7 +298,7 @@ export default function MinesweeperGame() {
             <button
               onClick={initGame}
               style={{
-                background: '#7c3aed',
+                background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,

@@ -5,6 +5,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -63,18 +64,6 @@ const TABS: { id: TabId; label: string; emoji: string }[] = [
   { id: 'devis', label: 'Devis', emoji: '📝' },
   { id: 'clients', label: 'Clients', emoji: '👥' },
 ];
-
-const CU = {
-  card: { border: '1px solid #E5E5E5' as const, borderRadius: 8, background: '#fff' },
-  btn: {
-    height: 36, padding: '0 14px', borderRadius: 8, fontWeight: 500 as const,
-    fontSize: 13, cursor: 'pointer' as const, border: '1px solid #E5E5E5' as const, background: '#fff' as const,
-  },
-  btnPrimary: {
-    height: 36, padding: '0 14px', borderRadius: 8, fontWeight: 500 as const,
-    fontSize: 13, cursor: 'pointer' as const, border: 'none' as const, background: '#1A1A1A', color: '#fff',
-  },
-};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -307,51 +296,48 @@ export default function FacturationPage() {
 
   const previewInvoice = previewId ? data.invoices.find(i => i.id === previewId) : null;
 
-  if (!loaded) return <div style={{ padding: 40, textAlign: 'center', color: '#6B6B6B' }}>Chargement...</div>;
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #E5E5E5',
-    fontSize: 13, background: '#fff', color: '#1A1A1A', outline: 'none',
-  };
+  if (!loaded) return <div style={{ padding: 40, textAlign: 'center', color: CU.textSecondary }}>Chargement...</div>;
 
   return (
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: isMobile ? 8 : 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 22 }}>{pageMeta.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{pageMeta.emoji}</span>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>
+              <h1 style={CU.pageTitle}>
                 <span className="fz-logo-word">{pageMeta.title}</span>
               </h1>
               <HelpBubble text={pageMeta.helpText} />
             </div>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{pageMeta.subtitle}</p>
+            <p style={CU.pageSubtitle}>{pageMeta.subtitle}</p>
           </div>
         </div>
       </div>
       <PageExplanation pageId="facturation" text={pageMeta.helpText} />
 
       {/* Stats bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
+      <div style={cardGrid(isMobile, 3)}>
         {[
-          { label: 'Total facturé', value: totalFacture, color: '#1A1A1A' },
-          { label: 'Payé', value: totalPaye, color: '#22c55e' },
-          { label: 'En attente', value: totalEnAttente, color: '#f59e0b' },
+          { label: 'Total facturé', value: totalFacture, color: CU.text },
+          { label: 'Payé', value: totalPaye, color: CU.success },
+          { label: 'En attente', value: totalEnAttente, color: CU.warning },
         ].map(s => (
-          <div key={s.label} style={{ ...CU.card, padding: 16 }}>
-            <div style={{ fontSize: 11, color: '#6B6B6B', marginBottom: 4 }}>{s.label}</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: s.color }}>{s.value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</div>
+          <div key={s.label} style={{ ...CU.card, padding: 16, marginBottom: 0 }}>
+            <div style={CU.statLabel}>{s.label}</div>
+            <div style={{ ...CU.statValue, fontSize: 20, color: s.color }}>{s.value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</div>
           </div>
         ))}
       </div>
 
+      <div style={{ marginBottom: 20 }} />
+
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 16, borderBottom: '1px solid #E5E5E5', paddingBottom: 0 }}>
+      <div style={tabBar()}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => { setTab(t.id); setStatusFilter('all'); }}
-            style={{ ...CU.btn, border: 'none', borderBottom: tab === t.id ? '2px solid #1A1A1A' : '2px solid transparent', borderRadius: 0, background: 'transparent', color: tab === t.id ? '#1A1A1A' : '#6B6B6B', fontWeight: tab === t.id ? 600 : 400 }}>
+            style={tab === t.id ? CU.tabActive : CU.tab}>
             {t.emoji} {t.label}
           </button>
         ))}
@@ -359,15 +345,14 @@ export default function FacturationPage() {
 
       {/* ── Preview Modal ── */}
       {previewInvoice && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
-          onClick={() => setPreviewId(null)}>
-          <div style={{ background: '#fff', borderRadius: 12, padding: isMobile ? 20 : 32, maxWidth: 600, width: '100%', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+        <div style={CU.overlay} onClick={() => setPreviewId(null)}>
+          <div style={{ ...CU.modal, maxWidth: 600, padding: isMobile ? 20 : 32, maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{previewInvoice.type === 'facture' ? 'FACTURE' : 'DEVIS'}</h2>
-                <div style={{ fontSize: 14, color: '#6B6B6B', marginTop: 4 }}>{previewInvoice.number}</div>
+                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: CU.text }}>{previewInvoice.type === 'facture' ? 'FACTURE' : 'DEVIS'}</h2>
+                <div style={{ fontSize: 14, color: CU.textSecondary, marginTop: 4 }}>{previewInvoice.number}</div>
               </div>
-              <button onClick={() => setPreviewId(null)} style={{ ...CU.btn, width: 32, height: 32, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+              <button onClick={() => setPreviewId(null)} style={{ ...CU.btnSmall, width: 32, height: 32, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20, fontSize: 13 }}>
               <div><strong>Date :</strong> {previewInvoice.date}</div>
@@ -380,7 +365,7 @@ export default function FacturationPage() {
             ) : null; })()}
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, marginBottom: 16 }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid #E5E5E5' }}>
+                <tr style={{ borderBottom: `2px solid ${CU.border}` }}>
                   <th style={{ textAlign: 'left', padding: '8px 4px' }}>Description</th>
                   <th style={{ textAlign: 'right', padding: '8px 4px' }}>Qté</th>
                   <th style={{ textAlign: 'right', padding: '8px 4px' }}>P.U. HT</th>
@@ -390,7 +375,7 @@ export default function FacturationPage() {
               </thead>
               <tbody>
                 {previewInvoice.items.map(item => (
-                  <tr key={item.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                  <tr key={item.id} style={{ borderBottom: `1px solid ${CU.border}` }}>
                     <td style={{ padding: '8px 4px' }}>{item.description}</td>
                     <td style={{ textAlign: 'right', padding: '8px 4px' }}>{item.qty}</td>
                     <td style={{ textAlign: 'right', padding: '8px 4px' }}>{item.unitPrice.toFixed(2)} €</td>
@@ -405,11 +390,11 @@ export default function FacturationPage() {
               <div>TVA : <strong>{calcTotalTVA(previewInvoice.items).toFixed(2)} €</strong></div>
               <div style={{ fontSize: 16, fontWeight: 700 }}>Total TTC : {calcTotal(previewInvoice.items).toFixed(2)} €</div>
             </div>
-            {previewInvoice.notes && <div style={{ marginTop: 16, fontSize: 12, color: '#6B6B6B', borderTop: '1px solid #E5E5E5', paddingTop: 12 }}><strong>Notes :</strong> {previewInvoice.notes}</div>}
-            {previewInvoice.paymentConditions && <div style={{ fontSize: 12, color: '#6B6B6B', marginTop: 4 }}><strong>Conditions :</strong> {previewInvoice.paymentConditions}</div>}
+            {previewInvoice.notes && <div style={{ marginTop: 16, fontSize: 12, color: CU.textSecondary, borderTop: `1px solid ${CU.border}`, paddingTop: 12 }}><strong>Notes :</strong> {previewInvoice.notes}</div>}
+            {previewInvoice.paymentConditions && <div style={{ fontSize: 12, color: CU.textSecondary, marginTop: 4 }}><strong>Conditions :</strong> {previewInvoice.paymentConditions}</div>}
             <div style={{ marginTop: 20, display: 'flex', gap: 8 }}>
               <button onClick={() => alert('Export PDF disponible prochainement')} style={CU.btnPrimary}>📥 Exporter PDF</button>
-              <button onClick={() => setPreviewId(null)} style={CU.btn}>Fermer</button>
+              <button onClick={() => setPreviewId(null)} style={CU.btnGhost}>Fermer</button>
             </div>
           </div>
         </div>
@@ -417,57 +402,57 @@ export default function FacturationPage() {
 
       {/* ── Invoice/Devis Form Modal ── */}
       {showForm && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
-          onClick={() => setShowForm(false)}>
-          <div style={{ background: '#fff', borderRadius: 12, padding: isMobile ? 16 : 24, maxWidth: 700, width: '100%', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600 }}>
+        <div style={CU.overlay} onClick={() => setShowForm(false)}>
+          <div style={{ ...CU.modal, maxWidth: 700, padding: isMobile ? 16 : 24, maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
               {editId ? 'Modifier' : 'Créer'} {formType === 'facture' ? 'une facture' : 'un devis'}
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
               <div>
-                <label style={{ fontSize: 12, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Client</label>
-                <select value={formClientId} onChange={e => setFormClientId(e.target.value)} style={inputStyle}>
+                <label style={CU.label}>Client</label>
+                <select value={formClientId} onChange={e => setFormClientId(e.target.value)} style={CU.select}>
                   <option value="">-- Sélectionner --</option>
                   {data.clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: 12, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Date</label>
-                <input type="date" value={formDate} onChange={e => setFormDate(e.target.value)} style={inputStyle} />
+                <label style={CU.label}>Date</label>
+                <input type="date" value={formDate} onChange={e => setFormDate(e.target.value)} style={CU.input} />
               </div>
               <div>
-                <label style={{ fontSize: 12, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Échéance</label>
-                <input type="date" value={formDueDate} onChange={e => setFormDueDate(e.target.value)} style={inputStyle} />
+                <label style={CU.label}>Échéance</label>
+                <input type="date" value={formDueDate} onChange={e => setFormDueDate(e.target.value)} style={CU.input} />
               </div>
             </div>
 
             {/* Line items */}
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Lignes</div>
+              <div style={CU.sectionTitle}>Lignes</div>
+              <div style={{ marginTop: 8 }} />
               {formItems.map((item, idx) => (
                 <div key={item.id} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '3fr 1fr 1fr 1fr auto', gap: 8, marginBottom: 8, alignItems: 'end' }}>
                   <div>
-                    {idx === 0 && <label style={{ fontSize: 11, color: '#6B6B6B' }}>Description</label>}
-                    <input value={item.description} onChange={e => updateLine(item.id, 'description', e.target.value)} style={inputStyle} placeholder="Description" />
+                    {idx === 0 && <label style={{ fontSize: 11, color: CU.textSecondary }}>Description</label>}
+                    <input value={item.description} onChange={e => updateLine(item.id, 'description', e.target.value)} style={CU.input} placeholder="Description" />
                   </div>
                   <div>
-                    {idx === 0 && <label style={{ fontSize: 11, color: '#6B6B6B' }}>Qté</label>}
-                    <input type="number" min={1} value={item.qty} onChange={e => updateLine(item.id, 'qty', parseInt(e.target.value) || 1)} style={inputStyle} />
+                    {idx === 0 && <label style={{ fontSize: 11, color: CU.textSecondary }}>Qté</label>}
+                    <input type="number" min={1} value={item.qty} onChange={e => updateLine(item.id, 'qty', parseInt(e.target.value) || 1)} style={CU.input} />
                   </div>
                   <div>
-                    {idx === 0 && <label style={{ fontSize: 11, color: '#6B6B6B' }}>P.U. HT</label>}
-                    <input type="number" min={0} step={0.01} value={item.unitPrice} onChange={e => updateLine(item.id, 'unitPrice', parseFloat(e.target.value) || 0)} style={inputStyle} />
+                    {idx === 0 && <label style={{ fontSize: 11, color: CU.textSecondary }}>P.U. HT</label>}
+                    <input type="number" min={0} step={0.01} value={item.unitPrice} onChange={e => updateLine(item.id, 'unitPrice', parseFloat(e.target.value) || 0)} style={CU.input} />
                   </div>
                   <div>
-                    {idx === 0 && <label style={{ fontSize: 11, color: '#6B6B6B' }}>TVA %</label>}
-                    <select value={item.tva} onChange={e => updateLine(item.id, 'tva', parseFloat(e.target.value))} style={inputStyle}>
+                    {idx === 0 && <label style={{ fontSize: 11, color: CU.textSecondary }}>TVA %</label>}
+                    <select value={item.tva} onChange={e => updateLine(item.id, 'tva', parseFloat(e.target.value))} style={CU.select}>
                       {TVA_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
                     </select>
                   </div>
-                  <button onClick={() => removeLine(item.id)} style={{ ...CU.btn, height: 34, padding: '0 8px', color: '#ef4444' }} title="Supprimer">🗑️</button>
+                  <button onClick={() => removeLine(item.id)} style={{ ...CU.btnSmall, color: CU.danger }} title="Supprimer">🗑️</button>
                 </div>
               ))}
-              <button onClick={addLine} style={{ ...CU.btn, fontSize: 12, marginTop: 4 }}>➕ Ajouter une ligne</button>
+              <button onClick={addLine} style={{ ...CU.btnSmall, marginTop: 4 }}>➕ Ajouter une ligne</button>
             </div>
 
             {/* Totals */}
@@ -479,17 +464,17 @@ export default function FacturationPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
               <div>
-                <label style={{ fontSize: 12, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Notes</label>
-                <textarea value={formNotes} onChange={e => setFormNotes(e.target.value)} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+                <label style={CU.label}>Notes</label>
+                <textarea value={formNotes} onChange={e => setFormNotes(e.target.value)} rows={2} style={CU.textarea} />
               </div>
               <div>
-                <label style={{ fontSize: 12, color: '#6B6B6B', display: 'block', marginBottom: 4 }}>Conditions de paiement</label>
-                <textarea value={formConditions} onChange={e => setFormConditions(e.target.value)} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+                <label style={CU.label}>Conditions de paiement</label>
+                <textarea value={formConditions} onChange={e => setFormConditions(e.target.value)} rows={2} style={CU.textarea} />
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button onClick={() => setShowForm(false)} style={CU.btn}>Annuler</button>
+              <button onClick={() => setShowForm(false)} style={CU.btnGhost}>Annuler</button>
               <button onClick={saveInvoice} style={CU.btnPrimary}>
                 {editId ? 'Enregistrer' : 'Créer'}
               </button>
@@ -500,21 +485,20 @@ export default function FacturationPage() {
 
       {/* ── Client Form Modal ── */}
       {showClientForm && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
-          onClick={() => setShowClientForm(false)}>
-          <div style={{ background: '#fff', borderRadius: 12, padding: isMobile ? 16 : 24, maxWidth: 500, width: '100%' }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600 }}>
+        <div style={CU.overlay} onClick={() => setShowClientForm(false)}>
+          <div style={{ ...CU.modal, maxWidth: 500, padding: isMobile ? 16 : 24 }} onClick={e => e.stopPropagation()}>
+            <h2 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
               {editClientId ? 'Modifier' : 'Ajouter'} un client
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Nom / Société</label><input value={clientName} onChange={e => setClientName(e.target.value)} style={inputStyle} /></div>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Email</label><input value={clientEmail} onChange={e => setClientEmail(e.target.value)} style={inputStyle} /></div>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Téléphone</label><input value={clientPhone} onChange={e => setClientPhone(e.target.value)} style={inputStyle} /></div>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>Adresse</label><input value={clientAddress} onChange={e => setClientAddress(e.target.value)} style={inputStyle} /></div>
-              <div><label style={{ fontSize: 12, color: '#6B6B6B' }}>SIRET</label><input value={clientSiret} onChange={e => setClientSiret(e.target.value)} style={inputStyle} /></div>
+              <div><label style={CU.label}>Nom / Société</label><input value={clientName} onChange={e => setClientName(e.target.value)} style={CU.input} /></div>
+              <div><label style={CU.label}>Email</label><input value={clientEmail} onChange={e => setClientEmail(e.target.value)} style={CU.input} /></div>
+              <div><label style={CU.label}>Téléphone</label><input value={clientPhone} onChange={e => setClientPhone(e.target.value)} style={CU.input} /></div>
+              <div><label style={CU.label}>Adresse</label><input value={clientAddress} onChange={e => setClientAddress(e.target.value)} style={CU.input} /></div>
+              <div><label style={CU.label}>SIRET</label><input value={clientSiret} onChange={e => setClientSiret(e.target.value)} style={CU.input} /></div>
             </div>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-              <button onClick={() => setShowClientForm(false)} style={CU.btn}>Annuler</button>
+              <button onClick={() => setShowClientForm(false)} style={CU.btnGhost}>Annuler</button>
               <button onClick={saveClient} style={CU.btnPrimary}>{editClientId ? 'Enregistrer' : 'Ajouter'}</button>
             </div>
           </div>
@@ -524,11 +508,14 @@ export default function FacturationPage() {
       {/* ── Factures / Devis Tab ── */}
       {(tab === 'factures' || tab === 'devis') && (
         <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          <div style={toolbar()}>
+            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', flex: 1 }}>
               {['all', 'brouillon', 'envoyee', 'payee', 'en_retard'].map(s => (
                 <button key={s} onClick={() => setStatusFilter(s)}
-                  style={{ ...CU.btn, height: 28, fontSize: 11, background: statusFilter === s ? '#1A1A1A' : '#fff', color: statusFilter === s ? '#fff' : '#6B6B6B', border: statusFilter === s ? '1px solid #1A1A1A' : '1px solid #E5E5E5' }}>
+                  style={statusFilter === s
+                    ? { ...CU.btnSmall, background: CU.accent, color: '#fff', border: `1px solid ${CU.accent}` }
+                    : CU.btnSmall
+                  }>
                   {s === 'all' ? 'Tous' : STATUS_LABELS[s]}
                 </button>
               ))}
@@ -539,8 +526,9 @@ export default function FacturationPage() {
           </div>
 
           {filteredInvoices.length === 0 ? (
-            <div style={{ ...CU.card, padding: 40, textAlign: 'center', color: '#6B6B6B' }}>
-              Aucun {tab === 'factures' ? 'facture' : 'devis'} trouvé
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>🧾</div>
+              <div style={CU.emptyTitle}>Aucun {tab === 'factures' ? 'facture' : 'devis'} trouvé</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -548,27 +536,27 @@ export default function FacturationPage() {
                 <div key={inv.id} style={{ ...CU.card, padding: isMobile ? 12 : 16, display: 'flex', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', flexDirection: isMobile ? 'column' : 'row', gap: 8 }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <span style={{ fontWeight: 600, fontSize: 14 }}>{inv.number}</span>
+                      <span style={{ fontWeight: 600, fontSize: 14, color: CU.text }}>{inv.number}</span>
                       <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: STATUS_COLORS[inv.status] + '18', color: STATUS_COLORS[inv.status], fontWeight: 600 }}>
                         {STATUS_LABELS[inv.status]}
                       </span>
                     </div>
-                    <div style={{ fontSize: 12, color: '#6B6B6B' }}>
+                    <div style={{ fontSize: 12, color: CU.textSecondary }}>
                       {getClientName(inv.clientId)} — {inv.date}
                     </div>
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: 15 }}>{calcTotal(inv.items).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: CU.text }}>{calcTotal(inv.items).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}</div>
                   <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                    <button onClick={() => setPreviewId(inv.id)} style={{ ...CU.btn, height: 28, fontSize: 11 }}>👁️ Voir</button>
-                    <button onClick={() => openEditInvoice(inv)} style={{ ...CU.btn, height: 28, fontSize: 11 }}>✏️</button>
+                    <button onClick={() => setPreviewId(inv.id)} style={CU.btnSmall}>👁️ Voir</button>
+                    <button onClick={() => openEditInvoice(inv)} style={CU.btnSmall}>✏️</button>
                     <select value={inv.status} onChange={e => setInvoiceStatus(inv.id, e.target.value as Invoice['status'])}
-                      style={{ ...CU.btn, height: 28, fontSize: 11, padding: '0 4px' }}>
+                      style={{ ...CU.btnSmall, padding: '0 4px' }}>
                       {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                     </select>
                     {inv.type === 'devis' && (
-                      <button onClick={() => convertDevisToFacture(inv.id)} style={{ ...CU.btn, height: 28, fontSize: 11 }} title="Convertir en facture">🔄 Facturer</button>
+                      <button onClick={() => convertDevisToFacture(inv.id)} style={CU.btnSmall} title="Convertir en facture">🔄 Facturer</button>
                     )}
-                    <button onClick={() => deleteInvoice(inv.id)} style={{ ...CU.btn, height: 28, fontSize: 11, color: '#ef4444' }}>🗑️</button>
+                    <button onClick={() => deleteInvoice(inv.id)} style={{ ...CU.btnSmall, color: CU.danger }}>🗑️</button>
                   </div>
                 </div>
               ))}
@@ -584,19 +572,22 @@ export default function FacturationPage() {
             <button onClick={openNewClient} style={CU.btnPrimary}>➕ Nouveau client</button>
           </div>
           {data.clients.length === 0 ? (
-            <div style={{ ...CU.card, padding: 40, textAlign: 'center', color: '#6B6B6B' }}>Aucun client</div>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>👥</div>
+              <div style={CU.emptyTitle}>Aucun client</div>
+            </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {data.clients.map(c => (
                 <div key={c.id} style={{ ...CU.card, padding: isMobile ? 12 : 16, display: 'flex', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', flexDirection: isMobile ? 'column' : 'row', gap: 8 }}>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 14 }}>🏢 {c.name}</div>
-                    <div style={{ fontSize: 12, color: '#6B6B6B' }}>{c.email} — {c.phone}</div>
-                    <div style={{ fontSize: 11, color: '#9B9B9B' }}>{c.address} — SIRET : {c.siret}</div>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: CU.text }}>🏢 {c.name}</div>
+                    <div style={{ fontSize: 12, color: CU.textSecondary }}>{c.email} — {c.phone}</div>
+                    <div style={{ fontSize: 11, color: CU.textMuted }}>{c.address} — SIRET : {c.siret}</div>
                   </div>
                   <div style={{ display: 'flex', gap: 4 }}>
-                    <button onClick={() => openEditClient(c)} style={{ ...CU.btn, height: 28, fontSize: 11 }}>✏️</button>
-                    <button onClick={() => deleteClient(c.id)} style={{ ...CU.btn, height: 28, fontSize: 11, color: '#ef4444' }}>🗑️</button>
+                    <button onClick={() => openEditClient(c)} style={CU.btnSmall}>✏️</button>
+                    <button onClick={() => deleteClient(c.id)} style={{ ...CU.btnSmall, color: CU.danger }}>🗑️</button>
                   </div>
                 </div>
               ))}

@@ -7,6 +7,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import AuthRequired from '../../../components/AuthRequired';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, searchInput } from '../../../lib/page-styles';
 import {
   DEFAULT_AGENTS,
   loadAgentConfigs,
@@ -95,7 +96,7 @@ function roleColor(role: string): string {
 
 function roleLabelFr(role: string): string {
   switch (role) {
-    case 'owner': return 'Propriétaire';
+    case 'owner': return 'Proprietaire';
     case 'admin': return 'Admin';
     case 'member': return 'Membre';
     case 'viewer': return 'Lecteur';
@@ -131,7 +132,7 @@ export default function TeamPage() {
   const [groups, setGroupsLocal] = useState<Group[]>([]);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
-  const [newGroupEmoji, setNewGroupEmoji] = useState('👥');
+  const [newGroupEmoji, setNewGroupEmoji] = useState('\u{1F465}');
   const [newGroupColor, setNewGroupColor] = useState('#0EA5E9');
   const [newGroupDesc, setNewGroupDesc] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
@@ -144,7 +145,7 @@ export default function TeamPage() {
   const [showCreateCommunity, setShowCreateCommunity] = useState(false);
   const [communitySearch, setCommunitySearch] = useState('');
   const [newCommunityName, setNewCommunityName] = useState('');
-  const [newCommunityEmoji, setNewCommunityEmoji] = useState('🌐');
+  const [newCommunityEmoji, setNewCommunityEmoji] = useState('\u{1F310}');
   const [newCommunityDesc, setNewCommunityDesc] = useState('');
   const [newCommunityTags, setNewCommunityTags] = useState('');
   const [newCommunityPublic, setNewCommunityPublic] = useState(true);
@@ -278,7 +279,7 @@ export default function TeamPage() {
     if (!newGroupName.trim() || teams.length === 0) return;
     createGroup(newGroupName.trim(), teams[0].id, newGroupEmoji, newGroupColor, newGroupDesc.trim());
     setNewGroupName('');
-    setNewGroupEmoji('👥');
+    setNewGroupEmoji('\u{1F465}');
     setNewGroupColor('#0EA5E9');
     setNewGroupDesc('');
     setShowCreateGroup(false);
@@ -358,7 +359,7 @@ export default function TeamPage() {
     const created = allC[allC.length - 1];
     if (created) joinCommunity(created.id);
     setNewCommunityName('');
-    setNewCommunityEmoji('🌐');
+    setNewCommunityEmoji('\u{1F310}');
     setNewCommunityDesc('');
     setNewCommunityTags('');
     setNewCommunityPublic(true);
@@ -382,23 +383,109 @@ export default function TeamPage() {
   const inactiveAgents = agents.filter(a => a.isAvailable && !activeIds.includes(a.id as AgentTypeId));
   const lockedAgents = agents.filter(a => !a.isAvailable);
 
+  // ── Shared member row renderer ──
+  function renderMemberRow(member: TeamMember) {
+    return (
+      <div key={member.id} style={{
+        ...CU.card,
+        display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
+      }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: '50%', background: CU.accentLight,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative' as const, fontSize: 16,
+        }}>
+          <span>{member.emoji}</span>
+          <div style={{
+            position: 'absolute' as const, bottom: -1, right: -1,
+            width: 10, height: 10, borderRadius: '50%',
+            border: `2px solid ${CU.bg}`,
+            background: member.status === 'online' ? CU.success : member.status === 'away' ? CU.warning : CU.border,
+          }} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{member.name}</div>
+          <div style={{ fontSize: 11, color: CU.textMuted }}>{member.email}</div>
+        </div>
+        <span style={member.role === 'owner' ? CU.badgeWarning : member.role === 'admin' ? CU.badge : CU.badgeSuccess}>
+          {roleLabelFr(member.role)}
+        </span>
+        <div style={{ position: 'relative' as const }}>
+          <button
+            onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: CU.textMuted, padding: 8, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >&#x2699;&#xFE0F;</button>
+          {memberActionId === member.id && (
+            <div style={{
+              position: 'absolute' as const, right: 0, top: '100%', zIndex: 50,
+              background: CU.bg, borderRadius: 8, padding: 8, minWidth: 160,
+              border: `1px solid ${CU.border}`,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+            }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: CU.textMuted, marginBottom: 6, padding: '0 4px' }}>Changer le r&ocirc;le</div>
+              {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
+                <button
+                  key={r}
+                  onClick={() => handleChangeRole(member.id, r)}
+                  style={{
+                    display: 'block', width: '100%', textAlign: 'left' as const, padding: '4px 8px',
+                    fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
+                    background: member.role === r ? CU.accentLight : 'transparent',
+                    color: member.role === r ? CU.text : CU.textSecondary,
+                    fontWeight: member.role === r ? 600 : 400,
+                  }}
+                >
+                  {roleLabelFr(r)}
+                </button>
+              ))}
+              <div style={CU.divider} />
+              {confirmRemoveId === member.id ? (
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button
+                    onClick={() => handleRemoveMember(member.id)}
+                    style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: '#DC262622', color: CU.danger, fontWeight: 600 }}
+                  >Confirmer</button>
+                  <button
+                    onClick={() => setConfirmRemoveId(null)}
+                    style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: CU.bgSecondary, color: CU.textMuted }}
+                  >Annuler</button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmRemoveId(member.id)}
+                  style={{
+                    display: 'block', width: '100%', textAlign: 'left' as const, padding: '4px 8px',
+                    fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
+                    background: 'transparent', color: CU.danger,
+                  }}
+                >
+                  Retirer du groupe
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthRequired pageName="Gestion d'Equipe">
-    <div className="client-page-scrollable">
+    <div style={pageContainer(isMobile)}>
       {/* Error banner */}
       {error && (
-        <div className="alert alert-danger" style={{ margin: '0 0 16px', fontSize: 13 }} onClick={() => setError('')}>
+        <div style={{ ...CU.card, background: '#FFF5F5', borderColor: CU.danger, color: CU.danger, fontSize: 13, marginBottom: 16, cursor: 'pointer' }} onClick={() => setError('')}>
           {error}
         </div>
       )}
 
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.team.emoji}</span>
+      <div style={{ marginBottom: 4 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.team.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.team.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.team.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.team.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.team.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.team.helpText} />
         </div>
@@ -406,104 +493,106 @@ export default function TeamPage() {
       <PageExplanation pageId="team" text={PAGE_META.team?.helpText} />
 
       {/* Tabs */}
-      <div className="cu-tabs" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', flexWrap: 'nowrap' }}>
-        <button className={`cu-tab ${activeTab === 'agents' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('agents')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
-          <span style={{ fontSize: 14 }}>🤖</span> Équipe IA
-        </button>
-        <button className={`cu-tab ${activeTab === 'members' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('members')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
-          <span style={{ fontSize: 14 }}>👤</span> Membres
-        </button>
-        <button className={`cu-tab ${activeTab === 'groups' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('groups')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
-          <span style={{ fontSize: 14 }}>🏘️</span> Groupes
-        </button>
-        <button className={`cu-tab ${activeTab === 'communities' ? 'cu-tab-active' : ''}`} onClick={() => setActiveTab('communities')} style={{ whiteSpace: 'nowrap', minHeight: 44 }}>
-          <span style={{ fontSize: 14 }}>🌐</span> Communautés
-        </button>
-        <button className={`cu-tab ${activeTab === 'activity' ? 'cu-tab-active' : ''}`} style={{ whiteSpace: 'nowrap', minHeight: 44 }} onClick={() => {
-          setActiveTab('activity');
-          if (activeWorkspace) loadWorkspaceData(activeWorkspace);
-        }}>
-          <span style={{ fontSize: 14 }}>📋</span> Activité
-        </button>
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${CU.border}`, marginBottom: 20, overflowX: 'auto' as const }}>
+        {([
+          { id: 'agents' as TabId, emoji: '\u{1F916}', label: 'Equipe IA' },
+          { id: 'members' as TabId, emoji: '\u{1F464}', label: 'Membres' },
+          { id: 'groups' as TabId, emoji: '\u{1F3D8}\uFE0F', label: 'Groupes' },
+          { id: 'communities' as TabId, emoji: '\u{1F310}', label: 'Communautes' },
+          { id: 'activity' as TabId, emoji: '\u{1F4CB}', label: 'Activite' },
+        ]).map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => {
+              setActiveTab(tab.id);
+              if (tab.id === 'activity' && activeWorkspace) loadWorkspaceData(activeWorkspace);
+            }}
+            style={{
+              ...(activeTab === tab.id ? CU.tabActive : CU.tab),
+              display: 'flex', alignItems: 'center', gap: 6,
+              whiteSpace: 'nowrap' as const, minHeight: 44,
+            }}
+          >
+            <span style={{ fontSize: 14 }}>{tab.emoji}</span> {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* ═══════════════════════════════════════════ Tab: Agents ═══════════════════════════════════════════ */}
+      {/* ═══ Tab: Agents ═══ */}
       {activeTab === 'agents' && <>
 
-      <p className="text-sm mb-8" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+      <p style={{ fontSize: 13, color: CU.textSecondary, marginBottom: 16 }}>
         {activeAgents.length} agent{activeAgents.length > 1 ? 's' : ''} actif{activeAgents.length > 1 ? 's' : ''} sur {DEFAULT_AGENTS.length} disponibles
       </p>
 
       {/* Active Agents */}
       {activeAgents.length > 0 && (
-        <div className="section">
-          <div className="section-title">Agents actifs</div>
-          <div className="grid-2" style={{ gap: 12 }}>
+        <div style={{ marginBottom: 24 }}>
+          <div style={CU.sectionTitle}>Agents actifs</div>
+          <div style={{ ...cardGrid(isMobile, 2), marginTop: 12 }}>
             {activeAgents.map(agent => (
-              <div key={agent.id} className="card" style={{
+              <div key={agent.id} style={{
+                ...CU.card,
                 borderColor: agent.color + '55',
                 background: agent.color + '08',
               }}>
-                <div className="flex gap-12 mb-12" style={{ alignItems: 'flex-start' }}>
-                  <div className="flex-center rounded-lg" style={{
-                    width: 52, height: 52,
-                    background: agent.color + '22', border: `1px solid ${agent.color}44`,
+                <div style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 52, height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: 8, background: agent.color + '22', border: `1px solid ${agent.color}44`,
                     flexShrink: 0,
                   }}>
                     <span style={{ fontSize: 26 }}>{agent.emoji}</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex flex-between" style={{ alignItems: 'flex-start' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
-                        <div className="text-lg font-bold" style={{ color: 'var(--fz-text, #1E293B)' }}>{agent.role}</div>
-                        <div className="text-sm font-semibold mt-4" style={{ color: agent.color, fontStyle: 'italic' }}>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: CU.text }}>{agent.role}</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, marginTop: 4, color: agent.color, fontStyle: 'italic' }}>
                           {agent.tagline}
                         </div>
                       </div>
-                      <div className="flex items-center gap-6 rounded-full" style={{
-                        padding: '4px 10px',
-                        background: '#F0F0F0', border: '1px solid #E5E5E5',
+                      <div style={{
+                        display: 'flex', alignItems: 'center', gap: 6, borderRadius: 20,
+                        padding: '4px 10px', background: CU.accentLight, border: `1px solid ${CU.border}`,
                       }}>
-                        <div className="rounded-full" style={{
-                          width: 8, height: 8, background: '#1A1A1A',
-                        }} />
-                        <span className="text-xs font-semibold text-success">En ligne 24/7</span>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: CU.text }} />
+                        <span style={{ fontSize: 11, fontWeight: 600, color: CU.success }}>En ligne 24/7</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-sm mb-12" style={{ lineHeight: 1.5, color: 'var(--fz-text-secondary, #64748B)' }}>
+                <p style={{ fontSize: 13, lineHeight: 1.5, color: CU.textSecondary, marginBottom: 12 }}>
                   {agent.hiringPitch}
                 </p>
 
-                <div className="flex flex-wrap gap-4" style={{ marginBottom: 14 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 4, marginBottom: 14 }}>
                   {agent.capabilities.map(cap => (
-                    <span key={cap} className="text-xs rounded-sm font-medium" style={{
-                      padding: '2px 8px',
-                      background: '#F0F0F0', color: '#1A1A1A',
+                    <span key={cap} style={{
+                      ...CU.badge, padding: '2px 8px',
                     }}>
                       {cap}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex gap-6">
-                  <Link href="/client/chat" className="btn btn-primary btn-sm flex-1" style={{ background: agent.color }}>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <Link href="/client/chat" style={{ ...CU.btnPrimary, flex: 1, background: agent.color, textDecoration: 'none' }}>
                     Discuter &rarr;
                   </Link>
-                  <Link href="/client/agents/customize" className="btn btn-ghost btn-sm" title="Personnaliser">
-                    <span style={{ fontSize: 16 }}>🎨</span>
+                  <Link href="/client/agents/customize" style={{ ...CU.btnGhost, textDecoration: 'none' }} title="Personnaliser">
+                    <span style={{ fontSize: 16 }}>{'\u{1F3A8}'}</span>
                   </Link>
                 </div>
 
                 {agent.isCustomized && (
-                  <div className="mt-8 text-xs text-accent font-semibold text-center">
-                    ✨ Personnalisé via Agent Studio
+                  <div style={{ marginTop: 8, fontSize: 11, fontWeight: 600, color: CU.text, textAlign: 'center' as const }}>
+                    {'\u2728'} Personnalise via Agent Studio
                   </div>
                 )}
 
-                <div className="mt-8 text-center text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
+                <div style={{ marginTop: 8, textAlign: 'center' as const, fontSize: 11, color: CU.textMuted }}>
                   Inclus gratuitement
                 </div>
               </div>
@@ -514,51 +603,50 @@ export default function TeamPage() {
 
       {/* Inactive Agents — can be activated */}
       {inactiveAgents.length > 0 && (
-        <div className="section">
-          <div className="section-title">Agents disponibles</div>
-          <p className="text-md mb-16" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>
-            Cliquez sur &quot;Activer&quot; pour ajouter un agent à votre équipe.
+        <div style={{ marginBottom: 24 }}>
+          <div style={CU.sectionTitle}>Agents disponibles</div>
+          <p style={{ fontSize: 13, color: CU.textMuted, marginBottom: 16, marginTop: 4 }}>
+            Cliquez sur &quot;Activer&quot; pour ajouter un agent &agrave; votre &eacute;quipe.
           </p>
-          <div className="grid-2" style={{ gap: 12 }}>
+          <div style={cardGrid(isMobile, 2)}>
             {inactiveAgents.map(agent => (
-              <div key={agent.id} className="card" style={{
-                borderColor: 'var(--fz-border, #E2E8F0)', opacity: 0.7,
+              <div key={agent.id} style={{
+                ...CU.card, opacity: 0.7,
               }}>
-                <div className="flex gap-12 mb-12" style={{ alignItems: 'flex-start' }}>
-                  <div className="flex-center rounded-lg" style={{
-                    width: 52, height: 52,
-                    background: 'var(--fz-bg-secondary, #F8FAFC)',
+                <div style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 52, height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: 8, background: CU.bgSecondary,
                     flexShrink: 0, filter: 'grayscale(0.3)',
                   }}>
                     <span style={{ fontSize: 26 }}>{agent.emoji}</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="text-lg font-bold" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{agent.role}</div>
-                    <div className="text-sm mt-4" style={{ fontStyle: 'italic', color: 'var(--fz-text-muted, #94A3B8)' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: CU.textSecondary }}>{agent.role}</div>
+                    <div style={{ fontSize: 13, marginTop: 4, fontStyle: 'italic', color: CU.textMuted }}>
                       {agent.tagline}
                     </div>
                   </div>
                 </div>
 
-                <p className="text-sm mb-12" style={{ lineHeight: 1.5, color: 'var(--fz-text-muted, #94A3B8)' }}>
+                <p style={{ fontSize: 13, lineHeight: 1.5, color: CU.textMuted, marginBottom: 12 }}>
                   {agent.description}
                 </p>
 
-                <div className="flex flex-wrap gap-4" style={{ marginBottom: 14 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 4, marginBottom: 14 }}>
                   {agent.capabilities.slice(0, 3).map(cap => (
-                    <span key={cap} className="text-xs rounded-sm" style={{ padding: '2px 8px', background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-muted, #94A3B8)' }}>
+                    <span key={cap} style={{ ...CU.badge, background: CU.bgSecondary, color: CU.textMuted }}>
                       {cap}
                     </span>
                   ))}
                   {agent.capabilities.length > 3 && (
-                    <span className="text-xs" style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>+{agent.capabilities.length - 3}</span>
+                    <span style={{ fontSize: 11, color: CU.textMuted }}>+{agent.capabilities.length - 3}</span>
                   )}
                 </div>
 
                 <button
                   onClick={() => handleToggleAgent(agent.id as AgentTypeId)}
-                  className="btn btn-primary btn-sm w-full"
-                  style={{ background: agent.color }}
+                  style={{ ...CU.btnPrimary, width: '100%', background: agent.color }}
                 >
                   Activer cet agent
                 </button>
@@ -569,144 +657,68 @@ export default function TeamPage() {
       )}
 
       {/* Bottom CTA */}
-      <div className="text-center rounded-lg mt-16" style={{ padding: '40px 20px', background: 'var(--fz-bg-secondary, #F8FAFC)', border: '1px solid var(--fz-border, #E2E8F0)' }}>
-        <div className="mb-12"><span style={{ fontSize: 36 }}>💼</span></div>
-        <div className="text-xl font-bold mb-8" style={{ color: 'var(--fz-text, #1E293B)' }}>
-          Votre équipe IA travaille ensemble
+      <div style={{ textAlign: 'center' as const, borderRadius: 8, marginTop: 16, padding: '40px 20px', background: CU.bgSecondary, border: `1px solid ${CU.border}` }}>
+        <div style={{ marginBottom: 12 }}><span style={{ fontSize: 36 }}>{'\u{1F4BC}'}</span></div>
+        <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8, color: CU.text }}>
+          Votre &eacute;quipe IA travaille ensemble
         </div>
-        <p className="text-md max-w-md" style={{ lineHeight: 1.6, margin: '0 auto 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
-          Tous les agents collaborent, partagent le contexte, et s&apos;améliorent avec chaque interaction.
+        <p style={{ fontSize: 13, lineHeight: 1.6, maxWidth: 420, margin: '0 auto 20px', color: CU.textSecondary }}>
+          Tous les agents collaborent, partagent le contexte, et s&apos;am&eacute;liorent avec chaque interaction.
         </p>
-        <div className="flex flex-center flex-wrap" style={{ gap: 10 }}>
-          <Link href="/client/chat" className="btn btn-primary">Discuter avec mon équipe</Link>
-          <Link href="/client/meeting" className="btn btn-ghost">Lancer une reunion</Link>
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' as const, gap: 10 }}>
+          <Link href="/client/chat" style={{ ...CU.btnPrimary, textDecoration: 'none' }}>Discuter avec mon &eacute;quipe</Link>
+          <Link href="/client/meeting" style={{ ...CU.btnGhost, textDecoration: 'none' }}>Lancer une reunion</Link>
         </div>
       </div>
 
       </>}
 
-      {/* ═══════════════════════════════════════════ Tab: Members ═══════════════════════════════════════════ */}
+      {/* ═══ Tab: Members ═══ */}
       {activeTab === 'members' && (
         <div>
           {/* Header */}
-          <div className="cu-section-header" style={{ flexWrap: 'wrap', gap: 8 }}>
-            <div className="cu-section-header-title">
-              <span style={{ fontSize: 16 }}>👤</span> Membres ({membersLocal.length})
+          <div style={{ ...toolbar(), flexWrap: 'wrap' as const, gap: 8 }}>
+            <div style={{ ...CU.sectionTitle, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 16 }}>{'\u{1F464}'}</span> Membres ({membersLocal.length})
             </div>
-            <div className="cu-section-header-spacer" />
+            <div style={{ flex: 1 }} />
             <input
               value={memberSearch}
               onChange={e => setMemberSearch(e.target.value)}
               placeholder="Rechercher..."
-              style={{
-                padding: '6px 12px', fontSize: 13, borderRadius: 8,
-                border: '1px solid var(--fz-border, #E2E8F0)',
-                background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                width: isMobile ? '100%' : 180, minWidth: 0,
-              }}
+              style={searchInput(isMobile)}
             />
             <button
-              className="cu-section-header-action"
               onClick={() => setShowInviteModal(true)}
-              style={{ marginLeft: 8, whiteSpace: 'nowrap', minHeight: 44 }}
+              style={{ ...CU.btnPrimary, marginLeft: 8, whiteSpace: 'nowrap' as const, minHeight: 44 }}
             >
               Inviter +
             </button>
           </div>
 
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
-            <div className="cu-stat-card">
-              <span className="cu-stat-emoji">👥</span>
-              <div className="cu-stat-value">{memberStats.total}</div>
-              <div className="cu-stat-label">Total membres</div>
-            </div>
-            <div className="cu-stat-card">
-              <span className="cu-stat-emoji">🟢</span>
-              <div className="cu-stat-value">{memberStats.online}</div>
-              <div className="cu-stat-label">En ligne</div>
-            </div>
-            <div className="cu-stat-card">
-              <span className="cu-stat-emoji">🛡️</span>
-              <div className="cu-stat-value">{memberStats.admins}</div>
-              <div className="cu-stat-label">Admins</div>
-            </div>
+          <div style={cardGrid(isMobile ? true : false, 3)}>
+            {[
+              { emoji: '\u{1F465}', value: memberStats.total, label: 'Total membres' },
+              { emoji: '\u{1F7E2}', value: memberStats.online, label: 'En ligne' },
+              { emoji: '\u{1F6E1}\uFE0F', value: memberStats.admins, label: 'Admins' },
+            ].map((stat, i) => (
+              <div key={i} style={{ ...CU.card, textAlign: 'center' as const, padding: 16 }}>
+                <span style={{ fontSize: 20 }}>{stat.emoji}</span>
+                <div style={CU.statValue}>{stat.value}</div>
+                <div style={CU.statLabel}>{stat.label}</div>
+              </div>
+            ))}
           </div>
 
           {/* Online members */}
           {onlineMembers.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
-                🟢 En ligne ({onlineMembers.length})
+            <div style={{ marginTop: 20, marginBottom: 20 }}>
+              <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 10 }}>
+                {'\u{1F7E2}'} En ligne ({onlineMembers.length})
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {onlineMembers.map(member => (
-                  <div key={member.id} className="cu-member-card">
-                    <div className="cu-avatar" style={{ width: 32, height: 32, position: 'relative' }}>
-                      <span>{member.emoji}</span>
-                      <div className={`cu-status-dot cu-status-${member.status}`} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div className="cu-member-name">{member.name}</div>
-                      <div className="cu-member-email">{member.email}</div>
-                    </div>
-                    <span className={`cu-badge cu-badge-${roleColor(member.role)}`}>{roleLabelFr(member.role)}</span>
-                    <div style={{ position: 'relative' }}>
-                      <button
-                        onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 8, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >⚙️</button>
-                      {memberActionId === member.id && (
-                        <div style={{
-                          position: 'absolute', right: 0, top: '100%', zIndex: 50,
-                          background: 'var(--fz-bg, #fff)',
-                          borderRadius: 8, padding: 8, minWidth: 160, border: '1px solid #E5E5E5',
-                        }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
-                          {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
-                            <button
-                              key={r}
-                              onClick={() => handleChangeRole(member.id, r)}
-                              style={{
-                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
-                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: member.role === r ? '#F0F0F0' : 'transparent',
-                                color: member.role === r ? '#1A1A1A' : 'var(--fz-text)',
-                                fontWeight: member.role === r ? 600 : 400,
-                              }}
-                            >
-                              {roleLabelFr(r)}
-                            </button>
-                          ))}
-                          <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', margin: '6px 0' }} />
-                          {confirmRemoveId === member.id ? (
-                            <div style={{ display: 'flex', gap: 4 }}>
-                              <button
-                                onClick={() => handleRemoveMember(member.id)}
-                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: '#DC262622', color: '#DC2626', fontWeight: 600 }}
-                              >Confirmer</button>
-                              <button
-                                onClick={() => setConfirmRemoveId(null)}
-                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: 'var(--fz-bg-secondary)', color: 'var(--fz-text-muted)' }}
-                              >Annuler</button>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => setConfirmRemoveId(member.id)}
-                              style={{
-                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
-                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: 'transparent', color: '#DC2626',
-                              }}
-                            >
-                              Retirer du groupe
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+              <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 6 }}>
+                {onlineMembers.map(member => renderMemberRow(member))}
               </div>
             </div>
           )}
@@ -714,146 +726,60 @@ export default function TeamPage() {
           {/* Offline members */}
           {offlineMembers.length > 0 && (
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
-                ⚪ Hors ligne ({offlineMembers.length})
+              <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 10 }}>
+                {'\u26AA'} Hors ligne ({offlineMembers.length})
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {offlineMembers.map(member => (
-                  <div key={member.id} className="cu-member-card">
-                    <div className="cu-avatar" style={{ width: 32, height: 32, position: 'relative' }}>
-                      <span>{member.emoji}</span>
-                      <div className={`cu-status-dot cu-status-${member.status}`} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div className="cu-member-name">{member.name}</div>
-                      <div className="cu-member-email">{member.email}</div>
-                    </div>
-                    <span className={`cu-badge cu-badge-${roleColor(member.role)}`}>{roleLabelFr(member.role)}</span>
-                    <div style={{ position: 'relative' }}>
-                      <button
-                        onClick={() => setMemberActionId(memberActionId === member.id ? null : member.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--fz-text-muted)', padding: 8, minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >⚙️</button>
-                      {memberActionId === member.id && (
-                        <div style={{
-                          position: 'absolute', right: 0, top: '100%', zIndex: 50,
-                          background: 'var(--fz-bg, #fff)',
-                          borderRadius: 8, padding: 8, minWidth: 160, border: '1px solid #E5E5E5',
-                        }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6, padding: '0 4px' }}>Changer le rôle</div>
-                          {(['owner', 'admin', 'member', 'viewer'] as const).map(r => (
-                            <button
-                              key={r}
-                              onClick={() => handleChangeRole(member.id, r)}
-                              style={{
-                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
-                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: member.role === r ? '#F0F0F0' : 'transparent',
-                                color: member.role === r ? '#1A1A1A' : 'var(--fz-text)',
-                                fontWeight: member.role === r ? 600 : 400,
-                              }}
-                            >
-                              {roleLabelFr(r)}
-                            </button>
-                          ))}
-                          <div style={{ borderTop: '1px solid var(--fz-border, #E2E8F0)', margin: '6px 0' }} />
-                          {confirmRemoveId === member.id ? (
-                            <div style={{ display: 'flex', gap: 4 }}>
-                              <button
-                                onClick={() => handleRemoveMember(member.id)}
-                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: '#DC262622', color: '#DC2626', fontWeight: 600 }}
-                              >Confirmer</button>
-                              <button
-                                onClick={() => setConfirmRemoveId(null)}
-                                style={{ flex: 1, padding: '4px 8px', fontSize: 11, border: 'none', borderRadius: 4, cursor: 'pointer', background: 'var(--fz-bg-secondary)', color: 'var(--fz-text-muted)' }}
-                              >Annuler</button>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => setConfirmRemoveId(member.id)}
-                              style={{
-                                display: 'block', width: '100%', textAlign: 'left', padding: '4px 8px',
-                                fontSize: 12, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: 'transparent', color: '#DC2626',
-                              }}
-                            >
-                              Retirer du groupe
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+              <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 6 }}>
+                {offlineMembers.map(member => renderMemberRow(member))}
               </div>
             </div>
           )}
 
           {/* Empty state */}
           {filteredMembers.length === 0 && (
-            <div className="cu-empty-state">
-              <div className="cu-empty-emoji">👤</div>
-              <div className="cu-empty-title">Aucun membre trouvé</div>
-              <div className="cu-empty-desc">{memberSearch ? 'Essayez un autre terme de recherche.' : 'Invitez des collaborateurs pour commencer.'}</div>
-              <button className="cu-empty-action" onClick={() => setShowInviteModal(true)}>Inviter un membre</button>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>{'\u{1F464}'}</div>
+              <div style={CU.emptyTitle}>Aucun membre trouv&eacute;</div>
+              <div style={CU.emptyDesc}>{memberSearch ? 'Essayez un autre terme de recherche.' : 'Invitez des collaborateurs pour commencer.'}</div>
+              <button style={CU.btnPrimary} onClick={() => setShowInviteModal(true)}>Inviter un membre</button>
             </div>
           )}
 
           {/* Invite Modal */}
           {showInviteModal && (
-            <div className="cu-modal-overlay" onClick={() => setShowInviteModal(false)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
-                <div className="cu-modal-header">
-                  <div className="cu-modal-title">Inviter un membre</div>
+            <div style={CU.overlay} onClick={() => setShowInviteModal(false)}>
+              <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }} onClick={e => e.stopPropagation()}>
+                <div style={{ marginBottom: 16 }}>
+                  <div style={CU.sectionTitle}>Inviter un membre</div>
                 </div>
-                <div className="cu-modal-body">
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Email</label>
-                    <input
-                      type="email"
-                      value={inviteEmail}
-                      onChange={e => setInviteEmail(e.target.value)}
-                      placeholder="collaborateur@entreprise.com"
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
-                    />
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Rôle</label>
-                    <select
-                      value={inviteRole}
-                      onChange={e => setInviteRole(e.target.value as 'admin' | 'member' | 'viewer')}
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
-                    >
-                      <option value="admin">Admin</option>
-                      <option value="member">Membre</option>
-                      <option value="viewer">Lecteur</option>
-                    </select>
-                  </div>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Email</label>
+                  <input
+                    type="email"
+                    value={inviteEmail}
+                    onChange={e => setInviteEmail(e.target.value)}
+                    placeholder="collaborateur@entreprise.com"
+                    style={CU.input}
+                  />
                 </div>
-                <div className="cu-modal-footer">
-                  <button
-                    onClick={() => setShowInviteModal(false)}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
-                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
-                    }}
-                  >Annuler</button>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>R&ocirc;le</label>
+                  <select
+                    value={inviteRole}
+                    onChange={e => setInviteRole(e.target.value as 'admin' | 'member' | 'viewer')}
+                    style={{ ...CU.select, width: '100%' }}
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="member">Membre</option>
+                    <option value="viewer">Lecteur</option>
+                  </select>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
+                  <button onClick={() => setShowInviteModal(false)} style={CU.btnGhost}>Annuler</button>
                   <button
                     onClick={handleInviteMember}
                     disabled={!inviteEmail.trim()}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
-                      opacity: inviteEmail.trim() ? 1 : 0.5,
-                    }}
+                    style={{ ...CU.btnPrimary, opacity: inviteEmail.trim() ? 1 : 0.5 }}
                   >Envoyer l&apos;invitation</button>
                 </div>
               </div>
@@ -862,19 +788,16 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ═══════════════════════════════════════════ Tab: Groups ═══════════════════════════════════════════ */}
+      {/* ═══ Tab: Groups ═══ */}
       {activeTab === 'groups' && (
         <div>
           {/* Header */}
-          <div className="cu-section-header">
-            <div className="cu-section-header-title">
-              <span style={{ fontSize: 16 }}>🏘️</span> Groupes ({groups.length})
+          <div style={toolbar()}>
+            <div style={{ ...CU.sectionTitle, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 16 }}>{'\u{1F3D8}\uFE0F'}</span> Groupes ({groups.length})
             </div>
-            <div className="cu-section-header-spacer" />
-            <button
-              className="cu-section-header-action"
-              onClick={() => setShowCreateGroup(true)}
-            >
+            <div style={{ flex: 1 }} />
+            <button onClick={() => setShowCreateGroup(true)} style={CU.btnPrimary}>
               Nouveau +
             </button>
           </div>
@@ -882,44 +805,37 @@ export default function TeamPage() {
           {/* Selected group detail view */}
           {selectedGroup && !editingGroup && (
             <div style={{
-              marginBottom: 20, padding: 16, borderRadius: 8,
-              border: '1px solid #E5E5E5',
-              background: '#F7F7F7',
+              ...CU.card, marginBottom: 20, padding: 16, background: CU.bgSecondary,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                 <span style={{ fontSize: 24 }}>{selectedGroup.emoji}</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--fz-text)' }}>{selectedGroup.name}</div>
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)' }}>{selectedGroup.description}</div>
+                  <div style={{ ...CU.sectionTitle }}>{selectedGroup.name}</div>
+                  <div style={{ fontSize: 12, color: CU.textMuted }}>{selectedGroup.description}</div>
                 </div>
                 <button
                   onClick={() => setSelectedGroup(null)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted)' }}
-                >✕</button>
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: CU.textMuted }}
+                >{'\u2715'}</button>
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 8 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: CU.textSecondary, marginBottom: 8 }}>
                 Membres du groupe ({selectedGroup.members.length})
               </div>
 
               {/* Current group members */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 4, marginBottom: 12 }}>
                 {selectedGroup.members.map(mId => {
                   const member = membersLocal.find(m => m.id === mId);
                   return (
                     <div key={mId} style={{
-                      display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
-                      borderRadius: 8, background: 'var(--fz-bg, #fff)',
-                      border: '1px solid var(--fz-border, #E2E8F0)',
+                      ...CU.card, display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
                     }}>
-                      <span style={{ fontSize: 16 }}>{member?.emoji ?? '👤'}</span>
-                      <div style={{ flex: 1, fontSize: 13, color: 'var(--fz-text)' }}>{member?.name ?? mId}</div>
+                      <span style={{ fontSize: 16 }}>{member?.emoji ?? '\u{1F464}'}</span>
+                      <div style={{ flex: 1, fontSize: 13, color: CU.text }}>{member?.name ?? mId}</div>
                       <button
                         onClick={() => handleRemoveGroupMember(selectedGroup.id, mId)}
-                        style={{
-                          padding: '2px 8px', fontSize: 11, borderRadius: 4,
-                          border: 'none', background: '#DC262615', color: '#DC2626', cursor: 'pointer',
-                        }}
+                        style={{ ...CU.btnSmall, background: '#DC262615', color: CU.danger, border: 'none' }}
                       >Retirer</button>
                     </div>
                   );
@@ -927,25 +843,21 @@ export default function TeamPage() {
               </div>
 
               {/* Add members */}
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--fz-text-muted)', marginBottom: 6 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: CU.textMuted, marginBottom: 6 }}>
                 Ajouter un membre
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 6 }}>
                 {membersLocal.filter(m => !selectedGroup.members.includes(m.id)).map(m => (
                   <button
                     key={m.id}
                     onClick={() => handleAddGroupMember(selectedGroup.id, m.id)}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px',
-                      borderRadius: 6, fontSize: 12, border: '1px solid var(--fz-border, #E2E8F0)',
-                      background: 'var(--fz-bg, #fff)', color: 'var(--fz-text)', cursor: 'pointer',
-                    }}
+                    style={CU.btnSmall}
                   >
-                    <span>{m.emoji}</span> {m.name} <span style={{ color: '#1A1A1A' }}>+</span>
+                    <span>{m.emoji}</span> {m.name} <span style={{ color: CU.text }}>+</span>
                   </button>
                 ))}
                 {membersLocal.filter(m => !selectedGroup.members.includes(m.id)).length === 0 && (
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', fontStyle: 'italic' }}>Tous les membres sont dans ce groupe.</div>
+                  <div style={{ fontSize: 12, color: CU.textMuted, fontStyle: 'italic' }}>Tous les membres sont dans ce groupe.</div>
                 )}
               </div>
             </div>
@@ -953,81 +865,56 @@ export default function TeamPage() {
 
           {/* Edit group modal */}
           {editingGroup && (
-            <div className="cu-modal-overlay" onClick={() => setEditingGroup(null)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
-                <div className="cu-modal-header">
-                  <div className="cu-modal-title">Modifier le groupe</div>
+            <div style={CU.overlay} onClick={() => setEditingGroup(null)}>
+              <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }} onClick={e => e.stopPropagation()}>
+                <div style={{ marginBottom: 16 }}>
+                  <div style={CU.sectionTitle}>Modifier le groupe</div>
                 </div>
-                <div className="cu-modal-body">
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Nom</label>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Nom</label>
+                  <input
+                    value={editingGroup.name}
+                    onChange={e => setEditingGroup({ ...editingGroup, name: e.target.value })}
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' as const }}>
+                  <div style={{ flex: 1, minWidth: isMobile ? '100%' : 80 }}>
+                    <label style={CU.label}>Emoji</label>
                     <input
-                      value={editingGroup.name}
-                      onChange={e => setEditingGroup({ ...editingGroup, name: e.target.value })}
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
+                      value={editingGroup.emoji}
+                      onChange={e => setEditingGroup({ ...editingGroup, emoji: e.target.value })}
+                      style={CU.input}
                     />
                   </div>
-                  <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
-                    <div style={{ flex: 1, minWidth: isMobile ? '100%' : 80 }}>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
-                      <input
-                        value={editingGroup.emoji}
-                        onChange={e => setEditingGroup({ ...editingGroup, emoji: e.target.value })}
-                        style={{
-                          width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                          border: '1px solid var(--fz-border, #E2E8F0)',
-                          background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                        }}
-                      />
+                  <div style={{ flex: 1, minWidth: isMobile ? '100%' : 120 }}>
+                    <label style={CU.label}>Couleur</label>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
+                      {GROUP_COLORS.map(c => (
+                        <button
+                          key={c}
+                          onClick={() => setEditingGroup({ ...editingGroup, color: c })}
+                          style={{
+                            width: 28, height: 28, borderRadius: '50%',
+                            border: editingGroup.color === c ? `2px solid ${CU.text}` : '2px solid transparent',
+                            background: c, cursor: 'pointer',
+                          }}
+                        />
+                      ))}
                     </div>
-                    <div style={{ flex: 1, minWidth: isMobile ? '100%' : 120 }}>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Couleur</label>
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {GROUP_COLORS.map(c => (
-                          <button
-                            key={c}
-                            onClick={() => setEditingGroup({ ...editingGroup, color: c })}
-                            style={{
-                              width: 28, height: 28, borderRadius: '50%', border: editingGroup.color === c ? '2px solid var(--fz-text)' : '2px solid transparent',
-                              background: c, cursor: 'pointer',
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Description</label>
-                    <input
-                      value={editingGroup.description}
-                      onChange={e => setEditingGroup({ ...editingGroup, description: e.target.value })}
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
-                    />
                   </div>
                 </div>
-                <div className="cu-modal-footer">
-                  <button
-                    onClick={() => setEditingGroup(null)}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
-                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
-                    }}
-                  >Annuler</button>
-                  <button
-                    onClick={handleUpdateGroup}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
-                    }}
-                  >Enregistrer</button>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Description</label>
+                  <input
+                    value={editingGroup.description}
+                    onChange={e => setEditingGroup({ ...editingGroup, description: e.target.value })}
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
+                  <button onClick={() => setEditingGroup(null)} style={CU.btnGhost}>Annuler</button>
+                  <button onClick={handleUpdateGroup} style={CU.btnPrimary}>Enregistrer</button>
                 </div>
               </div>
             </div>
@@ -1035,43 +922,45 @@ export default function TeamPage() {
 
           {/* Groups grid */}
           {groups.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
+            <div style={cardGrid(isMobile, 2)}>
               {groups.map(group => (
-                <div key={group.id} className="cu-group-card">
-                  <div className="cu-group-header">
-                    <span className="cu-group-emoji" style={{ background: group.color + '22' }}>{group.emoji}</span>
+                <div key={group.id} style={CU.card}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <span style={{
+                      fontSize: 20, width: 36, height: 36, borderRadius: 8,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: group.color + '22',
+                    }}>{group.emoji}</span>
                     <div>
-                      <div className="cu-group-name">{group.name}</div>
-                      <div className="cu-group-meta">{group.members.length} membre{group.members.length > 1 ? 's' : ''}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{group.name}</div>
+                      <div style={{ fontSize: 11, color: CU.textMuted }}>{group.members.length} membre{group.members.length > 1 ? 's' : ''}</div>
                     </div>
                   </div>
-                  <div className="cu-group-desc">{group.description}</div>
-                  <div className="cu-group-actions">
+                  <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 10 }}>{group.description}</div>
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
                     <button
-                      className="fz-btn fz-btn-primary fz-btn-sm"
                       onClick={() => { setSelectedGroup(group); setEditingGroup(null); }}
-                      style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none', background: group.color, color: '#fff', cursor: 'pointer' }}
+                      style={{ ...CU.btnSmall, background: group.color, color: '#fff', border: 'none' }}
                     >Voir</button>
                     <button
-                      className="fz-btn fz-btn-secondary fz-btn-sm"
                       onClick={() => setEditingGroup(group)}
-                      style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: '1px solid var(--fz-border)', background: 'transparent', color: 'var(--fz-text)', cursor: 'pointer' }}
+                      style={CU.btnSmall}
                     >Modifier</button>
                     {confirmDeleteGroupId === group.id ? (
                       <div style={{ display: 'flex', gap: 4 }}>
                         <button
                           onClick={() => handleDeleteGroup(group.id)}
-                          style={{ fontSize: 11, padding: '4px 8px', borderRadius: 4, border: 'none', background: '#DC262622', color: '#DC2626', cursor: 'pointer', fontWeight: 600 }}
+                          style={{ ...CU.btnSmall, background: '#DC262622', color: CU.danger, border: 'none', fontWeight: 600 }}
                         >Confirmer</button>
                         <button
                           onClick={() => setConfirmDeleteGroupId(null)}
-                          style={{ fontSize: 11, padding: '4px 8px', borderRadius: 4, border: 'none', background: 'var(--fz-bg-secondary)', color: 'var(--fz-text-muted)', cursor: 'pointer' }}
+                          style={{ ...CU.btnSmall, background: CU.bgSecondary, color: CU.textMuted }}
                         >Annuler</button>
                       </div>
                     ) : (
                       <button
                         onClick={() => setConfirmDeleteGroupId(group.id)}
-                        style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none', background: '#DC262615', color: '#DC2626', cursor: 'pointer' }}
+                        style={{ ...CU.btnSmall, background: '#DC262615', color: CU.danger, border: 'none' }}
                       >Supprimer</button>
                     )}
                   </div>
@@ -1079,95 +968,72 @@ export default function TeamPage() {
               ))}
             </div>
           ) : (
-            <div className="cu-empty-state">
-              <div className="cu-empty-emoji">🏘️</div>
-              <div className="cu-empty-title">Aucun groupe</div>
-              <div className="cu-empty-desc">Créez des groupes pour organiser vos collaborateurs par projet ou département.</div>
-              <button className="cu-empty-action" onClick={() => setShowCreateGroup(true)}>Créer un groupe</button>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>{'\u{1F3D8}\uFE0F'}</div>
+              <div style={CU.emptyTitle}>Aucun groupe</div>
+              <div style={CU.emptyDesc}>Cr&eacute;ez des groupes pour organiser vos collaborateurs par projet ou d&eacute;partement.</div>
+              <button style={CU.btnPrimary} onClick={() => setShowCreateGroup(true)}>Cr&eacute;er un groupe</button>
             </div>
           )}
 
           {/* Create group modal */}
           {showCreateGroup && (
-            <div className="cu-modal-overlay" onClick={() => setShowCreateGroup(false)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
-                <div className="cu-modal-header">
-                  <div className="cu-modal-title">Nouveau groupe</div>
+            <div style={CU.overlay} onClick={() => setShowCreateGroup(false)}>
+              <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }} onClick={e => e.stopPropagation()}>
+                <div style={{ marginBottom: 16 }}>
+                  <div style={CU.sectionTitle}>Nouveau groupe</div>
                 </div>
-                <div className="cu-modal-body">
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Nom du groupe</label>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Nom du groupe</label>
+                  <input
+                    value={newGroupName}
+                    onChange={e => setNewGroupName(e.target.value)}
+                    placeholder="ex: Marketing, Developpement..."
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={CU.label}>Emoji</label>
                     <input
-                      value={newGroupName}
-                      onChange={e => setNewGroupName(e.target.value)}
-                      placeholder="ex: Marketing, Développement..."
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
+                      value={newGroupEmoji}
+                      onChange={e => setNewGroupEmoji(e.target.value)}
+                      style={CU.input}
                     />
                   </div>
-                  <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
-                      <input
-                        value={newGroupEmoji}
-                        onChange={e => setNewGroupEmoji(e.target.value)}
-                        style={{
-                          width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                          border: '1px solid var(--fz-border, #E2E8F0)',
-                          background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                        }}
-                      />
+                  <div style={{ flex: 1 }}>
+                    <label style={CU.label}>Couleur</label>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
+                      {GROUP_COLORS.map(c => (
+                        <button
+                          key={c}
+                          onClick={() => setNewGroupColor(c)}
+                          style={{
+                            width: 28, height: 28, borderRadius: '50%',
+                            border: newGroupColor === c ? `2px solid ${CU.text}` : '2px solid transparent',
+                            background: c, cursor: 'pointer',
+                          }}
+                        />
+                      ))}
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Couleur</label>
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {GROUP_COLORS.map(c => (
-                          <button
-                            key={c}
-                            onClick={() => setNewGroupColor(c)}
-                            style={{
-                              width: 28, height: 28, borderRadius: '50%', border: newGroupColor === c ? '2px solid var(--fz-text)' : '2px solid transparent',
-                              background: c, cursor: 'pointer',
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Description</label>
-                    <input
-                      value={newGroupDesc}
-                      onChange={e => setNewGroupDesc(e.target.value)}
-                      placeholder="Description courte du groupe"
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
-                    />
                   </div>
                 </div>
-                <div className="cu-modal-footer">
-                  <button
-                    onClick={() => setShowCreateGroup(false)}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
-                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
-                    }}
-                  >Annuler</button>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Description</label>
+                  <input
+                    value={newGroupDesc}
+                    onChange={e => setNewGroupDesc(e.target.value)}
+                    placeholder="Description courte du groupe"
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
+                  <button onClick={() => setShowCreateGroup(false)} style={CU.btnGhost}>Annuler</button>
                   <button
                     onClick={handleCreateGroup}
                     disabled={!newGroupName.trim()}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
-                      opacity: newGroupName.trim() ? 1 : 0.5,
-                    }}
-                  >Créer le groupe</button>
+                    style={{ ...CU.btnPrimary, opacity: newGroupName.trim() ? 1 : 0.5 }}
+                  >Cr&eacute;er le groupe</button>
                 </div>
               </div>
             </div>
@@ -1175,65 +1041,57 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ═══════════════════════════════════════════ Tab: Communities ═══════════════════════════════════════════ */}
+      {/* ═══ Tab: Communities ═══ */}
       {activeTab === 'communities' && (
         <div>
           {/* Header */}
-          <div className="cu-section-header" style={{ flexWrap: 'wrap', gap: 8 }}>
-            <div className="cu-section-header-title">
-              <span style={{ fontSize: 16 }}>🌐</span> Communautés
+          <div style={{ ...toolbar(), flexWrap: 'wrap' as const, gap: 8 }}>
+            <div style={{ ...CU.sectionTitle, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 16 }}>{'\u{1F310}'}</span> Communaut&eacute;s
             </div>
-            <div className="cu-section-header-spacer" />
+            <div style={{ flex: 1 }} />
             <input
               value={communitySearch}
               onChange={e => setCommunitySearch(e.target.value)}
               placeholder="Rechercher..."
-              style={{
-                padding: '6px 12px', fontSize: 13, borderRadius: 8,
-                border: '1px solid var(--fz-border, #E2E8F0)',
-                background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                width: isMobile ? '100%' : 180, minWidth: 0,
-              }}
+              style={searchInput(isMobile)}
             />
             <button
-              className="cu-section-header-action"
               onClick={() => setShowCreateCommunity(true)}
-              style={{ marginLeft: 8, whiteSpace: 'nowrap', minHeight: 44 }}
+              style={{ ...CU.btnPrimary, marginLeft: 8, whiteSpace: 'nowrap' as const, minHeight: 44 }}
             >
-              Créer +
+              Cr&eacute;er +
             </button>
           </div>
 
           {/* Joined communities */}
           {joinedCommunities.length > 0 && (
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
-                Mes communautés ({joinedCommunities.length})
+              <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 10 }}>
+                Mes communaut&eacute;s ({joinedCommunities.length})
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 10 }}>
                 {joinedCommunities.map(community => (
-                  <div key={community.id} className="cu-group-card" style={{ cursor: 'default' }}>
-                    <div className="cu-group-header">
-                      <span className="cu-group-emoji" style={{ background: community.color + '22' }}>{community.emoji}</span>
+                  <div key={community.id} style={CU.card}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                      <span style={{
+                        fontSize: 20, width: 36, height: 36, borderRadius: 8,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: community.color + '22',
+                      }}>{community.emoji}</span>
                       <div>
-                        <div className="cu-group-name">{community.name}</div>
-                        <div className="cu-group-meta">{community.memberCount} membres</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{community.name}</div>
+                        <div style={{ fontSize: 11, color: CU.textMuted }}>{community.memberCount} membres</div>
                       </div>
                     </div>
-                    <div className="cu-group-desc">{community.description}</div>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-                      {community.tags.map(tag => <span key={tag} className="cu-tag">#{tag}</span>)}
+                    <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 8 }}>{community.description}</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const, marginBottom: 8 }}>
+                      {community.tags.map(tag => <span key={tag} style={CU.badge}>#{tag}</span>)}
                     </div>
-                    <div className="cu-group-actions">
-                      <button
-                        onClick={() => handleLeaveCommunity(community.id)}
-                        style={{
-                          fontSize: 12, padding: '4px 12px', borderRadius: 6,
-                          border: '1px solid var(--fz-border)', background: 'transparent',
-                          color: 'var(--fz-text-muted)', cursor: 'pointer',
-                        }}
-                      >Quitter</button>
-                    </div>
+                    <button
+                      onClick={() => handleLeaveCommunity(community.id)}
+                      style={CU.btnGhost}
+                    >Quitter</button>
                   </div>
                 ))}
               </div>
@@ -1243,32 +1101,31 @@ export default function TeamPage() {
           {/* Discover communities */}
           {discoverCommunities.length > 0 && (
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 10 }}>
-                Découvrir ({discoverCommunities.length})
+              <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 10 }}>
+                D&eacute;couvrir ({discoverCommunities.length})
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
+              <div style={cardGrid(isMobile, 2)}>
                 {discoverCommunities.map(community => (
-                  <div key={community.id} className="cu-group-card" style={{ cursor: 'pointer' }}>
-                    <div className="cu-group-header">
-                      <span className="cu-group-emoji" style={{ background: community.color + '22' }}>{community.emoji}</span>
+                  <div key={community.id} style={CU.cardHoverable}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                      <span style={{
+                        fontSize: 20, width: 36, height: 36, borderRadius: 8,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: community.color + '22',
+                      }}>{community.emoji}</span>
                       <div>
-                        <div className="cu-group-name">{community.name}</div>
-                        <div className="cu-group-meta">{community.memberCount} membres</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{community.name}</div>
+                        <div style={{ fontSize: 11, color: CU.textMuted }}>{community.memberCount} membres</div>
                       </div>
                     </div>
-                    <div className="cu-group-desc">{community.description}</div>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-                      {community.tags.map(tag => <span key={tag} className="cu-tag">#{tag}</span>)}
+                    <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 8 }}>{community.description}</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const, marginBottom: 8 }}>
+                      {community.tags.map(tag => <span key={tag} style={CU.badge}>#{tag}</span>)}
                     </div>
-                    <div className="cu-group-actions">
-                      <button
-                        onClick={() => handleJoinCommunity(community.id)}
-                        style={{
-                          fontSize: 12, padding: '4px 12px', borderRadius: 6, border: 'none',
-                          background: '#1A1A1A', color: '#fff', cursor: 'pointer',
-                        }}
-                      >Rejoindre</button>
-                    </div>
+                    <button
+                      onClick={() => handleJoinCommunity(community.id)}
+                      style={CU.btnPrimary}
+                    >Rejoindre</button>
                   </div>
                 ))}
               </div>
@@ -1277,120 +1134,86 @@ export default function TeamPage() {
 
           {/* Empty state */}
           {filteredCommunities.length === 0 && (
-            <div className="cu-empty-state">
-              <div className="cu-empty-emoji">🌐</div>
-              <div className="cu-empty-title">Aucune communauté trouvée</div>
-              <div className="cu-empty-desc">{communitySearch ? 'Essayez un autre terme de recherche.' : 'Créez ou rejoignez une communauté.'}</div>
-              <button className="cu-empty-action" onClick={() => setShowCreateCommunity(true)}>Créer une communauté</button>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>{'\u{1F310}'}</div>
+              <div style={CU.emptyTitle}>Aucune communaut&eacute; trouv&eacute;e</div>
+              <div style={CU.emptyDesc}>{communitySearch ? 'Essayez un autre terme de recherche.' : 'Cr\u00e9ez ou rejoignez une communaut\u00e9.'}</div>
+              <button style={CU.btnPrimary} onClick={() => setShowCreateCommunity(true)}>Cr&eacute;er une communaut&eacute;</button>
             </div>
           )}
 
           {/* Create community modal */}
           {showCreateCommunity && (
-            <div className="cu-modal-overlay" onClick={() => setShowCreateCommunity(false)}>
-              <div className="cu-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }}>
-                <div className="cu-modal-header">
-                  <div className="cu-modal-title">Nouvelle communauté</div>
+            <div style={CU.overlay} onClick={() => setShowCreateCommunity(false)}>
+              <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 520, width: '100%' }} onClick={e => e.stopPropagation()}>
+                <div style={{ marginBottom: 16 }}>
+                  <div style={CU.sectionTitle}>Nouvelle communaut&eacute;</div>
                 </div>
-                <div className="cu-modal-body">
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Nom</label>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Nom</label>
+                  <input
+                    value={newCommunityName}
+                    onChange={e => setNewCommunityName(e.target.value)}
+                    placeholder="ex: Developpeurs React, Marketing B2B..."
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+                  <div>
+                    <label style={CU.label}>Emoji</label>
                     <input
-                      value={newCommunityName}
-                      onChange={e => setNewCommunityName(e.target.value)}
-                      placeholder="ex: Développeurs React, Marketing B2B..."
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
+                      value={newCommunityEmoji}
+                      onChange={e => setNewCommunityEmoji(e.target.value)}
+                      style={{ ...CU.input, width: 60, textAlign: 'center' as const }}
                     />
                   </div>
-                  <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Emoji</label>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: CU.text, cursor: 'pointer' }}>
                       <input
-                        value={newCommunityEmoji}
-                        onChange={e => setNewCommunityEmoji(e.target.value)}
-                        style={{
-                          width: 60, padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                          border: '1px solid var(--fz-border, #E2E8F0)',
-                          background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                          textAlign: 'center',
-                        }}
+                        type="checkbox"
+                        checked={newCommunityPublic}
+                        onChange={e => setNewCommunityPublic(e.target.checked)}
+                        style={{ width: 16, height: 16, accentColor: CU.accent }}
                       />
-                    </div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--fz-text)', cursor: 'pointer' }}>
-                        <input
-                          type="checkbox"
-                          checked={newCommunityPublic}
-                          onChange={e => setNewCommunityPublic(e.target.checked)}
-                          style={{ width: 16, height: 16, accentColor: '#1A1A1A' }}
-                        />
-                        Communauté publique
-                      </label>
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Description</label>
-                    <input
-                      value={newCommunityDesc}
-                      onChange={e => setNewCommunityDesc(e.target.value)}
-                      placeholder="Décrivez votre communauté..."
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
-                    />
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Tags (séparés par des virgules)</label>
-                    <input
-                      value={newCommunityTags}
-                      onChange={e => setNewCommunityTags(e.target.value)}
-                      placeholder="ex: tech, startup, marketing"
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                      }}
-                    />
-                  </div>
-                  <div style={{ marginBottom: 14 }}>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--fz-text-secondary)', marginBottom: 4 }}>Règles de la communauté</label>
-                    <textarea
-                      value={newCommunityRules}
-                      onChange={e => setNewCommunityRules(e.target.value)}
-                      placeholder="Décrivez les règles de votre communauté..."
-                      rows={3}
-                      style={{
-                        width: '100%', padding: '8px 12px', fontSize: 13, borderRadius: 8,
-                        border: '1px solid var(--fz-border, #E2E8F0)',
-                        background: 'var(--fz-bg, #fff)', color: 'var(--fz-text, #1E293B)',
-                        resize: 'vertical',
-                      }}
-                    />
+                      Communaut&eacute; publique
+                    </label>
                   </div>
                 </div>
-                <div className="cu-modal-footer">
-                  <button
-                    onClick={() => setShowCreateCommunity(false)}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: '1px solid var(--fz-border)',
-                      background: 'transparent', color: 'var(--fz-text-muted)', cursor: 'pointer',
-                    }}
-                  >Annuler</button>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Description</label>
+                  <input
+                    value={newCommunityDesc}
+                    onChange={e => setNewCommunityDesc(e.target.value)}
+                    placeholder="Decrivez votre communaute..."
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>Tags (s&eacute;par&eacute;s par des virgules)</label>
+                  <input
+                    value={newCommunityTags}
+                    onChange={e => setNewCommunityTags(e.target.value)}
+                    placeholder="ex: tech, startup, marketing"
+                    style={CU.input}
+                  />
+                </div>
+                <div style={{ marginBottom: 14 }}>
+                  <label style={CU.label}>R&egrave;gles de la communaut&eacute;</label>
+                  <textarea
+                    value={newCommunityRules}
+                    onChange={e => setNewCommunityRules(e.target.value)}
+                    placeholder="Decrivez les regles de votre communaute..."
+                    rows={3}
+                    style={CU.textarea}
+                  />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
+                  <button onClick={() => setShowCreateCommunity(false)} style={CU.btnGhost}>Annuler</button>
                   <button
                     onClick={handleCreateCommunity}
                     disabled={!newCommunityName.trim()}
-                    style={{
-                      padding: '8px 16px', fontSize: 13, borderRadius: 8, border: 'none',
-                      background: '#1A1A1A', color: '#fff', cursor: 'pointer',
-                      opacity: newCommunityName.trim() ? 1 : 0.5,
-                    }}
-                  >Créer la communauté</button>
+                    style={{ ...CU.btnPrimary, opacity: newCommunityName.trim() ? 1 : 0.5 }}
+                  >Cr&eacute;er la communaut&eacute;</button>
                 </div>
               </div>
             </div>
@@ -1398,33 +1221,36 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ═══════════════════════════════════════════ Tab: Activity ═══════════════════════════════════════════ */}
+      {/* ═══ Tab: Activity ═══ */}
       {activeTab === 'activity' && (
         <div>
           {wsActivity.length === 0 ? (
-            <div className="text-center" style={{ padding: '60px 20px', color: 'var(--fz-text-secondary, #64748B)' }}>
-              <div style={{ marginBottom: 12 }}><span style={{ fontSize: 48 }}>📋</span></div>
-              <p className="text-sm">Aucune activité pour le moment.</p>
-              {workspaces.length === 0 && (
-                <p className="text-xs mt-4">Créez un espace collaboratif pour voir l&apos;activité de votre équipe.</p>
-              )}
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>{'\u{1F4CB}'}</div>
+              <div style={CU.emptyTitle}>Aucune activit&eacute; pour le moment</div>
+              <div style={CU.emptyDesc}>
+                {workspaces.length === 0
+                  ? 'Cr\u00e9ez un espace collaboratif pour voir l\u2019activit\u00e9 de votre \u00e9quipe.'
+                  : ''}
+              </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 6 }}>
               {wsActivity.map(entry => (
-                <div key={entry.id} className="flex items-center gap-8 card" style={{ padding: '10px 14px' }}>
-                  <div className="flex-center rounded-full" style={{
-                    width: 32, height: 32, background: 'var(--fz-bg-secondary, #F8FAFC)',
-                    fontSize: 12, fontWeight: 600, color: 'var(--fz-text, #1E293B)',
+                <div key={entry.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px' }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: '50%', background: CU.bgSecondary,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 600, color: CU.text,
                   }}>
                     {(entry.userName ?? '?')[0].toUpperCase()}
                   </div>
-                  <div className="flex-1">
-                    <div className="text-sm" style={{ color: 'var(--fz-text, #1E293B)' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, color: CU.text }}>
                       <strong>{entry.userName ?? 'Utilisateur'}</strong>{' '}
                       {entry.action.replace(/_/g, ' ')}
                     </div>
-                    <div className="text-xs" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>
+                    <div style={{ fontSize: 11, color: CU.textSecondary }}>
                       {new Date(entry.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>

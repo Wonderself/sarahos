@@ -7,6 +7,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 const CATEGORIES: ActionCategory[] = ['message', 'document', 'meeting', 'game', 'reward', 'referral', 'login', 'agent', 'system'];
 
@@ -70,29 +71,26 @@ export default function TimelinePage() {
   const meta = PAGE_META.timeline;
 
   return (
-    <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 800 }}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{
-          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--fz-text, #1A1A1A)',
-          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
-        }}>
-          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta.emoji}</span>
-          {meta.title}
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta.emoji}</span>
+          <h1 style={CU.pageTitle}>{meta.title}</h1>
           <HelpBubble text={meta.helpText} />
-        </h1>
-        <p style={{ color: 'var(--fz-text-muted, #9B9B9B)', fontSize: 14 }}>
+          <PageExplanation pageId="timeline" text={PAGE_META.timeline?.helpText} />
+        </div>
+        <p style={CU.pageSubtitle}>
           {meta.subtitle}
         </p>
       </div>
-      <PageExplanation pageId="timeline" text={PAGE_META.timeline?.helpText} />
 
       {/* Search */}
       <div style={{ marginBottom: 20 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-          borderRadius: 10, padding: '10px 14px',
+          background: CU.bgSecondary, border: `1px solid ${CU.border}`,
+          borderRadius: 8, padding: '10px 14px',
         }}>
           <span style={{ fontSize: 18 }}>🔍</span>
           <input
@@ -102,13 +100,13 @@ export default function TimelinePage() {
             placeholder="Rechercher dans la timeline..."
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              color: 'var(--fz-text, #1A1A1A)', fontSize: 14,
+              color: CU.text, fontSize: 14,
             }}
           />
           {search && (
             <span
               onClick={() => setSearch('')}
-              style={{ fontSize: 18, color: 'var(--fz-text-muted, #9B9B9B)', cursor: 'pointer', minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ fontSize: 18, color: CU.textMuted, cursor: 'pointer', minWidth: 44, minHeight: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >✕</span>
           )}
         </div>
@@ -124,11 +122,12 @@ export default function TimelinePage() {
               key={cat}
               onClick={() => toggleCategory(cat)}
               style={{
-                padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                fontSize: 12, fontWeight: 700, minHeight: 44,
-                background: active ? '#1A1A1A' : 'var(--fz-bg-secondary, #F7F7F7)',
-                color: active ? '#fff' : 'var(--fz-text-muted, #9B9B9B)',
-                display: 'flex', alignItems: 'center', gap: 5,
+                ...CU.btnSmall,
+                minHeight: 44,
+                fontWeight: 700,
+                background: active ? CU.accent : CU.bgSecondary,
+                color: active ? '#fff' : CU.textMuted,
+                border: active ? 'none' : `1px solid ${CU.border}`,
                 transition: 'all 0.2s',
               }}
             >
@@ -140,47 +139,34 @@ export default function TimelinePage() {
       </div>
 
       {/* Stats */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 8 : 12, marginBottom: 28,
-      }}>
-        <div style={{
-          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-          borderRadius: 12, padding: '14px', textAlign: 'center',
-          
-        }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#1A1A1A' }}>{events.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, marginTop: 2 }}>ACTIONS</div>
+      <div style={{ ...cardGrid(isMobile, 3), marginBottom: 28 }}>
+        <div style={{ ...CU.card, textAlign: 'center' as const }}>
+          <div style={CU.statValue}>{events.length}</div>
+          <div style={CU.statLabel}>ACTIONS</div>
         </div>
-        <div style={{
-          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-          borderRadius: 12, padding: '14px', textAlign: 'center',
-          
-        }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#1A1A1A' }}>{dates.length}</div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, marginTop: 2 }}>JOURS ACTIFS</div>
+        <div style={{ ...CU.card, textAlign: 'center' as const }}>
+          <div style={CU.statValue}>{dates.length}</div>
+          <div style={CU.statLabel}>JOURS ACTIFS</div>
         </div>
-        <div style={{
-          background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-          borderRadius: 12, padding: '14px', textAlign: 'center',
-          
-        }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#1A1A1A' }}>
+        <div style={{ ...CU.card, textAlign: 'center' as const }}>
+          <div style={CU.statValue}>
             {new Set(events.filter(e => e.agentId).map(e => e.agentId)).size}
           </div>
-          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, marginTop: 2 }}>AGENTS UTILISÉS</div>
+          <div style={CU.statLabel}>AGENTS UTILISÉS</div>
         </div>
       </div>
 
       {/* Timeline */}
       {dates.length === 0 ? (
         <div style={{
-          textAlign: 'center', padding: '60px 20px',
-          background: 'var(--fz-bg-secondary, #F7F7F7)', borderRadius: 14,
-          border: '1px solid var(--border-primary, #E5E5E5)',
+          ...CU.emptyState,
+          background: CU.bgSecondary,
+          borderRadius: 8,
+          border: `1px solid ${CU.border}`,
         }}>
-          <span style={{ fontSize: 48, marginBottom: 12, display: 'block' }}>🕐</span>
-          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--fz-text-secondary, #6B6B6B)', marginBottom: 6 }}>Aucune action enregistrée</div>
-          <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+          <div style={CU.emptyEmoji}>🕐</div>
+          <div style={CU.emptyTitle}>Aucune action enregistrée</div>
+          <div style={CU.emptyDesc}>
             Vos actions apparaîtront ici au fur et à mesure
           </div>
         </div>
@@ -189,7 +175,7 @@ export default function TimelinePage() {
           {/* Vertical line */}
           <div style={{
             position: 'absolute', left: 8, top: 0, bottom: 0, width: 2,
-            background: 'var(--fz-border, #E5E5E5)',
+            background: CU.border,
           }} />
 
           {dates.map(date => (
@@ -197,12 +183,12 @@ export default function TimelinePage() {
               {/* Date header */}
               <div style={{
                 position: 'relative', marginBottom: 14,
-                fontSize: 13, fontWeight: 700, color: 'var(--fz-text-secondary, #6B6B6B)',
+                fontSize: 13, fontWeight: 700, color: CU.textSecondary,
                 textTransform: 'capitalize',
               }}>
                 <div style={{
                   position: 'absolute', left: -24, top: 2, width: 12, height: 12,
-                  borderRadius: '50%', background: '#1A1A1A', border: '2px solid #fff',
+                  borderRadius: '50%', background: CU.accent, border: '2px solid #fff',
                 }} />
                 {formatDate(date)}
               </div>
@@ -214,9 +200,8 @@ export default function TimelinePage() {
                   <div
                     key={event.id}
                     style={{
+                      ...CU.card,
                       position: 'relative', marginBottom: 8,
-                      background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)',
-                      borderRadius: 10, padding: '12px 14px',
                       display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: 12,
                       flexWrap: isMobile ? 'wrap' : 'nowrap',
                     }}
@@ -225,13 +210,13 @@ export default function TimelinePage() {
                     <div style={{
                       position: 'absolute', left: -22, top: '50%', transform: 'translateY(-50%)',
                       width: 8, height: 8, borderRadius: '50%',
-                      background: '#9B9B9B', opacity: 0.6,
+                      background: CU.textMuted, opacity: 0.6,
                     }} />
 
                     {/* Icon */}
                     <div style={{
-                      width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                      background: '#F0F0F0', border: '1px solid #E5E5E5',
+                      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                      background: CU.bgSecondary, border: `1px solid ${CU.border}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 18,
                     }}>
@@ -240,14 +225,14 @@ export default function TimelinePage() {
 
                     {/* Content */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{event.title}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: CU.text }}>{event.title}</div>
                       {event.description && (
-                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 2 }}>{event.description}</div>
+                        <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>{event.description}</div>
                       )}
                     </div>
 
                     {/* Time */}
-                    <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', fontWeight: 600, flexShrink: 0 }}>
+                    <div style={{ fontSize: 11, color: CU.textMuted, fontWeight: 600, flexShrink: 0 }}>
                       {formatTime(event.timestamp)}
                     </div>
                   </div>

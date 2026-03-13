@@ -173,7 +173,7 @@ export default function TypingGame() {
               key={i}
               style={{
                 color,
-                borderBottom: i === input.length ? '2px solid #7c3aed' : 'none',
+                borderBottom: i === input.length ? '2px solid var(--accent)' : 'none',
                 transition: 'color 0.1s',
                 background: i < input.length && input[i] !== char ? 'rgba(239,68,68,0.15)' : 'transparent',
               }}
@@ -207,7 +207,7 @@ export default function TypingGame() {
           boxSizing: 'border-box',
         }}
         onFocus={(e) => {
-          e.currentTarget.style.borderColor = '#7c3aed';
+          e.currentTarget.style.borderColor = 'var(--accent)';
           // Scroll input into view on mobile to stay above virtual keyboard
           setTimeout(() => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
         }}
@@ -226,7 +226,7 @@ export default function TypingGame() {
             <button
               onClick={reset}
               style={{
-                background: '#7c3aed',
+                background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,

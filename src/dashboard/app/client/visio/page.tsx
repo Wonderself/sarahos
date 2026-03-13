@@ -8,6 +8,8 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
+import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 const VISIO_AGENTS = ALL_AGENTS.map(a => ({
   id: a.id,
@@ -44,6 +46,7 @@ const meta = PAGE_META.visio;
 export default function VisioPage() {
   const { requireAuth, LoginModalComponent } = useAuthGuard();
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [callHistory, setCallHistory] = useState<CallRecord[]>([]);
   const [activeSection, setActiveSection] = useState<'agents' | 'history'>('agents');
 
@@ -69,14 +72,14 @@ export default function VisioPage() {
   const topAgent = VISIO_AGENTS.find(a => a.id === topAgentId);
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 1000 }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 28 }}>{meta.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta.emoji}</span>
           <div>
-            <h1 className="page-title" style={{ color: 'var(--fz-text, #1A1A1A)' }}>{meta.title}</h1>
-            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #6B6B6B)' }}>
+            <h1 style={CU.pageTitle}>{meta.title}</h1>
+            <p style={CU.pageSubtitle}>
               Parlez face-à-face avec vos assistants IA en <span className="fz-logo-word">temps réel</span>. Micro + synthèse vocale pour une expérience naturelle.
             </p>
           </div>
@@ -84,8 +87,8 @@ export default function VisioPage() {
         </div>
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
-          padding: '6px 12px', borderRadius: 8, background: '#F0F0F0', border: '1px solid #E5E5E5',
-          fontSize: 11, color: '#6B6B6B',
+          padding: '6px 12px', borderRadius: 8, background: CU.accentLight, border: `1px solid ${CU.border}`,
+          fontSize: 11, color: CU.textSecondary,
         }}>
           ⚡ Consomme ~3x plus de crédits qu&apos;un chat texte (<span className="fz-logo-word">STT + LLM + TTS</span>)
         </div>
@@ -94,17 +97,17 @@ export default function VisioPage() {
 
       {/* Stats */}
       {totalCalls > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+        <div style={{ ...cardGrid(isMobile, 4), gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', marginBottom: 24 }}>
           {[
-            { label: 'Appels au total', value: String(totalCalls), icon: '📞', color: 'var(--accent)' },
-            { label: 'Ce mois', value: String(thisMonth.length), icon: '📅', color: '#1A1A1A' },
-            { label: 'Durée ce mois', value: formatDuration(totalDurationMonth), icon: '⏱️', color: '#1A1A1A' },
-            { label: 'Assistant favori', value: topAgent?.name ?? '—', icon: '🤖', color: '#1A1A1A' },
+            { label: 'Appels au total', value: String(totalCalls), icon: '📞' },
+            { label: 'Ce mois', value: String(thisMonth.length), icon: '📅' },
+            { label: 'Durée ce mois', value: formatDuration(totalDurationMonth), icon: '⏱️' },
+            { label: 'Assistant favori', value: topAgent?.name ?? '—', icon: '🤖' },
           ].map(s => (
-            <div key={s.label} style={{ padding: '14px 18px', borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}>
+            <div key={s.label} style={CU.card}>
               <div style={{ marginBottom: 4, fontSize: 20 }}>{s.icon}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: s.color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)' }}>{s.label}</div>
+              <div style={{ ...CU.statValue, fontSize: 16, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
+              <div style={CU.statLabel}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -116,13 +119,7 @@ export default function VisioPage() {
           <button
             key={t}
             onClick={() => setActiveSection(t as 'agents' | 'history')}
-            style={{
-              padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              minHeight: 44,
-              border: activeSection === t ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E5E5E5)',
-              background: activeSection === t ? 'var(--accent)' : 'var(--fz-bg-secondary, #F7F7F7)',
-              color: activeSection === t ? '#fff' : 'var(--fz-text, #1A1A1A)',
-            }}
+            style={activeSection === t ? { ...CU.btnPrimary, borderRadius: 20, padding: '8px 20px' } : { ...CU.btnGhost, borderRadius: 20, padding: '8px 20px' }}
           >
             {icon} {l}
           </button>
@@ -142,35 +139,35 @@ export default function VisioPage() {
               style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
             >
               <div
-                style={{ padding: 20, cursor: 'pointer', transition: 'all 0.2s', borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}
+                style={CU.cardHoverable}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = '#1A1A1A';
+                  e.currentTarget.style.borderColor = CU.accent;
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'var(--fz-border, #E5E5E5)';
+                  e.currentTarget.style.borderColor = CU.border;
                   e.currentTarget.style.transform = 'none';
                 }}
               >
                 <div style={{
                   width: 64, height: 64, borderRadius: '50%', margin: '0 auto 12px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: '#F0F0F0', border: '2px solid #E5E5E5',
+                  background: CU.accentLight, border: `2px solid ${CU.border}`,
                   fontSize: 28,
                 }}>
                   🤖
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fz-text, #1A1A1A)' }}>{agent.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 2 }}>{agent.role}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: CU.text }}>{agent.name}</div>
+                  <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{agent.role}</div>
                   {agentFreq[agent.id] && (
-                    <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 4 }}>
+                    <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 4 }}>
                       {agentFreq[agent.id]} appel{agentFreq[agent.id] > 1 ? 's' : ''}
                     </div>
                   )}
                   <div style={{
-                    marginTop: 10, fontSize: 11, fontWeight: 600, color: '#1A1A1A',
-                    height: 36, padding: '0 12px', borderRadius: 6, background: 'rgba(0,0,0,0.03)',
+                    marginTop: 10, fontSize: 11, fontWeight: 600, color: CU.text,
+                    height: 36, padding: '0 12px', borderRadius: 6, background: CU.accentLight,
                     display: 'inline-block',
                   }}>
                     Appeler 📞
@@ -185,41 +182,40 @@ export default function VisioPage() {
       {/* Call history */}
       {activeSection === 'history' && (
         callHistory.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 40px', borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}>
-            <div style={{ marginBottom: 16, fontSize: 48 }}>📞</div>
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8, color: 'var(--fz-text, #1A1A1A)' }}>Aucun appel pour le moment</div>
-            <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #9B9B9B)' }}>
+          <div style={{ ...CU.card, ...CU.emptyState }}>
+            <div style={CU.emptyEmoji}>📞</div>
+            <div style={CU.emptyTitle}>Aucun appel pour le moment</div>
+            <div style={CU.emptyDesc}>
               Vos appels avec les assistants apparaîtront ici après chaque conversation visio
             </div>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {callHistory.map((call, i) => {
-              const agent = VISIO_AGENTS.find(a => a.id === call.agentId);
-              const statusColor = call.status === 'completed' ? '#1A1A1A' : call.status === 'missed' ? '#9B9B9B' : '#1A1A1A';
+              const statusColor = call.status === 'completed' ? CU.text : call.status === 'missed' ? CU.textMuted : CU.text;
               const statusLabel = call.status === 'completed' ? 'Terminé' : call.status === 'missed' ? 'Manqué' : 'Erreur';
               return (
-                <div key={i} style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 12, border: '1px solid var(--border-primary, #E5E5E5)', background: 'var(--fz-bg, #fff)' }}>
+                <div key={i} style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
                     width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: '#F0F0F0', fontSize: 18,
+                    background: CU.accentLight, fontSize: 18,
                   }}>
                     🤖
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1A1A1A)' }}>{call.agentName}</div>
-                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginTop: 2 }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: CU.text }}>{call.agentName}</div>
+                    <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>
                       {new Date(call.startedAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       {call.durationSeconds > 0 && ` · ${formatDuration(call.durationSeconds)}`}
                     </div>
                   </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: statusColor + '20', color: statusColor, flexShrink: 0 }}>
+                  <span style={{ ...CU.badge, background: statusColor + '20', color: statusColor, fontWeight: 700 }}>
                     {statusLabel}
                   </span>
                   <Link
                     href={`/client/visio/${call.agentId}`}
-                    style={{ fontSize: 12, fontWeight: 600, padding: '6px 12px', borderRadius: 8, background: 'var(--accent)', color: '#fff', textDecoration: 'none', flexShrink: 0, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}
+                    style={{ ...CU.btnPrimary, fontSize: 12, textDecoration: 'none', flexShrink: 0 }}
                   >
                     Rappeler
                   </Link>
@@ -231,12 +227,12 @@ export default function VisioPage() {
       )}
 
       {/* Audio diagnostic */}
-      <div style={{ marginTop: 28, padding: 16, borderRadius: 12, background: 'var(--fz-bg-secondary, #F7F7F7)', border: '1px solid var(--border-primary, #E5E5E5)' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: 'var(--fz-text, #1A1A1A)' }}>Problèmes audio ?</div>
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #9B9B9B)', marginBottom: 8 }}>
+      <div style={{ ...CU.card, marginTop: 28, background: CU.bgSecondary }}>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4, color: CU.text }}>Problèmes audio ?</div>
+        <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 8 }}>
           Testez votre micro et vos haut-parleurs pour vérifier que tout fonctionne.
         </div>
-        <Link href="/client/visio/diagnostic" style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
+        <Link href="/client/visio/diagnostic" style={{ fontSize: 12, fontWeight: 600, color: CU.accent, textDecoration: 'none' }}>
           Lancer le diagnostic audio →
         </Link>
       </div>

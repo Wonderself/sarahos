@@ -4,6 +4,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useToast } from '../../../../components/Toast';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -492,6 +496,7 @@ function DashboardRenderer({ mod }: { mod: UserModule }) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function ModuleRuntimePage() {
+  const isMobile = useIsMobile();
   const params = useParams();
   const slugParam = typeof params.slug === 'string' ? params.slug : Array.isArray(params.slug) ? params.slug[0] : '';
   const { showError } = useToast();
@@ -545,46 +550,46 @@ export default function ModuleRuntimePage() {
   }[mod.type] ?? { icon: 'inventory_2', label: mod.type };
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
 
       {/* ── Header ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 14, background: `${mod.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+        <div style={headerRow()}>
+          <div style={{ width: 44, height: 44, borderRadius: 8, background: `${mod.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
             {mod.emoji}
           </div>
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{mod.name}</h1>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <span style={{ background: `${mod.color}20`, color: mod.color, borderRadius: 20, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>
+            <h1 style={CU.pageTitle}>{mod.name}</h1>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 2 }}>
+              <span style={{ ...CU.badge, background: `${mod.color}20`, color: mod.color }}>
                 <span style={{ fontSize: 12 }}>{typeInfo.icon === 'assignment' ? '📋' : typeInfo.icon === 'bar_chart' ? '📊' : typeInfo.icon === 'smart_toy' ? '🤖' : typeInfo.icon === 'trending_up' ? '📈' : typeInfo.icon === 'inventory_2' ? '📦' : typeInfo.icon}</span> {typeInfo.label}
               </span>
               {mod.type !== 'agent' && (
-                <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                <span style={{ fontSize: 12, color: CU.textSecondary }}>
                   {recordCount} enregistrement{recordCount !== 1 ? 's' : ''}
                 </span>
               )}
               {!mod.is_published && (
-                <span style={{ background: '#fef3c7', color: '#d97706', borderRadius: 20, padding: '2px 8px', fontSize: 11 }}>
+                <span style={CU.badgeWarning}>
                   Brouillon
                 </span>
               )}
             </div>
-            {mod.description && <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>{mod.description}</p>}
+            {mod.description && <p style={{ color: CU.textSecondary, fontSize: 13, marginTop: 4 }}>{mod.description}</p>}
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <Link href="/client/modules" style={{ padding: '7px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'transparent', textDecoration: 'none', fontSize: 13, color: 'var(--text-secondary)' }}>
+          <Link href="/client/modules" style={{ ...CU.btnGhost, textDecoration: 'none' }}>
             ← Retour
           </Link>
-          <Link href={`/client/modules/builder?edit=${mod.id}`} style={{ padding: '7px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'transparent', textDecoration: 'none', fontSize: 13, color: 'var(--text-secondary)' }}>
+          <Link href={`/client/modules/builder?edit=${mod.id}`} style={{ ...CU.btnGhost, textDecoration: 'none' }}>
             ✏️ Modifier
           </Link>
         </div>
       </div>
 
       {/* ── Content ── */}
-      <div style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 24, border: '1px solid var(--border)' }}>
+      <div style={{ ...CU.card, padding: 24 }}>
         {mod.type === 'form' && (
           <FormRenderer mod={mod} onSubmit={() => setRecordCount(c => c + 1)} />
         )}
@@ -601,7 +606,7 @@ export default function ModuleRuntimePage() {
 
       {/* ── Public URL info ── */}
       {mod.public_access && (
-        <div style={{ marginTop: 16, padding: '12px 16px', background: 'var(--bg-secondary)', borderRadius: 12, fontSize: 13, color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ marginTop: 16, padding: '12px 16px', background: CU.bgSecondary, borderRadius: 8, fontSize: 13, color: CU.textSecondary, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>🔗 Ce module a une URL publique : <code>/m/{mod.slug}</code></span>
           <button
             onClick={() => navigator.clipboard.writeText(`${window.location.origin}/m/${mod.slug}`)}

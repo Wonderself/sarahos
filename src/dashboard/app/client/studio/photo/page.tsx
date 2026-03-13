@@ -18,6 +18,10 @@ import AgentRequestQueue from '../../../../components/studio/AgentRequestQueue';
 import StudioPhotoGallery from '../../../../components/studio/StudioPhotoGallery';
 import { useAuthGuard } from '../../../../lib/useAuthGuard';
 import { useVisitorDraft } from '../../../../lib/useVisitorDraft';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 
 function getSession() {
   try { return JSON.parse(localStorage.getItem('fz_session') ?? '{}'); } catch { return {}; }
@@ -162,25 +166,25 @@ function PhotoStudioContent() {
   const systemPrompt = workflow.systemPrompt.replace('{displayName}', displayName);
 
   return (
-    <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', background: '#f9fafb' }}>
+    <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', background: CU.bgSecondary }}>
 
       {/* ── Top bar ── */}
       <div style={{
-        padding: '0 16px', borderBottom: '1px solid #e5e7eb',
-        display: 'flex', alignItems: 'center', gap: 10, background: 'white',
+        padding: '0 16px', borderBottom: `1px solid ${CU.border}`,
+        display: 'flex', alignItems: 'center', gap: 10, background: CU.bg,
         height: 44, flexShrink: 0,
       }}>
-        <a href="/client/studio" style={{ fontSize: 12, color: '#6b7280', textDecoration: 'none', flexShrink: 0 }}>
+        <a href="/client/studio" style={{ fontSize: 12, color: CU.textSecondary, textDecoration: 'none', flexShrink: 0 }}>
           ← Studio
         </a>
-        <span style={{ color: '#d1d5db' }}>|</span>
+        <span style={{ color: CU.border }}>|</span>
 
         <select
           value={selectedWorkflowId}
           onChange={e => { setSelectedWorkflowId(e.target.value); handleReset(); }}
           style={{
-            padding: '4px 8px', borderRadius: 6, border: '1px solid #e5e7eb',
-            fontSize: 12, background: 'white', outline: 'none', maxWidth: 160,
+            padding: '4px 8px', borderRadius: 6, border: `1px solid ${CU.border}`,
+            fontSize: 12, background: CU.bg, outline: 'none', maxWidth: 160,
           }}
         >
           {PHOTO_WORKFLOWS.map(wf => (
@@ -192,14 +196,14 @@ function PhotoStudioContent() {
 
         {/* Mode tabs */}
         {hasGeneration && (
-          <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: 8, padding: 2 }}>
+          <div style={{ display: 'flex', background: CU.bgSecondary, borderRadius: 8, padding: 2 }}>
             <button
               onClick={() => { setMode('free'); setActiveRequest(null); }}
               style={{
                 padding: '4px 12px', borderRadius: 6, fontSize: 11, fontWeight: 600,
                 border: 'none', cursor: 'pointer',
-                background: mode === 'free' ? 'white' : 'transparent',
-                color: mode === 'free' ? '#1d1d1f' : '#6b7280',
+                background: mode === 'free' ? CU.bg : 'transparent',
+                color: mode === 'free' ? CU.text : CU.textSecondary,
                 boxShadow: mode === 'free' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
@@ -210,8 +214,8 @@ function PhotoStudioContent() {
               style={{
                 padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
                 border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
-                background: mode === 'request' ? 'white' : 'transparent',
-                color: mode === 'request' ? '#1d1d1f' : '#6b7280',
+                background: mode === 'request' ? CU.bg : 'transparent',
+                color: mode === 'request' ? CU.text : CU.textSecondary,
                 boxShadow: mode === 'request' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
@@ -252,7 +256,7 @@ function PhotoStudioContent() {
             <span style={{ fontSize: 11, fontWeight: 700, color: activeRequest.agentColor }}>
               {activeRequest.agentName}
             </span>
-            <span style={{ fontSize: 11, color: '#374151' }}>
+            <span style={{ fontSize: 11, color: CU.text }}>
               {' '}&mdash; {activeRequest.title}
             </span>
           </div>
@@ -264,7 +268,7 @@ function PhotoStudioContent() {
           </span>
           <button
             onClick={() => setActiveRequest(null)}
-            style={{ fontSize: 10, color: '#6b7280', background: 'none', border: 'none', cursor: 'pointer' }}
+            style={{ fontSize: 10, color: CU.textSecondary, background: 'none', border: 'none', cursor: 'pointer' }}
           >
             ✕
           </button>
@@ -276,7 +280,7 @@ function PhotoStudioContent() {
 
         {/* Chat — 45% */}
         <div style={{
-          width: '45%', minWidth: 260, borderRight: '1px solid #e5e7eb',
+          width: '45%', minWidth: 260, borderRight: `1px solid ${CU.border}`,
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }}>
           <ChatPanel
@@ -328,13 +332,13 @@ function PhotoStudioContent() {
                 />
 
                 {/* Advanced questions — compact 2-col grid */}
-                <div style={{ padding: '0 16px 14px', background: '#fafafa' }}>
+                <div style={{ padding: '0 16px 14px', background: CU.bgSecondary }}>
                   <button
                     onClick={() => setAdvancedOpen(!advancedOpen)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 6, width: '100%',
                       padding: '8px 0', border: 'none', background: 'none', cursor: 'pointer',
-                      fontSize: 11, fontWeight: 600, color: '#6b7280', textAlign: 'left',
+                      fontSize: 11, fontWeight: 600, color: CU.textSecondary, textAlign: 'left',
                     }}
                   >
                     <span style={{
@@ -347,15 +351,15 @@ function PhotoStudioContent() {
                   {advancedOpen && (
                     <div style={{
                       display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10,
-                      padding: 14, background: 'white', borderRadius: 10,
-                      border: '1px solid #e5e7eb',
+                      padding: 14, background: CU.bg, borderRadius: 8,
+                      border: `1px solid ${CU.border}`,
                     }}>
                       {[
                         { label: 'Public cible', value: advPublicCible, set: setAdvPublicCible, placeholder: 'Ex: entrepreneurs, gamers...' },
                         { label: 'Inspiration / références', value: advInspiration, set: setAdvInspiration, placeholder: 'URL ou description...' },
                       ].map(f => (
                         <div key={f.label}>
-                          <label style={{ fontSize: 10, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 3 }}>
+                          <label style={{ fontSize: 10, fontWeight: 600, color: CU.text, display: 'block', marginBottom: 3 }}>
                             {f.label}
                           </label>
                           <input
@@ -365,7 +369,7 @@ function PhotoStudioContent() {
                             placeholder={f.placeholder}
                             style={{
                               width: '100%', padding: '6px 8px', borderRadius: 7,
-                              border: '1px solid #e5e7eb', fontSize: 11, outline: 'none',
+                              border: `1px solid ${CU.border}`, fontSize: 11, outline: 'none',
                             }}
                           />
                         </div>
@@ -375,7 +379,7 @@ function PhotoStudioContent() {
                         { label: 'Ton', value: advTon, set: setAdvTon, opts: ['', 'Formel', 'Décontracté', 'Humoristique', 'Inspirant', 'Luxe'] },
                       ].map(f => (
                         <div key={f.label}>
-                          <label style={{ fontSize: 10, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 3 }}>
+                          <label style={{ fontSize: 10, fontWeight: 600, color: CU.text, display: 'block', marginBottom: 3 }}>
                             {f.label}
                           </label>
                           <select
@@ -383,8 +387,8 @@ function PhotoStudioContent() {
                             onChange={e => f.set(e.target.value)}
                             style={{
                               width: '100%', padding: '6px 8px', borderRadius: 7,
-                              border: '1px solid #e5e7eb', fontSize: 11, outline: 'none',
-                              background: 'white',
+                              border: `1px solid ${CU.border}`, fontSize: 11, outline: 'none',
+                              background: CU.bg,
                             }}
                           >
                             {f.opts.map(o => <option key={o} value={o}>{o || '— Choisir —'}</option>)}
@@ -392,7 +396,7 @@ function PhotoStudioContent() {
                         </div>
                       ))}
                       <div style={{ gridColumn: '1/-1' }}>
-                        <label style={{ fontSize: 10, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 3 }}>
+                        <label style={{ fontSize: 10, fontWeight: 600, color: CU.text, display: 'block', marginBottom: 3 }}>
                           Éléments à inclure
                         </label>
                         <textarea
@@ -402,13 +406,13 @@ function PhotoStudioContent() {
                           rows={2}
                           style={{
                             width: '100%', padding: '6px 8px', borderRadius: 7,
-                            border: '1px solid #e5e7eb', fontSize: 11, outline: 'none',
+                            border: `1px solid ${CU.border}`, fontSize: 11, outline: 'none',
                             fontFamily: 'inherit', resize: 'none',
                           }}
                         />
                       </div>
                       <div style={{ gridColumn: '1/-1' }}>
-                        <label style={{ fontSize: 10, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 3 }}>
+                        <label style={{ fontSize: 10, fontWeight: 600, color: CU.text, display: 'block', marginBottom: 3 }}>
                           Éléments à éviter
                         </label>
                         <textarea
@@ -418,7 +422,7 @@ function PhotoStudioContent() {
                           rows={2}
                           style={{
                             width: '100%', padding: '6px 8px', borderRadius: 7,
-                            border: '1px solid #e5e7eb', fontSize: 11, outline: 'none',
+                            border: `1px solid ${CU.border}`, fontSize: 11, outline: 'none',
                             fontFamily: 'inherit', resize: 'none',
                           }}
                         />
@@ -429,9 +433,9 @@ function PhotoStudioContent() {
               </>
             ) : (
               /* Chat-only workflow (direction, branding) */
-              <div style={{ padding: 20, background: '#fafafa', height: '100%' }}>
+              <div style={{ padding: 20, background: CU.bgSecondary, height: '100%' }}>
                 <div style={{
-                  fontSize: 11, fontWeight: 600, color: '#06b6d4', textTransform: 'uppercase',
+                  fontSize: 11, fontWeight: 600, color: CU.text, textTransform: 'uppercase' as const,
                   letterSpacing: 1, marginBottom: 6,
                 }}>
                   {workflow.steps[currentStep]?.title ?? 'Brief'}
@@ -445,7 +449,7 @@ function PhotoStudioContent() {
                   placeholder="Les recommandations d'Emma apparaîtront ici. Ajoutez vos propres notes..."
                   rows={14}
                   style={{
-                    width: '100%', padding: 12, borderRadius: 10, border: '1px solid #e5e7eb',
+                    width: '100%', padding: 12, borderRadius: 8, border: `1px solid ${CU.border}`,
                     fontSize: 13, fontFamily: 'inherit', lineHeight: 1.7, resize: 'vertical',
                     outline: 'none',
                   }}
@@ -477,8 +481,8 @@ function PhotoStudioContent() {
 
       {/* ── Bottom: Agent requests + Photo gallery ── */}
       <div style={{
-        flexShrink: 0, borderTop: '2px solid #e5e7eb',
-        overflowY: 'auto', maxHeight: '36vh', background: 'white',
+        flexShrink: 0, borderTop: `2px solid ${CU.border}`,
+        overflowY: 'auto', maxHeight: '36vh', background: CU.bg,
       }}>
         <AgentRequestQueue
           type="photo"
@@ -499,7 +503,7 @@ function PhotoStudioContent() {
 
 export default function PhotoStudioPage() {
   return (
-    <Suspense fallback={<div style={{ padding: 32, textAlign: 'center', color: '#6b7280' }}>Chargement du studio...</div>}>
+    <Suspense fallback={<div style={{ padding: 32, textAlign: 'center', color: CU.textMuted }}>Chargement du studio...</div>}>
       <PhotoStudioContent />
     </Suspense>
   );

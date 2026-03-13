@@ -8,6 +8,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import AuthRequired from '../../../components/AuthRequired';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -156,22 +157,22 @@ export default function ProjectsPage() {
 
   return (
     <AuthRequired pageName="Projets">
-    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto', padding: isMobile ? '0 12px 48px' : '0 0 48px' }}>
+    <div style={pageContainer(isMobile)}>
 
       {/* Header */}
-      <div className="page-header" style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>
-              <span style={{ fontSize: 18 }}>{meta.emoji}</span>{' '}
-              <span className="fz-logo-word">{meta.title}</span>
+            <div style={headerRow()}>
+              <span style={emojiIcon(24)}>{meta.emoji}</span>
+              <h1 style={CU.pageTitle}>{meta.title}</h1>
               <HelpBubble text={meta.helpText} />
-            </h1>
-            <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{meta.subtitle}</p>
+            </div>
+            <p style={CU.pageSubtitle}>{meta.subtitle}</p>
           </div>
           <button
             onClick={() => { setForm({ name: '', description: '' }); setShowModal(true); }}
-            className="btn btn-primary"
+            style={CU.btnPrimary}
           >
             ➕ Nouveau projet
           </button>
@@ -181,16 +182,16 @@ export default function ProjectsPage() {
 
       {/* Stats */}
       {projects.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(auto-fit, minmax(100px, 1fr))' : 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+        <div style={{ ...cardGrid(isMobile, 3), marginBottom: 24 }}>
           {[
-            { label: 'Total projets', value: String(projects.length), emoji: '📁', color: '#1A1A1A' },
-            { label: 'Projet actif', value: activeProject?.name ?? '—', emoji: '✅', color: '#1A1A1A' },
-            { label: 'Credits cumules', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', emoji: '💳', color: '#1A1A1A' },
+            { label: 'Total projets', value: String(projects.length), emoji: '📁' },
+            { label: 'Projet actif', value: activeProject?.name ?? '—', emoji: '✅' },
+            { label: 'Credits cumules', value: totalCredits > 0 ? `${totalCredits.toLocaleString('fr-FR')} cr.` : '—', emoji: '💳' },
           ].map(s => (
-            <div key={s.label} className="card" style={{ padding: '14px 18px', background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
+            <div key={s.label} style={{ ...CU.card, padding: '14px 18px' }}>
               <div style={{ fontSize: 20, marginBottom: 4 }}>{s.emoji}</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: s.color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
+              <div style={{ ...CU.statValue, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.value}</div>
+              <div style={CU.statLabel}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -198,7 +199,7 @@ export default function ProjectsPage() {
 
       {/* Content */}
       {loading ? (
-        <div className="animate-pulse" style={{ textAlign: 'center', padding: '60px 0', color: 'var(--fz-text-muted, #94A3B8)' }}>Chargement...</div>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: CU.textMuted }}>Chargement...</div>
       ) : projects.length === 0 ? (
         <EmptyState
           icon="folder"
@@ -214,29 +215,28 @@ export default function ProjectsPage() {
             return (
               <div
                 key={project.id}
-                className="card"
-                style={{ padding: 20, position: 'relative', border: isActive ? '2px solid var(--accent)' : 'none', boxShadow: 'none', background: 'var(--fz-bg, #FFFFFF)' }}
+                style={{ ...CU.card, padding: 20, position: 'relative', border: isActive ? `2px solid ${CU.accent}` : `1px solid ${CU.border}` }}
               >
                 {/* Active badge */}
                 {isActive && (
-                  <div style={{ position: 'absolute', top: 12, right: 12, background: 'var(--accent)', color: '#fff', borderRadius: 99, fontSize: 10, fontWeight: 700, padding: '2px 8px' }}>
+                  <div style={{ position: 'absolute', top: 12, right: 12, ...CU.badgeSuccess, fontSize: 10, fontWeight: 700, background: CU.accent, color: '#fff' }}>
                     ✅ ACTIF
                   </div>
                 )}
                 {project.isDefault && !isActive && (
-                  <div style={{ position: 'absolute', top: 12, right: 12, background: 'var(--fz-bg-secondary, #F8FAFC)', color: 'var(--fz-text-secondary, #64748B)', borderRadius: 99, fontSize: 10, fontWeight: 600, padding: '2px 8px' }}>
+                  <div style={{ position: 'absolute', top: 12, right: 12, ...CU.badge, fontSize: 10, fontWeight: 600 }}>
                     ⭐ défaut
                   </div>
                 )}
 
                 {/* Name & description */}
-                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, paddingRight: isActive ? 60 : 16, color: 'var(--fz-text, #1E293B)' }}>{project.name}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, paddingRight: isActive ? 60 : 16, color: CU.text }}>{project.name}</div>
                 {project.description && (
-                  <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <div style={{ fontSize: 12, color: CU.textMuted, marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {project.description}
                   </div>
                 )}
-                <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
+                <div style={{ fontSize: 11, color: CU.textMuted, marginBottom: 16 }}>
                   Créé le {new Date(project.createdAt).toLocaleDateString('fr-FR')}
                 </div>
 
@@ -246,24 +246,21 @@ export default function ProjectsPage() {
                     <button
                       onClick={() => handleSetDefault(project.id)}
                       disabled={activating === project.id}
-                      className="btn btn-primary btn-sm"
-                      style={{ fontSize: 12 }}
+                      style={{ ...CU.btnSmall, background: CU.accent, color: '#fff', border: 'none' }}
                     >
                       {activating === project.id ? 'Activation...' : <>✅ Activer</>}
                     </button>
                   )}
                   <button
                     onClick={() => { setRenameProject(project); setRenameValue(project.name); }}
-                    className="btn btn-ghost btn-sm"
-                    style={{ fontSize: 12 }}
+                    style={CU.btnSmall}
                   >
                     ✏️ Renommer
                   </button>
                   {!project.isDefault && (
                     <button
                       onClick={() => setDeleteProject(project)}
-                      className="btn btn-ghost btn-sm"
-                      style={{ fontSize: 12, color: '#ef4444' }}
+                      style={{ ...CU.btnSmall, color: CU.danger }}
                     >
                       🗑️ Supprimer
                     </button>
@@ -279,16 +276,15 @@ export default function ProjectsPage() {
       {showModal && (
         <div
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          style={CU.overlay}
         >
-          <div className="card" style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 440, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>📁 Nouveau projet</h3>
+          <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 440, padding: isMobile ? 20 : 28 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>📁 Nouveau projet</h3>
 
             <div style={{ marginBottom: 14 }}>
-              <label style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>Nom du projet *</label>
+              <label style={CU.label}>Nom du projet *</label>
               <input
-                className="input"
-                style={{ width: '100%' }}
+                style={CU.input}
                 placeholder="ex : Client Dupont, Produit X, Marketing..."
                 value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
@@ -297,10 +293,9 @@ export default function ProjectsPage() {
               />
             </div>
             <div style={{ marginBottom: 20 }}>
-              <label style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', display: 'block', marginBottom: 6 }}>Description (optionnel)</label>
+              <label style={CU.label}>Description (optionnel)</label>
               <textarea
-                className="input"
-                style={{ width: '100%', minHeight: 80, resize: 'vertical' }}
+                style={CU.textarea}
                 placeholder="Décrivez brièvement ce projet..."
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
@@ -308,11 +303,11 @@ export default function ProjectsPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button onClick={() => setShowModal(false)} className="btn btn-ghost">Annuler</button>
+              <button onClick={() => setShowModal(false)} style={CU.btnGhost}>Annuler</button>
               <button
                 onClick={handleCreate}
                 disabled={saving || !form.name.trim()}
-                className="btn btn-primary"
+                style={CU.btnPrimary}
               >
                 {saving ? 'Création...' : 'Créer le projet'}
               </button>
@@ -325,24 +320,23 @@ export default function ProjectsPage() {
       {renameProject && (
         <div
           onClick={e => { if (e.target === e.currentTarget) setRenameProject(null); }}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          style={CU.overlay}
         >
-          <div className="card" style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 20, color: 'var(--fz-text, #1E293B)' }}>✏️ Renommer le projet</h3>
+          <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 28 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>✏️ Renommer le projet</h3>
             <input
-              className="input"
-              style={{ width: '100%', marginBottom: 20 }}
+              style={{ ...CU.input, marginBottom: 20 }}
               value={renameValue}
               onChange={e => setRenameValue(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && renameValue.trim()) handleRename(); }}
               autoFocus
             />
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button onClick={() => setRenameProject(null)} className="btn btn-ghost">Annuler</button>
+              <button onClick={() => setRenameProject(null)} style={CU.btnGhost}>Annuler</button>
               <button
                 onClick={handleRename}
                 disabled={renameSaving || !renameValue.trim()}
-                className="btn btn-primary"
+                style={CU.btnPrimary}
               >
                 {renameSaving ? 'Sauvegarde...' : 'Renommer'}
               </button>
@@ -355,20 +349,19 @@ export default function ProjectsPage() {
       {deleteProject && (
         <div
           onClick={e => { if (e.target === e.currentTarget) setDeleteProject(null); }}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          style={CU.overlay}
         >
-          <div className="card" style={{ width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 28, background: 'var(--fz-bg, #FFFFFF)', border: '1px solid #E5E5E5' }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>🗑️ Supprimer le projet</h3>
-            <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 20 }}>
-              Êtes-vous sûr de vouloir supprimer <strong>"{deleteProject.name}"</strong> ? Cette action est irréversible.
+          <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 28 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 12 }}>🗑️ Supprimer le projet</h3>
+            <p style={{ color: CU.textSecondary, fontSize: 14, marginBottom: 20 }}>
+              Êtes-vous sûr de vouloir supprimer <strong>&quot;{deleteProject.name}&quot;</strong> ? Cette action est irréversible.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button onClick={() => setDeleteProject(null)} className="btn btn-ghost">Annuler</button>
+              <button onClick={() => setDeleteProject(null)} style={CU.btnGhost}>Annuler</button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="btn btn-primary"
-                style={{ background: '#ef4444', borderColor: '#ef4444' }}
+                style={CU.btnDanger}
               >
                 {deleting ? 'Suppression...' : 'Supprimer définitivement'}
               </button>

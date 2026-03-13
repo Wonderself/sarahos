@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Journal Personnel
@@ -152,26 +153,23 @@ export default function JournalPage() {
 
   if (!mounted) return null;
 
-  const inputStyle: React.CSSProperties = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 };
-  const btnStyle: React.CSSProperties = { padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 };
-
   return (
-    <div style={{ padding: isMobile ? 16 : 32, maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 900 }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-        <span style={{ fontSize: 28 }}>{meta.emoji}</span>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{meta.title}</h1>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{meta.emoji}</span>
+        <h1 style={CU.pageTitle}>{meta.title}</h1>
         <PageExplanation pageId="journal" text={meta.helpText} />
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 20, fontSize: 14 }}>{meta.subtitle}</p>
+      <p style={{ ...CU.pageSubtitle, marginBottom: 20 }}>{meta.subtitle}</p>
 
       {/* Mood distribution */}
-      <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, marginBottom: 20, border: '1px solid var(--border-primary)' }}>
-        <h3 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>Distribution des humeurs</h3>
+      <div style={{ ...CU.card, marginBottom: 20 }}>
+        <h3 style={{ margin: '0 0 12px', ...CU.sectionTitle }}>Distribution des humeurs</h3>
         <div style={{ display: 'flex', gap: isMobile ? 8 : 16, alignItems: 'flex-end', height: 80 }}>
           {moodChart.map(m => (
             <div key={m.emoji} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: 4 }}>
-              <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600 }}>{m.count}</span>
+              <span style={{ fontSize: 12, color: CU.textSecondary, fontWeight: 600 }}>{m.count}</span>
               <div style={{ width: '100%', maxWidth: 40, height: `${Math.max(8, m.pct)}%`, borderRadius: 4, background: m.color, transition: 'height 0.3s ease' }} />
               <span style={{ fontSize: 18 }}>{m.emoji}</span>
             </div>
@@ -181,30 +179,30 @@ export default function JournalPage() {
 
       {/* Toolbar */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 20, alignItems: 'center' }}>
-        <input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} style={{ ...inputStyle, maxWidth: 240 }} />
-        <select value={filterMood} onChange={e => setFilterMood(e.target.value)} style={{ ...inputStyle, maxWidth: 160 }}>
+        <input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} style={{ ...CU.input, maxWidth: 240 }} />
+        <select value={filterMood} onChange={e => setFilterMood(e.target.value)} style={{ ...CU.select, maxWidth: 160 }}>
           <option value="">Toutes les humeurs</option>
           {MOODS.map(m => <option key={m.emoji} value={m.emoji}>{m.emoji} {m.label}</option>)}
         </select>
-        <button onClick={() => setShowNew(!showNew)} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>+ Nouvelle entrée</button>
+        <button onClick={() => setShowNew(!showNew)} style={CU.btnPrimary}>+ Nouvelle entrée</button>
         {entries.length > 0 && (
-          <button onClick={exportMarkdown} style={{ ...btnStyle, background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)' }}>Exporter MD</button>
+          <button onClick={exportMarkdown} style={CU.btnGhost}>Exporter MD</button>
         )}
       </div>
 
       {/* New entry form */}
       {showNew && (
-        <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, marginBottom: 20, border: '1px solid var(--border-primary)' }}>
+        <div style={{ ...CU.card, marginBottom: 20 }}>
           {/* Prompt suggestion */}
-          <div style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: 12, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 12, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 18 }}>💡</span>
-            <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontStyle: 'italic', flex: 1 }}>{prompt}</span>
+            <span style={{ fontSize: 13, color: CU.textSecondary, fontStyle: 'italic', flex: 1 }}>{prompt}</span>
             <button onClick={() => setPrompt(PROMPTS[Math.floor(Math.random() * PROMPTS.length)])} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>🔄</button>
           </div>
 
           {/* Mood picker */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, alignItems: 'center' }}>
-            <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Humeur :</span>
+            <span style={{ fontSize: 13, color: CU.textSecondary }}>Humeur :</span>
             {MOODS.map(m => (
               <button key={m.emoji} onClick={() => setMood(m.emoji)} style={{ fontSize: 24, background: mood === m.emoji ? m.color + '33' : 'transparent', border: mood === m.emoji ? `2px solid ${m.color}` : '2px solid transparent', borderRadius: 8, padding: 4, cursor: 'pointer', lineHeight: 1 }}>
                 {m.emoji}
@@ -212,54 +210,55 @@ export default function JournalPage() {
             ))}
           </div>
 
-          <textarea placeholder="Écrivez votre journal du jour..." value={content} onChange={e => setContent(e.target.value)} rows={6} style={{ ...inputStyle, marginBottom: 8, resize: 'vertical' }} />
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 10 }}>{wordCount(content)} mots</div>
+          <textarea placeholder="Écrivez votre journal du jour..." value={content} onChange={e => setContent(e.target.value)} rows={6} style={{ ...CU.textarea, marginBottom: 8 }} />
+          <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 10 }}>{wordCount(content)} mots</div>
 
           {/* Tags */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <input placeholder="Tag..." value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addTag()} style={{ ...inputStyle, maxWidth: 140 }} />
-            <button onClick={addTag} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)', padding: '6px 12px' }}>+</button>
+            <input placeholder="Tag..." value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && addTag()} style={{ ...CU.input, maxWidth: 140 }} />
+            <button onClick={addTag} style={{ ...CU.btnSmall, height: 36 }}>+</button>
             {tags.map(t => (
-              <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 10px', borderRadius: 12, background: 'var(--accent)', color: '#fff', fontSize: 12 }}>
-                {t} <span style={{ cursor: 'pointer' }} onClick={() => setTags(tags.filter(x => x !== t))}>x</span>
+              <span key={t} style={{ ...CU.badge, background: CU.accent, color: '#fff' }}>
+                {t} <span style={{ cursor: 'pointer', marginLeft: 4 }} onClick={() => setTags(tags.filter(x => x !== t))}>x</span>
               </span>
             ))}
           </div>
 
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={addEntry} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>Enregistrer</button>
-            <button onClick={() => setShowNew(false)} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)' }}>Annuler</button>
+            <button onClick={addEntry} style={CU.btnPrimary}>Enregistrer</button>
+            <button onClick={() => setShowNew(false)} style={CU.btnGhost}>Annuler</button>
           </div>
         </div>
       )}
 
       {/* Entries list */}
       {filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📓</div>
-          <p>Aucune entrée trouvée. Commencez votre journal !</p>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>📓</div>
+          <div style={CU.emptyTitle}>Aucune entrée trouvée</div>
+          <div style={CU.emptyDesc}>Commencez votre journal !</div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {filtered.map(e => {
             const moodData = MOODS.find(m => m.emoji === e.mood);
             return (
-              <div key={e.id} style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 14 : 18, border: '1px solid var(--border-primary)', borderLeft: `4px solid ${moodData?.color || 'var(--accent)'}` }}>
+              <div key={e.id} style={{ ...CU.card, borderLeft: `4px solid ${moodData?.color || CU.accent}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 22 }}>{e.mood}</span>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{new Date(e.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{new Date(e.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{wordCount(e.content)} mots</span>
+                    <span style={{ fontSize: 11, color: CU.textSecondary }}>{wordCount(e.content)} mots</span>
                     <button onClick={() => deleteEntry(e.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, opacity: 0.5 }}>🗑️</button>
                   </div>
                 </div>
-                <p style={{ margin: '0 0 8px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{e.content}</p>
+                <p style={{ margin: '0 0 8px', fontSize: 14, color: CU.text, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{e.content}</p>
                 {e.tags.length > 0 && (
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {e.tags.map(t => (
-                      <span key={t} style={{ padding: '2px 8px', borderRadius: 10, background: 'var(--bg-primary)', fontSize: 11, color: 'var(--text-secondary)' }}>{t}</span>
+                      <span key={t} style={CU.badge}>{t}</span>
                     ))}
                   </div>
                 )}

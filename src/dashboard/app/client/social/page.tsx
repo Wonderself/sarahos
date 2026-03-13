@@ -8,6 +8,7 @@ import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar } from '../../../lib/page-styles';
 
 // ─── Types ───────────────────────────────────────────────
 interface SavedPost {
@@ -744,7 +745,7 @@ export default function SocialMediaPage() {
     const pLabel = PLATFORMS.find(p => p.id === platformId)?.label ?? platformId;
 
     return (
-      <div className="fz-card" style={{ borderColor: `${pColor}33`, overflow: 'hidden', padding: 0 }}>
+      <div style={{ ...CU.card, borderColor: `${pColor}33`, overflow: 'hidden', padding: 0 }}>
         <div style={{
           padding: '12px 16px',
           borderBottom: `1px solid ${pColor}22`,
@@ -804,29 +805,27 @@ export default function SocialMediaPage() {
   const analytics = getAnalytics();
 
   return (
-    <div className="fz-page">
+    <div style={pageContainer(isMobile)}>
       {/* Page Header */}
-      <div className="fz-page-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 32 }}>{PAGE_META.social.emoji}</span>
-          <div>
-            <h1 className="fz-page-title" style={{ color: '#1A1A1A' }}>{PAGE_META.social.title}</h1>
-            <p className="fz-page-subtitle" style={{ color: '#6B6B6B' }}>
-              {PAGE_META.social.subtitle}
-            </p>
-          </div>
-          <HelpBubble text={PAGE_META.social.helpText} />
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{PAGE_META.social.emoji}</span>
+        <div>
+          <h1 style={CU.pageTitle}>{PAGE_META.social.title}</h1>
+          <p style={CU.pageSubtitle}>
+            {PAGE_META.social.subtitle}
+          </p>
         </div>
+        <HelpBubble text={PAGE_META.social.helpText} />
       </div>
       <PageExplanation pageId="social" text={PAGE_META.social?.helpText} />
 
       {/* Tab Navigation */}
-      <div className="fz-tabs">
+      <div style={tabBar()}>
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`fz-tab ${activeTab === tab.id ? 'fz-tab-active' : ''}`}
+            style={activeTab === tab.id ? CU.tabActive : CU.tab}
           >
             <span style={{ fontSize: 16 }}>{tab.emoji}</span>
             {tab.label}
@@ -839,15 +838,14 @@ export default function SocialMediaPage() {
           ═══════════════════════════════════════════════════ */}
       {activeTab === 'generator' && (
         <div>
-          <div className="fz-card" style={{ marginBottom: 16 }}>
-            <div className="fz-section-title">Plateforme</div>
-            <div className="fz-pill-group">
+          <div style={{ ...CU.card, marginBottom: 16 }}>
+            <div style={CU.sectionTitle}>Plateforme</div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
               {PLATFORMS.map(p => (
                 <button
                   key={p.id}
                   onClick={() => setPlatform(p.id)}
-                  className={`fz-pill ${platform === p.id ? 'fz-pill-active' : ''}`}
-                  style={platform === p.id ? { borderColor: p.color, background: `${p.color}12`, color: p.color } : {}}
+                  style={platform === p.id ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                 >
                   <span style={{ fontSize: 16 }}>{p.emoji}</span>
                   {p.label}
@@ -855,33 +853,31 @@ export default function SocialMediaPage() {
               ))}
             </div>
 
-            <div className="fz-section-title" style={{ marginTop: 20 }}>Type de contenu</div>
-            <div className="fz-pill-group">
+            <div style={{ ...CU.sectionTitle, marginTop: 20 }}>Type de contenu</div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
               {POST_TYPES.map(t => (
                 <button
                   key={t.id}
                   onClick={() => setPostType(t.id)}
-                  className={`fz-pill ${postType === t.id ? 'fz-pill-active' : ''}`}
+                  style={postType === t.id ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                 >
                   {t.label}
                 </button>
               ))}
             </div>
 
-            <div className="fz-section-title" style={{ marginTop: 20 }}>Sujet / Brief</div>
+            <div style={{ ...CU.sectionTitle, marginTop: 20 }}>Sujet / Brief</div>
             <textarea
               value={brief}
               onChange={e => setBrief(e.target.value)}
               placeholder="Decrivez le sujet de votre post..."
-              className="fz-textarea"
-              style={{ minHeight: 100 }}
+              style={{ ...CU.textarea, minHeight: 100 }}
             />
 
             {/* Advanced Options Toggle */}
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="fz-btn fz-btn-ghost"
-              style={{ marginTop: 12, gap: 6, paddingLeft: 0 }}
+              style={CU.btnGhost}
             >
               <span style={{
                 display: 'inline-block',
@@ -894,43 +890,43 @@ export default function SocialMediaPage() {
             </button>
 
             {showAdvanced && (
-              <div className="fz-grid-2" style={{ marginTop: 12, padding: 16, borderRadius: 8, background: '#F7F7F7', border: '1px solid #E5E5E5', gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", marginTop: 12, padding: 16, borderRadius: 8, background: '#F7F7F7', border: '1px solid #E5E5E5', gap: 16 }}>
                 <div>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Ton</label>
-                  <select value={tone} onChange={e => setTone(e.target.value)} className="fz-select">
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Ton</label>
+                  <select value={tone} onChange={e => setTone(e.target.value)} style={CU.select}>
                     {TONES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Objectif</label>
-                  <select value={goal} onChange={e => setGoal(e.target.value)} className="fz-select">
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Objectif</label>
+                  <select value={goal} onChange={e => setGoal(e.target.value)} style={CU.select}>
                     {GOALS.map(g => <option key={g} value={g}>{g}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Langue</label>
-                  <select value={language} onChange={e => setLanguage(e.target.value)} className="fz-select">
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Langue</label>
+                  <select value={language} onChange={e => setLanguage(e.target.value)} style={CU.select}>
                     {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Longueur</label>
-                  <select value={length} onChange={e => setLength(e.target.value)} className="fz-select">
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Longueur</label>
+                  <select value={length} onChange={e => setLength(e.target.value)} style={CU.select}>
                     {LENGTHS.map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Hashtags</label>
-                  <div className="fz-pill-group" style={{ marginBottom: 8 }}>
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Hashtags</label>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const, marginBottom: 8 }}>
                     <button
                       onClick={() => setHashtagMode('auto')}
-                      className={`fz-pill ${hashtagMode === 'auto' ? 'fz-pill-active' : ''}`}
+                      style={hashtagMode === 'auto' ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                     >
                       Automatique
                     </button>
                     <button
                       onClick={() => setHashtagMode('manual')}
-                      className={`fz-pill ${hashtagMode === 'manual' ? 'fz-pill-active' : ''}`}
+                      style={hashtagMode === 'manual' ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                     >
                       Manuel
                     </button>
@@ -941,7 +937,7 @@ export default function SocialMediaPage() {
                       value={manualHashtags}
                       onChange={e => setManualHashtags(e.target.value)}
                       placeholder="#marketing #ia #business"
-                      className="fz-input"
+                      style={CU.input}
                     />
                   )}
                 </div>
@@ -952,8 +948,7 @@ export default function SocialMediaPage() {
             <button
               onClick={handleGenerate}
               disabled={isGenerating || !brief.trim()}
-              className="fz-btn fz-btn-primary"
-              style={{ marginTop: 20, width: '100%', justifyContent: 'center', gap: 8 }}
+              style={CU.btnPrimary}
             >
               {isGenerating ? (
                 <>
@@ -972,17 +967,17 @@ export default function SocialMediaPage() {
 
           {/* Generated Content */}
           {generatedContent && (
-            <div className="fz-card" style={{ marginBottom: 16 }}>
-              <div className="fz-section-title" style={{ marginBottom: 14 }}>Resultat</div>
+            <div style={{ ...CU.card, marginBottom: 16 }}>
+              <div style={{ ...CU.sectionTitle, marginBottom: 14 }}>Resultat</div>
               {renderPlatformPreview(generatedContent, platform)}
               <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
-                <button onClick={handleCopy} className={`fz-btn ${copySuccess ? 'fz-btn-success' : 'fz-btn-secondary'} fz-btn-sm`}>
+                <button onClick={handleCopy} style={copySuccess ? {...CU.btnSmall, background: CU.success, color: "#fff", border: "none"} : CU.btnSmall}>
                   {copySuccess ? <><span style={{ fontSize: 14, verticalAlign: 'middle' }}>{'\u2705'}</span> Copie !</> : 'Copier'}
                 </button>
-                <button onClick={handleRegenerate} disabled={isGenerating} className="fz-btn fz-btn-secondary fz-btn-sm" style={{ opacity: isGenerating ? 0.5 : 1 }}>
+                <button onClick={handleRegenerate} disabled={isGenerating} style={{ ...CU.btnSmall, opacity: isGenerating ? 0.5 : 1 }}>
                   Regenerer
                 </button>
-                <button onClick={handleSavePost} className="fz-btn fz-btn-sm" style={{ background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', border: '1px solid #1A1A1A' }}>
+                <button onClick={handleSavePost} style={{ ...CU.btnSmall, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', border: '1px solid #1A1A1A' }}>
                   Sauvegarder
                 </button>
               </div>
@@ -991,8 +986,8 @@ export default function SocialMediaPage() {
 
           {/* Recent posts (generator tab - compact) */}
           {savedPosts.length > 0 && (
-            <div className="fz-card">
-              <div className="fz-section-title" style={{ marginBottom: 14 }}>Historique ({savedPosts.length})</div>
+            <div style={CU.card}>
+              <div style={{ ...CU.sectionTitle, marginBottom: 14 }}>Historique ({savedPosts.length})</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {savedPosts.slice(0, 5).map(post => (
                   <div key={post.id} style={{
@@ -1001,10 +996,10 @@ export default function SocialMediaPage() {
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span className="fz-badge" style={{ background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
+                        <span style={{ ...CU.badge, background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
                           <span style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {post.platform}
                         </span>
-                        <span className="fz-badge">{post.type}</span>
+                        <span style={CU.badge}>{post.type}</span>
                       </div>
                       <span style={{ fontSize: 11, color: '#9B9B9B' }}>{formatDate(post.createdAt)}</span>
                     </div>
@@ -1018,7 +1013,7 @@ export default function SocialMediaPage() {
                   </div>
                 ))}
                 {savedPosts.length > 5 && (
-                  <button onClick={() => setActiveTab('posts')} className="fz-btn fz-btn-ghost fz-btn-sm" style={{ alignSelf: 'center' }}>
+                  <button onClick={() => setActiveTab('posts')} style={{ ...CU.btnSmall, alignSelf: 'center' }}>
                     Voir tous les posts ({savedPosts.length})
                   </button>
                 )}
@@ -1034,12 +1029,12 @@ export default function SocialMediaPage() {
       {activeTab === 'posts' && (
         <div>
           {/* Filters & Sort */}
-          <div className="fz-card" style={{ marginBottom: 16 }}>
+          <div style={{ ...CU.card, marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6B6B6B', marginRight: 8 }}>Plateforme:</label>
-                  <select value={postsFilter} onChange={e => setPostsFilter(e.target.value)} className="fz-select" style={{ width: 'auto', minWidth: 120 }}>
+                  <select value={postsFilter} onChange={e => setPostsFilter(e.target.value)} style={{ ...CU.select, width: 'auto', minWidth: 120 }}>
                     <option value="all">Toutes</option>
                     {PLATFORMS.map(p => (
                       <option key={p.id} value={p.id}>{p.emoji} {p.label}</option>
@@ -1048,14 +1043,14 @@ export default function SocialMediaPage() {
                 </div>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, color: '#6B6B6B', marginRight: 8 }}>Tri:</label>
-                  <select value={postsSort} onChange={e => setPostsSort(e.target.value as 'date' | 'platform')} className="fz-select" style={{ width: 'auto', minWidth: 120 }}>
+                  <select value={postsSort} onChange={e => setPostsSort(e.target.value as 'date' | 'platform')} style={{ ...CU.select, width: 'auto', minWidth: 120 }}>
                     <option value="date">Plus recents</option>
                     <option value="platform">Par plateforme</option>
                   </select>
                 </div>
               </div>
               {selectedPostIds.size > 0 && (
-                <button onClick={handleDeleteSelected} className="fz-btn fz-btn-danger fz-btn-sm">
+                <button onClick={handleDeleteSelected} style={{...CU.btnDanger, ...CU.btnSmall}}>
                   Supprimer ({selectedPostIds.size})
                 </button>
               )}
@@ -1064,11 +1059,11 @@ export default function SocialMediaPage() {
 
           {/* Posts List */}
           {getFilteredPosts().length === 0 ? (
-            <div className="fz-empty">
-              <div className="fz-empty-icon"><span style={{ fontSize: 48 }}>{'\uD83D\uDCCB'}</span></div>
-              <div className="fz-empty-title">Aucun post sauvegarde</div>
-              <div className="fz-empty-desc">Generez votre premier post dans l&apos;onglet Generateur</div>
-              <button onClick={() => setActiveTab('generator')} className="fz-btn fz-btn-primary fz-btn-sm" style={{ marginTop: 12 }}>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}><span style={{ fontSize: 48 }}>{'\uD83D\uDCCB'}</span></div>
+              <div style={CU.emptyTitle}>Aucun post sauvegarde</div>
+              <div style={CU.emptyDesc}>Generez votre premier post dans l&apos;onglet Generateur</div>
+              <button onClick={() => setActiveTab('generator')} style={{ ...CU.btnPrimary, ...CU.btnSmall, marginTop: 12 }}>
                 Creer un post
               </button>
             </div>
@@ -1078,13 +1073,13 @@ export default function SocialMediaPage() {
                 const eng = mockEngagement(post.id);
                 const isSelected = selectedPostIds.has(post.id);
                 return (
-                  <div key={post.id} className="fz-card fz-card-hover" style={{ position: 'relative' }}>
+                  <div key={post.id} style={{ ...CU.cardHoverable, position: 'relative' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                       {/* Checkbox */}
                       <div
                         onClick={() => togglePostSelect(post.id)}
                         style={{
-                          width: 20, height: 20, borderRadius: 'var(--radius-sm)', flexShrink: 0,
+                          width: 20, height: 20, borderRadius: '4', flexShrink: 0,
                           border: isSelected ? '2px solid #1A1A1A' : '2px solid #E5E5E5',
                           background: isSelected ? '#1A1A1A' : 'transparent',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1098,10 +1093,10 @@ export default function SocialMediaPage() {
                         {/* Header */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span className="fz-badge" style={{ background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
+                            <span style={{ ...CU.badge, background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
                               <span style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {PLATFORMS.find(p => p.id === post.platform)?.label ?? post.platform}
                             </span>
-                            <span className="fz-badge">{post.type}</span>
+                            <span style={CU.badge}>{post.type}</span>
                           </div>
                           <span style={{ fontSize: 11, color: '#9B9B9B' }}>{formatDate(post.createdAt)}</span>
                         </div>
@@ -1128,17 +1123,17 @@ export default function SocialMediaPage() {
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                           <button
                             onClick={() => { navigator.clipboard.writeText(post.content); }}
-                            className="fz-btn fz-btn-secondary fz-btn-sm"
+                            style={CU.btnSmall}
                           >
                             Copier
                           </button>
-                          <button onClick={() => handleReusePost(post)} className="fz-btn fz-btn-secondary fz-btn-sm">
+                          <button onClick={() => handleReusePost(post)} style={CU.btnSmall}>
                             Reutiliser
                           </button>
-                          <button onClick={() => handleSchedulePost(post)} className="fz-btn fz-btn-secondary fz-btn-sm">
+                          <button onClick={() => handleSchedulePost(post)} style={CU.btnSmall}>
                             Planifier
                           </button>
-                          <button onClick={() => handleDeletePost(post.id)} className="fz-btn fz-btn-danger fz-btn-sm">
+                          <button onClick={() => handleDeletePost(post.id)} style={{...CU.btnDanger, ...CU.btnSmall}}>
                             Supprimer
                           </button>
                         </div>
@@ -1158,18 +1153,18 @@ export default function SocialMediaPage() {
       {activeTab === 'calendar' && (
         <div>
           {/* View toggle + navigation */}
-          <div className="fz-card" style={{ marginBottom: 16 }}>
+          <div style={{ ...CU.card, marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-              <div className="fz-pill-group">
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
                 <button
                   onClick={() => setCalendarView('week')}
-                  className={`fz-pill ${calendarView === 'week' ? 'fz-pill-active' : ''}`}
+                  style={calendarView === 'week' ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                 >
                   Semaine
                 </button>
                 <button
                   onClick={() => setCalendarView('month')}
-                  className={`fz-pill ${calendarView === 'month' ? 'fz-pill-active' : ''}`}
+                  style={calendarView === 'month' ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                 >
                   Mois
                 </button>
@@ -1181,8 +1176,7 @@ export default function SocialMediaPage() {
                     if (calendarView === 'week') setWeekOffset(w => w - 1);
                     else setMonthDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1));
                   }}
-                  className="fz-btn fz-btn-secondary fz-btn-sm"
-                  style={{ width: 44, height: 44, padding: 0, justifyContent: 'center' }}
+                  style={CU.btnSmall}
                 >
                   <span style={{ fontSize: 16 }}>{'\u25C0'}</span>
                 </button>
@@ -1200,13 +1194,12 @@ export default function SocialMediaPage() {
                     if (calendarView === 'week') setWeekOffset(w => w + 1);
                     else setMonthDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1));
                   }}
-                  className="fz-btn fz-btn-secondary fz-btn-sm"
-                  style={{ width: 44, height: 44, padding: 0, justifyContent: 'center' }}
+                  style={CU.btnSmall}
                 >
                   <span style={{ fontSize: 16 }}>{'\u25B6'}</span>
                 </button>
                 {calendarView === 'week' && weekOffset !== 0 && (
-                  <button onClick={() => setWeekOffset(0)} className="fz-btn fz-btn-ghost fz-btn-sm">
+                  <button onClick={() => setWeekOffset(0)} style={CU.btnSmall}>
                     Aujourd&apos;hui
                   </button>
                 )}
@@ -1222,7 +1215,7 @@ export default function SocialMediaPage() {
                 const dayPosts = getPostsForDate(key);
                 const isToday = dateToKey(new Date()) === key;
                 return (
-                  <div key={key} className="fz-card" style={{
+                  <div key={key} style={{ ...CU.card,
                     minHeight: 160, display: 'flex', flexDirection: 'column',
                     overflow: 'hidden', padding: 0,
                     borderColor: isToday ? '#1A1A1A' : undefined,
@@ -1244,8 +1237,7 @@ export default function SocialMediaPage() {
                       </div>
                       <button
                         onClick={() => { setShowAddPost(key); setNewCalPost({ platform: 'linkedin', title: '', content: '', time: '09:00' }); }}
-                        className="fz-btn fz-btn-ghost fz-btn-sm"
-                        style={{ width: 22, height: 22, padding: 0, justifyContent: 'center', fontSize: 14 }}
+                        style={CU.btnSmall}
                       >
                         +
                       </button>
@@ -1256,7 +1248,7 @@ export default function SocialMediaPage() {
                           key={p.id}
                           onClick={() => setEditingCalPost(p)}
                           style={{
-                            padding: '4px 8px', borderRadius: 'var(--radius-sm)',
+                            padding: '4px 8px', borderRadius: '4',
                             background: `${platformColor(p.platform)}10`,
                             borderLeft: `3px solid ${statusColors[p.status]}`,
                             cursor: 'pointer', fontSize: 11, lineHeight: 1.4,
@@ -1285,7 +1277,7 @@ export default function SocialMediaPage() {
 
           {/* Month view */}
           {calendarView === 'month' && (
-            <div className="fz-card" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ ...CU.card, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               <div style={{ minWidth: 500 }}><div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 8 }}>
                 {DAYS_FR.map(d => (
                   <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#9B9B9B', padding: '4px 0', textTransform: 'uppercase' }}>
@@ -1296,13 +1288,13 @@ export default function SocialMediaPage() {
               {getMonthDates(monthDate.getFullYear(), monthDate.getMonth()).map((week, wi) => (
                 <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 4 }}>
                   {week.map((date, di) => {
-                    if (!date) return <div key={di} style={{ minHeight: 60, borderRadius: 'var(--radius-sm)', background: '#F7F7F7' }} />;
+                    if (!date) return <div key={di} style={{ minHeight: 60, borderRadius: '4', background: '#F7F7F7' }} />;
                     const key = dateToKey(date);
                     const dayPosts = getPostsForDate(key);
                     const isToday = dateToKey(new Date()) === key;
                     return (
                       <div key={di} style={{
-                        minHeight: 60, borderRadius: 'var(--radius-sm)',
+                        minHeight: 60, borderRadius: '4',
                         border: isToday ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
                         background: '#fff', padding: 4, cursor: 'pointer',
                       }}
@@ -1347,23 +1339,22 @@ export default function SocialMediaPage() {
           {showAddPost && (
             <>
               <div onClick={() => setShowAddPost(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999 }} />
-              <div className="fz-card" style={{
+              <div style={{ ...CU.card,
                 position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                 width: 'calc(100% - 32px)', maxWidth: 480, maxHeight: '90vh', overflowY: 'auto', zIndex: 1000, border: '1px solid #E5E5E5',
               }}>
-                <div className="fz-section-title" style={{ marginBottom: 16 }}>
+                <div style={{ ...CU.sectionTitle, marginBottom: 16 }}>
                   Ajouter un post - {showAddPost}
                 </div>
 
                 <div style={{ marginBottom: 12 }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Plateforme</label>
-                  <div className="fz-pill-group">
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Plateforme</label>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
                     {PLATFORMS.map(p => (
                       <button
                         key={p.id}
                         onClick={() => setNewCalPost({ ...newCalPost, platform: p.id })}
-                        className={`fz-pill ${newCalPost.platform === p.id ? 'fz-pill-active' : ''}`}
-                        style={newCalPost.platform === p.id ? { borderColor: p.color, color: p.color } : {}}
+                        style={newCalPost.platform === p.id ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                       >
                         <span style={{ fontSize: 14 }}>{p.emoji}</span> {p.label}
                       </button>
@@ -1372,25 +1363,25 @@ export default function SocialMediaPage() {
                 </div>
 
                 <div style={{ marginBottom: 12 }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Heure</label>
-                  <input type="time" value={newCalPost.time} onChange={e => setNewCalPost({ ...newCalPost, time: e.target.value })} className="fz-input" style={{ width: 'auto' }} />
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Heure</label>
+                  <input type="time" value={newCalPost.time} onChange={e => setNewCalPost({ ...newCalPost, time: e.target.value })} style={{ ...CU.input, width: 'auto' }} />
                 </div>
 
                 <div style={{ marginBottom: 12 }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Titre</label>
-                  <input type="text" value={newCalPost.title} onChange={e => setNewCalPost({ ...newCalPost, title: e.target.value })} placeholder="Titre du post" className="fz-input" />
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Titre</label>
+                  <input type="text" value={newCalPost.title} onChange={e => setNewCalPost({ ...newCalPost, title: e.target.value })} placeholder="Titre du post" style={CU.input} />
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Contenu (optionnel)</label>
-                  <textarea value={newCalPost.content} onChange={e => setNewCalPost({ ...newCalPost, content: e.target.value })} placeholder="Contenu du post..." className="fz-textarea" style={{ minHeight: 80 }} />
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Contenu (optionnel)</label>
+                  <textarea value={newCalPost.content} onChange={e => setNewCalPost({ ...newCalPost, content: e.target.value })} placeholder="Contenu du post..." style={{ ...CU.textarea, minHeight: 80 }} />
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                  <button onClick={() => setShowAddPost(null)} className="fz-btn fz-btn-secondary fz-btn-sm">
+                  <button onClick={() => setShowAddPost(null)} style={CU.btnSmall}>
                     Annuler
                   </button>
-                  <button onClick={() => addCalendarPost(showAddPost)} disabled={!newCalPost.title.trim()} className="fz-btn fz-btn-primary fz-btn-sm" style={{ opacity: newCalPost.title.trim() ? 1 : 0.5 }}>
+                  <button onClick={() => addCalendarPost(showAddPost)} disabled={!newCalPost.title.trim()} style={{ ...CU.btnPrimary, ...CU.btnSmall, opacity: newCalPost.title.trim() ? 1 : 0.5 }}>
                     Ajouter
                   </button>
                 </div>
@@ -1402,11 +1393,11 @@ export default function SocialMediaPage() {
           {editingCalPost && (
             <>
               <div onClick={() => setEditingCalPost(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999 }} />
-              <div className="fz-card" style={{
+              <div style={{ ...CU.card,
                 position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                 width: 'calc(100% - 32px)', maxWidth: 440, maxHeight: '90vh', overflowY: 'auto', zIndex: 1000, border: '1px solid #E5E5E5',
               }}>
-                <div className="fz-section-title" style={{ marginBottom: 6 }}>
+                <div style={{ ...CU.sectionTitle, marginBottom: 6 }}>
                   <span style={{ fontSize: 16 }}>{platformEmoji(editingCalPost.platform)}</span> {editingCalPost.title}
                 </div>
                 <div style={{ fontSize: 12, color: '#9B9B9B', marginBottom: 16 }}>
@@ -1415,7 +1406,7 @@ export default function SocialMediaPage() {
 
                 {editingCalPost.content && (
                   <div style={{
-                    padding: 12, borderRadius: 'var(--radius-md)', background: '#F7F7F7',
+                    padding: 12, borderRadius: '8', background: '#F7F7F7',
                     fontSize: 13, lineHeight: 1.6, color: '#6B6B6B',
                     marginBottom: 16, maxHeight: 200, overflowY: 'auto', whiteSpace: 'pre-wrap',
                   }}>
@@ -1424,13 +1415,12 @@ export default function SocialMediaPage() {
                 )}
 
                 <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8, color: '#6B6B6B' }}>Changer le statut</div>
-                <div className="fz-pill-group" style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const, marginBottom: 16 }}>
                   {(Object.entries(statusLabels) as [CalendarPost['status'], string][]).map(([key, label]) => (
                     <button
                       key={key}
                       onClick={() => { updateCalendarPostStatus(editingCalPost.id, key); setEditingCalPost({ ...editingCalPost, status: key }); }}
-                      className={`fz-pill ${editingCalPost.status === key ? 'fz-pill-active' : ''}`}
-                      style={editingCalPost.status === key ? { borderColor: statusColors[key], color: statusColors[key] } : {}}
+                      style={editingCalPost.status === key ? {...CU.btnSmall, fontWeight: 600, borderColor: CU.accent, background: CU.accentLight} : CU.btnSmall}
                     >
                       {label}
                     </button>
@@ -1438,10 +1428,10 @@ export default function SocialMediaPage() {
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
-                  <button onClick={() => deleteCalendarPost(editingCalPost.id)} className="fz-btn fz-btn-danger fz-btn-sm">
+                  <button onClick={() => deleteCalendarPost(editingCalPost.id)} style={{...CU.btnDanger, ...CU.btnSmall}}>
                     Supprimer
                   </button>
-                  <button onClick={() => setEditingCalPost(null)} className="fz-btn fz-btn-secondary fz-btn-sm">
+                  <button onClick={() => setEditingCalPost(null)} style={CU.btnSmall}>
                     Fermer
                   </button>
                 </div>
@@ -1456,25 +1446,25 @@ export default function SocialMediaPage() {
           ═══════════════════════════════════════════════════ */}
       {activeTab === 'accounts' && (
         <div>
-          <div className="fz-info-box fz-info-box-accent" style={{ marginBottom: 20 }}>
-            <span className="fz-info-box-icon"><span style={{ fontSize: 20 }}>{'\uD83D\uDD17'}</span></span>
+          <div style={{ ...CU.card, borderLeft: "3px solid " + CU.accent, background: CU.accentLight, marginBottom: 20 }}>
+            <span style={{ flexShrink: 0 }}><span style={{ fontSize: 20 }}>{'\uD83D\uDD17'}</span></span>
             <div>
               <strong>Connectez vos comptes</strong> pour publier directement depuis Freenzy.io. Configurez vos cles API pour chaque plateforme. Vos identifiants sont stockes localement et ne quittent jamais votre navigateur.
             </div>
           </div>
 
-          <div className="fz-grid-2">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
             {/* LinkedIn */}
-            <div className="fz-card">
+            <div style={CU.card}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '8', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                   <span style={{ fontSize: 22 }}>{'\uD83D\uDCBC'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A' }}>LinkedIn</div>
                   <div style={{ fontSize: 11, color: '#9B9B9B' }}>LinkedIn Developer App</div>
                 </div>
-                <span className={`fz-badge ${platformKeys.linkedin?.connected ? 'fz-badge-success' : ''}`}>
+                <span style={platformKeys.linkedin?.connected ? CU.badgeSuccess : CU.badge}>
                   {platformKeys.linkedin?.connected ? 'Connecte' : 'Deconnecte'}
                 </span>
               </div>
@@ -1482,31 +1472,30 @@ export default function SocialMediaPage() {
               {platformKeys.linkedin?.connected ? (
                 <div>
                   {(() => { const acc = connectedAccounts.find(a => a.platform === 'linkedin'); return acc ? (
-                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: '#F7F7F7', marginBottom: 12 }}>
+                    <div style={{ padding: 12, borderRadius: '8', background: '#F7F7F7', marginBottom: 12 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{acc.username}</div>
                       <div style={{ fontSize: 12, color: '#9B9B9B' }}>{acc.followers.toLocaleString()} abonnes</div>
                       <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
                     </div>
                   ) : null; })()}
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => handleSyncAccount('linkedin')} className="fz-btn fz-btn-secondary fz-btn-sm" style={{ flex: 1 }}>Synchroniser</button>
-                    <button onClick={() => handleDisconnect('linkedin')} className="fz-btn fz-btn-danger fz-btn-sm">Deconnecter</button>
+                    <button onClick={() => handleSyncAccount('linkedin')} style={{ ...CU.btnSmall, flex: 1 }}>Synchroniser</button>
+                    <button onClick={() => handleDisconnect('linkedin')} style={{...CU.btnDanger, ...CU.btnSmall}}>Deconnecter</button>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div style={{ marginBottom: 12 }}>
-                    <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>API Key</label>
+                    <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>API Key</label>
                     <input
                       type="password"
                       value={platformKeys.linkedin?.apiKey ?? ''}
                       onChange={e => { const keys = { ...platformKeys, linkedin: { apiKey: e.target.value, connected: false } }; setPlatformKeys(keys); }}
                       placeholder="Votre cle API LinkedIn"
-                      className="fz-input"
-                      style={{ fontFamily: 'var(--font-mono)' }}
+                      style={{ ...CU.input, fontFamily: 'var(--font-mono)' }}
                     />
                   </div>
-                  <button onClick={() => handleTestConnection('linkedin')} disabled={testingPlatform === 'linkedin'} className="fz-btn fz-btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: '#E5E5E5', color: '#1A1A1A' }}>
+                  <button onClick={() => handleTestConnection('linkedin')} disabled={testingPlatform === 'linkedin'} style={{ ...CU.btnGhost, width: '100%', justifyContent: 'center', borderColor: '#E5E5E5', color: '#1A1A1A' }}>
                     {testingPlatform === 'linkedin' ? 'Test en cours...' : 'Tester la connexion'}
                   </button>
                 </div>
@@ -1514,16 +1503,16 @@ export default function SocialMediaPage() {
             </div>
 
             {/* Facebook / Instagram */}
-            <div className="fz-card">
+            <div style={CU.card}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '8', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                   <span style={{ fontSize: 22 }}>{'\uD83D\uDCD8'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A' }}>Facebook / Instagram</div>
                   <div style={{ fontSize: 11, color: '#9B9B9B' }}>Meta Business Suite</div>
                 </div>
-                <span className={`fz-badge ${platformKeys.facebook?.connected ? 'fz-badge-success' : ''}`}>
+                <span style={platformKeys.facebook?.connected ? CU.badgeSuccess : CU.badge}>
                   {platformKeys.facebook?.connected ? 'Connecte' : 'Deconnecte'}
                 </span>
               </div>
@@ -1531,42 +1520,40 @@ export default function SocialMediaPage() {
               {platformKeys.facebook?.connected ? (
                 <div>
                   {(() => { const acc = connectedAccounts.find(a => a.platform === 'facebook'); return acc ? (
-                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: '#F7F7F7', marginBottom: 12 }}>
+                    <div style={{ padding: 12, borderRadius: '8', background: '#F7F7F7', marginBottom: 12 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{acc.username}</div>
                       <div style={{ fontSize: 12, color: '#9B9B9B' }}>{acc.followers.toLocaleString()} abonnes</div>
                       <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
                     </div>
                   ) : null; })()}
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => handleSyncAccount('facebook')} className="fz-btn fz-btn-secondary fz-btn-sm" style={{ flex: 1 }}>Synchroniser</button>
-                    <button onClick={() => handleDisconnect('facebook')} className="fz-btn fz-btn-danger fz-btn-sm">Deconnecter</button>
+                    <button onClick={() => handleSyncAccount('facebook')} style={{ ...CU.btnSmall, flex: 1 }}>Synchroniser</button>
+                    <button onClick={() => handleDisconnect('facebook')} style={{...CU.btnDanger, ...CU.btnSmall}}>Deconnecter</button>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div style={{ marginBottom: 10 }}>
-                    <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Access Token</label>
+                    <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Access Token</label>
                     <input
                       type="password"
                       value={platformKeys.facebook?.accessToken ?? ''}
                       onChange={e => { const keys = { ...platformKeys, facebook: { accessToken: e.target.value, pageId: platformKeys.facebook?.pageId ?? '', connected: false } }; setPlatformKeys(keys); }}
                       placeholder="Votre access token Meta"
-                      className="fz-input"
-                      style={{ fontFamily: 'var(--font-mono)' }}
+                      style={{ ...CU.input, fontFamily: 'var(--font-mono)' }}
                     />
                   </div>
                   <div style={{ marginBottom: 12 }}>
-                    <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Page ID</label>
+                    <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Page ID</label>
                     <input
                       type="text"
                       value={platformKeys.facebook?.pageId ?? ''}
                       onChange={e => { const keys = { ...platformKeys, facebook: { accessToken: platformKeys.facebook?.accessToken ?? '', pageId: e.target.value, connected: false } }; setPlatformKeys(keys); }}
                       placeholder="ID de votre page Facebook"
-                      className="fz-input"
-                      style={{ fontFamily: 'var(--font-mono)' }}
+                      style={{ ...CU.input, fontFamily: 'var(--font-mono)' }}
                     />
                   </div>
-                  <button onClick={() => handleTestConnection('facebook')} disabled={testingPlatform === 'facebook'} className="fz-btn fz-btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: '#E5E5E5', color: '#1A1A1A' }}>
+                  <button onClick={() => handleTestConnection('facebook')} disabled={testingPlatform === 'facebook'} style={{ ...CU.btnGhost, width: '100%', justifyContent: 'center', borderColor: '#E5E5E5', color: '#1A1A1A' }}>
                     {testingPlatform === 'facebook' ? 'Test en cours...' : 'Tester la connexion'}
                   </button>
                 </div>
@@ -1574,16 +1561,16 @@ export default function SocialMediaPage() {
             </div>
 
             {/* Twitter / X */}
-            <div className="fz-card">
+            <div style={CU.card}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '8', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                   <span style={{ fontSize: 22 }}>{'\uD83D\uDC26'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A' }}>Twitter / X</div>
                   <div style={{ fontSize: 11, color: '#9B9B9B' }}>API payante ($100/mois)</div>
                 </div>
-                <span className={`fz-badge ${platformKeys.twitter?.connected ? 'fz-badge-success' : ''}`}>
+                <span style={platformKeys.twitter?.connected ? CU.badgeSuccess : CU.badge}>
                   {platformKeys.twitter?.connected ? 'Connecte' : 'Deconnecte'}
                 </span>
               </div>
@@ -1591,31 +1578,30 @@ export default function SocialMediaPage() {
               {platformKeys.twitter?.connected ? (
                 <div>
                   {(() => { const acc = connectedAccounts.find(a => a.platform === 'twitter'); return acc ? (
-                    <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: '#F7F7F7', marginBottom: 12 }}>
+                    <div style={{ padding: 12, borderRadius: '8', background: '#F7F7F7', marginBottom: 12 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{acc.username}</div>
                       <div style={{ fontSize: 12, color: '#9B9B9B' }}>{acc.followers.toLocaleString()} abonnes</div>
                       <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>Synchro: {formatDate(acc.lastSync)}</div>
                     </div>
                   ) : null; })()}
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => handleSyncAccount('twitter')} className="fz-btn fz-btn-secondary fz-btn-sm" style={{ flex: 1 }}>Synchroniser</button>
-                    <button onClick={() => handleDisconnect('twitter')} className="fz-btn fz-btn-danger fz-btn-sm">Deconnecter</button>
+                    <button onClick={() => handleSyncAccount('twitter')} style={{ ...CU.btnSmall, flex: 1 }}>Synchroniser</button>
+                    <button onClick={() => handleDisconnect('twitter')} style={{...CU.btnDanger, ...CU.btnSmall}}>Deconnecter</button>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div style={{ marginBottom: 10 }}>
-                    <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Bearer Token</label>
+                    <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Bearer Token</label>
                     <input
                       type="password"
                       value={platformKeys.twitter?.bearerToken ?? ''}
                       onChange={e => { const keys = { ...platformKeys, twitter: { apiKey: platformKeys.twitter?.apiKey ?? '', apiSecret: platformKeys.twitter?.apiSecret ?? '', bearerToken: e.target.value, connected: false } }; setPlatformKeys(keys); }}
                       placeholder="Bearer Token"
-                      className="fz-input"
-                      style={{ fontFamily: 'var(--font-mono)' }}
+                      style={{ ...CU.input, fontFamily: 'var(--font-mono)' }}
                     />
                   </div>
-                  <button onClick={() => handleTestConnection('twitter')} disabled={testingPlatform === 'twitter'} className="fz-btn fz-btn-secondary" style={{ width: '100%', justifyContent: 'center', borderColor: '#E5E5E5', color: '#1A1A1A' }}>
+                  <button onClick={() => handleTestConnection('twitter')} disabled={testingPlatform === 'twitter'} style={{ ...CU.btnGhost, width: '100%', justifyContent: 'center', borderColor: '#E5E5E5', color: '#1A1A1A' }}>
                     {testingPlatform === 'twitter' ? 'Test en cours...' : 'Tester la connexion'}
                   </button>
                 </div>
@@ -1623,36 +1609,36 @@ export default function SocialMediaPage() {
             </div>
 
             {/* Instagram (via Facebook) */}
-            <div className="fz-card">
+            <div style={CU.card}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '8', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                   <span style={{ fontSize: 22 }}>{'\uD83D\uDCF8'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A' }}>Instagram</div>
                   <div style={{ fontSize: 11, color: '#9B9B9B' }}>Via Facebook Business</div>
                 </div>
-                <span className={`fz-badge ${platformKeys.facebook?.connected ? 'fz-badge-info' : ''}`}>
+                <span style={platformKeys.facebook?.connected ? CU.badgeSuccess : CU.badge}>
                   {platformKeys.facebook?.connected ? 'Via Facebook' : 'Deconnecte'}
                 </span>
               </div>
-              <div className="fz-info-box" style={{ fontSize: 13 }}>
-                <span className="fz-info-box-icon"><span style={{ fontSize: 16 }}>{'\u2139\uFE0F'}</span></span>
+              <div style={{ ...CU.card, fontSize: 13 }}>
+                <span style={{ flexShrink: 0 }}><span style={{ fontSize: 16 }}>{'\u2139\uFE0F'}</span></span>
                 <span>Instagram utilise les memes identifiants que Facebook Business. Connectez votre compte Facebook pour publier sur Instagram.</span>
               </div>
             </div>
 
             {/* TikTok - Coming soon */}
-            <div className="fz-card" style={{ opacity: 0.5 }}>
+            <div style={{ ...CU.card, opacity: 0.5 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '8', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                   <span style={{ fontSize: 22 }}>{'\uD83C\uDFB5'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700 }}>TikTok</div>
                   <div style={{ fontSize: 11, color: '#9B9B9B' }}>Bientot disponible</div>
                 </div>
-                <span className="fz-badge fz-badge-warning">Prochainement</span>
+                <span style={CU.badgeWarning}>Prochainement</span>
               </div>
               <div style={{ fontSize: 13, color: '#9B9B9B', lineHeight: 1.6 }}>
                 L&apos;integration TikTok sera disponible dans une future mise a jour.
@@ -1660,16 +1646,16 @@ export default function SocialMediaPage() {
             </div>
 
             {/* YouTube - Coming soon */}
-            <div className="fz-card" style={{ opacity: 0.5 }}>
+            <div style={{ ...CU.card, opacity: 0.5 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '8', background: 'rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                   <span style={{ fontSize: 22 }}>{'\uD83D\uDCFA'}</span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A' }}>YouTube</div>
                   <div style={{ fontSize: 11, color: '#9B9B9B' }}>Bientot disponible</div>
                 </div>
-                <span className="fz-badge fz-badge-warning">Prochainement</span>
+                <span style={CU.badgeWarning}>Prochainement</span>
               </div>
               <div style={{ fontSize: 13, color: '#9B9B9B', lineHeight: 1.6 }}>
                 L&apos;integration YouTube sera disponible dans une future mise a jour.
@@ -1678,8 +1664,8 @@ export default function SocialMediaPage() {
           </div>
 
           {/* Security Note */}
-          <div className="fz-info-box fz-info-box-success" style={{ marginTop: 20 }}>
-            <span className="fz-info-box-icon"><span style={{ fontSize: 20 }}>{'\uD83D\uDD12'}</span></span>
+          <div style={{ ...CU.card, borderLeft: "3px solid " + CU.success, background: "#F0FFF4", marginTop: 20 }}>
+            <span style={{ flexShrink: 0 }}><span style={{ fontSize: 20 }}>{'\uD83D\uDD12'}</span></span>
             <span>
               <strong>Securite :</strong> Vos cles API sont stockees localement dans votre navigateur (localStorage) et ne sont jamais envoyees a nos serveurs. La connexion utilise une simulation OAuth pour le moment.
             </span>
@@ -1693,42 +1679,42 @@ export default function SocialMediaPage() {
       {activeTab === 'analytics' && (
         <div>
           {/* Summary Stats */}
-          <div className="fz-stat-grid" style={{ marginBottom: 24 }}>
-            <div className="fz-stat">
-              <div className="fz-stat-label">Posts generes</div>
-              <div className="fz-stat-value">{analytics.totalPosts}</div>
-              <div className="fz-stat-sub">{analytics.monthPosts} ce mois</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 24 }}>
+            <div style={{ ...CU.card, textAlign: "center" as const }}>
+              <div style={CU.statLabel}>Posts generes</div>
+              <div style={CU.statValue}>{analytics.totalPosts}</div>
+              <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{analytics.monthPosts} ce mois</div>
             </div>
-            <div className="fz-stat">
-              <div className="fz-stat-label">Caracteres</div>
-              <div className="fz-stat-value">
+            <div style={{ ...CU.card, textAlign: "center" as const }}>
+              <div style={CU.statLabel}>Caracteres</div>
+              <div style={CU.statValue}>
                 {analytics.totalChars > 1000 ? `${(analytics.totalChars / 1000).toFixed(1)}k` : analytics.totalChars}
               </div>
-              <div className="fz-stat-sub">generes ce mois</div>
+              <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>generes ce mois</div>
             </div>
-            <div className="fz-stat">
-              <div className="fz-stat-label">Engagement moyen</div>
-              <div className="fz-stat-value">{analytics.avgEngagement}</div>
-              <div className="fz-stat-sub">interactions / post</div>
+            <div style={{ ...CU.card, textAlign: "center" as const }}>
+              <div style={CU.statLabel}>Engagement moyen</div>
+              <div style={CU.statValue}>{analytics.avgEngagement}</div>
+              <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>interactions / post</div>
             </div>
-            <div className="fz-stat">
-              <div className="fz-stat-label">Meilleure plateforme</div>
-              <div className="fz-stat-value" style={{ fontSize: 20 }}>
+            <div style={{ ...CU.card, textAlign: "center" as const }}>
+              <div style={CU.statLabel}>Meilleure plateforme</div>
+              <div style={{ ...CU.statValue, fontSize: 20 }}>
                 <span style={{ fontSize: 20 }}>{platformEmoji(analytics.bestPlatform)}</span> {PLATFORMS.find(p => p.id === analytics.bestPlatform)?.label ?? '-'}
               </div>
-              <div className="fz-stat-sub">{analytics.byPlatform[analytics.bestPlatform] ?? 0} posts</div>
+              <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{analytics.byPlatform[analytics.bestPlatform] ?? 0} posts</div>
             </div>
           </div>
 
           {/* Account Analysis */}
-          <div className="fz-section" style={{ marginBottom: 24 }}>
-            <div className="fz-section-title">Analyse de compte</div>
-            <div className="fz-section-desc" style={{ marginBottom: 16 }}>Selectionnez un compte connecte pour lancer une analyse detaillee</div>
-            <div className="fz-card">
+          <div style={{ marginBottom: 24 }}>
+            <div style={CU.sectionTitle}>Analyse de compte</div>
+            <div style={{ ...CU.label, marginBottom: 16 }}>Selectionnez un compte connecte pour lancer une analyse detaillee</div>
+            <div style={CU.card}>
               <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
                 <div style={{ flex: 1, minWidth: 180 }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Compte</label>
-                  <select value={analysisTarget} onChange={e => setAnalysisTarget(e.target.value)} className="fz-select">
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Compte</label>
+                  <select value={analysisTarget} onChange={e => setAnalysisTarget(e.target.value)} style={CU.select}>
                     <option value="">Choisir un compte...</option>
                     {connectedAccounts.map(a => (
                       <option key={a.platform} value={a.platform}>{platformEmoji(a.platform)} {a.username}</option>
@@ -1743,8 +1729,7 @@ export default function SocialMediaPage() {
                 <button
                   onClick={runAccountAnalysis}
                   disabled={!analysisTarget || isAnalyzing}
-                  className="fz-btn fz-btn-primary fz-btn-sm"
-                  style={{ opacity: !analysisTarget || isAnalyzing ? 0.5 : 1 }}
+                  style={{...CU.btnPrimary, ...CU.btnSmall}}
                 >
                   {isAnalyzing ? 'Analyse...' : 'Lancer l\'analyse'}
                 </button>
@@ -1763,29 +1748,29 @@ export default function SocialMediaPage() {
 
               {analysisResult && !isAnalyzing && (
                 <div style={{ marginTop: 20 }}>
-                  <div className="fz-divider" style={{ margin: '0 0 16px' }} />
-                  <div className="fz-grid-3" style={{ gap: 12 }}>
-                    <div className="fz-stat">
-                      <div className="fz-stat-label">Abonnes</div>
-                      <div className="fz-stat-value">{analysisResult.followers.toLocaleString()}</div>
-                      <div className="fz-stat-sub">Croissance: {analysisResult.growthRate}/mois</div>
+                  <div style={{ ...CU.divider, margin: '0 0 16px' }} />
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+                    <div style={{ ...CU.card, textAlign: "center" as const }}>
+                      <div style={CU.statLabel}>Abonnes</div>
+                      <div style={CU.statValue}>{analysisResult.followers.toLocaleString()}</div>
+                      <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>Croissance: {analysisResult.growthRate}/mois</div>
                     </div>
-                    <div className="fz-stat">
-                      <div className="fz-stat-label">Engagement</div>
-                      <div className="fz-stat-value">{analysisResult.engagementRate}%</div>
-                      <div className="fz-stat-sub">{analysisResult.avgLikes} likes, {analysisResult.avgComments} commentaires</div>
+                    <div style={{ ...CU.card, textAlign: "center" as const }}>
+                      <div style={CU.statLabel}>Engagement</div>
+                      <div style={CU.statValue}>{analysisResult.engagementRate}%</div>
+                      <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{analysisResult.avgLikes} likes, {analysisResult.avgComments} commentaires</div>
                     </div>
-                    <div className="fz-stat">
-                      <div className="fz-stat-label">Meilleur horaire</div>
-                      <div className="fz-stat-value">{analysisResult.bestPostTime}</div>
-                      <div className="fz-stat-sub">Audience: {analysisResult.audienceAge} ans</div>
+                    <div style={{ ...CU.card, textAlign: "center" as const }}>
+                      <div style={CU.statLabel}>Meilleur horaire</div>
+                      <div style={CU.statValue}>{analysisResult.bestPostTime}</div>
+                      <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>Audience: {analysisResult.audienceAge} ans</div>
                     </div>
                   </div>
                   <div style={{ marginTop: 16 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#6B6B6B', marginBottom: 8 }}>Top hashtags</div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {analysisResult.topHashtags.map(tag => (
-                        <span key={tag} className="fz-badge fz-badge-accent">{tag}</span>
+                        <span key={tag} style={CU.badge}>{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -1803,20 +1788,20 @@ export default function SocialMediaPage() {
           </div>
 
           {/* Top Performing Posts */}
-          <div className="fz-section" style={{ marginBottom: 24 }}>
-            <div className="fz-section-title">Performance des posts</div>
-            <div className="fz-section-desc" style={{ marginBottom: 16 }}>Top 5 posts par engagement</div>
+          <div style={{ marginBottom: 24 }}>
+            <div style={CU.sectionTitle}>Performance des posts</div>
+            <div style={{ ...CU.label, marginBottom: 16 }}>Top 5 posts par engagement</div>
 
             {savedPosts.length === 0 ? (
-              <div className="fz-empty">
-                <div className="fz-empty-icon"><span style={{ fontSize: 48 }}>{'\uD83D\uDCCA'}</span></div>
-                <div className="fz-empty-title">Pas de donnees</div>
-                <div className="fz-empty-desc">Generez des posts pour voir leurs performances</div>
+              <div style={CU.emptyState}>
+                <div style={CU.emptyEmoji}><span style={{ fontSize: 48 }}>{'\uD83D\uDCCA'}</span></div>
+                <div style={CU.emptyTitle}>Pas de donnees</div>
+                <div style={CU.emptyDesc}>Generez des posts pour voir leurs performances</div>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {getTopPerformingPosts().map((post, idx) => (
-                  <div key={post.id} className="fz-card" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <div key={post.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{
                       width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
                       background: idx < 3 ? 'rgba(0,0,0,0.04)' : '#F7F7F7',
@@ -1828,7 +1813,7 @@ export default function SocialMediaPage() {
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span className="fz-badge" style={{ background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
+                        <span style={{ ...CU.badge, background: `${platformColor(post.platform)}15`, color: platformColor(post.platform) }}>
                           <span style={{ fontSize: 14 }}>{platformEmoji(post.platform)}</span> {post.platform}
                         </span>
                       </div>
@@ -1851,10 +1836,10 @@ export default function SocialMediaPage() {
           </div>
 
           {/* Tendances - posting frequency */}
-          <div className="fz-section">
-            <div className="fz-section-title">Tendances</div>
-            <div className="fz-section-desc" style={{ marginBottom: 16 }}>Frequence de publication par jour de la semaine</div>
-            <div className="fz-card">
+          <div >
+            <div style={CU.sectionTitle}>Tendances</div>
+            <div style={{ ...CU.label, marginBottom: 16 }}>Frequence de publication par jour de la semaine</div>
+            <div style={CU.card}>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 120, padding: '0 4px' }}>
                 {DAYS_FR.map((day, i) => {
                   const count = calendarPosts.filter(p => {
@@ -1872,7 +1857,7 @@ export default function SocialMediaPage() {
                     <div key={day} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                       <span style={{ fontSize: 11, fontWeight: 600, color: '#1A1A1A' }}>{count}</span>
                       <div style={{
-                        width: '100%', maxWidth: 40, height, borderRadius: 'var(--radius-sm)',
+                        width: '100%', maxWidth: 40, height, borderRadius: '4',
                         background: count > 0 ? '#1A1A1A' : '#F7F7F7',
                         transition: 'height 0.3s ease',
                       }} />
@@ -1881,7 +1866,7 @@ export default function SocialMediaPage() {
                   );
                 })}
               </div>
-              <div className="fz-divider" style={{ margin: '16px 0' }} />
+              <div style={{ ...CU.divider, margin: '16px 0' }} />
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <div style={{ fontSize: 12, color: '#9B9B9B' }}>
                   <strong>Meilleur jour:</strong> {(() => {
@@ -1909,22 +1894,22 @@ export default function SocialMediaPage() {
       {activeTab === 'competitors' && (
         <div>
           {/* Add Competitor Form */}
-          <div className="fz-card" style={{ marginBottom: 20 }}>
-            <div className="fz-section-title" style={{ marginBottom: 12 }}>Ajouter un concurrent</div>
+          <div style={{ ...CU.card, marginBottom: 20 }}>
+            <div style={{ ...CU.sectionTitle, marginBottom: 12 }}>Ajouter un concurrent</div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
               <div style={{ flex: 1, minWidth: 180 }}>
-                <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Nom / Username</label>
+                <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Nom / Username</label>
                 <input
                   type="text"
                   value={newCompName}
                   onChange={e => setNewCompName(e.target.value)}
                   placeholder="Ex: HubSpot, Nike..."
-                  className="fz-input"
+                  style={CU.input}
                 />
               </div>
               <div style={{ minWidth: 150 }}>
-                <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Plateforme</label>
-                <select value={newCompPlatform} onChange={e => setNewCompPlatform(e.target.value)} className="fz-select">
+                <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Plateforme</label>
+                <select value={newCompPlatform} onChange={e => setNewCompPlatform(e.target.value)} style={CU.select}>
                   {PLATFORMS.map(p => (
                     <option key={p.id} value={p.id}>{p.emoji} {p.label}</option>
                   ))}
@@ -1933,14 +1918,13 @@ export default function SocialMediaPage() {
               <button
                 onClick={addCompetitor}
                 disabled={!newCompName.trim()}
-                className="fz-btn fz-btn-primary fz-btn-sm"
-                style={{ opacity: newCompName.trim() ? 1 : 0.5 }}
+                style={{...CU.btnPrimary, ...CU.btnSmall}}
               >
                 Ajouter
               </button>
               <button
                 onClick={() => setShowCompSearch(!showCompSearch)}
-                className="fz-btn fz-btn-secondary fz-btn-sm"
+                style={CU.btnSmall}
               >
                 <span style={{ fontSize: 14 }}>{'\uD83D\uDD0D'}</span> Rechercher
               </button>
@@ -1949,17 +1933,17 @@ export default function SocialMediaPage() {
 
           {/* Search Competitors */}
           {showCompSearch && (
-            <div className="fz-card" style={{ marginBottom: 20 }}>
-              <div className="fz-section-title" style={{ marginBottom: 12 }}>Rechercher des concurrents</div>
+            <div style={{ ...CU.card, marginBottom: 20 }}>
+              <div style={{ ...CU.sectionTitle, marginBottom: 12 }}>Rechercher des concurrents</div>
               <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: 16 }}>
                 <div style={{ flex: 1, minWidth: 200 }}>
-                  <label className="fz-section-desc" style={{ marginBottom: 6, display: 'block' }}>Secteur / Mots-cles</label>
+                  <label style={{ ...CU.label, marginBottom: 6, display: 'block' }}>Secteur / Mots-cles</label>
                   <input
                     type="text"
                     value={compSearchQuery}
                     onChange={e => setCompSearchQuery(e.target.value)}
                     placeholder="Ex: Marketing digital, SaaS..."
-                    className="fz-input"
+                    style={CU.input}
                   />
                 </div>
               </div>
@@ -1987,7 +1971,7 @@ export default function SocialMediaPage() {
                           setNewCompPlatform(result.platform);
                           addCompetitor();
                         }}
-                        className="fz-btn fz-btn-secondary fz-btn-sm"
+                        style={CU.btnSmall}
                       >
                         + Ajouter
                       </button>
@@ -2000,17 +1984,17 @@ export default function SocialMediaPage() {
 
           {/* Competitors List */}
           {competitors.length === 0 ? (
-            <div className="fz-empty">
-              <div className="fz-empty-icon"><span style={{ fontSize: 48 }}>{'\uD83C\uDFAF'}</span></div>
-              <div className="fz-empty-title">Aucun concurrent suivi</div>
-              <div className="fz-empty-desc">Ajoutez des concurrents pour comparer vos performances</div>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}><span style={{ fontSize: 48 }}>{'\uD83C\uDFAF'}</span></div>
+              <div style={CU.emptyTitle}>Aucun concurrent suivi</div>
+              <div style={CU.emptyDesc}>Ajoutez des concurrents pour comparer vos performances</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {competitors.map(comp => {
                 const isComparing = compareTarget === comp.id;
                 return (
-                  <div key={comp.id} className="fz-card">
+                  <div key={comp.id} style={CU.card}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <span style={{ fontSize: 22 }}>{platformEmoji(comp.platform)}</span>
@@ -2023,17 +2007,17 @@ export default function SocialMediaPage() {
                         <button
                           onClick={() => analyzeCompetitor(comp.id)}
                           disabled={analyzingCompId === comp.id}
-                          className="fz-btn fz-btn-secondary fz-btn-sm"
+                          style={CU.btnSmall}
                         >
                           {analyzingCompId === comp.id ? 'Analyse...' : 'Analyser'}
                         </button>
                         <button
                           onClick={() => setCompareTarget(isComparing ? null : comp.id)}
-                          className={`fz-btn fz-btn-sm ${isComparing ? 'fz-btn-primary' : 'fz-btn-secondary'}`}
+                          style={isComparing ? {...CU.btnPrimary, ...CU.btnSmall} : CU.btnSmall}
                         >
                           {isComparing ? 'Fermer' : 'Comparer'}
                         </button>
-                        <button onClick={() => removeCompetitor(comp.id)} className="fz-btn fz-btn-danger fz-btn-sm">
+                        <button onClick={() => removeCompetitor(comp.id)} style={{...CU.btnDanger, ...CU.btnSmall}}>
                           <span style={{ fontSize: 14 }}>{'\u2716'}</span>
                         </button>
                       </div>
@@ -2058,37 +2042,37 @@ export default function SocialMediaPage() {
                     {/* Compare View */}
                     {isComparing && (
                       <div>
-                        <div className="fz-divider" style={{ margin: '0 0 16px' }} />
-                        <div className="fz-section-title" style={{ fontSize: 13, marginBottom: 12 }}>
+                        <div style={{ ...CU.divider, margin: '0 0 16px' }} />
+                        <div style={{ ...CU.sectionTitle, fontSize: 13, marginBottom: 12 }}>
                           Comparaison avec votre compte
                         </div>
-                        <div className="fz-grid-2" style={{ gap: 12 }}>
-                          <div className="fz-stat" style={{ border: '1px solid #1A1A1A', borderRadius: 'var(--radius-md)' }}>
-                            <div className="fz-stat-label">Vous</div>
-                            <div className="fz-stat-value" style={{ fontSize: 18 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+                          <div style={{ ...CU.card, textAlign: "center" as const, border: '1px solid #1A1A1A', borderRadius: '8' }}>
+                            <div style={CU.statLabel}>Vous</div>
+                            <div style={{ ...CU.statValue, fontSize: 18 }}>
                               {(() => {
                                 const acc = connectedAccounts.find(a => a.platform === comp.platform);
                                 return acc ? acc.followers.toLocaleString() : savedPosts.length;
                               })()}
                             </div>
-                            <div className="fz-stat-sub">
+                            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>
                               {connectedAccounts.find(a => a.platform === comp.platform) ? 'abonnes' : 'posts'}
                             </div>
                           </div>
-                          <div className="fz-stat" style={{ border: `1px solid ${platformColor(comp.platform)}`, borderRadius: 'var(--radius-md)' }}>
-                            <div className="fz-stat-label">{comp.name}</div>
-                            <div className="fz-stat-value" style={{ fontSize: 18 }}>{comp.followers.toLocaleString()}</div>
-                            <div className="fz-stat-sub">abonnes</div>
+                          <div style={{ ...CU.card, textAlign: "center" as const, border: `1px solid ${platformColor(comp.platform)}`, borderRadius: '8' }}>
+                            <div style={CU.statLabel}>{comp.name}</div>
+                            <div style={{ ...CU.statValue, fontSize: 18 }}>{comp.followers.toLocaleString()}</div>
+                            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>abonnes</div>
                           </div>
                         </div>
-                        <div className="fz-grid-2" style={{ gap: 12, marginTop: 12 }}>
-                          <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: '#F7F7F7', textAlign: 'center' }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, marginTop: 12 }}>
+                          <div style={{ padding: 12, borderRadius: '8', background: '#F7F7F7', textAlign: 'center' }}>
                             <div style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', marginBottom: 4 }}>Votre engagement</div>
                             <div style={{ fontSize: 18, fontWeight: 800, color: '#1A1A1A' }}>
                               {savedPosts.length > 0 ? `${(analytics.avgEngagement / Math.max(savedPosts.length, 1)).toFixed(1)}%` : '0%'}
                             </div>
                           </div>
-                          <div style={{ padding: 12, borderRadius: 'var(--radius-md)', background: '#F7F7F7', textAlign: 'center' }}>
+                          <div style={{ padding: 12, borderRadius: '8', background: '#F7F7F7', textAlign: 'center' }}>
                             <div style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', marginBottom: 4 }}>Engagement concurrent</div>
                             <div style={{ fontSize: 18, fontWeight: 800, color: platformColor(comp.platform) }}>
                               {comp.avgEngagement}%

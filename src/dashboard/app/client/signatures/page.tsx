@@ -5,6 +5,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Signatures Email
@@ -38,10 +39,10 @@ const TEMPLATE_OPTIONS: { id: TemplateStyle; label: string; emoji: string }[] = 
   { id: 'moderne', label: 'Moderne', emoji: '🚀' },
 ];
 
-const ACCENT_COLORS = ['#7c3aed', '#2563eb', '#059669', '#dc2626', '#d97706', '#0891b2', '#1A1A1A', '#6366f1'];
+const ACCENT_COLORS = ['#0EA5E9', '#2563eb', '#059669', '#dc2626', '#d97706', '#0891b2', '#1A1A1A', '#6366f1'];
 
 function emptySignature(): Omit<Signature, 'id' | 'createdAt'> {
-  return { name: '', title: '', company: '', phone: '', email: '', website: '', linkedin: '', photoUrl: '', template: 'corporate', accentColor: '#7c3aed', isActive: false };
+  return { name: '', title: '', company: '', phone: '', email: '', website: '', linkedin: '', photoUrl: '', template: 'corporate', accentColor: '#0EA5E9', isActive: false };
 }
 
 function seedDemoSignature(): Signature[] {
@@ -56,7 +57,7 @@ function seedDemoSignature(): Signature[] {
     linkedin: 'https://linkedin.com/in/mariedupont',
     photoUrl: '',
     template: 'corporate',
-    accentColor: '#7c3aed',
+    accentColor: '#0EA5E9',
     isActive: true,
     createdAt: new Date().toISOString(),
   }];
@@ -146,61 +147,47 @@ export default function SignaturesPage() {
     ? (signatures.find(s => s.id === editingId) || { ...form, id: 'tmp', isActive: false, createdAt: '' } as Signature)
     : { ...form, id: 'tmp', isActive: false, createdAt: '' } as Signature;
 
-  const cardStyle: React.CSSProperties = {
-    background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20,
-    border: '1px solid var(--border-primary)',
-  };
-
-  const inputStyle: React.CSSProperties = {
-    padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-    background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13, width: '100%',
-  };
-
   return (
-    <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1000, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{
-          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--text-primary)',
-          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
-        }}>
-          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta?.emoji}</span>
-          {meta?.title}
-          <HelpBubble text={meta?.helpText || ''} />
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{meta?.subtitle}</p>
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta?.emoji}</span>
+          <h1 style={CU.pageTitle}>
+            {meta?.title}
+            <HelpBubble text={meta?.helpText || ''} />
+          </h1>
+        </div>
+        <p style={CU.pageSubtitle}>{meta?.subtitle}</p>
       </div>
       <PageExplanation pageId="signatures" text={PAGE_META.signatures?.helpText} />
 
       <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 16 }}>
         {/* Form */}
-        <div style={{ flex: 1, ...cardStyle }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>
+        <div style={{ flex: 1, ...CU.card, padding: isMobile ? 16 : 20 }}>
+          <h3 style={CU.sectionTitle}>
             {editingId ? '✏️ Modifier' : '➕ Nouvelle signature'}
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <input placeholder="Nom complet *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={inputStyle} />
-            <input placeholder="Titre / Poste" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} style={inputStyle} />
-            <input placeholder="Entreprise" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} style={inputStyle} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14 }}>
+            <input placeholder="Nom complet *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={CU.input} />
+            <input placeholder="Titre / Poste" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} style={CU.input} />
+            <input placeholder="Entreprise" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} style={CU.input} />
             <div style={{ display: 'flex', gap: 8 }}>
-              <input placeholder="Téléphone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={{ ...inputStyle, flex: 1 }} />
-              <input placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={{ ...inputStyle, flex: 1 }} />
+              <input placeholder="Téléphone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={{ ...CU.input, flex: 1 }} />
+              <input placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={{ ...CU.input, flex: 1 }} />
             </div>
-            <input placeholder="Site web" value={form.website} onChange={e => setForm({ ...form, website: e.target.value })} style={inputStyle} />
-            <input placeholder="LinkedIn URL" value={form.linkedin} onChange={e => setForm({ ...form, linkedin: e.target.value })} style={inputStyle} />
-            <input placeholder="Photo URL (optionnel)" value={form.photoUrl} onChange={e => setForm({ ...form, photoUrl: e.target.value })} style={inputStyle} />
+            <input placeholder="Site web" value={form.website} onChange={e => setForm({ ...form, website: e.target.value })} style={CU.input} />
+            <input placeholder="LinkedIn URL" value={form.linkedin} onChange={e => setForm({ ...form, linkedin: e.target.value })} style={CU.input} />
+            <input placeholder="Photo URL (optionnel)" value={form.photoUrl} onChange={e => setForm({ ...form, photoUrl: e.target.value })} style={CU.input} />
 
             {/* Template selector */}
             <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Style</div>
+              <div style={CU.label}>Style</div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {TEMPLATE_OPTIONS.map(t => (
-                  <button key={t.id} onClick={() => setForm({ ...form, template: t.id })} style={{
-                    padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                    background: form.template === t.id ? 'var(--accent)' : 'var(--bg-primary)',
-                    color: form.template === t.id ? '#fff' : 'var(--text-primary)',
-                    fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                  }}>
+                  <button key={t.id} onClick={() => setForm({ ...form, template: t.id })} style={
+                    form.template === t.id ? { ...CU.btnPrimary, height: 28, fontSize: 12 } : { ...CU.btnSmall }
+                  }>
                     {t.emoji} {t.label}
                   </button>
                 ))}
@@ -209,11 +196,12 @@ export default function SignaturesPage() {
 
             {/* Color picker */}
             <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>Couleur d'accent</div>
+              <div style={CU.label}>Couleur d'accent</div>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {ACCENT_COLORS.map(c => (
                   <button key={c} onClick={() => setForm({ ...form, accentColor: c })} style={{
-                    width: 28, height: 28, borderRadius: '50%', background: c, border: form.accentColor === c ? '3px solid var(--text-primary)' : '2px solid var(--border-primary)',
+                    width: 28, height: 28, borderRadius: '50%', background: c,
+                    border: form.accentColor === c ? `3px solid ${CU.text}` : `2px solid ${CU.border}`,
                     cursor: 'pointer',
                   }} />
                 ))}
@@ -221,16 +209,10 @@ export default function SignaturesPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={handleSave} style={{
-                flex: 1, padding: '10px 16px', borderRadius: 8, border: 'none',
-                background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
-              }}>
+              <button onClick={handleSave} style={{ ...CU.btnPrimary, flex: 1 }}>
                 {editingId ? '💾 Mettre à jour' : '➕ Créer'}
               </button>
-              <button onClick={handleCopyHtml} style={{
-                padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                background: 'var(--bg-primary)', color: 'var(--text-primary)', fontWeight: 600, fontSize: 14, cursor: 'pointer',
-              }}>
+              <button onClick={handleCopyHtml} style={CU.btnGhost}>
                 {copied ? '✅ Copié !' : '📋 Copier le HTML'}
               </button>
             </div>
@@ -241,55 +223,48 @@ export default function SignaturesPage() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Live preview */}
           {currentPreview.name && (
-            <div style={cardStyle}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12 }}>
+            <div style={{ ...CU.card, padding: isMobile ? 16 : 20 }}>
+              <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>
                 👁️ Aperçu en direct
               </h3>
-              <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: '1px solid #e5e5e5' }}
+              <div style={{ background: '#fff', borderRadius: 8, padding: 16, border: `1px solid ${CU.border}` }}
                 dangerouslySetInnerHTML={{ __html: renderSignatureHtml(currentPreview as Signature) }} />
             </div>
           )}
 
           {/* Saved signatures */}
-          <div style={cardStyle}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12 }}>
+          <div style={{ ...CU.card, padding: isMobile ? 16 : 20 }}>
+            <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>
               📂 Mes signatures ({signatures.length})
             </h3>
             {signatures.length === 0 && (
-              <p style={{ color: 'var(--text-secondary)', fontSize: 13, textAlign: 'center', padding: 20 }}>
-                Aucune signature créée
-              </p>
+              <div style={CU.emptyState}>
+                <div style={CU.emptyEmoji}>✍️</div>
+                <div style={CU.emptyTitle}>Aucune signature créée</div>
+                <div style={CU.emptyDesc}>Créez votre première signature email professionnelle.</div>
+              </div>
             )}
             {signatures.map(sig => (
               <div key={sig.id} style={{
-                padding: 12, borderRadius: 8, border: '1px solid var(--border-primary)',
-                background: sig.isActive ? `${sig.accentColor}10` : 'var(--bg-primary)',
+                padding: 12, borderRadius: 8, border: `1px solid ${CU.border}`,
+                background: sig.isActive ? `${sig.accentColor}10` : CU.bg,
                 marginBottom: 8,
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: CU.text }}>
                       {sig.name} {sig.isActive && <span style={{ fontSize: 11, color: sig.accentColor, fontWeight: 600 }}>● Active</span>}
                     </div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <div style={{ fontSize: 12, color: CU.textSecondary }}>
                       {sig.title}{sig.company ? ` — ${sig.company}` : ''} — {TEMPLATE_OPTIONS.find(t => t.id === sig.template)?.label}
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 4 }}>
                     {!sig.isActive && (
-                      <button onClick={() => handleSetActive(sig.id)} style={{
-                        padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                        background: 'var(--bg-primary)', fontSize: 11, cursor: 'pointer', color: 'var(--text-primary)',
-                      }}>✅</button>
+                      <button onClick={() => handleSetActive(sig.id)} style={CU.btnSmall}>✅</button>
                     )}
-                    <button onClick={() => handleEdit(sig)} style={{
-                      padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                      background: 'var(--bg-primary)', fontSize: 11, cursor: 'pointer', color: 'var(--text-primary)',
-                    }}>✏️</button>
-                    <button onClick={() => handleDelete(sig.id)} style={{
-                      padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                      background: 'var(--bg-primary)', fontSize: 11, cursor: 'pointer', color: '#ef4444',
-                    }}>🗑️</button>
+                    <button onClick={() => handleEdit(sig)} style={CU.btnSmall}>✏️</button>
+                    <button onClick={() => handleDelete(sig.id)} style={{ ...CU.btnSmall, color: CU.danger }}>🗑️</button>
                   </div>
                 </div>
               </div>

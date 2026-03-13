@@ -11,6 +11,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import AuthRequired from '../../../components/AuthRequired';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,23 +65,6 @@ const MODEL_PRICES: ModelPrice[] = [
 ];
 const TABS = ['Vue mensuelle', 'Par feature', 'Auto-topup', 'Tarification'] as const;
 type Tab = typeof TABS[number];
-
-// ─── ClickUp-style design tokens ─────────────────────────────────────────────
-
-const CU = {
-  card: {
-    background: '#fff',
-    border: '1px solid #E5E5E5' as const,
-    borderRadius: 8,
-  },
-  text: 'var(--fz-text, #1A1D23)',
-  textSecondary: 'var(--fz-text-secondary, #6B6F76)',
-  textMuted: 'var(--fz-text-muted, #A1A5AC)',
-  accent: 'var(--fz-accent, #0EA5E9)',
-  border: '#E5E5E5',
-  bg: 'var(--fz-bg, #FFFFFF)',
-  bgSecondary: 'var(--fz-bg-secondary, #F8FAFC)',
-};
 
 // ─── API helper ───────────────────────────────────────────────────────────────
 
@@ -223,7 +207,7 @@ export default function FinancesPage() {
       <AuthRequired pageName="Finances & Credits">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, flexDirection: 'column', gap: 12 }}>
         <div style={{ fontSize: 40 }}>💳</div>
-        <div style={{ fontSize: 13, color: '#9B9B9B' }} className="animate-pulse">Chargement des finances...</div>
+        <div style={{ fontSize: 13, color: CU.textMuted }} className="animate-pulse">Chargement des finances...</div>
       </div>
       </AuthRequired>
     );
@@ -231,15 +215,15 @@ export default function FinancesPage() {
 
   return (
     <AuthRequired pageName="Finances & Credits">
-    <div className="client-page-scrollable" style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 20 }}>{PAGE_META.finances.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.finances.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: '#1A1A1A', margin: 0 }}>{PAGE_META.finances.title}</h1>
-            <p style={{ fontSize: 12, color: '#9B9B9B', margin: '2px 0 0' }}>{PAGE_META.finances.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.finances.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.finances.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.finances.helpText} />
         </div>
@@ -249,18 +233,18 @@ export default function FinancesPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '130px' : '180px'}, 1fr))`, gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Solde actuel', value: `${currentBalance} cr`, icon: '💰', color: '#1A1A1A' },
-          { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: '📉', color: 'var(--danger)' },
-          { label: 'Coût moyen/session', value: monthlyCosts.length > 0 ? `${((monthlyCosts.slice(-1)[0]?.cost ?? 0) / 30).toFixed(2)} cr/j` : '—', icon: '📊', color: '#1A1A1A' },
-          { label: 'Auto-recharge', value: autoTopup.autoTopupEnabled ? 'Activée' : 'Désactivée', icon: '🔄', color: '#1A1A1A' },
+          { label: 'Solde actuel', value: `${currentBalance} cr`, icon: '💰' },
+          { label: 'Dépenses ce mois', value: `${monthSpent} cr`, icon: '📉' },
+          { label: 'Coût moyen/session', value: monthlyCosts.length > 0 ? `${((monthlyCosts.slice(-1)[0]?.cost ?? 0) / 30).toFixed(2)} cr/j` : '—', icon: '📊' },
+          { label: 'Auto-recharge', value: autoTopup.autoTopupEnabled ? 'Activée' : 'Désactivée', icon: '🔄' },
         ].map(s => (
           <div key={s.label} style={{
             ...CU.card,
             padding: '16px 20px',
           }}>
             <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#1A1A1A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
-            <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 2 }}>{s.label}</div>
+            <div style={{ ...CU.statValue, fontSize: 18, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.value}</div>
+            <div style={CU.statLabel}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -268,13 +252,11 @@ export default function FinancesPage() {
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap' }}>
         {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)} style={{
-            height: 36, padding: '0 16px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer',
-            border: tab === t ? 'none' : `1px solid ${'#E5E5E5'}`,
-            background: tab === t ? CU.accent : CU.bg,
-            color: tab === t ? '#fff' : CU.text,
-            transition: 'all 0.15s',
-          }}>{t}</button>
+          <button key={t} onClick={() => setTab(t)} style={
+            tab === t
+              ? { ...CU.btnPrimary, borderRadius: 6 }
+              : { ...CU.btnGhost, borderRadius: 6 }
+          }>{t}</button>
         ))}
       </div>
 
@@ -282,17 +264,17 @@ export default function FinancesPage() {
       {tab === 'Vue mensuelle' && (
         <div>
           {monthlyCosts.length === 0 ? (
-            <div style={{ ...CU.card, textAlign: 'center' as const, padding: '60px 40px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📊</div>
-              <div style={{ fontWeight: 600, marginBottom: 8, color: '#1A1A1A' }}>Aucune donnée disponible</div>
-              <div style={{ fontSize: 13, color: '#9B9B9B' }}>Utilisez vos agents pour voir apparaître les données ici.</div>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>📊</div>
+              <div style={CU.emptyTitle}>Aucune donnée disponible</div>
+              <div style={CU.emptyDesc}>Utilisez vos agents pour voir apparaître les données ici.</div>
             </div>
           ) : (
             <div style={{ ...CU.card, padding: 24 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>📊 Dépenses mensuelles (12 derniers mois)</h3>
+              <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 16 }}>📊 Dépenses mensuelles (12 derniers mois)</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={monthlyCosts} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={'#E5E5E5'} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={CU.border} />
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: CU.textMuted }} />
                   <YAxis tick={{ fontSize: 11, fill: CU.textMuted }} unit=" cr" />
                   <Tooltip formatter={(v: number | undefined) => [`${v ?? 0} crédits`, 'Dépense']} />
@@ -308,16 +290,16 @@ export default function FinancesPage() {
       {tab === 'Par feature' && (
         <div>
           {featureCosts.length === 0 ? (
-            <div style={{ ...CU.card, textAlign: 'center' as const, padding: '60px 40px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📈</div>
-              <div style={{ fontWeight: 600, marginBottom: 8, color: '#1A1A1A' }}>Aucune donnée de répartition disponible</div>
-              <div style={{ fontSize: 13, color: '#9B9B9B' }}>Les données s&apos;afficheront après utilisation.</div>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>📈</div>
+              <div style={CU.emptyTitle}>Aucune donnée de répartition disponible</div>
+              <div style={CU.emptyDesc}>Les données s&apos;afficheront après utilisation.</div>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: pieData.length > 0 && !isMobile ? '1fr 1fr' : '1fr', gap: 16 }}>
               {pieData.length > 0 && (
                 <div style={{ ...CU.card, padding: 24 }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>📊 Répartition par feature</h3>
+                  <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 16 }}>📊 Répartition par feature</h3>
                   <ResponsiveContainer width="100%" height={220}>
                     <PieChart>
                       <Pie data={pieData} cx="50%" cy="50%" outerRadius={80} dataKey="value" labelLine={false}
@@ -331,7 +313,7 @@ export default function FinancesPage() {
                 </div>
               )}
               <div style={{ ...CU.card, padding: 24 }}>
-                <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>📋 Détail par feature</h3>
+                <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 16 }}>📋 Détail par feature</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {featureCosts.map((f, i) => (
                     <div key={f.feature} style={{
@@ -339,26 +321,27 @@ export default function FinancesPage() {
                       padding: '8px 10px', borderRadius: 6,
                       transition: 'background 0.12s',
                     }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'var(--fz-bg-secondary, #F8FAFC)'; }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = CU.bgSecondary; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
                     >
                       <div style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, background: PIE_COLORS[i % PIE_COLORS.length] }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, color: '#1A1A1A' }}>{FEATURE_ICONS[f.feature] && <span style={{ fontSize: 14 }}>{FEATURE_ICONS[f.feature]}</span>}{FEATURE_LABELS[f.feature] ?? f.feature}</div>
-                        <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, color: CU.text }}>{FEATURE_ICONS[f.feature] && <span style={{ fontSize: 14 }}>{FEATURE_ICONS[f.feature]}</span>}{FEATURE_LABELS[f.feature] ?? f.feature}</div>
+                        <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 1 }}>
                           {f.requests} req · {(f.tokens / 1000).toFixed(0)}k tokens
                         </div>
                       </div>
                       <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{(f.cost / 1_000_000).toFixed(3)} cr</div>
-                        <div style={{ fontSize: 11, color: '#9B9B9B' }}>{(f.pct ?? 0).toFixed(1)}%</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{(f.cost / 1_000_000).toFixed(3)} cr</div>
+                        <div style={{ fontSize: 11, color: CU.textMuted }}>{(f.pct ?? 0).toFixed(1)}%</div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${'#E5E5E5'}`, display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                  <span style={{ fontWeight: 600, color: '#1A1A1A' }}>Total</span>
-                  <span style={{ fontWeight: 700, color: '#1A1A1A' }}>{(totalFeatureCost / 1_000_000).toFixed(3)} cr</span>
+                <div style={{ ...CU.divider, marginTop: 16, marginBottom: 0 }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, paddingTop: 12 }}>
+                  <span style={{ fontWeight: 600, color: CU.text }}>Total</span>
+                  <span style={{ fontWeight: 700, color: CU.text }}>{(totalFeatureCost / 1_000_000).toFixed(3)} cr</span>
                 </div>
               </div>
             </div>
@@ -370,23 +353,23 @@ export default function FinancesPage() {
       {tab === 'Auto-topup' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ ...CU.card, padding: 24 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>🔄 Recharge <span className="fz-logo-word">automatique</span></h3>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 16 }}>🔄 Recharge <span className="fz-logo-word">automatique</span></h3>
 
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '14px 16px', borderRadius: 8,
-              background: '#F7F7F7', marginBottom: 20,
+              background: CU.bgSecondary, marginBottom: 20,
             }}>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#1A1A1A' }}>Auto-recharge</div>
-                <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 2 }}>
+                <div style={{ fontSize: 13, fontWeight: 500, color: CU.text }}>Auto-recharge</div>
+                <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>
                   Recharge automatiquement quand le solde est bas
                 </div>
               </div>
               <button
                 onClick={() => setAutoTopup(p => ({ ...p, autoTopupEnabled: !p.autoTopupEnabled }))}
                 style={{
-                  width: 44, height: 24, borderRadius: 12, border: '1px solid #E5E5E5', cursor: 'pointer',
+                  width: 44, height: 24, borderRadius: 12, border: `1px solid ${CU.border}`, cursor: 'pointer',
                   background: autoTopup.autoTopupEnabled ? CU.accent : '#d1d5db',
                   position: 'relative', transition: 'background 0.2s',
                 }}
@@ -394,39 +377,37 @@ export default function FinancesPage() {
                 <span style={{
                   position: 'absolute', top: 2, left: autoTopup.autoTopupEnabled ? 22 : 2,
                   width: 20, height: 20, borderRadius: '50%', background: '#fff',
-                  transition: 'left 0.2s', border: '1px solid #E5E5E5',
+                  transition: 'left 0.2s', border: `1px solid ${CU.border}`,
                 }} />
               </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 20 }}>
+            <div style={cardGrid(isMobile, 2)}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 500, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>
+                <label style={CU.label}>
                   Seuil de déclenchement (crédits)
                 </label>
                 <input
-                  className="input"
                   type="number"
                   min="1"
                   value={thresholdInput}
                   onChange={e => setThresholdInput(e.target.value)}
-                  style={{ width: '100%', borderRadius: 6, fontSize: 13 }}
+                  style={CU.input}
                 />
-                <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>Recharge quand le solde descend sous ce seuil</div>
+                <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 4 }}>Recharge quand le solde descend sous ce seuil</div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 500, color: '#6B6B6B', display: 'block', marginBottom: 6 }}>
+                <label style={CU.label}>
                   Montant à recharger (crédits)
                 </label>
                 <input
-                  className="input"
                   type="number"
                   min="1"
                   value={amountInput}
                   onChange={e => setAmountInput(e.target.value)}
-                  style={{ width: '100%', borderRadius: 6, fontSize: 13 }}
+                  style={CU.input}
                 />
-                <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 4 }}>Montant ajouté à chaque recharge</div>
+                <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 4 }}>Montant ajouté à chaque recharge</div>
               </div>
             </div>
 
@@ -434,11 +415,10 @@ export default function FinancesPage() {
               onClick={saveAutoTopup}
               disabled={topupSaving}
               style={{
-                height: 36, padding: '0 20px', borderRadius: 6, fontSize: 13, fontWeight: 500,
-                border: '1px solid #E5E5E5', cursor: topupSaving ? 'wait' : 'pointer',
-                background: '#1A1A1A', color: '#fff',
-                transition: 'opacity 0.15s',
+                ...CU.btnPrimary,
+                marginTop: 20,
                 opacity: topupSaving ? 0.7 : 1,
+                cursor: topupSaving ? 'wait' : 'pointer',
               }}
             >
               {topupSaving ? 'Sauvegarde...' : topupSaved ? <>✅ Sauvegardé</> : 'Sauvegarder les paramètres'}
@@ -448,24 +428,24 @@ export default function FinancesPage() {
           {/* History */}
           {topupHistory.length > 0 && (
             <div style={{ ...CU.card, padding: 24 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 14, color: '#1A1A1A' }}>📜 Historique des recharges automatiques</h3>
+              <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 14 }}>📜 Historique des recharges automatiques</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {topupHistory.map(h => (
                   <div key={h.id} style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '10px 8px', borderBottom: `1px solid ${'#E5E5E5'}`,
+                    padding: '10px 8px', borderBottom: `1px solid ${CU.border}`,
                     borderRadius: 0, transition: 'background 0.12s',
                   }}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = CU.bgSecondary; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
                   >
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1A1A1A' }}>{Math.round(h.amount / 1_000_000)} crédits rechargés</div>
-                      <div style={{ fontSize: 12, color: '#9B9B9B', marginTop: 2 }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: CU.text }}>{Math.round(h.amount / 1_000_000)} crédits rechargés</div>
+                      <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>
                         {new Date(h.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#1A1A1A' }}>🔄 Auto</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: CU.text }}>🔄 Auto</span>
                   </div>
                 ))}
               </div>
@@ -478,13 +458,13 @@ export default function FinancesPage() {
       {tab === 'Tarification' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ ...CU.card, padding: 24 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>💲 Grille de prix par modèle</h3>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 16 }}>💲 Grille de prix par modèle</h3>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               <table style={{ width: '100%', minWidth: 500, borderCollapse: 'collapse', fontSize: isMobile ? 11 : 13 }}>
                 <thead>
-                  <tr style={{ borderBottom: `2px solid ${'#E5E5E5'}` }}>
+                  <tr style={{ borderBottom: `2px solid ${CU.border}` }}>
                     {['Modèle', 'Input / 1M tokens', 'Output / 1M tokens', 'Coût moyen / 1M', 'Equivalent crédits'].map(h => (
-                      <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontSize: 12, fontWeight: 500, color: '#9B9B9B', whiteSpace: 'nowrap' }}>{h}</th>
+                      <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontSize: 12, fontWeight: 500, color: CU.textMuted, whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -493,53 +473,52 @@ export default function FinancesPage() {
                     const avg = (m.inputPer1M + m.outputPer1M) / 2;
                     const credits = Math.ceil(avg * 1.25);
                     return (
-                      <tr key={m.model} style={{ borderBottom: `1px solid ${'#E5E5E5'}`, transition: 'background 0.12s' }}
+                      <tr key={m.model} style={{ borderBottom: `1px solid ${CU.border}`, transition: 'background 0.12s' }}
                         onMouseEnter={e => { (e.currentTarget as HTMLTableRowElement).style.background = CU.bgSecondary; }}
                         onMouseLeave={e => { (e.currentTarget as HTMLTableRowElement).style.background = 'transparent'; }}
                       >
-                        <td style={{ padding: '12px 12px', fontWeight: 500, color: '#1A1A1A', fontSize: 13 }}>{m.model}</td>
-                        <td style={{ padding: '12px 12px', color: '#6B6B6B', fontSize: 13 }}>${m.inputPer1M.toFixed(2)}</td>
-                        <td style={{ padding: '12px 12px', color: '#6B6B6B', fontSize: 13 }}>${m.outputPer1M.toFixed(2)}</td>
-                        <td style={{ padding: '12px 12px', color: '#6B6B6B', fontSize: 13 }}>${avg.toFixed(2)}</td>
-                        <td style={{ padding: '12px 12px', fontWeight: 600, color: '#1A1A1A', fontSize: 13 }}>{credits} cr / 1M tokens</td>
+                        <td style={{ padding: '12px 12px', fontWeight: 500, color: CU.text, fontSize: 13 }}>{m.model}</td>
+                        <td style={{ padding: '12px 12px', color: CU.textSecondary, fontSize: 13 }}>${m.inputPer1M.toFixed(2)}</td>
+                        <td style={{ padding: '12px 12px', color: CU.textSecondary, fontSize: 13 }}>${m.outputPer1M.toFixed(2)}</td>
+                        <td style={{ padding: '12px 12px', color: CU.textSecondary, fontSize: 13 }}>${avg.toFixed(2)}</td>
+                        <td style={{ padding: '12px 12px', fontWeight: 600, color: CU.text, fontSize: 13 }}>{credits} cr / 1M tokens</td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
-            <div style={{ fontSize: 11, color: '#9B9B9B', marginTop: 12 }}>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 12 }}>
               * Tarifs <span className="fz-logo-word">Anthropic</span> + 25% de marge Freenzy. 1 crédit = 1M micro-crédits (unité interne).
             </div>
           </div>
 
           {/* Calculator */}
           <div style={{ ...CU.card, padding: 24 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, color: '#1A1A1A' }}>🧮 Calculateur de budget</h3>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 14, marginBottom: 16 }}>🧮 Calculateur de budget</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-              <label style={{ fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', color: '#1A1A1A' }}>Messages par jour :</label>
+              <label style={{ fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', color: CU.text }}>Messages par jour :</label>
               <input
-                className="input"
                 type="number"
                 value={calcMessages}
                 onChange={e => setCalcMessages(e.target.value)}
-                style={{ width: 100, borderRadius: 6, fontSize: 13 }}
+                style={{ ...CU.input, width: 100, maxWidth: 100 }}
                 min="1"
               />
-              <span style={{ fontSize: 12, color: '#9B9B9B' }}>≈ {(msgsPerDay * 30).toFixed(0)} messages/mois · {(monthlyTokens / 1000).toFixed(0)}k tokens/mois</span>
+              <span style={{ fontSize: 12, color: CU.textMuted }}>≈ {(msgsPerDay * 30).toFixed(0)} messages/mois · {(monthlyTokens / 1000).toFixed(0)}k tokens/mois</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '140px' : '200px'}, 1fr))`, gap: 12 }}>
               {[
-                { model: 'Claude Haiku (rapide)', cost: haikuCredits, color: '#1A1A1A', desc: 'Tâches simples et rapides', icon: '⚡' },
-                { model: 'Claude Sonnet (standard)', cost: sonnetCredits, color: '#1A1A1A', desc: 'Agents L1/L2, usage courant', icon: '🎯' },
+                { model: 'Claude Haiku (rapide)', cost: haikuCredits, desc: 'Tâches simples et rapides', icon: '⚡' },
+                { model: 'Claude Sonnet (standard)', cost: sonnetCredits, desc: 'Agents L1/L2, usage courant', icon: '🎯' },
               ].map(c => (
                 <div key={c.model} style={{
                   padding: 18, borderRadius: 8,
-                  background: '#F7F7F7', border: '1px solid #E5E5E5',
+                  background: CU.bgSecondary, border: `1px solid ${CU.border}`,
                 }}>
-                  <div style={{ fontSize: 12, fontWeight: 500, color: '#1A1A1A', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>{c.icon} {c.model}</div>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', marginBottom: 4 }}>~{c.cost} cr/mois</div>
-                  <div style={{ fontSize: 12, color: '#9B9B9B' }}>{c.desc}</div>
+                  <div style={{ fontSize: 12, fontWeight: 500, color: CU.text, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>{c.icon} {c.model}</div>
+                  <div style={{ ...CU.statValue, fontSize: 24, marginBottom: 4 }}>~{c.cost} cr/mois</div>
+                  <div style={{ fontSize: 12, color: CU.textMuted }}>{c.desc}</div>
                 </div>
               ))}
             </div>

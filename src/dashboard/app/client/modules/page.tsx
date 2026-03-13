@@ -7,6 +7,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -107,25 +108,25 @@ export default function ModulesPage() {
   }
 
   if (loading) return (
-    <div style={{ padding: 32, textAlign: 'center', color: 'var(--fz-text-secondary, #64748B)' }}>
+    <div style={{ padding: 32, textAlign: 'center', color: CU.textSecondary }}>
       Chargement des modules...
     </div>
   );
 
   return (
-    <div className="client-page-scrollable" style={{ padding: isMobile ? 12 : '24px 32px', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
 
       {/* ── Page Header ── */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.modules.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.modules.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.modules.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.modules.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.modules.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.modules.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.modules.helpText} />
           <div style={{ marginLeft: 'auto' }}>
-            <Link href="/client/modules/builder" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Link href="/client/modules/builder" style={{ ...CU.btnPrimary, textDecoration: 'none' }}>
               ➕ Créer un module
             </Link>
           </div>
@@ -135,13 +136,13 @@ export default function ModulesPage() {
 
       {/* ── Empty state ── */}
       {modules.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 40px', background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, border: '2px dashed #E5E5E5' }}>
-          <div style={{ fontSize: 56, marginBottom: 16 }}>📦</div>
-          <h2 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: 'var(--fz-text, #1E293B)' }}>Aucun module créé</h2>
-          <p style={{ color: 'var(--fz-text-secondary, #64748B)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+        <div style={{ ...CU.emptyState, border: '2px dashed #E5E5E5', borderRadius: 8, background: CU.bg }}>
+          <div style={CU.emptyEmoji}>📦</div>
+          <div style={CU.emptyTitle}>Aucun module créé</div>
+          <div style={CU.emptyDesc}>
             Créez votre premier module : un formulaire de collecte, une base CRM, un assistant IA dédié ou un tableau de bord personnalisé.
-          </p>
-          <Link href="/client/modules/builder" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+          </div>
+          <Link href="/client/modules/builder" style={{ ...CU.btnPrimary, textDecoration: 'none' }}>
             ➕ Créer mon premier module
           </Link>
         </div>
@@ -149,11 +150,11 @@ export default function ModulesPage() {
 
       {/* ── Grid ── */}
       {modules.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
           {modules.map(mod => {
-            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: 'var(--fz-accent, #0EA5E9)' };
+            const typeInfo = TYPE_LABELS[mod.type] ?? { label: mod.type, emoji: '📦', color: CU.accent };
             return (
-              <div key={mod.id} style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, padding: 20, border: '1px solid #E5E5E5', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div key={mod.id} style={{ ...CU.card, display: 'flex', flexDirection: 'column' as const, gap: 12 }}>
 
                 {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -164,11 +165,11 @@ export default function ModulesPage() {
                     {mod.emoji}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--fz-text, #1E293B)' }}>
+                    <div style={{ fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: CU.text }}>
                       {mod.name}
                     </div>
                     {mod.description && (
-                      <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: 12, color: CU.textSecondary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {mod.description}
                       </div>
                     )}
@@ -177,16 +178,16 @@ export default function ModulesPage() {
 
                 {/* Badges */}
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                  <span style={{ background: '#F0F0F0', color: '#1A1A1A', borderRadius: 8, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>
+                  <span style={CU.badge}>
                     <span style={{ fontSize: 12 }}>{typeInfo.emoji}</span> {typeInfo.label}
                   </span>
                   {mod.is_published ? (
-                    <span style={{ background: '#F0F0F0', color: '#1A1A1A', borderRadius: 8, padding: '2px 10px', fontSize: 12, fontWeight: 600 }}>✅ Publié</span>
+                    <span style={CU.badgeSuccess}>✅ Publié</span>
                   ) : (
-                    <span style={{ background: '#F0F0F0', color: '#6B6B6B', borderRadius: 8, padding: '2px 10px', fontSize: 12 }}>Brouillon</span>
+                    <span style={CU.badge}>Brouillon</span>
                   )}
                   {mod.record_count > 0 && (
-                    <span style={{ background: 'var(--fz-bg-secondary, #F8FAFC)', borderRadius: 8, padding: '2px 10px', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}>
+                    <span style={CU.badge}>
                       {mod.record_count} enregistrement{mod.record_count > 1 ? 's' : ''}
                     </span>
                   )}
@@ -194,14 +195,14 @@ export default function ModulesPage() {
 
                 {/* Footer */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: 4, flexWrap: 'wrap' as const, gap: 6 }}>
-                  <span style={{ fontSize: 11, color: 'var(--fz-text-secondary, #64748B)' }}>
+                  <span style={{ fontSize: 11, color: CU.textSecondary }}>
                     Modifié {timeAgo(mod.updated_at)}
                   </span>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
                     {/* Open */}
                     <Link
                       href={`/client/modules/${mod.slug}`}
-                      style={{ padding: '5px 12px', borderRadius: 8, background: '#1A1A1A', color: 'white', textDecoration: 'none', fontSize: 13, fontWeight: 600 }}
+                      style={{ ...CU.btnPrimary, height: 28, padding: '0 10px', fontSize: 12, textDecoration: 'none' }}
                     >
                       Ouvrir
                     </Link>
@@ -209,7 +210,7 @@ export default function ModulesPage() {
                     {mod.public_access && (
                       <button
                         onClick={() => copyPublicUrl(mod)}
-                        style={{ padding: '5px 10px', borderRadius: 8, border: 'none', boxShadow: 'none', background: 'transparent', cursor: 'pointer', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
+                        style={{ ...CU.btnSmall, background: 'transparent', border: 'none', color: CU.textSecondary }}
                         title="Copier l'URL publique"
                       >
                         {copyDone === mod.id ? '✅' : '🔗'}
@@ -218,7 +219,7 @@ export default function ModulesPage() {
                     {/* Edit */}
                     <Link
                       href={`/client/modules/builder?edit=${mod.id}`}
-                      style={{ padding: '5px 10px', borderRadius: 8, border: 'none', boxShadow: 'none', background: 'transparent', textDecoration: 'none', fontSize: 12, color: 'var(--fz-text-secondary, #64748B)' }}
+                      style={{ ...CU.btnSmall, background: 'transparent', border: 'none', textDecoration: 'none', color: CU.textSecondary }}
                       title="Modifier"
                     >
                       ✏️
@@ -227,7 +228,7 @@ export default function ModulesPage() {
                     <button
                       onClick={() => setConfirmDelete(mod)}
                       disabled={deleting === mod.id}
-                      style={{ padding: '5px 10px', borderRadius: 8, border: 'none', boxShadow: 'none', background: 'transparent', cursor: 'pointer', fontSize: 12, color: '#ef4444' }}
+                      style={{ ...CU.btnSmall, background: 'transparent', border: 'none', color: CU.danger }}
                       title="Supprimer"
                     >
                       🗑️
@@ -242,18 +243,18 @@ export default function ModulesPage() {
 
       {/* ── Confirm delete modal ── */}
       {confirmDelete && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--fz-bg, #FFFFFF)', borderRadius: 8, padding: isMobile ? 20 : 32, width: '100%', maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, border: 'none', boxShadow: 'none' }}>
-            <h3 style={{ fontWeight: 700, marginBottom: 12, color: 'var(--fz-text, #1E293B)' }}>Supprimer le module ?</h3>
-            <p style={{ color: 'var(--fz-text-secondary, #64748B)', marginBottom: 24 }}>
+        <div style={CU.overlay}>
+          <div style={{ ...CU.modal, maxWidth: isMobile ? 'calc(100vw - 32px)' : 400, padding: isMobile ? 20 : 24 }}>
+            <h3 style={{ fontWeight: 700, marginBottom: 12, color: CU.text }}>Supprimer le module ?</h3>
+            <p style={{ color: CU.textSecondary, marginBottom: 24 }}>
               Le module <strong>{confirmDelete.name}</strong> et tous ses enregistrements ({confirmDelete.record_count}) seront définitivement supprimés.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-              <button onClick={() => setConfirmDelete(null)} className="btn" style={{ background: 'var(--fz-bg-secondary, #F8FAFC)' }}>Annuler</button>
+              <button onClick={() => setConfirmDelete(null)} style={CU.btnGhost}>Annuler</button>
               <button
                 onClick={() => deleteModule(confirmDelete)}
                 disabled={deleting === confirmDelete.id}
-                style={{ padding: '8px 20px', borderRadius: 8, background: '#fff', color: 'var(--danger)', border: '1px solid var(--danger)', cursor: 'pointer', fontWeight: 600 }}
+                style={CU.btnDanger}
               >
                 {deleting === confirmDelete.id ? 'Suppression...' : 'Supprimer'}
               </button>

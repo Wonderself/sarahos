@@ -5,6 +5,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Templates Email
@@ -31,7 +32,7 @@ interface CustomTemplate extends EmailTemplate {
 const STORAGE_KEY = 'fz_email_templates';
 
 const CATEGORY_COLORS: Record<TemplateCategory, string> = {
-  'Marketing': '#7c3aed',
+  'Marketing': '#0EA5E9',
   'Transactionnel': '#059669',
   'Notification': '#2563eb',
   'Événement': '#d97706',
@@ -42,7 +43,7 @@ const BUILT_IN_TEMPLATES: EmailTemplate[] = [
     id: 'bi-1', name: 'Newsletter', emoji: '📰', category: 'Marketing',
     subject: 'Les nouvelles de [Entreprise] — [Mois]',
     description: 'Template de newsletter mensuelle avec sections et CTA.',
-    htmlPreview: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto"><div style="background:linear-gradient(135deg,#7c3aed,#5b6cf7);padding:30px 20px;text-align:center;border-radius:12px 12px 0 0"><h1 style="color:#fff;margin:0;font-size:22px">📰 Newsletter</h1><p style="color:#fff;opacity:0.8;margin:8px 0 0;font-size:14px">[Entreprise] — Mars 2026</p></div><div style="padding:20px;background:#fff"><h2 style="font-size:16px;color:#1a1a1a">Les temps forts du mois</h2><p style="color:#666;font-size:14px;line-height:1.6">Découvrez nos dernières actualités, nouveaux produits et événements à venir.</p><div style="background:#f7f7f7;border-radius:8px;padding:16px;margin:16px 0"><h3 style="font-size:14px;margin:0 0 8px;color:#1a1a1a">🚀 Nouvelle fonctionnalité</h3><p style="margin:0;color:#666;font-size:13px">Description de la nouveauté...</p></div><a href="#" style="display:inline-block;background:#7c3aed;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">En savoir plus</a></div></div>`,
+    htmlPreview: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto"><div style="background:linear-gradient(135deg,#0EA5E9,#5b6cf7);padding:30px 20px;text-align:center;border-radius:12px 12px 0 0"><h1 style="color:#fff;margin:0;font-size:22px">📰 Newsletter</h1><p style="color:#fff;opacity:0.8;margin:8px 0 0;font-size:14px">[Entreprise] — Mars 2026</p></div><div style="padding:20px;background:#fff"><h2 style="font-size:16px;color:#1a1a1a">Les temps forts du mois</h2><p style="color:#666;font-size:14px;line-height:1.6">Découvrez nos dernières actualités, nouveaux produits et événements à venir.</p><div style="background:#f7f7f7;border-radius:8px;padding:16px;margin:16px 0"><h3 style="font-size:14px;margin:0 0 8px;color:#1a1a1a">🚀 Nouvelle fonctionnalité</h3><p style="margin:0;color:#666;font-size:13px">Description de la nouveauté...</p></div><a href="#" style="display:inline-block;background:#0EA5E9;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">En savoir plus</a></div></div>`,
     isBuiltIn: true,
   },
   {
@@ -63,7 +64,7 @@ const BUILT_IN_TEMPLATES: EmailTemplate[] = [
     id: 'bi-4', name: 'Abandon panier', emoji: '🛒', category: 'Marketing',
     subject: 'Vous avez oublié quelque chose...',
     description: 'Relance pour les paniers abandonnés.',
-    htmlPreview: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden"><div style="padding:30px;text-align:center"><span style="font-size:48px">🛒</span><h2 style="color:#1a1a1a;margin:12px 0 8px">Oups, vous avez oublié quelque chose !</h2><p style="color:#666;font-size:14px">Votre panier vous attend. Finalisez votre commande avant qu'il ne soit trop tard.</p><div style="background:#f7f7f7;border-radius:8px;padding:16px;margin:16px 0;text-align:left"><p style="font-weight:600;color:#1a1a1a;margin:0 0 4px;font-size:14px">[Produit]</p><p style="color:#666;margin:0;font-size:13px">[Prix] €</p></div><a href="#" style="display:inline-block;background:#7c3aed;color:#fff;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:700">Reprendre ma commande</a></div></div>`,
+    htmlPreview: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden"><div style="padding:30px;text-align:center"><span style="font-size:48px">🛒</span><h2 style="color:#1a1a1a;margin:12px 0 8px">Oups, vous avez oublié quelque chose !</h2><p style="color:#666;font-size:14px">Votre panier vous attend. Finalisez votre commande avant qu'il ne soit trop tard.</p><div style="background:#f7f7f7;border-radius:8px;padding:16px;margin:16px 0;text-align:left"><p style="font-weight:600;color:#1a1a1a;margin:0 0 4px;font-size:14px">[Produit]</p><p style="color:#666;margin:0;font-size:13px">[Prix] €</p></div><a href="#" style="display:inline-block;background:#0EA5E9;color:#fff;padding:12px 32px;border-radius:8px;text-decoration:none;font-weight:700">Reprendre ma commande</a></div></div>`,
     isBuiltIn: true,
   },
   {
@@ -119,7 +120,7 @@ const BUILT_IN_TEMPLATES: EmailTemplate[] = [
     id: 'bi-12', name: 'Merci', emoji: '❤️', category: 'Transactionnel',
     subject: 'Merci pour votre commande !',
     description: 'Confirmation et remerciement post-achat.',
-    htmlPreview: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#fff;border-radius:12px;padding:30px;text-align:center"><span style="font-size:48px">❤️</span><h2 style="color:#1a1a1a;margin:12px 0">Merci [Prénom] !</h2><p style="color:#666;font-size:14px;line-height:1.6">Votre commande #[Numéro] a bien été enregistrée. Vous recevrez un email de suivi dès l'expédition.</p><div style="background:#f7f7f7;border-radius:8px;padding:16px;margin:16px 0;text-align:left"><p style="font-weight:600;margin:0 0 4px;font-size:14px;color:#1a1a1a">Récapitulatif</p><p style="color:#666;margin:0;font-size:13px">[Produit] — [Prix] €</p></div><a href="#" style="display:inline-block;background:#7c3aed;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600">Suivre ma commande</a></div>`,
+    htmlPreview: `<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#fff;border-radius:12px;padding:30px;text-align:center"><span style="font-size:48px">❤️</span><h2 style="color:#1a1a1a;margin:12px 0">Merci [Prénom] !</h2><p style="color:#666;font-size:14px;line-height:1.6">Votre commande #[Numéro] a bien été enregistrée. Vous recevrez un email de suivi dès l'expédition.</p><div style="background:#f7f7f7;border-radius:8px;padding:16px;margin:16px 0;text-align:left"><p style="font-weight:600;margin:0 0 4px;font-size:14px;color:#1a1a1a">Récapitulatif</p><p style="color:#666;margin:0;font-size:13px">[Produit] — [Prix] €</p></div><a href="#" style="display:inline-block;background:#0EA5E9;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600">Suivre ma commande</a></div>`,
     isBuiltIn: true,
   },
 ];
@@ -184,105 +185,89 @@ export default function EmailTemplatesPage() {
     saveCustom(customTemplates.filter(t => t.id !== id));
   }
 
-  const cardStyle: React.CSSProperties = {
-    background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20,
-    border: '1px solid var(--border-primary)',
-  };
-
   return (
-    <div style={{ padding: isMobile ? '16px 12px' : '24px 20px', maxWidth: 1000, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{
-          fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--text-primary)',
-          display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8,
-        }}>
-          <span style={{ fontSize: isMobile ? 26 : 32 }}>{meta?.emoji}</span>
-          {meta?.title}
-          <HelpBubble text={meta?.helpText || ''} />
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{meta?.subtitle}</p>
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{meta?.emoji}</span>
+          <h1 style={CU.pageTitle}>
+            {meta?.title}
+            <HelpBubble text={meta?.helpText || ''} />
+          </h1>
+        </div>
+        <p style={CU.pageSubtitle}>{meta?.subtitle}</p>
       </div>
       <PageExplanation pageId="email-templates" text={PAGE_META['email-templates']?.helpText} />
 
       {/* Filters + Create */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
+      <div style={{ ...toolbar(), justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          <button onClick={() => setActiveCategory('all')} style={{
-            padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border-primary)',
-            background: activeCategory === 'all' ? 'var(--accent)' : 'var(--bg-secondary)',
-            color: activeCategory === 'all' ? '#fff' : 'var(--text-primary)',
-            fontSize: 12, fontWeight: 600, cursor: 'pointer',
-          }}>Tous ({allTemplates.length})</button>
+          <button onClick={() => setActiveCategory('all')} style={
+            activeCategory === 'all' ? { ...CU.btnPrimary, height: 28, fontSize: 12 } : CU.btnSmall
+          }>Tous ({allTemplates.length})</button>
           {ALL_CATEGORIES.map(cat => {
             const count = allTemplates.filter(t => t.category === cat).length;
             return (
-              <button key={cat} onClick={() => setActiveCategory(cat)} style={{
-                padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border-primary)',
-                background: activeCategory === cat ? CATEGORY_COLORS[cat] : 'var(--bg-secondary)',
-                color: activeCategory === cat ? '#fff' : 'var(--text-primary)',
-                fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              }}>{cat} ({count})</button>
+              <button key={cat} onClick={() => setActiveCategory(cat)} style={
+                activeCategory === cat
+                  ? { ...CU.btnPrimary, height: 28, fontSize: 12, background: CATEGORY_COLORS[cat] }
+                  : CU.btnSmall
+              }>{cat} ({count})</button>
             );
           })}
         </div>
-        <button onClick={() => setShowCreate(!showCreate)} style={{
-          padding: '8px 16px', borderRadius: 8, border: 'none',
-          background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer',
-        }}>➕ Créer</button>
+        <button onClick={() => setShowCreate(!showCreate)} style={CU.btnPrimary}>➕ Créer</button>
       </div>
 
       {/* Create form */}
       {showCreate && (
-        <div style={{ ...cardStyle, marginBottom: 20 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12 }}>
+        <div style={{ ...CU.card, marginBottom: 20, padding: isMobile ? 16 : 20 }}>
+          <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>
             ➕ Nouveau template personnalisé
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <input placeholder="Nom du template *" value={newName} onChange={e => setNewName(e.target.value)}
-                style={{ flex: 2, minWidth: 180, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13 }} />
+                style={{ ...CU.input, flex: 2, minWidth: 180 }} />
               <select value={newCategory} onChange={e => setNewCategory(e.target.value as TemplateCategory)}
-                style={{ flex: 1, minWidth: 140, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13 }}>
+                style={{ ...CU.select, flex: 1, minWidth: 140 }}>
                 {ALL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <input placeholder="Objet de l'email *" value={newSubject} onChange={e => setNewSubject(e.target.value)}
-              style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13 }} />
+              style={CU.input} />
             <input placeholder="Description (optionnel)" value={newDescription} onChange={e => setNewDescription(e.target.value)}
-              style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 13 }} />
-            <button onClick={handleCreateCustom} style={{
-              padding: '10px 16px', borderRadius: 8, border: 'none', alignSelf: 'flex-start',
-              background: 'var(--accent)', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
-            }}>Créer le template</button>
+              style={CU.input} />
+            <button onClick={handleCreateCustom} style={{ ...CU.btnPrimary, alignSelf: 'flex-start' }}>Créer le template</button>
           </div>
         </div>
       )}
 
       {/* Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 12 }}>
+      <div style={cardGrid(isMobile, 3)}>
         {filtered.map(t => (
-          <div key={t.id} style={{ ...cardStyle, cursor: 'pointer', position: 'relative' }}
+          <div key={t.id} style={{ ...CU.cardHoverable, position: 'relative' }}
             onClick={() => { setPreviewTemplate(t); setEditMode(false); setEditTitle(t.name); setEditSubject(t.subject); }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <span style={{ fontSize: 24 }}>{t.emoji}</span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>{t.name}</div>
+                <div style={{ fontWeight: 600, fontSize: 14, color: CU.text }}>{t.name}</div>
                 <span style={{
-                  fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 4,
+                  ...CU.badge,
                   background: `${CATEGORY_COLORS[t.category]}20`, color: CATEGORY_COLORS[t.category],
                 }}>{t.category}</span>
               </div>
               {!t.isBuiltIn && (
                 <button onClick={e => { e.stopPropagation(); handleDeleteCustom(t.id); }} style={{
-                  background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', color: '#ef4444',
+                  background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', color: CU.danger,
                 }}>🗑️</button>
               )}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>{t.description}</div>
+            <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 8 }}>{t.description}</div>
             {/* Mini preview */}
             <div style={{
-              background: '#fff', borderRadius: 8, padding: 8, border: '1px solid #e5e5e5',
+              background: '#fff', borderRadius: 8, padding: 8, border: `1px solid ${CU.border}`,
               height: 100, overflow: 'hidden', transform: 'scale(0.5)', transformOrigin: 'top left',
               width: '200%', pointerEvents: 'none',
             }} dangerouslySetInnerHTML={{ __html: t.htmlPreview }} />
@@ -292,27 +277,20 @@ export default function EmailTemplatesPage() {
 
       {/* Preview Modal */}
       {previewTemplate && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 9999, padding: 20,
-        }} onClick={() => setPreviewTemplate(null)}>
+        <div style={CU.overlay} onClick={() => setPreviewTemplate(null)}>
           <div onClick={e => e.stopPropagation()} style={{
-            background: 'var(--bg-primary)', borderRadius: 16, padding: 24,
-            maxWidth: 650, width: '100%', maxHeight: '85vh', overflow: 'auto',
+            ...CU.modal, maxWidth: 650, maxHeight: '85vh',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
+              <h3 style={{ ...CU.sectionTitle, fontSize: 18 }}>
                 {previewTemplate.emoji} {previewTemplate.name}
               </h3>
               <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={() => setEditMode(!editMode)} style={{
-                  padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border-primary)',
-                  background: editMode ? 'var(--accent)' : 'var(--bg-secondary)',
-                  color: editMode ? '#fff' : 'var(--text-primary)', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                }}>🎨 Personnaliser</button>
+                <button onClick={() => setEditMode(!editMode)} style={
+                  editMode ? { ...CU.btnPrimary, height: 28, fontSize: 12 } : CU.btnSmall
+                }>🎨 Personnaliser</button>
                 <button onClick={() => setPreviewTemplate(null)} style={{
-                  background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text-secondary)',
+                  background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: CU.textMuted,
                 }}>✕</button>
               </div>
             </div>
@@ -320,24 +298,21 @@ export default function EmailTemplatesPage() {
             {editMode && (
               <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <input value={editTitle} onChange={e => setEditTitle(e.target.value)} placeholder="Titre"
-                  style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', fontSize: 13 }} />
+                  style={CU.input} />
                 <input value={editSubject} onChange={e => setEditSubject(e.target.value)} placeholder="Objet"
-                  style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', fontSize: 13 }} />
+                  style={CU.input} />
                 <input value={editCtaText} onChange={e => setEditCtaText(e.target.value)} placeholder="Texte du bouton CTA"
-                  style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', fontSize: 13 }} />
+                  style={CU.input} />
               </div>
             )}
 
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12 }}>
+            <div style={{ fontSize: 13, color: CU.textSecondary, marginBottom: 12 }}>
               <strong>Objet :</strong> {editMode ? editSubject : previewTemplate.subject}
             </div>
-            <div style={{ background: '#f7f7f7', borderRadius: 8, padding: 16, border: '1px solid #e5e5e5' }}
+            <div style={{ background: CU.bgSecondary, borderRadius: 8, padding: 16, border: `1px solid ${CU.border}` }}
               dangerouslySetInnerHTML={{ __html: previewTemplate.htmlPreview }} />
             <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
-              <button onClick={() => handleCopyHtml(previewTemplate)} style={{
-                padding: '8px 16px', borderRadius: 8, border: 'none',
-                background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer',
-              }}>
+              <button onClick={() => handleCopyHtml(previewTemplate)} style={CU.btnPrimary}>
                 {copied ? '✅ Copié !' : '📋 Copier HTML'}
               </button>
             </div>

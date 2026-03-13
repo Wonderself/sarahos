@@ -6,6 +6,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 const DONE_KEY = 'fz_formations_done';
 
@@ -172,57 +173,16 @@ export default function FormationsPage() {
     setForm({ ...emptyForm });
   };
 
-  /* ─── Styles ─── */
-  const accent = '#1A1A1A';
-
-  const sectionStyle: React.CSSProperties = {
-    maxWidth: 1100,
-    margin: '0 auto',
-    padding: isMobile ? '0 12px' : '0 24px',
-  };
-
-  const cardStyle: React.CSSProperties = {
-    background: 'var(--fz-bg, #FFFFFF)',
-    borderRadius: 8,
-    padding: '28px 24px',
-    border: '1px solid #E5E5E5',
-    cursor: 'default',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px 16px',
-    fontSize: 14,
-    border: '1px solid #E5E5E5',
-    borderRadius: 10,
-    outline: 'none',
-    fontFamily: 'inherit',
-    background: 'var(--fz-bg-secondary, #F8FAFC)',
-    color: 'var(--fz-text, #1E293B)',
-    transition: 'border-color 0.2s',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 13,
-    fontWeight: 600,
-    color: 'var(--fz-text-secondary, #64748B)',
-    marginBottom: 6,
-    display: 'block',
-  };
-
   return (
-    <div className="client-page-scrollable" style={{ background: 'var(--fz-bg, #FFFFFF)', minHeight: '100vh', paddingBottom: 80 }}>
+    <div style={{ ...pageContainer(isMobile), paddingBottom: 80 }}>
 
       {/* ── Page Header ── */}
-      <div style={{ marginBottom: 24, padding: '24px 24px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.formations.emoji}</span>
+      <div style={{ marginBottom: 20 }}>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.formations.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.formations.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.formations.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.formations.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.formations.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.formations.helpText} />
         </div>
@@ -230,110 +190,90 @@ export default function FormationsPage() {
       <PageExplanation pageId="formations" text={PAGE_META.formations?.helpText} />
 
       {/* ── Benefits Bar ── */}
-      <section style={{ ...sectionStyle, marginBottom: 48 }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 16,
-        }}>
+      <section style={{ marginBottom: 32 }}>
+        <div style={cardGrid(isMobile, 4)}>
           {BENEFITS.map(b => (
             <div key={b.title} style={{
-              background: 'var(--fz-bg, #FFFFFF)',
-              borderRadius: 8,
-              padding: '20px 18px',
-              border: '1px solid #E5E5E5',
+              ...CU.card,
               textAlign: 'center',
             }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>{b.icon}</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>{b.title}</div>
-              <div style={{ fontSize: 12, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.5 }}>{b.desc}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: CU.text, marginBottom: 4 }}>{b.title}</div>
+              <div style={{ fontSize: 12, color: CU.textSecondary, lineHeight: 1.5 }}>{b.desc}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── Formation Cards Grid ── */}
-      <section style={{ ...sectionStyle, marginBottom: 56 }}>
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <h2 style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: 'var(--fz-text, #1E293B)',
-            letterSpacing: '-0.03em',
-            marginBottom: 8,
-          }}>
+      <section style={{ marginBottom: 40 }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 20 }}>
             Nos formations
           </h2>
-          <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', maxWidth: 480, margin: '0 auto' }}>
-            Des programmes concus pour vous rendre <span className="fz-logo-word">autonome</span> rapidement, avec des cas pratiques adaptes a votre activite.
+          <p style={{ fontSize: 13, color: CU.textSecondary, maxWidth: 480, margin: '6px auto 0', lineHeight: 1.5 }}>
+            Des programmes concus pour vous rendre autonome rapidement, avec des cas pratiques adaptes a votre activite.
           </p>
         </div>
 
         {/* Search + progress */}
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: isMobile ? 0 : 200 }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)' }}>🔍</span>
+            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: CU.textMuted }}>🔍</span>
             <input
               type="text"
               placeholder="Rechercher une formation..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{
-                width: '100%', padding: '10px 12px 10px 36px', fontSize: 14,
-                border: 'none', borderRadius: 8, boxShadow: 'none', outline: 'none',
-                fontFamily: 'inherit', background: 'var(--fz-bg, #FFFFFF)', boxSizing: 'border-box',
+                ...CU.input,
+                paddingLeft: 36,
               }}
-              onFocus={e => (e.currentTarget.style.borderColor = accent)}
-              onBlur={e => (e.currentTarget.style.borderColor = '')}
             />
           </div>
           {doneCount > 0 && (
-            <div style={{ fontSize: 13, color: '#1A1A1A', fontWeight: 600, flexShrink: 0 }}>
+            <div style={{ fontSize: 13, color: CU.text, fontWeight: 600, flexShrink: 0 }}>
               ✅ {doneCount}/{FORMATIONS.length} terminée{doneCount > 1 ? 's' : ''}
             </div>
           )}
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))',
-          gap: 20,
-        }}>
+        <div style={cardGrid(isMobile, 2)}>
           {filteredFormations.length === 0 && (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--fz-text-muted, #94A3B8)' }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>🔍</div>
-              <div>Aucune formation ne correspond à votre recherche.</div>
-              <button onClick={() => setSearch('')} style={{ marginTop: 10, fontSize: 12, color: accent, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Réinitialiser</button>
+            <div style={{ gridColumn: '1/-1', ...CU.emptyState, padding: '40px 0' }}>
+              <div style={CU.emptyEmoji}>🔍</div>
+              <div style={CU.emptyDesc}>Aucune formation ne correspond à votre recherche.</div>
+              <button onClick={() => setSearch('')} style={{ ...CU.btnSmall, color: CU.accent, textDecoration: 'underline', border: 'none', background: 'none' }}>Réinitialiser</button>
             </div>
           )}
           {filteredFormations.map(f => (
             <div
               key={f.id}
               style={{
-                ...cardStyle,
+                ...CU.card,
                 position: 'relative',
                 opacity: f.available ? 1 : 0.85,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+                transition: 'background 0.15s',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.background = '#F7F7F7';
+                (e.currentTarget as HTMLDivElement).style.background = CU.bgSecondary;
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLDivElement).style.background = '#fff';
+                (e.currentTarget as HTMLDivElement).style.background = CU.bg;
               }}
             >
               {/* Unavailable badge */}
               {!f.available && (
                 <div style={{
+                  ...CU.badgeWarning,
                   position: 'absolute',
                   top: 14,
                   right: 14,
-                  height: 36, padding: '0 12px',
-                  borderRadius: 8,
                   fontSize: 10,
                   fontWeight: 700,
-                  background: '#fef3c7',
-                  color: '#92400e',
-                  letterSpacing: '0.02em',
                 }}>
                   Bientot disponible
                 </div>
@@ -342,25 +282,25 @@ export default function FormationsPage() {
               {/* Icon + Title */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                 <div style={{
-                  width: 48,
-                  height: 48,
+                  width: 44,
+                  height: 44,
                   borderRadius: 8,
-                  background: `${accent}12`,
+                  background: CU.accentLight,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 24,
+                  fontSize: 22,
                   flexShrink: 0,
                 }}>
                   🎓
                 </div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: 'var(--fz-text, #1E293B)',
+                    fontSize: 15,
+                    fontWeight: 600,
+                    color: CU.text,
                     lineHeight: 1.3,
-                    marginBottom: 0,
+                    margin: 0,
                   }}>
                     {f.title}
                   </h3>
@@ -370,7 +310,7 @@ export default function FormationsPage() {
               {/* Description */}
               <p style={{
                 fontSize: 13,
-                color: 'var(--fz-text-secondary, #64748B)',
+                color: CU.textSecondary,
                 lineHeight: 1.6,
                 margin: 0,
                 flex: 1,
@@ -385,16 +325,14 @@ export default function FormationsPage() {
                 gap: 10,
                 flexWrap: 'wrap',
                 paddingTop: 8,
-                borderTop: '1px solid var(--fz-border, #E2E8F0)',
+                borderTop: `1px solid ${CU.border}`,
               }}>
                 {/* Level Badge */}
                 <span style={{
-                  padding: '3px 10px',
-                  borderRadius: 6,
-                  fontSize: 11,
-                  fontWeight: 700,
+                  ...CU.badge,
                   background: `${f.levelColor}18`,
                   color: f.levelColor,
+                  fontWeight: 600,
                 }}>
                   {f.level}
                 </span>
@@ -405,7 +343,7 @@ export default function FormationsPage() {
                   alignItems: 'center',
                   gap: 4,
                   fontSize: 12,
-                  color: 'var(--fz-text-secondary, #64748B)',
+                  color: CU.textSecondary,
                   fontWeight: 500,
                 }}>
                   ⏱️ {f.duration}
@@ -416,7 +354,7 @@ export default function FormationsPage() {
                   marginLeft: 'auto',
                   fontSize: 13,
                   fontWeight: 700,
-                  color: accent,
+                  color: CU.accent,
                 }}>
                   {f.price}
                 </span>
@@ -425,12 +363,12 @@ export default function FormationsPage() {
               {/* Inscription note for unavailable */}
               {!f.available && (
                 <div style={{
-                  fontSize: 11,
-                  color: '#92400e',
-                  background: '#fffbeb',
+                  ...CU.badgeWarning,
+                  width: '100%',
+                  justifyContent: 'center',
                   padding: '8px 12px',
                   borderRadius: 8,
-                  textAlign: 'center',
+                  fontSize: 11,
                   lineHeight: 1.5,
                 }}>
                   Inscrivez-vous pour etre informe de la disponibilite
@@ -442,11 +380,18 @@ export default function FormationsPage() {
                 <button
                   onClick={() => toggleDone(f.id)}
                   style={{
-                    width: '100%', padding: '8px 0', fontSize: 12, fontWeight: 600, minHeight: 44,
-                    borderRadius: 8, border: `1px solid ${doneIds.has(f.id) ? '#22c55e' : '#e5e7eb'}`,
+                    ...(doneIds.has(f.id) ? CU.badgeSuccess : CU.btnGhost),
+                    width: '100%',
+                    height: 36,
+                    justifyContent: 'center',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    borderRadius: 8,
+                    border: `1px solid ${doneIds.has(f.id) ? CU.success : CU.border}`,
                     background: doneIds.has(f.id) ? '#f0fdf4' : 'transparent',
-                    color: doneIds.has(f.id) ? '#16a34a' : '#9ca3af',
-                    cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
+                    color: doneIds.has(f.id) ? CU.success : CU.textMuted,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
                   }}
                 >
                   {doneIds.has(f.id) ? <>✅ Terminée</> : 'Marquer comme terminée'}
@@ -458,27 +403,20 @@ export default function FormationsPage() {
       </section>
 
       {/* ── CTA / Quote Request Section ── */}
-      <section style={sectionStyle}>
+      <section>
         <div style={{
-          background: 'var(--fz-bg, #FFFFFF)',
-          borderRadius: 20,
-          padding: 'clamp(24px, 4vw, 48px)',
-          border: '1px solid #E5E5E5',
+          ...CU.card,
+          borderRadius: 12,
+          padding: isMobile ? 24 : 40,
           maxWidth: 680,
           margin: '0 auto',
         }}>
-          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
             <div style={{ fontSize: 32, marginBottom: 12 }}>📧</div>
-            <h2 style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: 'var(--fz-text, #1E293B)',
-              letterSpacing: '-0.02em',
-              marginBottom: 8,
-            }}>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 20, marginBottom: 6 }}>
               Faire une demande
             </h2>
-            <p style={{ fontSize: 14, color: 'var(--fz-text-secondary, #64748B)', lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
+            <p style={{ fontSize: 13, color: CU.textSecondary, lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
               Decrivez vos besoins et nous vous proposons un programme sur mesure adapte a votre activite.
             </p>
           </div>
@@ -492,38 +430,29 @@ export default function FormationsPage() {
               border: '1px solid #bbf7d0',
             }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-              <h3 style={{ fontSize: 20, fontWeight: 700, color: '#15803d', marginBottom: 8 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#15803d', marginBottom: 8, margin: '0 0 8px' }}>
                 Demande envoyee !
               </h3>
-              <p style={{ fontSize: 14, color: '#166534', lineHeight: 1.6, marginBottom: 20 }}>
+              <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6, marginBottom: 20 }}>
                 Merci pour votre interet. Nous reviendrons vers vous sous 24 a 48 heures avec une proposition personnalisee.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                style={{
-                  padding: '10px 24px',
-                  borderRadius: 10,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  border: '1px solid #bbf7d0',
-                  background: 'var(--fz-bg, #FFFFFF)',
-                  color: '#15803d',
-                  cursor: 'pointer',
-                }}
+                style={CU.btnGhost}
               >
                 Faire une autre demande
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Error */}
               {error && (
                 <div style={{
+                  ...CU.badgeDanger,
                   padding: '10px 16px',
-                  borderRadius: 10,
+                  borderRadius: 8,
                   fontSize: 13,
-                  color: '#dc2626',
-                  background: '#fef2f2',
+                  width: '100%',
                   border: '1px solid #fecaca',
                 }}>
                   {error}
@@ -532,49 +461,43 @@ export default function FormationsPage() {
 
               {/* Name */}
               <div>
-                <label style={labelStyle}>Nom complet *</label>
+                <label style={CU.label}>Nom complet *</label>
                 <input
                   type="text"
                   placeholder="Jean Dupont"
                   value={form.name}
                   onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
-                  style={inputStyle}
-                  onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '')}
+                  style={CU.input}
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label style={labelStyle}>Email *</label>
+                <label style={CU.label}>Email *</label>
                 <input
                   type="email"
                   placeholder="jean@entreprise.com"
                   value={form.email}
                   onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
-                  style={inputStyle}
-                  onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '')}
+                  style={CU.input}
                 />
               </div>
 
               {/* Phone */}
               <div>
-                <label style={labelStyle}>Telephone</label>
+                <label style={CU.label}>Telephone</label>
                 <input
                   type="tel"
                   placeholder="+33 6 12 34 56 78"
                   value={form.phone}
                   onChange={e => setForm(prev => ({ ...prev, phone: e.target.value }))}
-                  style={inputStyle}
-                  onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '')}
+                  style={CU.input}
                 />
               </div>
 
               {/* Formation Selection */}
               <div>
-                <label style={labelStyle}>Formation(s) souhaitee(s) *</label>
+                <label style={CU.label}>Formation(s) souhaitee(s) *</label>
                 <div style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -592,13 +515,13 @@ export default function FormationsPage() {
                           alignItems: 'center',
                           gap: 10,
                           padding: '10px 14px',
-                          borderRadius: 10,
+                          borderRadius: 8,
                           minHeight: 44,
-                          border: `1.5px solid ${selected ? accent : 'var(--fz-border, #E2E8F0)'}`,
-                          background: selected ? `${accent}08` : '#fff',
+                          border: `1.5px solid ${selected ? CU.accent : CU.border}`,
+                          background: selected ? `${CU.accent}08` : CU.bg,
                           cursor: 'pointer',
                           textAlign: 'left',
-                          transition: 'border-color 0.2s, background 0.2s',
+                          transition: 'border-color 0.15s, background 0.15s',
                           fontFamily: 'inherit',
                         }}
                       >
@@ -606,26 +529,26 @@ export default function FormationsPage() {
                           width: 20,
                           height: 20,
                           borderRadius: 5,
-                          border: `2px solid ${selected ? accent : 'var(--border-secondary)'}`,
-                          background: selected ? accent : '#fff',
+                          border: `2px solid ${selected ? CU.accent : CU.border}`,
+                          background: selected ? CU.accent : CU.bg,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: 12,
-                          color: '#fff',
+                          color: CU.bg,
                           flexShrink: 0,
-                          transition: 'background 0.2s, border-color 0.2s',
+                          transition: 'background 0.15s, border-color 0.15s',
                         }}>
                           {selected ? '✓' : ''}
                         </span>
                         <span style={{ fontSize: 16 }}>🎓</span>
                         <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--fz-text, #1E293B)' }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>
                             {f.title}
                           </div>
-                          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 1 }}>
+                          <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 1 }}>
                             {f.level} &middot; {f.duration}
-                            {!f.available && <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: 6 }}>Bientot</span>}
+                            {!f.available && <span style={{ color: CU.warning, fontWeight: 600, marginLeft: 6 }}>Bientot</span>}
                           </div>
                         </div>
                       </button>
@@ -636,19 +559,13 @@ export default function FormationsPage() {
 
               {/* Context / Needs */}
               <div>
-                <label style={labelStyle}>Vos besoins / contexte</label>
+                <label style={CU.label}>Vos besoins / contexte</label>
                 <textarea
                   placeholder="Decrivez votre entreprise, vos objectifs et le contexte de cette demande de formation..."
                   value={form.context}
                   onChange={e => setForm(prev => ({ ...prev, context: e.target.value }))}
                   rows={4}
-                  style={{
-                    ...inputStyle,
-                    resize: 'vertical',
-                    minHeight: 100,
-                  }}
-                  onFocus={e => (e.currentTarget.style.borderColor = accent)}
-                  onBlur={e => (e.currentTarget.style.borderColor = '')}
+                  style={CU.textarea}
                 />
               </div>
 
@@ -656,26 +573,11 @@ export default function FormationsPage() {
               <button
                 onClick={handleSubmit}
                 style={{
+                  ...CU.btnPrimary,
                   width: '100%',
-                  padding: '14px 24px',
-                  borderRadius: 8,
-                  fontSize: 15,
+                  height: 44,
+                  fontSize: 14,
                   fontWeight: 700,
-                  border: 'none',
-                  minHeight: 44,
-                  background: '#1A1A1A',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  transition: 'opacity 0.2s, transform 0.15s',
-                  letterSpacing: '-0.01em',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.opacity = '0.9';
-                  (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.99)';
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLButtonElement).style.opacity = '1';
-                  (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
                 }}
               >
                 Envoyer ma demande
@@ -683,7 +585,7 @@ export default function FormationsPage() {
 
               <p style={{
                 fontSize: 11,
-                color: 'var(--fz-text-muted, #94A3B8)',
+                color: CU.textMuted,
                 textAlign: 'center',
                 lineHeight: 1.5,
                 margin: 0,

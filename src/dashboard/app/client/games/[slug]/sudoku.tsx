@@ -311,7 +311,7 @@ export default function SudokuGame() {
         <button
           onClick={reset}
           style={{
-            background: gameOver ? '#7c3aed' : 'rgba(255,255,255,0.08)',
+            background: gameOver ? 'var(--accent)' : 'rgba(255,255,255,0.08)',
             color: gameOver ? '#fff' : 'rgba(255,255,255,0.5)',
             border: gameOver ? 'none' : '1px solid rgba(255,255,255,0.1)',
             borderRadius: 10,

@@ -3,6 +3,10 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '../../../../components/Toast';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
+import { PAGE_META } from '../../../../lib/emoji-map';
+import PageExplanation from '../../../../components/PageExplanation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -244,6 +248,7 @@ function FieldEditor({ field, onChange, onDelete }: {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 function BuilderContent() {
+  const isMobile = useIsMobile();
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get('edit');
@@ -386,16 +391,23 @@ function BuilderContent() {
   const STEP_LABELS = ['Type', 'Identité', 'Structure', 'Publier'];
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 860, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 860 }}>
 
       {/* ── Header ── */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>
-          {editId ? <>✏️ Modifier le module</> : <>🔧 Créer un module</>}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-          Créez une mini-application fonctionnelle intégrée à votre dashboard.
-        </p>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{editId ? '✏️' : '🔧'}</span>
+        <div>
+          <h1 style={CU.pageTitle}>
+            {editId ? 'Modifier le module' : 'Créer un module'}
+          </h1>
+          <p style={CU.pageSubtitle}>
+            Créez une mini-application fonctionnelle intégrée à votre dashboard.
+          </p>
+        </div>
+        <PageExplanation
+          pageId="modules-builder"
+          text={PAGE_META['modules']?.helpText ?? 'Créez des modules personnalisés pour étendre vos assistants.'}
+        />
       </div>
 
       {/* ── Stepper ── */}
@@ -414,7 +426,7 @@ function BuilderContent() {
                 background: active ? 'var(--accent)' : done ? '#10b981' : 'var(--bg-secondary)',
                 color: (active || done) ? 'white' : 'var(--text-secondary)',
                 fontWeight: active ? 700 : 500, fontSize: 13,
-                borderRadius: s === 1 ? '12px 0 0 12px' : s === 4 ? '0 12px 12px 0' : 0,
+                borderRadius: s === 1 ? '8px 0 0 8px' : s === 4 ? '0 8px 8px 0' : 0,
                 transition: 'all 0.2s',
               }}
             >

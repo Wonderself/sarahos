@@ -6,6 +6,8 @@ import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
 import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -59,6 +61,7 @@ async function portalCall<T>(path: string, method = 'GET', data?: unknown): Prom
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ChasseurPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,50 +154,50 @@ export default function ChasseurPage() {
 
   // ── Mission detail side panel ──
   const MissionDetail = ({ m }: { m: Mission }) => (
-    <div className="card" style={{ padding: 20 }}>
+    <div style={{ ...CU.card, padding: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
         <div>
-          <div style={{ fontWeight: 700, fontSize: 16 }}>{m.title}</div>
-          <div style={{ fontSize: 14, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>🏢 {m.company}</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: CU.text }}>{m.title}</div>
+          <div style={{ fontSize: 14, color: CU.textMuted, marginTop: 2 }}>🏢 {m.company}</div>
         </div>
-        <button onClick={() => setSelectedMission(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--fz-text-muted, #94A3B8)' }}>×</button>
+        <button onClick={() => setSelectedMission(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: CU.textMuted }}>×</button>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-          <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Type</span>
+          <span style={{ color: CU.textMuted }}>Type</span>
           <span style={{ fontWeight: 600 }}>{TYPE_LABELS[m.type]}</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-          <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Statut</span>
+          <span style={{ color: CU.textMuted }}>Statut</span>
           <span style={{ fontWeight: 700, color: STATUS_CONFIG[m.status].color }}>{STATUS_CONFIG[m.status].icon} {STATUS_CONFIG[m.status].label}</span>
         </div>
         {m.tjm && (
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-            <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>TJM</span>
+            <span style={{ color: CU.textMuted }}>TJM</span>
             <span style={{ fontWeight: 600 }}>{m.tjm} €/j</span>
           </div>
         )}
         {m.salary_k && (
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-            <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Salaire</span>
+            <span style={{ color: CU.textMuted }}>Salaire</span>
             <span style={{ fontWeight: 600 }}>{m.salary_k}k€</span>
           </div>
         )}
         {m.location && (
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-            <span style={{ color: 'var(--fz-text-muted, #94A3B8)' }}>Localisation</span>
+            <span style={{ color: CU.textMuted }}>Localisation</span>
             <span style={{ fontWeight: 600 }}>📍 {m.location}</span>
           </div>
         )}
       </div>
 
       {m.next_action && (
-        <div style={{ padding: '10px 14px', background: 'var(--accent)10', borderRadius: 8, marginBottom: 12, borderLeft: '3px solid var(--accent)' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', marginBottom: 2 }}>PROCHAINE ACTION</div>
+        <div style={{ padding: '10px 14px', background: CU.bgSecondary, borderRadius: 8, marginBottom: 12, borderLeft: `3px solid ${CU.accent}` }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: CU.accent, marginBottom: 2 }}>PROCHAINE ACTION</div>
           <div style={{ fontSize: 13 }}>{m.next_action}</div>
           {m.next_action_date && (
-            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
+            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>
               📅 {new Date(m.next_action_date).toLocaleDateString('fr-FR')}
             </div>
           )}
@@ -202,64 +205,67 @@ export default function ChasseurPage() {
       )}
 
       {m.notes && (
-        <div style={{ fontSize: 12, color: 'var(--fz-text-muted)', marginBottom: 12, lineHeight: 1.6 }}>{m.notes}</div>
+        <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 12, lineHeight: 1.6 }}>{m.notes}</div>
       )}
 
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {STATUSES.indexOf(m.status) > 0 && (
-          <button onClick={() => handleMove(m.id, m.status, 'back')} className="btn btn-ghost btn-sm" style={{ fontSize: 11 }}>
+          <button onClick={() => handleMove(m.id, m.status, 'back')} style={{ ...CU.btnSmall, fontSize: 11 }}>
             ← Retour
           </button>
         )}
         {STATUSES.indexOf(m.status) < STATUSES.length - 1 && (
-          <button onClick={() => handleMove(m.id, m.status, 'forward')} className="btn btn-primary btn-sm" style={{ fontSize: 11 }}>
+          <button onClick={() => handleMove(m.id, m.status, 'forward')} style={{ ...CU.btnPrimary, height: 28, padding: '0 10px', fontSize: 11 }}>
             Avancer →
           </button>
         )}
-        <Link href={`/client/chat?agent=fz-chasseur&context=${encodeURIComponent(`Mission: ${m.title} chez ${m.company} (${TYPE_LABELS[m.type]})`)}`} className="btn btn-ghost btn-sm" style={{ fontSize: 11, textDecoration: 'none' }}>
+        <Link href={`/client/chat?agent=fz-chasseur&context=${encodeURIComponent(`Mission: ${m.title} chez ${m.company} (${TYPE_LABELS[m.type]})`)}`} style={{ ...CU.btnSmall, fontSize: 11, textDecoration: 'none' }}>
           💬 Conseil
         </Link>
-        <button onClick={() => handleDelete(m.id)} className="btn btn-ghost btn-sm" style={{ fontSize: 11, color: '#ef4444' }}>🗑️</button>
+        <button onClick={() => handleDelete(m.id)} style={{ ...CU.btnSmall, fontSize: 11, color: CU.danger }}>🗑️</button>
       </div>
     </div>
   );
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 1200 }}>
       {/* Header */}
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 20 }}>
         <div>
-          <div style={{ marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>← Agents personnels</Link>
+          <div style={{ marginBottom: 6 }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: CU.textMuted, textDecoration: 'none' }}>← Agents personnels</Link>
           </div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.chasseur.emoji} {PAGE_META.chasseur.title}</h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.chasseur.subtitle}</p>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{PAGE_META.chasseur.emoji}</span>
+            <h1 style={CU.pageTitle}>{PAGE_META.chasseur.title}</h1>
+          </div>
+          <p style={CU.pageSubtitle}>{PAGE_META.chasseur.subtitle}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <HelpBubble text={PAGE_META.chasseur.helpText} />
-          <button onClick={() => setView(view === 'kanban' ? 'list' : 'kanban')} className="btn btn-ghost btn-sm">
+          <button onClick={() => setView(view === 'kanban' ? 'list' : 'kanban')} style={CU.btnSmall}>
             {view === 'kanban' ? <>📋 Liste</> : <>📊 Kanban</>}
           </button>
-          <button onClick={() => setShowModal(true)} className="btn btn-primary btn-sm">+ Ajouter</button>
+          <button onClick={() => setShowModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>+ Ajouter</button>
         </div>
       </div>
       <PageExplanation pageId="chasseur" text={PAGE_META.chasseur?.helpText} />
 
-      {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
+      {error && <div style={{ ...CU.card, background: '#FFF5F5', color: CU.danger, marginBottom: 20, fontSize: 13 }}>{error}</div>}
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(5, 1fr)', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Missions', value: missions.length, icon: '📋', color: 'var(--accent)' },
+          { label: 'Missions', value: missions.length, icon: '📋', color: CU.accent },
           { label: 'Candidatures', value: applied, icon: '📤', color: '#3b82f6' },
           { label: 'Entretiens', value: interviews, icon: '🎯', color: '#f59e0b' },
-          { label: 'Taux de réponse', value: `${responseRate}%`, icon: '📈', color: responseRate >= 30 ? '#22c55e' : '#f59e0b' },
-          { label: 'Offres', value: offers, icon: '🎉', color: '#22c55e' },
+          { label: 'Taux de réponse', value: `${responseRate}%`, icon: '📈', color: responseRate >= 30 ? CU.success : '#f59e0b' },
+          { label: 'Offres', value: offers, icon: '🎉', color: CU.success },
         ].map(s => (
-          <div key={s.label} className="card" style={{ padding: '14px 18px' }}>
+          <div key={s.label} style={CU.card}>
             <div style={{ fontSize: 20, marginBottom: 4 }}>{s.icon}</div>
             <div style={{ fontSize: 20, fontWeight: 700, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>{s.label}</div>
+            <div style={{ fontSize: 11, color: CU.textMuted }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -268,13 +274,13 @@ export default function ChasseurPage() {
       <div style={{ display: 'grid', gridTemplateColumns: selectedMission ? '1fr 320px' : '1fr', gap: 20 }}>
         <div>
           {missions.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '80px 40px' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🎯</div>
-              <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>Aucune mission en cours</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 20 }}>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>🎯</div>
+              <div style={CU.emptyTitle}>Aucune mission en cours</div>
+              <div style={CU.emptyDesc}>
                 Ajoutez vos opportunités et suivez chaque étape jusqu&apos;à l&apos;offre
               </div>
-              <button onClick={() => setShowModal(true)} className="btn btn-primary btn-sm">+ Ajouter une mission</button>
+              <button onClick={() => setShowModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>+ Ajouter une mission</button>
             </div>
           ) : view === 'kanban' ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
@@ -295,19 +301,19 @@ export default function ChasseurPage() {
                       {col.map(m => (
                         <div
                           key={m.id}
-                          className="card"
                           onClick={() => setSelectedMission(m)}
                           style={{
-                            padding: '12px 14px', cursor: 'pointer',
+                            ...CU.cardHoverable,
+                            padding: '12px 14px',
                             borderLeft: `3px solid ${cfg.color}`,
-                            background: selectedMission?.id === m.id ? 'var(--fz-bg-secondary, #F8FAFC)' : undefined,
+                            background: selectedMission?.id === m.id ? CU.bgSecondary : CU.bg,
                           }}
                         >
                           <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4, lineHeight: 1.3 }}>{m.title}</div>
-                          <div style={{ fontSize: 11, color: 'var(--fz-text-muted, #94A3B8)' }}>🏢 {m.company}</div>
-                          {m.tjm && <div style={{ fontSize: 11, color: 'var(--accent)', marginTop: 3 }}>{m.tjm}€/j</div>}
+                          <div style={{ fontSize: 11, color: CU.textMuted }}>🏢 {m.company}</div>
+                          {m.tjm && <div style={{ fontSize: 11, color: CU.accent, marginTop: 3 }}>{m.tjm}€/j</div>}
                           {m.next_action_date && (
-                            <div style={{ fontSize: 10, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 4 }}>
+                            <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 4 }}>
                               📅 {new Date(m.next_action_date).toLocaleDateString('fr-FR')}
                             </div>
                           )}
@@ -325,24 +331,23 @@ export default function ChasseurPage() {
                 return (
                   <div
                     key={m.id}
-                    className="card"
-                    style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', borderLeft: `3px solid ${cfg.color}` }}
+                    style={{ ...CU.cardHoverable, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, borderLeft: `3px solid ${cfg.color}` }}
                     onClick={() => setSelectedMission(m)}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, fontSize: 14 }}>{m.title}</div>
-                      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>🏢 {m.company} · {TYPE_LABELS[m.type]}</div>
+                      <div style={{ fontSize: 12, color: CU.textMuted }}>🏢 {m.company} · {TYPE_LABELS[m.type]}</div>
                     </div>
-                    {m.tjm && <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', flexShrink: 0 }}>{m.tjm}€/j</div>}
+                    {m.tjm && <div style={{ fontSize: 12, fontWeight: 700, color: CU.accent, flexShrink: 0 }}>{m.tjm}€/j</div>}
                     <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: cfg.color + '20', color: cfg.color, flexShrink: 0 }}>
                       {cfg.icon} {cfg.label}
                     </span>
                     <div style={{ display: 'flex', gap: 4 }}>
                       {STATUSES.indexOf(m.status) > 0 && (
-                        <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'back'); }} style={{ background: 'none', border: 'none', borderRadius: 8, boxShadow: 'var(--fz-shadow-card, 0 1px 3px rgba(0,0,0,0.04))', cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: 'var(--fz-text-muted, #94A3B8)' }}>←</button>
+                        <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'back'); }} style={{ background: 'none', border: 'none', borderRadius: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.04)', cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: CU.textMuted }}>←</button>
                       )}
                       {STATUSES.indexOf(m.status) < STATUSES.length - 1 && (
-                        <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'forward'); }} style={{ background: 'var(--accent)', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: '#fff' }}>→</button>
+                        <button onClick={e => { e.stopPropagation(); handleMove(m.id, m.status, 'forward'); }} style={{ background: CU.accent, border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12, padding: '2px 6px', color: '#fff' }}>→</button>
                       )}
                     </div>
                   </div>
@@ -357,60 +362,60 @@ export default function ChasseurPage() {
 
       {/* Modal */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-          <div className="card" style={{ width: '100%', maxWidth: 480, padding: 24, maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>🎯 Nouvelle mission</h3>
+        <div style={CU.overlay}>
+          <div style={{ ...CU.modal, maxWidth: 480 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>🎯 Nouvelle mission</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Poste / Mission</label>
-                  <input className="input" placeholder="Ex: Développeur React..." value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} autoFocus />
+                  <label style={CU.label}>Poste / Mission</label>
+                  <input style={CU.input} placeholder="Ex: Développeur React..." value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} autoFocus />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Entreprise</label>
-                  <input className="input" placeholder="Nom de l'entreprise" value={form.company} onChange={e => setForm(p => ({ ...p, company: e.target.value }))} />
+                  <label style={CU.label}>Entreprise</label>
+                  <input style={CU.input} placeholder="Nom de l'entreprise" value={form.company} onChange={e => setForm(p => ({ ...p, company: e.target.value }))} />
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Type</label>
-                  <select className="input" value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value as MissionType }))}>
+                  <label style={CU.label}>Type</label>
+                  <select style={{ ...CU.select, width: '100%' }} value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value as MissionType }))}>
                     {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Statut initial</label>
-                  <select className="input" value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value as MissionStatus }))}>
+                  <label style={CU.label}>Statut initial</label>
+                  <select style={{ ...CU.select, width: '100%' }} value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value as MissionStatus }))}>
                     {STATUSES.map(s => <option key={s} value={s}>{STATUS_CONFIG[s].icon} {STATUS_CONFIG[s].label}</option>)}
                   </select>
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>TJM (€/jour)</label>
-                  <input className="input" type="number" placeholder="600" value={form.tjm} onChange={e => setForm(p => ({ ...p, tjm: e.target.value }))} />
+                  <label style={CU.label}>TJM (€/jour)</label>
+                  <input style={CU.input} type="number" placeholder="600" value={form.tjm} onChange={e => setForm(p => ({ ...p, tjm: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Salaire (k€/an)</label>
-                  <input className="input" type="number" placeholder="55" value={form.salary_k} onChange={e => setForm(p => ({ ...p, salary_k: e.target.value }))} />
+                  <label style={CU.label}>Salaire (k€/an)</label>
+                  <input style={CU.input} type="number" placeholder="55" value={form.salary_k} onChange={e => setForm(p => ({ ...p, salary_k: e.target.value }))} />
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Prochaine action</label>
-                <input className="input" placeholder="Ex: Relancer le recruteur..." value={form.next_action} onChange={e => setForm(p => ({ ...p, next_action: e.target.value }))} />
+                <label style={CU.label}>Prochaine action</label>
+                <input style={CU.input} placeholder="Ex: Relancer le recruteur..." value={form.next_action} onChange={e => setForm(p => ({ ...p, next_action: e.target.value }))} />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Date de l&apos;action</label>
-                <input className="input" type="date" value={form.next_action_date} onChange={e => setForm(p => ({ ...p, next_action_date: e.target.value }))} />
+                <label style={CU.label}>Date de l&apos;action</label>
+                <input style={CU.input} type="date" value={form.next_action_date} onChange={e => setForm(p => ({ ...p, next_action_date: e.target.value }))} />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Notes</label>
-                <textarea className="input" rows={2} placeholder="Remarques, liens, contacts..." value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} style={{ resize: 'none' }} />
+                <label style={CU.label}>Notes</label>
+                <textarea style={{ ...CU.textarea, resize: 'none' as const }} rows={2} placeholder="Remarques, liens, contacts..." value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} />
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-              <button onClick={() => setShowModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
-              <button onClick={handleAdd} className="btn btn-primary" style={{ flex: 1 }} disabled={saving}>
+              <button onClick={() => setShowModal(false)} style={{ ...CU.btnGhost, flex: 1 }}>Annuler</button>
+              <button onClick={handleAdd} style={{ ...CU.btnPrimary, flex: 1 }} disabled={saving}>
                 {saving ? 'Enregistrement...' : 'Ajouter'}
               </button>
             </div>

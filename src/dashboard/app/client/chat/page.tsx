@@ -10,6 +10,7 @@ import { parseActionProposals, ACTION_TYPE_ICONS, ACTION_TYPE_LABELS, PRIORITY_L
 import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 import { Channel, TeamMessage, getChannels, getMessages as getTeamMessages, sendMessage as sendTeamMessage, editMessage, deleteMessage, addReaction, pinMessage, createChannel, deleteChannel, getUnreadCounts, markAsRead, searchMessages as searchTeamMessages, getThreadReplies, replyToThread, seedDefaultChannels } from '../../../lib/messaging';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { VisitorEmptyState } from '../../../components/VisitorBanner';
@@ -1163,7 +1164,7 @@ export default function ChatPage() {
     const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
     return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase()
-        ? <mark key={i} style={{ background: 'rgba(0,0,0,0.06)', color: '#1A1A1A', borderRadius: 2 }}>{part}</mark>
+        ? <mark key={i} style={{ background: CU.accentLight, color: CU.text, borderRadius: 2 }}>{part}</mark>
         : part
     );
   }
@@ -1233,7 +1234,7 @@ export default function ChatPage() {
 
   if (!isAuthenticated) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto', background: CU.bg }}>
         <VisitorEmptyState
           icon="💬"
           title="Connectez-vous pour discuter avec vos agents IA"
@@ -1252,11 +1253,11 @@ export default function ChatPage() {
   return (
     <div className="chat-page">
       {/* ═══ PAGE HEADER ═══ */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid var(--fz-border, #E5E5E5)`, background: 'var(--fz-bg, #fff)' }}>
-        <span style={{ fontSize: 18 }}>{PAGE_META.chat.emoji}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid ${CU.border}`, background: CU.bg }}>
+        <span style={emojiIcon(18)}>{PAGE_META.chat.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'var(--fz-text, #1A1A1A)' }}>{PAGE_META.chat.title}</h1>
-          <p style={{ fontSize: 13, margin: 0, color: 'var(--fz-text-secondary, #6B6B6B)' }}>{PAGE_META.chat.subtitle}</p>
+          <h1 style={{ ...CU.pageTitle, fontSize: 18 }}>{PAGE_META.chat.title}</h1>
+          <p style={CU.pageSubtitle}>{PAGE_META.chat.subtitle}</p>
         </div>
         <HelpBubble text={PAGE_META.chat.helpText} />
       </div>
@@ -1763,7 +1764,7 @@ export default function ChatPage() {
                     <div className="chat-msg-actions">
                       <AudioPlayback text={msg.content} gender={selectedAgent?.gender ?? 'F'} size="sm" />
                       {msg.isFaq && (
-                        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A', fontWeight: 600 }}>
+                        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: CU.accentLight, color: CU.text, fontWeight: 600 }}>
                           FAQ
                         </span>
                       )}
@@ -1803,7 +1804,7 @@ export default function ChatPage() {
               </div>
             )}
             {feedbackGiven[i] && (
-              <div style={{ fontSize: 11, color: feedbackGiven[i] === 'positive' ? '#1A1A1A' : '#6B6B6B', marginTop: 4, fontWeight: 500, paddingLeft: 38 }}>
+              <div style={{ fontSize: 11, color: feedbackGiven[i] === 'positive' ? CU.text : CU.textSecondary, marginTop: 4, fontWeight: 500, paddingLeft: 38 }}>
                 {feedbackGiven[i] === 'positive' ? <>🙏 Merci pour votre retour !</> : 'Noté, on va s\'améliorer !'}
               </div>
             )}
@@ -1948,12 +1949,12 @@ export default function ChatPage() {
       {/* FAQ match hint */}
       {faqMatch && !loading && (
         <div className="flex flex-between items-center flex-wrap gap-6" style={{
-          padding: '6px 16px', background: 'rgba(0,0,0,0.03)', borderTop: '1px solid rgba(0,0,0,0.08)',
+          padding: '6px 16px', background: CU.bgSecondary, borderTop: `1px solid ${CU.border}`,
         }}>
           <span className="text-xs font-semibold text-success">💡 FAQ trouvée — 0 token</span>
           <div className="flex gap-4">
             <button onClick={() => useFaqAnswer(faqMatch)} className="btn btn-sm"
-              style={{ fontSize: 10, background: '#1A1A1A', color: 'white', borderColor: '#1A1A1A' }}>Utiliser FAQ</button>
+              style={{ fontSize: 10, background: CU.accent, color: '#fff', borderColor: CU.accent }}>Utiliser FAQ</button>
             <button onClick={() => setFaqMatch(null)} className="btn btn-ghost btn-sm" style={{ fontSize: 10 }}>IA</button>
           </div>
         </div>
@@ -2024,7 +2025,7 @@ export default function ChatPage() {
         <div className="agent-bottom-sheet-overlay open" onClick={() => setShowAgentSheet(false)} />
         <div className="agent-bottom-sheet open">
           <div className="agent-bottom-sheet-handle" />
-          <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 12 }}>Choisir un assistant</div>
+          <div style={{ ...CU.sectionTitle, marginBottom: 12 }}>Choisir un assistant</div>
           {agents.map(agent => (
             <div
               key={agent.id}

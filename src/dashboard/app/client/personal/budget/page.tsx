@@ -10,6 +10,8 @@ import { useToast } from '../../../../components/Toast';
 import { PAGE_META } from '../../../../lib/emoji-map';
 import PageExplanation from '../../../../components/PageExplanation';
 import HelpBubble from '../../../../components/HelpBubble';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../../lib/page-styles';
+import { useIsMobile } from '../../../../lib/use-media-query';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -75,6 +77,7 @@ async function portalCall<T>(path: string, method = 'GET', data?: unknown): Prom
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function BudgetPage() {
+  const isMobile = useIsMobile();
   const { showError, showSuccess } = useToast();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -198,57 +201,55 @@ export default function BudgetPage() {
   }
 
   return (
-    <div className="client-page-scrollable" style={{ maxWidth: 900, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 20 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <Link href="/client/personal" style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', textDecoration: 'none' }}>
+          <div style={{ marginBottom: 6 }}>
+            <Link href="/client/personal" style={{ fontSize: 13, color: CU.textMuted, textDecoration: 'none' }}>
               ← Agents personnels
             </Link>
           </div>
-          <h1 className="page-title" style={{ color: 'var(--fz-text, #1E293B)' }}>{PAGE_META.budget.emoji} {PAGE_META.budget.title}</h1>
-          <p className="page-subtitle" style={{ color: 'var(--fz-text-secondary, #64748B)' }}>{PAGE_META.budget.subtitle}</p>
+          <div style={headerRow()}>
+            <span style={emojiIcon(24)}>{PAGE_META.budget.emoji}</span>
+            <h1 style={CU.pageTitle}>{PAGE_META.budget.title}</h1>
+          </div>
+          <p style={CU.pageSubtitle}>{PAGE_META.budget.subtitle}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <HelpBubble text={PAGE_META.budget.helpText} />
-          <Link href="/client/chat?agent=fz-budget" className="btn btn-primary btn-sm">
+          <Link href="/client/chat?agent=fz-budget" style={{ ...CU.btnPrimary, fontSize: 12, height: 32, textDecoration: 'none' }}>
             💬 Analyser avec fz-budget
           </Link>
         </div>
       </div>
       <PageExplanation pageId="budget" text={PAGE_META.budget?.helpText} />
 
-      {error && <div className="alert alert-danger" style={{ marginBottom: 20 }}>{error}</div>}
+      {error && <div style={{ ...CU.card, background: '#FFF5F5', color: CU.danger, marginBottom: 20, fontSize: 13 }}>{error}</div>}
 
       {/* Stats cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
         {[
-          { label: 'Solde ce mois', value: fmt(balance), icon: '⚖️', color: balance >= 0 ? '#22c55e' : '#ef4444' },
-          { label: 'Revenus', value: fmt(totalIncome), icon: '💰', color: '#22c55e' },
-          { label: 'Dépenses', value: fmt(totalExpenses), icon: '💸', color: '#ef4444' },
+          { label: 'Solde ce mois', value: fmt(balance), icon: '⚖️', color: balance >= 0 ? CU.success : CU.danger },
+          { label: 'Revenus', value: fmt(totalIncome), icon: '💰', color: CU.success },
+          { label: 'Dépenses', value: fmt(totalExpenses), icon: '💸', color: CU.danger },
           { label: 'Épargne', value: fmt(totalSavings), icon: '🏦', color: '#3b82f6' },
         ].map(stat => (
-          <div key={stat.label} className="card" style={{ padding: '16px 20px' }}>
+          <div key={stat.label} style={CU.card}>
             <div style={{ fontSize: 24, marginBottom: 6 }}>{stat.icon}</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: stat.color }}>{stat.value}</div>
-            <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{stat.label}</div>
+            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${CU.border}`, marginBottom: 20 }}>
         {(['overview', 'transactions', 'goals'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveSection(tab)}
-            style={{
-              padding: '8px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-              border: activeSection === tab ? '1.5px solid var(--accent)' : '1.5px solid var(--fz-border, #E2E8F0)',
-              background: activeSection === tab ? 'var(--accent)' : 'var(--fz-bg-secondary, #F8FAFC)',
-              color: activeSection === tab ? '#fff' : 'var(--fz-text, #1E293B)',
-            }}
+            style={activeSection === tab ? CU.tabActive : CU.tab}
           >
             {tab === 'overview' ? <>📊 Vue d&apos;ensemble</> : tab === 'transactions' ? <>📋 Transactions</> : <>🎯 Objectifs</>}
           </button>
@@ -257,21 +258,22 @@ export default function BudgetPage() {
 
       {/* Overview tab */}
       {activeSection === 'overview' && (
-        <div className="card" style={{ padding: 24 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--fz-text, #1E293B)' }}>
+        <div style={CU.card}>
+          <h3 style={{ ...CU.sectionTitle, marginBottom: 16 }}>
             Évolution sur 6 mois
           </h3>
           {transactions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--fz-text-muted, #94A3B8)' }}>
-              <div style={{ fontSize: 36, marginBottom: 8 }}>📊</div>
-              <div>Ajoutez des transactions pour voir votre évolution</div>
+            <div style={CU.emptyState}>
+              <div style={CU.emptyEmoji}>📊</div>
+              <div style={CU.emptyTitle}>Aucune donnée</div>
+              <div style={CU.emptyDesc}>Ajoutez des transactions pour voir votre évolution</div>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--fz-border, #E2E8F0)" />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--fz-text-muted, #94A3B8)' }} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--fz-text-muted, #94A3B8)' }} tickFormatter={v => `${v}€`} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CU.border} />
+                <XAxis dataKey="month" tick={{ fontSize: 11, fill: CU.textMuted }} />
+                <YAxis tick={{ fontSize: 11, fill: CU.textMuted }} tickFormatter={v => `${v}€`} />
                 <Tooltip formatter={(value: number | undefined) => `${(value ?? 0).toLocaleString('fr-FR')} €`} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar dataKey="Revenus" fill="#22c55e" radius={[3, 3, 0, 0]} />
@@ -292,33 +294,32 @@ export default function BudgetPage() {
                 <button
                   key={cat}
                   onClick={() => setFilterCat(cat)}
-                  className={filterCat === cat ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
-                  style={{ fontSize: 11 }}
+                  style={filterCat === cat ? { ...CU.btnSmall, background: CU.accent, color: '#fff', borderColor: CU.accent } : CU.btnSmall}
                 >
                   {cat === 'all' ? 'Tout' : `${CAT_ICONS[cat]} ${CAT_LABELS[cat]}`}
                 </button>
               ))}
             </div>
-            <button onClick={() => setShowTxModal(true)} className="btn btn-primary btn-sm">
+            <button onClick={() => setShowTxModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>
               + Ajouter
             </button>
           </div>
 
           {displayedTx.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
-              <div style={{ fontWeight: 600, marginBottom: 6 }}>Aucune transaction</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>📋</div>
+              <div style={CU.emptyTitle}>Aucune transaction</div>
+              <div style={CU.emptyDesc}>
                 Enregistrez vos revenus et dépenses pour suivre votre budget
               </div>
-              <button onClick={() => setShowTxModal(true)} className="btn btn-primary btn-sm">
+              <button onClick={() => setShowTxModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>
                 + Ajouter une transaction
               </button>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {displayedTx.map(tx => (
-                <div key={tx.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div key={tx.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
                     width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -327,10 +328,10 @@ export default function BudgetPage() {
                     {CAT_ICONS[tx.category]}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--fz-text, #1E293B)' }}>{tx.label}</div>
-                    <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: CU.text }}>{tx.label}</div>
+                    <div style={{ fontSize: 12, color: CU.textMuted }}>
                       {new Date(tx.date).toLocaleDateString('fr-FR')}
-                      {tx.is_recurring && <span style={{ marginLeft: 6, background: 'var(--accent)20', color: 'var(--accent)', padding: '1px 6px', borderRadius: 4, fontSize: 10 }}>Récurrent</span>}
+                      {tx.is_recurring && <span style={{ ...CU.badge, marginLeft: 6, fontSize: 10 }}>Récurrent</span>}
                     </div>
                   </div>
                   <div style={{ fontWeight: 700, fontSize: 15, color: CAT_COLORS[tx.category], flexShrink: 0 }}>
@@ -338,7 +339,7 @@ export default function BudgetPage() {
                   </div>
                   <button
                     onClick={() => handleDeleteTx(tx.id)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--fz-text-muted, #94A3B8)', fontSize: 16, padding: '4px 6px', flexShrink: 0 }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: CU.textMuted, fontSize: 16, padding: '4px 6px', flexShrink: 0 }}
                     title="Supprimer"
                   >
                     ×
@@ -354,18 +355,18 @@ export default function BudgetPage() {
       {activeSection === 'goals' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-            <button onClick={() => setShowGoalModal(true)} className="btn btn-primary btn-sm">
+            <button onClick={() => setShowGoalModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>
               + Nouvel objectif
             </button>
           </div>
           {goals.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>🎯</div>
-              <div style={{ fontWeight: 600, marginBottom: 6 }}>Aucun objectif</div>
-              <div style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)', marginBottom: 16 }}>
+            <div style={{ ...CU.card, ...CU.emptyState }}>
+              <div style={CU.emptyEmoji}>🎯</div>
+              <div style={CU.emptyTitle}>Aucun objectif</div>
+              <div style={CU.emptyDesc}>
                 Définissez des objectifs d&apos;épargne ou d&apos;investissement
               </div>
-              <button onClick={() => setShowGoalModal(true)} className="btn btn-primary btn-sm">
+              <button onClick={() => setShowGoalModal(true)} style={{ ...CU.btnPrimary, height: 32, fontSize: 12 }}>
                 + Créer un objectif
               </button>
             </div>
@@ -374,22 +375,22 @@ export default function BudgetPage() {
               {goals.map(goal => {
                 const pct = Math.min(100, Math.round((goal.current_cents / goal.target_cents) * 100));
                 return (
-                  <div key={goal.id} className="card" style={{ padding: '16px 20px' }}>
+                  <div key={goal.id} style={CU.card}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                       <div>
-                        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--fz-text, #1E293B)' }}>{goal.label}</div>
-                        <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>
+                        <div style={{ fontWeight: 700, fontSize: 15, color: CU.text }}>{goal.label}</div>
+                        <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>
                           {fmt(goal.current_cents)} / {fmt(goal.target_cents)}
                         </div>
                       </div>
-                      <div style={{ fontWeight: 700, fontSize: 18, color: pct >= 100 ? '#22c55e' : 'var(--accent)' }}>
+                      <div style={{ fontWeight: 700, fontSize: 18, color: pct >= 100 ? CU.success : CU.accent }}>
                         {pct}%
                       </div>
                     </div>
-                    <div style={{ height: 8, borderRadius: 4, background: 'var(--fz-bg-secondary, #F8FAFC)', overflow: 'hidden' }}>
+                    <div style={{ height: 8, borderRadius: 4, background: CU.bgSecondary, overflow: 'hidden' }}>
                       <div style={{
                         height: '100%', borderRadius: 4, width: `${pct}%`,
-                        background: pct >= 100 ? '#22c55e' : 'var(--accent)',
+                        background: pct >= 100 ? CU.success : CU.accent,
                         transition: 'width 0.6s ease',
                       }} />
                     </div>
@@ -406,17 +407,14 @@ export default function BudgetPage() {
 
       {/* Modal Add Transaction */}
       {showTxModal && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
-        }}>
-          <div className="card" style={{ width: '100%', maxWidth: 420, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>➕ Ajouter une transaction</h3>
+        <div style={CU.overlay}>
+          <div style={{ ...CU.modal, maxWidth: 420 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>➕ Ajouter une transaction</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Libellé</label>
+                <label style={CU.label}>Libellé</label>
                 <input
-                  className="input"
+                  style={CU.input}
                   placeholder="Ex: Salaire, Loyer..."
                   value={txForm.label}
                   onChange={e => setTxForm(p => ({ ...p, label: e.target.value }))}
@@ -424,9 +422,9 @@ export default function BudgetPage() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Montant (€)</label>
+                  <label style={CU.label}>Montant (€)</label>
                   <input
-                    className="input"
+                    style={CU.input}
                     type="number"
                     placeholder="0.00"
                     value={txForm.amount}
@@ -434,9 +432,9 @@ export default function BudgetPage() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Date</label>
+                  <label style={CU.label}>Date</label>
                   <input
-                    className="input"
+                    style={CU.input}
                     type="date"
                     value={txForm.date}
                     onChange={e => setTxForm(p => ({ ...p, date: e.target.value }))}
@@ -444,8 +442,8 @@ export default function BudgetPage() {
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Catégorie</label>
-                <select className="input" value={txForm.category} onChange={e => setTxForm(p => ({ ...p, category: e.target.value as TxCategory }))}>
+                <label style={CU.label}>Catégorie</label>
+                <select style={{ ...CU.select, width: '100%' }} value={txForm.category} onChange={e => setTxForm(p => ({ ...p, category: e.target.value as TxCategory }))}>
                   {Object.entries(CAT_LABELS).map(([k, v]) => <option key={k} value={k}>{CAT_ICONS[k as TxCategory]} {v}</option>)}
                 </select>
               </div>
@@ -455,8 +453,8 @@ export default function BudgetPage() {
               </label>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-              <button onClick={() => setShowTxModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
-              <button onClick={handleAddTx} className="btn btn-primary" style={{ flex: 1 }} disabled={txSaving}>
+              <button onClick={() => setShowTxModal(false)} style={{ ...CU.btnGhost, flex: 1 }}>Annuler</button>
+              <button onClick={handleAddTx} style={{ ...CU.btnPrimary, flex: 1 }} disabled={txSaving}>
                 {txSaving ? 'Enregistrement...' : 'Ajouter'}
               </button>
             </div>
@@ -466,26 +464,23 @@ export default function BudgetPage() {
 
       {/* Modal Add Goal */}
       {showGoalModal && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20,
-        }}>
-          <div className="card" style={{ width: '100%', maxWidth: 380, padding: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 20 }}>🎯 Nouvel objectif</h3>
+        <div style={CU.overlay}>
+          <div style={{ ...CU.modal, maxWidth: 380 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 16, marginBottom: 20 }}>🎯 Nouvel objectif</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Nom de l&apos;objectif</label>
+                <label style={CU.label}>Nom de l&apos;objectif</label>
                 <input
-                  className="input"
+                  style={CU.input}
                   placeholder="Ex: Fonds d'urgence, Voyage..."
                   value={goalForm.label}
                   onChange={e => setGoalForm(p => ({ ...p, label: e.target.value }))}
                 />
               </div>
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>Montant cible (€)</label>
+                <label style={CU.label}>Montant cible (€)</label>
                 <input
-                  className="input"
+                  style={CU.input}
                   type="number"
                   placeholder="0"
                   value={goalForm.target}
@@ -494,8 +489,8 @@ export default function BudgetPage() {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-              <button onClick={() => setShowGoalModal(false)} className="btn btn-ghost" style={{ flex: 1 }}>Annuler</button>
-              <button onClick={handleAddGoal} className="btn btn-primary" style={{ flex: 1 }} disabled={goalSaving}>
+              <button onClick={() => setShowGoalModal(false)} style={{ ...CU.btnGhost, flex: 1 }}>Annuler</button>
+              <button onClick={handleAddGoal} style={{ ...CU.btnPrimary, flex: 1 }} disabled={goalSaving}>
                 {goalSaving ? 'Création...' : 'Créer'}
               </button>
             </div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Calendrier
@@ -161,29 +162,26 @@ export default function CalendrierPage() {
 
   if (!mounted) return null;
 
-  const inputStyle: React.CSSProperties = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 };
-  const btnStyle: React.CSSProperties = { padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14 };
-
   return (
-    <div style={{ padding: isMobile ? 16 : 32, maxWidth: 1100, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-        <span style={{ fontSize: 28 }}>{meta.emoji}</span>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{meta.title}</h1>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{meta.emoji}</span>
+        <h1 style={CU.pageTitle}>{meta.title}</h1>
         <PageExplanation pageId="calendrier" text={meta.helpText} />
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 20, fontSize: 14 }}>{meta.subtitle}</p>
+      <p style={{ ...CU.pageSubtitle, marginBottom: 20 }}>{meta.subtitle}</p>
 
       {/* Nav + view toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={prevMonth} style={{ ...btnStyle, background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)', padding: '6px 12px' }}>◀</button>
-          <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', minWidth: 180, textAlign: 'center' }}>{MONTH_NAMES[month]} {year}</span>
-          <button onClick={nextMonth} style={{ ...btnStyle, background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)', padding: '6px 12px' }}>▶</button>
+          <button onClick={prevMonth} style={{ ...CU.btnGhost, padding: '0 12px' }}>◀</button>
+          <span style={{ fontSize: 18, fontWeight: 700, color: CU.text, minWidth: 180, textAlign: 'center' }}>{MONTH_NAMES[month]} {year}</span>
+          <button onClick={nextMonth} style={{ ...CU.btnGhost, padding: '0 12px' }}>▶</button>
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
           {(['month', 'week', 'list'] as ViewMode[]).map(v => (
-            <button key={v} onClick={() => setView(v)} style={{ ...btnStyle, background: view === v ? 'var(--accent)' : 'var(--bg-secondary)', color: view === v ? '#fff' : 'var(--text-secondary)', border: view === v ? 'none' : '1px solid var(--border-primary)', fontSize: 13, padding: '6px 14px' }}>
+            <button key={v} onClick={() => setView(v)} style={view === v ? { ...CU.btnPrimary, fontSize: 13, padding: '0 14px' } : { ...CU.btnGhost, fontSize: 13, padding: '0 14px' }}>
               {v === 'month' ? 'Mois' : v === 'week' ? 'Semaine' : 'Liste'}
             </button>
           ))}
@@ -194,10 +192,10 @@ export default function CalendrierPage() {
         {/* Calendar grid area */}
         <div style={{ flex: 1 }}>
           {view === 'month' && (
-            <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 8 : 16, border: '1px solid var(--border-primary)' }}>
+            <div style={{ ...CU.card, padding: isMobile ? 8 : 16 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
                 {DAY_NAMES.map(d => (
-                  <div key={d} style={{ textAlign: 'center', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', padding: 6 }}>{d}</div>
+                  <div key={d} style={{ textAlign: 'center', fontSize: 12, fontWeight: 600, color: CU.textSecondary, padding: 6 }}>{d}</div>
                 ))}
                 {monthDays.map(({ date, isCurrentMonth }, i) => {
                   const ds = dateStr(date);
@@ -205,8 +203,8 @@ export default function CalendrierPage() {
                   const isSelected = ds === selectedDate;
                   const dayEvents = eventsMap[ds] || [];
                   return (
-                    <div key={i} onClick={() => setSelectedDate(ds)} style={{ minHeight: isMobile ? 40 : 64, padding: 4, borderRadius: 8, cursor: 'pointer', background: isSelected ? 'var(--accent)' + '22' : 'var(--bg-primary)', border: isToday ? '2px solid var(--accent)' : isSelected ? '2px solid var(--accent)' : '1px solid transparent', opacity: isCurrentMonth ? 1 : 0.35, transition: 'background 0.15s' }}>
-                      <div style={{ fontSize: 13, fontWeight: isToday ? 700 : 400, color: isToday ? 'var(--accent)' : 'var(--text-primary)', textAlign: 'center' }}>{date.getDate()}</div>
+                    <div key={i} onClick={() => setSelectedDate(ds)} style={{ minHeight: isMobile ? 40 : 64, padding: 4, borderRadius: 8, cursor: 'pointer', background: isSelected ? CU.accentLight : CU.bg, border: isToday ? `2px solid ${CU.accent}` : isSelected ? `2px solid ${CU.accent}` : '1px solid transparent', opacity: isCurrentMonth ? 1 : 0.35, transition: 'background 0.15s' }}>
+                      <div style={{ fontSize: 13, fontWeight: isToday ? 700 : 400, color: isToday ? CU.accent : CU.text, textAlign: 'center' }}>{date.getDate()}</div>
                       <div style={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', marginTop: 2 }}>
                         {dayEvents.slice(0, 3).map(ev => (
                           <div key={ev.id} style={{ width: 6, height: 6, borderRadius: '50%', background: ev.color }} />
@@ -223,7 +221,7 @@ export default function CalendrierPage() {
           )}
 
           {view === 'week' && (
-            <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 8 : 16, border: '1px solid var(--border-primary)', overflowX: 'auto' }}>
+            <div style={{ ...CU.card, padding: isMobile ? 8 : 16, overflowX: 'auto' }}>
               <div style={{ display: 'grid', gridTemplateColumns: `60px repeat(7, 1fr)`, gap: 1, minWidth: isMobile ? 600 : undefined }}>
                 {/* Header */}
                 <div />
@@ -231,7 +229,7 @@ export default function CalendrierPage() {
                   const ds = dateStr(d);
                   const isToday = ds === todayStr;
                   return (
-                    <div key={ds} style={{ textAlign: 'center', padding: 6, fontWeight: isToday ? 700 : 400, color: isToday ? 'var(--accent)' : 'var(--text-primary)', fontSize: 13 }}>
+                    <div key={ds} style={{ textAlign: 'center', padding: 6, fontWeight: isToday ? 700 : 400, color: isToday ? CU.accent : CU.text, fontSize: 13 }}>
                       {DAY_NAMES[d.getDay() === 0 ? 6 : d.getDay() - 1]} {d.getDate()}
                     </div>
                   );
@@ -239,12 +237,12 @@ export default function CalendrierPage() {
                 {/* Hours */}
                 {HOURS.filter((_, i) => i >= 7 && i <= 21).map(hour => (
                   <>
-                    <div key={`h-${hour}`} style={{ fontSize: 11, color: 'var(--text-secondary)', textAlign: 'right', paddingRight: 6, paddingTop: 2 }}>{hour}</div>
+                    <div key={`h-${hour}`} style={{ fontSize: 11, color: CU.textSecondary, textAlign: 'right', paddingRight: 6, paddingTop: 2 }}>{hour}</div>
                     {weekDays.map(d => {
                       const ds = dateStr(d);
                       const hourEvents = (eventsMap[ds] || []).filter(e => e.time && e.time.startsWith(hour.slice(0, 2)));
                       return (
-                        <div key={`${ds}-${hour}`} onClick={() => { setSelectedDate(ds); }} style={{ minHeight: 32, borderTop: '1px solid var(--border-primary)', padding: 2, cursor: 'pointer' }}>
+                        <div key={`${ds}-${hour}`} onClick={() => { setSelectedDate(ds); }} style={{ minHeight: 32, borderTop: `1px solid ${CU.border}`, padding: 2, cursor: 'pointer' }}>
                           {hourEvents.map(ev => (
                             <div key={ev.id} onClick={e => { e.stopPropagation(); openForm(undefined, ev); }} style={{ fontSize: 10, background: ev.color + '33', color: ev.color, borderRadius: 4, padding: '1px 4px', marginBottom: 1, cursor: 'pointer', fontWeight: 600 }}>{ev.title}</div>
                           ))}
@@ -260,20 +258,20 @@ export default function CalendrierPage() {
           {view === 'list' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {events.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary)' }}>
-                  <div style={{ fontSize: 48, marginBottom: 12 }}>📅</div>
-                  <p>Aucun événement. Ajoutez-en un !</p>
+                <div style={CU.emptyState}>
+                  <div style={CU.emptyEmoji}>📅</div>
+                  <p style={CU.emptyDesc}>Aucun événement. Ajoutez-en un !</p>
                 </div>
               ) : (
                 [...events].sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time)).map(ev => (
-                  <div key={ev.id} style={{ background: 'var(--bg-secondary)', borderRadius: 10, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-primary)', borderLeft: `4px solid ${ev.color}` }}>
+                  <div key={ev.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderLeft: `4px solid ${ev.color}` }}>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{ev.title}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{ev.title}</div>
+                      <div style={{ fontSize: 12, color: CU.textSecondary }}>
                         {new Date(ev.date + 'T00:00').toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
                         {ev.time ? ` à ${ev.time}` : ''}
                       </div>
-                      {ev.description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{ev.description}</div>}
+                      {ev.description && <div style={{ fontSize: 12, color: CU.textSecondary, marginTop: 4 }}>{ev.description}</div>}
                     </div>
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button onClick={() => openForm(undefined, ev)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>✏️</button>
@@ -289,27 +287,27 @@ export default function CalendrierPage() {
         {/* Side panel: selected day */}
         {view !== 'list' && (
           <div style={{ width: isMobile ? '100%' : 300, flexShrink: 0 }}>
-            <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, border: '1px solid var(--border-primary)', position: isMobile ? 'static' : 'sticky', top: 80 }}>
-              <h3 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>
+            <div style={{ ...CU.card, padding: isMobile ? 16 : 20, position: isMobile ? 'static' : 'sticky', top: 80 }}>
+              <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>
                 {selectedDate ? new Date(selectedDate + 'T00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Sélectionnez un jour'}
               </h3>
               {selectedDate && (
                 <>
-                  {selectedEvents.length === 0 && <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Aucun événement ce jour.</p>}
+                  {selectedEvents.length === 0 && <p style={{ fontSize: 13, color: CU.textSecondary }}>Aucun événement ce jour.</p>}
                   {selectedEvents.map(ev => (
-                    <div key={ev.id} style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: 10, marginBottom: 8, borderLeft: `3px solid ${ev.color}` }}>
+                    <div key={ev.id} style={{ background: CU.bgSecondary, borderRadius: 8, padding: 10, marginBottom: 8, borderLeft: `3px solid ${ev.color}` }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{ev.title}</span>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{ev.title}</span>
                         <div style={{ display: 'flex', gap: 4 }}>
                           <button onClick={() => openForm(undefined, ev)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12 }}>✏️</button>
                           <button onClick={() => deleteEvent(ev.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, opacity: 0.5 }}>🗑️</button>
                         </div>
                       </div>
-                      {ev.time && <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{ev.time}</div>}
-                      {ev.description && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{ev.description}</div>}
+                      {ev.time && <div style={{ fontSize: 12, color: CU.textSecondary }}>{ev.time}</div>}
+                      {ev.description && <div style={{ fontSize: 12, color: CU.textSecondary, marginTop: 4 }}>{ev.description}</div>}
                     </div>
                   ))}
-                  <button onClick={() => openForm(selectedDate)} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff', width: '100%', marginTop: 8 }}>+ Ajouter</button>
+                  <button onClick={() => openForm(selectedDate)} style={{ ...CU.btnPrimary, width: '100%', marginTop: 8 }}>+ Ajouter</button>
                 </>
               )}
             </div>
@@ -319,23 +317,23 @@ export default function CalendrierPage() {
 
       {/* Event form modal */}
       {showForm && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 16 }} onClick={() => setShowForm(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: 'var(--bg-secondary)', borderRadius: 16, padding: 24, maxWidth: 440, width: '100%', border: '1px solid var(--border-primary)' }}>
-            <h3 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{editId ? 'Modifier' : 'Nouvel'} événement</h3>
-            <input placeholder="Titre" value={formTitle} onChange={e => setFormTitle(e.target.value)} style={{ ...inputStyle, marginBottom: 10 }} />
+        <div style={CU.overlay} onClick={() => setShowForm(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ ...CU.modal, maxWidth: 440 }}>
+            <h3 style={{ ...CU.sectionTitle, fontSize: 18, marginBottom: 16 }}>{editId ? 'Modifier' : 'Nouvel'} événement</h3>
+            <input placeholder="Titre" value={formTitle} onChange={e => setFormTitle(e.target.value)} style={{ ...CU.input, marginBottom: 10 }} />
             <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
-              <input type="date" value={formDate} onChange={e => setFormDate(e.target.value)} style={{ ...inputStyle, flex: 1 }} />
-              <input type="time" value={formTime} onChange={e => setFormTime(e.target.value)} style={{ ...inputStyle, flex: 1 }} />
+              <input type="date" value={formDate} onChange={e => setFormDate(e.target.value)} style={{ ...CU.input, flex: 1 }} />
+              <input type="time" value={formTime} onChange={e => setFormTime(e.target.value)} style={{ ...CU.input, flex: 1 }} />
             </div>
-            <textarea placeholder="Description (optionnel)" value={formDesc} onChange={e => setFormDesc(e.target.value)} rows={3} style={{ ...inputStyle, marginBottom: 10, resize: 'vertical' }} />
+            <textarea placeholder="Description (optionnel)" value={formDesc} onChange={e => setFormDesc(e.target.value)} rows={3} style={{ ...CU.textarea, marginBottom: 10 }} />
             <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
               {EVENT_COLORS.map(c => (
-                <button key={c} onClick={() => setFormColor(c)} style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: formColor === c ? '3px solid var(--text-primary)' : '2px solid transparent', cursor: 'pointer' }} />
+                <button key={c} onClick={() => setFormColor(c)} style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: formColor === c ? `3px solid ${CU.text}` : '2px solid transparent', cursor: 'pointer' }} />
               ))}
             </div>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button onClick={() => setShowForm(false)} style={{ ...btnStyle, background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)' }}>Annuler</button>
-              <button onClick={saveEvent} style={{ ...btnStyle, background: 'var(--accent)', color: '#fff' }}>Enregistrer</button>
+              <button onClick={() => setShowForm(false)} style={CU.btnGhost}>Annuler</button>
+              <button onClick={saveEvent} style={CU.btnPrimary}>Enregistrer</button>
             </div>
           </div>
         </div>
@@ -343,7 +341,7 @@ export default function CalendrierPage() {
 
       {/* Floating add button (list/month views) */}
       {view !== 'list' && !showForm && (
-        <button onClick={() => openForm(selectedDate || todayStr)} style={{ position: 'fixed', bottom: 24, right: 24, width: 56, height: 56, borderRadius: '50%', background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 24, fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.2)', zIndex: 100 }}>+</button>
+        <button onClick={() => openForm(selectedDate || todayStr)} style={{ position: 'fixed', bottom: 24, right: 24, width: 56, height: 56, borderRadius: '50%', background: CU.accent, color: '#fff', border: 'none', cursor: 'pointer', fontSize: 24, fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.2)', zIndex: 100 }}>+</button>
       )}
     </div>
   );

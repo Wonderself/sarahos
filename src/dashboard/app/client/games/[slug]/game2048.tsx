@@ -112,7 +112,7 @@ const TILE_COLORS: Record<number, { bg: string; fg: string }> = {
   512: { bg: '#a16207', fg: '#fff' },
   1024: { bg: '#854d0e', fg: '#fff' },
   2048: { bg: '#22c55e', fg: '#fff' },
-  4096: { bg: '#7c3aed', fg: '#fff' },
+  4096: { bg: 'var(--accent)', fg: '#fff' },
   8192: { bg: '#ec4899', fg: '#fff' },
 };
 
@@ -330,7 +330,7 @@ export default function Game2048() {
             <button
               onClick={initGame}
               style={{
-                background: '#7c3aed',
+                background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 10,

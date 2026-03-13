@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Pomodoro / Focus Timer
@@ -166,28 +167,25 @@ export default function PomodoroPage() {
 
   if (!mounted) return null;
 
-  const btnStyle: React.CSSProperties = { padding: '10px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 15 };
-  const statCard: React.CSSProperties = { background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, textAlign: 'center', border: '1px solid var(--border-primary)' };
-
   return (
-    <div style={{ padding: isMobile ? 16 : 32, maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ ...pageContainer(isMobile), maxWidth: 800 }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-        <span style={{ fontSize: 28 }}>{meta.emoji}</span>
-        <h1 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{meta.title}</h1>
+      <div style={headerRow()}>
+        <span style={emojiIcon(24)}>{meta.emoji}</span>
+        <h1 style={CU.pageTitle}>{meta.title}</h1>
         <PageExplanation pageId="pomodoro" text={meta.helpText} />
       </div>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: 24, fontSize: 14 }}>{meta.subtitle}</p>
+      <p style={{ ...CU.pageSubtitle, marginBottom: 24 }}>{meta.subtitle}</p>
 
       {/* Timer circle */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
         <div style={{ position: 'relative', width: 240, height: 240, marginBottom: 20 }}>
           <svg width={240} height={240} style={{ transform: 'rotate(-90deg)' }}>
-            <circle cx={120} cy={120} r={110} fill="none" stroke="var(--border-primary)" strokeWidth={8} />
+            <circle cx={120} cy={120} r={110} fill="none" stroke={CU.border} strokeWidth={8} />
             <circle cx={120} cy={120} r={110} fill="none" stroke={accentColor} strokeWidth={8} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - progress)} style={{ transition: 'stroke-dashoffset 0.5s ease' }} />
           </svg>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontSize: 48, fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{formatTime(timeLeft)}</div>
+            <div style={{ fontSize: 48, fontWeight: 700, color: CU.text, fontVariantNumeric: 'tabular-nums' }}>{formatTime(timeLeft)}</div>
             <div style={{ fontSize: 14, color: accentColor, fontWeight: 600, textTransform: 'uppercase' }}>
               {phase === 'work' ? 'Travail' : phase === 'break' ? 'Pause courte' : 'Pause longue'}
             </div>
@@ -195,15 +193,15 @@ export default function PomodoroPage() {
         </div>
 
         {/* Task input */}
-        <input placeholder="Sur quoi travaillez-vous ?" value={task} onChange={e => setTask(e.target.value)} style={{ width: '100%', maxWidth: 360, padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14, textAlign: 'center', marginBottom: 16 }} />
+        <input placeholder="Sur quoi travaillez-vous ?" value={task} onChange={e => setTask(e.target.value)} style={{ ...CU.input, maxWidth: 360, textAlign: 'center', marginBottom: 16 }} />
 
         {/* Controls */}
         <div style={{ display: 'flex', gap: 12 }}>
-          <button onClick={() => setRunning(!running)} style={{ ...btnStyle, background: accentColor, color: '#fff', minWidth: 100 }}>
+          <button onClick={() => setRunning(!running)} style={{ ...CU.btnPrimary, background: accentColor, minWidth: 100, fontSize: 15, height: 40 }}>
             {running ? 'Pause' : 'Démarrer'}
           </button>
-          <button onClick={reset} style={{ ...btnStyle, background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)' }}>Réinitialiser</button>
-          <button onClick={() => setShowSettings(!showSettings)} style={{ ...btnStyle, background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border-primary)' }}>
+          <button onClick={reset} style={{ ...CU.btnGhost, fontSize: 15, height: 40 }}>Réinitialiser</button>
+          <button onClick={() => setShowSettings(!showSettings)} style={{ ...CU.btnGhost, fontSize: 15, height: 40 }}>
             {showSettings ? 'Fermer' : 'Réglages'}
           </button>
         </div>
@@ -211,13 +209,13 @@ export default function PomodoroPage() {
 
       {/* Settings */}
       {showSettings && (
-        <div style={{ background: 'var(--bg-secondary)', borderRadius: 12, padding: isMobile ? 16 : 20, marginBottom: 24, border: '1px solid var(--border-primary)' }}>
-          <h3 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Réglages</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
+        <div style={{ ...CU.card, padding: isMobile ? 16 : 20, marginBottom: 24 }}>
+          <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>Réglages</h3>
+          <div style={cardGrid(isMobile, 2)}>
             {([['Travail (min)', 'work', state.settings.work], ['Pause courte (min)', 'shortBreak', state.settings.shortBreak], ['Pause longue (min)', 'longBreak', state.settings.longBreak], ['Pauses longues tous les', 'longBreakInterval', state.settings.longBreakInterval]] as const).map(([label, key, val]) => (
               <div key={key}>
-                <label style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>{label}</label>
-                <input type="number" min={1} max={120} value={val} onChange={e => updateSetting(key as 'work', Number(e.target.value) || 1)} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-primary)', background: 'var(--bg-primary)', color: 'var(--text-primary)', fontSize: 14 }} />
+                <label style={CU.label}>{label}</label>
+                <input type="number" min={1} max={120} value={val} onChange={e => updateSetting(key as 'work', Number(e.target.value) || 1)} style={CU.input} />
               </div>
             ))}
           </div>
@@ -225,42 +223,43 @@ export default function PomodoroPage() {
       )}
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1fr 1fr 1fr', gap: 12, marginBottom: 24 }}>
-        <div style={statCard}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>{todaySessions.length}</div>
-          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Sessions aujourd&apos;hui</div>
+      <div style={{ ...cardGrid(isMobile, 3), marginBottom: 24 }}>
+        <div style={{ ...CU.card, textAlign: 'center' }}>
+          <div style={CU.statValue}>{todaySessions.length}</div>
+          <div style={CU.statLabel}>Sessions aujourd&apos;hui</div>
         </div>
-        <div style={statCard}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>{weekSessions.length}</div>
-          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Cette semaine</div>
+        <div style={{ ...CU.card, textAlign: 'center' }}>
+          <div style={CU.statValue}>{weekSessions.length}</div>
+          <div style={CU.statLabel}>Cette semaine</div>
         </div>
-        <div style={statCard}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)' }}>{bestStreak}</div>
-          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Meilleur streak (jours)</div>
+        <div style={{ ...CU.card, textAlign: 'center' }}>
+          <div style={CU.statValue}>{bestStreak}</div>
+          <div style={CU.statLabel}>Meilleur streak (jours)</div>
         </div>
       </div>
 
       {/* History */}
-      <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12 }}>Historique des sessions</h3>
+      <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>Historique des sessions</h3>
       {state.sessions.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)' }}>
-          <div style={{ fontSize: 40, marginBottom: 8 }}>🍅</div>
-          <p>Aucune session terminée. Lancez votre premier Pomodoro !</p>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>🍅</div>
+          <div style={CU.emptyTitle}>Aucune session terminée</div>
+          <div style={CU.emptyDesc}>Lancez votre premier Pomodoro !</div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {state.sessions.slice(0, 20).map(s => (
-            <div key={s.id} style={{ background: 'var(--bg-secondary)', borderRadius: 10, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-primary)' }}>
+            <div key={s.id} style={{ ...CU.card, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 18 }}>{s.type === 'work' ? '🍅' : '☕'}</span>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{s.task}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: CU.text }}>{s.task}</div>
+                  <div style={{ fontSize: 12, color: CU.textSecondary }}>
                     {s.type === 'work' ? 'Travail' : s.type === 'break' ? 'Pause' : 'Pause longue'} — {s.duration} min
                   </div>
                 </div>
               </div>
-              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{new Date(s.completedAt).toLocaleDateString('fr-FR')} {new Date(s.completedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</div>
+              <div style={{ fontSize: 12, color: CU.textSecondary }}>{new Date(s.completedAt).toLocaleDateString('fr-FR')} {new Date(s.completedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
           ))}
         </div>

@@ -10,6 +10,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import HelpBubble from '../../../components/HelpBubble';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, searchInput, tabBar } from '../../../lib/page-styles';
 
 // ── Component ──
 
@@ -97,14 +98,14 @@ export default function MarketplacePage() {
   const featuredAgents = TEMPLATES.filter((t) => t.featured).slice(0, 6);
 
   return (
-    <div className="client-page-scrollable" style={{ padding: isMobile ? '16px 12px' : '32px 24px', maxWidth: 1200, margin: '0 auto' }}>
+    <div className="client-page-scrollable" style={pageContainer(isMobile)}>
       {/* ── Page Header ── */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>{PAGE_META.marketplace.emoji}</span>
+        <div style={headerRow()}>
+          <span style={emojiIcon(24)}>{PAGE_META.marketplace.emoji}</span>
           <div>
-            <h1 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text)', margin: 0 }}>{PAGE_META.marketplace.title}</h1>
-            <p style={{ fontSize: 12, color: 'var(--fz-text-muted)', margin: '2px 0 0' }}>{PAGE_META.marketplace.subtitle}</p>
+            <h1 style={CU.pageTitle}>{PAGE_META.marketplace.title}</h1>
+            <p style={CU.pageSubtitle}>{PAGE_META.marketplace.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.marketplace.helpText} />
         </div>
@@ -113,36 +114,32 @@ export default function MarketplacePage() {
 
       {/* ── Featured Section ── */}
       <div style={{ marginBottom: 40 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 16 }}>
+        <h2 style={{ ...CU.sectionTitle, fontSize: 18, marginBottom: 16 }}>
           ⭐ Assistants vedettes
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
-          {featuredAgents.map((agent, idx) => (
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: 12 }}>
+          {featuredAgents.map((agent) => (
             <div
               key={agent.id}
               style={{
-                background: '#F7F7F7',
-                borderRadius: 8,
+                ...CU.cardHoverable,
+                background: CU.bgSecondary,
                 padding: 24,
-                color: '#1A1A1A',
                 position: 'relative',
                 overflow: 'hidden',
-                transition: 'background 0.2s',
-                cursor: 'pointer',
-                border: '1px solid #E5E5E5',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#F0F0F0';
+                e.currentTarget.style.background = CU.accentLight;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#F7F7F7';
+                e.currentTarget.style.background = CU.bgSecondary;
               }}
             >
               <div style={{ fontSize: 40, marginBottom: 12 }}>{agent.icon}</div>
-              <h3 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 6 }}>{agent.name}</h3>
-              <p style={{ fontSize: isMobile ? 12 : 13, color: '#6B6B6B', marginBottom: 16, lineHeight: 1.5 }}>{agent.description}</p>
+              <h3 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, color: CU.text, marginBottom: 6 }}>{agent.name}</h3>
+              <p style={{ fontSize: isMobile ? 12 : 13, color: CU.textSecondary, marginBottom: 16, lineHeight: 1.5 }}>{agent.description}</p>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12, color: '#9B9B9B' }}>
+                <span style={{ fontSize: 12, color: CU.textMuted }}>
                   {agent.installs.toLocaleString('fr-FR')} installations
                 </span>
                 <button
@@ -152,16 +149,9 @@ export default function MarketplacePage() {
                   }}
                   disabled={installing === agent.id}
                   style={{
-                    background: installed.has(agent.id) ? '#F0F0F0' : '#1A1A1A',
-                    color: installed.has(agent.id) ? '#1A1A1A' : '#fff',
-                    border: '1px solid #E5E5E5',
-                    borderRadius: 8,
-                    padding: isMobile ? '10px 24px' : '8px 20px',
-                    fontSize: 13,
+                    ...(installed.has(agent.id) ? CU.btnGhost : CU.btnPrimary),
                     minHeight: isMobile ? 44 : 36,
-                    fontWeight: 600,
                     cursor: installing === agent.id ? 'wait' : 'pointer',
-                    transition: 'all 0.2s',
                   }}
                 >
                   {installing === agent.id ? '...' : installed.has(agent.id) ? <>✅ Installe</> : 'Installer'}
@@ -176,7 +166,7 @@ export default function MarketplacePage() {
       <div style={{ marginBottom: 24 }}>
         {/* Search bar */}
         <div style={{ position: 'relative', marginBottom: 16 }}>
-          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, color: CU.textMuted }}>
             🔍
           </span>
           <input
@@ -185,18 +175,12 @@ export default function MarketplacePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
-              width: '100%',
-              padding: '12px 16px 12px 42px',
-              borderRadius: 8,
-              border: '1px solid #E5E5E5',
-              background: '#fff',
-              color: '#1A1A1A',
-              fontSize: 14,
-              outline: 'none',
-              transition: 'border-color 0.2s',
+              ...CU.input,
+              padding: '0 16px 0 42px',
+              height: 40,
             }}
-            onFocus={(e) => (e.target.style.borderColor = '#1A1A1A')}
-            onBlur={(e) => (e.target.style.borderColor = '#E5E5E5')}
+            onFocus={(e) => (e.target.style.borderColor = CU.accent)}
+            onBlur={(e) => (e.target.style.borderColor = CU.border)}
           />
         </div>
 
@@ -206,18 +190,10 @@ export default function MarketplacePage() {
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              style={{
-                padding: '6px 16px',
-                borderRadius: 8,
-                border: category === cat ? '1px solid #1A1A1A' : '1px solid #E5E5E5',
-                background: category === cat ? '#1A1A1A' : '#fff',
-                color: category === cat ? '#fff' : '#6B6B6B',
-                fontSize: 13,
-                fontWeight: category === cat ? 600 : 400,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                whiteSpace: 'nowrap',
-              }}
+              style={category === cat
+                ? { ...CU.btnPrimary, height: 32, padding: '0 16px', fontSize: 13 }
+                : { ...CU.btnGhost, height: 32, padding: '0 16px', fontSize: 13, whiteSpace: 'nowrap' }
+              }
             >
               {cat}
             </button>
@@ -226,7 +202,7 @@ export default function MarketplacePage() {
 
         {/* Sort + count */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 13, color: 'var(--fz-text-muted, #94A3B8)' }}>
+          <span style={{ fontSize: 13, color: CU.textMuted }}>
             {filtered.length} assistant{filtered.length > 1 ? 's' : ''} trouve{filtered.length > 1 ? 's' : ''}
           </span>
           <div style={{ display: 'flex', gap: 4 }}>
@@ -238,18 +214,10 @@ export default function MarketplacePage() {
               <button
                 key={s.key}
                 onClick={() => setSort(s.key)}
-                style={{
-                  padding: isMobile ? '8px 14px' : '5px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  minHeight: isMobile ? 40 : 'auto',
-                  border: '1px solid #E5E5E5',
-                  background: sort === s.key ? '#1A1A1A' : '#fff',
-                  color: sort === s.key ? '#fff' : '#6B6B6B',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
+                style={sort === s.key
+                  ? { ...CU.btnPrimary, height: isMobile ? 40 : 28, padding: '0 12px', fontSize: 12 }
+                  : { ...CU.btnGhost, height: isMobile ? 40 : 28, padding: '0 12px', fontSize: 12 }
+                }
               >
                 {s.label}
               </button>
@@ -263,7 +231,7 @@ export default function MarketplacePage() {
         style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: 16,
+          gap: 12,
         }}
       >
         {filtered.map((agent) => (
@@ -278,21 +246,12 @@ export default function MarketplacePage() {
       </div>
 
       {filtered.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--fz-text-muted, #94A3B8)' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
-          <p style={{ fontSize: 15 }}>Aucun assistant ne correspond a votre recherche.</p>
+        <div style={CU.emptyState}>
+          <div style={CU.emptyEmoji}>🔍</div>
+          <p style={CU.emptyTitle}>Aucun assistant ne correspond a votre recherche.</p>
           <button
             onClick={() => { setSearch(''); setCategory('Tous'); }}
-            style={{
-              marginTop: 12,
-              padding: '8px 20px',
-              borderRadius: 8,
-              border: '1px solid #E5E5E5',
-              background: '#fff',
-              color: '#1A1A1A',
-              fontSize: 13,
-              cursor: 'pointer',
-            }}
+            style={CU.btnGhost}
           >
             Reinitialiser les filtres
           </button>
@@ -305,8 +264,8 @@ export default function MarketplacePage() {
           marginTop: 40,
           padding: '16px 24px',
           borderRadius: 8,
-          background: '#F7F7F7',
-          border: '1px solid #E5E5E5',
+          background: CU.bgSecondary,
+          border: `1px solid ${CU.border}`,
           display: 'flex',
           justifyContent: 'space-around',
           flexWrap: 'wrap',
@@ -336,25 +295,21 @@ function AgentCard({
   onToggle: () => void;
 }) {
   const isMobile = useIsMobile();
-  const catColor = '#1A1A1A';
 
   return (
     <div
       style={{
-        background: '#fff',
-        borderRadius: 8,
-        border: '1px solid #E5E5E5',
+        ...CU.cardHoverable,
         padding: 20,
-        transition: 'background 0.2s',
         cursor: 'default',
         display: 'flex',
         flexDirection: 'column',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.background = '#F7F7F7';
+        e.currentTarget.style.background = CU.bgSecondary;
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.background = '#fff';
+        e.currentTarget.style.background = CU.bg;
       }}
     >
       {/* Top row: icon + badges */}
@@ -362,72 +317,28 @@ function AgentCard({
         <span style={{ fontSize: 32 }}>{agent.icon}</span>
         <div style={{ display: 'flex', gap: 6 }}>
           {agent.badge === 'populaire' && (
-            <span
-              style={{
-                padding: '2px 8px',
-                borderRadius: 10,
-                background: '#F0F0F0',
-                color: '#1A1A1A',
-                fontSize: 11,
-                fontWeight: 600,
-              }}
-            >
-              📈 Populaire
-            </span>
+            <span style={CU.badge}>📈 Populaire</span>
           )}
           {agent.badge === 'nouveau' && (
-            <span
-              style={{
-                padding: '2px 8px',
-                borderRadius: 10,
-                background: '#F0F0F0',
-                color: '#1A1A1A',
-                fontSize: 11,
-                fontWeight: 600,
-              }}
-            >
-              ✨ Nouveau
-            </span>
+            <span style={CU.badge}>✨ Nouveau</span>
           )}
         </div>
       </div>
 
       {/* Name */}
-      <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--fz-text, #1E293B)', marginBottom: 4 }}>{agent.name}</h3>
+      <h3 style={{ fontSize: 16, fontWeight: 600, color: CU.text, marginBottom: 4 }}>{agent.name}</h3>
 
       {/* Category + tier badges */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-        <span
-          style={{
-            padding: '2px 10px',
-            borderRadius: 10,
-            background: '#F0F0F0',
-            color: '#1A1A1A',
-            fontSize: 11,
-            fontWeight: 600,
-          }}
-        >
-          {agent.category}
-        </span>
-        <span
-          style={{
-            padding: '2px 10px',
-            borderRadius: 10,
-            background: '#F0F0F0',
-            color: '#1A1A1A',
-            fontSize: 11,
-            fontWeight: 600,
-          }}
-        >
-          Gratuit
-        </span>
+        <span style={CU.badge}>{agent.category}</span>
+        <span style={CU.badgeSuccess}>Gratuit</span>
       </div>
 
       {/* Description */}
       <p
         style={{
           fontSize: 13,
-          color: 'var(--fz-text-secondary, #64748B)',
+          color: CU.textSecondary,
           lineHeight: 1.5,
           marginBottom: 16,
           flex: 1,
@@ -442,33 +353,16 @@ function AgentCard({
 
       {/* Footer: installs + button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)' }}>
+        <span style={{ fontSize: 12, color: CU.textMuted }}>
           {agent.installs.toLocaleString('fr-FR')} installs
         </span>
         <button
           onClick={onToggle}
           disabled={isInstalling}
           style={{
-            padding: isMobile ? '10px 20px' : '7px 18px',
-            borderRadius: 8,
+            ...(isInstalled ? CU.btnGhost : CU.btnPrimary),
             minHeight: isMobile ? 44 : 36,
-            border: '1px solid #E5E5E5',
-            background: isInstalled ? '#fff' : '#1A1A1A',
-            color: isInstalled ? '#6B6B6B' : '#fff',
-            fontSize: 13,
-            fontWeight: 600,
             cursor: isInstalling ? 'wait' : 'pointer',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            if (!isInstalled && !isInstalling) {
-              e.currentTarget.style.background = '#F5F5F5';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isInstalled && !isInstalling) {
-              e.currentTarget.style.background = '#1A1A1A';
-            }
           }}
         >
           {isInstalling ? '...' : isInstalled ? <>✅ Installe</> : 'Installer'}
@@ -481,8 +375,8 @@ function AgentCard({
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: 22, fontWeight: 700, color: '#1A1A1A' }}>{value}</div>
-      <div style={{ fontSize: 12, color: 'var(--fz-text-muted, #94A3B8)', marginTop: 2 }}>{label}</div>
+      <div style={CU.statValue}>{value}</div>
+      <div style={CU.statLabel}>{label}</div>
     </div>
   );
 }

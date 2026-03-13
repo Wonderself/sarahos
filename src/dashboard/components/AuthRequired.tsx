@@ -99,7 +99,7 @@ export default function AuthRequired({ children, pageName }: AuthRequiredProps) 
               height: 44,
               padding: '0 28px',
               borderRadius: 8,
-              background: '#7c3aed',
+              background: 'var(--accent)',
               color: '#fff',
               fontSize: 14,
               fontWeight: 600,
@@ -122,7 +122,7 @@ export default function AuthRequired({ children, pageName }: AuthRequiredProps) 
             <button
               onClick={() => setLoginModalOpen(true)}
               style={{
-                color: '#7c3aed',
+                color: 'var(--accent)',
                 textDecoration: 'none',
                 fontWeight: 500,
                 background: 'none',

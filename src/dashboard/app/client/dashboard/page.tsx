@@ -10,7 +10,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import HelpBubble from '../../../components/HelpBubble';
 import PageExplanation from '../../../components/PageExplanation';
 import { QUICK_ACTIONS, FEATURE_SECTIONS, PAGE_META } from '../../../lib/emoji-map';
-import { isAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
+import { isAuthenticated } from '../../../components/VisitorBanner';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 
 // ─── Types ───
@@ -56,7 +56,18 @@ export default function ClientDashboard() {
   const [isVisitor, setIsVisitor] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated()) { setIsVisitor(true); return; }
+    const isGuest = !isAuthenticated();
+    setIsVisitor(isGuest);
+    if (isGuest) {
+      // Demo data for guests — show real dashboard, not a wall
+      setStats({ totalMessages: 0, totalDocuments: 0, streak: 0 });
+      setWalletBalance(50_000_000); // 50 credits (signup bonus)
+      setActiveAgentIds(['fz-repondeur', 'fz-assistante', 'fz-communication']);
+      setBriefing('Bienvenue sur Freenzy.io ! Explorez le dashboard librement. Créez un compte gratuit pour activer vos agents IA et commencer à travailler.');
+      setBriefingLoaded(true);
+      setBriefingTime(new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+      return;
+    }
     loadStats();
     loadWallet();
     setActiveAgentIds(getActiveAgentIds());
@@ -251,6 +262,7 @@ export default function ClientDashboard() {
   }
 
   function refreshBriefing() {
+    if (isVisitor) return; // guests can't refresh
     try { localStorage.removeItem(BRIEFING_CACHE_KEY); } catch {}
     setBriefingLoaded(false);
     setBriefingTime('');
@@ -271,74 +283,6 @@ export default function ClientDashboard() {
   const todosDone = todos.filter(t => t.done).length;
   const todosTotal = todos.length;
 
-  if (isVisitor) {
-    return (
-      <div style={pageContainer(isMobile)}>
-        <VisitorEmptyState
-          icon="🚀"
-          title="Bienvenue sur Freenzy.io"
-          description="Votre OS d'entreprise propulsé par l'intelligence artificielle. Gérez vos agents IA, documents, communications et bien plus depuis un seul dashboard."
-          features={[
-            { icon: '🤖', label: 'Agents IA', desc: '100+ assistants spécialisés pour chaque besoin' },
-            { icon: '📄', label: 'Documents', desc: 'Génération automatique de contrats, emails, rapports' },
-            { icon: '💬', label: 'Chat IA', desc: 'Conversations intelligentes avec contexte métier' },
-            { icon: '📞', label: 'Répondeur IA', desc: 'Gestion automatisée de vos appels entrants' },
-            { icon: '📊', label: 'Analytics', desc: 'Tableaux de bord et suivi de performance' },
-            { icon: '🎮', label: 'Arcade', desc: 'Gamification et récompenses intégrées' },
-          ]}
-        />
-
-        {/* Feature Sections Grid — visible to visitors */}
-        <div style={{ marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={emojiIcon(16)}>🧭</span>
-            <span style={{ ...CU.sectionTitle, flex: 1 }}>Explorez les fonctionnalités</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {FEATURE_SECTIONS.map(section => (
-              <div key={section.id} style={{
-                ...CU.card, padding: 0, overflow: 'hidden',
-              }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '12px 16px',
-                  borderBottom: `1px solid ${CU.border}`,
-                  background: CU.bgSecondary,
-                }}>
-                  <span style={{ fontSize: 16 }}>{section.emoji}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={CU.sectionTitle}>{section.title}</div>
-                    <div style={CU.pageSubtitle}>{section.subtitle}</div>
-                  </div>
-                </div>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(160px, 1fr))',
-                  gap: 0,
-                }}>
-                  {section.items.map(item => (
-                    <div key={item.id} style={{
-                      display: 'flex', alignItems: 'center', gap: 10,
-                      padding: '12px 16px',
-                      borderBottom: `1px solid ${CU.border}`,
-                      opacity: 0.7,
-                    }}>
-                      <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{item.label}</div>
-                        <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 1 }}>{item.desc}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div style={pageContainer(isMobile)}>
       {showWelcome && (
@@ -350,7 +294,7 @@ export default function ClientDashboard() {
         <span style={emojiIcon(20)}>👋</span>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span style={{ ...CU.pageTitle, fontSize: 16 }}>
-            {greeting}, {userName || 'cher client'}
+            {greeting}{userName ? `, ${userName}` : ''}
           </span>
           <span style={CU.pageSubtitle}>
             {todayStr}

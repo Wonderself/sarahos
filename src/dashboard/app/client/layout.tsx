@@ -522,6 +522,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     // Dark mode removed — always light
 
+    // Resize listener — keep isDesktop in sync
+    const onResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener('resize', onResize);
+
     const interval = setInterval(refreshGamification, 30000);
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'fz_session' && !e.newValue) {
@@ -555,6 +559,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     return () => {
       clearInterval(interval);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('storage', onStorage);
       window.removeEventListener('offline', goOffline);
       window.removeEventListener('online', goOnline);
@@ -885,12 +890,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     )}
     <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
       {/* Mobile Top Bar — hamburger in top-right */}
-      <div className="mobile-topbar" style={{ height: 48, background: '#fff', borderBottom: '1px solid #E5E5E5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px 0 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: '#1A1A1A' }}>
+      <div className="mobile-topbar" style={{ background: '#fff', borderBottom: '1px solid #E5E5E5', padding: '0 8px 0 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: '#1A1A1A', overflow: 'hidden' }}>
+          <span style={{ fontWeight: 700, fontSize: 14, letterSpacing: '-0.02em', flexShrink: 0 }}>freenzy.io</span>
+          <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B', flexShrink: 0 }}>Beta Test 1</span>
           {(() => {
             const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
             const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-            return meta ? <><span>{meta.emoji}</span><span>{meta.title}</span></> : <><span style={{ fontWeight: 700 }}>freenzy.io</span><span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B', marginLeft: 4 }}>Beta Test 1</span></>;
+            return meta ? <><span style={{ color: '#E5E5E5', margin: '0 2px' }}>|</span><span style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{meta.emoji} {meta.title}</span></> : null;
           })()}
         </div>
         <button
@@ -908,7 +915,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <div
           className="sidebar-overlay active"
           onClick={() => setSidebarExpanded(false)}
-          style={{ left: isDesktop ? 56 : 0 }}
         />
       )}
 
@@ -1077,7 +1083,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         )}
 
         {/* Navigation — relative container for customize panel overlay */}
-        <div className="sidebar-nav" style={{ position: 'relative', flex: 1 }}>
+        <div className="sidebar-nav" style={{ position: 'relative', flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch' }}>
 
           {/* Customize Panel */}
           {customizeOpen && (
@@ -1433,7 +1439,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </div>
 
         {/* Footer compact — avatar + name + settings + logout (or login link for guests) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderTop: '1px solid #E5E5E5' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', paddingBottom: 'max(8px, env(safe-area-inset-bottom, 0px))', borderTop: '1px solid #E5E5E5', flexShrink: 0 }}>
           {session ? (
             <>
               <div style={{

@@ -102,7 +102,7 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
           return;
         }
 
-        const delay = parts[1];
+        const delay = parts[1] || '24h';
         const id = parts.slice(2).join('_');
         const intervals: Record<string, string> = { '2h': '2 hours', '24h': '24 hours', '48h': '48 hours', 'week': '7 days' };
         const interval = intervals[delay] || '24 hours';
@@ -188,8 +188,8 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
 
       if (data.startsWith('confirm_credits_')) {
         const parts = data.replace('confirm_credits_', '').split('_');
-        const email = parts[0];
-        const amount = parts[1];
+        const email = parts[0] || '';
+        const amount = parts[1] || '0';
         await dbQuery(`UPDATE users SET credits = credits + ${amount} WHERE email = '${email.replace(/'/g, "''")}'`);
         await dbQuery(`INSERT INTO credit_transactions (user_id, amount, reason, created_at) SELECT id, ${amount}, 'admin manual', NOW() FROM users WHERE email = '${email.replace(/'/g, "''")}'`);
         await bot.answerCallbackQuery(query.id, { text: '✅ Crédits ajoutés' });

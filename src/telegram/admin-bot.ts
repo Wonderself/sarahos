@@ -6,7 +6,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { spawn } from 'child_process';
 import { resetHistory } from './commands/chat-command';
 
-const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
+export const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 
 // ─── DB Helper ─────────────────────────────────────────────────
 // Uses psql directly (no pg dependency needed)
@@ -156,7 +156,7 @@ _Envoie une photo pour l'analyser_
   });
 
   // ── /users ──
-  bot.onText(/\/users(?:\s+(\d+))?/, async (msg, match) => {
+  bot.onText(/\/users(?:\s+(\d+))?/, async (msg, _match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const total = await dbQuery('SELECT COUNT(*) FROM users');
@@ -425,7 +425,7 @@ ${topProfessions.split('\n').map((l: string) => {
     const lines = items.split('\n').filter(Boolean);
     let backlogMsg = '📋 *Backlog Produit*\n\n';
     for (const line of lines) {
-      const [id, title, priority, effort, impact] = line.split('|');
+      const [_id, title, priority, effort, impact] = line.split('|');
       backlogMsg += `• [${priority}] *${title}* — Effort: ${effort}, Impact: ${impact}\n`;
     }
 

@@ -47,7 +47,7 @@ export const Memory = {
    */
   async save(category: string, content: string): Promise<void> {
     ensureFile();
-    const sectionHeader = SECTION_MAP[category] || SECTION_MAP.strategic;
+    const sectionHeader = SECTION_MAP[category] || SECTION_MAP['strategic'] || '## Notes stratégiques';
     const date = new Date().toISOString().split('T')[0];
     const entry = `\n- **${date}** — ${content}`;
 

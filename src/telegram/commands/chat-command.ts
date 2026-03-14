@@ -149,9 +149,9 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
     const fullResponse = assistantText + actionHint;
 
     // Send response (split if needed)
-    const parts = splitMessage(fullResponse);
+    const parts: string[] = splitMessage(fullResponse);
     if (parts.length === 1) {
-      await streamer.finish(parts[0], {
+      await streamer.finish(parts[0] ?? '', {
         inline_keyboard: [
           [
             { text: '🔄 Continuer', callback_data: 'chat_continue' },
@@ -161,11 +161,12 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
         ],
       });
     } else {
-      await streamer.finish(parts[0]);
+      await streamer.finish(parts[0] ?? '');
       for (let i = 1; i < parts.length; i++) {
         const isLast = i === parts.length - 1;
+        const part = parts[i] ?? '';
         if (isLast) {
-          await bot.sendMessage(chatId, parts[i], {
+          await bot.sendMessage(chatId, part, {
             parse_mode: 'Markdown',
             reply_markup: {
               inline_keyboard: [
@@ -178,7 +179,7 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
             },
           });
         } else {
-          await bot.sendMessage(chatId, parts[i], { parse_mode: 'Markdown' });
+          await bot.sendMessage(chatId, part, { parse_mode: 'Markdown' });
         }
       }
     }
@@ -201,7 +202,8 @@ export function getLastAssistantMessage(chatId: string): string | null {
   const history = conversationHistory.get(chatId);
   if (!history) return null;
   for (let i = history.length - 1; i >= 0; i--) {
-    if (history[i].role === 'assistant') return history[i].content;
+    const msg = history[i];
+    if (msg && msg.role === 'assistant') return msg.content;
   }
   return null;
 }

@@ -5,12 +5,12 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { TelegramChannels } from './channels';
 
-let bot: TelegramBot;
-let adminChatId: string;
+export let proactiveBot: TelegramBot;
+export let proactiveAdminChatId: string;
 
 export function initProactiveNotifications(botInstance: TelegramBot, chatId: string): void {
-  bot = botInstance;
-  adminChatId = chatId;
+  proactiveBot = botInstance;
+  proactiveAdminChatId = chatId;
 }
 
 /**

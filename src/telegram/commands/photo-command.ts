@@ -19,7 +19,7 @@ export function registerPhotoCommand(bot: TelegramBot, adminChatId: string): voi
     if (!photos || photos.length === 0) return;
 
     // Get highest resolution photo
-    const photo = photos[photos.length - 1];
+    const photo = photos[photos.length - 1]!;
     const caption = msg.caption || '';
 
     if (!ANTHROPIC_API_KEY) {
@@ -33,7 +33,7 @@ export function registerPhotoCommand(bot: TelegramBot, adminChatId: string): voi
     try {
       // Download photo from Telegram
       const file = await bot.getFile(photo.file_id);
-      const fileUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
+      const fileUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path || ''}`;
 
       const imageResponse = await fetch(fileUrl);
       if (!imageResponse.ok) throw new Error('Impossible de télécharger l\'image');
@@ -135,15 +135,15 @@ Sois précis et actionnable.`;
       }
 
       const fullResponse = `📸 *Analyse d'image*\n\n${analysis}`;
-      const parts = splitMessage(fullResponse);
+      const parts: string[] = splitMessage(fullResponse);
 
       if (parts.length === 1) {
-        await streamer.finish(parts[0], { inline_keyboard: buttons });
+        await streamer.finish(parts[0] ?? '', { inline_keyboard: buttons });
       } else {
-        await streamer.finish(parts[0]);
+        await streamer.finish(parts[0] ?? '');
         for (let i = 1; i < parts.length; i++) {
           const isLast = i === parts.length - 1;
-          await bot.sendMessage(chatId, parts[i], {
+          await bot.sendMessage(chatId, parts[i] ?? '', {
             parse_mode: 'Markdown',
             reply_markup: isLast ? { inline_keyboard: buttons } : undefined,
           });

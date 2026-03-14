@@ -78,6 +78,25 @@
 - **Variables .env optionnelles** : TELEGRAM_ALERTS_CHANNEL, TELEGRAM_BUSINESS_CHANNEL, TELEGRAM_TECH_CHANNEL, ANTHROPIC_API_KEY, COOLIFY_WEBHOOK_URL, STRIPE_SECRET_KEY, DB_PASSWORD, PROJECT_ROOT
 - **Lancement** : `npx ts-node src/telegram/index.ts` ou import `startTelegramBot()` depuis le serveur
 
+## SESSION 3b — AGENTS 01-10 (prompts complets)
+- **Statut** : TERMINE
+- **Fichiers** (10) dans `src/config/agents/` :
+  - `agent-01-secretaire-medicale.ts` — id: secretaire-medicale, Sonnet, 2cr, 1647 mots, 5 exemples
+  - `agent-02-devis-pro.ts` — id: devis-pro-artisan, Sonnet, 3cr, 2389 mots, 5 exemples
+  - `agent-03-reputation-avis.ts` — id: reputation-google, Sonnet, 1cr, 1156 mots, 5 exemples
+  - `agent-04-content-linkedin.ts` — id: content-linkedin, Sonnet, 2cr, 1562 mots, 5 exemples
+  - `agent-05-sav-auto.ts` — id: sav-auto, Haiku, 1cr, 1489 mots, 6 exemples
+  - `agent-06-documents.ts` — id: documents-juridiques, Opus, 5cr, 2247 mots, 5 exemples
+  - `agent-07-relances.ts` — id: relances-clients, Haiku, 1cr, 1259 mots, 6 exemples
+  - `agent-08-reporting.ts` — id: reporting-analytics, Sonnet, 2cr, 1306 mots, 5 exemples
+  - `agent-09-social-food.ts` — id: social-media-food, Sonnet, 2cr, 1684 mots, 8 exemples
+  - `agent-10-paniers-abandonnes.ts` — id: paniers-abandonnes, Haiku, 1cr, 1407 mots, 6 exemples
+- **Total** : 4190 lignes, ~16 000 mots de system prompts, 56 exemples
+- **Modeles** : Haiku (3 agents L1), Sonnet (6 agents L2), Opus (1 agent L3)
+- **Interface** : AgentConfig uniforme (13 champs) — tous valides TypeScript
+- **Variables dynamiques** : user.nom, user.profession, user.sub_profession, business.nom, business.ville, business.adresse_complete, etc.
+- **Profils cibles couverts** : sante, artisan, coach, consultant, agence, pme, ecommerce, restaurant, immo, liberal, particulier
+
 ---
 
-**S1 + S2 + S3 terminees. Pret pour S4.**
+**S1 + S2 + S3 + S3b terminees. Pret pour S4.**

@@ -313,6 +313,60 @@ Jour plus calme en volume mais panier moyen en hausse (+10.5%). La baisse de com
 2. Si le CA est en dessous de la moyenne 3 jours de suite → déclencher une action (email flash promo / story Instagram)
 
 Aucune alerte critique.`
+    },
+    {
+      input: 'Rapport hebdo RH : 12 employés, 2 absents cette semaine (maladie), 1 recrutement en cours (développeur), 3 entretiens annuels réalisés sur 12 prévus.',
+      output: `RAPPORT HEBDOMADAIRE RH — {{ business.nom }} — Semaine [N]
+
+📊 EFFECTIFS :
+┌──────────────────────┬──────────┐
+│ Effectif total       │ 12       │
+│ Présents semaine     │ 10       │
+│ Absents (maladie)    │ 2        │
+│ Taux présence        │ 83.3%    │
+│ Recrutements ouverts │ 1        │
+└──────────────────────┴──────────┘
+
+Entretiens annuels :  ██████░░░░░░░░░░░░░  25% (3/12)
+
+ANALYSE :
+Taux d'absence de 16.7% cette semaine — au-dessus de la moyenne nationale (4-5%). Si les 2 absences sont ponctuelles et non liées, pas d'alerte. Si récurrence → surveiller la charge de travail et le moral de l'équipe.
+
+Entretiens annuels : seulement 25% réalisés. Au rythme actuel (3/semaine), il faudra 3 semaines supplémentaires. Planifier les 9 restants sur les 2 prochaines semaines pour respecter le calendrier.
+
+RECOMMANDATIONS :
+1. [HAUTE] Accélérer les entretiens annuels — planifier 5 la semaine prochaine et 4 la suivante
+2. [MOYENNE] Vérifier l'avancement du recrutement développeur — combien de candidatures reçues, prochaines étapes ?
+3. [BASSE] Si les absences maladie persistent, envisager un point bien-être avec l'équipe`
+    },
+    {
+      input: 'Dashboard mensuel boutique en ligne mars : 1847 visites, 89 commandes, CA 14 230€, taux conversion 4.8%, 12 retours, coût pub 2100€.',
+      output: `RAPPORT MENSUEL E-COMMERCE — {{ business.nom }} — Mars 2026
+
+📊 PERFORMANCE GLOBALE :
+┌──────────────────────┬──────────┬──────────┬────────┐
+│ Métrique             │ Mars     │ Objectif │ Atteint│
+├──────────────────────┼──────────┼──────────┼────────┤
+│ Visites              │ 1 847    │ —        │ —      │
+│ Commandes            │ 89       │ —        │ —      │
+│ CA                   │ 14 230€  │ —        │ —      │
+│ Taux conversion      │ 4.8%     │ 3%       │ 160% 🟢│
+│ Panier moyen         │ 159.89€  │ —        │ —      │
+│ Retours              │ 12       │ —        │ 13.5%  │
+│ Coût acquisition     │ 2 100€   │ —        │ —      │
+│ ROAS                 │ 6.78x    │ 3x       │ 226% 🟢│
+│ CPA                  │ 23.60€   │ —        │ —      │
+└──────────────────────┴──────────┴──────────┴────────┘
+
+ANALYSE :
+Excellent mois. Taux de conversion à 4.8% (bien au-dessus du benchmark e-commerce de 2-3%). ROAS de 6.78x = chaque euro publicitaire rapporte 6.78€. CPA de 23.60€ par commande est très compétitif.
+
+Point de vigilance : taux de retour à 13.5% (12/89). La moyenne e-commerce est de 20-30% (mode) donc c'est acceptable, mais identifier si un produit concentre les retours.
+
+RECOMMANDATIONS :
+1. [HAUTE] Augmenter le budget pub — le ROAS de 6.78x indique une marge d'investissement. Tester +500€ en avril
+2. [MOYENNE] Analyser les 12 retours — motifs et produits concernés pour réduire encore le taux
+3. [BASSE] Optimiser les pages produit avec le meilleur taux de conversion pour répliquer leur structure`
     }
   ],
   tags: ['reporting', 'analytics', 'KPI', 'tableau de bord', 'data', 'business intelligence'],

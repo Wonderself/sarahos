@@ -235,7 +235,7 @@ Connectez votre numéro WhatsApp Business à Freenzy et laissez l'IA répondre i
     content: `L'adoption de l'IA en entreprise pose des questions légitimes sur la **protection des données personnelles**. Voici les 7 règles essentielles.
 
 **Règle 1 : Hébergement européen**
-Vos données doivent rester en Europe. Freenzy héberge toutes les données sur des serveurs européens (OVH, France).
+Vos données doivent rester en Europe. Freenzy héberge toutes les données sur des serveurs européens (Hetzner, Allemagne).
 
 **Règle 2 : Pas d'entraînement sur vos données**
 Vérifiez que le fournisseur d'IA ne s'entraîne pas sur vos conversations. Chez Freenzy, c'est garanti par contrat.

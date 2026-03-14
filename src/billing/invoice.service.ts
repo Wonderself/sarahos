@@ -102,7 +102,7 @@ class InvoiceService {
   <div class="parties">
     <div class="party">
       <h3>Emetteur</h3>
-      <p><strong>FREENZY.IO SAS</strong><br>Intelligence Artificielle<br>Netanya, Israel<br>contact@freenzy.io</p>
+      <p><strong>FREENZY.IO SAS</strong><br>Intelligence Artificielle<br>Tel Aviv, Israel<br>contact@freenzy.io</p>
     </div>
     <div class="party">
       <h3>Client</h3>

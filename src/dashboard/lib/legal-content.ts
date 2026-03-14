@@ -2,7 +2,7 @@
 // All legal text as constants for version control and easy editing
 
 export const LEGAL_LAST_UPDATED = '2 mars 2026';
-export const COMPANY_NAME = 'SAS Freenzy.io France';
+export const COMPANY_NAME = 'Freenzy Ltd';
 export const COMPANY_HOLDING = 'Freenzy Ltd';
 export const COMPANY_EMAIL = 'contact@freenzy.io';
 export const COMPANY_SITE = 'https://freenzy.io';
@@ -119,9 +119,9 @@ L'Utilisateur sera informe des modifications substantielles par email ou notific
   {
     id: 'droit',
     title: 'Article 10 — Droit applicable et litiges',
-    content: `Les presentes CGU sont soumises au droit francais.
+    content: `Les presentes CGU sont soumises au droit israelien.
 
-En cas de litige, les parties s'engagent a rechercher une solution amiable. A defaut, les tribunaux competents de Paris seront seuls competents.
+En cas de litige, les parties s'engagent a rechercher une solution amiable. A defaut, les tribunaux competents de Tel Aviv (Israel) seront seuls competents. Pour les Utilisateurs residant dans l'Union Europeenne, les dispositions imperatives du droit de la consommation de leur pays de residence restent applicables.
 
 Pour toute question relative aux presentes CGU, contactez-nous a : ${COMPANY_EMAIL}`,
   },
@@ -189,7 +189,7 @@ Les couts exacts sont affiches dans l'interface avant chaque action. ${COMPANY_N
 
 Conformement aux dispositions du Code de la consommation, l'Utilisateur peut recourir gratuitement au service de mediation de la consommation. Le mediateur sera designe ulterieurement et ses coordonnees communiquees sur le Site.
 
-Les presentes CGV sont soumises au droit francais. Les tribunaux de Paris sont seuls competents en cas de litige.`,
+Les presentes CGV sont soumises au droit israelien. Les tribunaux de Tel Aviv (Israel) sont seuls competents en cas de litige. Pour les consommateurs residant dans l'Union Europeenne, les dispositions imperatives du droit local restent applicables.`,
   },
 ];
 
@@ -202,13 +202,11 @@ export const MENTIONS_SECTIONS = [
     id: 'editeur',
     title: 'Editeur du site',
     content: `**${COMPANY_NAME}**
-Societe par Actions Simplifiee (SAS)
-Capital social : [a completer]
-RCS : [a completer]
-Siege social : [a completer — France]
-Numero de TVA intracommunautaire : [a completer]
+Societe de droit israelien (Israeli Limited Company)
+Siege social : Tel Aviv, Israel
+Numero d'entreprise israelien : [a completer]
 
-Filiale de **${COMPANY_HOLDING}** (holding)
+L'interface du Service est en francais car la plateforme s'adresse aux utilisateurs francophones (France, Belgique). Freenzy Ltd est une societe israelienne.
 
 Directeur de la publication : [a completer]
 Contact : ${COMPANY_EMAIL}

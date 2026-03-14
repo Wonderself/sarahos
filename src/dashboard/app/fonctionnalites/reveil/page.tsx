@@ -333,7 +333,7 @@ export default function ReveilPage() {
           {/* Briefing items */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
-              { icon: '☀️', iconLabel: 'météo locale ensoleillée', label: 'Météo', text: 'Netanya : 22°C, ensoleillé. Parfait pour attaquer la journée !' },
+              { icon: '☀️', iconLabel: 'météo locale ensoleillée', label: 'Météo', text: 'Tel Aviv : 22°C, ensoleillé. Parfait pour attaquer la journée !' },
               { icon: '📰', iconLabel: 'actualités du jour résumées', label: 'Actualités', text: 'L\'IA générative atteint un nouveau cap : 1 milliard d\'utilisateurs actifs.' },
               { icon: '💬', iconLabel: 'citation inspirante du jour', label: 'Citation', text: '« Le succès n\'est pas final, l\'échec n\'est pas fatal. C\'est le courage de continuer qui compte. » — Churchill' },
               { icon: '📅', iconLabel: 'agenda rendez-vous du jour', label: 'Agenda', text: '3 rendez-vous aujourd\'hui. Le premier à 10h avec Dupont & Fils.' },

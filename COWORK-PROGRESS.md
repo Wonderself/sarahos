@@ -53,6 +53,31 @@
 - **Variables env requises** : `GOOGLE_PLACES_API_KEY`, `ANTHROPIC_API_KEY`
 - **Erreurs** : Aucune
 
+## SESSION 3 — TELEGRAM BOT COMPLET (11 features)
+- **Statut** : TERMINE
+- **Fichiers crees** (12) :
+  - `src/telegram/index.ts` — Point d'entree, lance le bot avec toutes les features
+  - `src/telegram/admin-bot.ts` — Feature 1: Commandes principales (/start /status /users /revenue /errors /pending /approve /reject /deploy /backup /report /broadcast /credits /user /backlog /reset)
+  - `src/telegram/commands/claude-command.ts` — Feature 2: /claude avec progression temps reel (spawn + stream-json)
+  - `src/telegram/commands/think-command.ts` — Feature 3: /think Extended Thinking (claude-opus-4-6, budget 10k tokens)
+  - `src/telegram/commands/chat-command.ts` — Feature 4: /chat avec memoire (20 messages, contexte CLAUDE.md, Sonnet)
+  - `src/telegram/commands/photo-command.ts` — Feature 5: Analyse photo automatique (Vision, detection bug/maquette/concurrent)
+  - `src/telegram/utils/streaming.ts` — Feature 6: TelegramStreamer (live typing, rate limit, split 4096 chars)
+  - `src/telegram/channels.ts` — Feature 7: Multi-canaux (alerts, business, tech, admin) avec fallback ADMIN_CHAT_ID
+  - `src/telegram/memory.ts` — Feature 8: MEMORY.md (save/read/search par categorie)
+  - `src/telegram/callbacks.ts` — Feature 9: Callbacks inline (approve/reject/postpone/deploy/credits/fix/implement)
+  - `src/telegram/proactive-notifications.ts` — Feature 10: Notifications auto (new user, payment, erreur critique, disque, milestones, churn)
+  - `src/telegram/daily-brief.ts` — Feature 11: Brief CEO quotidien 8h Netanya (revenus, users, agent star, validations, quick win)
+- **Securite** : ADMIN_CHAT_ID verifie sur CHAQUE message, ignore silencieusement les autres
+- **DB** : Queries via psql spawn (pas de dependance pg)
+- **API** : Anthropic SDK via fetch direct (Opus pour /think, Sonnet pour /chat et /photo)
+- **Callbacks** : processUpdate() pour simuler les commandes depuis les boutons inline
+- **TypeScript** : 0 erreurs (tsc --noEmit --skipLibCheck)
+- **Packages installes** : node-telegram-bot-api, @types/node-telegram-bot-api, sharp, @types/sharp
+- **Variables .env requises** : TELEGRAM_BOT_TOKEN, TELEGRAM_ADMIN_CHAT_ID (6238804698)
+- **Variables .env optionnelles** : TELEGRAM_ALERTS_CHANNEL, TELEGRAM_BUSINESS_CHANNEL, TELEGRAM_TECH_CHANNEL, ANTHROPIC_API_KEY, COOLIFY_WEBHOOK_URL, STRIPE_SECRET_KEY, DB_PASSWORD, PROJECT_ROOT
+- **Lancement** : `npx ts-node src/telegram/index.ts` ou import `startTelegramBot()` depuis le serveur
+
 ---
 
-**S1 + S2 terminees. Pret pour S3.**
+**S1 + S2 + S3 terminees. Pret pour S4.**

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ReferralService } from '../../../../../lib/referral/ReferralService';
+import { ReferralService } from '../../../../lib/referral/ReferralService';
 
 /**
  * GET /api/referral/info?code=XXXXXX — Public endpoint.

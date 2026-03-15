@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { chat } from '../../../../../lib/support-chat/SupportChatService';
+import { chat } from '../../../../lib/support-chat/SupportChatService';
 
 // ─── Rate limit store (per session, in-memory) ────────────
 

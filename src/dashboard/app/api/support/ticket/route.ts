@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createTicket, notifyTelegram } from '../../../../../lib/support-chat/SupportChatService';
+import { createTicket, notifyTelegram } from '../../../../lib/support-chat/SupportChatService';
 
 // ─── POST /api/support/ticket ──────────────────────────────
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ReferralService } from '../../../../lib/referral/ReferralService';
+import { ReferralService } from '../../../lib/referral/ReferralService';
 
 function getTokenFromRequest(req: NextRequest): string {
   return req.headers.get('authorization')?.replace('Bearer ', '') || req.cookies.get('fz-token')?.value || '';

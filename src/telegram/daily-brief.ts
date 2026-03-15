@@ -4,6 +4,7 @@
  */
 import TelegramBot from 'node-telegram-bot-api';
 import { spawn } from 'child_process';
+import { getDailyMotivation, getDailyTip, getGsdReminder } from './fun-interactive';
 
 let bot: TelegramBot;
 let adminChatId: string;
@@ -106,6 +107,12 @@ async function generateBrief(): Promise<string> {
     '',
     parseInt(errors24h) > 0 ? `🚨 ${errors24h} erreurs en 24h\n` : '',
     quickWin && quickWin !== '0' ? `🔧 *Quick win du jour :*\n${quickWin}\n` : '',
+    getDailyMotivation(),
+    '',
+    getDailyTip(),
+    '',
+    getGsdReminder(),
+    '',
     'Bonne journée ! 🚀',
   ].filter(Boolean).join('\n');
 

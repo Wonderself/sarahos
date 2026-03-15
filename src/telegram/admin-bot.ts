@@ -65,6 +65,7 @@ export function registerBotCommands(bot: TelegramBot, adminChatId: string): void
 /users — Stats utilisateurs
 /revenue — Revenus Stripe
 /errors — Dernières erreurs
+/kpi — Dashboard KPI complet
 
 ⚡ *ACTIONS RAPIDES*
 /claude \\[instruction\\] — Donner une tâche à Claude
@@ -86,6 +87,17 @@ _Envoie une photo pour l'analyser_
 /broadcast \\[msg\\] — Message à tous
 /credits \\[email\\] \\[n\\] — Créditer un user
 /user \\[email\\] — Profil d'un user
+
+🎮 *FUN & GAMIFICATION*
+/score — 🏆 Score Freenzy (gamifié)
+/streak — 🔥 Streak d'activité
+/quiz — 🧠 Quiz sur Freenzy
+/motivation — 💪 Citation motivation
+/mood — 🎭 Comment tu te sens ?
+/goals \\[objectif\\] — 🎯 Goals de la semaine
+/tip — 💡 Tip dev/business
+/dice \\[opt1, opt2\\] — 🎲 Aide à décider
+/gsd — 📋 Cheatsheet GSD
 
 💬 *CONVERSATION*
 /reset — Réinitialiser l'historique

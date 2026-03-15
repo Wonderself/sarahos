@@ -846,16 +846,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   if (loading) {
     return (
       <div style={{ display: 'flex', minHeight: '100dvh', background: '#fff' }}>
-        {/* Emoji rail skeleton during loading */}
-        <div style={{
-          position: 'fixed', top: 0, left: 0, bottom: 0, width: 56,
-          background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
-          zIndex: 9999, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', padding: '16px 0',
-        }}>
-          <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
-        </div>
-        <div style={{ flex: 1, marginLeft: 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* Emoji rail skeleton — desktop only */}
+        {isDesktop && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, bottom: 0, width: 56,
+            background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
+            zIndex: 9999, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', padding: '16px 0',
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
+          </div>
+        )}
+        <div style={{ flex: 1, marginLeft: isDesktop ? 56 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ fontSize: 14, color: '#9B9B9B' }}>Chargement...</div>
         </div>
       </div>
@@ -947,7 +949,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <nav className="emoji-rail" style={{
             position: 'fixed', top: 0, left: 0, bottom: 0,
             width: 56, background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            display: isDesktop ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center',
             zIndex: 9999, padding: '4px 0',
             overflowY: 'auto', overflowX: 'hidden',
             WebkitOverflowScrolling: 'touch',

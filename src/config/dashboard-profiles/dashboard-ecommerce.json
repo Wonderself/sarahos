@@ -1,0 +1,37 @@
+{
+  "profil": "ecommerce",
+  "layout": "ecommerce",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{ca_hier}}€ hier · {{commandes_hier}} commandes · {{paniers_abandonnes}} paniers abandonnés",
+    "data_source": "ecommerce_dashboard",
+    "accent_color": "#16A34A",
+    "accent_gradient": "linear-gradient(135deg, #16A34A, #22C55E)"
+  },
+  "priority_agents": ["sav-auto", "paniers-abandonnes", "fiches-produits-seo", "reputation-google", "reporting-analytics"],
+  "hidden_agents": ["secretaire-medicale", "devis-pro-artisan", "social-media-food", "rdv-planning", "programme-formation"],
+  "quick_actions": [
+    { "id": "fiches", "label": "Fiches produits", "icon": "🏷️", "href": "/dashboard/agents/fiches-produits-seo" },
+    { "id": "paniers", "label": "Paniers abandonnés", "icon": "🛒", "href": "/dashboard/agents/paniers-abandonnes" },
+    { "id": "avis", "label": "Répondre avis", "icon": "⭐", "href": "/dashboard/agents/reputation-google" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "KPIs e-commerce", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 3 },
+    { "id": "team_overview", "type": "team_overview", "title": "Équipe SAV", "visible": true, "order": 4, "min_role": "member" },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 5 }
+  ],
+  "tooltips_level": "medium",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Connecter votre boutique", "Générer vos premières fiches produits", "Activer la récupération de paniers", "Configurer les réponses automatiques SAV"]
+  },
+  "team_sections": {
+    "show_team_usage": true,
+    "show_team_approvals": true,
+    "show_credit_pool": true,
+    "show_member_activity": false
+  }
+}

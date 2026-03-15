@@ -1,0 +1,27 @@
+{
+  "profil": "particulier",
+  "layout": "minimal",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "Votre assistant personnel est prêt",
+    "data_source": "minimal_dashboard",
+    "accent_color": "#0EA5E9",
+    "accent_gradient": "linear-gradient(135deg, #0EA5E9, #38BDF8)"
+  },
+  "priority_agents": ["briefing-matinal", "reputation-google", "email-marketing"],
+  "hidden_agents": ["devis-pro-artisan", "secretaire-medicale", "sav-auto", "paniers-abandonnes", "fiches-produits-seo", "social-media-food", "reporting-analytics", "formation-interne", "programme-formation", "veille-reglementaire", "analyse-concurrentielle", "product-improvement"],
+  "quick_actions": [
+    { "id": "briefing", "label": "Mon briefing", "icon": "☀️", "href": "/dashboard/agents/briefing-matinal" },
+    { "id": "avis", "label": "Mes avis", "icon": "⭐", "href": "/dashboard/agents/reputation-google" }
+  ],
+  "sections": [
+    { "id": "agents", "type": "agents", "title": "Mes assistants", "visible": true, "order": 1 },
+    { "id": "approvals", "type": "approvals", "title": "En attente", "visible": true, "order": 2 }
+  ],
+  "tooltips_level": "high",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Découvrir votre dashboard", "Tester votre premier assistant", "Personnaliser vos préférences"]
+  }
+}

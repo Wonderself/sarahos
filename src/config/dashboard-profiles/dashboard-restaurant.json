@@ -1,0 +1,30 @@
+{
+  "profil": "restaurant",
+  "layout": "standard",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{reservations_jour}} réservations aujourd'hui · {{avis_a_repondre}} avis à répondre",
+    "data_source": "restaurant_dashboard",
+    "accent_color": "#DC2626",
+    "accent_gradient": "linear-gradient(135deg, #DC2626, #EF4444)"
+  },
+  "priority_agents": ["social-media-food", "reputation-google", "relances-clients", "briefing-matinal", "email-marketing"],
+  "hidden_agents": ["devis-pro-artisan", "paniers-abandonnes", "fiches-produits-seo", "secretaire-medicale", "content-linkedin", "programme-formation", "veille-reglementaire"],
+  "quick_actions": [
+    { "id": "social", "label": "Post réseaux", "icon": "📸", "href": "/dashboard/agents/social-media-food" },
+    { "id": "avis", "label": "Répondre avis", "icon": "⭐", "href": "/dashboard/agents/reputation-google" },
+    { "id": "relance", "label": "Relancer clients", "icon": "📞", "href": "/dashboard/agents/relances-clients" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Aujourd'hui", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "medium",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Connecter votre Google My Business", "Répondre à votre premier avis", "Créer un post plat du jour", "Activer les relances clients"]
+  }
+}

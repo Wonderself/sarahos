@@ -1,0 +1,39 @@
+{
+  "profil": "agence",
+  "layout": "agency",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{clients_actifs}} clients actifs · {{actions_en_attente}} actions en attente",
+    "data_source": "agency_dashboard",
+    "accent_color": "#7C3AED",
+    "accent_gradient": "linear-gradient(135deg, #7C3AED, #8B5CF6)"
+  },
+  "priority_agents": ["content-linkedin", "reporting-analytics", "email-marketing", "documents-juridiques", "relances-clients"],
+  "hidden_agents": ["secretaire-medicale", "devis-pro-artisan", "social-media-food", "paniers-abandonnes"],
+  "quick_actions": [
+    { "id": "content", "label": "Créer du contenu", "icon": "✍️", "href": "/dashboard/agents/content-linkedin" },
+    { "id": "report", "label": "Rapport client", "icon": "📊", "href": "/dashboard/agents/reporting-analytics" },
+    { "id": "email", "label": "Email marketing", "icon": "📧", "href": "/dashboard/agents/email-marketing" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Performance agence", "visible": true, "order": 1 },
+    { "id": "team_overview", "type": "team_overview", "title": "Mon équipe", "visible": true, "order": 2, "min_role": "member" },
+    { "id": "credit_pool", "type": "credit_pool", "title": "Pool crédits", "visible": true, "order": 3, "min_role": "admin" },
+    { "id": "agents", "type": "agents", "title": "Assistants IA", "visible": true, "order": 4 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 5 },
+    { "id": "team_activity", "type": "team_activity", "title": "Activité équipe", "visible": true, "order": 6, "min_role": "admin" },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 7 }
+  ],
+  "tooltips_level": "low",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Inviter votre équipe", "Configurer les agents partagés", "Créer votre premier contenu LinkedIn", "Activer le reporting automatique"]
+  },
+  "team_sections": {
+    "show_team_usage": true,
+    "show_team_approvals": true,
+    "show_credit_pool": true,
+    "show_member_activity": true
+  }
+}

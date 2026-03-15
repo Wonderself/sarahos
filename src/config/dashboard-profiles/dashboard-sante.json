@@ -1,0 +1,36 @@
+{
+  "profil": "sante",
+  "layout": "medical",
+  "hero": {
+    "greeting_template": "Bonjour Dr {{nom}}",
+    "subtitle_template": "{{messages_patients}} messages patients · {{rdv_a_confirmer}} RDV à confirmer",
+    "data_source": "medical_dashboard",
+    "accent_color": "#2563EB",
+    "accent_gradient": "linear-gradient(135deg, #2563EB, #3B82F6)"
+  },
+  "priority_agents": ["secretaire-medicale", "documents-juridiques", "rdv-planning", "veille-reglementaire", "email-marketing"],
+  "hidden_agents": ["devis-pro-artisan", "paniers-abandonnes", "fiches-produits-seo", "social-media-food", "content-linkedin"],
+  "quick_actions": [
+    { "id": "messages", "label": "Messages patients", "icon": "💬", "href": "/dashboard/agents/secretaire-medicale" },
+    { "id": "rdv", "label": "Gérer RDV", "icon": "📅", "href": "/dashboard/agents/rdv-planning" },
+    { "id": "documents", "label": "Documents", "icon": "📄", "href": "/dashboard/agents/documents-juridiques" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Activité cabinet", "visible": true, "order": 1 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 2 },
+    { "id": "agents", "type": "agents", "title": "Assistants", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "low",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Configurer les horaires du cabinet", "Tester la secrétaire IA", "Configurer les rappels RDV", "Activer la veille réglementaire"]
+  },
+  "team_sections": {
+    "show_team_usage": true,
+    "show_team_approvals": true,
+    "show_credit_pool": true,
+    "show_member_activity": false
+  }
+}

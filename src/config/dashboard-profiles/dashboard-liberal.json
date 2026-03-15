@@ -1,0 +1,30 @@
+{
+  "profil": "liberal",
+  "layout": "standard",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{dossiers_en_cours}} dossiers en cours · {{relances_dues}} relances dues",
+    "data_source": "liberal_dashboard",
+    "accent_color": "#475569",
+    "accent_gradient": "linear-gradient(135deg, #475569, #64748B)"
+  },
+  "priority_agents": ["documents-juridiques", "relances-clients", "veille-reglementaire", "rdv-planning", "email-marketing"],
+  "hidden_agents": ["devis-pro-artisan", "paniers-abandonnes", "fiches-produits-seo", "social-media-food", "sav-auto"],
+  "quick_actions": [
+    { "id": "document", "label": "Rédiger document", "icon": "📄", "href": "/dashboard/agents/documents-juridiques" },
+    { "id": "relance", "label": "Relancer", "icon": "📞", "href": "/dashboard/agents/relances-clients" },
+    { "id": "veille", "label": "Veille réglementaire", "icon": "📰", "href": "/dashboard/agents/veille-reglementaire" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Mon activité", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "low",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Configurer votre profil", "Générer votre premier document", "Activer la veille réglementaire", "Configurer les relances automatiques"]
+  }
+}

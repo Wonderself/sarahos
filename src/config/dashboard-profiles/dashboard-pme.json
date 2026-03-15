@@ -1,0 +1,39 @@
+{
+  "profil": "pme",
+  "layout": "manager",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "Équipe : {{membres_actifs}} actifs · {{taches_en_cours}} tâches · Pool : {{pool_credits}} crédits",
+    "data_source": "pme_dashboard",
+    "accent_color": "#1D4ED8",
+    "accent_gradient": "linear-gradient(135deg, #1D4ED8, #3B82F6)"
+  },
+  "priority_agents": ["reporting-analytics", "documents-juridiques", "relances-clients", "formation-interne", "email-marketing"],
+  "hidden_agents": ["social-media-food", "paniers-abandonnes"],
+  "quick_actions": [
+    { "id": "report", "label": "Rapport", "icon": "📊", "href": "/dashboard/agents/reporting-analytics" },
+    { "id": "document", "label": "Document", "icon": "📄", "href": "/dashboard/agents/documents-juridiques" },
+    { "id": "equipe", "label": "Mon équipe", "icon": "👥", "href": "/dashboard/team" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "KPIs entreprise", "visible": true, "order": 1 },
+    { "id": "team_overview", "type": "team_overview", "title": "Mon équipe", "visible": true, "order": 2, "min_role": "member" },
+    { "id": "credit_pool", "type": "credit_pool", "title": "Pool crédits", "visible": true, "order": 3, "min_role": "admin" },
+    { "id": "agents", "type": "agents", "title": "Assistants IA", "visible": true, "order": 4 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 5 },
+    { "id": "team_activity", "type": "team_activity", "title": "Activité équipe", "visible": true, "order": 6, "min_role": "admin" },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 7 }
+  ],
+  "tooltips_level": "low",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Créer votre organisation", "Inviter votre équipe", "Configurer le pool de crédits", "Activer les agents partagés", "Configurer les workflows d'approbation"]
+  },
+  "team_sections": {
+    "show_team_usage": true,
+    "show_team_approvals": true,
+    "show_credit_pool": true,
+    "show_member_activity": true
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "profil": "autre",
+  "layout": "standard",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{credits}} crédits disponibles · {{agents_actifs}} assistants actifs",
+    "data_source": "standard_dashboard",
+    "accent_color": "#1A1A1A",
+    "accent_gradient": "linear-gradient(135deg, #1A1A1A, #374151)"
+  },
+  "priority_agents": ["briefing-matinal", "documents-juridiques", "email-marketing", "relances-clients", "reputation-google"],
+  "hidden_agents": [],
+  "quick_actions": [
+    { "id": "briefing", "label": "Mon briefing", "icon": "☀️", "href": "/dashboard/agents/briefing-matinal" },
+    { "id": "document", "label": "Document", "icon": "📄", "href": "/dashboard/agents/documents-juridiques" },
+    { "id": "email", "label": "Email", "icon": "📧", "href": "/dashboard/agents/email-marketing" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Mon activité", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Tous les assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "medium",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Compléter votre profil", "Explorer les assistants IA", "Lancer votre première action", "Personnaliser votre dashboard"]
+  }
+}

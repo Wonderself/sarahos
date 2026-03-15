@@ -1,0 +1,30 @@
+{
+  "profil": "immo",
+  "layout": "standard",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{mandats_actifs}} mandats actifs · {{relances_dues}} relances dues",
+    "data_source": "immo_dashboard",
+    "accent_color": "#166534",
+    "accent_gradient": "linear-gradient(135deg, #166534, #22C55E)"
+  },
+  "priority_agents": ["documents-juridiques", "relances-clients", "reputation-google", "rdv-planning", "email-marketing"],
+  "hidden_agents": ["devis-pro-artisan", "paniers-abandonnes", "fiches-produits-seo", "social-media-food", "sav-auto", "programme-formation"],
+  "quick_actions": [
+    { "id": "document", "label": "Rédiger document", "icon": "📄", "href": "/dashboard/agents/documents-juridiques" },
+    { "id": "relance", "label": "Relancer prospects", "icon": "📞", "href": "/dashboard/agents/relances-clients" },
+    { "id": "rdv", "label": "Planifier visite", "icon": "🏠", "href": "/dashboard/agents/rdv-planning" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Mon portefeuille", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "medium",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Configurer votre profil immobilier", "Générer votre premier document", "Activer les relances automatiques", "Connecter Google My Business"]
+  }
+}

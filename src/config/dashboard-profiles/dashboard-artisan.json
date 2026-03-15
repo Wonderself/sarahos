@@ -1,0 +1,30 @@
+{
+  "profil": "artisan",
+  "layout": "standard",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{devis_en_attente}} devis en attente · {{relances_dues}} relances dues",
+    "data_source": "devis_relances",
+    "accent_color": "#D97706",
+    "accent_gradient": "linear-gradient(135deg, #D97706, #F59E0B)"
+  },
+  "priority_agents": ["devis-pro-artisan", "relances-clients", "reputation-google", "rdv-planning", "email-marketing"],
+  "hidden_agents": ["paniers-abandonnes", "fiches-produits-seo", "social-media-food", "programme-formation"],
+  "quick_actions": [
+    { "id": "new-devis", "label": "Nouveau devis", "icon": "📝", "href": "/dashboard/agents/devis-pro-artisan" },
+    { "id": "relancer", "label": "Relancer clients", "icon": "📞", "href": "/dashboard/agents/relances-clients" },
+    { "id": "avis", "label": "Répondre aux avis", "icon": "⭐", "href": "/dashboard/agents/reputation-google" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Mes chiffres", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Mes assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "En attente", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "medium",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Configurer votre profil artisan", "Générer votre premier devis", "Répondre à un avis Google", "Activer les relances automatiques"]
+  }
+}

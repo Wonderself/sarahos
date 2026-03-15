@@ -1,0 +1,30 @@
+{
+  "profil": "coach",
+  "layout": "standard",
+  "hero": {
+    "greeting_template": "Bonjour {{prenom}}",
+    "subtitle_template": "{{clients_actifs}} clients actifs · Prochain RDV : {{prochain_rdv}}",
+    "data_source": "coach_dashboard",
+    "accent_color": "#EC4899",
+    "accent_gradient": "linear-gradient(135deg, #EC4899, #F472B6)"
+  },
+  "priority_agents": ["content-linkedin", "programme-formation", "rdv-planning", "relances-clients", "email-marketing"],
+  "hidden_agents": ["devis-pro-artisan", "paniers-abandonnes", "fiches-produits-seo", "social-media-food", "secretaire-medicale", "sav-auto"],
+  "quick_actions": [
+    { "id": "linkedin", "label": "Post LinkedIn", "icon": "💼", "href": "/dashboard/agents/content-linkedin" },
+    { "id": "programme", "label": "Programme formation", "icon": "📚", "href": "/dashboard/agents/programme-formation" },
+    { "id": "rdv", "label": "Gérer RDV", "icon": "📅", "href": "/dashboard/agents/rdv-planning" }
+  ],
+  "sections": [
+    { "id": "metrics", "type": "metrics", "title": "Mon activité", "visible": true, "order": 1 },
+    { "id": "agents", "type": "agents", "title": "Mes assistants", "visible": true, "order": 2 },
+    { "id": "approvals", "type": "approvals", "title": "Validations", "visible": true, "order": 3 },
+    { "id": "automations", "type": "automations", "title": "Automatisations", "visible": true, "order": 4 }
+  ],
+  "tooltips_level": "medium",
+  "onboarding_checklist": {
+    "enabled": true,
+    "hide_after_completion": true,
+    "steps": ["Définir votre spécialité", "Créer votre premier post LinkedIn", "Planifier un programme de formation", "Activer les rappels RDV"]
+  }
+}

@@ -832,7 +832,7 @@ export default function DiscussionsPage() {
 
   if (!checkIsAuthenticated()) {
     return (
-      <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '16px 12px' : '16px 24px', maxWidth: 800, margin: '0 auto' }}>
         <VisitorEmptyState
           icon="🧠"
           title="Connectez-vous pour démarrer une discussion approfondie"
@@ -852,7 +852,7 @@ export default function DiscussionsPage() {
 
       {/* ─── Page Header ─── */}
       <div style={{
-        padding: isMobile ? '18px 16px 14px' : '24px 32px 18px',
+        padding: isMobile ? '14px 12px 10px' : '16px 24px 14px',
         borderBottom: `1px solid ${CU.border}`,
         background: CU.bg,
         ...headerRow(), flexShrink: 0,
@@ -1040,7 +1040,7 @@ export default function DiscussionsPage() {
 
         {!active ? (
           /* ─── Landing: Rich Template Browser ─── */
-          <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '16px 12px 60px' : '24px 24px 60px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px 10px 48px' : '16px 20px 48px' }}>
             {/* Top bar: Create + Search + Random */}
             <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
               <div style={{
@@ -1545,9 +1545,9 @@ export default function DiscussionsPage() {
             {/* Messages */}
             <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '12px 8px' : '16px 20px' }}>
               {active.messages.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '60px 20px', color: '#6B6B6B' }}>
-                  <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>{iconEmoji(active.agentEmoji)}</span>
-                  <p style={{ fontSize: 16, fontWeight: 600, color: CU.text }}>
+                <div style={{ textAlign: 'center', padding: '40px 16px', color: '#6B6B6B' }}>
+                  <span style={{ fontSize: 40, marginBottom: 12, display: 'block' }}>{iconEmoji(active.agentEmoji)}</span>
+                  <p style={{ fontSize: 15, fontWeight: 600, color: CU.text }}>
                     {active.agentName} est prêt
                   </p>
                   <p style={{ fontSize: 14, marginTop: 4 }}>
@@ -1853,7 +1853,7 @@ export default function DiscussionsPage() {
           onClick={e => { if (e.target === e.currentTarget) { setWizardOpen(false); pendingSendRef.current = null; } }}
         >
           <div style={{
-            width: '100%', maxWidth: 520, borderRadius: isMobile ? 8 : 12, padding: isMobile ? '20px 16px' : '32px',
+            width: '100%', maxWidth: 520, borderRadius: isMobile ? 8 : 12, padding: isMobile ? '16px 14px' : '24px',
             background: '#fff', border: '1px solid #E5E5E5',
             margin: isMobile ? '0 12px' : 0, boxSizing: 'border-box' as const,
           }}>
@@ -1912,8 +1912,8 @@ export default function DiscussionsPage() {
 
             {wizardStep === 'analyzing' && (
               <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>🔍</span>
-                <p style={{ fontSize: 16, color: CU.text, fontWeight: 600 }}>
+                <span style={{ fontSize: 40, marginBottom: 12, display: 'block' }}>🔍</span>
+                <p style={{ fontSize: 15, color: CU.text, fontWeight: 600 }}>
                   Analyse en cours...
                 </p>
                 <p style={{ fontSize: 14, color: '#6B6B6B' }}>

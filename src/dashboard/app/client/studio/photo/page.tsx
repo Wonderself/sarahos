@@ -168,11 +168,11 @@ function PhotoStudioContent() {
   return (
     <div style={{ height: 'calc(100vh - 56px)', display: 'flex', flexDirection: 'column', background: CU.bgSecondary }}>
 
-      {/* ── Top bar ── */}
+      {/* ── Top bar — compact ── */}
       <div style={{
-        padding: '0 16px', borderBottom: `1px solid ${CU.border}`,
-        display: 'flex', alignItems: 'center', gap: 10, background: CU.bg,
-        height: 44, flexShrink: 0,
+        padding: '0 12px', borderBottom: `1px solid ${CU.border}`,
+        display: 'flex', alignItems: 'center', gap: 8, background: CU.bg,
+        height: 38, flexShrink: 0,
       }}>
         <a href="/client/studio" style={{ fontSize: 12, color: CU.textSecondary, textDecoration: 'none', flexShrink: 0 }}>
           ← Studio
@@ -332,12 +332,12 @@ function PhotoStudioContent() {
                 />
 
                 {/* Advanced questions — compact 2-col grid */}
-                <div style={{ padding: '0 16px 14px', background: CU.bgSecondary }}>
+                <div style={{ padding: '0 12px 10px', background: CU.bgSecondary }}>
                   <button
                     onClick={() => setAdvancedOpen(!advancedOpen)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 6, width: '100%',
-                      padding: '8px 0', border: 'none', background: 'none', cursor: 'pointer',
+                      padding: '6px 0', border: 'none', background: 'none', cursor: 'pointer',
                       fontSize: 11, fontWeight: 600, color: CU.textSecondary, textAlign: 'left',
                     }}
                   >
@@ -350,8 +350,8 @@ function PhotoStudioContent() {
 
                   {advancedOpen && (
                     <div style={{
-                      display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 10,
-                      padding: 14, background: CU.bg, borderRadius: 8,
+                      display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(220px, 100%), 1fr))', gap: 8,
+                      padding: 10, background: CU.bg, borderRadius: 6,
                       border: `1px solid ${CU.border}`,
                     }}>
                       {[
@@ -433,7 +433,7 @@ function PhotoStudioContent() {
               </>
             ) : (
               /* Chat-only workflow (direction, branding) */
-              <div style={{ padding: 20, background: CU.bgSecondary, height: '100%' }}>
+              <div style={{ padding: 16, background: CU.bgSecondary, height: '100%' }}>
                 <div style={{
                   fontSize: 11, fontWeight: 600, color: CU.text, textTransform: 'uppercase' as const,
                   letterSpacing: 1, marginBottom: 6,
@@ -481,8 +481,8 @@ function PhotoStudioContent() {
 
       {/* ── Bottom: Agent requests + Photo gallery ── */}
       <div style={{
-        flexShrink: 0, borderTop: `2px solid ${CU.border}`,
-        overflowY: 'auto', maxHeight: '36vh', background: CU.bg,
+        flexShrink: 0, borderTop: `1px solid ${CU.border}`,
+        overflowY: 'auto', maxHeight: '32vh', background: CU.bg,
       }}>
         <AgentRequestQueue
           type="photo"

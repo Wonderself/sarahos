@@ -456,7 +456,7 @@ function TeamChat() {
   );
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 140px)', borderTop: '1px solid var(--fz-border, #E5E5E5)' }}>
+    <div style={{ display: 'flex', height: 'calc(100vh - 120px)', borderTop: '1px solid var(--fz-border, #E5E5E5)' }}>
       {/* Mobile sidebar toggle */}
       {isMobile && (
         <button
@@ -1237,8 +1237,8 @@ export default function ChatPage() {
       <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto', background: CU.bg }}>
         <VisitorEmptyState
           icon="💬"
-          title="Connectez-vous pour discuter avec vos agents IA"
-          description="Chattez en temps réel avec plus de 100 assistants IA spécialisés. Chaque agent comprend votre contexte métier et vous accompagne dans vos tâches quotidiennes."
+          title="Connectez-vous pour discuter avec vos assistants"
+          description="Chattez en temps réel avec plus de 150+ assistants spécialisés. Chaque assistant comprend votre contexte métier et vous accompagne dans vos tâches quotidiennes."
           features={[
             { icon: '🤖', label: 'Agents spécialisés', desc: 'Juridique, comptable, marketing, RH et plus' },
             { icon: '🧠', label: 'Mémoire contextuelle', desc: 'L\'agent retient vos préférences et votre historique' },
@@ -1252,12 +1252,12 @@ export default function ChatPage() {
 
   return (
     <div className="chat-page">
-      {/* ═══ PAGE HEADER ═══ */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px 10px', borderBottom: `1px solid ${CU.border}`, background: CU.bg }}>
-        <span style={emojiIcon(18)}>{PAGE_META.chat.emoji}</span>
+      {/* ═══ PAGE HEADER — compact ═══ */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px 8px', borderBottom: `1px solid ${CU.border}`, background: CU.bg }}>
+        <span style={emojiIcon(16)}>{PAGE_META.chat.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ ...CU.pageTitle, fontSize: 18 }}>{PAGE_META.chat.title}</h1>
-          <p style={CU.pageSubtitle}>{PAGE_META.chat.subtitle}</p>
+          <h1 style={{ ...CU.pageTitle, fontSize: 16, margin: 0 }}>{PAGE_META.chat.title}</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: 11, margin: 0 }}>{PAGE_META.chat.subtitle}</p>
         </div>
         <HelpBubble text={PAGE_META.chat.helpText} />
       </div>

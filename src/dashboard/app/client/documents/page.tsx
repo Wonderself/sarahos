@@ -1136,48 +1136,42 @@ export default function DocumentsPage() {
 
   return (
     <div className="client-page-scrollable" style={pageContainer(isMobile)}>
-      {/* ─── Page Header ─── */}
+      {/* ─── Page Header — compact ─── */}
       <div style={headerRow()}>
-        <span style={emojiIcon(24)}>{PAGE_META.documents.emoji}</span>
+        <span style={emojiIcon(18)}>{PAGE_META.documents.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={CU.pageTitle}>{PAGE_META.documents.title}</h1>
-          <p style={{ ...CU.pageSubtitle, margin: '2px 0 0' }}>{PAGE_META.documents.subtitle}</p>
+          <h1 style={{ ...CU.pageTitle, fontSize: 18 }}>📄 Documents</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: 12, margin: '2px 0 0' }}>Générez et gérez vos documents</p>
         </div>
         <HelpBubble text={PAGE_META.documents.helpText} />
       </div>
       <PageExplanation pageId="documents" text={PAGE_META.documents?.helpText} />
 
-      {/* ─── Stat cards ─── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 12, marginBottom: 24 }}>
-        <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 22 }}>📄</span>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: CU.text, lineHeight: 1 }}>{TEMPLATES.length}</div>
-            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Modèles</div>
-          </div>
+      {/* ─── Stat cards — compact inline ─── */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 8, marginBottom: 16 }}>
+        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 16 }}>📄</span>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', lineHeight: 1 }}>{TEMPLATES.length}</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B' }}>Modèles</div>
         </div>
-        <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 22 }}>✨</span>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: CU.text, lineHeight: 1 }}>{generatedDocs.length}</div>
-            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Générés</div>
-          </div>
+        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 16 }}>✨</span>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', lineHeight: 1 }}>{generatedDocs.length}</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B' }}>Générés</div>
         </div>
-        <div style={{ ...CU.card, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 22 }}>🧠</span>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: CU.text, lineHeight: 1 }}>{kbDocs.length}</div>
-            <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Base connaissance</div>
-          </div>
+        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 16 }}>🧠</span>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', lineHeight: 1 }}>{kbDocs.length}</div>
+          <div style={{ fontSize: 11, color: '#9B9B9B' }}>Base connaissance</div>
         </div>
       </div>
 
-      {/* ─── Profile Completion Banner ─── */}
+      {/* ─── Profile Completion Banner — compact ─── */}
       {!bannerDismissed && (
         <div style={{
           ...CU.card,
           borderLeft: '3px solid #1A1A1A',
-          padding: 16, marginBottom: 20,
+          padding: '10px 14px', marginBottom: 12,
           display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
         }}>
           <div style={{ flex: 1 }}>
@@ -1222,12 +1216,12 @@ export default function DocumentsPage() {
         </div>
       )}
 
-      {/* ─── Category Filter (ClickUp tab style) ─── */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 16 }}>
+      {/* ─── Category Filter — compact tabs ─── */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
         <button
           onClick={() => setFilterCategory('')}
           style={{
-            height: 30, padding: '0 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+            height: 26, padding: '0 8px', borderRadius: 6, fontSize: 11, fontWeight: 500,
             border: 'none', cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
             background: !filterCategory ? `${CU.accent}` : 'transparent',
             color: !filterCategory ? '#fff' : CU.textMuted,
@@ -1240,7 +1234,7 @@ export default function DocumentsPage() {
             key={cat}
             onClick={() => setFilterCategory(cat)}
             style={{
-              height: 30, padding: '0 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+              height: 26, padding: '0 8px', borderRadius: 6, fontSize: 11, fontWeight: 500,
               border: 'none', cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
               background: filterCategory === cat ? `${CU.accent}` : 'transparent',
               color: filterCategory === cat ? '#fff' : CU.textMuted,
@@ -1251,45 +1245,40 @@ export default function DocumentsPage() {
         ))}
       </div>
 
-      {/* ─── Templates Grid ─── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, marginBottom: 24 }}>
+      {/* ─── Templates — Notion-style compact rows ─── */}
+      <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 4, marginBottom: 16 }}>
         {filteredTemplates.map(tpl => (
           <button
             key={tpl.id}
             onClick={() => setSelectedTemplate(tpl)}
             style={{
-              ...CU.card, padding: 16, textAlign: 'left' as const,
+              ...CU.card, padding: '8px 12px', textAlign: 'left' as const,
               cursor: 'pointer', fontFamily: 'inherit', width: '100%',
-              display: 'flex', gap: 12, alignItems: 'flex-start',
+              display: 'flex', gap: 8, alignItems: 'center',
             }}
           >
-            <div style={{
-              width: 44, height: 44, borderRadius: 8,
-              fontSize: 22, background: 'rgba(0,0,0,0.04)', flexShrink: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              📄
-            </div>
+            <span style={{ fontSize: 18, flexShrink: 0 }}>📄</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: CU.text, marginBottom: 4 }}>{tpl.title}</div>
-              <div style={{ fontSize: 12, color: CU.textSecondary, lineHeight: 1.5 }}>{tpl.description}</div>
-              <span style={{
-                display: 'inline-block', marginTop: 8, padding: '2px 8px', borderRadius: 6,
-                fontSize: 11, fontWeight: 600, background: 'rgba(0,0,0,0.04)', color: '#1A1A1A',
-              }}>
-                {tpl.category}
-              </span>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A' }}>{tpl.title}</div>
+              <div style={{ fontSize: 11, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{tpl.description}</div>
             </div>
+            <span style={{
+              padding: '1px 6px', borderRadius: 4,
+              fontSize: 10, fontWeight: 500, background: '#FAFAFA', color: '#6B6B6B', border: '1px solid #E5E5E5',
+              whiteSpace: 'nowrap' as const, flexShrink: 0,
+            }}>
+              {tpl.category}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* ─── Knowledge Base Manager ─── */}
-      <section style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 16 }}>🧠</span>
+      {/* ─── Knowledge Base Manager — compact ─── */}
+      <section style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 14 }}>🧠</span>
           <div style={{ flex: 1 }}>
-            <h2 style={{ ...CU.sectionTitle }}>Base de connaissance</h2>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Base de connaissance</h2>
             <div style={{ fontSize: 12, color: CU.textMuted }}>
               Documents uploadés et injectés <span className="fz-logo-word">automatiquement</span> dans vos agents
             </div>
@@ -1324,15 +1313,15 @@ export default function DocumentsPage() {
             </div>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 4 }}>
             {kbDocs.map(doc => {
               const sizeKb = Math.round(doc.file_size / 1024);
               const contextLabel: Record<string, string> = { general: 'Général', repondeur: 'Répondeur', personal: 'Perso', 'studio-video': 'Studio Vidéo', 'studio-photo': 'Studio Photo' };
               return (
                 <div key={doc.id} style={{
-                  ...CU.card, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12,
+                  ...CU.card, padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 8,
                 }}>
-                  <div style={{ fontSize: 20, flexShrink: 0 }}>
+                  <div style={{ fontSize: 16, flexShrink: 0 }}>
                     {doc.filename.endsWith('.pdf') ? '📑' : doc.filename.endsWith('.docx') ? '📄' : doc.filename.endsWith('.xlsx') ? '📊' : '📄'}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -1366,17 +1355,17 @@ export default function DocumentsPage() {
       {/* ─── Generated Documents History ─── */}
       {generatedDocs.length > 0 && (
         <section>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontSize: 16 }}>📋</span>
-            <h2 style={{ ...CU.sectionTitle }}>Mes documents ({generatedDocs.length})</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: 14 }}>📋</span>
+            <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Mes documents ({generatedDocs.length})</h2>
             <div style={{ flex: 1 }} />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 4 }}>
             {generatedDocs.map(doc => (
               <div key={doc.id} style={{
-                ...CU.card, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12,
+                ...CU.card, padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 8,
               }}>
-                <span style={{ fontSize: 18 }}>📄</span>
+                <span style={{ fontSize: 16 }}>📄</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: CU.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{doc.title}</div>
                   <div style={{ fontSize: 11, color: CU.textMuted }}>{new Date(doc.createdAt).toLocaleString('fr-FR')}</div>

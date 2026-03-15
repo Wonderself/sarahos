@@ -374,7 +374,7 @@ export default function NotificationsPage() {
       {/* Bottom CTA if no alerts */}
       {!loading && notifications.filter(n => n.type === 'alert').length === 0 && (
         <div style={{
-          ...CU.card, textAlign: 'center', marginTop: 16, padding: '24px 20px',
+          ...CU.card, textAlign: 'center', marginTop: 16, padding: '16px 16px',
           borderLeft: `3px solid ${CU.accent}`,
         }}>
           <span style={{ fontSize: 24 }}>✅</span>

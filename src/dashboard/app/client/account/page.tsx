@@ -319,7 +319,7 @@ export default function AccountPage() {
 
       {/* Commission & Status */}
       <div style={{ marginBottom: 20 }}>
-        <h2 style={CU.sectionTitle}>Mon statut</h2>
+        <h2 style={CU.sectionTitle}>🏅 Mon statut</h2>
         <div style={{ ...sectionCard, borderLeft: `3px solid ${CU.accent}`, background: CU.accent + '06' }}>
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' as const : 'row' as const, alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: isMobile ? 10 : 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16 }}>
@@ -356,7 +356,7 @@ export default function AccountPage() {
       {/* Referral Code */}
       {referralCode && (
         <div style={{ marginBottom: 20 }}>
-          <h2 style={CU.sectionTitle}>Code de parrainage</h2>
+          <h2 style={CU.sectionTitle}>🎁 Code de parrainage</h2>
           <div style={{ ...sectionCard, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <span style={{ fontSize: 28 }}>🎁</span>
@@ -381,7 +381,7 @@ export default function AccountPage() {
 
       {/* Profile */}
       <div style={{ marginBottom: 20 }}>
-        <h2 style={CU.sectionTitle}>Profil</h2>
+        <h2 style={CU.sectionTitle}>👤 Profil</h2>
         <div style={sectionCard}>
           <div style={cardGrid(isMobile, 3)}>
             <div>
@@ -462,7 +462,7 @@ export default function AccountPage() {
                   </div>
                 )}
                 <div style={{ fontSize: 24, marginBottom: 4, marginTop: opt.popular ? 6 : 0 }}>💳</div>
-                <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 2, color: CU.text }}>{opt.amount}€</div>
+                <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 2, color: CU.text }}>{opt.amount}€</div>
                 <div style={{ fontSize: 12, color: CU.textSecondary, marginBottom: 8 }}>{(opt.amount * 100).toLocaleString()} crédits</div>
                 <button
                   style={{ ...CU.btnPrimary, width: '100%' }}
@@ -648,9 +648,9 @@ export default function AccountPage() {
 
       {/* Communication Channels */}
       <div style={{ ...sectionCard, marginBottom: 20 }}>
-        <h3 style={CU.sectionTitle}>Canaux de communication</h3>
+        <h3 style={CU.sectionTitle}>📡 Canaux de communication</h3>
         {[
-          { icon: '📱', name: 'WhatsApp', desc: 'Parlez a vos agents par message et notes vocales', status: 'Bientot' },
+          { icon: '📱', name: 'WhatsApp', desc: 'Parlez a vos assistants par message et notes vocales', status: 'Bientot' },
           { icon: '💬', name: 'SMS', desc: 'Recevez des alertes et rapports par SMS', status: 'Bientot' },
           { icon: '📧', name: 'Email', desc: 'Notifications et rapports par email', status: 'Bientot' },
           { icon: '🎙️', name: 'Voix (Deepgram)', desc: 'Dictez vos messages et ecoutez les reponses', status: 'Actif' },
@@ -673,12 +673,12 @@ export default function AccountPage() {
 
       {/* Integrations */}
       <div style={{ ...sectionCard, marginBottom: 20 }}>
-        <h3 style={CU.sectionTitle}>Integrations</h3>
+        <h3 style={CU.sectionTitle}>🔗 Integrations</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
           {[
             { icon: '🎙️', title: 'Voix Premium (ElevenLabs)', desc: 'Voix ultra-realistes', active: true },
-            { icon: '🎬', title: 'Avatar Video (D-ID)', desc: 'Vos agents en video', active: false },
-            { icon: '📱', title: 'WhatsApp Business', desc: 'Vos agents sur WhatsApp', active: false },
+            { icon: '🎬', title: 'Avatar Video (D-ID)', desc: 'Vos assistants en video', active: false },
+            { icon: '📱', title: 'WhatsApp Business', desc: 'Vos assistants sur WhatsApp', active: false },
           ].map(item => (
             <div key={item.title} style={{
               ...CU.card, padding: 12,
@@ -699,7 +699,7 @@ export default function AccountPage() {
       {/* Usage */}
       {usage && (
         <div style={{ marginBottom: 20 }}>
-          <h2 style={CU.sectionTitle}>Utilisation</h2>
+          <h2 style={CU.sectionTitle}>📊 Utilisation</h2>
           <div style={cardGrid(isMobile, 3)}>
             <div style={{ ...CU.card, padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 4 }}>
               <span style={{ fontSize: 20 }}>🔤</span>

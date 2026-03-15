@@ -169,7 +169,7 @@ const DEMO_DATA: TeamData = {
 // ─── Styles ───────────────────────────────────────────────────
 const S: Record<string, CSSProperties> = {
   page: {
-    padding: 28,
+    padding: 16,
     maxWidth: 1000,
     margin: '0 auto',
     minHeight: '100vh',
@@ -253,7 +253,7 @@ const S: Record<string, CSSProperties> = {
     letterSpacing: '0.3px',
   },
   section: {
-    marginBottom: 28,
+    marginBottom: 20,
   },
   sectionHeader: {
     display: 'flex',
@@ -295,12 +295,12 @@ const S: Record<string, CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '80px 24px',
+    padding: '48px 16px',
     textAlign: 'center',
   },
   ctaEmoji: {
-    fontSize: 56,
-    marginBottom: 16,
+    fontSize: 44,
+    marginBottom: 12,
   },
   ctaTitle: {
     fontSize: 20,
@@ -346,7 +346,7 @@ const S: Record<string, CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '80px 0',
+    padding: '48px 0',
     color: C.muted,
     fontSize: 14,
   },
@@ -364,7 +364,7 @@ const S: Record<string, CSSProperties> = {
     textAlign: 'center',
   },
   overviewValue: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 700,
     color: C.text,
     lineHeight: 1,
@@ -528,7 +528,7 @@ export default function TeamPage() {
           <div style={S.ctaTitle}>Travaillez en equipe</div>
           <div style={S.ctaDesc}>
             Creez une organisation pour collaborer avec votre equipe.
-            Partagez les agents, les credits et les projets.
+            Partagez les assistants, les credits et les projets.
           </div>
           <div style={S.ctaActions}>
             <button style={S.ctaBtnPrimary}>
@@ -600,7 +600,7 @@ export default function TeamPage() {
             <div style={{ ...S.overviewValue, color: C.success }}>
               {data.agents.length}
             </div>
-            <div style={S.overviewLabel}>Agents disponibles</div>
+            <div style={S.overviewLabel}>Assistants disponibles</div>
           </div>
           <div style={S.overviewCard}>
             <div style={S.overviewValue}>{data.workflows.filter(w => w.enabled).length}</div>
@@ -695,7 +695,7 @@ export default function TeamPage() {
           <div style={S.divider} />
           <div style={S.section}>
             <h2 style={S.sectionTitle}>
-              <span>🤖</span> Configuration des agents
+              <span>🤖</span> Configuration des assistants
             </h2>
             <div style={{ marginTop: 12 }}>
               <AgentPermissions

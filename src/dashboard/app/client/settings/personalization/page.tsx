@@ -168,7 +168,7 @@ const TABS: TabDef[] = [
   { id: 'dashboard', label: 'Mon Dashboard', emoji: '🏠' },
   { id: 'notifications', label: 'Notifications', emoji: '🔔' },
   { id: 'validations', label: 'Validations', emoji: '✅' },
-  { id: 'agents', label: 'Agents', emoji: '🤖' },
+  { id: 'agents', label: 'Assistants', emoji: '🤖' },
   { id: 'integrations', label: 'Integrations', emoji: '🔗' },
   { id: 'team', label: 'Mon Equipe', emoji: '👥', requiresOrg: true },
 ];
@@ -186,7 +186,7 @@ function getToken(): string {
 // ─── Styles ───────────────────────────────────────────────────
 const S: Record<string, CSSProperties> = {
   page: {
-    padding: 28,
+    padding: 16,
     maxWidth: 900,
     margin: '0 auto',
     minHeight: '100vh',
@@ -412,7 +412,7 @@ const S: Record<string, CSSProperties> = {
     textAlign: 'center',
   },
   statValue: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 700,
     color: C.text,
     lineHeight: 1,
@@ -427,7 +427,7 @@ const S: Record<string, CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '80px 0',
+    padding: '48px 0',
     color: C.muted,
     fontSize: 14,
   },
@@ -691,7 +691,7 @@ export default function PersonalizationPage() {
                 onChange={e => updateDashboard('defaultPage', e.target.value)}
               >
                 <option value="/client/dashboard">Dashboard</option>
-                <option value="/client/agents">Agents</option>
+                <option value="/client/agents">Assistants</option>
                 <option value="/client/discussions">Discussions</option>
                 <option value="/client/studio">Studio</option>
               </select>
@@ -792,8 +792,8 @@ export default function PersonalizationPage() {
           {n.pushEnabled && (
             <>
               <Toggle
-                label="Alertes agents"
-                description="Notifications quand un agent termine une tache"
+                label="Alertes assistants"
+                description="Notifications quand un assistant termine une tache"
                 checked={n.pushAgentAlerts}
                 onChange={v => updateNotifications('pushAgentAlerts', v)}
               />
@@ -900,7 +900,7 @@ export default function PersonalizationPage() {
     const a = settings.agents;
     return (
       <div style={S.section}>
-        <h3 style={S.sectionTitle}>Configuration des agents IA</h3>
+        <h3 style={S.sectionTitle}>Configuration des assistants</h3>
         <div style={S.card}>
           <div style={S.fieldRow}>
             <div style={S.field}>
@@ -1109,7 +1109,7 @@ export default function PersonalizationPage() {
         {role === 'member' && (
           <div style={S.card}>
             <div style={{ textAlign: 'center', padding: '20px 0', color: C.muted, fontSize: 13 }}>
-              En tant que membre, vous pouvez utiliser les agents et voir les statistiques de l&apos;equipe.
+              En tant que membre, vous pouvez utiliser les assistants et voir les statistiques de l&apos;equipe.
               Pour gerer l&apos;equipe, demandez un acces admin.
             </div>
           </div>

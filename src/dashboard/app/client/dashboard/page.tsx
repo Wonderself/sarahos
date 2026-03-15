@@ -63,7 +63,7 @@ export default function ClientDashboard() {
       setStats({ totalMessages: 0, totalDocuments: 0, streak: 0 });
       setWalletBalance(50_000_000); // 50 credits (signup bonus)
       setActiveAgentIds(['fz-repondeur', 'fz-assistante', 'fz-communication']);
-      setBriefing('Bienvenue sur Freenzy.io ! Explorez le dashboard librement. Créez un compte gratuit pour activer vos agents IA et commencer à travailler.');
+      setBriefing('Bienvenue sur Freenzy.io ! Explorez le dashboard librement. Créez un compte gratuit pour activer vos assistants et commencer à travailler.');
       setBriefingLoaded(true);
       setBriefingTime(new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
       return;
@@ -291,12 +291,12 @@ export default function ClientDashboard() {
 
       {/* ── Greeting Header — compact single row ── */}
       <div style={headerRow()}>
-        <span style={emojiIcon(20)}>👋</span>
+        <span style={emojiIcon(18)}>👋</span>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ ...CU.pageTitle, fontSize: 16 }}>
+          <span style={{ ...CU.pageTitle, fontSize: 18, lineHeight: 1.2 }}>
             {greeting}{userName ? `, ${userName}` : ''}
           </span>
-          <span style={CU.pageSubtitle}>
+          <span style={{ ...CU.pageSubtitle, fontSize: 12 }}>
             {todayStr}
           </span>
         </div>
@@ -319,85 +319,80 @@ export default function ClientDashboard() {
         </div>
       )}
 
-      {/* ── KPI Cards ── */}
+      {/* ── KPI Cards — compact 1-line stats ── */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)',
-        gap: isMobile ? 8 : 12,
-        marginBottom: 16,
+        gap: 8,
+        marginBottom: 12,
       }}>
         <Link href="/client/account" style={{
-          ...CU.cardHoverable, textDecoration: 'none', padding: '12px 14px',
-          display: 'flex', alignItems: 'flex-start', gap: 10,
+          ...CU.cardHoverable, textDecoration: 'none', padding: '8px 12px',
+          display: 'flex', alignItems: 'center', gap: 8,
         }}>
-          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>💰</span>
-          <div>
-            <div style={CU.statLabel}>Crédits</div>
-            <div style={CU.statValue}>{credits.toFixed(1)}</div>
-            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>
-              {daysLeft > 0 ? `~${daysLeft}j · ${averageDaily}/j` : 'Rechargez'}
-            </div>
+          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>💰</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: CU.textMuted }}>Crédits</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{credits.toFixed(1)} <span style={{ fontSize: 10, fontWeight: 400, color: CU.textMuted }}>{daysLeft > 0 ? `~${daysLeft}j` : ''}</span></div>
           </div>
         </Link>
-        <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>💬</span>
-          <div>
-            <div style={CU.statLabel}>Messages</div>
-            <div style={CU.statValue}>{stats.totalMessages}</div>
-            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>Conversations</div>
+        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>💬</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: CU.textMuted }}>Messages</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{stats.totalMessages}</div>
           </div>
         </div>
         <Link href="/client/agents" style={{
-          ...CU.cardHoverable, textDecoration: 'none', padding: '12px 14px',
-          display: 'flex', alignItems: 'flex-start', gap: 10,
+          ...CU.cardHoverable, textDecoration: 'none', padding: '8px 12px',
+          display: 'flex', alignItems: 'center', gap: 8,
         }}>
-          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>🤖</span>
-          <div>
-            <div style={CU.statLabel}>Assistants</div>
-            <div style={CU.statValue}>{activeAgents.length}</div>
-            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>actifs</div>
+          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>🤖</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: CU.textMuted }}>Assistants</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{activeAgents.length} <span style={{ fontSize: 10, fontWeight: 400, color: CU.textMuted }}>actifs</span></div>
           </div>
         </Link>
-        <div style={{ ...CU.card, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-          <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0, marginTop: 2 }}>{stats.streak > 0 ? '🔥' : '✨'}</span>
-          <div>
-            <div style={CU.statLabel}>{stats.streak > 0 ? 'Streak' : 'Activité'}</div>
-            <div style={CU.statValue}>{stats.streak > 0 ? `${stats.streak}j` : 'Nouveau'}</div>
-            <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{stats.streak > 0 ? 'Jours consécutifs' : 'Bienvenue !'}</div>
+        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>{stats.streak > 0 ? '🔥' : '✨'}</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: CU.textMuted }}>{stats.streak > 0 ? 'Streak' : 'Activité'}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{stats.streak > 0 ? `${stats.streak}j` : 'Nouveau'}</div>
           </div>
         </div>
       </div>
 
-      {/* ── AI Briefing ── */}
-      <div style={{ ...CU.card, padding: '12px 16px', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 16 }}>🧠</span>
-            <span style={CU.sectionTitle}>Briefing IA du jour</span>
+      {/* ── AI Briefing — compact ── */}
+      <div style={{ ...CU.card, padding: '10px 14px', marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 14 }}>🧠</span>
+            <span style={{ ...CU.sectionTitle, fontSize: 14 }}>Briefing du jour</span>
             <HelpBubble text="Chaque matin, votre IA analyse votre activité et vous propose un résumé actionnable." />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {briefingTime && <span style={{ fontSize: 11, color: CU.textMuted }}>Mis à jour à {briefingTime}</span>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {briefingTime && <span style={{ fontSize: 10, color: CU.textMuted }}>{briefingTime}</span>}
             <button
               onClick={refreshBriefing}
               disabled={briefingLoading}
               style={{
                 ...CU.btnGhost,
+                fontSize: 11, height: 26, padding: '0 8px',
                 opacity: briefingLoading ? 0.6 : 1,
               }}
             >
-              {briefingLoading ? '⏳' : '🔄'} {briefingLoading ? 'Génération...' : 'Actualiser'}
+              {briefingLoading ? '⏳' : '🔄'}
             </button>
           </div>
         </div>
         {briefingLoading && !briefingLoaded ? (
-          <div style={{ padding: '12px 0', color: CU.textMuted, fontSize: 13, fontStyle: 'italic' }}>
-            ⏳ Votre briefing IA est en cours de génération...
+          <div style={{ padding: '6px 0', color: CU.textMuted, fontSize: 12, fontStyle: 'italic' }}>
+            ⏳ Briefing en cours de génération...
           </div>
         ) : briefing ? (
           <div style={{
-            fontSize: 13, lineHeight: 1.7, color: CU.textSecondary,
-            background: CU.bgSecondary, borderRadius: 8, padding: '12px 16px',
+            fontSize: 12, lineHeight: 1.6, color: CU.textSecondary,
+            background: CU.bgSecondary, borderRadius: 6, padding: '8px 12px',
             whiteSpace: 'pre-wrap',
           }}>
             {briefing}
@@ -413,37 +408,37 @@ export default function ClientDashboard() {
         )}
       </div>
 
-      {/* ── Quick Actions ── */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <span style={{ fontSize: 16 }}>⚡</span>
-          <span style={{ ...CU.sectionTitle, flex: 1 }}>Actions rapides</span>
+      {/* ── Quick Actions — compact ── */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+          <span style={{ fontSize: 14 }}>⚡</span>
+          <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>Actions rapides</span>
           <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
         </div>
         <div style={cardGrid(isMobile, 3)}>
           {QUICK_ACTIONS.map(action => (
             <Link key={action.href} href={action.href} style={{
-              ...CU.cardHoverable, textDecoration: 'none', padding: '14px 16px',
-              display: 'flex', alignItems: 'center', gap: 12,
+              ...CU.cardHoverable, textDecoration: 'none', padding: '8px 12px',
+              display: 'flex', alignItems: 'center', gap: 8,
             }}>
-              <span style={{ fontSize: 28, flexShrink: 0 }}>{action.emoji}</span>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{action.emoji}</span>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{action.label}</div>
-                <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 2 }}>{action.desc}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: CU.text }}>{action.label}</div>
+                <div style={{ fontSize: 10, color: CU.textMuted, marginTop: 1 }}>{action.desc}</div>
               </div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* ── Todos & Priorities ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, marginBottom: 24 }}>
+      {/* ── Todos & Priorities — compact ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 8, marginBottom: 16 }}>
         {/* Todos */}
-        <div style={{ ...CU.card, padding: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 16 }}>✅</span>
-            <span style={{ ...CU.sectionTitle, flex: 1 }}>
-              Tâches du jour {todosTotal > 0 && <span style={{ fontWeight: 500, color: CU.textMuted }}>({todosDone}/{todosTotal})</span>}
+        <div style={{ ...CU.card, padding: '10px 14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <span style={{ fontSize: 14 }}>✅</span>
+            <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>
+              Tâches {todosTotal > 0 && <span style={{ fontWeight: 500, color: CU.textMuted }}>({todosDone}/{todosTotal})</span>}
             </span>
             <HelpBubble text="Ajoutez vos tâches pour la journée. Elles sont sauvegardées automatiquement." />
           </div>
@@ -495,10 +490,10 @@ export default function ClientDashboard() {
         </div>
 
         {/* Priorities */}
-        <div style={{ ...CU.card, padding: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 16 }}>🎯</span>
-            <span style={{ ...CU.sectionTitle, flex: 1 }}>3 priorités du jour</span>
+        <div style={{ ...CU.card, padding: '10px 14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <span style={{ fontSize: 14 }}>🎯</span>
+            <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>3 priorités</span>
             <HelpBubble text="Définissez vos 3 objectifs principaux. Restez concentré sur l'essentiel." />
           </div>
           {[0, 1, 2].map(idx => (
@@ -524,31 +519,31 @@ export default function ClientDashboard() {
         </div>
       </div>
 
-      {/* ── Feature Sections Grid ── */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-          <span style={{ fontSize: 16 }}>🧭</span>
-          <span style={{ ...CU.sectionTitle, flex: 1 }}>Toutes vos fonctionnalités</span>
+      {/* ── Feature Sections Grid — compact Notion rows ── */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+          <span style={{ fontSize: 14 }}>🧭</span>
+          <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>Toutes vos fonctionnalités</span>
           <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {FEATURE_SECTIONS.map(section => (
             <div key={section.id} style={{
               ...CU.card, padding: 0, overflow: 'hidden',
             }}>
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '12px 16px',
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '8px 12px',
                 borderBottom: `1px solid ${CU.border}`,
                 background: CU.bgSecondary,
               }}>
-                <span style={{ fontSize: 16 }}>{section.emoji}</span>
+                <span style={{ fontSize: 14 }}>{section.emoji}</span>
                 <div style={{ flex: 1 }}>
-                  <div style={CU.sectionTitle}>
+                  <div style={{ ...CU.sectionTitle, fontSize: 13 }}>
                     {section.title}
-                    {section.proOnly && <span style={{ ...CU.badge, fontSize: 10, fontWeight: 700, marginLeft: 8 }}>PRO</span>}
+                    {section.proOnly && <span style={{ ...CU.badge, fontSize: 9, fontWeight: 700, marginLeft: 6 }}>PRO</span>}
                   </div>
-                  <div style={CU.pageSubtitle}>{section.subtitle}</div>
+                  <div style={{ ...CU.pageSubtitle, fontSize: 11 }}>{section.subtitle}</div>
                 </div>
               </div>
               <div style={{
@@ -559,16 +554,16 @@ export default function ClientDashboard() {
                 {section.items.map(item => (
                   <Link key={item.id} href={item.href} style={{
                     textDecoration: 'none',
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '12px 16px',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    padding: '6px 12px',
                     borderBottom: `1px solid ${CU.border}`,
                     transition: 'background 0.15s ease',
                     color: 'inherit',
                   }}>
-                    <span style={{ fontSize: 22, flexShrink: 0 }}>{item.emoji}</span>
+                    <span style={{ fontSize: 18, flexShrink: 0 }}>{item.emoji}</span>
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: CU.text }}>{item.label}</div>
-                      <div style={{ fontSize: 11, color: CU.textMuted, marginTop: 1 }}>{item.desc}</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: CU.text }}>{item.label}</div>
+                      <div style={{ fontSize: 10, color: CU.textMuted }}>{item.desc}</div>
                     </div>
                   </Link>
                 ))}
@@ -578,18 +573,18 @@ export default function ClientDashboard() {
         </div>
       </div>
 
-      {/* ── Referral banner ── */}
+      {/* ── Referral banner — compact ── */}
       {!isDismissed('referral') && (
         <div style={{
           ...CU.card,
-          display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', marginBottom: 16,
+          display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', marginBottom: 12,
           background: CU.bgSecondary,
         }}>
-          <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, textDecoration: 'none', color: 'inherit' }}>
-            <span style={{ fontSize: 28 }}>🎁</span>
+          <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, textDecoration: 'none', color: 'inherit' }}>
+            <span style={{ fontSize: 20 }}>🎁</span>
             <div>
-              <div style={{ ...CU.sectionTitle, fontSize: 14 }}>Invitez un ami, gagnez 20€</div>
-              <div style={{ fontSize: 12, color: CU.textMuted, marginTop: 2 }}>Parrainage illimité — crédits offerts pour les deux</div>
+              <div style={{ ...CU.sectionTitle, fontSize: 13 }}>Invitez un ami, gagnez 20€</div>
+              <div style={{ fontSize: 11, color: CU.textMuted }}>Parrainage illimité — crédits offerts</div>
             </div>
           </Link>
           <button onClick={() => dismissFor('referral', 7)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, fontSize: 16, color: CU.textMuted }}>

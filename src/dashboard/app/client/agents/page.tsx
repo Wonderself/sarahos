@@ -74,15 +74,15 @@ export default function AgentsPage() {
 
   return (
     <div className="client-page-scrollable" style={pageContainer(isMobile)}>
-      {/* Page Header */}
+      {/* Page Header — compact */}
       <div style={headerRow()}>
-        <span style={emojiIcon(24)}>{PAGE_META.agents.emoji}</span>
+        <span style={emojiIcon(18)}>{PAGE_META.agents.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={CU.pageTitle}>{PAGE_META.agents.title}</h1>
-          <p style={CU.pageSubtitle}>{PAGE_META.agents.subtitle}</p>
+          <h1 style={{ ...CU.pageTitle, fontSize: 18 }}>🤖 Assistants</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: 12 }}>Votre équipe de 150+ assistants</p>
         </div>
         <HelpBubble text={PAGE_META.agents.helpText} />
-        <Link href="/client/agents/create" style={{ ...CU.btnPrimary, textDecoration: 'none' }}>
+        <Link href="/client/agents/create" style={{ ...CU.btnPrimary, textDecoration: 'none', fontSize: 12, height: 30, padding: '0 12px' }}>
           ➕ Créer
         </Link>
       </div>
@@ -97,37 +97,35 @@ export default function AgentsPage() {
         </div>
       )}
 
-      {/* ─── Stat cards ─── */}
-      <div style={{ ...cardGrid(isMobile, 3), marginBottom: 24, marginTop: 20 }}>
+      {/* ─── Stat cards — compact inline ─── */}
+      <div style={{ ...cardGrid(isMobile, 3), marginBottom: 16, marginTop: 12 }}>
         {[
           { emoji: '✨', value: customAgents.length, label: 'Personnalisés' },
           { emoji: '💼', value: businessAgents.length, label: 'Business' },
           { emoji: '👤', value: personalAgents.length, label: 'Personnels' },
         ].map(s => (
           <div key={s.label} style={{
-            ...CU.card, display: 'flex', alignItems: 'center', gap: 12,
+            ...CU.card, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px',
           }}>
-            <span style={emojiIcon(22)}>{s.emoji}</span>
-            <div>
-              <div style={CU.statValue}>{s.value}</div>
-              <div style={CU.statLabel}>{s.label}</div>
-            </div>
+            <span style={{ fontSize: 16 }}>{s.emoji}</span>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#1A1A1A', lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontSize: 11, color: '#9B9B9B' }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      {/* ─── Mes agents personnalisés ─── */}
-      <section style={{ marginBottom: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <span style={emojiIcon(16)}>✨</span>
-          <h2 style={CU.sectionTitle}>Mes assistants personnalisés</h2>
-          <span style={{ ...CU.badge, background: `${CU.accent}18`, color: CU.accent }}>
+      {/* ─── Mes assistants personnalisés ─── */}
+      <section style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <span style={{ fontSize: 14 }}>✨</span>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Mes assistants personnalisés</h2>
+          <span style={{ ...CU.badge, background: `${CU.accent}18`, color: CU.accent, fontSize: 10 }}>
             {customAgents.length}
           </span>
           <div style={{ flex: 1 }} />
           <Link href="/client/agents/create" style={{
             ...CU.btnPrimary, textDecoration: 'none',
-            fontSize: 12, height: isMobile ? 40 : 30, padding: '0 10px',
+            fontSize: 11, height: isMobile ? 36 : 28, padding: '0 10px',
           }}>
             ➕ Nouveau
           </Link>
@@ -143,7 +141,7 @@ export default function AgentsPage() {
               <div style={CU.emptyEmoji}>🤖</div>
               <div style={CU.emptyTitle}>Aucun assistant personnalisé</div>
               <div style={CU.emptyDesc}>
-                Créez votre premier <span className="fz-logo-word">assistant IA</span> sur mesure en quelques minutes
+                Créez votre premier <span className="fz-logo-word">assistant</span> sur mesure en quelques minutes
               </div>
               <Link href="/client/agents/create" style={{
                 ...CU.btnPrimary, textDecoration: 'none', padding: '0 20px',
@@ -153,116 +151,95 @@ export default function AgentsPage() {
             </div>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 6 }}>
             {customAgents.map(agent => (
               <div key={agent.id} style={{
-                ...CU.card, display: 'flex', flexDirection: 'column' as const, gap: 10,
-                borderTop: `3px solid ${CU.border}`,
+                ...CU.card, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px',
+                borderLeft: `3px solid ${CU.border}`,
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 8, background: CU.accentLight,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0,
-                  }}>
-                    🤖
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: CU.text }}>{agent.name}</div>
-                    <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.role ?? 'Assistant personnalisé'}</div>
+                <span style={{ fontSize: 18, flexShrink: 0 }}>🤖</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: CU.text }}>{agent.name}</div>
+                  <div style={{ fontSize: 10, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, display: 'flex', gap: 6, alignItems: 'center' }}>
+                    {agent.role ?? 'Assistant personnalisé'}
+                    {agent.domain && <span style={{ ...CU.badge, fontSize: 9, padding: '0 4px', background: CU.accentLight, color: CU.textSecondary }}>{DOMAIN_LABELS[agent.domain] ?? agent.domain}</span>}
+                    <span style={{ fontSize: 9, color: agent.is_active ? '#1A1A1A' : CU.textMuted }}>{agent.is_active ? '✅' : '⬜'}</span>
                   </div>
                 </div>
-
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
-                  {agent.domain && (
-                    <span style={{ ...CU.badge, background: CU.accentLight, color: CU.textSecondary }}>
-                      {DOMAIN_LABELS[agent.domain] ?? agent.domain}
-                    </span>
-                  )}
-                  <span style={{
-                    ...CU.badge,
-                    background: agent.is_active ? CU.accentLight : CU.accentLight,
-                    color: agent.is_active ? CU.text : CU.textMuted,
-                  }}>
-                    {agent.is_active ? '✅ Actif' : '⬜ Inactif'}
-                  </span>
-                </div>
-
-                <div style={{ display: 'flex', gap: 6, marginTop: 'auto' }}>
-                  <Link href={`/client/agents/create?edit=${agent.id}`} style={{
-                    ...CU.btnGhost, flex: 1, height: isMobile ? 44 : 32,
-                    fontSize: 12, textDecoration: 'none',
-                  }}>
-                    ✏️ Éditer
-                  </Link>
-                  <button
-                    onClick={() => deleteAgent(agent.id, agent.name)}
-                    disabled={deleting === agent.id}
-                    style={{
-                      ...CU.btnSmall, height: isMobile ? 44 : 32,
-                      color: CU.danger,
-                    }}
-                  >
-                    {deleting === agent.id ? '...' : '🗑️'}
-                  </button>
-                </div>
+                <Link href={`/client/agents/create?edit=${agent.id}`} style={{
+                  ...CU.btnGhost, height: isMobile ? 36 : 26, padding: '0 8px',
+                  fontSize: 11, textDecoration: 'none',
+                }}>
+                  ✏️
+                </Link>
+                <button
+                  onClick={() => deleteAgent(agent.id, agent.name)}
+                  disabled={deleting === agent.id}
+                  style={{
+                    ...CU.btnSmall, height: isMobile ? 36 : 26, padding: '0 6px',
+                    color: CU.danger, fontSize: 11,
+                  }}
+                >
+                  {deleting === agent.id ? '...' : '🗑️'}
+                </button>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      {/* ─── Agents Freenzy — Business ─── */}
-      <section style={{ marginBottom: 28 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <span style={emojiIcon(16)}>💼</span>
-          <h2 style={CU.sectionTitle}>Assistants business Freenzy</h2>
-          <span style={CU.badge}>{businessAgents.length}</span>
+      {/* ─── Assistants business Freenzy — compact rows ─── */}
+      <section style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <span style={{ fontSize: 14 }}>💼</span>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Assistants business</h2>
+          <span style={{ ...CU.badge, fontSize: 10 }}>{businessAgents.length}</span>
           <div style={{ flex: 1 }} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(200px, 1fr))', gap: 6 }}>
           {businessAgents.map(agent => (
             <div key={agent.id} style={{
-              ...CU.card, display: 'flex', alignItems: 'center', gap: 10,
+              ...CU.card, display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
             }}>
-              <span style={emojiIcon(20)}>{agent.emoji}</span>
+              <span style={{ fontSize: 16 }}>{agent.emoji}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: CU.text }}>{agent.name}</div>
-                <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: '#1A1A1A' }}>{agent.name}</div>
+                <div style={{ fontSize: 10, color: '#9B9B9B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                ...CU.btnSmall, textDecoration: 'none',
-                height: isMobile ? 36 : 28,
+                ...CU.btnSmall, textDecoration: 'none', fontSize: 10,
+                height: isMobile ? 32 : 24, padding: '0 6px',
               }}>
-                ⚙️ Config
+                ⚙️
               </Link>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ─── Agents personnels ─── */}
+      {/* ─── Assistants personnels — compact rows ─── */}
       <section>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <span style={emojiIcon(16)}>👤</span>
-          <h2 style={CU.sectionTitle}>Assistants personnels Freenzy</h2>
-          <span style={CU.badge}>{personalAgents.length}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <span style={{ fontSize: 14 }}>👤</span>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Assistants personnels</h2>
+          <span style={{ ...CU.badge, fontSize: 10 }}>{personalAgents.length}</span>
           <div style={{ flex: 1 }} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(200px, 1fr))', gap: 6 }}>
           {personalAgents.map(agent => (
             <div key={agent.id} style={{
-              ...CU.card, display: 'flex', alignItems: 'center', gap: 10,
+              ...CU.card, display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
             }}>
-              <span style={emojiIcon(20)}>{agent.emoji}</span>
+              <span style={{ fontSize: 16 }}>{agent.emoji}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: CU.text }}>{agent.name}</div>
-                <div style={{ fontSize: 11, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: '#1A1A1A' }}>{agent.name}</div>
+                <div style={{ fontSize: 10, color: '#9B9B9B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>{agent.description ?? ''}</div>
               </div>
               <Link href={`/client/agents/customize?agent=${agent.id}`} style={{
-                ...CU.btnSmall, textDecoration: 'none',
-                height: isMobile ? 36 : 28,
+                ...CU.btnSmall, textDecoration: 'none', fontSize: 10,
+                height: isMobile ? 32 : 24, padding: '0 6px',
               }}>
-                ⚙️ Config
+                ⚙️
               </Link>
             </div>
           ))}

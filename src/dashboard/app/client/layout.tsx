@@ -845,8 +845,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   if (loading) {
     return (
-      <div className="flex-center" style={{ height: '100vh', background: '#fff' }}>
-        <div className="animate-pulse text-lg text-tertiary">Chargement...</div>
+      <div style={{ display: 'flex', minHeight: '100dvh', background: '#fff' }}>
+        {/* Emoji rail skeleton during loading */}
+        <div style={{
+          position: 'fixed', top: 0, left: 0, bottom: 0, width: 56,
+          background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
+          zIndex: 9999, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', padding: '16px 0',
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
+        </div>
+        <div style={{ flex: 1, marginLeft: 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ fontSize: 14, color: '#9B9B9B' }}>Chargement...</div>
+        </div>
       </div>
     );
   }
@@ -888,7 +899,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </button>
       </div>
     )}
-    <div className="flex" style={{ minHeight: '100vh', paddingTop: isImpersonating ? 40 : 0 }}>
+    <div style={{ display: 'flex', minHeight: '100dvh', paddingTop: isImpersonating ? 40 : 0 }}>
       {/* Mobile Top Bar — hamburger in top-right */}
       <div className="mobile-topbar" style={{ background: '#fff', borderBottom: '1px solid #E5E5E5', padding: '0 8px 0 12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: '#1A1A1A', overflow: 'hidden' }}>
@@ -933,7 +944,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }
 
         return (
-          <nav className="emoji-rail">
+          <nav className="emoji-rail" style={{
+            position: 'fixed', top: 0, left: 0, bottom: 0,
+            width: 56, background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            zIndex: 9999, padding: '4px 0',
+            overflowY: 'auto', overflowX: 'hidden',
+            WebkitOverflowScrolling: 'touch',
+          }}>
             <div className="emoji-rail-top">
               <button
                 className="emoji-rail-btn"

@@ -5,8 +5,11 @@ import LinkedInPreview from './LinkedInPreview';
 import EmailPreview from './EmailPreview';
 import GoogleReviewPreview from './GoogleReviewPreview';
 import SMSPreview from './SMSPreview';
+import WhatsAppPreview from './WhatsAppPreview';
+import InstagramPreview from './InstagramPreview';
+import DevisPreview from './DevisPreview';
 
-type PreviewType = 'linkedin' | 'email' | 'google-review' | 'sms';
+type PreviewType = 'linkedin' | 'email' | 'google-review' | 'sms' | 'whatsapp' | 'instagram' | 'devis';
 
 interface ContentPreviewMetadata {
   from?: string;
@@ -17,6 +20,9 @@ interface ContentPreviewMetadata {
   reviewText?: string;
   businessName?: string;
   recipientName?: string;
+  recipientPhone?: string;
+  imageUrl?: string;
+  companyName?: string;
 }
 
 interface ContentPreviewProps {
@@ -34,6 +40,9 @@ const TYPE_CONFIG: Record<PreviewType, { icon: string; label: string }> = {
   email: { icon: '📧', label: 'Email' },
   'google-review': { icon: '⭐', label: 'Google Avis' },
   sms: { icon: '💬', label: 'SMS' },
+  whatsapp: { icon: '📱', label: 'WhatsApp' },
+  instagram: { icon: '📸', label: 'Instagram' },
+  devis: { icon: '📄', label: 'Devis' },
 };
 
 export default function ContentPreview({
@@ -148,6 +157,35 @@ export default function ContentPreview({
           <SMSPreview
             content={editedContent}
             recipientName={metadata?.recipientName}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'whatsapp':
+        return (
+          <WhatsAppPreview
+            content={editedContent}
+            recipientName={metadata?.recipientName}
+            recipientPhone={metadata?.recipientPhone}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'instagram':
+        return (
+          <InstagramPreview
+            content={editedContent}
+            authorName={metadata?.authorName}
+            imageUrl={metadata?.imageUrl}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'devis':
+        return (
+          <DevisPreview
+            content={editedContent}
+            companyName={metadata?.companyName}
             editable={editing}
             onEdit={setEditedContent}
           />

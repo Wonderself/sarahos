@@ -1,8 +1,15 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import CookieConsent from '../components/CookieConsent';
 import AnalyticsLoader from '../components/AnalyticsLoader';
 import { getAllFaqItems } from '../lib/faq-data';
 import './globals.css';
+
+// Lazy-load chat widget — only loads JS when user clicks the bubble
+const ChatWidgetLazy = dynamic(() => import('../components/support/ChatWidget'), {
+  ssr: false,
+  loading: () => null,
+});
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -391,6 +398,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <CookieConsent />
         <AnalyticsLoader />
+        <ChatWidgetLazy />
       </body>
     </html>
   );

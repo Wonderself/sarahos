@@ -141,12 +141,12 @@ export default function V2Landing() {
               color: '#6B6B6B', lineHeight: 1.6,
               maxWidth: 420, margin: '0 auto 36px',
             }}>
-              100+ agents IA pour tout gerer.
+              150+ outils IA pour tout gérer.
               <br />
               <span style={{ color: '#1A1A1A', fontWeight: 600 }}>Gratuit. Sans inscription.</span>
             </p>
 
-            <Link href="/client/dashboard" style={{
+            <Link href="/try" style={{
               display: 'inline-block',
               padding: '14px 36px',
               background: '#1A1A1A', color: '#fff',
@@ -154,11 +154,11 @@ export default function V2Landing() {
               textDecoration: 'none',
               transition: 'transform 0.2s, box-shadow 0.2s',
             }}>
-              Commencer gratuitement
+              Essayer gratuitement →
             </Link>
 
             <p style={{ fontSize: 12, color: '#9B9B9B', marginTop: 14 }}>
-              Aucune carte bancaire requise
+              <Link href="/try" style={{ color: '#6B6B6B', textDecoration: 'none' }}>Tester sans inscription →</Link> · Aucune carte bancaire requise
             </p>
           </div>
 

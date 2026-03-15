@@ -19,7 +19,8 @@
     "db:init": "tsx scripts/seed-data.ts",
     "db:seed-users": "tsx scripts/seed-users.ts",
     "db:remove-test-users": "tsx scripts/remove-test-users.ts",
-    "health": "tsx scripts/health-check.ts"
+    "health": "tsx scripts/health-check.ts",
+    "prepare": "husky"
   },
   "keywords": [
     "ai",
@@ -75,6 +76,7 @@
     "@typescript-eslint/parser": "^8.56.1",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "prettier": "^3.8.1",
     "supertest": "^7.2.2",

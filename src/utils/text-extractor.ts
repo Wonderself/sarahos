@@ -83,7 +83,6 @@ export async function extractTextWithSections(buffer: Buffer, mimeType: string, 
     const lines = fullText.split('\n');
     let currentTitle = filename ? `Document: ${filename}` : 'Section 1';
     let currentContent: string[] = [];
-    let sectionIdx = 1;
 
     for (const line of lines) {
       // Detect headings (lines that look like titles)
@@ -95,7 +94,6 @@ export async function extractTextWithSections(buffer: Buffer, mimeType: string, 
         }
         currentTitle = line.trim().replace(/^#+\s*/, '');
         currentContent = [];
-        sectionIdx++;
       } else {
         currentContent.push(line);
       }

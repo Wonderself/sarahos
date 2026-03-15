@@ -1,0 +1,31 @@
+#!/bin/sh
+# TypeScript check (dashboard)
+# Filter out known pre-existing errors to only catch NEW errors
+TS_OUTPUT=$(npx tsc --noEmit --project src/dashboard/tsconfig.json 2>&1)
+NEW_ERRORS=$(echo "$TS_OUTPUT" | grep 'error TS' \
+  | grep -v '.next/types' \
+  | grep -v 'node_modules' \
+  | grep -v '@dnd-kit/' \
+  | grep -v 'pdfmake/' \
+  | grep -v "Cannot find module '../../../lib/use-media-query'" \
+  | grep -v "Cannot find module '../../../lib/page-styles'" \
+  | grep -v "Cannot find module 'pdfmake" \
+  | grep -v "'feat.mockup.review'" \
+  | grep -v "'feat.mockup.lines'" \
+  || true)
+
+if [ -n "$NEW_ERRORS" ]; then
+  echo "❌ New TypeScript errors found:"
+  echo "$NEW_ERRORS"
+  exit 1
+fi
+echo "✅ TypeScript OK (pre-existing errors filtered)"
+
+# Lint check — only fail on actual errors, not warnings
+LINT_OUTPUT=$(npm run lint 2>&1 || true)
+if echo "$LINT_OUTPUT" | grep -q "  error  "; then
+  echo "$LINT_OUTPUT" | grep "  error  "
+  echo "❌ Lint errors found!"
+  exit 1
+fi
+echo "✅ Lint OK"

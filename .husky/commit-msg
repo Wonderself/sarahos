@@ -1,0 +1,16 @@
+#!/bin/sh
+# Validate commit message format: feat|fix|refactor|test|docs(scope): description
+first_line=$(head -1 "$1")
+pattern="^(feat|fix|refactor|test|docs|chore|style|perf|ci|build|revert)(\(.+\))?: .{1,}"
+
+if ! echo "$first_line" | grep -qE "$pattern"; then
+  # Allow merge commits
+  if ! echo "$first_line" | grep -qE "^Merge "; then
+    echo "❌ Commit message format invalide!"
+    echo "Format attendu: feat|fix|refactor|test|docs(scope): description"
+    echo "Exemple: feat(nav): add mobile icons"
+    echo ""
+    echo "Message reçu: $first_line"
+    exit 1
+  fi
+fi

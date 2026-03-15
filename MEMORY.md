@@ -1,10 +1,14 @@
 # Freenzy.io — Journal de bord Claude
 
-## A propos de ce fichier
-Ce fichier est mis a jour par Claude Code.
+## ⚠️ ARCHIVE — Lecture seule
+> Ce fichier n'est plus maintenu manuellement depuis le 15/03/2026.
+> La mémoire persistante est désormais gérée automatiquement par **Claude Mem**.
+> Ce fichier reste dans le repo comme référence historique des décisions architecturales.
+
+## A propos de ce fichier (historique)
+Ce fichier était mis a jour par Claude Code.
 Il contient les decisions prises, bugs resolus, features rejetees,
 et insights importants sur Freenzy.io.
-Il est injecte dans chaque conversation pour eviter de repeter les memes erreurs.
 
 ## Decisions d'architecture
 

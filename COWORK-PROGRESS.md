@@ -123,6 +123,67 @@
   - `index.ts` — Public API exports
 - **Bot Telegram Admin** : deja cree en S3 (src/telegram/)
 
+## SESSION A — SÉCURITÉ + ÉQUIPES + CRONS + MOTEUR
+- **Statut** : TERMINÉ
+- **T1 — Constantes BRAND** : `src/config/constants.ts` (TOTAL_TOOLS_PUBLIC: "150+", termes harmonisés)
+- **T2 — RLS + Isolation** :
+  - Migration : `src/db/migrations/add-rls-policies.sql` (RLS sur 12 tables, rôles freenzy_app/freenzy_admin)
+  - Middleware : `src/middleware/isolation.ts` (withUserContext, withAdminContext)
+  - Guards : `src/lib/guards.ts` (assertOwnership, sanitizeOutput, ForbiddenError)
+- **T3 — Système d'équipes** :
+  - Migration : `src/db/migrations/add-teams.sql` (6 tables + RLS)
+  - Services : OrganizationService, CreditPoolService, TeamAgentService (dans `src/lib/teams/`)
+  - Migration invitations : `src/db/migrations/add-invitations.sql`
+- **T4 — Onboarding raccourci invités** : `src/dashboard/app/invite/[token]/page.tsx`
+- **T5 — Chat intelligent support** :
+  - Backend : `src/lib/support-chat/SupportChatService.ts` (Claude Haiku, anti-injection, streaming)
+  - Migration : `src/db/migrations/add-support-chat.sql` (support_chat_logs, support_tickets)
+  - API : `src/dashboard/app/api/support/chat/route.ts` + `ticket/route.ts`
+- **T6-7 — Crons** :
+  - `src/cron/scheduler.ts` (node-cron, 8 jobs)
+  - `src/lib/briefing/BriefingService.ts`
+  - `src/lib/email-sequence/EmailSequenceService.ts`
+  - `src/lib/reporting/ReportingService.ts`
+  - Scripts VPS prêts (backup-db, health-check, github-backup, rgpd-purge)
+- **T8 — Moteur amélioration** :
+  - `src/lib/improvement-engine/MetricsCollector.ts` + `ImprovementEngine.ts`
+  - API compteurs publics : `src/dashboard/app/api/public/counters/route.ts`
+- **T9 — Parrainage** :
+  - Migration : `src/db/migrations/add-referral.sql`
+  - Service : `src/lib/referral/ReferralService.ts`
+  - API : `src/dashboard/app/api/referral/route.ts` + `info/route.ts`
+  - Landing : `src/dashboard/app/r/[code]/page.tsx`
+- **T10 — Telegram équipes** : commandes /teams, /team, /tickets intégrées
+
+## SESSION B — DASHBOARD + EMAILS + SETTINGS + ÉQUIPES UI
+- **Statut** : TERMINÉ
+- **T1 — Dashboard configs** : 11 JSON dans `src/config/dashboard-profiles/` + types.ts
+- **T2 — Dashboard dynamique** :
+  - 8 composants dashboard : DashboardLayout, HeroSection, AgentsGrid, ApprovalWidget, MetricsWidget, QuickActions, OnboardingChecklist, ResetDashboardButton
+  - 4 composants équipe : TeamOverview, CreditPoolWidget, TeamActivityFeed, MemberSwitcher
+  - ReferralWidget, LiveCounters
+  - Config loader : `src/dashboard/lib/profile-config-loader.ts`
+  - API : `src/dashboard/app/api/dashboard/config/route.ts`
+- **T3 — Mode guest /try** : `src/dashboard/app/try/page.tsx` + API `/api/try/chat/route.ts`
+- **T4 — Chat widget support** :
+  - 5 composants : ChatWidget, ChatBubble, ChatWindow, ChatMessage, QuickReplies
+  - Intégré dans layout.tsx global (lazy load)
+- **T5 — Emails bienvenue** : 13 HTML dans `emails/templates/` (11 profils + invitation + base-layout)
+  - Renderer : `emails/templates/email-renderer.ts`
+  - Service : `src/lib/email/WelcomeEmailService.ts`
+- **T6 — Settings** : `src/dashboard/app/client/settings/personalization/page.tsx` (8 onglets)
+  - 5 composants équipe : MembersList, InviteModal, CreditPoolManager, ApprovalWorkflows, AgentPermissions
+- **T7 — Page équipe** : `src/dashboard/app/client/team/page.tsx` (refonte complète)
+- **T8 — Audit UX 10 pages** : dashboard, chat, agents, studio, documents, discussions, account, settings, team, notifications — padding réduits, termes harmonisés ("assistants")
+
+## FIX MOBILE — Emoji rail → Hamburger menu
+- **Statut** : TERMINÉ
+- Sur mobile (≤768px) : emoji rail masqué (display:none), hamburger menu plein écran
+- Sidebar overlay depuis la gauche (85vw, max 320px, z-index 100)
+- Main content pleine largeur (margin-left: 0)
+- Desktop : emoji rail inchangé (56px)
+- Pattern identique à Notion mobile
+
 ---
 
-**S1 + S2 + S3 + S3b + S4 + S5 terminees. Pret pour S6+S7.**
+**TOUTES SESSIONS TERMINÉES. Prêt pour Features Rollout (voir plan).**

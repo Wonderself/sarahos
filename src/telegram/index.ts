@@ -55,6 +55,16 @@ export function startTelegramBot(): TelegramBot {
 
   bot = new TelegramBot(BOT_TOKEN!, { polling: true });
 
+  // Prevent crash on polling errors
+  bot.on('polling_error', (err) => {
+    console.error('[Polling error]', err.message);
+  });
+
+  // Prevent crash on unhandled errors
+  bot.on('error', (err) => {
+    console.error('[Bot error]', err.message);
+  });
+
   // Security: ignore all messages from non-admin
   bot.on('message', (msg) => {
     if (msg.chat.id.toString() !== ADMIN_CHAT_ID) {

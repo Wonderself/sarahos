@@ -77,6 +77,22 @@ export class TelegramStreamer {
         const errMsg = err instanceof Error ? err.message : String(err);
         // "message is not modified" — content hasn't changed, ignore
         if (errMsg.includes('message is not modified')) return;
+        // Markdown parse error — retry without parse_mode
+        if (errMsg.includes("can't parse entities")) {
+          try {
+            const fallbackOpts: TelegramBot.EditMessageTextOptions = {
+              chat_id: this.chatId,
+              message_id: this.messageId,
+            };
+            if (buttons) {
+              fallbackOpts.reply_markup = buttons;
+            }
+            await this.bot.editMessageText(text, fallbackOpts);
+            return;
+          } catch {
+            return;
+          }
+        }
         // Rate limit — wait and retry
         if (errMsg.includes('Too Many Requests') || errMsg.includes('429')) {
           const waitMs = Math.min(1000 * Math.pow(2, attempt), 5000);

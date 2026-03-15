@@ -9,16 +9,19 @@ import { resetHistory } from './commands/chat-command';
 export const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 
 // ─── DB Helper ─────────────────────────────────────────────────
-// Uses psql directly (no pg dependency needed)
+// Uses docker exec to reach PostgreSQL inside the container
+const PG_CONTAINER = process.env.PG_CONTAINER || 'freenzy-postgres-ewcwwk0wocw0cw0kccsw4kcw-024742433003';
+
 async function dbQuery(sql: string): Promise<string> {
   return new Promise((resolve) => {
-    const proc = spawn('psql', ['-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql], {
-      env: { ...process.env, PGPASSWORD: process.env.DB_PASSWORD || '' },
-    });
+    const proc = spawn('docker', ['exec', PG_CONTAINER, 'psql', '-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql]);
     let out = '';
     let err = '';
     proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
     proc.stderr.on('data', (d: Buffer) => { err += d.toString(); });
+    proc.on('error', (e: Error) => {
+      resolve(`Error: ${e.message}`);
+    });
     proc.on('close', () => resolve(out.trim() || err.trim() || 'No result'));
   });
 }

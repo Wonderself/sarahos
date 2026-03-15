@@ -17,6 +17,7 @@ OFFSET_FILE="/tmp/freenzy-claude-bot-offset"
 source "$PROJECT_DIR/.env" 2>/dev/null
 
 BOT_TOKEN="${TELEGRAM_BOT_TOKEN}"
+ANTHROPIC_KEY="${ANTHROPIC_API_KEY}"
 ADMIN_CHAT_ID="6238804698"
 POLL_INTERVAL=3
 
@@ -165,6 +166,65 @@ process_logs_command() {
   send_message "$ADMIN_CHAT_ID" "$(echo -e "$msg")"
 }
 
+process_chat_command() {
+  local message="$1"
+
+  if [ -z "$ANTHROPIC_KEY" ]; then
+    send_message "$ADMIN_CHAT_ID" "⚠️ ANTHROPIC_API_KEY non configuree dans .env"
+    return
+  fi
+
+  send_message "$ADMIN_CHAT_ID" "💬 Reflexion en cours..."
+
+  # Load CLAUDE.md context (first 4000 chars)
+  local context=""
+  if [ -f "$PROJECT_DIR/CLAUDE.md" ]; then
+    context=$(head -c 4000 "$PROJECT_DIR/CLAUDE.md")
+  fi
+
+  local system_prompt="Tu es l'assistant de Emmanuel Smadja, fondateur de Freenzy.io. Reponds en francais, sois direct et concis. Contexte projet : ${context}"
+
+  # Escape message for JSON
+  local json_message
+  json_message=$(python3 -c "import sys,json; print(json.dumps(sys.argv[1]))" "$message")
+  local json_system
+  json_system=$(python3 -c "import sys,json; print(json.dumps(sys.argv[1]))" "$system_prompt")
+
+  local response
+  response=$(curl -s -m 120 "https://api.anthropic.com/v1/messages" \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: ${ANTHROPIC_KEY}" \
+    -H "anthropic-version: 2023-06-01" \
+    -d "{
+      \"model\": \"claude-sonnet-4-20250514\",
+      \"max_tokens\": 2048,
+      \"system\": ${json_system},
+      \"messages\": [{\"role\": \"user\", \"content\": ${json_message}}]
+    }" 2>/dev/null)
+
+  local reply
+  reply=$(echo "$response" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    if 'content' in data:
+        print(''.join(b['text'] for b in data['content'] if b['type'] == 'text'))
+    elif 'error' in data:
+        print('Erreur API: ' + data['error'].get('message', str(data['error'])))
+    else:
+        print('Reponse inattendue: ' + str(data)[:300])
+except Exception as e:
+    print(f'Erreur parsing: {e}')
+" 2>/dev/null)
+
+  if [ -z "$reply" ]; then
+    send_message "$ADMIN_CHAT_ID" "❌ Pas de reponse de Claude. Verifier ANTHROPIC_API_KEY."
+    return
+  fi
+
+  send_message "$ADMIN_CHAT_ID" "$(echo "$reply" | head -c 4000)"
+}
+
 echo "🤖 Freenzy Claude Bot started (PID $$, polling every ${POLL_INTERVAL}s)"
 send_message "$ADMIN_CHAT_ID" "🤖 <b>Claude Bot demarre</b>
 
@@ -222,6 +282,37 @@ except:
         # Run in background so bot keeps polling
         process_claude_command "$INSTRUCTION" "$msg_id" &
         ;;
+      /claude)
+        send_message "$ADMIN_CHAT_ID" "🤖 <b>Claude Code — Aide</b>
+
+Donne une instruction a Claude Code pour executer une tache sur le projet.
+
+<b>Usage :</b> <code>/claude [instruction]</code>
+
+<b>Exemples :</b>
+• <code>/claude ajoute un bouton contact sur la homepage</code>
+• <code>/claude genere 3 articles blog SEO</code>
+• <code>/claude corrige les bugs TypeScript</code>
+• <code>/claude analyse les logs d'erreur</code>
+
+⏱ Timeout : 10 minutes max par tache."
+        ;;
+      /chat\ *)
+        CHAT_MSG="${text#/chat }"
+        process_chat_command "$CHAT_MSG" &
+        ;;
+      /chat)
+        send_message "$ADMIN_CHAT_ID" "💬 <b>Chat — Aide</b>
+
+Parle directement avec Claude (Sonnet). Il connait le projet Freenzy.
+
+<b>Usage :</b> <code>/chat [message]</code>
+
+<b>Exemples :</b>
+• <code>/chat combien on a d'utilisateurs actifs ?</code>
+• <code>/chat idees pour augmenter la retention</code>
+• <code>/chat resume les derniers changements</code>"
+        ;;
       /status)
         process_status_command
         ;;
@@ -232,16 +323,16 @@ except:
         send_message "$ADMIN_CHAT_ID" "🤖 <b>Freenzy Claude Bot</b>
 
 <b>Commandes :</b>
-/claude [instruction] — Execute Claude Code
+/claude [instruction] — Execute une tache (modifie le code)
+/chat [message] — Discuter avec Claude (lecture seule)
 /status — Status serveur et containers
-/logs — Dernières taches executees
+/logs — Dernieres taches executees
 /help — Cette aide
 
 <b>Exemples :</b>
 <code>/claude ajoute un bouton contact sur la homepage</code>
-<code>/claude genere 3 articles blog SEO</code>
-<code>/claude corrige les bugs TypeScript</code>
-<code>/claude analyse les logs d'erreur</code>"
+<code>/chat combien d'utilisateurs actifs cette semaine ?</code>
+<code>/chat idees pour ameliorer le onboarding</code>"
         ;;
       /*)
         send_message "$ADMIN_CHAT_ID" "❓ Commande inconnue. Tape /help"

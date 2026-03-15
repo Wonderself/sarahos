@@ -118,7 +118,7 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6-20250514',
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 4096,
         system: systemPrompt,
         messages: history,
@@ -148,38 +148,38 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
 
     const fullResponse = assistantText + actionHint;
 
+    // Helper: send message with Markdown fallback to plain text
+    const safeSend = async (cid: string, text: string, opts?: TelegramBot.SendMessageOptions): Promise<void> => {
+      try {
+        await bot.sendMessage(cid, text, { parse_mode: 'Markdown', ...opts });
+      } catch {
+        await bot.sendMessage(cid, text, { ...opts, parse_mode: undefined });
+      }
+    };
+
     // Send response (split if needed)
+    const chatButtons: TelegramBot.InlineKeyboardMarkup = {
+      inline_keyboard: [
+        [
+          { text: '🔄 Continuer', callback_data: 'chat_continue' },
+          { text: '📋 → Tâche', callback_data: `to_task_chat_${Date.now()}` },
+          { text: '💾 Sauvegarder', callback_data: `save_memory_chat_${Date.now()}` },
+        ],
+      ],
+    };
+
     const parts: string[] = splitMessage(fullResponse);
     if (parts.length === 1) {
-      await streamer.finish(parts[0] ?? '', {
-        inline_keyboard: [
-          [
-            { text: '🔄 Continuer', callback_data: 'chat_continue' },
-            { text: '📋 → Tâche', callback_data: `to_task_chat_${Date.now()}` },
-            { text: '💾 Sauvegarder', callback_data: `save_memory_chat_${Date.now()}` },
-          ],
-        ],
-      });
+      await streamer.finish(parts[0] ?? '', chatButtons);
     } else {
       await streamer.finish(parts[0] ?? '');
       for (let i = 1; i < parts.length; i++) {
         const isLast = i === parts.length - 1;
         const part = parts[i] ?? '';
         if (isLast) {
-          await bot.sendMessage(chatId, part, {
-            parse_mode: 'Markdown',
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  { text: '🔄 Continuer', callback_data: 'chat_continue' },
-                  { text: '📋 → Tâche', callback_data: `to_task_chat_${Date.now()}` },
-                  { text: '💾 Sauvegarder', callback_data: `save_memory_chat_${Date.now()}` },
-                ],
-              ],
-            },
-          });
+          await safeSend(chatId, part, { reply_markup: chatButtons });
         } else {
-          await bot.sendMessage(chatId, part, { parse_mode: 'Markdown' });
+          await safeSend(chatId, part);
         }
       }
     }

@@ -20,14 +20,15 @@ interface PendingAction {
 
 const pendingActions = new Map<string, PendingAction>();
 
-// DB helper
+// DB helper — uses docker exec to reach PostgreSQL
+const PG_CONTAINER = process.env.PG_CONTAINER || 'freenzy-postgres-ewcwwk0wocw0cw0kccsw4kcw-024742433003';
+
 async function dbQuery(sql: string): Promise<string> {
   return new Promise((resolve) => {
-    const proc = spawn('psql', ['-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql], {
-      env: { ...process.env, PGPASSWORD: process.env.DB_PASSWORD || '' },
-    });
+    const proc = spawn('docker', ['exec', PG_CONTAINER, 'psql', '-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql]);
     let out = '';
     proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    proc.on('error', (e: Error) => { resolve(`Error: ${e.message}`); });
     proc.on('close', () => resolve(out.trim() || 'OK'));
   });
 }

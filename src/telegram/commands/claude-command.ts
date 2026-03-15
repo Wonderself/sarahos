@@ -51,6 +51,25 @@ function formatProgress(state: ClaudeTaskState): string {
 }
 
 export function registerClaudeCommand(bot: TelegramBot, adminChatId: string): void {
+  // Handle /claude without arguments — show help
+  bot.onText(/^\/claude$/, async (msg) => {
+    if (msg.chat.id.toString() !== adminChatId) return;
+    await bot.sendMessage(msg.chat.id, `🤖 *Claude Code — Aide*
+
+Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
+
+*Usage :* \`/claude [instruction]\`
+
+*Exemples :*
+• \`/claude ajoute un bouton contact sur la homepage\`
+• \`/claude génère 3 articles blog SEO\`
+• \`/claude corrige les bugs TypeScript\`
+• \`/claude analyse les logs d'erreur\`
+• \`/claude lance le build et corrige les erreurs\`
+
+⏱ Timeout : 10 minutes max par tâche.`, { parse_mode: 'Markdown' });
+  });
+
   bot.onText(/\/claude (.+)/, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const instruction = match?.[1]?.trim();

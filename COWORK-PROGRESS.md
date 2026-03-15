@@ -97,6 +97,32 @@
 - **Variables dynamiques** : user.nom, user.profession, user.sub_profession, business.nom, business.ville, business.adresse_complete, etc.
 - **Profils cibles couverts** : sante, artisan, coach, consultant, agence, pme, ecommerce, restaurant, immo, liberal, particulier
 
+## SESSION 4 — AGENTS 11-20 + INDEX
+- **Statut** : TERMINE
+- **Fichiers crees** (11) dans `src/config/agents/` :
+  - `agent-11-veille-reglementaire.ts` — id: veille-reglementaire, Sonnet, 3cr
+  - `agent-12-briefing-matinal.ts` — id: briefing-matinal, Haiku, 1cr
+  - `agent-13-intelligence-gatherer.ts` — id: intelligence-gatherer, Sonnet, 5cr
+  - `agent-14-amelioration-produit.ts` — id: product-improvement, Opus, 10cr
+  - `agent-15-formation-interne.ts` — id: formation-interne, Sonnet, 3cr
+  - `agent-16-programme-formation.ts` — id: programme-formation, Sonnet, 4cr
+  - `agent-17-rdv-planning.ts` — id: rdv-planning, Haiku, 1cr
+  - `agent-18-fiches-produits.ts` — id: fiches-produits-seo, Sonnet, 2cr
+  - `agent-19-email-marketing.ts` — id: email-marketing, Sonnet, 2cr
+  - `agent-20-analyse-concurrentielle.ts` — id: analyse-concurrentielle, Opus, 8cr
+  - `index.ts` — Catalogue 20 agents + AGENTS_BY_PROFILE + AGENTS_BY_TAG + getAgentsForProfile() + getRecommendedAgents()
+- **Total agents** : 20 (10 existants S3 + 10 nouveaux S4)
+- **Index** : catalogue, mapping par profil (12 profils), mapping par tag, fonctions de recherche et recommandation
+
+## SESSION 5 — APPROVAL SYSTEM
+- **Statut** : TERMINE
+- **Fichiers crees** (4) dans `src/lib/approval-system/` :
+  - `approval-types.ts` — ActionType enum (16 types), ApprovalStatus enum, interfaces
+  - `ApprovalService.ts` — create/approve/reject/postpone/modify/processExpired/sendReminders
+  - `ApprovalNotifier.ts` — email HTML (table-based Outlook), Telegram inline buttons, WhatsApp, in-app
+  - `index.ts` — Public API exports
+- **Bot Telegram Admin** : deja cree en S3 (src/telegram/)
+
 ---
 
-**S1 + S2 + S3 + S3b terminees. Pret pour S4.**
+**S1 + S2 + S3 + S3b + S4 + S5 terminees. Pret pour S6+S7.**

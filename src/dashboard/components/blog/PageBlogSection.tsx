@@ -7,6 +7,57 @@ import { PAGE_BLOG_CONFIGS } from '@/lib/page-blog/articles-data';
 import { getArticlesForPage } from '@/lib/page-blog';
 import { useIsMobile } from '@/lib/use-media-query';
 
+// ─── Category emoji map ─────────────────────────────────────
+const CATEGORY_EMOJIS: Record<string, string> = {
+  'productivite': '\uD83D\uDE80',
+  'ia': '\uD83E\uDD16',
+  'chat': '\uD83D\uDCAC',
+  'agents': '\uD83E\uDDD1\u200D\uD83D\uDCBB',
+  'assistants': '\uD83E\uDDD1\u200D\uD83D\uDCBB',
+  'studio': '\uD83C\uDFA8',
+  'creatif': '\uD83C\uDFA8',
+  'marketing': '\uD83D\uDCE3',
+  'commercial': '\uD83D\uDCBC',
+  'finance': '\uD83D\uDCB0',
+  'juridique': '\u2696\uFE0F',
+  'rh': '\uD83D\uDC65',
+  'communication': '\uD83D\uDCE1',
+  'strategie': '\uD83C\uDFAF',
+  'automatisation': '\u2699\uFE0F',
+  'documents': '\uD83D\uDCC4',
+  'social': '\uD83D\uDCF1',
+  'repondeur': '\uD83D\uDCDE',
+  'reveil': '\u23F0',
+  'restaurant': '\uD83C\uDF7D\uFE0F',
+  'immobilier': '\uD83C\uDFE0',
+  'cabinet': '\uD83C\uDFE5',
+  'discussions': '\uD83D\uDCA1',
+  'blog': '\uD83D\uDCDD',
+  'arcade': '\uD83C\uDFAE',
+  'entreprise': '\uD83C\uDFE2',
+  'securite': '\uD83D\uDD12',
+  'analytics': '\uD83D\uDCCA',
+  'default': '\uD83D\uDCCC',
+};
+
+function getCategoryEmoji(category: string): string {
+  const lower = category.toLowerCase();
+  for (const [key, emoji] of Object.entries(CATEGORY_EMOJIS)) {
+    if (lower.includes(key)) return emoji;
+  }
+  return CATEGORY_EMOJIS['default'];
+}
+
+// ─── Subheading emoji picker ────────────────────────────────
+const SUBHEADING_EMOJIS = [
+  '\uD83D\uDCA1', '\u2705', '\uD83D\uDD11', '\uD83C\uDFAF', '\uD83D\uDCCC',
+  '\u26A1', '\uD83D\uDEE0\uFE0F', '\uD83D\uDCDD', '\uD83D\uDD0D', '\uD83D\uDCA0',
+];
+
+function getSubheadingEmoji(index: number): string {
+  return SUBHEADING_EMOJIS[index % SUBHEADING_EMOJIS.length];
+}
+
 // ─── Props ──────────────────────────────────────────────────
 interface PageBlogSectionProps {
   pageId: string;
@@ -17,6 +68,7 @@ interface PageBlogSectionProps {
 function renderMarkdown(text: string): React.ReactNode[] {
   const lines = text.split('\n');
   const nodes: React.ReactNode[] = [];
+  let subheadingIdx = 0;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -27,20 +79,36 @@ function renderMarkdown(text: string): React.ReactNode[] {
       continue;
     }
 
-    // Headers
+    // Headers ### → subheading with emoji
     if (trimmed.startsWith('### ')) {
+      const emoji = getSubheadingEmoji(subheadingIdx++);
       nodes.push(
-        <h4 key={`h4-${i}`} style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', margin: '16px 0 6px' }}>
-          {trimmed.slice(4)}
+        <h4 key={`h4-${i}`} style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', margin: '14px 0 8px' }}>
+          {emoji} {trimmed.slice(4)}
         </h4>
       );
       continue;
     }
+    // Headers ## → subheading with emoji
     if (trimmed.startsWith('## ')) {
+      const emoji = getSubheadingEmoji(subheadingIdx++);
       nodes.push(
-        <h3 key={`h3-${i}`} style={{ fontSize: 15, fontWeight: 600, color: '#1A1A1A', margin: '18px 0 8px' }}>
-          {trimmed.slice(3)}
+        <h3 key={`h3-${i}`} style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', margin: '14px 0 8px' }}>
+          {emoji} {trimmed.slice(3)}
         </h3>
+      );
+      continue;
+    }
+
+    // Check if line is entirely bold: **something**
+    const isBoldLine = /^\*\*[^*]+\*\*$/.test(trimmed);
+    if (isBoldLine) {
+      const emoji = getSubheadingEmoji(subheadingIdx++);
+      const boldText = trimmed.slice(2, -2);
+      nodes.push(
+        <p key={`bh-${i}`} style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', margin: '14px 0 8px', lineHeight: 1.4 }}>
+          {emoji} {boldText}
+        </p>
       );
       continue;
     }
@@ -49,7 +117,7 @@ function renderMarkdown(text: string): React.ReactNode[] {
     const parts = trimmed.split(/(\*\*[^*]+\*\*)/g);
     const rendered = parts.map((part, j) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={j}>{part.slice(2, -2)}</strong>;
+        return <strong key={j} style={{ fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
       }
       return part;
     });
@@ -98,16 +166,18 @@ function ArticleCard({
   isExpanded,
   onToggle,
   isMobile,
+  categoryEmoji,
 }: {
   article: PageArticle;
   isExpanded: boolean;
   onToggle: () => void;
   isMobile: boolean;
+  categoryEmoji: string;
 }) {
   const [hovered, setHovered] = useState(false);
 
   const cardStyle: CSSProperties = {
-    background: '#fff',
+    background: '#FFFFFF',
     border: '1px solid #E5E5E5',
     borderRadius: 8,
     cursor: 'pointer',
@@ -121,14 +191,16 @@ function ArticleCard({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
     padding: 12,
   };
 
   const collapsedDesktopStyle: CSSProperties = {
     display: 'flex',
-    flexDirection: 'column',
-    padding: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    padding: 12,
   };
 
   return (
@@ -153,9 +225,9 @@ function ArticleCard({
             alt={article.imageAlt}
             loading="lazy"
             style={{
-              width: 60,
-              height: 60,
-              borderRadius: 8,
+              width: 48,
+              height: 48,
+              borderRadius: 24,
               objectFit: 'cover',
               flexShrink: 0,
             }}
@@ -166,16 +238,17 @@ function ArticleCard({
             alt={article.imageAlt}
             loading="lazy"
             style={{
-              width: '100%',
-              height: 120,
+              width: 160,
+              height: 100,
+              borderRadius: 6,
               objectFit: 'cover',
-              borderRadius: '8px 8px 0 0',
+              flexShrink: 0,
             }}
           />
         )}
 
         {/* Text content */}
-        <div style={{ padding: isMobile ? 0 : '10px 14px 12px', flex: 1, minWidth: 0 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <h3 style={{
             fontSize: 14,
             fontWeight: 600,
@@ -187,14 +260,14 @@ function ArticleCard({
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
           } as CSSProperties}>
-            {article.title}
+            {categoryEmoji} {article.title}
           </h3>
 
           {!isMobile && (
             <p style={{
               fontSize: 12,
               color: '#6B6B6B',
-              margin: '6px 0 0',
+              margin: '4px 0 0',
               lineHeight: 1.5,
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -208,7 +281,7 @@ function ArticleCard({
           <div style={{
             fontSize: 11,
             color: '#9B9B9B',
-            marginTop: isMobile ? 4 : 8,
+            marginTop: isMobile ? 4 : 6,
             lineHeight: 1.4,
           }}>
             <time dateTime={article.date}>
@@ -227,22 +300,30 @@ function ArticleCard({
 
       {/* Expanded view */}
       {isExpanded && (
-        <div style={{ padding: '0 14px 14px', borderTop: '1px solid #E5E5E5' }}>
+        <div style={{
+          borderLeft: '3px solid #E5E5E5',
+          marginLeft: 12,
+          marginRight: 12,
+          marginBottom: 12,
+          padding: 16,
+          borderTop: '1px solid #E5E5E5',
+        }}>
           <ArticleJsonLd article={article} />
 
           <img
             src={article.imageUrl}
             alt={article.imageAlt}
+            loading="lazy"
             style={{
               width: '100%',
               height: 300,
               objectFit: 'cover',
-              borderRadius: 8,
-              marginTop: 14,
+              borderRadius: 6,
+              marginBottom: 14,
             }}
           />
 
-          <div style={{ marginTop: 14 }}>
+          <div>
             {renderMarkdown(article.content)}
           </div>
 
@@ -252,7 +333,7 @@ function ArticleCard({
               display: 'inline-flex',
               alignItems: 'center',
               gap: 4,
-              marginTop: 16,
+              marginTop: 14,
               padding: '6px 14px',
               fontSize: 12,
               fontWeight: 500,
@@ -276,6 +357,7 @@ export default function PageBlogSection({ pageId, maxArticles = 10 }: PageBlogSe
   const isMobile = useIsMobile();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [linkHovered, setLinkHovered] = useState(false);
 
   const config: PageBlogConfig | null = useMemo(
     () => getArticlesForPage(PAGE_BLOG_CONFIGS, pageId),
@@ -285,6 +367,11 @@ export default function PageBlogSection({ pageId, maxArticles = 10 }: PageBlogSe
   const handleToggle = useCallback((articleId: string) => {
     setExpandedId((prev) => (prev === articleId ? null : articleId));
   }, []);
+
+  const categoryEmoji = useMemo(() => {
+    if (!config) return CATEGORY_EMOJIS['default'];
+    return getCategoryEmoji(config.categoryTitle);
+  }, [config]);
 
   // No articles → render nothing
   if (!config || config.articles.length === 0) {
@@ -296,18 +383,18 @@ export default function PageBlogSection({ pageId, maxArticles = 10 }: PageBlogSe
   const hasMore = config.articles.length > visibleCount;
 
   const gridStyle: CSSProperties = isMobile
-    ? { display: 'flex', flexDirection: 'column', gap: 10 }
-    : { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 };
+    ? { display: 'flex', flexDirection: 'column', gap: 8 }
+    : { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 };
 
   return (
     <section aria-label={`Articles : ${config.categoryTitle}`}>
       {/* Separator */}
-      <div style={{ borderTop: '1px solid #E5E5E5', margin: '32px 0' }} />
+      <div style={{ borderTop: '1px solid #E5E5E5', margin: '24px 0' }} />
 
       {/* Header */}
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 12 }}>
         <h2 style={{
-          fontSize: 16,
+          fontSize: 15,
           fontWeight: 700,
           color: '#1A1A1A',
           margin: 0,
@@ -316,7 +403,7 @@ export default function PageBlogSection({ pageId, maxArticles = 10 }: PageBlogSe
           {config.categoryEmoji} Articles : {config.categoryTitle}
         </h2>
         <p style={{
-          fontSize: 12,
+          fontSize: 11,
           color: '#9B9B9B',
           margin: '4px 0 0',
           lineHeight: 1.5,
@@ -334,19 +421,20 @@ export default function PageBlogSection({ pageId, maxArticles = 10 }: PageBlogSe
             isExpanded={expandedId === article.id}
             onToggle={() => handleToggle(article.id)}
             isMobile={isMobile}
+            categoryEmoji={categoryEmoji}
           />
         ))}
       </div>
 
       {/* Show more / View all */}
-      <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         {hasMore && (
           <button
             onClick={() => setShowAll(true)}
             style={{
               fontSize: 12,
               fontWeight: 500,
-              color: '#1A1A1A',
+              color: '#6B6B6B',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -361,18 +449,21 @@ export default function PageBlogSection({ pageId, maxArticles = 10 }: PageBlogSe
 
         <a
           href="/client/blog"
+          onMouseEnter={() => setLinkHovered(true)}
+          onMouseLeave={() => setLinkHovered(false)}
           style={{
             fontSize: 12,
-            fontWeight: 500,
-            color: '#1A1A1A',
-            textDecoration: 'none',
+            fontWeight: 400,
+            color: '#6B6B6B',
+            textDecoration: linkHovered ? 'underline' : 'none',
+            textUnderlineOffset: 3,
             marginLeft: 'auto',
             display: 'inline-flex',
             alignItems: 'center',
             gap: 4,
           }}
         >
-          VOIR TOUS LES ARTICLES {'\u2192'}
+          Voir tous les articles {'\u2192'}
         </a>
       </div>
     </section>

@@ -12,7 +12,7 @@ ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-ENV NODE_OPTIONS=--max-old-space-size=4096
+ENV NODE_OPTIONS=--max-old-space-size=8192
 RUN npm run build
 
 FROM node:20-alpine AS runner

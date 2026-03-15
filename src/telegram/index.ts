@@ -31,6 +31,7 @@ import { registerClaudeCommand } from './commands/claude-command';
 import { registerThinkCommand } from './commands/think-command';
 import { registerChatCommand } from './commands/chat-command';
 import { registerPhotoCommand } from './commands/photo-command';
+import { registerAutoloopCommand } from './commands/autoloop-command';
 import { registerCallbacks } from './callbacks';
 import { initChannels } from './channels';
 import { initProactiveNotifications } from './proactive-notifications';
@@ -91,7 +92,10 @@ export function startTelegramBot(): TelegramBot {
   // 6. Photo analysis (Feature 5)
   registerPhotoCommand(bot, ADMIN_CHAT_ID);
 
-  // 7. Inline callbacks (Feature 9)
+  // 7. /autoloop with budget tracking (Feature 12)
+  registerAutoloopCommand(bot, ADMIN_CHAT_ID);
+
+  // 8. Inline callbacks (Feature 9)
   registerCallbacks(bot, ADMIN_CHAT_ID);
 
   // 8. Proactive notifications (Feature 10)
@@ -105,7 +109,7 @@ export function startTelegramBot(): TelegramBot {
     '🤖 *Freenzy Admin Bot — Démarré*',
     '',
     '✅ Commandes : /start /status /users /revenue /errors',
-    '✅ Actions : /claude /think /chat + photos',
+    '✅ Actions : /claude /think /chat /autoloop + photos',
     '✅ Validations : /pending /approve /reject',
     '✅ Système : /deploy /backup /report',
     '✅ Notifications proactives : activées',
@@ -116,7 +120,7 @@ export function startTelegramBot(): TelegramBot {
 
   console.log('✅ Bot Telegram opérationnel');
   console.log(`   Admin Chat ID: ${ADMIN_CHAT_ID}`);
-  console.log(`   Features: 11/11 actives`);
+  console.log(`   Features: 12/12 actives`);
 
   // Graceful shutdown
   const shutdown = () => {

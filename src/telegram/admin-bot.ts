@@ -68,6 +68,7 @@ export function registerBotCommands(bot: TelegramBot, adminChatId: string): void
 
 ⚡ *ACTIONS RAPIDES*
 /claude \\[instruction\\] — Donner une tâche à Claude
+/autoloop \\[instruction\\] \\[durée\\] — Session autonome longue
 /think \\[question\\] — Analyse approfondie
 /chat \\[message\\] — Conversation libre
 _Envoie une photo pour l'analyser_

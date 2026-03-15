@@ -564,4 +564,69 @@ ${topProfessions.split('\n').map((l: string) => {
       },
     });
   });
+
+  // ── /tickets ──
+  bot.onText(/\/tickets/, async (msg) => {
+    if (msg.chat.id.toString() !== adminChatId) return;
+
+    const tickets = await dbQuery(`
+      SELECT id, visitor_email, subject, status, priority,
+        to_char(created_at, 'DD/MM HH24:MI') as created
+      FROM support_tickets
+      WHERE status != 'closed'
+      ORDER BY CASE priority WHEN 'urgent' THEN 1 WHEN 'high' THEN 2 ELSE 3 END, created_at DESC
+      LIMIT 15
+    `);
+
+    if (!tickets || tickets === 'No result') {
+      await bot.sendMessage(msg.chat.id, '✅ Aucun ticket ouvert.');
+      return;
+    }
+
+    let ticketsMsg = '🎫 *Tickets Support*\n\n';
+    for (const line of tickets.split('\n').filter(Boolean)) {
+      const [id, email, subject, status, priority, created] = line.split('|');
+      const badge = priority === 'urgent' ? '🔴' : priority === 'high' ? '🟡' : '🟢';
+      ticketsMsg += `${badge} *${(subject || '').slice(0, 40)}*\n   ${email} · ${status} · ${created}\n   ID: \`${(id || '').slice(0, 8)}\`\n\n`;
+    }
+
+    await bot.sendMessage(msg.chat.id, ticketsMsg, { parse_mode: 'Markdown' });
+  });
+
+  // ── /referrals ──
+  bot.onText(/\/referrals/, async (msg) => {
+    if (msg.chat.id.toString() !== adminChatId) return;
+
+    const stats = await dbQuery(`
+      SELECT
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'rewarded' THEN 1 END) as activated,
+        COALESCE(SUM(CASE WHEN status = 'rewarded' THEN reward_referrer END), 0) as credits_given
+      FROM referrals
+    `);
+
+    const topReferrers = await dbQuery(`
+      SELECT u.display_name, COUNT(r.id) as refs, SUM(r.reward_referrer) as earned
+      FROM referrals r JOIN users u ON r.referrer_id = u.id
+      WHERE r.status = 'rewarded'
+      GROUP BY u.id, u.display_name ORDER BY refs DESC LIMIT 5
+    `);
+
+    const [total, activated, creditsGiven] = (stats || '0|0|0').split('|');
+
+    let msg2 = `🎁 *Parrainages*\n\n`;
+    msg2 += `Total : ${total}\n`;
+    msg2 += `Activés : ${activated}\n`;
+    msg2 += `Crédits distribués : ${creditsGiven}\n\n`;
+
+    if (topReferrers && topReferrers !== 'No result') {
+      msg2 += `🏆 *Top parrains :*\n`;
+      for (const line of topReferrers.split('\n').filter(Boolean)) {
+        const [name, refs, earned] = line.split('|');
+        msg2 += `• ${name} — ${refs} filleuls · ${earned} crédits\n`;
+      }
+    }
+
+    await bot.sendMessage(msg.chat.id, msg2, { parse_mode: 'Markdown' });
+  });
 }

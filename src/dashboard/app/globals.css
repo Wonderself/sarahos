@@ -1819,6 +1819,11 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
   flex-shrink: 0;
 }
+.public-nav-mobile-icons {
+  display: none;
+  align-items: center;
+  gap: 2px;
+}
 
 /* ── PublicFooter ── */
 .public-footer {
@@ -1966,6 +1971,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 768px) {
   /* Nav */
   .public-nav-links { display: none; }
+  .public-nav-mobile-icons { display: flex; }
   .public-nav-mobile-toggle { display: flex; }
 
   /* Footer */

@@ -219,15 +219,46 @@ export default function PublicNav() {
           </Link>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="public-nav-mobile-toggle"
-          onClick={() => setMobileOpen(o => !o)}
-          aria-label="Menu"
-          style={{ color: isDark ? 'rgba(255,255,255,0.85)' : '#1d1d1f' }}
-        >
-          {mobileOpen ? '\u2715' : '\u2630'}
-        </button>
+        {/* Mobile fixed icons — always visible on mobile */}
+        <div className="public-nav-mobile-icons">
+          <Link
+            href="/demo"
+            aria-label="Démo"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 40, height: 40, borderRadius: 10,
+              background: pathname === '/demo' ? 'rgba(0,0,0,0.06)' : 'transparent',
+              textDecoration: 'none', transition: 'background 0.2s ease',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={pathname === '/demo' ? '#1A1A1A' : '#6b7280'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          </Link>
+          <Link
+            href="/login"
+            aria-label="Connexion"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 40, height: 40, borderRadius: 10,
+              background: pathname === '/login' ? 'rgba(0,0,0,0.06)' : 'transparent',
+              textDecoration: 'none', transition: 'background 0.2s ease',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={pathname === '/login' ? '#1A1A1A' : '#6b7280'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </Link>
+          <button
+            className="public-nav-mobile-toggle"
+            onClick={() => setMobileOpen(o => !o)}
+            aria-label="Menu"
+            style={{ color: isDark ? 'rgba(255,255,255,0.85)' : '#1d1d1f' }}
+          >
+            {mobileOpen ? '\u2715' : '\u2630'}
+          </button>
+        </div>
       </div>
 
       {/* Mobile dropdown */}

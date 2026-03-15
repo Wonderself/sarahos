@@ -170,8 +170,8 @@ export function getRecommendedAgents(userProfile: UserProfile) {
   if (has_gmb) {
     const idx = result.findIndex(a => a.id === 'reputation-google');
     if (idx > 0) {
-      const [rep] = result.splice(idx, 1);
-      result.unshift(rep);
+      const rep = result.splice(idx, 1)[0];
+      if (rep) result.unshift(rep);
     }
   }
 

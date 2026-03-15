@@ -5,7 +5,6 @@
 import { spawn } from 'child_process';
 import {
   ActionType,
-  ApprovalStatus,
   ApprovalTarget,
   type ApprovalQueueItem,
   type ApprovalSettings,

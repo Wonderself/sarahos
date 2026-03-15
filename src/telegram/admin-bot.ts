@@ -438,4 +438,130 @@ ${topProfessions.split('\n').map((l: string) => {
     resetHistory(msg.chat.id.toString());
     await bot.sendMessage(msg.chat.id, '🔄 Historique effacé. Nouvelle conversation.');
   });
+
+  // ── /teams ──
+  bot.onText(/\/teams/, async (msg) => {
+    if (msg.chat.id.toString() !== adminChatId) return;
+
+    const teams = await dbQuery(`
+      SELECT o.name, COUNT(om.id) as members,
+        COALESCE(cp.total_credits - cp.used_credits, 0) as pool_remaining,
+        (SELECT COUNT(*) FROM organization_agents oa WHERE oa.organization_id = o.id AND oa.enabled = true) as active_agents,
+        u.email as owner_email, o.plan
+      FROM organizations o
+      JOIN users u ON o.owner_id = u.id
+      LEFT JOIN organization_members om ON o.id = om.organization_id
+      LEFT JOIN credit_pools cp ON o.id = cp.organization_id
+      GROUP BY o.id, o.name, cp.total_credits, cp.used_credits, u.email, o.plan
+      ORDER BY members DESC LIMIT 20
+    `);
+
+    if (!teams || teams === 'No result') {
+      await bot.sendMessage(msg.chat.id, '👥 Aucune équipe créée.');
+      return;
+    }
+
+    const lines = teams.split('\n').filter(Boolean);
+    let teamsMsg = '👥 *Équipes Freenzy*\n\n';
+    let totalMembers = 0;
+
+    lines.forEach((line, i) => {
+      const [name, members, pool, agents, owner, plan] = line.split('|');
+      totalMembers += parseInt(members || '0');
+      teamsMsg += `${i + 1}. *${name}* — ${members} membres | ${pool} crédits | ${agents} agents\n   Owner: ${owner} | Plan: ${plan}\n\n`;
+    });
+
+    teamsMsg += `\n_Total : ${lines.length} orgas | ${totalMembers} membres_`;
+
+    await bot.sendMessage(msg.chat.id, teamsMsg, {
+      parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: [[
+          { text: '📊 Détails', callback_data: 'teams_details' },
+          { text: '📈 Usage', callback_data: 'teams_usage' },
+        ]],
+      },
+    });
+  });
+
+  // ── /team [name] ──
+  bot.onText(/\/team (.+)/, async (msg, match) => {
+    if (msg.chat.id.toString() !== adminChatId) return;
+    const search = match?.[1]?.trim();
+    if (!search) return;
+
+    const org = await dbQuery(`
+      SELECT o.id, o.name, o.plan, o.max_members, u.email as owner_email,
+        COUNT(om.id) as member_count,
+        COALESCE(cp.total_credits, 0) as total_credits,
+        COALESCE(cp.used_credits, 0) as used_credits
+      FROM organizations o
+      JOIN users u ON o.owner_id = u.id
+      LEFT JOIN organization_members om ON o.id = om.organization_id
+      LEFT JOIN credit_pools cp ON o.id = cp.organization_id
+      WHERE LOWER(o.name) LIKE LOWER('%${search.replace(/'/g, "''")}%')
+      GROUP BY o.id, o.name, o.plan, o.max_members, u.email, cp.total_credits, cp.used_credits
+      LIMIT 1
+    `);
+
+    if (!org || org === 'No result') {
+      await bot.sendMessage(msg.chat.id, `⚠️ Équipe "${search}" introuvable.`);
+      return;
+    }
+
+    const [orgId, name, plan, maxMembers, ownerEmail, memberCount, totalCr, usedCr] = org.split('|');
+    const poolRemaining = parseInt(totalCr || '0') - parseInt(usedCr || '0');
+
+    // Get members usage
+    const members = await dbQuery(`
+      SELECT u.display_name, om.role,
+        (SELECT COUNT(*) FROM agent_usage_logs aul WHERE aul.user_id = u.id AND aul.created_at > NOW() - INTERVAL '7 days') as agent_uses,
+        (SELECT COALESCE(SUM(credits_used), 0) FROM credit_usage_log cul WHERE cul.user_id = u.id AND cul.organization_id = '${orgId}' AND cul.created_at > NOW() - INTERVAL '7 days') as credits_used
+      FROM organization_members om
+      JOIN users u ON om.user_id = u.id
+      WHERE om.organization_id = '${orgId}'
+      ORDER BY credits_used DESC
+    `);
+
+    // Get top agents
+    const topAgents = await dbQuery(`
+      SELECT cul.agent_id, COUNT(*) as uses
+      FROM credit_usage_log cul
+      WHERE cul.organization_id = '${orgId}' AND cul.created_at > NOW() - INTERVAL '7 days'
+      GROUP BY cul.agent_id ORDER BY uses DESC LIMIT 5
+    `);
+
+    let teamMsg = `👥 *${name}*\n\n`;
+    teamMsg += `Membres : ${memberCount} / ${maxMembers}\n`;
+    teamMsg += `Owner : ${ownerEmail}\n`;
+    teamMsg += `Plan : ${plan}\n`;
+    teamMsg += `Pool crédits : ${usedCr} / ${totalCr} (${poolRemaining} restants)\n\n`;
+
+    teamMsg += `📊 *Usage 7j :*\n`;
+    if (members) {
+      for (const line of members.split('\n').filter(Boolean)) {
+        const [mName, mRole, mAgents, mCredits] = line.split('|');
+        teamMsg += `• ${mName} (${mRole}) — ${mAgents} agents | ${mCredits} crédits\n`;
+      }
+    }
+
+    teamMsg += `\n🤖 *Top agents :*\n`;
+    if (topAgents && topAgents !== 'No result') {
+      for (const line of topAgents.split('\n').filter(Boolean)) {
+        const [agentId, uses] = line.split('|');
+        teamMsg += `• ${agentId} — ${uses} utilisations\n`;
+      }
+    }
+
+    await bot.sendMessage(msg.chat.id, teamMsg, {
+      parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: [[
+          { text: '💳 Ajouter crédits', callback_data: `team_add_credits_${orgId}` },
+          { text: '👤 Gérer membres', callback_data: `team_members_${orgId}` },
+          { text: '⚙️ Settings', callback_data: `team_settings_${orgId}` },
+        ]],
+      },
+    });
+  });
 }

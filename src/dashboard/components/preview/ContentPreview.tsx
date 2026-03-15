@@ -8,8 +8,13 @@ import SMSPreview from './SMSPreview';
 import WhatsAppPreview from './WhatsAppPreview';
 import InstagramPreview from './InstagramPreview';
 import DevisPreview from './DevisPreview';
+import FacebookPreview from './FacebookPreview';
+import TwitterPreview from './TwitterPreview';
+import CVPreview from './CVPreview';
+import NewsletterPreview from './NewsletterPreview';
+import NotificationPreview from './NotificationPreview';
 
-type PreviewType = 'linkedin' | 'email' | 'google-review' | 'sms' | 'whatsapp' | 'instagram' | 'devis';
+type PreviewType = 'linkedin' | 'email' | 'google-review' | 'sms' | 'whatsapp' | 'instagram' | 'devis' | 'facebook' | 'twitter' | 'cv' | 'newsletter' | 'notification';
 
 interface ContentPreviewMetadata {
   from?: string;
@@ -23,6 +28,9 @@ interface ContentPreviewMetadata {
   recipientPhone?: string;
   imageUrl?: string;
   companyName?: string;
+  handle?: string;
+  brandColor?: string;
+  appName?: string;
 }
 
 interface ContentPreviewProps {
@@ -43,6 +51,11 @@ const TYPE_CONFIG: Record<PreviewType, { icon: string; label: string }> = {
   whatsapp: { icon: '📱', label: 'WhatsApp' },
   instagram: { icon: '📸', label: 'Instagram' },
   devis: { icon: '📄', label: 'Devis' },
+  facebook: { icon: '📘', label: 'Facebook' },
+  twitter: { icon: '🐦', label: 'Twitter / X' },
+  cv: { icon: '📋', label: 'CV' },
+  newsletter: { icon: '📰', label: 'Newsletter' },
+  notification: { icon: '🔔', label: 'Notification' },
 };
 
 export default function ContentPreview({
@@ -186,6 +199,52 @@ export default function ContentPreview({
           <DevisPreview
             content={editedContent}
             companyName={metadata?.companyName}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'facebook':
+        return (
+          <FacebookPreview
+            content={editedContent}
+            authorName={metadata?.authorName}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'twitter':
+        return (
+          <TwitterPreview
+            content={editedContent}
+            authorName={metadata?.authorName}
+            handle={metadata?.handle}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'cv':
+        return (
+          <CVPreview
+            content={editedContent}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'newsletter':
+        return (
+          <NewsletterPreview
+            content={editedContent}
+            subject={metadata?.subject}
+            brandColor={metadata?.brandColor}
+            editable={editing}
+            onEdit={setEditedContent}
+          />
+        );
+      case 'notification':
+        return (
+          <NotificationPreview
+            content={editedContent}
+            appName={metadata?.appName}
             editable={editing}
             onEdit={setEditedContent}
           />

@@ -3,6 +3,13 @@
  * Veille IA bi-quotidienne pour Freenzy.io
  */
 
+// Import weekly news
+import { newsWeek1a } from './news-week1a';
+import { newsWeek1b } from './news-week1b';
+import { newsWeek2a } from './news-week2a';
+import { newsWeek2b } from './news-week2b';
+import { newsWeek2c } from './news-week2c';
+
 // ─── Types ──────────────────────────────────────────────────
 
 export interface NewsArticle {
@@ -46,7 +53,7 @@ export const NEWS_CATEGORIES: { id: NewsCategory; label: string; emoji: string; 
 
 // ─── Articles — 16 mars 2026 ────────────────────────────────
 
-export const NEWS_ARTICLES: NewsArticle[] = [
+const originalArticles: NewsArticle[] = [
 
   // ═══════════════════════════════════════════════════════════
   //  MATIN — 10 articles
@@ -1061,6 +1068,22 @@ Si vous déployez de l'IA en entreprise, la sécurité n'est pas optionnelle. Fr
   },
 ];
 
+// ─── Merged News (all weeks + original) ─────────────────────
+
+export const NEWS_ARTICLES: NewsArticle[] = [
+  ...newsWeek2c, // most recent first
+  ...newsWeek2b,
+  ...newsWeek2a,
+  ...newsWeek1b,
+  ...newsWeek1a,
+  ...originalArticles, // the 20 articles already in the file
+].sort((a, b) => {
+  // Sort by date descending, then morning before evening
+  const dateCompare = b.date.localeCompare(a.date);
+  if (dateCompare !== 0) return dateCompare;
+  return a.period === 'morning' ? -1 : 1;
+});
+
 // ─── Helpers ────────────────────────────────────────────────
 
 export function getNewsForDate(date: string, period?: 'morning' | 'evening'): NewsArticle[] {
@@ -1079,7 +1102,7 @@ export function getNewsByCategory(category: NewsCategory, date?: string): NewsAr
   });
 }
 
-export function getLatestNews(count = 10): NewsArticle[] {
+export function getLatestNews(count = 20): NewsArticle[] {
   return [...NEWS_ARTICLES]
     .sort((a, b) => {
       const dateCompare = b.date.localeCompare(a.date);

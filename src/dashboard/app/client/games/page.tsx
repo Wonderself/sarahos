@@ -27,6 +27,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Icon-to-Emoji mapping for dynamic game/badge icons ─────────────────────
 
@@ -479,6 +480,7 @@ export default function GamesHubPage() {
           );
         })}
       </div>
+      <PageBlogSection pageId="games" />
     </div>
   );
 }

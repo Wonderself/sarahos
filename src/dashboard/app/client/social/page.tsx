@@ -9,6 +9,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Types ───────────────────────────────────────────────
 interface SavedPost {
@@ -2097,6 +2098,7 @@ export default function SocialMediaPage() {
         }
       `}</style>
       {LoginModalComponent}
+      <PageBlogSection pageId="social" />
     </div>
   );
 }

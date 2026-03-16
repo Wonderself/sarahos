@@ -14,6 +14,7 @@ import {
   type Skill,
   type SkillCategory,
 } from '../../../lib/skills-data';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ── Types ──
 type Tab = 'all' | 'installed' | 'popular' | 'new' | 'premium';
@@ -443,6 +444,7 @@ export default function SkillsPage() {
           </div>
         </div>
       )}
+      <PageBlogSection pageId="skills" />
     </div>
   );
 }

@@ -31,14 +31,17 @@ export const parcoursContentNiv2: FormationParcours = {
       title: 'Stratégie éditoriale multi-plateforme',
       emoji: '🌐',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'cs2-m1-l1',
           type: 'text',
           title: 'Cohérence cross-platform sans copier-coller',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Tu publies sur LinkedIn, Instagram, TikTok, ta newsletter et peut-être même un blog. Le piège classique ? Poster exactement la même chose partout — ou pire, poster des messages complètement incohérents qui donnent l'impression que 5 personnes différentes gèrent ta marque.
 
 La cohérence cross-platform, ce n'est pas du copier-coller. C'est un fil rouge qui relie tous tes contenus : le même positionnement, les mêmes valeurs, le même ton — mais adaptés au format et aux codes de chaque plateforme. Pense à ça comme une chanson : la mélodie reste la même, mais l'arrangement change selon qu'on joue en acoustique ou en électro.
@@ -56,7 +59,7 @@ Un outil pratique : crée un tableau de correspondance. Pour chaque idée de con
           type: 'text',
           title: 'Tone of voice et charte éditoriale',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Le tone of voice, c'est la personnalité de ta marque quand elle parle. Et comme une vraie personnalité, elle doit rester stable — sinon tes lecteurs ne sauront jamais à quoi s'attendre.
 
 Ta charte éditoriale est le document de référence qui garantit cette cohérence. Même si tu es seul à rédiger aujourd'hui, rédiger une charte te force à clarifier tes choix et te fait gagner un temps fou quand tu délègues ou que tu utilises l'IA pour générer du contenu.
@@ -72,9 +75,9 @@ Un tip concret : demande à l'assistant Freenzy de rédiger le même message dan
           type: 'quiz',
           title: 'Quiz — Stratégie éditoriale multi-plateforme',
           duration: '3 min',
-          xp: 75,
+          xpReward: 75,
           content: 'Vérifie ta maîtrise de la cohérence éditoriale cross-platform.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Que signifie la cohérence cross-platform ?',
               options: ['Publier le même post sur toutes les plateformes', 'Garder le même message mais adapter le format à chaque réseau', 'Ne publier que sur une seule plateforme', 'Utiliser les mêmes hashtags partout'],
@@ -112,14 +115,17 @@ Un tip concret : demande à l'assistant Freenzy de rédiger le même message dan
       title: 'Calendrier de contenu automatisé',
       emoji: '📅',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'cs2-m2-l1',
           type: 'text',
           title: 'Planification mensuelle et batch creation',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Le plus grand ennemi de la régularité en contenu, c'est la page blanche du lundi matin. « Qu'est-ce que je poste aujourd'hui ? » — si tu te poses cette question, tu as déjà perdu. La solution : la planification mensuelle et le batch creation.
 
 Le batch creation, c'est le fait de créer plusieurs contenus en une seule session au lieu de produire au jour le jour. L'idée est simple : tu bloques 2 à 4 heures par semaine (ou une journée par mois) pour créer tout ton contenu à l'avance. Ton cerveau reste en « mode créatif » au lieu de basculer entre création, publication, réponses aux commentaires et gestion quotidienne.
@@ -139,7 +145,7 @@ Le calendrier n'est pas gravé dans le marbre. Garde 20% de flexibilité pour l'
           type: 'exercise',
           title: 'Créez un calendrier 1 semaine avec l\'assistant',
           duration: '4 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Mets en pratique la planification de contenu en créant un calendrier éditorial complet pour une semaine.',
           exercisePrompt: 'Utilise l\'assistant Freenzy pour créer un calendrier de contenu sur 7 jours. Définis d\'abord 3 piliers de contenu pour ton activité, puis génère un planning avec : la plateforme cible (LinkedIn, Instagram, ou les deux), le format (texte, carrousel, vidéo courte, story), le pilier de contenu concerné, le sujet précis et le meilleur horaire de publication. Tu dois avoir au minimum 1 publication par jour ouvré et 1 le week-end.'
         },
@@ -148,9 +154,9 @@ Le calendrier n'est pas gravé dans le marbre. Garde 20% de flexibilité pour l'
           type: 'quiz',
           title: 'Quiz — Calendrier de contenu',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Vérifie tes connaissances sur la planification et le batch creation.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Qu\'est-ce que le batch creation ?',
               options: ['Publier en masse sur tous les réseaux en même temps', 'Créer plusieurs contenus en une seule session dédiée', 'Copier le contenu d\'autres créateurs', 'Automatiser la publication sans relecture'],
@@ -188,14 +194,17 @@ Le calendrier n'est pas gravé dans le marbre. Garde 20% de flexibilité pour l'
       title: 'A/B testing de contenu',
       emoji: '🧪',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'cs2-m3-l1',
           type: 'text',
           title: 'Tester titres, visuels et horaires',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Le A/B testing n'est pas réservé aux pages web et aux campagnes publicitaires. C'est un outil puissant pour améliorer ton contenu organique — et la plupart des créateurs passent complètement à côté.
 
 Le principe est simple : au lieu de deviner ce qui marche, tu testes. Tu crées deux versions d'un même contenu en changeant un seul élément, tu publies les deux, et tu compares les résultats. La version gagnante devient ton nouveau standard.
@@ -213,7 +222,7 @@ Règle d'or du A/B testing : ne change qu'une variable à la fois. Si tu changes
           type: 'text',
           title: 'Interpréter les résultats d\'un A/B test',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Faire un A/B test c'est bien, savoir lire les résultats c'est mieux. Beaucoup de créateurs testent, voient un chiffre plus élevé et concluent — sans se demander si la différence est réelle ou juste du bruit statistique.
 
 Première règle : définis ton KPI principal AVANT le test. Qu'est-ce que tu cherches à optimiser ? Le taux d'engagement (likes + commentaires / impressions), la portée (nombre de personnes touchées), les clics vers ton site, ou les conversions (inscriptions, ventes) ? Chaque objectif peut donner un « gagnant » différent. Un post peut avoir un engagement énorme mais zéro clic — est-ce vraiment un succès si ton objectif est de générer du trafic ?
@@ -231,9 +240,9 @@ Enfin, n'oublie pas que les algorithmes évoluent. Un résultat valide aujourd'h
           type: 'quiz',
           title: 'Quiz — A/B testing de contenu',
           duration: '3 min',
-          xp: 75,
+          xpReward: 75,
           content: 'Teste tes connaissances sur le A/B testing appliqué au contenu.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle est la règle d\'or du A/B testing ?',
               options: ['Tester sur le plus de plateformes possible', 'Ne changer qu\'une seule variable à la fois', 'Toujours tester les horaires en premier', 'Publier les deux versions en même temps'],
@@ -271,14 +280,17 @@ Enfin, n'oublie pas que les algorithmes évoluent. Un résultat valide aujourd'h
       title: 'SEO avancé',
       emoji: '🔍',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'cs2-m4-l1',
           type: 'text',
           title: 'Clusters de mots-clés, linking interne et E-E-A-T',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Le SEO en 2026 ne se résume plus à placer des mots-clés dans un article. Google est devenu beaucoup plus intelligent et récompense l'expertise thématique, la structure de contenu et l'autorité réelle. Voici les trois piliers du SEO avancé.
 
 Premier pilier : les clusters de mots-clés (ou topic clusters). Au lieu d'écrire des articles isolés, tu construis un écosystème de contenu. Le principe : une page pilier (article long et complet sur un sujet large) entourée de pages satellites (articles plus courts sur des sous-sujets spécifiques). Toutes les pages satellites pointent vers la page pilier, et la page pilier renvoie vers chaque satellite. Par exemple, si ta page pilier est « Marketing digital pour PME », tes satellites pourraient être « SEO local pour PME », « Email marketing pour débutants », « Publicité Facebook petit budget », etc.
@@ -294,7 +306,7 @@ Le SEO avancé est un jeu de patience. Les résultats ne sont pas immédiats mai
           type: 'exercise',
           title: 'Créez un cluster de 5 articles SEO',
           duration: '4 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Mets en pratique la stratégie de topic clusters en créant une architecture de contenu SEO complète.',
           exercisePrompt: 'Utilise l\'assistant Freenzy pour créer un cluster SEO complet. Choisis un sujet principal lié à ton activité, puis génère : 1) Une page pilier avec son titre optimisé, sa meta description (155 caractères max) et un plan détaillé en 5-7 sections. 2) Cinq articles satellites avec pour chacun : le titre optimisé, le mot-clé principal, le mot-clé secondaire, la meta description et le lien vers la page pilier. 3) Le maillage interne entre les articles (quel satellite renvoie vers quel autre).'
         },
@@ -303,9 +315,9 @@ Le SEO avancé est un jeu de patience. Les résultats ne sont pas immédiats mai
           type: 'quiz',
           title: 'Quiz — SEO avancé',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Vérifie ta maîtrise des concepts SEO avancés.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Qu\'est-ce qu\'un topic cluster en SEO ?',
               options: ['Un groupe de mots-clés synonymes', 'Une page pilier entourée de pages satellites liées thématiquement', 'Un ensemble de backlinks depuis le même domaine', 'Un plugin WordPress pour le SEO'],
@@ -349,14 +361,17 @@ Le SEO avancé est un jeu de patience. Les résultats ne sont pas immédiats mai
       title: 'Branding visuel cross-platform',
       emoji: '🎨',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'cs2-m5-l1',
           type: 'text',
           title: 'Cohérence visuelle et templates réutilisables',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Tu peux avoir le meilleur contenu du monde — si tes visuels changent de style à chaque publication, ton audience ne te reconnaîtra pas dans son feed. La cohérence visuelle est ce qui transforme un créateur de contenu en une marque mémorable.
 
 L'identité visuelle de ta marque repose sur 4 éléments fondamentaux. Les couleurs : choisis 2 à 3 couleurs principales et 1 à 2 couleurs d'accent. Utilise-les systématiquement. Pense à Coca-Cola (rouge), Spotify (vert), LinkedIn (bleu) — la couleur est le premier signal de reconnaissance. Les typographies : 1 police pour les titres (avec du caractère) et 1 police pour le texte courant (lisible). Maximum 2 polices, jamais plus. Les éléments graphiques récurrents : un style d'illustration, un type de bordure, un pattern de fond, des icônes dans un style cohérent. Et enfin, le traitement photo : filtre, contraste, luminosité — tous tes visuels doivent avoir le même « grain ».
@@ -374,7 +389,7 @@ La cohérence visuelle paie sur le long terme. Après 3 à 6 mois de publication
           type: 'game',
           title: 'Jeu — Associe le format à sa plateforme',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Associe chaque format visuel à la plateforme où il performe le mieux.',
           gameType: 'matching',
           gameData: {
@@ -395,9 +410,9 @@ La cohérence visuelle paie sur le long terme. Après 3 à 6 mois de publication
           type: 'quiz',
           title: 'Quiz — Branding visuel',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Teste tes connaissances sur le branding visuel cross-platform.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Combien de couleurs principales recommande-t-on dans une identité visuelle ?',
               options: ['1 seule', '2 à 3', '5 à 7', '10 ou plus'],
@@ -429,14 +444,17 @@ La cohérence visuelle paie sur le long terme. Après 3 à 6 mois de publication
       title: 'Analytics contenu',
       emoji: '📊',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'cs2-m6-l1',
           type: 'text',
           title: 'KPIs, engagement rate et conversion',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Créer du contenu sans mesurer les résultats, c'est comme conduire les yeux fermés. Les analytics te donnent les yeux — encore faut-il savoir quoi regarder. Parce que les plateformes te noient sous les chiffres, et la plupart ne servent à rien.
 
 Commençons par les KPIs qui comptent vraiment. Le nombre d'abonnés ? C'est une vanity metric — un compteur qui fait plaisir à l'ego mais ne dit rien sur la santé de ta stratégie. Concentre-toi plutôt sur ces 5 indicateurs essentiels.
@@ -456,7 +474,7 @@ Piège classique : comparer tes chiffres avec ceux d'un compte dans une niche di
           type: 'text',
           title: 'Dashboards et reporting efficace',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Avoir les bons KPIs c'est la première étape. Mais si tu dois passer 2 heures chaque semaine à compiler des chiffres depuis 5 plateformes différentes, tu vas vite abandonner. La solution : un dashboard centralisé et un reporting automatisé.
 
 Un bon dashboard contenu affiche 3 niveaux d'information. La vue d'ensemble (health check) : tes KPIs principaux en un coup d'oeil — engagement rate global, portée moyenne, croissance d'audience, meilleur post de la semaine. C'est ce que tu regardes en 30 secondes chaque matin. La vue par plateforme : chaque réseau avec ses métriques spécifiques, ses tendances sur 30 jours et ses top posts. C'est ta revue hebdomadaire de 15 minutes. La vue détaillée : l'analyse post par post avec les résultats des A/B tests, les horaires les plus performants et les sujets qui génèrent le plus d'engagement. C'est ta session mensuelle d'optimisation stratégique.
@@ -472,9 +490,9 @@ Avec Freenzy, tu peux importer tes statistiques et demander à l'assistant de g�
           type: 'quiz',
           title: 'Quiz — Analytics contenu',
           duration: '3 min',
-          xp: 75,
+          xpReward: 75,
           content: 'Vérifie ta maîtrise des analytics et du reporting contenu.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Comment calcule-t-on le taux d\'engagement ?',
               options: ['Nombre d\'abonnés / nombre de posts', '(Likes + commentaires + partages + sauvegardes) / impressions × 100', 'Nombre de vues / nombre de clics', 'Nombre de posts / nombre de jours'],

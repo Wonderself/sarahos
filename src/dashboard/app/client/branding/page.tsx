@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, type CSSProperties, type ChangeEvent, type DragEvent } from 'react';
 import { useIsMobile } from '@/lib/use-media-query';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -511,6 +512,7 @@ export default function BrandingPage() {
           </div>
         </div>
       </div>
+      <PageBlogSection pageId="branding" />
     </div>
   );
 }

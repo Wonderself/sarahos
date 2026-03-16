@@ -33,14 +33,17 @@ export const parcoursComplianceOfficer: FormationParcours = {
       title: 'Audit IA complet',
       emoji: '🔍',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'compliance-m1-l1',
           type: 'text' as const,
           title: 'Methodologie d\'audit IA : du cadrage a la restitution',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Bienvenue dans la ligue des experts 🏆 ! Si vous etes ici, c'est que vous maitrisez deja les bases du droit de l'IA. On passe maintenant en mode « professionnel de la conformite ». Et ca commence par LE pilier du metier : l'audit IA.
 
 🎯 Pourquoi auditer vos systemes IA ?
@@ -70,7 +73,7 @@ Phase 6 — Restitution : Rediger le rapport d'audit, presenter les conclusions 
           type: 'text' as const,
           title: 'Shadow AI et cartographie des risques',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Le Shadow AI, c'est le cauchemar des compliance officers 😱. C'est l'equivalent du Shadow IT, mais pour l'intelligence artificielle : des outils IA utilises par les collaborateurs sans validation ni supervision de l'entreprise.
 
 🕵️ L'ampleur du phenomene
@@ -104,9 +107,9 @@ La matrice resultante (Impact x Probabilite x Detectabilite) vous donne un score
           type: 'quiz' as const,
           title: 'Quiz — Audit IA complet',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Testez vos connaissances sur la methodologie d\'audit IA et la gestion du Shadow AI.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Combien de phases comporte un audit IA complet selon la methodologie presentee ?',
               options: ['4 phases', '5 phases', '6 phases', '8 phases'],
@@ -150,14 +153,17 @@ La matrice resultante (Impact x Probabilite x Detectabilite) vous donne un score
       title: 'Conformite internationale (EU/US/Chine)',
       emoji: '🌍',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'compliance-m2-l1',
           type: 'text' as const,
           title: 'IA Act vs Executive Order vs loi chinoise : comparatif strategique',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Si votre entreprise opere a l'international — ou si vos clients sont dans plusieurs pays — vous devez naviguer entre trois grands cadres reglementaires IA qui ont des philosophies TRES differentes 🌐
 
 🇪🇺 L'approche europeenne : regulation par les risques
@@ -185,7 +191,7 @@ Points cles : obligation d'enregistrement de tous les modeles generatifs, censur
           type: 'text' as const,
           title: 'Construire un programme de conformite multi-juridictionnel',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `OK, on connait les trois grands cadres. Maintenant, comment construire un programme de conformite qui fonctionne partout ? 🏗️ Spoiler : c'est un defi, mais c'est faisable.
 
 🧱 La strategie du « plus haut denominateur commun »
@@ -215,9 +221,9 @@ Automatisez ce qui peut l'etre : les checks de conformite, le monitoring des bia
           type: 'quiz' as const,
           title: 'Quiz — Conformite internationale',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Verifiez votre maitrise des cadres reglementaires IA dans le monde.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle est la philosophie de l\'IA Act europeen ?',
               options: ['Autoregulation volontaire', 'Regulation par niveaux de risque', 'Controle etatique total', 'Pas de regulation'],
@@ -261,14 +267,17 @@ Automatisez ce qui peut l'etre : les checks de conformite, le monitoring des bia
       title: 'AIPD avancee (Analyse d\'Impact IA)',
       emoji: '📊',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'compliance-m3-l1',
           type: 'text' as const,
           title: 'AIPD vs DPIA : construire une analyse d\'impact IA exhaustive',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Vous connaissez la DPIA (Data Protection Impact Assessment) du RGPD ? L'AIPD, c'est sa grande soeur specialisee IA 📈. Et dans le cadre de l'IA Act, elle devient incontournable pour les systemes a haut risque.
 
 🔎 DPIA vs AIPD : quelle difference ?
@@ -300,7 +309,7 @@ Section 6 — Plan de suivi : Une AIPD n'est pas un document qu'on fait une fois
           type: 'text' as const,
           title: 'Biais algorithmiques : detection, mesure et correction',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Les biais algorithmiques sont probablement le risque IA le plus mediatise — et a juste titre 😬. Un systeme IA biaise peut discriminer des personnes en fonction de leur genre, ethnie, age ou origine sociale, parfois de maniere totalement invisible.
 
 🧪 Les types de biais dans les systemes IA
@@ -334,9 +343,9 @@ Attention : corriger un type de biais peut en agraver un autre. C'est un equilib
           type: 'quiz' as const,
           title: 'Quiz — AIPD et biais algorithmiques',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Evaluez votre expertise sur l\'analyse d\'impact IA et la detection des biais.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle est la principale difference entre une DPIA et une AIPD ?',
               options: ['La DPIA est plus complete', 'L\'AIPD couvre aussi les biais, la transparence et l\'impact social', 'Ce sont des synonymes', 'La DPIA est specifique a l\'IA'],
@@ -380,14 +389,17 @@ Attention : corriger un type de biais peut en agraver un autre. C'est un equilib
       title: 'Gouvernance IA en entreprise',
       emoji: '🏛️',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'compliance-m4-l1',
           type: 'text' as const,
           title: 'Mettre en place un comite d\'ethique et de gouvernance IA',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `La gouvernance IA, c'est le systeme nerveux de votre conformite 🧠. Sans elle, vos audits et vos AIPD restent des exercices ponctuels sans impact durable. Avec elle, la conformite IA devient un reflexe organisationnel.
 
 🏗️ Pourquoi creer un comite de gouvernance IA ?
@@ -425,7 +437,7 @@ Le comite valide TOUT nouveau deploiement IA avant mise en production. Pas d'exc
           type: 'text' as const,
           title: 'Politiques internes et charte d\'utilisation de l\'IA',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Avoir un comite de gouvernance, c'est bien. Mais sans politiques ecrites et communiquees, vos collaborateurs ne savent pas ce qu'ils peuvent et ne peuvent pas faire avec l'IA 📜
 
 📋 Les 5 politiques IA essentielles
@@ -453,9 +465,9 @@ Soyez accessibles : Pas de jargon juridique incomprehensible. Vos collaborateurs
           type: 'quiz' as const,
           title: 'Quiz — Gouvernance IA',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Testez votre maitrise de la gouvernance IA en entreprise.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel role est indispensable pour donner du poids politique au comite de gouvernance IA ?',
               options: ['Le DPO', 'Le sponsor executif (membre du COMEX)', 'Le data scientist', 'Le representant juridique'],
@@ -499,14 +511,17 @@ Soyez accessibles : Pas de jargon juridique incomprehensible. Vos collaborateurs
       title: 'Incidents et notifications CNIL',
       emoji: '🚨',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'compliance-m5-l1',
           type: 'text' as const,
           title: 'Taxonomie des incidents IA et procedures d\'urgence',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Quand un systeme IA deraille, chaque minute compte ⏱️. La difference entre un incident bien gere et une crise majeure, c'est la preparation. Voyons comment structurer votre reponse aux incidents IA.
 
 🏷️ Taxonomie des incidents IA
@@ -540,7 +555,7 @@ Preparez a l'avance : une fiche de qualification rapide (decision tree), les coo
           type: 'text' as const,
           title: 'Notifications CNIL : obligations, delais, formulaires',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `La notification a la CNIL, c'est le moment ou la theorie rencontre la pratique. Et croyez-moi, quand vous devez notifier un incident a 2h du matin un vendredi, vous etes content d'avoir prepare le terrain 😰
 
 📨 Quand notifier la CNIL ?
@@ -580,9 +595,9 @@ Si des personnes sont a risque eleve (donnees bancaires, donnees de sante), vous
           type: 'quiz' as const,
           title: 'Quiz — Incidents et notifications',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Evaluez votre maitrise de la gestion des incidents IA et des notifications CNIL.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel est le delai de notification CNIL pour une violation de donnees personnelles ?',
               options: ['24 heures', '48 heures', '72 heures calendaires', '5 jours ouvres'],
@@ -626,14 +641,17 @@ Si des personnes sont a risque eleve (donnees bancaires, donnees de sante), vous
       title: 'Veille reglementaire permanente',
       emoji: '📡',
       duration: '15 min',
-      xp: 175,
+      xpReward: 175,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'compliance-m6-l1',
           type: 'text' as const,
           title: 'Organiser une veille reglementaire IA efficace',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `La reglementation IA evolue a une vitesse folle 🚀. En 2025-2026, on voit des nouvelles propositions legislatives, des guidelines, des decisions de justice et des sanctions pratiquement chaque semaine. Si vous ne suivez pas, vous prenez du retard — et du risque.
 
 📰 Les sources essentielles a surveiller
@@ -665,7 +683,7 @@ Etape 5 — Archivage : Conservez un historique structure de votre veille. En ca
           type: 'text' as const,
           title: 'Anticiper les tendances : ce qui arrive en 2026-2028',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Un bon Compliance Officer ne se contente pas de reagir — il anticipe 🔮. Voici les grandes tendances reglementaires IA qui vont impacter votre organisation dans les 2-3 prochaines annees.
 
 📅 2026 : L'annee de l'application
@@ -704,9 +722,9 @@ La responsabilite civile IA sera clarifiee. La directive europeenne sur la respo
           type: 'quiz' as const,
           title: 'Quiz — Veille reglementaire et anticipation',
           duration: '5 min',
-          xp: 95,
+          xpReward: 95,
           content: 'Quiz final du parcours Compliance Officer. Montrez votre expertise !',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quand l\'IA Act entre-t-il en vigueur completement pour les systemes haut risque ?',
               options: ['Fevrier 2025', 'Aout 2025', 'Aout 2026', 'Janvier 2027'],
@@ -778,14 +796,17 @@ export const parcoursSystemsArchitect: FormationParcours = {
       title: 'Architecture multi-agents',
       emoji: '🤖',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'architect-m1-l1',
           type: 'text' as const,
           title: 'Patterns d\'architecture multi-agents : du simple au complexe',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Bienvenue dans le parcours expert en architecture IA 🏗️ ! Si les autres parcours vous apprenaient a UTILISER l'IA, celui-ci vous apprend a la CONSTRUIRE. On commence par le coeur de Freenzy : l'architecture multi-agents.
 
 🧩 Qu'est-ce qu'un systeme multi-agents ?
@@ -815,7 +836,7 @@ Pour la plupart des cas d'usage business, le pattern hierarchique est le meilleu
           type: 'text' as const,
           title: 'Communication inter-agents et gestion de la memoire partagee',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Le pattern, c'est le squelette. Mais pour que les agents collaborent vraiment, il faut deux choses : un protocole de communication fiable et une memoire partagee coherente 🧠
 
 📡 Protocoles de communication inter-agents
@@ -847,9 +868,9 @@ Memoire a long terme (pgvector) : Les connaissances accumulees, les patterns det
           type: 'quiz' as const,
           title: 'Quiz — Architecture multi-agents',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Testez vos connaissances en architecture de systemes multi-agents.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel pattern multi-agents utilise Freenzy pour sa hierarchie L1/L2/L3 ?',
               options: ['Pipeline sequentiel', 'Fan-out / Fan-in', 'Hierarchique (superviseur)', 'Emergent (swarm)'],
@@ -893,14 +914,17 @@ Memoire a long terme (pgvector) : Les connaissances accumulees, les patterns det
       title: 'Infrastructure et performance',
       emoji: '⚡',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'architect-m2-l1',
           type: 'text' as const,
           title: 'Dimensionner une infrastructure IA : CPU, GPU, RAM, stockage',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `L'architecture la plus elegante du monde ne sert a rien si l'infrastructure ne suit pas 💪. Dimensionner correctement votre infra IA, c'est trouver l'equilibre entre performance, cout et fiabilite.
 
 🖥️ Les 4 ressources critiques
@@ -938,7 +962,7 @@ Connection pooling : PostgreSQL supporte un nombre limite de connexions simultan
           type: 'text' as const,
           title: 'Scalabilite horizontale et strategies de caching',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Votre systeme fonctionne bien avec 100 utilisateurs. Mais que se passe-t-il quand vous passez a 10 000 ? A 100 000 ? C'est la qu'on distingue une architecture amateur d'une architecture pro 📈
 
 📏 Scalabilite verticale vs horizontale
@@ -979,9 +1003,9 @@ Regle d'or du caching : cachez tout ce qui est « immutable ou lentement mutable
           type: 'quiz' as const,
           title: 'Quiz — Infrastructure et performance',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Verifiez votre maitrise du dimensionnement et de l\'optimisation infrastructure.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel pourcentage d\'economie le prompt caching apporte-t-il chez Freenzy ?',
               options: ['50%', '70%', '89%', '95%'],
@@ -1025,14 +1049,17 @@ Regle d'or du caching : cachez tout ce qui est « immutable ou lentement mutable
       title: 'Securite des systemes IA',
       emoji: '🔒',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'architect-m3-l1',
           type: 'text' as const,
           title: 'Surface d\'attaque IA : prompt injection, data poisoning, model stealing',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `La securite IA est un domaine a part entiere qui va bien au-dela de la cybersecurite classique 🛡️. Un systeme IA a des vulnerabilites specifiques que les attaquants connaissent de mieux en mieux.
 
 🎯 Les 6 vecteurs d'attaque specifiques a l'IA
@@ -1064,7 +1091,7 @@ Samsung (2023) : Des employes ont partage du code source confidentiel avec ChatG
           type: 'text' as const,
           title: 'Defense en profondeur : securiser chaque couche',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `La securite IA efficace repose sur la defense en profondeur : plusieurs couches de protection qui se renforcent mutuellement 🏰. Si une couche tombe, les autres tiennent.
 
 🧅 Les 7 couches de securite IA
@@ -1096,9 +1123,9 @@ Implementez des variables d'environnement separees, des comptes de service dedie
           type: 'quiz' as const,
           title: 'Quiz — Securite des systemes IA',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Evaluez votre expertise en securite des systemes IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Qu\'est-ce que la prompt injection indirecte ?',
               options: ['Un utilisateur qui tape un prompt malveillant', 'Du contenu malveillant cache dans des donnees que l\'agent va lire', 'Une injection SQL dans les prompts', 'Un bug dans le system prompt'],
@@ -1142,14 +1169,17 @@ Implementez des variables d'environnement separees, des comptes de service dedie
       title: 'Monitoring et observabilite',
       emoji: '📊',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'architect-m4-l1',
           type: 'text' as const,
           title: 'Les 3 piliers de l\'observabilite IA : logs, metriques, traces',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `« On ne peut pas ameliorer ce qu'on ne mesure pas. » Cette maxime est encore plus vraie pour les systemes IA, ou les problemes peuvent etre subtils et progressifs 📉
 
 🏛️ Les 3 piliers classiques + le pilier IA
@@ -1178,7 +1208,7 @@ Pilier 4 (specifique IA) — Qualite des outputs : C'est le pilier que les syste
           type: 'text' as const,
           title: 'Alerting intelligent et runbooks automatises',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Avoir des metriques, c'est bien. Etre alerte AVANT que les utilisateurs ne s'en plaignent, c'est mieux 🚨. L'alerting intelligent est ce qui transforme votre monitoring passif en systeme de protection actif.
 
 🔔 Les 3 niveaux d'alertes
@@ -1225,9 +1255,9 @@ Attention : l'automatisation doit etre prudente et reversible. Un script qui red
           type: 'quiz' as const,
           title: 'Quiz — Monitoring et observabilite',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Testez votre maitrise du monitoring des systemes IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Combien de piliers d\'observabilite specifiques a l\'IA sont presentes ?',
               options: ['2 piliers', '3 piliers', '4 piliers (3 classiques + qualite IA)', '5 piliers'],
@@ -1271,14 +1301,17 @@ Attention : l'automatisation doit etre prudente et reversible. Un script qui red
       title: 'Migration et integration',
       emoji: '🔄',
       duration: '15 min',
-      xp: 165,
+      xpReward: 165,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'architect-m5-l1',
           type: 'text' as const,
           title: 'Strategies de migration vers une architecture IA',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Migrer un systeme existant vers une architecture IA, c'est comme renover une maison pendant qu'on y habite 🏠. Il faut que tout continue a fonctionner pendant les travaux. Voyons les strategies qui marchent.
 
 🗺️ Les 3 strategies de migration
@@ -1323,7 +1356,7 @@ Le piege des integrations : Votre systeme est connecte a 15 services tiers (Stri
           type: 'text' as const,
           title: 'API design et integration de services IA tiers',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Un systeme IA moderne ne vit jamais seul — il s'integre avec des dizaines de services : LLMs, TTS, STT, image generation, bases de donnees vectorielles, services de paiement, messagerie... Concevoir des APIs propres et des integrations robustes, c'est ce qui fait la difference entre un prototype et un produit 🔌
 
 🏗️ Principes de design d'API IA
@@ -1353,9 +1386,9 @@ Rate limiting : Protegez vos endpoints avec des limites par utilisateur et par I
           type: 'quiz' as const,
           title: 'Quiz — Migration et integration',
           duration: '5 min',
-          xp: 85,
+          xpReward: 85,
           content: 'Evaluez votre expertise en strategies de migration et integration IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle strategie de migration est recommandee pour les systemes en production ?',
               options: ['Big Bang', 'Strangler Fig', 'Parallel Run', 'Cold Turkey'],
@@ -1399,14 +1432,17 @@ Rate limiting : Protegez vos endpoints avec des limites par utilisateur et par I
       title: 'Vision long terme et evolutions',
       emoji: '🔮',
       duration: '15 min',
-      xp: 175,
+      xpReward: 175,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'architect-m6-l1',
           type: 'text' as const,
           title: 'Tendances architecturales IA 2026-2030',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `Un bon architecte ne construit pas seulement pour aujourd'hui — il anticipe les 3 a 5 prochaines annees 🔭. L'architecture IA evolue a une vitesse folle, et certaines tendances vont transformer radicalement la facon dont on construit les systemes.
 
 🌊 Tendance 1 — Agents autonomes de longue duree
@@ -1446,7 +1482,7 @@ Freenzy est deja positionne sur cette tendance avec son marketplace de 50 templa
           type: 'text' as const,
           title: 'Concevoir pour la durabilite : dette technique IA et principes d\'evolution',
           duration: '5 min',
-          xp: 40,
+          xpReward: 40,
           content: `La dette technique classique, vous connaissez. La dette technique IA, c'est sa cousine encore plus vicieuse 💸. Un modele qui derive, des prompts non versionnes, des pipelines de donnees fragiles — ca s'accumule vite et ca coute cher a rembourser.
 
 🏚️ Les 5 types de dette technique IA
@@ -1480,9 +1516,9 @@ Principe 5 — Refactoring continu : Allouez 20% du temps de developpement au re
           type: 'quiz' as const,
           title: 'Quiz final — Vision long terme et durabilite',
           duration: '5 min',
-          xp: 95,
+          xpReward: 95,
           content: 'Quiz final du parcours AI Systems Architect. Prouvez votre expertise !',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle tendance IA permettra de traiter des taches sensibles directement sur le device ?',
               options: ['Agents autonomes', 'Modeles multimodaux', 'Edge AI (Small Language Models)', 'Marketplace d\'agents'],

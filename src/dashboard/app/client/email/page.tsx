@@ -6,6 +6,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Email IA
@@ -377,6 +378,7 @@ export default function EmailPage() {
           </div>
         </div>
       )}
+      <PageBlogSection pageId="email" />
     </div>
   );
 }

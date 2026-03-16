@@ -11,6 +11,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 type Category = keyof typeof REWARD_CATEGORIES;
 
@@ -307,6 +308,7 @@ export default function RewardsPage() {
           en complétant toutes les actions disponibles
         </div>
       </div>
+      <PageBlogSection pageId="rewards" />
     </div>
   );
 }

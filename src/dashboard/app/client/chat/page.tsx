@@ -11,6 +11,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 import { Channel, TeamMessage, getChannels, getMessages as getTeamMessages, sendMessage as sendTeamMessage, editMessage, deleteMessage, addReaction, pinMessage, createChannel, deleteChannel, getUnreadCounts, markAsRead, searchMessages as searchTeamMessages, getThreadReplies, replyToThread, seedDefaultChannels } from '../../../lib/messaging';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { VisitorEmptyState } from '../../../components/VisitorBanner';
@@ -2050,6 +2051,7 @@ export default function ChatPage() {
       </>}
       </>}
       {LoginModalComponent}
+      <PageBlogSection pageId="chat" />
     </div>
   );
 }

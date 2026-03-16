@@ -18,6 +18,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import HelpBubble from '../../../components/HelpBubble';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar, searchInput } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Mes agents persos (merged page)
@@ -660,6 +661,7 @@ export default function PersonalAgentsPage() {
           </div>
         </div>
       )}
+      <PageBlogSection pageId="personal" />
     </div>
   );
 }

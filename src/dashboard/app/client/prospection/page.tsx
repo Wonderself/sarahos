@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, type CSSProperties } from 'react';
 import { useIsMobile } from '@/lib/use-media-query';
 import { CU, pageContainer, headerRow, tabBar } from '@/lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -611,6 +612,7 @@ export default function ProspectionPage() {
           to { transform: rotate(360deg); }
         }
       `}</style>
+      <PageBlogSection pageId="prospection" />
     </div>
   );
 }

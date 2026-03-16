@@ -8,6 +8,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
 import HelpBubble from '../../../components/HelpBubble';
 import PageExplanation from '../../../components/PageExplanation';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 interface CustomAgent {
   id: string;
@@ -245,6 +246,7 @@ export default function AgentsPage() {
           ))}
         </div>
       </section>
+      <PageBlogSection pageId="agents" />
     </div>
   );
 }

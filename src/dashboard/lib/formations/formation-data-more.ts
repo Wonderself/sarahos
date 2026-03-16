@@ -27,14 +27,17 @@ export const parcoursContenuPro: FormationParcours = {
       title: 'Posts LinkedIn qui cartonnent',
       emoji: '💼',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'contenu-pro-m1-l1',
           type: 'text',
           title: 'L\'algorithme LinkedIn en 2026',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `LinkedIn a profondément évolué ces dernières années. En 2026, l'algorithme privilégie trois facteurs clés : la pertinence du contenu par rapport à votre réseau, le taux d'engagement dans les premières heures et la régularité de publication.
 
 Le « dwell time » (temps passé sur votre post) est devenu le signal numéro un. Un post que les gens lisent en entier vaut plus qu'un post qui reçoit des likes rapides. Cela signifie que les textes longs et structurés performent mieux que les phrases courtes suivies d'un lien externe.
@@ -52,7 +55,7 @@ Enfin, les « pods d'engagement » (groupes qui se likent mutuellement) sont dé
           type: 'exercise',
           title: 'Créez votre premier post LinkedIn',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: `Mettez en pratique le format hook + story + leçon appris dans la leçon précédente.`,
           exercisePrompt: 'Générez un post LinkedIn avec l\'assistant en utilisant le format hook + story + leçon. Choisissez un sujet lié à votre activité professionnelle. Le post doit faire entre 150 et 300 mots, contenir un hook accrocheur en première ligne, une anecdote personnelle au milieu et un enseignement clair à la fin. Ajoutez 3 hashtags pertinents.'
         },
@@ -61,9 +64,9 @@ Enfin, les « pods d'engagement » (groupes qui se likent mutuellement) sont dé
           type: 'quiz',
           title: 'Quiz — LinkedIn best practices',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur les bonnes pratiques LinkedIn en 2026.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel est le signal le plus important pour l\'algorithme LinkedIn en 2026 ?',
               options: ['Le nombre de likes', 'Le dwell time (temps de lecture)', 'Le nombre de commentaires', 'Le nombre de partages'],
@@ -99,14 +102,17 @@ Enfin, les « pods d'engagement » (groupes qui se likent mutuellement) sont dé
       title: 'Réseaux sociaux visuels',
       emoji: '📸',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'contenu-pro-m2-l1',
           type: 'text',
           title: 'Stratégies Instagram, Facebook et TikTok',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Chaque réseau social visuel a ses propres codes et son propre algorithme. Comprendre ces différences est essentiel pour maximiser votre impact sans multiplier les efforts inutilement.
 
 Instagram en 2026 privilégie les Reels courts (15-30 secondes) et les carrousels éducatifs. Le format photo unique perd du terrain sauf pour les marques lifestyle haut de gamme. L'algorithme favorise les comptes qui utilisent toutes les fonctionnalités : stories, reels, posts, lives. Les stories avec des stickers interactifs (sondages, questions) boostent votre visibilité de 25% en moyenne.
@@ -122,7 +128,7 @@ La stratégie cross-platform gagnante : créez un contenu long (vidéo YouTube o
           type: 'text',
           title: 'Hashtags et horaires de publication',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `Les hashtags et les horaires de publication sont les deux leviers les plus sous-estimés du marketing social. Bien maîtrisés, ils peuvent doubler votre portée sans effort supplémentaire.
 
 Pour les hashtags, appliquez la règle du 3-3-3 : 3 hashtags larges (plus de 1 million de posts), 3 hashtags moyens (100K à 1M) et 3 hashtags de niche (moins de 100K). Les hashtags de niche sont ceux où vous avez le plus de chances d'apparaître en « Top Posts ». Recherchez-les en tapant des mots-clés spécifiques à votre secteur.
@@ -138,9 +144,9 @@ Utilisez les statistiques natives de chaque plateforme (Instagram Insights, Face
           type: 'quiz',
           title: 'Quiz — Réseaux sociaux visuels',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur les stratégies des réseaux sociaux visuels.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel format Instagram obtient le plus de portée en 2026 ?',
               options: ['Les photos uniques', 'Les Reels courts (15-30s)', 'Les stories texte', 'Les IGTV longs'],
@@ -176,14 +182,17 @@ Utilisez les statistiques natives de chaque plateforme (Instagram Insights, Face
       title: 'Emails marketing efficaces',
       emoji: '📧',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'contenu-pro-m3-l1',
           type: 'text',
           title: 'Objets, preheaders et CTA qui convertissent',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `L'email marketing reste le canal avec le meilleur ROI en 2026 : pour 1€ investi, il rapporte en moyenne 42€. Mais 47% des destinataires ouvrent ou ignorent un email uniquement sur la base de l'objet. Maîtriser l'art de l'objet est donc crucial.
 
 Un bon objet d'email respecte ces règles : moins de 50 caractères (idéalement 30-40), une promesse claire et spécifique, un sentiment d'urgence ou de curiosité sans être « clickbait ». Les chiffres fonctionnent bien (« 3 erreurs qui tuent vos ventes ») ainsi que les questions directes (« Avez-vous fait cette erreur ? »).
@@ -201,7 +210,7 @@ Personnalisez au-delà du prénom : segmentez par comportement (a ouvert le dern
           type: 'exercise',
           title: 'Créez une séquence de 3 emails',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Mettez en pratique les techniques d\'email marketing apprises.',
           exercisePrompt: 'Créez une séquence de 3 emails avec l\'assistant IA. Email 1 (J+0) : bienvenue et présentation de votre offre. Email 2 (J+3) : étude de cas ou témoignage client. Email 3 (J+7) : offre spéciale avec urgence. Pour chaque email, rédigez : l\'objet (< 50 caractères), le preheader, le corps (< 200 mots) et le CTA.'
         },
@@ -210,9 +219,9 @@ Personnalisez au-delà du prénom : segmentez par comportement (a ouvert le dern
           type: 'quiz',
           title: 'Quiz — Email marketing',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Vérifiez vos connaissances en email marketing.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel est le ROI moyen de l\'email marketing en 2026 ?',
               options: ['5€ pour 1€ investi', '15€ pour 1€ investi', '42€ pour 1€ investi', '100€ pour 1€ investi'],
@@ -242,14 +251,17 @@ Personnalisez au-delà du prénom : segmentez par comportement (a ouvert le dern
       title: 'Répondre aux avis Google',
       emoji: '⭐',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'contenu-pro-m4-l1',
           type: 'text',
           title: 'Stratégie de réponse par note (1 à 5 étoiles)',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Les avis Google sont le premier facteur de décision pour 93% des consommateurs locaux. Répondre à chaque avis (positif ou négatif) améliore votre référencement local de 15% en moyenne et montre à vos prospects que vous êtes attentif.
 
 Avis 5 étoiles : remerciez chaleureusement, mentionnez un détail spécifique de leur expérience pour montrer que vous avez lu, et invitez-les à revenir. Exemple : « Merci Marie ! Ravi que notre menu du jour vous ait plu. On vous attend pour découvrir notre nouvelle carte d'été ! »
@@ -269,7 +281,7 @@ Règle d'or : répondez dans les 24 heures. Plus vous répondez vite, plus l'imp
           type: 'exercise',
           title: 'Répondez à 3 avis fictifs',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Entraînez-vous à répondre à des avis Google de différentes notes.',
           exercisePrompt: 'Répondez à ces 3 avis fictifs en utilisant l\'assistant IA et les stratégies apprises :\n\nAvis 1 (⭐⭐⭐⭐⭐) : « Super restaurant, le personnel est adorable et la cuisine excellente. On reviendra ! — Sophie »\n\nAvis 2 (⭐⭐⭐) : « Bonne cuisine mais le service était un peu lent. La terrasse est agréable par contre. — Marc »\n\nAvis 3 (⭐) : « Attente de 45 minutes pour une pizza froide. Personnel désagréable. Plus jamais. — Thomas »\n\nPour chaque réponse, appliquez la stratégie adaptée à la note.'
         },
@@ -278,9 +290,9 @@ Règle d'or : répondez dans les 24 heures. Plus vous répondez vite, plus l'imp
           type: 'quiz',
           title: 'Quiz — Avis Google',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur la gestion des avis Google.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel pourcentage de consommateurs consulte les avis Google avant un achat local ?',
               options: ['50%', '72%', '93%', '100%'],
@@ -316,14 +328,17 @@ Règle d'or : répondez dans les 24 heures. Plus vous répondez vite, plus l'imp
       title: 'Studio photo IA',
       emoji: '🖼️',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'contenu-pro-m5-l1',
           type: 'text',
           title: 'Flux/schnell et l\'art du prompt visuel',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Freenzy utilise le modèle Flux/schnell de fal.ai pour générer des images professionnelles en quelques secondes. Ce modèle excelle dans les rendus photoréalistes, les illustrations business et les visuels marketing.
 
 Le prompt (la description textuelle de l'image souhaitée) est la clé d'une bonne génération. Un prompt efficace suit la structure : sujet + style + ambiance + détails techniques. Par exemple : « Photo professionnelle d'une femme souriante dans un bureau moderne, style corporate, lumière naturelle douce, arrière-plan flou bokeh, haute résolution ».
@@ -341,7 +356,7 @@ Cas d'usage professionnels : photos de profil LinkedIn, visuels pour posts rése
           type: 'exercise',
           title: 'Générez une image professionnelle',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Utilisez le studio photo IA pour créer un visuel professionnel.',
           exercisePrompt: 'Générez une image professionnelle avec le studio photo IA de Freenzy. Rédigez un prompt détaillé en suivant la structure : sujet + style + ambiance + détails techniques. Essayez de créer un visuel utilisable pour votre activité (photo de profil, bannière, illustration produit...). Comparez le résultat avec votre prompt et ajustez si nécessaire.'
         },
@@ -350,9 +365,9 @@ Cas d'usage professionnels : photos de profil LinkedIn, visuels pour posts rése
           type: 'quiz',
           title: 'Quiz — Studio photo IA',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur la génération d\'images IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel modèle utilise Freenzy pour la génération d\'images ?',
               options: ['DALL-E 3', 'Midjourney v6', 'Flux/schnell de fal.ai', 'Stable Diffusion XL'],
@@ -382,14 +397,17 @@ Cas d'usage professionnels : photos de profil LinkedIn, visuels pour posts rése
       title: 'Studio vidéo IA',
       emoji: '🎬',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'contenu-pro-m6-l1',
           type: 'text',
           title: 'Avatars D-ID et projets vidéo',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `La vidéo est le format roi du marketing digital en 2026. Freenzy intègre deux technologies complémentaires pour vous permettre de créer des vidéos professionnelles sans caméra ni compétence technique.
 
 D-ID est la technologie d'avatars parlants. Vous fournissez une photo (la vôtre ou celle générée par le studio photo) et un script texte, et D-ID crée une vidéo où l'avatar parle naturellement avec des mouvements de lèvres synchronisés et des expressions faciales réalistes. Idéal pour les vidéos de présentation, les tutoriels et les messages personnalisés.
@@ -405,7 +423,7 @@ Les projets vidéo vous permettent de regrouper plusieurs clips sous un même no
           type: 'text',
           title: 'Édition et publication de vidéos',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `Une fois vos vidéos générées, il est important de les optimiser avant publication. Chaque plateforme a ses formats et durées idéales.
 
 Pour Instagram Reels et TikTok, le format vertical (9:16) est obligatoire. La durée optimale est de 15 à 30 secondes. Ajoutez des sous-titres — 85% des vidéos sur les réseaux sociaux sont regardées sans le son. Placez votre message clé dans les 3 premières secondes.
@@ -421,9 +439,9 @@ La bibliothèque vidéo de Freenzy vous permet de télécharger vos vidéos dans
           type: 'quiz',
           title: 'Quiz — Studio vidéo IA',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur la création vidéo IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle technologie Freenzy utilise-t-elle pour les avatars parlants ?',
               options: ['Runway ML', 'D-ID', 'Synthesia', 'HeyGen'],
@@ -476,14 +494,17 @@ export const parcoursSecuriteRgpd: FormationParcours = {
       title: 'RGPD : les bases',
       emoji: '📜',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'securite-rgpd-m1-l1',
           type: 'text',
           title: 'Droits, obligations et sanctions',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Le Règlement Général sur la Protection des Données (RGPD), en vigueur depuis mai 2018, est le cadre juridique européen qui régit la collecte et le traitement des données personnelles. Toute entreprise qui traite des données de résidents européens doit s'y conformer, quelle que soit sa taille ou sa localisation.
 
 Les droits des personnes sont au cœur du RGPD. Chaque individu dispose de huit droits fondamentaux : le droit d'accès (savoir quelles données sont collectées), le droit de rectification (corriger des données erronées), le droit à l'effacement (« droit à l'oubli »), le droit à la portabilité (récupérer ses données dans un format lisible), le droit d'opposition (refuser un traitement), le droit à la limitation (geler un traitement), le droit de ne pas être soumis à une décision automatisée et le droit d'être informé.
@@ -499,7 +520,7 @@ Le RGPD n'est pas qu'une contrainte — c'est un avantage concurrentiel. Les con
           type: 'text',
           title: 'Les principes clés du RGPD',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `Le RGPD repose sur six principes fondamentaux que tout professionnel doit connaître et appliquer au quotidien.
 
 1. Licéité, loyauté et transparence : vous devez avoir une base légale pour traiter des données (consentement, contrat, obligation légale, intérêt légitime...) et informer clairement les personnes de ce que vous faites avec leurs données.
@@ -521,9 +542,9 @@ Le principe d'accountability (responsabilité) oblige l'entreprise à pouvoir d�
           type: 'quiz',
           title: 'Quiz — RGPD les bases',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Évaluez votre compréhension des fondamentaux du RGPD.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Depuis quand le RGPD est-il en vigueur ?',
               options: ['Janvier 2016', 'Mai 2018', 'Janvier 2020', 'Mai 2022'],
@@ -565,14 +586,17 @@ Le principe d'accountability (responsabilité) oblige l'entreprise à pouvoir d�
       title: 'IA et données personnelles',
       emoji: '🤖',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'securite-rgpd-m2-l1',
           type: 'text',
           title: 'Ce que l\'IA stocke — et ce qu\'elle ne stocke pas',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `L'utilisation de l'intelligence artificielle soulève des questions légitimes sur le traitement des données personnelles. Comprendre ce qui est stocké, traité et partagé est essentiel pour utiliser l'IA en toute conformité.
 
 Chez Freenzy, les conversations avec les assistants IA ne sont pas utilisées pour entraîner les modèles. Les données sont traitées pour fournir une réponse, puis le contexte de conversation est géré selon vos paramètres de rétention. Les données sont hébergées exclusivement en Europe (Hetzner) pour garantir la conformité RGPD.
@@ -592,9 +616,9 @@ Les logs sont anonymisés : les informations personnelles identifiables (PII) so
           type: 'quiz',
           title: 'Quiz — IA et données',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Vérifiez votre compréhension du traitement des données par l\'IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Où sont hébergées les données de Freenzy ?',
               options: ['Aux États-Unis (AWS)', 'En Europe (Hetzner)', 'En Asie (Alibaba Cloud)', 'Partout dans le monde (CDN)'],
@@ -626,7 +650,7 @@ Les logs sont anonymisés : les informations personnelles identifiables (PII) so
           type: 'game',
           title: 'Jeu — Types de données et catégories RGPD',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Associez chaque type de donnée à sa catégorie RGPD.',
           gameType: 'matching',
           gameData: {
@@ -649,14 +673,17 @@ Les logs sont anonymisés : les informations personnelles identifiables (PII) so
       title: 'Protéger son entreprise',
       emoji: '🛡️',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'securite-rgpd-m3-l1',
           type: 'text',
           title: 'Mots de passe, 2FA et chiffrement',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `La sécurité de votre entreprise commence par trois piliers fondamentaux : des mots de passe solides, l'authentification à deux facteurs et le chiffrement des données sensibles.
 
 Les mots de passe restent la première ligne de défense. Un mot de passe fort en 2026 fait au minimum 12 caractères et mélange majuscules, minuscules, chiffres et caractères spéciaux. Mais la longueur prime sur la complexité : « MonChienAdore-LesPizza$2026 » est plus sûr que « Xk9#mQ ». Utilisez un gestionnaire de mots de passe (Bitwarden, 1Password) pour ne retenir qu'un seul mot de passe maître.
@@ -674,7 +701,7 @@ Activez la 2FA sur TOUS vos comptes critiques : email, banque, réseaux sociaux,
           type: 'exercise',
           title: 'Activez la 2FA sur votre compte',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Mettez en pratique la sécurisation de votre compte Freenzy.',
           exercisePrompt: 'Activez la 2FA sur votre compte Freenzy en suivant ces étapes :\n1. Allez dans les paramètres de sécurité de votre compte\n2. Cliquez sur « Activer la 2FA »\n3. Scannez le QR code avec Google Authenticator ou Authy\n4. Entrez le code à 6 chiffres pour confirmer\n5. Sauvegardez vos codes de récupération dans un endroit sûr\n\nSi vous n\'avez pas encore d\'application d\'authentification, installez Google Authenticator (gratuit) sur votre smartphone.'
         },
@@ -683,9 +710,9 @@ Activez la 2FA sur TOUS vos comptes critiques : email, banque, réseaux sociaux,
           type: 'quiz',
           title: 'Quiz — Protection entreprise',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur la protection de votre entreprise.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle est la longueur minimale recommandée pour un mot de passe en 2026 ?',
               options: ['6 caractères', '8 caractères', '12 caractères', '20 caractères'],
@@ -721,14 +748,17 @@ Activez la 2FA sur TOUS vos comptes critiques : email, banque, réseaux sociaux,
       title: 'Obligations légales',
       emoji: '⚖️',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'securite-rgpd-m4-l1',
           type: 'text',
           title: 'CGU, mentions légales et cookies',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Tout site web professionnel en Europe doit respecter un ensemble d'obligations légales. Le non-respect de ces obligations expose à des sanctions financières et nuit à la crédibilité de votre entreprise.
 
 Les mentions légales sont obligatoires pour tout site web professionnel (loi LCEN en France). Elles doivent inclure : la raison sociale de l'entreprise, l'adresse du siège social, le numéro d'immatriculation (RCS, SIRET), le nom du directeur de publication, les coordonnées de l'hébergeur et un moyen de contact (email ou formulaire).
@@ -746,7 +776,7 @@ Utilisez une plateforme de gestion du consentement (CMP) comme Tarteaucitron ou 
           type: 'text',
           title: 'Exigences de la CNIL',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `La CNIL (Commission Nationale de l'Informatique et des Libertés) est l'autorité française de protection des données. Elle contrôle la conformité des entreprises et dispose de pouvoirs de sanction importants. Voici ses exigences principales.
 
 Le registre des traitements est obligatoire pour toute entreprise de plus de 250 salariés, mais la CNIL le recommande fortement pour toutes les entreprises. Ce document recense tous les traitements de données personnelles : finalité, catégories de données, destinataires, durées de conservation et mesures de sécurité.
@@ -764,9 +794,9 @@ La CNIL publie régulièrement des référentiels sectoriels (santé, RH, commer
           type: 'quiz',
           title: 'Quiz — Obligations légales',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Vérifiez vos connaissances sur les obligations légales du numérique.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Les mentions légales sont-elles obligatoires sur un site web professionnel ?',
               options: ['Non, c\'est facultatif', 'Oui, pour tous les sites professionnels', 'Seulement pour les sites e-commerce', 'Seulement pour les entreprises de plus de 50 salariés'],
@@ -802,14 +832,17 @@ La CNIL publie régulièrement des référentiels sectoriels (santé, RH, commer
       title: 'Bonnes pratiques quotidiennes',
       emoji: '✅',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'securite-rgpd-m5-l1',
           type: 'text',
           title: 'Sécurité email, partage de fichiers et cloud',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Les cyberattaques ciblent principalement les employés, pas les serveurs. 91% des violations de données commencent par un email de phishing. Les bonnes pratiques quotidiennes sont votre meilleure défense.
 
 Sécurité email : ne cliquez jamais sur un lien dans un email inattendu. Vérifiez l'adresse de l'expéditeur (pas seulement le nom affiché — survolez pour voir l'adresse réelle). Les banques et administrations ne demandent jamais vos identifiants par email. En cas de doute, contactez l'expéditeur présumé par un autre canal (téléphone, site officiel).
@@ -827,7 +860,7 @@ Réseau : utilisez un VPN sur les réseaux Wi-Fi publics (hôtels, cafés, aéro
           type: 'game',
           title: 'Jeu — Classez les mesures de sécurité par priorité',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Classez ces mesures de sécurité de la plus prioritaire à la moins prioritaire pour une PME.',
           gameType: 'ordering',
           gameData: {
@@ -846,9 +879,9 @@ Réseau : utilisez un VPN sur les réseaux Wi-Fi publics (hôtels, cafés, aéro
           type: 'quiz',
           title: 'Quiz — Bonnes pratiques',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos réflexes de sécurité au quotidien.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel pourcentage des violations de données commence par un email de phishing ?',
               options: ['45%', '68%', '91%', '99%'],
@@ -878,14 +911,17 @@ Réseau : utilisez un VPN sur les réseaux Wi-Fi publics (hôtels, cafés, aéro
       title: 'Audit de sécurité',
       emoji: '🔍',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'securite-rgpd-m6-l1',
           type: 'text',
           title: 'Checklist de sécurité complète',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Un audit de sécurité régulier est indispensable pour identifier les vulnérabilités avant qu'elles ne soient exploitées. Voici une checklist complète pour évaluer la sécurité de votre entreprise.
 
 Authentification et accès : tous les comptes critiques ont-ils la 2FA activée ? Les mots de passe font-ils plus de 12 caractères et sont-ils uniques ? Les ex-employés ont-ils été désactivés de tous les systèmes ? Les droits d'accès suivent-ils le principe du moindre privilège (chaque personne n'a accès qu'à ce dont elle a besoin) ?
@@ -905,7 +941,7 @@ Facteur humain : les employés sont-ils formés aux risques de phishing ? Une po
           type: 'exercise',
           title: 'Faites votre propre audit de sécurité',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Évaluez la sécurité de votre propre environnement numérique.',
           exercisePrompt: 'Réalisez un mini-audit de sécurité de votre environnement numérique avec l\'assistant IA. Répondez honnêtement à ces questions et l\'assistant vous donnera un score et des recommandations personnalisées :\n\n1. Utilisez-vous un gestionnaire de mots de passe ?\n2. La 2FA est-elle activée sur votre email principal ?\n3. Quand avez-vous changé vos mots de passe pour la dernière fois ?\n4. Avez-vous vérifié haveibeenpwned.com récemment ?\n5. Vos sauvegardes sont-elles automatiques ?\n6. Vos logiciels sont-ils à jour ?\n7. Utilisez-vous un VPN sur les Wi-Fi publics ?\n8. Vos employés sont-ils formés au phishing ?'
         },
@@ -914,9 +950,9 @@ Facteur humain : les employés sont-ils formés aux risques de phishing ? Une po
           type: 'quiz',
           title: 'Quiz — Audit de sécurité',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Quiz final sur l\'audit de sécurité.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel principe guide les droits d\'accès dans une entreprise sécurisée ?',
               options: ['Tout le monde a accès à tout', 'Le principe du moindre privilège', 'Les managers ont tous les accès', 'L\'accès est basé sur l\'ancienneté'],
@@ -981,14 +1017,17 @@ export const parcoursMaitriserAssistants: FormationParcours = {
       title: 'Les 12 assistants business',
       emoji: '💼',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'maitriser-assistants-m1-l1',
           type: 'text',
           title: 'Vue d\'ensemble des assistants business',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Freenzy met à votre disposition 12 assistants business spécialisés, chacun expert dans un domaine précis de la gestion d'entreprise. Comprendre leurs forces vous permet de déléguer efficacement.
 
 L'assistant Commercial (fz-commercial) gère votre pipeline de ventes : prospection, qualification de leads, suivi des opportunités et relances automatiques. Il rédige des propositions commerciales personnalisées et analyse vos taux de conversion.
@@ -1012,7 +1051,7 @@ Les assistants Logistique, Achats, Qualité, Stratégie et Direction générale 
           type: 'text',
           title: 'Quand utiliser quel assistant',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `Choisir le bon assistant pour la bonne tâche est la clé pour obtenir des résultats optimaux. Voici un guide de décision rapide par situation.
 
 Vous recevez un appel d'un prospect → Assistant Répondeur (fz-repondeur) pour qualifier la demande, puis Assistant Commercial (fz-commercial) pour le suivi et la proposition.
@@ -1036,9 +1075,9 @@ Astuce : vous pouvez mentionner plusieurs assistants dans une même conversation
           type: 'quiz',
           title: 'Quiz — Quel assistant pour quelle tâche ?',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Associez chaque situation au bon assistant.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel assistant utiliser pour rédiger une proposition commerciale ?',
               options: ['fz-marketing', 'fz-commercial', 'fz-communication', 'fz-juridique'],
@@ -1080,14 +1119,17 @@ Astuce : vous pouvez mentionner plusieurs assistants dans une même conversation
       title: 'Les 12 assistants personnels',
       emoji: '👤',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'maitriser-assistants-m2-l1',
           type: 'text',
           title: 'Vue d\'ensemble des assistants personnels',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Au-delà des assistants business, Freenzy propose des assistants personnels conçus pour améliorer votre vie quotidienne, votre bien-être et votre développement personnel.
 
 L'assistant Réveil Intelligent vous réveille chaque matin avec un briefing personnalisé : météo, actualités de votre secteur, rappels de la journée, citation motivante et musique adaptée à votre humeur. Il propose 8 modes de réveil et 18 rubriques personnalisables.
@@ -1109,7 +1151,7 @@ Les assistants Culture, Langues, Éducation, Relations, Productivité et Bien-ê
           type: 'exercise',
           title: 'Testez 3 assistants personnels',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Expérimentez avec les assistants personnels de Freenzy.',
           exercisePrompt: 'Testez 3 assistants personnels de Freenzy parmi ceux présentés dans la leçon :\n\n1. Demandez à l\'assistant Nutrition de créer un plan de repas pour une journée selon vos préférences\n2. Demandez à l\'assistant Voyage de planifier un week-end dans une ville de votre choix avec un budget de 500€\n3. Demandez à l\'assistant Coach de Vie de vous aider à définir 3 objectifs SMART pour le mois prochain\n\nComparez la qualité et la pertinence des réponses. Notez ce qui vous a surpris positivement et ce qui pourrait être amélioré.'
         },
@@ -1118,9 +1160,9 @@ Les assistants Culture, Langues, Éducation, Relations, Productivité et Bien-ê
           type: 'quiz',
           title: 'Quiz — Assistants personnels',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur les assistants personnels.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Combien de modes de réveil propose l\'assistant Réveil Intelligent ?',
               options: ['3 modes', '5 modes', '8 modes', '12 modes'],
@@ -1156,14 +1198,17 @@ Les assistants Culture, Langues, Éducation, Relations, Productivité et Bien-ê
       title: 'Le studio créatif',
       emoji: '🎨',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'maitriser-assistants-m3-l1',
           type: 'text',
           title: 'Photo et vidéo IA : fonctionnalités avancées',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Le Studio Créatif de Freenzy est un espace de création tout-en-un qui combine la génération d'images par IA (Flux/schnell), la création de vidéos (D-ID + LTX Video) et un système de gestion de projets créatifs.
 
 En mode « Création libre », vous avez un contrôle total sur vos créations. Pour les images, vous rédigez un prompt détaillé et le modèle Flux/schnell génère un visuel en quelques secondes. Le coût est de 8 crédits en standard et 12 en HD. Vous pouvez itérer rapidement : générez, évaluez, ajustez le prompt, régénérez.
@@ -1181,7 +1226,7 @@ Fonctionnalités avancées : galerie photo avec filtres par date et par agent de
           type: 'exercise',
           title: 'Créez une photo et une vidéo',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Expérimentez avec le studio créatif de Freenzy.',
           exercisePrompt: 'Utilisez le Studio Créatif de Freenzy pour réaliser deux créations :\n\n1. PHOTO : Générez une image professionnelle pour votre profil ou votre entreprise. Rédigez un prompt structuré (sujet + style + ambiance + qualité) et générez l\'image. Si le résultat ne convient pas, ajustez le prompt et réessayez.\n\n2. VIDÉO : Créez un avatar parlant avec D-ID. Uploadez une photo (ou utilisez celle que vous venez de générer) et rédigez un script de présentation de 30 secondes. Lancez la génération et attendez le résultat.\n\nComparez le coût en crédits et le temps de génération entre les deux formats.'
         },
@@ -1190,9 +1235,9 @@ Fonctionnalités avancées : galerie photo avec filtres par date et par agent de
           type: 'quiz',
           title: 'Quiz — Studio créatif',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur le studio créatif.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quels sont les deux modes du Studio Créatif ?',
               options: ['Mode jour / Mode nuit', 'Création libre / Demandes agents', 'Standard / Premium', 'Photo / Vidéo'],
@@ -1222,14 +1267,17 @@ Fonctionnalités avancées : galerie photo avec filtres par date et par agent de
       title: 'Les discussions profondes',
       emoji: '🧠',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'maitriser-assistants-m4-l1',
           type: 'text',
           title: '85 templates et Extended Thinking',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Les Discussions Profondes sont une fonctionnalité unique de Freenzy qui vous permet d'explorer des sujets complexes avec le modèle IA le plus puissant : Claude Opus avec Extended Thinking.
 
 Contrairement aux conversations classiques qui utilisent des modèles rapides (Haiku, Sonnet), les Discussions Profondes mobilisent Opus — le modèle le plus avancé — avec une capacité de réflexion étendue. L'IA « pense » avant de répondre, structurant sa réflexion en profondeur pour des réponses nuancées et complètes.
@@ -1249,7 +1297,7 @@ Vous pouvez partager vos discussions sur Twitter, LinkedIn, Facebook, WhatsApp e
           type: 'exercise',
           title: 'Lancez une discussion profonde',
           duration: '10 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Expérimentez les Discussions Profondes de Freenzy.',
           exercisePrompt: 'Lancez une Discussion Profonde sur Freenzy :\n\n1. Allez dans la section « Discussions Profondes »\n2. Parcourez les 85 templates et choisissez un sujet qui vous intéresse\n3. Utilisez les tags pour filtrer si nécessaire\n4. Lancez la discussion et échangez au moins 5 messages\n5. Activez le mode Challenge pour tester l\'avocat du diable\n6. Observez comment la profondeur de la discussion évolue (phase exploration → approfondissement)\n\nNotez la différence de qualité par rapport à une conversation classique avec un assistant standard.'
         },
@@ -1258,9 +1306,9 @@ Vous pouvez partager vos discussions sur Twitter, LinkedIn, Facebook, WhatsApp e
           type: 'quiz',
           title: 'Quiz — Discussions profondes',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur les Discussions Profondes.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel modèle IA est utilisé pour les Discussions Profondes ?',
               options: ['Claude Haiku', 'Claude Sonnet', 'Claude Opus avec Extended Thinking', 'GPT-4'],
@@ -1296,14 +1344,17 @@ Vous pouvez partager vos discussions sur Twitter, LinkedIn, Facebook, WhatsApp e
       title: 'L\'arcade et la gamification',
       emoji: '🎮',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'maitriser-assistants-m5-l1',
           type: 'text',
           title: 'Jeux, XP, badges et rewards',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `Freenzy intègre un système de gamification complet qui rend l'utilisation de la plateforme ludique et addictive. L'arcade, les points d'expérience (XP), les badges et les rewards créent une boucle d'engagement vertueuse.
 
 Les XP (Experience Points) sont gagnés à chaque action sur la plateforme : compléter une formation, utiliser un assistant, créer du contenu dans le studio, terminer une discussion profonde. Votre niveau augmente avec les XP accumulés, débloquant de nouvelles fonctionnalités et récompenses.
@@ -1321,7 +1372,7 @@ La gamification n'est pas un gadget : elle augmente de 60% le taux de rétention
           type: 'game',
           title: 'Flashcards — Gamification Freenzy',
           duration: '12 min',
-          xp: 100,
+          xpReward: 100,
           content: 'Testez vos connaissances sur la gamification avec ces flashcards interactives.',
           gameType: 'flashcards',
           gameData: {
@@ -1342,9 +1393,9 @@ La gamification n'est pas un gadget : elle augmente de 60% le taux de rétention
           type: 'quiz',
           title: 'Quiz — Arcade et gamification',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Quiz sur le système de gamification.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelles actions permettent de gagner des XP ?',
               options: ['Uniquement les formations', 'Uniquement les conversations avec les assistants', 'Toutes les actions : formations, assistants, studio, discussions', 'Seulement les achats de crédits'],
@@ -1374,14 +1425,17 @@ La gamification n'est pas un gadget : elle augmente de 60% le taux de rétention
       title: 'Automatisations et crons',
       emoji: '⚙️',
       duration: '30 min',
-      xp: 300,
+      xpReward: 300,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'maitriser-assistants-m6-l1',
           type: 'text',
           title: 'Tâches planifiées, briefings et séquences email',
           duration: '10 min',
-          xp: 50,
+          xpReward: 50,
           content: `Les automatisations sont le cœur de la productivité sur Freenzy. Elles vous permettent de déléguer des tâches répétitives à vos assistants, qui s'exécutent automatiquement selon des plannings définis.
 
 Les tâches CRON sont des actions programmées à des intervalles réguliers. Par exemple : un briefing matinal à 7h00 (votre assistant compile les actualités de votre secteur, vos rendez-vous du jour et vos priorités), un rapport de ventes hebdomadaire chaque lundi à 9h00, ou une veille concurrentielle quotidienne à 18h00.
@@ -1399,7 +1453,7 @@ L'assistant Direction Générale (fz-dg) orchestre les automatisations stratégi
           type: 'text',
           title: 'Workflows d\'approbation',
           duration: '8 min',
-          xp: 50,
+          xpReward: 50,
           content: `Le système Autopilot de Freenzy introduit un workflow d'approbation intelligent : les assistants proposent des actions, et vous validez avant exécution. Ce modèle garantit que l'IA reste un outil sous votre contrôle total.
 
 Le processus fonctionne en quatre étapes : proposition (un assistant identifie une opportunité ou un problème et propose une action), validation (vous approuvez ou refusez via le dashboard ou WhatsApp), exécution (l'action est réalisée automatiquement après approbation) et rollback (possibilité d'annuler l'action si le résultat n'est pas satisfaisant).
@@ -1417,9 +1471,9 @@ Un audit trail complet enregistre chaque action : qui a proposé, qui a validé,
           type: 'quiz',
           title: 'Quiz — Automatisations',
           duration: '10 min',
-          xp: 150,
+          xpReward: 150,
           content: 'Testez vos connaissances sur les automatisations Freenzy.',
-          questions: [
+          quizQuestions: [
             {
               question: 'À quelle fréquence le cron des séquences email s\'exécute-t-il ?',
               options: ['Toutes les minutes', 'Toutes les heures', 'Toutes les 6 heures', 'Une fois par jour'],

@@ -8,6 +8,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 interface Referral {
   id: string;
@@ -354,6 +355,7 @@ export default function ReferralsPage() {
           </div>
         )}
       </div>
+      <PageBlogSection pageId="referrals" />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // =============================================================================
 // Freenzy.io — Formations Barrel File
+// All parcours imported here appear in the /learn page automatically
 // =============================================================================
 
 import {
@@ -14,6 +15,33 @@ import {
   parcoursMaitriserAssistants,
   comingSoonParcours,
 } from './formation-data-more';
+
+// ─── Niv1 parcours ──────────────────────────────────────────
+import { parcoursArtisansIA } from './formation-niv1-artisans';
+import { parcoursAvatarIA, parcoursChatIA } from './formation-niv1-avatar-chat';
+import { parcoursEcommerceIA, parcoursSanteIA } from './formation-niv1-ecommerce-sante';
+import { parcoursAnalytics, parcoursFilmIA } from './formation-niv1-analytics-film';
+import { parcoursAPIWebhooks, parcoursBusinessPlan } from './formation-niv1-api-business';
+
+// ─── Niv2 parcours ──────────────────────────────────────────
+import { parcoursPromptNiv2 } from './formation-niv2-prompt';
+import { parcoursContentNiv2 } from './formation-niv2-contenu';
+import { parcoursDroitIANiv2 } from './formation-niv2-droit';
+import { parcoursOrchestrationNiv2 } from './formation-niv2-orchestration';
+
+// ─── Niv3 parcours ──────────────────────────────────────────
+import { parcoursPromptMaster, parcoursContentDirector } from './formation-niv3-prompt-contenu';
+import { parcoursComplianceOfficer, parcoursSystemsArchitect } from './formation-niv3-droit-orchestration';
+
+// ─── New formations — Metier ────────────────────────────────
+import { parcoursPlombierIA, parcoursElectricienIA, parcoursAvocatIA, parcoursNotaireIA, parcoursDentisteIA } from './formation-new-metier-1';
+import { parcoursKineIA, parcoursArchitecteIA, parcoursPhotographeIA, parcoursGraphisteIA, parcoursDeveloppeurIA } from './formation-new-metier-2';
+
+// ─── New formations — Tech ─────────────────────────────────
+import { parcoursPythonIA, parcoursAPIRest, parcoursBDD, parcoursDockerIA } from './formation-new-tech-1';
+
+// ─── New formations — Quotidien ─────────────────────────────
+import { parcoursYogaMeditation, parcoursSportIA, parcoursParentaliteIA, parcoursDevPerso, parcoursEcologieIA } from './formation-new-quotidien-2';
 
 import { generateDiplomaPDF } from './diploma-generator';
 
@@ -39,11 +67,54 @@ export { generateDiplomaPDF };
 // ---------------------------------------------------------------------------
 
 const availableParcours = [
+  // Core (5)
   parcoursPremiersPas,
   parcoursPromptEngineering,
   parcoursContenuPro,
   parcoursSecuriteRgpd,
   parcoursMaitriserAssistants,
+  // Niv1 (8)
+  parcoursArtisansIA,
+  parcoursAvatarIA,
+  parcoursChatIA,
+  parcoursEcommerceIA,
+  parcoursSanteIA,
+  parcoursAnalytics,
+  parcoursFilmIA,
+  parcoursAPIWebhooks,
+  parcoursBusinessPlan,
+  // Niv2 (4)
+  parcoursPromptNiv2,
+  parcoursContentNiv2,
+  parcoursDroitIANiv2,
+  parcoursOrchestrationNiv2,
+  // Niv3 (4)
+  parcoursPromptMaster,
+  parcoursContentDirector,
+  parcoursComplianceOfficer,
+  parcoursSystemsArchitect,
+  // New — Metier (10)
+  parcoursPlombierIA,
+  parcoursElectricienIA,
+  parcoursAvocatIA,
+  parcoursNotaireIA,
+  parcoursDentisteIA,
+  parcoursKineIA,
+  parcoursArchitecteIA,
+  parcoursPhotographeIA,
+  parcoursGraphisteIA,
+  parcoursDeveloppeurIA,
+  // New — Tech (4)
+  parcoursPythonIA,
+  parcoursAPIRest,
+  parcoursBDD,
+  parcoursDockerIA,
+  // New — Quotidien (5)
+  parcoursYogaMeditation,
+  parcoursSportIA,
+  parcoursParentaliteIA,
+  parcoursDevPerso,
+  parcoursEcologieIA,
 ];
 
 // ---------------------------------------------------------------------------

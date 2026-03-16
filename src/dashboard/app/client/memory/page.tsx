@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { CU } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Memoire IA
@@ -589,6 +590,7 @@ export default function MemoryPage() {
           })}
         </div>
       </div>
+      <PageBlogSection pageId="memory" />
     </div>
   );
 }

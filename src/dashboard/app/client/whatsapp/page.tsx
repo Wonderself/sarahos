@@ -6,6 +6,7 @@ import { getBond, recordAgentInteraction, recordFeedback, getTopAgents, LEVEL_NA
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -566,6 +567,7 @@ export default function WhatsAppPage() {
         </>
       )}
       {LoginModalComponent}
+      <PageBlogSection pageId="whatsapp" />
     </div>
   );
 }

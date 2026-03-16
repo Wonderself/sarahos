@@ -77,11 +77,14 @@ export const FORMATION_CATEGORIES: FormationCategory[] = [
   { id: 'freenzy', title: 'Maitriser Freenzy', emoji: '\u{1F916}', description: 'Apprenez a utiliser la plateforme', parcours: ['premiers-pas', 'maitriser-assistants'] },
   { id: 'ia', title: 'Intelligence Artificielle', emoji: '\u{1F9E0}', description: 'Comprendre et utiliser l\'IA', parcours: ['prompt-engineering'] },
   { id: 'contenu', title: 'Creation de contenu', emoji: '\u{1F3A8}', description: 'Photos, videos, posts, branding', parcours: ['contenu-pro'] },
-  { id: 'business', title: 'Business & Productivite', emoji: '\u{1F4BC}', description: 'Devis, factures, CRM, equipes', parcours: [] },
-  { id: 'technique', title: 'Technique & Integrations', emoji: '\u{1F527}', description: 'API, Telegram, webhooks', parcours: ['api-integrations'] },
+  { id: 'business', title: 'Business & Productivite', emoji: '\u{1F4BC}', description: 'Marketing, growth, management, comptabilite', parcours: ['marketing-digital', 'growth-hacking', 'copywriting-ia', 'personal-branding', 'negociation-ia', 'management-ia', 'recrutement-ia', 'compta-pme', 'juridique-entreprise', 'export-international'] },
+  { id: 'technique', title: 'Technique & Integrations', emoji: '\u{1F527}', description: 'Python, API, Docker, CI/CD, securite', parcours: ['api-integrations', 'python-ia', 'api-rest', 'bases-donnees-ia', 'docker-ia', 'cicd-ia', 'testing-ia', 'monitoring-ia', 'securite-web-ia', 'performance-ia', 'architecture-ia'] },
   { id: 'securite', title: 'Securite & Conformite', emoji: '\u{1F6E1}\u{FE0F}', description: 'RGPD, protection des donnees', parcours: ['securite-rgpd'] },
+  { id: 'productivite', title: 'Productivite', emoji: '\u{23F1}\u{FE0F}', description: 'GTD, Pomodoro, email zero, reunions', parcours: ['gtd-ia', 'pomodoro-avance', 'notion-mastery', 'email-zero', 'reunions-efficaces', 'prise-de-notes', 'mind-mapping', 'speed-reading', 'memoire-ia', 'public-speaking'] },
+  { id: 'creativite', title: 'Creativite', emoji: '\u{1F3A8}', description: 'Ecriture, podcast, YouTube, design, musique', parcours: ['ecriture-creative', 'storytelling-ia', 'podcast-ia', 'youtube-ia', 'photographie-ia', 'design-graphique-ia', 'ux-design-ia', 'musique-ia', 'animation-ia', '3d-ia'] },
+  { id: 'quotidien', title: 'Vie quotidienne', emoji: '\u{1F3E0}', description: 'Cuisine, jardinage, sport, finances, ecologie', parcours: ['cuisine-ia', 'jardinage-ia', 'bricolage-ia', 'voyage-ia', 'finances-perso-ia', 'yoga-meditation-ia', 'sport-ia', 'parentalite-ia', 'dev-perso-ia', 'ecologie-ia'] },
+  { id: 'metier', title: 'Par metier', emoji: '\u{1F3AF}', description: '20 formations specifiques par profession', parcours: ['artisans-ia-niv1', 'plombier-ia', 'electricien-ia', 'avocat-ia', 'notaire-ia', 'dentiste-ia', 'kine-ia', 'architecte-ia', 'photographe-ia', 'graphiste-ia', 'developpeur-ia', 'comptable-ia', 'agent-immo-ia', 'coiffeur-ia', 'fleuriste-ia', 'boulanger-ia', 'garagiste-ia', 'veterinaire-ia', 'opticien-ia', 'pharmacien-ia', 'prof-ia'] },
   { id: 'langues', title: 'Langues', emoji: '\u{1F30D}', description: 'Bientot disponible — style Duolingo', parcours: ['francais-anglais', 'francais-hebreu'] },
-  { id: 'metier', title: 'Par metier', emoji: '\u{1F3AF}', description: 'Formations specifiques par profession', parcours: ['freenzy-artisans', 'freenzy-medecins', 'freenzy-agences', 'freenzy-ecommerce'] },
 ];
 
 // ---------------------------------------------------------------------------

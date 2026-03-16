@@ -11,6 +11,7 @@ import {
   calculateLevel,
   type FormationParcours,
 } from '@/lib/formations';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -415,6 +416,7 @@ export default function LearnPage() {
       <div style={{ fontSize: 12, color: '#9B9B9B', textAlign: 'center', marginBottom: 24 }}>
         💡 Suggestion ? <a href="mailto:support@freenzy.io" style={{ color: '#1A1A1A', textDecoration: 'underline' }}>support@freenzy.io</a>
       </div>
+      <PageBlogSection pageId="learn" />
     </div>
   );
 }

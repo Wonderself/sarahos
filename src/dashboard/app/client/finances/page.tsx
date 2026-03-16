@@ -12,6 +12,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import AuthRequired from '../../../components/AuthRequired';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -525,6 +526,7 @@ export default function FinancesPage() {
           </div>
         </div>
       )}
+      <PageBlogSection pageId="finances" />
     </div>
     </AuthRequired>
   );

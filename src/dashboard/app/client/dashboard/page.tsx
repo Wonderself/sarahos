@@ -12,6 +12,7 @@ import PageExplanation from '../../../components/PageExplanation';
 import { QUICK_ACTIONS, FEATURE_SECTIONS, PAGE_META } from '../../../lib/emoji-map';
 import { isAuthenticated } from '../../../components/VisitorBanner';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Types ───
 
@@ -592,6 +593,7 @@ export default function ClientDashboard() {
           </button>
         </div>
       )}
+      <PageBlogSection pageId="dashboard" />
     </div>
   );
 }

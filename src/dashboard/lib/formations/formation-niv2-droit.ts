@@ -33,14 +33,17 @@ export const parcoursDroitIANiv2: FormationParcours = {
       title: 'IA Act europeen en pratique',
       emoji: '\uD83C\uDDEA\uD83C\uDDFA',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'droit-ia-m1-l1',
           type: 'text' as const,
           title: 'Classification des risques et obligations par niveau',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `L'IA Act est LE texte de reference en Europe depuis son adoption definitive en 2024. Si vous utilisez de l'IA dans votre activite, il vous concerne directement \u2014 et il est beaucoup plus simple a comprendre qu'on ne le pense \uD83D\uDE09
 
 \uD83D\uDCCA Le systeme de classification par risques
@@ -64,7 +67,7 @@ L'IA Act s'applique progressivement : les interdictions sont en vigueur depuis f
           type: 'text' as const,
           title: 'Ce que ca change concretement pour les PME',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `OK, l'IA Act c'est bien joli, mais concretement, qu'est-ce que ca change pour VOUS si vous etes une PME, un freelance ou un entrepreneur ? \uD83E\uDD14
 
 \uD83D\uDCBC Impact reel au quotidien
@@ -90,9 +93,9 @@ Ce que vous n'avez PAS besoin de faire (si vous etes en risque limite) : pas d'a
           type: 'quiz' as const,
           title: 'Quiz — IA Act europeen',
           duration: '3 min',
-          xp: 70,
+          xpReward: 70,
           content: 'Verifiez que vous maitrisez les bases de l\'IA Act europeen.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel est le montant maximum d\'amende pour un systeme IA a risque inacceptable ?',
               options: ['10 millions d\'euros', '20 millions d\'euros', '35 millions d\'euros ou 7% du CA mondial', '50 millions d\'euros'],
@@ -136,14 +139,17 @@ Ce que vous n'avez PAS besoin de faire (si vous etes en risque limite) : pas d'a
       title: 'Droit d\'auteur et IA',
       emoji: '\u00A9\uFE0F',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'droit-ia-m2-l1',
           type: 'text' as const,
           title: 'Qui est l\'auteur d\'un contenu IA ?',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `C'est LA question a 1 million d'euros \uD83D\uDCB0 : quand une IA genere un texte, une image, de la musique ou du code... qui est l'auteur ? Qui detient les droits ? Qui peut l'exploiter commercialement ?
 
 \uD83D\uDCDD Textes generes par IA
@@ -173,7 +179,7 @@ Le code est traite comme une oeuvre litteraire en droit d'auteur. GitHub Copilot
           type: 'text' as const,
           title: 'Images IA : Flux, DALL-E, Midjourney — droits et limites',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `Vous adorez generer des images avec l'IA ? Nous aussi \uD83C\uDFA8 Mais avant de les utiliser dans vos supports commerciaux, il y a des regles a connaitre. Chaque plateforme a ses propres conditions, et les pieges sont reels.
 
 \uD83D\uDD25 Flux (fal.ai) — Ce qu'utilise Freenzy
@@ -205,9 +211,9 @@ Midjourney accorde une licence commerciale aux abonnes payants. Les utilisateurs
           type: 'quiz' as const,
           title: 'Quiz — Droit d\'auteur et IA',
           duration: '2 min',
-          xp: 65,
+          xpReward: 65,
           content: 'Testez vos connaissances sur le droit d\'auteur applique aux contenus generes par IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Un texte genere a 100% par IA sans intervention humaine est-il protege par le droit d\'auteur en Europe ?',
               options: ['Oui, automatiquement', 'Oui, si on declare l\'IA comme auteur', 'Non, il n\'est pas protegeable', 'Ca depend du pays'],
@@ -251,14 +257,17 @@ Midjourney accorde une licence commerciale aux abonnes payants. Les utilisateurs
       title: 'Video IA et deepfakes',
       emoji: '\uD83C\uDFAC',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'droit-ia-m3-l1',
           type: 'text' as const,
           title: 'Cadre legal des videos IA, avatars et voix synthetiques',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `La video generee par IA explose : Runway, Sora, Kling, LTX Video... et avec D-ID ou HeyGen, on peut creer des avatars parlants ultra-realistes. Mais le cadre legal est strict, et les sanctions sont lourdes \uD83C\uDFAC
 
 \uD83E\uDDD1\u200D\uD83D\uDCBB Avatars IA et droit a l'image
@@ -288,7 +297,7 @@ Pour les videos commerciales (publicites, presentations), la recommandation est 
           type: 'text' as const,
           title: 'Deepfakes : ce qui est interdit, ce qui est autorise',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Les deepfakes fascinent et inquietent a la fois. Faisons le point sur ce qui est legal et ce qui peut vous envoyer devant un tribunal \uD83D\uDC68\u200D\u2696\uFE0F
 
 \u274C Ce qui est INTERDIT
@@ -322,9 +331,9 @@ En 2024-2025, les premieres condamnations sont tombees en France : un homme cond
           type: 'quiz' as const,
           title: 'Quiz — Video IA et deepfakes',
           duration: '3 min',
-          xp: 70,
+          xpReward: 70,
           content: 'Verifiez que vous connaissez le cadre legal des videos IA et des deepfakes.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Creer un avatar IA avec le visage d\'un collegue sans son consentement ecrit est...',
               options: ['Legal si c\'est pour l\'entreprise', 'Legal si on ne le diffuse pas publiquement', 'Illegal — violation du droit a l\'image', 'Legal si on le previent a l\'oral'],
@@ -362,14 +371,17 @@ En 2024-2025, les premieres condamnations sont tombees en France : un homme cond
       title: 'RGPD avance : DPO pratique',
       emoji: '\uD83D\uDD12',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'droit-ia-m4-l1',
           type: 'text' as const,
           title: 'Registre de traitement et AIPD',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `Vous connaissez les bases du RGPD ? Parfait. Maintenant, on passe au niveau superieur : les outils concrets du DPO (Delegue a la Protection des Donnees) \uD83D\uDD12
 
 \uD83D\uDCCB Le registre des activites de traitement
@@ -412,7 +424,7 @@ La CNIL a publie un guide specifique « IA et AIPD » en 2024 avec des modeles p
           type: 'exercise' as const,
           title: 'Exercice — Analyse d\'impact de votre usage IA',
           duration: '4 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Mettez en pratique la theorie : realisez une mini-AIPD sur votre propre usage de l\'IA.',
           exercisePrompt: `Realisez une analyse d'impact simplifiee (mini-AIPD) de votre utilisation de l'IA dans votre activite professionnelle. Suivez ce plan :
 
@@ -429,9 +441,9 @@ L'assistant vous guidera etape par etape et vous donnera un feedback personnalis
           type: 'quiz' as const,
           title: 'Quiz — RGPD et IA',
           duration: '2 min',
-          xp: 45,
+          xpReward: 45,
           content: 'Testez vos connaissances RGPD avancees appliquees a l\'IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Le registre des activites de traitement est impose par quel article du RGPD ?',
               options: ['Article 5', 'Article 13', 'Article 30', 'Article 83'],
@@ -469,14 +481,17 @@ L'assistant vous guidera etape par etape et vous donnera un feedback personnalis
       title: 'Contrats et IA',
       emoji: '\uD83D\uDCDD',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'droit-ia-m5-l1',
           type: 'text' as const,
           title: 'Clauses IA dans les contrats : responsabilite et sous-traitance',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `Quand vous utilisez l'IA dans un cadre professionnel, vos contrats doivent le refleter. Que ce soit avec vos clients, vos fournisseurs ou vos prestataires \u2014 l'IA change la donne contractuelle \uD83D\uDCDD
 
 \uD83E\uDD1D Clauses IA essentielles dans vos contrats clients
@@ -505,7 +520,7 @@ Anthropic (utilise par Freenzy) a un DPA solide et ne conserve pas les donnees d
           type: 'text' as const,
           title: 'CGU et mentions legales quand on utilise l\'IA',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Vos CGU et mentions legales doivent etre a jour si vous utilisez l'IA dans vos services. C'est pas la partie la plus fun, mais c'est indispensable \uD83D\uDE05
 
 \uD83D\uDCC4 Mettre a jour vos CGU
@@ -546,9 +561,9 @@ Si vous cochez tout ca, vous etes dans les regles. Et surtout, vous inspirez con
           type: 'quiz' as const,
           title: 'Quiz — Contrats et IA',
           duration: '3 min',
-          xp: 70,
+          xpReward: 70,
           content: 'Verifiez vos connaissances sur les aspects contractuels de l\'utilisation de l\'IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quand vous utilisez une API IA pour traiter des donnees clients, le fournisseur IA est considere comme...',
               options: ['Un responsable de traitement', 'Un sous-traitant au sens du RGPD', 'Un tiers non concerne', 'Un co-responsable'],
@@ -586,14 +601,17 @@ Si vous cochez tout ca, vous etes dans les regles. Et surtout, vous inspirez con
       title: 'Cas pratiques et jurisprudence',
       emoji: '\uD83D\uDCDA',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'droit-ia-m6-l1',
           type: 'text' as const,
           title: '5 cas reels qui font jurisprudence',
           duration: '4 min',
-          xp: 30,
+          xpReward: 30,
           content: `Rien de mieux que des cas concrets pour comprendre le droit de l'IA. Voici 5 affaires majeures qui dessinent le cadre juridique actuel \uD83D\uDCDA
 
 \uD83D\uDCF8 1. Getty Images vs Stability AI (2023-en cours)
@@ -633,7 +651,7 @@ Impact pour vous : evitez de generer des images « dans le style de [artiste spe
           type: 'game' as const,
           title: 'Jeu — Matching : situation vs risque juridique',
           duration: '3 min',
-          xp: 40,
+          xpReward: 40,
           content: 'Associez chaque situation a son risque juridique principal. Glissez-deposez pour faire les paires !',
           gameType: 'matching' as const,
           gameData: {
@@ -670,9 +688,9 @@ Impact pour vous : evitez de generer des images « dans le style de [artiste spe
           type: 'quiz' as const,
           title: 'Quiz final — Jurisprudence IA',
           duration: '3 min',
-          xp: 55,
+          xpReward: 55,
           content: 'Derniere ligne droite ! Testez vos connaissances sur les cas reels et la jurisprudence IA.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel montant d\'amende la CNIL a-t-elle inflige a Clearview AI ?',
               options: ['1 million d\'euros', '5 millions d\'euros', '20 millions d\'euros', '50 millions d\'euros'],

@@ -11,6 +11,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import HelpBubble from '../../../components/HelpBubble';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, searchInput, tabBar } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ── Component ──
 
@@ -277,6 +278,7 @@ export default function MarketplacePage() {
         <StatItem label="Categories" value={(CATEGORIES.length - 1).toString()} />
         <StatItem label="100% Gratuits" value={TEMPLATES.length.toString()} />
       </div>
+      <PageBlogSection pageId="marketplace" />
     </div>
   );
 }

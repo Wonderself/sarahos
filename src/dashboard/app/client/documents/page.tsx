@@ -11,6 +11,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 import { isAuthenticated as checkIsAuthenticated, VisitorEmptyState } from '../../../components/VisitorBanner';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraft } from '../../../lib/useVisitorDraft';
@@ -1386,6 +1387,7 @@ export default function DocumentsPage() {
         </section>
       )}
       {LoginModalComponent}
+      <PageBlogSection pageId="documents" />
     </div>
   );
 }

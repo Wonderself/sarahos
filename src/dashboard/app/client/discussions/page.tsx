@@ -7,6 +7,7 @@ import { useToast } from '../../../components/Toast';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 import {
   MAX_DEEP_CONTEXT,
   DEEP_DISCUSSION_MODEL,
@@ -2116,6 +2117,7 @@ export default function DiscussionsPage() {
       `}</style>
       </div>
       {LoginModalComponent}
+      <PageBlogSection pageId="discussions" />
     </div>
   );
 }

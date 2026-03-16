@@ -8,6 +8,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 const API = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3010';
 
@@ -1444,6 +1445,7 @@ function SettingsTab({ config, onUpdate, saving }: { config: RepondeurConfig; on
       </div>
 
       <SaveBar saving={saving} onSave={save} changed={changed} />
+      <PageBlogSection pageId="repondeur" />
     </div>
   );
 }

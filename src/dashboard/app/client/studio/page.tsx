@@ -9,6 +9,7 @@ import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 const ICON_TO_EMOJI: Record<string, string> = {
   auto_awesome: '✨',
@@ -318,6 +319,7 @@ export default function StudioPage() {
           </div>
         </div>
       </section>
+      <PageBlogSection pageId="studio/photo" />
     </div>
   );
 }

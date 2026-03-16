@@ -31,14 +31,17 @@ export const parcoursOrchestrationNiv2: FormationParcours = {
       title: 'Chaîner plusieurs assistants',
       emoji: '🔗',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'orch-m1-l1',
           type: 'text' as const,
           title: 'Pipelines d\'assistants : la puissance du chaînage',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `L'un des super-pouvoirs de Freenzy, c'est de pouvoir connecter plusieurs assistants entre eux pour créer de véritables pipelines automatisés 🚀
 
 Le principe est simple : la sortie (output) d'un assistant devient l'entrée (input) de l'assistant suivant. Imaginez une chaîne de production industrielle, mais pour l'information.
@@ -66,7 +69,7 @@ Astuce pro : commencez par des chaînes courtes (2 assistants) avant de construi
           type: 'exercise' as const,
           title: 'Créez votre première chaîne multi-agents',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Mettez en pratique le chaînage d\'assistants en créant un pipeline Commercial → Rédacteur → Email.',
           exercisePrompt: 'Créez une chaîne de 3 assistants dans Freenzy : 1) L\'assistant Commercial analyse un lead fictif (nom : Marie Dupont, entreprise : BioTech Lyon, budget : 15 000 €, besoin : automatiser le support client). 2) Le Rédacteur génère un email personnalisé basé sur l\'analyse. 3) L\'assistant Email prépare l\'envoi avec un objet accrocheur et un créneau optimal. Décrivez le résultat attendu à chaque étape de la chaîne.'
         },
@@ -75,9 +78,9 @@ Astuce pro : commencez par des chaînes courtes (2 assistants) avant de construi
           type: 'quiz' as const,
           title: 'Quiz — Chaînage d\'assistants',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Vérifiez que vous maîtrisez les concepts de chaînage multi-agents.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Dans un pipeline d\'assistants, que se passe-t-il entre deux maillons ?',
               options: [
@@ -135,14 +138,17 @@ Astuce pro : commencez par des chaînes courtes (2 assistants) avant de construi
       title: 'Workflows d\'approbation complexes',
       emoji: '✅',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'orch-m2-l1',
           type: 'text' as const,
           title: 'Approbations multi-niveaux et escalade',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Dans une entreprise, tout ne peut pas être exécuté automatiquement. Certaines actions nécessitent une validation humaine — c'est là qu'interviennent les workflows d'approbation 📋
 
 Freenzy implémente un système d'approbation multi-niveaux inspiré des meilleures pratiques de gouvernance :
@@ -166,7 +172,7 @@ Chaque approbation ou refus est enregistré dans le journal d'audit avec horodat
           type: 'text' as const,
           title: 'Configurer les workflows dans Freenzy',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Configurer un workflow d'approbation dans Freenzy se fait en quelques clics depuis la section Autopilot du dashboard admin 🛠️
 
 Étape 1 — Définir les déclencheurs : choisissez quel type d'action agent déclenche le workflow. Par exemple : « Quand l'assistant Commercial veut envoyer un devis supérieur à 5 000 € → workflow niveau 2 ».
@@ -188,9 +194,9 @@ Conseil pro : commencez avec des règles simples et affinez progressivement. Un 
           type: 'quiz' as const,
           title: 'Quiz — Workflows d\'approbation',
           duration: '3 min',
-          xp: 75,
+          xpReward: 75,
           content: 'Testez vos connaissances sur les workflows d\'approbation multi-niveaux.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quel rôle RBAC peut approuver une action de niveau 3 (sensible) ?',
               options: [
@@ -248,14 +254,17 @@ Conseil pro : commencez avec des règles simples et affinez progressivement. Un 
       title: 'Gestion d\'équipe avancée',
       emoji: '👥',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'orch-m3-l1',
           type: 'text' as const,
           title: 'Pool de crédits, quotas et analytics équipe',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Quand votre équipe grandit, gérer les crédits IA individuellement devient un cauchemar. C'est pourquoi Freenzy propose un système de pool de crédits partagé et de quotas par membre 💰
 
 Le pool de crédits est une enveloppe commune alimentée par l'administrateur. Au lieu de distribuer des crédits à chaque utilisateur individuellement, vous créez un pool central et définissez des règles d'accès :
@@ -284,7 +293,7 @@ Rappel important : les crédits Freenzy n'expirent jamais ♾️ et les 5 000 pr
           type: 'exercise' as const,
           title: 'Configurez un pool crédits pour 5 membres',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Exercice pratique : créez une configuration de pool de crédits réaliste pour une petite équipe.',
           exercisePrompt: 'Configurez un pool de crédits pour une agence de communication de 5 personnes : 1 directeur, 2 chefs de projet et 2 juniors. Le budget mensuel total est de 500 crédits. Définissez : le quota journalier par rôle, les limitations par type d\'action (Haiku/Sonnet/Opus), les seuils d\'alerte, et expliquez votre logique de répartition. Utilisez l\'assistant pour vous aider à calculer la répartition optimale.'
         },
@@ -293,9 +302,9 @@ Rappel important : les crédits Freenzy n'expirent jamais ♾️ et les 5 000 pr
           type: 'quiz' as const,
           title: 'Quiz — Gestion d\'équipe',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Vérifiez vos connaissances sur la gestion d\'équipe et les pools de crédits.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Que se passe-t-il quand un membre atteint son quota journalier de crédits ?',
               options: [
@@ -353,14 +362,17 @@ Rappel important : les crédits Freenzy n'expirent jamais ♾️ et les 5 000 pr
       title: 'Assistants custom',
       emoji: '🧩',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'orch-m4-l1',
           type: 'text' as const,
           title: 'Créer un assistant avec un system prompt personnalisé',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Freenzy fournit plus de 100 assistants prêts à l'emploi, mais la vraie puissance réside dans votre capacité à créer des assistants sur mesure, parfaitement adaptés à votre métier 🧪
 
 Un assistant custom, c'est un agent IA que vous configurez de A à Z :
@@ -387,7 +399,7 @@ Les assistants custom héritent automatiquement du système de routage intellige
           type: 'text' as const,
           title: 'Variables dynamiques, contexte métier et mémoire',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `Un assistant custom statique, c'est bien. Un assistant qui s'adapte dynamiquement à chaque situation, c'est 10 fois mieux 🚀
 
 Les variables dynamiques sont des placeholders dans votre system prompt qui sont remplacés automatiquement au moment de l'exécution :
@@ -418,9 +430,9 @@ Concrètement, après 5 échanges avec un client, votre assistant sait qu'il pr�
           type: 'quiz' as const,
           title: 'Quiz — Assistants custom',
           duration: '3 min',
-          xp: 75,
+          xpReward: 75,
           content: 'Testez vos connaissances sur la création et la configuration d\'assistants personnalisés.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quels sont les 4 éléments essentiels d\'un bon system prompt ?',
               options: [
@@ -489,14 +501,17 @@ Concrètement, après 5 échanges avec un client, votre assistant sait qu'il pr�
       title: 'Optimisation des coûts',
       emoji: '💎',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'orch-m5-l1',
           type: 'text' as const,
           title: 'Haiku vs Sonnet vs Opus : bien choisir son modèle',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `L'optimisation des coûts IA commence par un principe simple : utiliser le bon modèle pour la bonne tâche. Freenzy vous donne accès à trois niveaux de puissance, et savoir quand utiliser chacun peut diviser votre facture par 5 💡
 
 Haiku (L1) — Le sprinter 🏃
@@ -519,7 +534,7 @@ Règle d'or : commencez toujours par Haiku. Si le résultat n'est pas assez bon,
           type: 'game' as const,
           title: 'Jeu — Classez les tâches par modèle optimal',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Classez ces 8 tâches de la moins coûteuse (Haiku) à la plus coûteuse (Opus) en fonction du modèle optimal.',
           gameType: 'ordering',
           gameData: {
@@ -540,9 +555,9 @@ Règle d'or : commencez toujours par Haiku. Si le résultat n'est pas assez bon,
           type: 'quiz' as const,
           title: 'Quiz — Optimisation des coûts',
           duration: '3 min',
-          xp: 50,
+          xpReward: 50,
           content: 'Vérifiez que vous savez optimiser vos crédits IA comme un pro.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Quelle approche permet de réduire les coûts de 60 à 80 % ?',
               options: [
@@ -600,14 +615,17 @@ Règle d'or : commencez toujours par Haiku. Si le résultat n'est pas assez bon,
       title: 'Cas d\'usage avancés par métier',
       emoji: '🏢',
       duration: '10 min',
-      xp: 125,
+      xpReward: 125,
+      passingScore: 60,
+      badgeEmoji: '🏆',
+      badgeName: 'Module terminé',
       lessons: [
         {
           id: 'orch-m6-l1',
           type: 'text' as const,
           title: 'Artisan & Médecin : pipelines métier concrets',
           duration: '4 min',
-          xp: 25,
+          xpReward: 25,
           content: `Passons de la théorie à la pratique avec des cas d'usage concrets qui montrent toute la puissance de l'orchestration multi-agents dans des contextes métier réels 🔧
 
 CAS 1 — L'artisan plombier : pipeline Devis → Relance → Facture
@@ -641,7 +659,7 @@ Le Dr. Sophie arrive le matin avec un planning optimisé et des dossiers prêts.
           type: 'text' as const,
           title: 'Agence : brief → contenu → reporting',
           duration: '3 min',
-          xp: 25,
+          xpReward: 25,
           content: `CAS 3 — L'agence de communication : pipeline Brief → Contenu → Reporting
 
 Clara dirige une agence de 8 personnes qui gère 15 clients. Chaque mois, c'est la même course : produire du contenu pour chaque client, publier au bon moment, puis envoyer les rapports de performance. Avec Freenzy, tout est orchestré automatiquement 🎬
@@ -663,9 +681,9 @@ L'orchestration multi-agents n'est pas juste une fonctionnalité technique. C'es
           type: 'quiz' as const,
           title: 'Quiz — Cas d\'usage métier',
           duration: '3 min',
-          xp: 75,
+          xpReward: 75,
           content: 'Testez vos connaissances sur les pipelines multi-agents appliqués aux cas métier.',
-          questions: [
+          quizQuestions: [
             {
               question: 'Dans le pipeline de l\'artisan, quel assistant génère automatiquement le devis ?',
               options: [

@@ -6,6 +6,7 @@ import InviteModal from '../../../components/settings/team/InviteModal';
 import CreditPoolManager from '../../../components/settings/team/CreditPoolManager';
 import ApprovalWorkflows from '../../../components/settings/team/ApprovalWorkflows';
 import AgentPermissions from '../../../components/settings/team/AgentPermissions';
+import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Notion Palette ───────────────────────────────────────────
 const C = {
@@ -719,6 +720,7 @@ export default function TeamPage() {
         onClose={() => setInviteOpen(false)}
         onInvite={handleInvite}
       />
+      <PageBlogSection pageId="team" />
     </div>
   );
 }

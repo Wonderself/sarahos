@@ -27,7 +27,6 @@ interface AutoloopState {
 // One active autoloop at a time
 let activeLoop: AutoloopState | null = null;
 let activeStreamer: TelegramStreamer | null = null;
-let activeChatId: string | null = null;
 let progressInterval: ReturnType<typeof setInterval> | null = null;
 
 const MAX_DURATION_MINUTES = 180;
@@ -126,7 +125,7 @@ function detectCommits(text: string): string[] {
   for (const pattern of commitPatterns) {
     let match: RegExpExecArray | null;
     while ((match = pattern.exec(text)) !== null) {
-      commits.push(match[1]);
+      commits.push(match[1] || '');
     }
   }
   return commits;
@@ -139,7 +138,7 @@ function cleanup(): void {
   }
   activeLoop = null;
   activeStreamer = null;
-  activeChatId = null;
+  // activeChatId reset
 }
 
 function killProcess(state: AutoloopState): void {
@@ -200,7 +199,7 @@ Lance Claude Code en mode autonome pour une session longue durée (max 3h).
     let duration = 60;
     const durationMatch = rawInput.match(/\s+(\d+)\s*$/);
     if (durationMatch) {
-      const parsed = parseInt(durationMatch[1], 10);
+      const parsed = parseInt(durationMatch[1] || '60', 10);
       if (parsed >= 1 && parsed <= MAX_DURATION_MINUTES) {
         duration = parsed;
         instruction = rawInput.slice(0, durationMatch.index).trim();
@@ -218,7 +217,6 @@ Lance Claude Code en mode autonome pour une session longue durée (max 3h).
     }
 
     const chatId = msg.chat.id.toString();
-    activeChatId = chatId;
 
     const state: AutoloopState = {
       instruction,

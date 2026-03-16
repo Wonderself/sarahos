@@ -6,7 +6,7 @@ import type { Prospect } from '@/lib/prospection/ProspectionService';
 
 // ── Validation ───────────────────────────────────────────────────────────────
 
-function isValidProspect(item: Record<string, unknown>): item is Prospect {
+function isValidProspect(item: Record<string, unknown>): item is Record<string, unknown> & Prospect {
   return (
     typeof item.id === 'string' &&
     typeof item.name === 'string' &&

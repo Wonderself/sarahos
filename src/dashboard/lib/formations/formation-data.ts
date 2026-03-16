@@ -26,20 +26,28 @@ export interface FormationLesson {
   exercisePrompt?: string;
   gameType?: 'matching' | 'ordering' | 'fill-blanks' | 'flashcards';
   gameData?: Record<string, unknown>;
-  xpReward: number;
+  xpReward?: number;
+  xp?: number;
+  questions?: Array<{
+    question: string;
+    options: string[];
+    correctIndex: number;
+    explanation: string;
+  }>;
 }
 
 export interface FormationModule {
   id: string;
   title: string;
   emoji: string;
-  description: string;
+  description?: string;
   duration: string;
   lessons: FormationLesson[];
-  passingScore: number;
-  xpReward: number;
-  badgeEmoji: string;
-  badgeName: string;
+  passingScore?: number;
+  xpReward?: number;
+  xp?: number;
+  badgeEmoji?: string;
+  badgeName?: string;
 }
 
 export interface FormationParcours {

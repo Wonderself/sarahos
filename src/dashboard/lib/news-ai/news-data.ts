@@ -4,12 +4,13 @@
  */
 
 // Import weekly news
+import { newsWeek0 } from './news-week0';
 import { newsWeek1a } from './news-week1a';
 import { newsWeek1b } from './news-week1b';
 import { newsWeek2a } from './news-week2a';
 import { newsWeek2b } from './news-week2b';
 import { newsWeek2c } from './news-week2c';
-import { newsWeek3a } from './news-week3a';
+// newsWeek3a (mars 17-19) = dates futures, non inclus
 
 // ─── Types ──────────────────────────────────────────────────
 
@@ -1072,13 +1073,13 @@ Si vous déployez de l'IA en entreprise, la sécurité n'est pas optionnelle. Fr
 // ─── Merged News (all weeks + original) ─────────────────────
 
 export const NEWS_ARTICLES: NewsArticle[] = [
-  ...newsWeek3a, // most recent first
   ...newsWeek2c,
   ...newsWeek2b,
   ...newsWeek2a,
   ...newsWeek1b,
   ...newsWeek1a,
-  ...originalArticles, // the 20 articles already in the file
+  ...newsWeek0,
+  ...originalArticles, // mars 16 articles
 ].sort((a, b) => {
   // Sort by date descending, then morning before evening
   const dateCompare = b.date.localeCompare(a.date);

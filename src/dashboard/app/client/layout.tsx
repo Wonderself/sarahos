@@ -1008,16 +1008,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
             <div className="emoji-rail-bottom">
               <button className="emoji-rail-btn" onClick={() => setSearchOpen(true)} title="Rechercher (Ctrl+K)">🔍</button>
-              <Link href="/client/account" className="emoji-rail-btn" style={{ textDecoration: 'none' }} title="Mon compte">
+              <Link href="/client/account" className="emoji-rail-btn" style={{ textDecoration: 'none' }} title="Mon compte" onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                 ⚙️
               </Link>
-              <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => setNotifUnreadCount(0)}>
+              <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => { setNotifUnreadCount(0); if (!isDesktop) setSidebarExpanded(false); }}>
                 🔔
                 {notifUnreadCount > 0 && (
                   <span style={{ position: 'absolute', top: 0, right: 0, minWidth: 16, height: 16, borderRadius: 8, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
                 )}
               </Link>
-              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : '#1A1A1A', color: session ? undefined : '#fff' }}>
+              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : '#1A1A1A', color: session ? undefined : '#fff' }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                 {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '?'}
               </Link>
             </div>
@@ -1031,7 +1031,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,
           }}>
-            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }}>
+            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.02em' }}>freenzy.io</span>
               <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B' }}>Beta Test 1</span>
             </Link>
@@ -1104,6 +1104,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   key={agId}
                   href={`/client/chat?agent=${agId}`}
                   title={ag.name}
+                  onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}
                   style={{
                     width: 32, height: 32, borderRadius: '50%',
                     background: '#FAFAFA', border: '1px solid #E5E5E5',
@@ -1288,14 +1289,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             return (
               <div key={section.id} id={`nav-section-${section.id}`} className="nav-section">
                 <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
-                  <span style={{ fontSize: 12 }}>{SECTION_EMOJIS[section.id] || '📌'}</span> {section.title}
+                  <span className="section-emoji-label" style={{ fontSize: 12 }}>{SECTION_EMOJIS[section.id] || '📌'}</span> {section.title}
                 </div>
                 {visibleItems.map(item => {
                   const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
                   const isNotifications = item.href === '/client/notifications';
                   return (
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
-                      onClick={isNotifications ? () => setNotifUnreadCount(0) : undefined}
+                      onClick={() => { if (isNotifications) setNotifUnreadCount(0); if (!isDesktop) setSidebarExpanded(false); }}
                       style={{
                         minHeight: 32, fontSize: 13, fontWeight: isActive ? 500 : 400,
                         color: isActive ? '#1A1A1A' : '#6B6B6B',
@@ -1342,15 +1343,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {session && customAgents.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
-                <span style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
+                <span className="section-emoji-label" style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
               </div>
               {customAgents.map(agent => (
-                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`}>
+                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>🤖</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
                   </Link>
               ))}
-              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }}>
+              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                 <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Créer un assistant</span>
               </Link>
@@ -1361,19 +1362,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {session && publishedModules.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
-                <span style={{ fontSize: 12 }}>📦</span> Mes modules
+                <span className="section-emoji-label" style={{ fontSize: 12 }}>📦</span> Mes modules
               </div>
               {publishedModules.map(mod => {
                 const href = `/client/modules/${mod.slug}`;
                 const isActive = pathname === href;
                 return (
-                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}>
+                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>📦</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.name}</span>
                   </Link>
                 );
               })}
-              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }}>
+              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                 <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Nouveau module</span>
               </Link>
@@ -1384,9 +1385,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {session && (
           <div className="nav-section">
             <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
-              <span style={{ fontSize: 12 }}>📊</span> Statut
+              <span className="section-emoji-label" style={{ fontSize: 12 }}>📊</span> Statut
             </div>
-            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`}>
+            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
               <span className="nav-icon"><span style={{ fontSize: 16 }}>💳</span></span>
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
@@ -1396,7 +1397,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
               </span>
             </Link>
-            <Link href="/client/account" className="nav-link">
+            <Link href="/client/account" className="nav-link" onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
               <span className="nav-icon">
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
@@ -1427,11 +1428,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 }}
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}
               >
                 Ouvrir un compte gratuit
               </Link>
               <div style={{ textAlign: 'center', marginTop: 6 }}>
-                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }}>
+                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                   Déjà un compte ? Se connecter
                 </Link>
               </div>
@@ -1442,7 +1444,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {hiddenSections.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal', opacity: 0.5 }}>
-                <span style={{ fontSize: 12 }}>👁️</span> Sections masquées
+                <span className="section-emoji-label" style={{ fontSize: 12 }}>👁️</span> Sections masquées
               </div>
               {hiddenSections.map(section => (
                 <div key={section.id} className="nav-link nav-link-hidden">
@@ -1491,7 +1493,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1A1A1A' }}>
                 {session.displayName}
               </span>
-              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }}>⚙️</Link>
+              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>⚙️</Link>
               <button onClick={logout} title="Déconnexion" style={{
                 flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: 14, color: '#9B9B9B', padding: '4px',
@@ -1513,10 +1515,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   fontSize: 12, fontWeight: 600, color: '#1A1A1A',
                   textDecoration: 'none', flex: 1,
                 }}
+                onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}
               >
                 Ouvrir un compte
               </Link>
-              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }}>
+              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
                 Connexion
               </Link>
             </>

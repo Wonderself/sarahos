@@ -1144,9 +1144,9 @@ a { color: inherit; text-decoration: none; }
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     z-index: 100;
-    width: 85vw !important;
-    min-width: 240px !important;
-    max-width: 300px;
+    width: calc(85vw - 56px) !important;
+    min-width: 220px !important;
+    max-width: 280px !important;
   }
   .client-sidebar.sidebar-expanded {
     transform: translateX(0);
@@ -1194,9 +1194,12 @@ a { color: inherit; text-decoration: none; }
   .mobile-topbar { height: 44px; padding: 0 10px; left: 56px !important; }
   .client-main-content { margin-left: 56px !important; padding-top: 44px !important; padding-bottom: 0 !important; }
   .main-content { margin-left: 56px !important; }
-  .client-sidebar { left: 56px !important; }
+  .client-sidebar { left: 56px !important; width: calc(85vw - 56px) !important; min-width: 200px !important; max-width: 260px !important; }
   .client-sidebar.sidebar-expanded { left: 56px !important; }
   .sidebar-overlay { left: 56px !important; }
+
+  /* Hide duplicate section emojis on phone */
+  .client-sidebar .section-emoji-label { display: none; }
 
   .page-container { padding: 10px 8px 12px; }
   .page-title { font-size: 20px; }
@@ -1286,12 +1289,12 @@ a { color: inherit; text-decoration: none; }
     padding: 10px 12px 2px;
   }
 
-  /* Wider sidebar on small screens — full width, no rail */
+  /* Wider sidebar on small screens — starts after emoji rail */
   .client-sidebar.sidebar-expanded {
-    width: 85vw !important;
-    min-width: 280px !important;
-    max-width: 320px;
-    left: 0 !important;
+    width: calc(85vw - 56px) !important;
+    min-width: 220px !important;
+    max-width: 280px !important;
+    left: 56px !important;
   }
 
   /* Smoother overlay */
@@ -1307,6 +1310,16 @@ a { color: inherit; text-decoration: none; }
   /* Compact bottom padding (no more bottom tab bar) */
   .page-container {
     padding-bottom: 16px;
+  }
+
+  /* Hide duplicate section emojis in sidebar (already shown in emoji rail) */
+  .client-sidebar .section-emoji-label {
+    display: none;
+  }
+
+  /* Sync scroll: overlay covers from emoji rail edge */
+  .sidebar-overlay.active {
+    left: 56px !important;
   }
 }
 

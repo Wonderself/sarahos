@@ -414,7 +414,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   // Menu customization
   const [menuSections, setMenuSections] = useState<SectionConfig[]>([]);
-  const [isDesktop, setIsDesktop] = useState(true);
+  const [deviceType, setDeviceType] = useState<'phone' | 'tablet' | 'desktop'>('desktop');
+  const isDesktop = deviceType === 'desktop' || deviceType === 'tablet';
+  const isPhone = deviceType === 'phone';
   const [isPro, setIsPro] = useState(false);
   const [notifUnreadCount, setNotifUnreadCount] = useState(0);
   const [customizeOpen, setCustomizeOpen] = useState(false);
@@ -443,8 +445,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   useEffect(() => {
-    const desktop = window.innerWidth >= 768;
-    setIsDesktop(desktop);
+    const w = window.innerWidth;
+    const dt = w < 768 ? 'phone' : w <= 1024 ? 'tablet' : 'desktop';
+    setDeviceType(dt);
+    const desktop = dt !== 'phone';
     setCustomizeTab(desktop ? 'desktop' : 'mobile');
 
     const proStored = localStorage.getItem('fz_is_pro') === 'true';
@@ -526,21 +530,25 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     // Dark mode removed — always light
 
-    // Resize listener — keep isDesktop in sync + sidebar state
+    // Resize listener — keep deviceType in sync + sidebar state
     const onResize = () => {
-      const nowDesktop = window.innerWidth >= 768;
-      setIsDesktop(prev => {
-        if (prev !== nowDesktop) {
-          // Transitioning: open sidebar on desktop, close on mobile
-          setSidebarExpanded(nowDesktop);
+      const w2 = window.innerWidth;
+      const newDt = w2 < 768 ? 'phone' as const : w2 <= 1024 ? 'tablet' as const : 'desktop' as const;
+      setDeviceType(prev => {
+        if (prev !== newDt) {
+          // Phone: sidebar closed; tablet/desktop: sidebar open
+          setSidebarExpanded(newDt !== 'phone');
         }
-        return nowDesktop;
+        return newDt;
       });
     };
     // Initial sync on mount
     if (window.innerWidth < 768) {
-      setIsDesktop(false);
+      setDeviceType('phone');
       setSidebarExpanded(false);
+    } else if (window.innerWidth <= 1024) {
+      setDeviceType('tablet');
+      setSidebarExpanded(true);
     }
     window.addEventListener('resize', onResize);
 
@@ -873,7 +881,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }}>
           <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
         </div>
-        <div style={{ flex: 1, marginLeft: isDesktop ? 296 : 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ flex: 1, marginLeft: deviceType === 'desktop' ? 296 : deviceType === 'tablet' ? 260 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ fontSize: 14, color: '#9B9B9B' }}>Chargement...</div>
         </div>
       </div>
@@ -918,37 +926,46 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
     )}
     <div style={{ display: 'flex', minHeight: '100dvh', paddingTop: isImpersonating ? 40 : 0 }}>
-      {/* Mobile Top Bar — hamburger in top-right */}
-      <div className="mobile-topbar" style={{ background: '#fff', borderBottom: '1px solid #E5E5E5', padding: '0 8px 0 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: '#1A1A1A', overflow: 'hidden' }}>
-          <span style={{ fontWeight: 700, fontSize: 14, letterSpacing: '-0.02em', flexShrink: 0 }}>freenzy.io</span>
-          <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B', flexShrink: 0 }}>Beta Test 1</span>
-          {(() => {
-            const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '') || 'dashboard';
-            const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-            return meta ? <><span style={{ color: '#E5E5E5', margin: '0 2px' }}>|</span><span style={{ fontSize: 12, color: '#6B6B6B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{meta.emoji} {meta.title}</span></> : null;
-          })()}
-        </div>
+      {/* Phone floating menu button — small "f." button top-left */}
+      {isPhone && !sidebarExpanded && (
         <button
-          className="mobile-menu-btn"
-          onClick={() => setSidebarExpanded(e => !e)}
+          onClick={() => setSidebarExpanded(true)}
+          style={{
+            position: 'fixed',
+            top: 8,
+            left: 8,
+            zIndex: 150,
+            width: 40,
+            height: 40,
+            borderRadius: 10,
+            background: '#fff',
+            border: '1px solid #E5E5E5',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 14,
+            fontWeight: 800,
+            color: '#1A1A1A',
+            fontFamily: 'system-ui',
+          }}
           aria-label="Menu"
-          style={{ display: 'none', width: 40, height: 40, borderRadius: 8, background: 'transparent', border: 'none', color: '#1A1A1A', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18 }}
         >
-          {sidebarExpanded ? '✕' : '☰'}
+          f.
         </button>
-      </div>
+      )}
 
-      {/* Sidebar Overlay — click outside to close (mobile only) */}
-      {sidebarExpanded && !isDesktop && (
+      {/* Sidebar Overlay — click outside to close (phone only) */}
+      {sidebarExpanded && isPhone && (
         <div
           className="sidebar-overlay active"
           onClick={() => setSidebarExpanded(false)}
         />
       )}
 
-      {/* Emoji Rail — always visible on desktop */}
-      {(() => {
+      {/* Emoji Rail — only on desktop (>1024px), hidden on phone+tablet */}
+      {deviceType === 'desktop' && (() => {
         const navCtx = getCurrentNavContext(pathname, visibleSections);
 
         // On emoji click: open sidebar and scroll to that section
@@ -1008,16 +1025,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
             <div className="emoji-rail-bottom">
               <button className="emoji-rail-btn" onClick={() => setSearchOpen(true)} title="Rechercher (Ctrl+K)">🔍</button>
-              <Link href="/client/account" className="emoji-rail-btn" style={{ textDecoration: 'none' }} title="Mon compte" onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+              <Link href="/client/account" className="emoji-rail-btn" style={{ textDecoration: 'none' }} title="Mon compte" onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                 ⚙️
               </Link>
-              <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => { setNotifUnreadCount(0); if (!isDesktop) setSidebarExpanded(false); }}>
+              <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => { setNotifUnreadCount(0); if (isPhone) setSidebarExpanded(false); }}>
                 🔔
                 {notifUnreadCount > 0 && (
                   <span style={{ position: 'absolute', top: 0, right: 0, minWidth: 16, height: 16, borderRadius: 8, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
                 )}
               </Link>
-              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : '#1A1A1A', color: session ? undefined : '#fff' }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : '#1A1A1A', color: session ? undefined : '#fff' }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                 {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '?'}
               </Link>
             </div>
@@ -1031,18 +1048,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,
           }}>
-            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.02em' }}>freenzy.io</span>
               <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B' }}>Beta Test 1</span>
             </Link>
-            {!isDesktop && (
+            {isPhone && (
               <button
                 onClick={() => setSidebarExpanded(false)}
                 title="Fermer le menu"
                 style={{
-                  width: 24, height: 24, borderRadius: '50%', border: '1px solid #E5E5E5',
+                  width: 28, height: 28, borderRadius: '50%', border: '1px solid #E5E5E5',
                   background: '#fff', cursor: 'pointer', display: 'flex',
-                  alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
+                  alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0,
                   color: '#6B6B6B',
                 }}
               >
@@ -1104,7 +1121,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   key={agId}
                   href={`/client/chat?agent=${agId}`}
                   title={ag.name}
-                  onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}
+                  onClick={() => { if (isPhone) setSidebarExpanded(false); }}
                   style={{
                     width: 32, height: 32, borderRadius: '50%',
                     background: '#FAFAFA', border: '1px solid #E5E5E5',
@@ -1296,7 +1313,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   const isNotifications = item.href === '/client/notifications';
                   return (
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
-                      onClick={() => { if (isNotifications) setNotifUnreadCount(0); if (!isDesktop) setSidebarExpanded(false); }}
+                      onClick={() => { if (isNotifications) setNotifUnreadCount(0); if (isPhone) setSidebarExpanded(false); }}
                       style={{
                         minHeight: 32, fontSize: 13, fontWeight: isActive ? 500 : 400,
                         color: isActive ? '#1A1A1A' : '#6B6B6B',
@@ -1346,12 +1363,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span className="section-emoji-label" style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
               </div>
               {customAgents.map(agent => (
-                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>🤖</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
                   </Link>
               ))}
-              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                 <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Créer un assistant</span>
               </Link>
@@ -1368,13 +1385,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 const href = `/client/modules/${mod.slug}`;
                 const isActive = pathname === href;
                 return (
-                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>📦</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.name}</span>
                   </Link>
                 );
               })}
-              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                 <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Nouveau module</span>
               </Link>
@@ -1387,7 +1404,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
               <span className="section-emoji-label" style={{ fontSize: 12 }}>📊</span> Statut
             </div>
-            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
               <span className="nav-icon"><span style={{ fontSize: 16 }}>💳</span></span>
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
@@ -1397,7 +1414,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
               </span>
             </Link>
-            <Link href="/client/account" className="nav-link" onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+            <Link href="/client/account" className="nav-link" onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
               <span className="nav-icon">
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
@@ -1428,12 +1445,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 }}
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}
+                onClick={() => { if (isPhone) setSidebarExpanded(false); }}
               >
                 Ouvrir un compte gratuit
               </Link>
               <div style={{ textAlign: 'center', marginTop: 6 }}>
-                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                   Déjà un compte ? Se connecter
                 </Link>
               </div>
@@ -1493,7 +1510,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1A1A1A' }}>
                 {session.displayName}
               </span>
-              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>⚙️</Link>
+              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>⚙️</Link>
               <button onClick={logout} title="Déconnexion" style={{
                 flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: 14, color: '#9B9B9B', padding: '4px',
@@ -1515,11 +1532,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   fontSize: 12, fontWeight: 600, color: '#1A1A1A',
                   textDecoration: 'none', flex: 1,
                 }}
-                onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}
+                onClick={() => { if (isPhone) setSidebarExpanded(false); }}
               >
                 Ouvrir un compte
               </Link>
-              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (!isDesktop) setSidebarExpanded(false); }}>
+              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
                 Connexion
               </Link>
             </>
@@ -1528,7 +1545,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </nav>
 
       {/* Client Content */}
-      <div className="client-main-content" onClick={() => { if (sidebarExpanded && !isDesktop) setSidebarExpanded(false); }}>
+      <div className="client-main-content" onClick={() => { if (sidebarExpanded && isPhone) setSidebarExpanded(false); }}>
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (

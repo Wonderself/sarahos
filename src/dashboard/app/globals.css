@@ -1108,57 +1108,57 @@ a { color: inherit; text-decoration: none; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* Tablet portrait / Mobile landscape */
-@media (max-width: 768px) {
-  /* MOBILE: Emoji rail VISIBLE, sidebar as overlay */
+/* ─── PHONE (<768px) ─── */
+@media (max-width: 767px) {
+  /* Hide emoji rail completely on phone */
   .emoji-rail {
-    display: flex !important;
-    width: 56px;
+    display: none !important;
   }
 
-  /* Mobile topbar: starts after emoji rail */
-  .mobile-topbar { display: flex; left: 56px; }
-
-  /* Sidebar: overlay from left, positioned after emoji rail */
-  .sidebar {
-    position: fixed !important;
-    top: 0;
-    left: 56px !important;
-    bottom: 0;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 100;
-    width: 85vw !important;
-    min-width: 240px !important;
-    max-width: 300px;
-  }
-  .sidebar.sidebar-open {
-    transform: translateX(0);
+  /* Hide mobile topbar */
+  .mobile-topbar {
+    display: none !important;
   }
 
+  /* Content takes full width */
+  .client-main-content {
+    margin-left: 0 !important;
+    padding-top: 0 !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  /* Sidebar: full overlay from left edge */
   .client-sidebar {
     position: fixed !important;
     top: 0;
-    left: 56px !important;
+    left: 0 !important;
     bottom: 0;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 85vw !important;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    z-index: 100;
-    width: calc(85vw - 56px) !important;
-    min-width: 220px !important;
-    max-width: 280px !important;
+    z-index: 200;
+    background: #fff;
+    box-shadow: 4px 0 16px rgba(0,0,0,0.1);
   }
   .client-sidebar.sidebar-expanded {
     transform: translateX(0);
-    left: 56px !important;
-    z-index: 100;
+    left: 0 !important;
   }
 
-  /* Overlay: starts after emoji rail */
-  .sidebar-overlay { left: 56px !important; }
+  /* Overlay covers everything from left edge */
+  .sidebar-overlay {
+    left: 0 !important;
+    z-index: 199;
+  }
 
-  .main-content { margin-left: 56px !important; padding-top: 48px; }
-  .client-main-content { margin-left: 56px !important; padding-top: 48px; }
+  /* Show section emojis in sidebar (since no emoji rail on phone) */
+  .client-sidebar .section-emoji-label {
+    display: inline !important;
+  }
 
   /* Grids */
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
@@ -1171,7 +1171,7 @@ a { color: inherit; text-decoration: none; }
 
   .level-badge-fixed { display: none; }
   .hide-mobile { display: none !important; }
-  .chat-height { height: calc(100vh - 120px); height: calc(100dvh - 120px); max-height: calc(100vh - 120px); }
+  .chat-height { height: calc(100vh - 60px); height: calc(100dvh - 60px); max-height: calc(100vh - 60px); }
 
   /* Prevent iOS auto-zoom on input focus */
   input, textarea, select, .input, .select { font-size: max(16px, 1rem) !important; }
@@ -1184,22 +1184,54 @@ a { color: inherit; text-decoration: none; }
   .nav-link { touch-action: manipulation; }
 }
 
-/* Phone */
+/* ─── TABLET/iPad (768px-1024px) ─── */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Full sidebar always open on tablet, no emoji rail */
+  .emoji-rail {
+    display: none !important;
+  }
+
+  .mobile-topbar {
+    display: none !important;
+  }
+
+  .client-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0 !important;
+    bottom: 0;
+    width: 260px !important;
+    min-width: 260px !important;
+    transform: translateX(0) !important;
+    z-index: 55;
+    background: #fff;
+    border-right: 1px solid #E5E5E5;
+  }
+  .client-sidebar.sidebar-expanded {
+    transform: translateX(0) !important;
+    left: 0 !important;
+  }
+
+  .client-main-content {
+    margin-left: 260px !important;
+  }
+  .main-content {
+    margin-left: 260px !important;
+  }
+
+  /* Show section emojis in sidebar on tablet too */
+  .client-sidebar .section-emoji-label {
+    display: inline !important;
+  }
+
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Small Phone (<=480px) */
 @media (max-width: 480px) {
   .grid-4, .grid-3, .grid-5 { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
-
-  /* Phone: emoji rail visible, sidebar overlay */
-  .emoji-rail { display: flex !important; width: 56px; }
-  .mobile-topbar { height: 44px; padding: 0 10px; left: 56px !important; }
-  .client-main-content { margin-left: 56px !important; padding-top: 44px !important; padding-bottom: 0 !important; }
-  .main-content { margin-left: 56px !important; }
-  .client-sidebar { left: 56px !important; width: calc(85vw - 56px) !important; min-width: 200px !important; max-width: 260px !important; }
-  .client-sidebar.sidebar-expanded { left: 56px !important; }
-  .sidebar-overlay { left: 56px !important; }
-
-  /* Hide duplicate section emojis on phone */
-  .client-sidebar .section-emoji-label { display: none; }
 
   .page-container { padding: 10px 8px 12px; }
   .page-title { font-size: 20px; }
@@ -1243,8 +1275,8 @@ a { color: inherit; text-decoration: none; }
   .page-subtitle { font-size: 12px; }
 }
 
-/* ─── Scrollable tabs on mobile ─── */
-@media (max-width: 768px) {
+/* ─── Scrollable tabs on phone ─── */
+@media (max-width: 767px) {
   .tabs {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -1276,8 +1308,8 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--radius-md);
 }
 
-/* ─── Mobile-First Enhancements ─── */
-@media (max-width: 768px) {
+/* ─── Phone sidebar enhancements ─── */
+@media (max-width: 767px) {
   /* Touch-friendly nav links (iOS minimum 44px) */
   .client-sidebar .nav-link {
     padding: 12px 16px;
@@ -1287,14 +1319,6 @@ a { color: inherit; text-decoration: none; }
   .client-sidebar .nav-section-title {
     font-size: 10px;
     padding: 10px 12px 2px;
-  }
-
-  /* Wider sidebar on small screens — starts after emoji rail */
-  .client-sidebar.sidebar-expanded {
-    width: calc(85vw - 56px) !important;
-    min-width: 220px !important;
-    max-width: 280px !important;
-    left: 56px !important;
   }
 
   /* Smoother overlay */
@@ -1307,32 +1331,17 @@ a { color: inherit; text-decoration: none; }
     padding: 8px 12px;
   }
 
-  /* Compact bottom padding (no more bottom tab bar) */
+  /* Compact bottom padding */
   .page-container {
     padding-bottom: 16px;
   }
-
-  /* Hide duplicate section emojis in sidebar (already shown in emoji rail) */
-  .client-sidebar .section-emoji-label {
-    display: none;
-  }
-
-  /* Sync scroll: overlay covers from emoji rail edge */
-  .sidebar-overlay.active {
-    left: 56px !important;
-  }
 }
 
-/* Tablet */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .client-sidebar {
-    width: 220px;
-    min-width: 220px;
-  }
-  /* sidebar overlays on tablet too */
+/* ─── Tablet sidebar enhancements ─── */
+@media (min-width: 768px) and (max-width: 1024px) {
   .client-sidebar .nav-link {
     font-size: 12px;
-    padding: 8px 10px;
+    padding: 8px 12px;
     min-height: 40px;
   }
   .client-sidebar .nav-section-title {

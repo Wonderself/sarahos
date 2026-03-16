@@ -139,7 +139,6 @@ function cleanup(): void {
   }
   activeLoop = null;
   activeStreamer = null;
-  activeChatId = null;
 }
 
 function killProcess(state: AutoloopState): void {
@@ -218,7 +217,6 @@ Lance Claude Code en mode autonome pour une session longue durée (max 3h).
     }
 
     const chatId = msg.chat.id.toString();
-    activeChatId = chatId;
 
     const state: AutoloopState = {
       instruction,

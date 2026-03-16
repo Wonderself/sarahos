@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import PublicNav from '../components/PublicNav';
 import PublicFooter from '../components/PublicFooter';
 import { FAQ_CATEGORIES } from '../lib/faq-data';
 
 /* ═══════════════════════════════════════════════════════════
-   FREENZY.IO — Landing Page v3
-   10 sections, inline styles, mobile-first, Notion palette
+   FREENZY.IO — Landing Page v4
+   12 sections, inline styles, mobile-first, Notion palette
    ═══════════════════════════════════════════════════════════ */
 
 // ─── Palette
@@ -21,83 +21,55 @@ const C = {
   bgSec: '#FAFAFA',
 };
 
-// ─── Floating emojis data
+// ─── Floating emojis data (25 emojis)
 const FLOAT_EMOJIS = [
-  { e: '\u{1F916}', top: '8%', left: '5%', size: 38, delay: 0 },
-  { e: '\u{1F4AC}', top: '15%', left: '85%', size: 32, delay: 2 },
-  { e: '\u{1F4CA}', top: '30%', left: '10%', size: 28, delay: 4 },
-  { e: '\u{26A1}', top: '25%', left: '90%', size: 34, delay: 1 },
-  { e: '\u{1F4DD}', top: '50%', left: '3%', size: 30, delay: 6 },
-  { e: '\u{1F3A8}', top: '55%', left: '92%', size: 36, delay: 3 },
-  { e: '\u{1F4E7}', top: '70%', left: '8%', size: 26, delay: 5 },
-  { e: '\u{1F4B3}', top: '65%', left: '88%', size: 30, delay: 7 },
-  { e: '\u{1F3AF}', top: '80%', left: '15%', size: 32, delay: 2 },
-  { e: '\u2728', top: '10%', left: '45%', size: 24, delay: 8 },
-  { e: '\u{1F680}', top: '40%', left: '95%', size: 28, delay: 9 },
-  { e: '\u{1F4A1}', top: '85%', left: '80%', size: 30, delay: 4 },
-  { e: '\u{1F916}', top: '45%', left: '50%', size: 22, delay: 10 },
-  { e: '\u{1F4AC}', top: '75%', left: '55%', size: 26, delay: 11 },
-  { e: '\u{26A1}', top: '20%', left: '30%', size: 20, delay: 6 },
+  { e: '🤖', top: '5%', left: '4%', size: 44, delay: 0 },
+  { e: '💬', top: '12%', left: '88%', size: 38, delay: 2 },
+  { e: '📊', top: '28%', left: '8%', size: 36, delay: 4 },
+  { e: '⚡', top: '22%', left: '92%', size: 42, delay: 1 },
+  { e: '📝', top: '48%', left: '3%', size: 38, delay: 6 },
+  { e: '🎨', top: '52%', left: '94%', size: 44, delay: 3 },
+  { e: '📧', top: '68%', left: '6%', size: 34, delay: 5 },
+  { e: '💳', top: '62%', left: '90%', size: 38, delay: 7 },
+  { e: '🎯', top: '78%', left: '12%', size: 40, delay: 2 },
+  { e: '✨', top: '8%', left: '42%', size: 32, delay: 8 },
+  { e: '🚀', top: '38%', left: '96%', size: 36, delay: 9 },
+  { e: '💡', top: '82%', left: '82%', size: 38, delay: 4 },
+  { e: '🎓', top: '18%', left: '30%', size: 34, delay: 10 },
+  { e: '📱', top: '42%', left: '50%', size: 30, delay: 11 },
+  { e: '🔍', top: '72%', left: '55%', size: 36, delay: 6 },
+  { e: '💼', top: '32%', left: '18%', size: 40, delay: 12 },
+  { e: '🛡️', top: '58%', left: '40%', size: 34, delay: 3 },
+  { e: '📋', top: '88%', left: '25%', size: 38, delay: 14 },
+  { e: '🎮', top: '15%', left: '65%', size: 32, delay: 5 },
+  { e: '💬', top: '75%', left: '35%', size: 36, delay: 13 },
+  { e: '📊', top: '45%', left: '75%', size: 30, delay: 7 },
+  { e: '🧠', top: '25%', left: '55%', size: 42, delay: 15 },
+  { e: '🤖', top: '65%', left: '70%', size: 34, delay: 8 },
+  { e: '⚡', top: '85%', left: '60%', size: 38, delay: 16 },
+  { e: '🎯', top: '55%', left: '15%', size: 50, delay: 9 },
 ];
 
-// ─── Feature blocks
-const FEATURES = [
-  {
-    title: 'Repondez a vos avis Google en 1 clic',
-    desc: 'Votre assistant analyse chaque avis, detecte le ton, et redige une reponse professionnelle et personnalisee. Vous validez, il publie.',
-    mockup: {
-      review: { stars: 4, name: 'Marie D.', text: 'Tres bon service, livraison un peu lente mais qualite au top !' },
-      response: 'Merci Marie pour votre retour ! Nous travaillons activement sur nos delais de livraison. Ravie que la qualite vous ait plu.',
-    },
-  },
-  {
-    title: 'Generez un devis pro en 3 minutes',
-    desc: 'Decrivez votre prestation en langage naturel. L\'assistant genere un devis complet, chiffre, avec CGV et export PDF.',
-    mockup: {
-      client: 'Acme Corp',
-      ref: 'DEV-2026-0047',
-      total: '4 800,00 \u20AC HT',
-      lines: ['Integration API — 2 400\u20AC', 'Formation equipe — 1 200\u20AC', 'Support 3 mois — 1 200\u20AC'],
-    },
-  },
-  {
-    title: 'Votre secretaire IA repond 24h/24',
-    desc: 'Appels, emails, WhatsApp : votre assistant repond avec une voix naturelle, qualifie les demandes et vous transmet un resume.',
-    mockup: {
-      incoming: 'Bonjour, je souhaite prendre RDV pour une consultation mardi prochain.',
-      reply: 'Bonjour ! J\'ai un creneau disponible mardi a 10h ou 14h. Lequel vous convient ?',
-      status: 'RDV confirme · mardi 14h · rappel envoye',
-    },
-  },
-  {
-    title: 'Creez du contenu LinkedIn viral',
-    desc: 'Donnez un sujet, choisissez le ton. L\'assistant redige des posts optimises avec hashtags, hooks et appels a l\'action.',
-    mockup: {
-      hook: 'J\'ai automatise 80% de mon admin en 2 semaines.',
-      body: 'Voici les 3 outils qui ont change ma productivite...',
-      hashtags: '#IA #Productivite #PME #Automatisation',
-      engagement: '47 likes · 12 commentaires · 3 partages',
-    },
-  },
+// ─── Feature carousel columns
+const FEATURE_COLUMNS = [
+  { title: '📝 Documents', items: ['📄 Devis automatiques', '🧾 Factures PDF', '📑 Contrats', '📋 Attestations', '📝 Comptes-rendus', '📊 Rapports'] },
+  { title: '💬 Communication', items: ['📧 Emails professionnels', '⭐ Réponses avis Google', '💬 Messages WhatsApp', '📱 SMS de relance', '📰 Newsletter', '🎧 Support client'] },
+  { title: '📱 Réseaux sociaux', items: ['💼 Posts LinkedIn', '📸 Posts Instagram', '👥 Posts Facebook', '🐦 Threads Twitter', '📱 Stories', '📅 Calendrier éditorial'] },
+  { title: '📊 Analyse', items: ['🔍 Veille concurrentielle', '📈 Analyse de marché', '📊 Reporting', '🔎 SEO audit', '🎯 Prospection', '📋 Scoring leads'] },
+  { title: '🎨 Création', items: ['📸 Photos IA', '🎬 Vidéos avatars', '🎨 Logos et branding', '🛍️ Fiches produits', '📄 CV professionnels', '📊 Présentations'] },
+  { title: '🤖 Automatisation', items: ['☀️ Briefing matinal', '🔔 Rappels RDV', '🔄 Relances auto', '✅ Validation workflows', '📧 Emails séquencés', '🚨 Alertes intelligentes'] },
 ];
 
 // ─── Profession cards
 const PROFILES = [
-  { emoji: '\u{1F527}', name: 'Artisan', count: 5, assistants: ['Devis automatique', 'Relance clients', 'Avis Google'] },
-  { emoji: '\u{1F3E5}', name: 'Sante', count: 5, assistants: ['Prise de RDV', 'Rappels patients', 'Comptes-rendus'] },
-  { emoji: '\u{1F3A8}', name: 'Agence', count: 6, assistants: ['Brief creatif', 'Social media', 'Reporting client'] },
-  { emoji: '\u{1F6D2}', name: 'E-commerce', count: 5, assistants: ['Fiches produits', 'SAV automatise', 'Relance paniers'] },
-  { emoji: '\u{1F3AF}', name: 'Coach', count: 4, assistants: ['Planning seances', 'Suivi client', 'Contenu expert'] },
-  { emoji: '\u{1F37D}\uFE0F', name: 'Restaurant', count: 4, assistants: ['Reservations', 'Menu du jour', 'Avis Google'] },
-  { emoji: '\u2696\uFE0F', name: 'Liberal', count: 5, assistants: ['Contrats IA', 'Veille juridique', 'Facturation'] },
-  { emoji: '\u{1F3E2}', name: 'PME', count: 8, assistants: ['RH complet', 'Comptabilite', 'Commercial'] },
-];
-
-// ─── Plans
-const PLANS = [
-  { name: 'Gratuit', members: '3 membres', price: '0\u20AC', sub: 'pour toujours', features: ['3 membres', '150+ assistants', 'Dashboard complet'] },
-  { name: 'Pro', members: '10 membres', price: '19\u20AC', sub: '/mois', features: ['10 membres', 'Roles & permissions', 'Support prioritaire'], highlight: true },
-  { name: 'Business', members: '25 membres', price: '49\u20AC', sub: '/mois', features: ['25 membres', 'API access', 'Onboarding dedie'] },
+  { emoji: '🔧', name: 'Artisan', count: 5, assistants: ['Devis automatique', 'Relance clients', 'Avis Google', 'Planning chantiers'] },
+  { emoji: '🏥', name: 'Santé', count: 5, assistants: ['Prise de RDV', 'Rappels patients', 'Comptes-rendus', 'Ordonnances'] },
+  { emoji: '🎨', name: 'Agence', count: 6, assistants: ['Brief créatif', 'Social media', 'Reporting client', 'Veille tendances'] },
+  { emoji: '🛒', name: 'E-commerce', count: 5, assistants: ['Fiches produits', 'SAV automatisé', 'Relance paniers', 'Analyse ventes'] },
+  { emoji: '🎯', name: 'Coach', count: 4, assistants: ['Planning séances', 'Suivi client', 'Contenu expert', 'Facturation'] },
+  { emoji: '🍽️', name: 'Restaurant', count: 4, assistants: ['Réservations', 'Menu du jour', 'Avis Google', 'Stocks'] },
+  { emoji: '⚖️', name: 'Libéral', count: 5, assistants: ['Contrats IA', 'Veille juridique', 'Facturation', 'Secrétariat'] },
+  { emoji: '🏢', name: 'PME', count: 8, assistants: ['RH complet', 'Comptabilité', 'Commercial', 'Direction'] },
 ];
 
 // ─── FAQ selection (10 most common)
@@ -151,10 +123,27 @@ const cardStyle: React.CSSProperties = {
   transition: 'box-shadow 0.2s ease, transform 0.2s ease',
 };
 
+// ─── Dashboard sidebar items
+const SIDEBAR_ITEMS = [
+  '🏠 Tableau de bord',
+  '💬 Chat IA',
+  '🤖 Mes Assistants',
+  '📄 Documents',
+  '🎨 Studio Créatif',
+  '📊 Analytics',
+  '📚 Formations',
+  '📰 News IA',
+  '🔧 Skills',
+  '👥 Mon Équipe',
+  '⚙️ Paramètres',
+];
+
 export default function LandingPage() {
   const [hoveredProfile, setHoveredProfile] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [carouselPaused, setCarouselPaused] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth <= 768);
@@ -163,17 +152,27 @@ export default function LandingPage() {
     return () => window.removeEventListener('resize', handler);
   }, []);
 
+  // Build flat carousel items (duplicate for seamless loop)
+  const carouselItems = FEATURE_COLUMNS.flatMap(col =>
+    col.items.map(item => ({ category: col.title, label: item }))
+  );
+  const duplicatedItems = [...carouselItems, ...carouselItems];
+
   return (
     <>
       {/* Animation keyframes */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes float-emoji {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
+          50% { transform: translateY(-15px); }
         }
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scroll-features {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
       ` }} />
 
@@ -199,8 +198,8 @@ export default function LandingPage() {
               top: fe.top,
               left: fe.left,
               fontSize: fe.size,
-              opacity: 0.06,
-              animation: `float-emoji 20s ease-in-out infinite`,
+              opacity: 0.12,
+              animation: `float-emoji 25s ease-in-out infinite`,
               animationDelay: `${fe.delay}s`,
               pointerEvents: 'none',
               zIndex: 0,
@@ -222,25 +221,45 @@ export default function LandingPage() {
             {/* Left: Text */}
             <div style={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
               <h1 style={{
-                fontSize: isMobile ? 32 : 44,
+                fontSize: isMobile ? 36 : 52,
                 fontWeight: 800,
                 color: C.text,
-                lineHeight: 1.15,
+                lineHeight: 1.1,
                 letterSpacing: '-0.03em',
-                marginBottom: 20,
+                marginBottom: 8,
               }}>
-                Vos assistants IA travaillent pendant que vous dormez.
+                Utilisez vraiment l&apos;IA.
               </h1>
+              <h2 style={{
+                fontSize: isMobile ? 22 : 28,
+                fontWeight: 600,
+                color: C.secondary,
+                lineHeight: 1.3,
+                marginBottom: 16,
+                letterSpacing: '-0.01em',
+              }}>
+                Facile et gratuit*
+              </h2>
               <p style={{
                 fontSize: isMobile ? 16 : 18,
                 color: C.secondary,
                 lineHeight: 1.6,
+                marginBottom: 8,
+                maxWidth: 520,
+                marginLeft: isMobile ? 'auto' : undefined,
+                marginRight: isMobile ? 'auto' : undefined,
+              }}>
+                +150 assistants IA sur mesure pour vous
+              </p>
+              <p style={{
+                fontSize: 12,
+                color: C.muted,
                 marginBottom: 32,
                 maxWidth: 520,
                 marginLeft: isMobile ? 'auto' : undefined,
                 marginRight: isMobile ? 'auto' : undefined,
               }}>
-                150+ outils IA pour PME, independants et equipes. 0% commission. 50 credits offerts.
+                *pas d&apos;abonnement et pas de commissions sur les tokens
               </p>
               <div style={{
                 display: 'flex',
@@ -278,7 +297,7 @@ export default function LandingPage() {
                   border: `1px solid ${C.border}`,
                   transition: 'background 0.2s ease',
                 }}>
-                  Voir ce que ca fait
+                  Découvrir &darr;
                 </Link>
               </div>
             </div>
@@ -319,9 +338,9 @@ export default function LandingPage() {
                   marginBottom: 20,
                 }}>
                   {[
-                    { emoji: '\u{1F916}', label: '12 Assistants actifs', bg: '#F0F7FF' },
-                    { emoji: '\u26A1', label: '23 Actions ce mois', bg: '#FFF8F0' },
-                    { emoji: '\u{1F48E}', label: '47 Credits', bg: '#F0FFF4' },
+                    { emoji: '🤖', label: '12 Assistants actifs', bg: '#F0F7FF' },
+                    { emoji: '⚡', label: '23 Actions ce mois', bg: '#FFF8F0' },
+                    { emoji: '💎', label: '47 Crédits', bg: '#F0FFF4' },
                   ].map((s, i) => (
                     <div key={i} style={{
                       background: s.bg,
@@ -338,9 +357,9 @@ export default function LandingPage() {
                 {/* Mini agent cards */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {[
-                    { name: 'Secretaire IA', status: true },
+                    { name: 'Secrétaire IA', status: true },
                     { name: 'Devis Pro', status: true },
-                    { name: 'Reputation Google', status: true },
+                    { name: 'Réputation Google', status: true },
                   ].map((agent, i) => (
                     <div key={i} style={{
                       display: 'flex',
@@ -352,7 +371,7 @@ export default function LandingPage() {
                       border: `1px solid ${C.border}`,
                     }}>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text }}>{agent.name}</span>
-                      <span style={{ fontSize: 14, color: '#27C93F' }}>{agent.status ? '\u2705' : '\u23F8'}</span>
+                      <span style={{ fontSize: 14, color: '#27C93F' }}>✅</span>
                     </div>
                   ))}
                 </div>
@@ -362,154 +381,246 @@ export default function LandingPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 2 — FEATURES
+            SECTION 2 — FEATURES CAROUSEL
            ══════════════════════════════════════════════════════ */}
-        <section id="features" style={sectionStyle(C.bgSec)}>
+        <section id="features" style={{ ...sectionStyle(C.bgSec), overflow: 'hidden' }}>
           <div style={containerStyle}>
-            <h2 style={sectionTitle}>Ce que Freenzy fait pour vous</h2>
-            <p style={sectionSub}>Chaque assistant est specialise. Voici 4 cas concrets.</p>
+            <h2 style={sectionTitle}>Concrètement, ça fait quoi ? 🤔</h2>
+            <p style={sectionSub}>Un aperçu de ce que vos assistants font pour vous, automatiquement.</p>
+          </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
-              {FEATURES.map((feat, idx) => {
-                const reversed = idx % 2 === 1;
-                return (
-                  <div key={idx} style={{
-                    display: 'flex',
-                    flexDirection: isMobile ? 'column' : (reversed ? 'row-reverse' : 'row'),
-                    alignItems: 'center',
-                    gap: 40,
+          {/* Auto-scrolling carousel */}
+          <div
+            ref={carouselRef}
+            onMouseEnter={() => setCarouselPaused(true)}
+            onMouseLeave={() => setCarouselPaused(false)}
+            onTouchStart={() => setCarouselPaused(true)}
+            onTouchEnd={() => setCarouselPaused(false)}
+            style={{
+              overflow: 'hidden',
+              width: '100%',
+              padding: '0 0 8px',
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              gap: 12,
+              animation: 'scroll-features 60s linear infinite',
+              animationPlayState: carouselPaused ? 'paused' : 'running',
+              width: 'max-content',
+            }}>
+              {duplicatedItems.map((item, i) => (
+                <div key={i} style={{
+                  background: C.bg,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 8,
+                  padding: '10px 16px',
+                  whiteSpace: 'nowrap',
+                  fontSize: 13,
+                  color: C.text,
+                  fontWeight: 500,
+                  flexShrink: 0,
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                }}>
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Category labels below */}
+          <div style={{
+            ...containerStyle,
+            marginTop: 32,
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 12,
+          }}>
+            {FEATURE_COLUMNS.map((col, i) => (
+              <div key={i} style={{
+                padding: '8px 16px',
+                background: C.bg,
+                border: `1px solid ${C.border}`,
+                borderRadius: 20,
+                fontSize: 13,
+                fontWeight: 600,
+                color: C.text,
+              }}>
+                {col.title}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════
+            SECTION 3 — DASHBOARD SCREENSHOT
+           ══════════════════════════════════════════════════════ */}
+        <section style={sectionStyle(C.bg)}>
+          <div style={containerStyle}>
+            <h2 style={sectionTitle}>Votre dashboard, adapté à votre métier 🎯</h2>
+            <p style={sectionSub}>Le menu s&apos;adapte automatiquement selon votre activité et votre profession.</p>
+
+            <div style={{
+              background: C.bg,
+              border: `1px solid ${C.border}`,
+              borderRadius: 16,
+              overflow: 'hidden',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.08)',
+              maxWidth: 900,
+              margin: '0 auto',
+              position: 'relative',
+            }}>
+              {/* Browser chrome */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '12px 16px',
+                borderBottom: `1px solid ${C.border}`,
+                background: C.bgSec,
+              }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FF5F56' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFBD2E' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27C93F' }} />
+                <div style={{
+                  marginLeft: 16,
+                  flex: 1,
+                  background: C.bg,
+                  borderRadius: 6,
+                  padding: '4px 12px',
+                  fontSize: 11,
+                  color: C.muted,
+                  fontFamily: 'monospace',
+                }}>
+                  app.freenzy.io/client/dashboard
+                </div>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                minHeight: isMobile ? 'auto' : 380,
+                flexDirection: isMobile ? 'column' : 'row',
+              }}>
+                {/* Sidebar */}
+                <div style={{
+                  width: isMobile ? '100%' : 220,
+                  borderRight: isMobile ? 'none' : `1px solid ${C.border}`,
+                  borderBottom: isMobile ? `1px solid ${C.border}` : 'none',
+                  padding: '16px 12px',
+                  background: C.bgSec,
+                }}>
+                  <div style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: C.text,
+                    marginBottom: 16,
+                    padding: '0 8px',
                   }}>
-                    {/* Text */}
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 12, letterSpacing: '-0.01em' }}>
-                        {feat.title}
-                      </h3>
-                      <p style={{ fontSize: 15, color: C.secondary, lineHeight: 1.6 }}>
-                        {feat.desc}
-                      </p>
-                    </div>
-
-                    {/* Mockup */}
-                    <div style={{ flex: 1, width: '100%' }}>
-                      {idx === 0 && (
-                        /* Google review mockup */
-                        <div style={{ ...cardStyle, padding: 20 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                            <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E8E8E8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>M</div>
-                            <div>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{feat.mockup.review.name}</div>
-                              <div style={{ fontSize: 12, color: '#F59E0B' }}>{'★'.repeat(feat.mockup.review.stars)}{'☆'.repeat(5 - feat.mockup.review.stars)}</div>
-                            </div>
-                          </div>
-                          <p style={{ fontSize: 13, color: C.secondary, marginBottom: 16, lineHeight: 1.5 }}>&quot;{feat.mockup.review.text}&quot;</p>
-                          <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12 }}>
-                            <div style={{ fontSize: 11, color: C.muted, marginBottom: 6 }}>{'\u{1F916}'} Reponse generee par Freenzy</div>
-                            <p style={{ fontSize: 13, color: C.text, lineHeight: 1.5, fontStyle: 'italic' }}>{feat.mockup.response}</p>
-                          </div>
-                        </div>
-                      )}
-
-                      {idx === 1 && (
-                        /* Devis mockup */
-                        <div style={{ ...cardStyle, padding: 20 }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                            <div>
-                              <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>DEVIS</div>
-                              <div style={{ fontSize: 11, color: C.muted }}>{feat.mockup.ref}</div>
-                            </div>
-                            <div style={{ fontSize: 11, color: C.muted }}>Client: {feat.mockup.client}</div>
-                          </div>
-                          {feat.mockup.lines.map((line: string, li: number) => (
-                            <div key={li} style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              padding: '8px 0',
-                              borderBottom: li < feat.mockup.lines.length - 1 ? `1px solid ${C.border}` : 'none',
-                              fontSize: 13,
-                              color: C.text,
-                            }}>
-                              <span>{line.split(' \u2014 ')[0]}</span>
-                              <span style={{ fontWeight: 600 }}>{line.split(' \u2014 ')[1]}</span>
-                            </div>
-                          ))}
-                          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12, paddingTop: 12, borderTop: `2px solid ${C.text}` }}>
-                            <span style={{ fontSize: 16, fontWeight: 700, color: C.text }}>Total: {feat.mockup.total}</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {idx === 2 && (
-                        /* Secretary mockup */
-                        <div style={{ ...cardStyle, padding: 20 }}>
-                          <div style={{
-                            background: C.bgSec,
-                            borderRadius: 10,
-                            padding: 12,
-                            marginBottom: 10,
-                            borderLeft: `3px solid ${C.border}`,
-                          }}>
-                            <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>Patient</div>
-                            <p style={{ fontSize: 13, color: C.text, margin: 0 }}>{feat.mockup.incoming}</p>
-                          </div>
-                          <div style={{
-                            background: '#F0F7FF',
-                            borderRadius: 10,
-                            padding: 12,
-                            marginBottom: 10,
-                            borderLeft: '3px solid #3B82F6',
-                          }}>
-                            <div style={{ fontSize: 11, color: '#3B82F6', marginBottom: 4 }}>{'\u{1F916}'} Secretaire IA</div>
-                            <p style={{ fontSize: 13, color: C.text, margin: 0 }}>{feat.mockup.reply}</p>
-                          </div>
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            padding: '8px 12px',
-                            background: '#F0FFF4',
-                            borderRadius: 8,
-                            fontSize: 12,
-                            color: '#16A34A',
-                            fontWeight: 500,
-                          }}>
-                            \u2705 {feat.mockup.status}
-                          </div>
-                        </div>
-                      )}
-
-                      {idx === 3 && (
-                        /* LinkedIn mockup */
-                        <div style={{ ...cardStyle, padding: 20 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                            <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#0077B5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 700 }}>in</div>
-                            <div>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>Votre post LinkedIn</div>
-                              <div style={{ fontSize: 11, color: C.muted }}>Il y a 2h</div>
-                            </div>
-                          </div>
-                          <p style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 8, lineHeight: 1.4 }}>{feat.mockup.hook}</p>
-                          <p style={{ fontSize: 13, color: C.secondary, marginBottom: 10, lineHeight: 1.5 }}>{feat.mockup.body}</p>
-                          <p style={{ fontSize: 12, color: '#0077B5', marginBottom: 12 }}>{feat.mockup.hashtags}</p>
-                          <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10, fontSize: 12, color: C.muted }}>
-                            {feat.mockup.engagement}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    FREENZY.IO
                   </div>
-                );
-              })}
+                  {SIDEBAR_ITEMS.map((item, i) => (
+                    <div key={i} style={{
+                      padding: '8px 10px',
+                      borderRadius: 6,
+                      fontSize: 13,
+                      color: i === 0 ? C.text : C.secondary,
+                      fontWeight: i === 0 ? 600 : 400,
+                      background: i === 0 ? C.bg : 'transparent',
+                      marginBottom: 2,
+                      cursor: 'default',
+                    }}>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Main content */}
+                <div style={{ flex: 1, padding: isMobile ? 16 : 24 }}>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: C.text, marginBottom: 24 }}>
+                    Bienvenue, Marie 👋
+                  </div>
+
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+                    gap: 12,
+                    marginBottom: 24,
+                  }}>
+                    {[
+                      { label: 'Assistants actifs', value: '12', emoji: '🤖', bg: '#F0F7FF' },
+                      { label: 'Actions ce mois', value: '23', emoji: '⚡', bg: '#FFF8F0' },
+                      { label: 'Crédits restants', value: '47', emoji: '💎', bg: '#F0FFF4' },
+                    ].map((kpi, i) => (
+                      <div key={i} style={{
+                        background: kpi.bg,
+                        borderRadius: 10,
+                        padding: 16,
+                        textAlign: 'center',
+                      }}>
+                        <div style={{ fontSize: 20, marginBottom: 4 }}>{kpi.emoji}</div>
+                        <div style={{ fontSize: 22, fontWeight: 800, color: C.text }}>{kpi.value}</div>
+                        <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{kpi.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}>
+                    {[
+                      { name: 'Secrétaire IA', action: 'RDV confirmé — mardi 14h', time: 'Il y a 5 min' },
+                      { name: 'Devis Pro', action: 'Devis #047 envoyé à Acme Corp', time: 'Il y a 12 min' },
+                      { name: 'Réputation', action: '3 avis Google traités', time: 'Il y a 1h' },
+                    ].map((activity, i) => (
+                      <div key={i} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '10px 12px',
+                        background: C.bgSec,
+                        borderRadius: 8,
+                        border: `1px solid ${C.border}`,
+                      }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{activity.name}</div>
+                          <div style={{ fontSize: 11, color: C.muted }}>{activity.action}</div>
+                        </div>
+                        <div style={{ fontSize: 11, color: C.muted, whiteSpace: 'nowrap' }}>{activity.time}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Label overlay */}
+              <div style={{
+                position: 'absolute',
+                bottom: 16,
+                right: 16,
+                background: C.text,
+                color: '#FFFFFF',
+                fontSize: 12,
+                fontWeight: 600,
+                padding: '6px 14px',
+                borderRadius: 20,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+              }}>
+                ✨ Le menu s&apos;adapte selon votre profil
+              </div>
             </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 3 — PROFILES
+            SECTION 4 — PROFILES
            ══════════════════════════════════════════════════════ */}
-        <section style={sectionStyle(C.bg)}>
+        <section style={sectionStyle(C.bgSec)}>
           <div style={containerStyle}>
-            <h2 style={sectionTitle}>Adapte a votre metier</h2>
-            <p style={sectionSub}>Quel que soit votre metier, Freenzy s&apos;adapte.</p>
+            <h2 style={sectionTitle}>Quel que soit votre métier 🎯</h2>
+            <p style={sectionSub}>Freenzy s&apos;adapte à votre activité avec des assistants spécialisés.</p>
 
             <div style={{
               display: 'grid',
@@ -526,19 +637,20 @@ export default function LandingPage() {
                     textAlign: 'center',
                     cursor: 'default',
                     position: 'relative',
-                    minHeight: hoveredProfile === i ? 180 : 120,
+                    padding: 28,
+                    minHeight: hoveredProfile === i ? 200 : 140,
                     transition: 'all 0.25s ease',
                     boxShadow: hoveredProfile === i ? '0 4px 16px rgba(0,0,0,0.08)' : 'none',
                   }}
                 >
-                  <div style={{ fontSize: 32, marginBottom: 8 }}>{p.emoji}</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: C.text, marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 12, color: C.muted }}>{p.count} assistants</div>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}>{p.emoji}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: C.text, marginBottom: 4 }}>{p.name}</div>
+                  <div style={{ fontSize: 13, color: C.muted }}>{p.count} assistants dédiés</div>
 
                   {hoveredProfile === i && (
                     <div style={{
-                      marginTop: 12,
-                      paddingTop: 12,
+                      marginTop: 14,
+                      paddingTop: 14,
                       borderTop: `1px solid ${C.border}`,
                     }}>
                       {p.assistants.map((a, ai) => (
@@ -559,12 +671,12 @@ export default function LandingPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 4 — HOW IT WORKS
+            SECTION 5 — HOW IT WORKS
            ══════════════════════════════════════════════════════ */}
-        <section style={sectionStyle(C.bgSec)}>
+        <section style={sectionStyle(C.bg)}>
           <div style={containerStyle}>
-            <h2 style={sectionTitle}>Comment ca marche</h2>
-            <p style={sectionSub}>3 etapes pour demarrer. Pas de carte bancaire.</p>
+            <h2 style={sectionTitle}>Opérationnel en 2 minutes ⚡</h2>
+            <p style={sectionSub}>3 étapes simples pour démarrer.</p>
 
             <div style={{
               display: 'grid',
@@ -572,9 +684,9 @@ export default function LandingPage() {
               gap: 24,
             }}>
               {[
-                { emoji: '\u{1F3AF}', step: '1', title: 'Testez gratuitement', desc: '5 messages gratuits, sans inscription. Decouvrez vos assistants en action.' },
-                { emoji: '\u26A1', step: '2', title: 'Creez votre compte', desc: 'Quiz 2 min, dashboard personnalise. 50 credits offerts immediatement.' },
-                { emoji: '\u{1F680}', step: '3', title: 'Vos assistants travaillent', desc: 'Automatisations, briefings matinaux, relances clients — tout tourne pour vous.' },
+                { emoji: '🎯', step: '1', title: 'Testez gratuitement', desc: 'Pas de carte bancaire. 5 messages gratuits pour découvrir.' },
+                { emoji: '⚙️', step: '2', title: 'On configure tout', desc: 'Quiz rapide de 2 minutes. Dashboard personnalisé selon votre métier.' },
+                { emoji: '🚀', step: '3', title: 'Vos assistants travaillent', desc: 'Briefings, relances, documents — tout se fait automatiquement.' },
               ].map((s, i) => (
                 <div key={i} style={{
                   ...cardStyle,
@@ -606,12 +718,12 @@ export default function LandingPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 5 — TEAMS
+            SECTION 6 — FORMATIONS
            ══════════════════════════════════════════════════════ */}
-        <section style={sectionStyle(C.bg)}>
+        <section style={sectionStyle(C.bgSec)}>
           <div style={containerStyle}>
-            <h2 style={sectionTitle}>Travaillez en equipe avec l&apos;IA</h2>
-            <p style={sectionSub}>Chaque membre de votre equipe a acces aux memes assistants, avec des roles et permissions.</p>
+            <h2 style={sectionTitle}>Formez-vous gratuitement 🎓</h2>
+            <p style={sectionSub}>22 parcours, 396 leçons, diplômes téléchargeables</p>
 
             <div style={{
               display: 'grid',
@@ -620,15 +732,167 @@ export default function LandingPage() {
               maxWidth: 900,
               margin: '0 auto',
             }}>
-              {PLANS.map((plan, i) => (
+              {[
+                { emoji: '🧠', title: 'Prompt Engineering', level: 'Intermédiaire', duration: '1h', color: '#F0F7FF' },
+                { emoji: '🎨', title: 'Créer du contenu pro', level: 'Débutant', duration: '1h', color: '#FFF8F0' },
+                { emoji: '🛡️', title: 'Droit de l\'IA', level: 'Avancé', duration: '1h', color: '#F0FFF4' },
+              ].map((course, i) => (
+                <div key={i} style={{
+                  ...cardStyle,
+                  padding: 28,
+                  textAlign: 'center',
+                }}>
+                  <div style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 14,
+                    background: course.color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 28,
+                    margin: '0 auto 16px',
+                  }}>
+                    {course.emoji}
+                  </div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 8 }}>{course.title}</h3>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 4 }}>
+                    <span style={{
+                      fontSize: 11,
+                      padding: '3px 10px',
+                      borderRadius: 12,
+                      background: C.bgSec,
+                      border: `1px solid ${C.border}`,
+                      color: C.secondary,
+                      fontWeight: 500,
+                    }}>
+                      {course.level}
+                    </span>
+                    <span style={{
+                      fontSize: 11,
+                      padding: '3px 10px',
+                      borderRadius: 12,
+                      background: C.bgSec,
+                      border: `1px solid ${C.border}`,
+                      color: C.secondary,
+                      fontWeight: 500,
+                    }}>
+                      {course.duration}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: 32 }}>
+              <Link href="/client/learn" style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '12px 24px',
+                background: C.text,
+                color: '#fff',
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}>
+                Voir toutes les formations &rarr;
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════
+            SECTION 7 — NEWS IA
+           ══════════════════════════════════════════════════════ */}
+        <section style={sectionStyle(C.bg)}>
+          <div style={containerStyle}>
+            <h2 style={sectionTitle}>L&apos;actu IA, résumée pour vous 📰</h2>
+            <p style={sectionSub}>Les dernières nouvelles du monde de l&apos;intelligence artificielle.</p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+              gap: 20,
+              maxWidth: 900,
+              margin: '0 auto',
+            }}>
+              {[
+                { emoji: '🧠', title: 'Claude 4 Opus : ce que ça change pour les entreprises', date: '15 mars 2026', tag: 'Modèles IA' },
+                { emoji: '⚖️', title: 'AI Act européen : les nouvelles obligations pour 2026', date: '14 mars 2026', tag: 'Régulation' },
+                { emoji: '🚀', title: 'Comment les PME françaises adoptent l\'IA en 2026', date: '13 mars 2026', tag: 'Tendances' },
+              ].map((article, i) => (
+                <div key={i} style={{
+                  ...cardStyle,
+                  padding: 24,
+                }}>
+                  <div style={{ fontSize: 32, marginBottom: 12 }}>{article.emoji}</div>
+                  <span style={{
+                    fontSize: 11,
+                    padding: '3px 10px',
+                    borderRadius: 12,
+                    background: C.bgSec,
+                    border: `1px solid ${C.border}`,
+                    color: C.muted,
+                    fontWeight: 500,
+                  }}>
+                    {article.tag}
+                  </span>
+                  <h3 style={{ fontSize: 15, fontWeight: 600, color: C.text, marginTop: 10, marginBottom: 8, lineHeight: 1.4 }}>
+                    {article.title}
+                  </h3>
+                  <div style={{ fontSize: 12, color: C.muted }}>{article.date}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: 32 }}>
+              <Link href="/client/news-ai" style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '12px 24px',
+                background: C.text,
+                color: '#fff',
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}>
+                Lire toutes les news &rarr;
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════
+            SECTION 8 — TARIFS (CRÉDITS ONLY)
+           ══════════════════════════════════════════════════════ */}
+        <section style={sectionStyle(C.bgSec)}>
+          <div style={containerStyle}>
+            <h2 style={sectionTitle}>Transparent et sans surprise 💎</h2>
+            <p style={sectionSub}>Pas d&apos;abonnement. Rechargez quand vous voulez.</p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+              gap: 16,
+              maxWidth: 900,
+              margin: '0 auto 32px',
+            }}>
+              {[
+                { credits: '10', price: '10€', bonus: null },
+                { credits: '50', price: '45€', bonus: '10% offert' },
+                { credits: '100', price: '80€', bonus: '20% offert', highlight: true },
+                { credits: '500', price: '350€', bonus: '30% offert' },
+              ].map((pack, i) => (
                 <div key={i} style={{
                   ...cardStyle,
                   textAlign: 'center',
-                  padding: 32,
-                  border: plan.highlight ? `2px solid ${C.text}` : `1px solid ${C.border}`,
+                  padding: 28,
+                  border: pack.highlight ? `2px solid ${C.text}` : `1px solid ${C.border}`,
                   position: 'relative',
                 }}>
-                  {plan.highlight && (
+                  {pack.highlight && (
                     <div style={{
                       position: 'absolute',
                       top: -12,
@@ -640,181 +904,55 @@ export default function LandingPage() {
                       fontWeight: 600,
                       padding: '4px 14px',
                       borderRadius: 20,
+                      whiteSpace: 'nowrap',
                     }}>
                       Populaire
                     </div>
                   )}
-                  <h3 style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 4 }}>{plan.name}</h3>
-                  <div style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>{plan.members}</div>
-                  <div style={{ marginBottom: 20 }}>
-                    <span style={{ fontSize: 36, fontWeight: 800, color: C.text }}>{plan.price}</span>
-                    <span style={{ fontSize: 14, color: C.muted }}>{plan.sub}</span>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
-                    {plan.features.map((f, fi) => (
-                      <div key={fi} style={{ fontSize: 13, color: C.secondary }}>
-                        \u2713 {f}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ textAlign: 'center', marginTop: 32 }}>
-              <Link href="/login?mode=register" style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '14px 28px',
-                background: C.text,
-                color: '#fff',
-                borderRadius: 10,
-                fontSize: 15,
-                fontWeight: 600,
-                textDecoration: 'none',
-              }}>
-                Creer mon equipe gratuitement &rarr;
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════════
-            SECTION 6 — PRICING
-           ══════════════════════════════════════════════════════ */}
-        <section style={sectionStyle(C.bgSec)}>
-          <div style={containerStyle}>
-            <h2 style={sectionTitle}>Credits IA — payez uniquement ce que vous utilisez</h2>
-            <p style={sectionSub}>1 credit ≈ 1 action IA (email, devis, reponse avis...). Pas d&apos;abonnement, pas de surprise.</p>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-              gap: 20,
-              maxWidth: 720,
-              margin: '0 auto 32px',
-            }}>
-              {[
-                { credits: '50', price: '4,99\u20AC', perCredit: '0,10\u20AC', badge: 'Starter' },
-                { credits: '200', price: '14,99\u20AC', perCredit: '0,075\u20AC', badge: 'Pro', highlight: true },
-                { credits: '500', price: '29,99\u20AC', perCredit: '0,06\u20AC', badge: 'Business' },
-              ].map((pack, i) => (
-                <div key={i} style={{
-                  ...cardStyle,
-                  textAlign: 'center',
-                  padding: 28,
-                  border: pack.highlight ? `2px solid ${C.text}` : `1px solid ${C.border}`,
-                }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>{pack.badge}</div>
                   <div style={{ fontSize: 36, fontWeight: 800, color: C.text, marginBottom: 4 }}>{pack.credits}</div>
-                  <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>credits</div>
+                  <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>crédits</div>
                   <div style={{ fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 4 }}>{pack.price}</div>
-                  <div style={{ fontSize: 12, color: C.secondary }}>{pack.perCredit} / credit</div>
+                  {pack.bonus && (
+                    <div style={{
+                      fontSize: 12,
+                      color: '#16A34A',
+                      fontWeight: 600,
+                      marginTop: 8,
+                      padding: '3px 10px',
+                      background: '#F0FFF4',
+                      borderRadius: 12,
+                      display: 'inline-block',
+                    }}>
+                      {pack.bonus}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
             <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: 16,
-              marginTop: 24,
+              textAlign: 'center',
+              padding: '16px 24px',
+              background: C.bg,
+              border: `1px solid ${C.border}`,
+              borderRadius: 12,
+              maxWidth: 500,
+              margin: '0 auto',
             }}>
-              {[
-                '\u{1F381} 50 credits offerts',
-                '\u{1F48E} 0% commission',
-                '\u221E Credits sans expiration',
-              ].map((chip, i) => (
-                <div key={i} style={{
-                  padding: '8px 18px',
-                  background: C.bg,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 20,
-                  fontSize: 13,
-                  color: C.text,
-                  fontWeight: 500,
-                }}>
-                  {chip}
-                </div>
-              ))}
+              <p style={{ fontSize: 14, color: C.text, fontWeight: 500, margin: 0 }}>
+                🎁 50 crédits offerts à l&apos;inscription · 1 crédit ≈ 1 action IA
+              </p>
             </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════════
-            SECTION 7 — SOCIAL PROOF
-           ══════════════════════════════════════════════════════ */}
-        <section style={sectionStyle(C.bg)}>
-          <div style={containerStyle}>
-            <h2 style={sectionTitle}>Ce que les assistants font chaque semaine</h2>
-            <p style={sectionSub}>Cas d&apos;usage types — voici ce que Freenzy automatise au quotidien.</p>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-              gap: 20,
-            }}>
-              {[
-                { emoji: '\u{1F4E7}', value: '1 240+', label: 'emails rediges et envoyes', desc: 'Propositions commerciales, relances, confirmations' },
-                { emoji: '\u{1F4C4}', value: '380+', label: 'documents generes', desc: 'Devis, contrats, NDA, rapports, CGV' },
-                { emoji: '\u{1F465}', value: '85+', label: 'equipes actives', desc: 'PME, agences, cabinets, independants' },
-              ].map((stat, i) => (
-                <div key={i} style={{
-                  ...cardStyle,
-                  textAlign: 'center',
-                  padding: 32,
-                }}>
-                  <div style={{ fontSize: 36, marginBottom: 12 }}>{stat.emoji}</div>
-                  <div style={{ fontSize: 28, fontWeight: 800, color: C.text, marginBottom: 4 }}>{stat.value}</div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 8 }}>{stat.label}</div>
-                  <div style={{ fontSize: 13, color: C.muted }}>{stat.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════════
-            SECTION 8 — REFERRAL
-           ══════════════════════════════════════════════════════ */}
-        <section style={{
-          ...sectionStyle(C.text),
-          padding: '64px 24px',
-        }}>
-          <div style={{
-            ...containerStyle,
-            textAlign: 'center',
-          }}>
-            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#FFFFFF', marginBottom: 12, letterSpacing: '-0.02em' }}>
-              Invitez, gagnez.
-            </h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.6)', marginBottom: 28, maxWidth: 480, margin: '0 auto 28px' }}>
-              20 credits pour vous, 20 pour votre filleul. Sans limite de parrainages.
-            </p>
-            <Link href="/login?mode=register" style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '14px 28px',
-              background: '#FFFFFF',
-              color: C.text,
-              borderRadius: 10,
-              fontSize: 15,
-              fontWeight: 600,
-              textDecoration: 'none',
-            }}>
-              Creer mon compte &rarr;
-            </Link>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════
             SECTION 9 — FAQ
            ══════════════════════════════════════════════════════ */}
-        <section style={sectionStyle(C.bgSec)}>
+        <section style={sectionStyle(C.bg)}>
           <div style={{ ...containerStyle, maxWidth: 720 }}>
-            <h2 style={sectionTitle}>Questions frequentes</h2>
-            <p style={sectionSub}>Les reponses aux 10 questions les plus posees.</p>
+            <h2 style={sectionTitle}>Des questions ? 💬</h2>
+            <p style={sectionSub}>Les réponses aux 10 questions les plus posées.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {FAQ_SELECTION.map((faq, i) => (
@@ -881,10 +1019,62 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ══════════════════════════════════════════════════════
+            SECTION 10 — PARRAINAGE
+           ══════════════════════════════════════════════════════ */}
+        <section style={{
+          ...sectionStyle(C.text),
+          padding: '64px 24px',
+        }}>
+          <div style={{
+            ...containerStyle,
+            textAlign: 'center',
+          }}>
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#FFFFFF', marginBottom: 12, letterSpacing: '-0.02em' }}>
+              Partagez Freenzy, gagnez des crédits 🎁
+            </h2>
+            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', marginBottom: 12, maxWidth: 520, margin: '0 auto 12px' }}>
+              Invitez un ami &rarr; vous gagnez 20 crédits, il gagne 20 crédits.
+            </p>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 28, maxWidth: 480, margin: '0 auto 28px' }}>
+              Sans limite de parrainages.
+            </p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/client/referrals" style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '14px 28px',
+                background: '#FFFFFF',
+                color: C.text,
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}>
+                Obtenir mon lien &rarr;
+              </Link>
+              <Link href="/login?mode=register" style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '14px 28px',
+                background: 'transparent',
+                color: '#FFFFFF',
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                textDecoration: 'none',
+                border: '1px solid rgba(255,255,255,0.3)',
+              }}>
+                Créer mon compte
+              </Link>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 10 — FOOTER
+          SECTION 11 — FOOTER
          ══════════════════════════════════════════════════════ */}
       <PublicFooter />
     </>

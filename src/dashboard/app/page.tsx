@@ -276,7 +276,7 @@ export default function LandingPage() {
                 gap: 12,
                 justifyContent: isMobile ? 'center' : 'flex-start',
               }}>
-                <Link href="/try" style={{
+                <Link href="/login" style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -290,7 +290,7 @@ export default function LandingPage() {
                   transition: 'opacity 0.2s ease',
                   border: 'none',
                 }}>
-                  Essayer gratuitement &rarr;
+                  Accéder à Freenzy &rarr;
                 </Link>
                 <Link href="#features" style={{
                   display: 'inline-flex',

@@ -451,7 +451,7 @@ export default function ArcadePage() {
           50 cr&eacute;dits offerts — aucune carte bancaire requise.
         </p>
         <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '16px 40px', borderRadius: 10, fontWeight: 700, fontSize: 17, textDecoration: 'none' }}>
-          Commencer gratuitement
+          Accéder à Freenzy
           <span className="material-symbols-rounded" style={{ fontSize: 22 }}>rocket_launch</span>
         </Link>
       </section>

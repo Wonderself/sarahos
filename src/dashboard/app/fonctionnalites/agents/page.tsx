@@ -147,7 +147,7 @@ export default function AgentsPage() {
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
-              Essayer gratuitement
+              Accéder à Freenzy
               <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
             </Link>
             <Link href="/demo" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
@@ -340,7 +340,7 @@ export default function AgentsPage() {
           50 cr&eacute;dits offerts — aucune carte bancaire requise.
         </p>
         <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '16px 40px', borderRadius: 10, fontWeight: 700, fontSize: 17, textDecoration: 'none' }}>
-          Commencer gratuitement
+          Accéder à Freenzy
           <span className="material-symbols-rounded" style={{ fontSize: 22 }}>rocket_launch</span>
         </Link>
       </section>

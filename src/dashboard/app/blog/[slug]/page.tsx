@@ -240,7 +240,7 @@ export default function BlogArticlePage() {
             50 cr&eacute;dits offerts pour tester tous les agents IA. Aucune carte bancaire requise.
           </p>
           <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '12px 28px', borderRadius: 10, fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
-            Commencer gratuitement
+            Accéder à Freenzy
             <span className="material-symbols-rounded" style={{ fontSize: 18 }}>arrow_forward</span>
           </Link>
         </div>

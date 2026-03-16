@@ -832,7 +832,7 @@ export default function DemoPage() {
             Créer mon compte gratuit
           </Link>
           <Link
-            href="/try"
+            href="/login"
             style={{
               display: 'inline-block',
               padding: '14px 32px',

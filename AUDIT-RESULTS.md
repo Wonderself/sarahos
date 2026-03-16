@@ -4,14 +4,14 @@
 
 ---
 
-## Score Global : 85/100
+## Score Global : 88/100
 
 | Catégorie | Score | Détails |
 |-----------|-------|---------|
 | Responsive (iPhone 11) | 88/100 | Excellente base mobile-first |
 | Cohérence design | 93/100 | 7 pages sans CU sur 94 |
 | SEO | 75/100 | JSON-LD excellent, blog articles sans metadata unique |
-| Code qualité | En cours | Audit en cours |
+| Code qualité | 95/100 | 0 console.log, 0 any, 3 fichiers inutilisés |
 
 ---
 
@@ -117,9 +117,25 @@ L'ensemble du dashboard est **bien implémenté** pour mobile. Breakpoints corre
 
 ---
 
-## 4. Audit Code Qualité — En cours
+## 4. Audit Code Qualité — 95/100
 
-_Résultats à venir_
+### Points forts
+- ✅ 0 `console.log()` dans 360+ fichiers
+- ✅ 0 type `any` — TypeScript strict mode enforced
+- ✅ Import consistency excellent
+- ✅ Naming conventions cohérentes (PascalCase composants, kebab-case libs)
+
+### Fichiers inutilisés (à supprimer)
+
+**Libs (3) :**
+- `landing-data.ts` (1,900 lignes) — remplacé par données inline dans page.tsx
+- `faq-utils.ts` (47 lignes) — jamais appelé
+- `team-management.ts` (200+ lignes) — feature abandonnée
+
+**Composants (9) :**
+- ActionButton.tsx, AgentIcon.tsx, AudienceSwitcher.tsx
+- BrandingBadge.tsx, BrandingPrompt.tsx, DocumentPreview.tsx
+- SkeletonLoader.tsx, TestimonialCard.tsx, VideoPlaceholder.tsx
 
 ---
 

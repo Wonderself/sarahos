@@ -76,14 +76,38 @@ export default function PublicNav() {
         height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         {/* Logo */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <span
-            className={`fz-logo-text ${isDark ? 'fz-logo-text-dark' : 'fz-logo-text-light'}`}
-            style={{ fontSize: 22, transition: 'all 0.3s ease' }}
-          >
-            freenzy.io
+        <Link href="/" style={{ display: 'flex', alignItems: 'baseline', gap: 6, textDecoration: 'none' }}>
+          <span style={{
+            fontSize: 24,
+            fontWeight: 800,
+            letterSpacing: '-0.04em',
+            color: isDark ? '#FFFFFF' : '#1A1A1A',
+            transition: 'all 0.3s ease',
+            fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+          }}>
+            freenzy
           </span>
-          <span style={{ fontSize: 9, fontStyle: 'italic', color: isDark ? 'rgba(255,255,255,0.4)' : '#B0B0B0', fontWeight: 400, marginLeft: -4, alignSelf: 'flex-end', marginBottom: 2 }}>Beta Test 1</span>
+          <span style={{
+            fontSize: 13,
+            fontWeight: 300,
+            color: isDark ? 'rgba(255,255,255,0.35)' : '#9B9B9B',
+            letterSpacing: '0.02em',
+          }}>
+            .io
+          </span>
+          <span style={{
+            fontSize: 8,
+            fontWeight: 600,
+            color: '#FFFFFF',
+            background: isDark ? 'rgba(255,255,255,0.15)' : '#1A1A1A',
+            padding: '2px 6px',
+            borderRadius: 4,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase' as const,
+            marginLeft: 4,
+          }}>
+            beta
+          </span>
         </Link>
 
         {/* Desktop links */}

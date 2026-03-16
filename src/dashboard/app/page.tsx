@@ -221,27 +221,35 @@ export default function LandingPage() {
             {/* Left: Text */}
             <div style={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
               <h1 style={{
-                fontSize: isMobile ? 36 : 52,
+                fontSize: isMobile ? 38 : 56,
                 fontWeight: 800,
                 color: C.text,
-                lineHeight: 1.1,
-                letterSpacing: '-0.03em',
+                lineHeight: 1.08,
+                letterSpacing: '-0.04em',
                 marginBottom: 8,
+                fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
               }}>
-                Utilisez vraiment l&apos;IA.
+                Utilisez<br />
+                <span style={{
+                  background: 'linear-gradient(135deg, #1A1A1A 0%, #6B6B6B 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>vraiment</span>{' '}
+                l&apos;IA.
               </h1>
               <h2 style={{
-                fontSize: isMobile ? 22 : 28,
-                fontWeight: 600,
+                fontSize: isMobile ? 20 : 26,
+                fontWeight: 500,
                 color: C.secondary,
                 lineHeight: 1.3,
                 marginBottom: 16,
                 letterSpacing: '-0.01em',
               }}>
-                Facile et gratuit*
+                Facile et gratuit<span style={{ color: C.muted, fontWeight: 400 }}>*</span>
               </h2>
               <p style={{
-                fontSize: isMobile ? 16 : 18,
+                fontSize: isMobile ? 15 : 17,
                 color: C.secondary,
                 lineHeight: 1.6,
                 marginBottom: 8,
@@ -252,14 +260,15 @@ export default function LandingPage() {
                 +150 assistants IA sur mesure pour vous
               </p>
               <p style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: C.muted,
                 marginBottom: 32,
                 maxWidth: 520,
                 marginLeft: isMobile ? 'auto' : undefined,
                 marginRight: isMobile ? 'auto' : undefined,
+                fontStyle: 'italic',
               }}>
-                *pas d&apos;abonnement et pas de commissions sur les tokens
+                *pas d&apos;abonnement · pas de commission sur les tokens
               </p>
               <div style={{
                 display: 'flex',

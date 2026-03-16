@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyCallerAuth } from '@/lib/api-auth';
 
+const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
+
 /**
- * Social Media API — account analysis, competitor analysis, post analytics
+ * Social Media API — account analysis, competitor analysis, post analytics, AI generation
  * Uses AI agents for analysis + mock data fallback
  */
 
@@ -142,6 +144,64 @@ export async function POST(req: NextRequest) {
         await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
         // For now, always return success if credentials provided
         return NextResponse.json({ connected: true, username: body.apiKey ? `user_${platform}` : null });
+      }
+
+      case 'generate': {
+        const { tone, goal, length, language, brief } = body;
+        if (!brief || !String(brief).trim()) {
+          return NextResponse.json({ error: 'Missing brief' }, { status: 400 });
+        }
+
+        const systemPrompt = `Tu es un expert en social media marketing. Tu crées du contenu engageant et professionnel pour les réseaux sociaux.
+
+Plateforme : ${platform || 'LinkedIn'}
+Ton : ${tone || 'professionnel'}
+Objectif : ${goal || 'informer'}
+Longueur : ${length || 'moyen'}
+Langue : ${language || 'français'}
+
+Règles par plateforme :
+- LinkedIn : professionnel, hooks accrocheurs, 150-300 mots, 3-5 hashtags en fin
+- Instagram : visuel, emojis, 30-100 mots + 10 hashtags séparés
+- Twitter/X : concis, max 280 caractères, 2-3 hashtags
+- Facebook : conversationnel, 50-200 mots, question engageante en fin
+- TikTok : fun/éducatif, script 30-60s, hook dans les 3 premières secondes
+- YouTube : titre SEO + description 500 mots + tags
+
+Génère UNIQUEMENT le contenu du post (pas de méta-commentaire).`;
+
+        const llmRes = await fetch(`${API_BASE}/billing/llm`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${auth.token}`,
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: String(brief).trim() },
+            ],
+            maxTokens: 1024,
+            temperature: 0.8,
+            agentName: 'fz-communication',
+          }),
+        });
+
+        if (!llmRes.ok) {
+          const errData = await llmRes.json().catch(() => ({}));
+          return NextResponse.json(
+            { error: errData.error || 'Erreur de génération' },
+            { status: llmRes.status }
+          );
+        }
+
+        const data = await llmRes.json();
+        return NextResponse.json({
+          content: data.content || data.text || '',
+          model: 'claude-sonnet-4-20250514',
+          tokens: data.usage?.total_tokens || 0,
+        });
       }
 
       default:

@@ -907,6 +907,29 @@ export default function DocumentsPage() {
         prompt += `\n\nContexte entreprise du client: ${companyProfile}`;
       }
 
+      // Auto-inject user context variables
+      const userSession = (() => {
+        try { return JSON.parse(localStorage.getItem('fz_session') || '{}'); } catch { return {}; }
+      })();
+      const branding = (() => {
+        try { return JSON.parse(localStorage.getItem('fz_branding') || '{}'); } catch { return {}; }
+      })();
+
+      const contextBlock = `
+--- CONTEXTE UTILISATEUR ---
+Nom: ${userSession.displayName || 'Non renseigné'}
+Email: ${userSession.email || 'Non renseigné'}
+Entreprise: ${branding.companyName || 'Non renseigné'}
+SIRET: ${branding.siret || 'Non renseigné'}
+Adresse: ${branding.address || 'Non renseigné'}
+Téléphone: ${branding.phone || 'Non renseigné'}
+Date du jour: ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+---
+Utilise ces informations pour personnaliser le document si pertinent.
+`;
+
+      prompt = contextBlock + '\n' + prompt;
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

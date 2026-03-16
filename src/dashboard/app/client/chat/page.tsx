@@ -27,6 +27,7 @@ import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraft } from '../../../lib/useVisitorDraft';
 import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
+import { MarkdownContent } from '@/lib/markdown';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -842,11 +843,17 @@ export default function ChatPage() {
 
       if (!res.ok) {
         const errorMsg = data.error ?? data.message ?? `Erreur ${res.status}`;
+        let userContent: string;
+        if (res.status === 402 || data.code === 'INSUFFICIENT_BALANCE') {
+          userContent = '💳 Crédits insuffisants. [Rechargez votre compte](/client/finances) pour continuer.';
+        } else if (res.status === 429) {
+          userContent = '⏳ Trop de requêtes. Veuillez patienter quelques secondes avant de réessayer.';
+        } else {
+          userContent = `❌ Erreur de communication. Veuillez réessayer. (${errorMsg})`;
+        }
         setMessages(prev => [...prev, {
           role: 'system',
-          content: res.status === 402 || data.code === 'INSUFFICIENT_BALANCE'
-            ? `Credits epuises. [Rechargez votre compte](/client/account) pour continuer.`
-            : `Erreur: ${errorMsg}`,
+          content: userContent,
           timestamp: new Date().toISOString(),
         }]);
       } else {
@@ -904,7 +911,7 @@ export default function ChatPage() {
     } catch (e) {
       setMessages(prev => [...prev, {
         role: 'system',
-        content: `Erreur de connexion: ${e instanceof Error ? e.message : 'inconnue'}`,
+        content: `❌ Erreur de connexion: ${e instanceof Error ? e.message : 'inconnue'}`,
         timestamp: new Date().toISOString(),
       }]);
     } finally {
@@ -972,9 +979,17 @@ export default function ChatPage() {
       if (!res.ok) {
         let errorMsg = `Erreur ${res.status}`;
         try { const data = await res.json(); errorMsg = data.error ?? data.message ?? errorMsg; } catch { /* */ }
+        let userContent: string;
+        if (res.status === 402) {
+          userContent = '💳 Crédits insuffisants. [Rechargez votre compte](/client/finances) pour continuer.';
+        } else if (res.status === 429) {
+          userContent = '⏳ Trop de requêtes. Veuillez patienter quelques secondes avant de réessayer.';
+        } else {
+          userContent = `❌ Erreur de communication. Veuillez réessayer. (${errorMsg})`;
+        }
         setMessages(prev => [...prev, {
           role: 'system',
-          content: res.status === 402 ? 'Credits epuises. [Rechargez votre compte](/client/account) pour continuer.' : `Erreur: ${errorMsg}`,
+          content: userContent,
           timestamp: new Date().toISOString(),
         }]);
         return;
@@ -1084,7 +1099,7 @@ export default function ChatPage() {
       if (e instanceof DOMException && e.name === 'AbortError') {
         // Stream was intentionally aborted (timeout or user action)
       } else {
-        setMessages(prev => [...prev, { role: 'system', content: `Erreur de connexion: ${e instanceof Error ? e.message : 'inconnue'}`, timestamp: new Date().toISOString() }]);
+        setMessages(prev => [...prev, { role: 'system', content: `❌ Erreur de connexion: ${e instanceof Error ? e.message : 'inconnue'}`, timestamp: new Date().toISOString() }]);
       }
     } finally {
       sendingRef.current = false;
@@ -1748,12 +1763,21 @@ export default function ChatPage() {
                     borderRadius: 'var(--radius-md)', fontSize: 13, fontStyle: 'italic',
                   } : undefined
                 }>
-                  <div style={{ whiteSpace: 'pre-wrap' }}>
-                    {searchActive && searchQuery ? highlightText(msg.content, searchQuery) : msg.content}
-                    {loading && i === messages.length - 1 && msg.role === 'assistant' && msg.content && (
-                      <span className="chat-typing-cursor" />
-                    )}
-                  </div>
+                  {msg.role === 'assistant' && !(searchActive && searchQuery) ? (
+                    <div>
+                      <MarkdownContent content={msg.content} />
+                      {loading && i === messages.length - 1 && msg.content && (
+                        <span className="chat-typing-cursor" />
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ whiteSpace: 'pre-wrap' }}>
+                      {searchActive && searchQuery ? highlightText(msg.content, searchQuery) : msg.content}
+                      {loading && i === messages.length - 1 && msg.role === 'assistant' && msg.content && (
+                        <span className="chat-typing-cursor" />
+                      )}
+                    </div>
+                  )}
                 </div>
                 {/* Meta info — timestamp + actions */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>

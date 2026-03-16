@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
+const ALLOWED_MODELS = [
+  'claude-haiku-4-5-20251001',
+  'claude-sonnet-4-20250514',
+  'claude-opus-4-6',
+];
+
 export async function POST(req: NextRequest) {
   let body: Record<string, unknown>;
   try { body = await req.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
@@ -12,6 +18,13 @@ export async function POST(req: NextRequest) {
 
   if (!token) return NextResponse.json({ error: 'No auth token' }, { status: 401 });
 
+  const model = (body.model as string) ?? 'claude-sonnet-4-20250514';
+  if (!ALLOWED_MODELS.includes(model)) {
+    return NextResponse.json({ error: 'Modèle IA non autorisé' }, { status: 400 });
+  }
+
+  const maxTokens = Math.min(Math.max(Number(body.maxTokens ?? 4096), 1), 8192);
+
   try {
     const res = await fetch(`${API_BASE}/billing/llm`, {
       method: 'POST',
@@ -20,9 +33,9 @@ export async function POST(req: NextRequest) {
         'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
-        model: body.model ?? 'claude-sonnet-4-20250514',
+        model,
         messages: body.messages,
-        maxTokens: body.maxTokens ?? 4096,
+        maxTokens,
         temperature: body.temperature ?? 0.7,
         agentName: body.agentName ?? 'fz-assistante',
       }),

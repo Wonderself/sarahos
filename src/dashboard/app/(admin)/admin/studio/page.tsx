@@ -509,7 +509,7 @@ function HistoryTab() {
             </div>
             {preview.type === 'photo' && preview.result_url && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={preview.result_url} alt="generated" style={{ width: '100%', borderRadius: 8, marginBottom: 12 }} />
+              <img src={preview.result_url} alt={`Image générée par IA : ${preview.prompt?.slice(0, 80) || 'studio'}`} style={{ width: '100%', borderRadius: 8, marginBottom: 12 }} />
             )}
             {preview.type === 'video' && preview.result_url && (
               <video src={preview.result_url} controls style={{ width: '100%', borderRadius: 8, marginBottom: 12 }} />
@@ -651,7 +651,7 @@ function PhotoLab({ photoModels }: { photoModels: ModelConfig[] }) {
       {result && (
         <div style={{ marginTop: 16 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={result.imageUrl} alt="result" style={{ width: '100%', borderRadius: 8, marginBottom: 8 }} />
+          <img src={result.imageUrl} alt={`Résultat de génération IA : ${prompt?.slice(0, 80) || 'image studio'}`} style={{ width: '100%', borderRadius: 8, marginBottom: 8 }} />
           <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'var(--text-muted)', flexWrap: 'wrap' }}>
             <span>{fmtModel(result.model)}</span>
             <span>{result.width}×{result.height}</span>

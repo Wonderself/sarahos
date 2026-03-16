@@ -288,6 +288,7 @@ export default function SocialMediaPage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState('');
   const abortRef = useRef<AbortController | null>(null);
   const { data: savedPosts, setData: setSavedPosts } = useUserData<SavedPost[]>('social_posts', [], 'fz_social_posts');
   const [copySuccess, setCopySuccess] = useState(false);
@@ -336,92 +337,57 @@ export default function SocialMediaPage() {
 
     setIsGenerating(true);
     setGeneratedContent('');
+    setGenerateError('');
 
     const hashtagInstruction = hashtagMode === 'auto'
       ? 'Ajoute des hashtags pertinents automatiquement.'
       : `Utilise ces hashtags: ${manualHashtags}`;
 
-    const systemPrompt = `Tu es un expert en social media marketing. Genere un post optimise pour ${platform} au format ${postType}. Ton: ${tone}. Objectif: ${goal}. Le post doit etre en ${language}. Longueur souhaitee: ${length}. ${hashtagInstruction}. Inclus des emojis pertinents et des hashtags.`;
+    const enrichedBrief = `${brief.trim()}\n\nFormat: ${postType}. ${hashtagInstruction}`;
 
     try {
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
 
-      const res = await fetch('/api/chat/stream', {
+      const res = await fetch('/api/social', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session.token ? { 'Authorization': `Bearer ${session.token}` } : {}),
+        },
         body: JSON.stringify({
-          token: session.token,
-          model: 'claude-sonnet-4-20250514',
-          messages: [
-            { role: 'user', content: `${systemPrompt}\n\nSujet/Brief: ${brief}` }
-          ],
-          maxTokens: 2048,
-          temperature: 0.8,
-          agentName: 'fz-community',
+          action: 'generate',
+          platform,
+          tone,
+          goal,
+          length,
+          language: language || 'français',
+          brief: enrichedBrief,
         }),
         signal: controller.signal,
       });
 
       if (!res.ok) {
-        const err = await res.text();
-        setGeneratedContent(`Erreur: ${err}`);
-        setIsGenerating(false);
-        return;
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Erreur de generation');
       }
 
-      const reader = res.body?.getReader();
-      if (!reader) {
-        setGeneratedContent('Erreur: pas de stream disponible');
-        setIsGenerating(false);
-        return;
-      }
-
-      const decoder = new TextDecoder();
-      let accumulated = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6).trim();
-            if (data === '[DONE]') break;
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-                accumulated += parsed.delta.text;
-                setGeneratedContent(accumulated);
-              } else if (parsed.text) {
-                accumulated += parsed.text;
-                setGeneratedContent(accumulated);
-              } else if (parsed.content) {
-                accumulated = parsed.content;
-                setGeneratedContent(accumulated);
-              }
-            } catch {
-              if (data && data !== '[DONE]') {
-                accumulated += data;
-                setGeneratedContent(accumulated);
-              }
-            }
-          }
-        }
-      }
-
-      if (!accumulated) {
-        setGeneratedContent('Aucun contenu genere. Verifiez vos credits.');
+      const data = await res.json();
+      if (data.content) {
+        setGeneratedContent(data.content);
+      } else {
+        setGenerateError('Aucun contenu genere. Verifiez vos credits.');
       }
     } catch (err) {
-      setGeneratedContent(`Erreur de connexion: ${err instanceof Error ? err.message : 'inconnue'}`);
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        // User cancelled
+      } else {
+        setGenerateError(err instanceof Error ? err.message : 'Erreur de connexion');
+      }
+    } finally {
+      setIsGenerating(false);
     }
-
-    setIsGenerating(false);
   }
 
   function handleCopy() {
@@ -965,6 +931,13 @@ export default function SocialMediaPage() {
               )}
             </button>
           </div>
+
+          {/* Generation Error */}
+          {generateError && (
+            <div style={{ color: '#DC2626', fontSize: 14, padding: '10px 14px', background: 'rgba(220,38,38,0.06)', borderRadius: 8, border: '1px solid rgba(220,38,38,0.2)', marginBottom: 12 }}>
+              {generateError}
+            </div>
+          )}
 
           {/* Generated Content */}
           {generatedContent && (

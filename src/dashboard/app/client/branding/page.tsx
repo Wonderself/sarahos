@@ -338,7 +338,7 @@ export default function BrandingPage() {
           <h2 style={styles.cardTitle}>Logo</h2>
           {branding.logo ? (
             <div style={{ textAlign: 'center' }}>
-              <img src={branding.logo} alt="Logo" style={styles.logoPreview} />
+              <img src={branding.logo} alt="Logo de votre entreprise" style={styles.logoPreview} />
               <br />
               <button style={styles.removeBtn} onClick={() => updateField('logo', '')}>
                 Supprimer le logo
@@ -478,7 +478,7 @@ export default function BrandingPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={styles.previewHeader}>
                 {branding.logo && (
-                  <img src={branding.logo} alt="" style={{ width: 40, height: 40, objectFit: 'contain' }} />
+                  <img src={branding.logo} alt="Aperçu du logo de votre marque" style={{ width: 40, height: 40, objectFit: 'contain' }} />
                 )}
                 <div>
                   <p style={{ ...styles.previewCompany, color: branding.primaryColor, fontFamily: branding.fontFamily }}>

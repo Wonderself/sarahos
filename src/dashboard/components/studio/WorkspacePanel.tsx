@@ -113,7 +113,7 @@ export default function WorkspacePanel(props: WorkspacePanelProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={props.avatarUrl}
-                alt="Avatar preview"
+                alt="Aperçu de l'avatar généré"
                 style={{ maxWidth: 200, maxHeight: 200, borderRadius: 12, border: '1px solid #e5e7eb' }}
                 onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />

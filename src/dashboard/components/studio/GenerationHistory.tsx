@@ -145,7 +145,7 @@ export default function GenerationHistory({ onReusePrompt }: Props) {
                 <div style={{ display: 'flex', gap: 12 }}>
                   <img
                     src={entry.imageUrl}
-                    alt=""
+                    alt={`Image générée : ${entry.prompt.slice(0, 80)}`}
                     style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8 }}
                   />
                   <div style={{ flex: 1 }}>

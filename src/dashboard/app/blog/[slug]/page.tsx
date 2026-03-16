@@ -4,6 +4,7 @@ import PublicNav from '@/components/PublicNav';
 import PublicFooter from '@/components/PublicFooter';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { getArticleBySlug, getRelatedArticles, BLOG_CATEGORIES } from '@/lib/blog-data';
 
 export default function BlogArticlePage() {
@@ -11,6 +12,71 @@ export default function BlogArticlePage() {
   const slug = typeof params.slug === 'string' ? params.slug : Array.isArray(params.slug) ? params.slug[0] : '';
   const article = getArticleBySlug(slug);
   const related = article ? getRelatedArticles(slug, 3) : [];
+
+  // Dynamic metadata for SEO
+  useEffect(() => {
+    if (!article) return;
+
+    // Update page title
+    document.title = `${article.title} — Freenzy.io Blog`;
+
+    // Update or create meta description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', article.excerpt);
+
+    // Update Open Graph tags
+    const ogTags: Record<string, string> = {
+      'og:title': article.title,
+      'og:description': article.excerpt,
+      'og:type': 'article',
+      'og:url': `https://freenzy.io/blog/${article.slug}`,
+    };
+
+    for (const [property, content] of Object.entries(ogTags)) {
+      let tag = document.querySelector(`meta[property="${property}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute('property', property);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    }
+
+    // Add JSON-LD structured data
+    const schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.id = 'blog-article-schema';
+    schemaScript.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: article.title,
+      description: article.excerpt,
+      author: { '@type': 'Person', name: article.author },
+      datePublished: article.publishedAt,
+      publisher: { '@type': 'Organization', name: 'Freenzy.io' },
+    });
+    document.head.appendChild(schemaScript);
+
+    return () => {
+      // Restore default title on unmount
+      document.title = 'Blog — Guides IA, Tutoriels & Retours d\'Expérience | Freenzy.io';
+
+      // Remove JSON-LD script
+      const existingSchema = document.getElementById('blog-article-schema');
+      if (existingSchema) existingSchema.remove();
+
+      // Reset OG tags
+      for (const property of Object.keys(ogTags)) {
+        const tag = document.querySelector(`meta[property="${property}"]`);
+        if (tag) tag.remove();
+      }
+    };
+  }, [article]);
   const accentGradient = 'linear-gradient(135deg, #7c3aed, #06b6d4)';
 
   if (!article) {

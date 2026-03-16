@@ -129,7 +129,7 @@ export default function SecurityPage() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={qrCode}
-                alt="QR Code 2FA"
+                alt="QR Code pour configurer l'authentification à deux facteurs"
                 style={{ borderRadius: 8, marginBottom: 12, border: '1px solid var(--border-primary)', maxWidth: 200 }}
               />
             )}

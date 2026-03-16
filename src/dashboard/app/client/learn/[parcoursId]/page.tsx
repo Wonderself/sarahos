@@ -835,7 +835,7 @@ export default function ParcoursDetailPage() {
         diplomaTitle: parcours!.diplomaTitle,
         date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
         score: avgScore,
-        totalXP: parcours!.totalXP,
+        totalXP: progress.totalXP,
         color: parcours!.color,
         modulesCompleted: parcours!.modules.length,
         totalModules: parcours!.modules.length,

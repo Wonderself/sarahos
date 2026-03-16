@@ -60,9 +60,9 @@ const FEATURE_ICONS: Record<string, string> = {
 };
 const PIE_COLORS = ['#1A1A1A', '#6B6B6B', '#9B9B9B', '#BFBFBF', '#4A4A4A', '#787878', '#A0A0A0'];
 const MODEL_PRICES: ModelPrice[] = [
-  { model: 'Claude Haiku 4.5', inputPer1M: 0.80, outputPer1M: 4.00 },
-  { model: 'Claude Sonnet 4.6', inputPer1M: 3.00, outputPer1M: 15.00 },
-  { model: 'Claude Opus 4.6', inputPer1M: 15.00, outputPer1M: 75.00 },
+  { model: 'Claude Haiku 4.5', inputPer1M: 1.00, outputPer1M: 5.00 },
+  { model: 'Claude Sonnet 4', inputPer1M: 3.00, outputPer1M: 15.00 },
+  { model: 'Claude Opus 4.6', inputPer1M: 5.00, outputPer1M: 25.00 },
 ];
 const TABS = ['Vue mensuelle', 'Par feature', 'Auto-topup', 'Tarification'] as const;
 type Tab = typeof TABS[number];

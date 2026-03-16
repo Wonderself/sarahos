@@ -1110,9 +1110,12 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── PHONE (<768px) ─── */
 @media (max-width: 767px) {
-  /* Hide emoji rail completely on phone */
+  /* Phone: show emoji rail, always visible fixed left */
   .emoji-rail {
-    display: none !important;
+    display: flex !important;
+    position: fixed !important;
+    width: 56px;
+    z-index: 200 !important;
   }
 
   /* Hide mobile topbar */
@@ -1120,42 +1123,42 @@ a { color: inherit; text-decoration: none; }
     display: none !important;
   }
 
-  /* Content takes full width */
+  /* Content offset by emoji rail width */
   .client-main-content {
-    margin-left: 0 !important;
+    margin-left: 56px !important;
     padding-top: 0 !important;
   }
   .main-content {
-    margin-left: 0 !important;
+    margin-left: 56px !important;
   }
 
-  /* Sidebar: full overlay from left edge */
+  /* Sidebar: attached popup right of emoji rail */
   .client-sidebar {
     position: fixed !important;
     top: 0;
-    left: 0 !important;
+    left: 56px !important;
     bottom: 0;
-    width: 280px !important;
-    min-width: 280px !important;
-    max-width: 85vw !important;
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: calc(85vw - 56px) !important;
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 200;
+    transition: transform 0.25s ease;
+    z-index: 199;
     background: #fff;
     box-shadow: 4px 0 16px rgba(0,0,0,0.1);
   }
   .client-sidebar.sidebar-expanded {
     transform: translateX(0);
-    left: 0 !important;
+    left: 56px !important;
   }
 
-  /* Overlay covers everything from left edge */
+  /* Overlay starts after emoji rail */
   .sidebar-overlay {
-    left: 0 !important;
-    z-index: 199;
+    left: 56px !important;
+    z-index: 198;
   }
 
-  /* Show section emojis in sidebar (since no emoji rail on phone) */
+  /* Show section emojis in sidebar */
   .client-sidebar .section-emoji-label {
     display: inline !important;
   }

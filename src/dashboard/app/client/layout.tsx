@@ -599,7 +599,24 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('storage', onFavChange);
   }, []);
 
-  useEffect(() => { setSidebarExpanded(false); }, [pathname]);
+  // Close sidebar on navigation (phone only)
+  useEffect(() => { if (deviceType === 'phone') setSidebarExpanded(false); }, [pathname, deviceType]);
+
+  // Close sidebar on scroll (phone only)
+  useEffect(() => {
+    if (deviceType !== 'phone') return;
+    const mainEl = document.querySelector('.client-main-content');
+    if (!mainEl) return;
+    const handleScroll = () => {
+      if (sidebarExpanded) setSidebarExpanded(false);
+    };
+    mainEl.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      mainEl.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [deviceType, sidebarExpanded]);
 
   // SSE — real-time notifications
   useEffect(() => {
@@ -926,36 +943,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
     )}
     <div style={{ display: 'flex', minHeight: '100dvh', paddingTop: isImpersonating ? 40 : 0 }}>
-      {/* Phone floating menu button — small "f." button top-left */}
-      {isPhone && !sidebarExpanded && (
-        <button
-          onClick={() => setSidebarExpanded(true)}
-          style={{
-            position: 'fixed',
-            top: 8,
-            left: 8,
-            zIndex: 150,
-            width: 40,
-            height: 40,
-            borderRadius: 10,
-            background: '#fff',
-            border: '1px solid #E5E5E5',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 14,
-            fontWeight: 800,
-            color: '#1A1A1A',
-            fontFamily: 'system-ui',
-          }}
-          aria-label="Menu"
-        >
-          f.
-        </button>
-      )}
-
       {/* Sidebar Overlay — click outside to close (phone only) */}
       {sidebarExpanded && isPhone && (
         <div
@@ -964,8 +951,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         />
       )}
 
-      {/* Emoji Rail — only on desktop (>1024px), hidden on phone+tablet */}
-      {deviceType === 'desktop' && (() => {
+      {/* Emoji Rail — visible on desktop + phone (hidden on tablet via CSS) */}
+      {deviceType !== 'tablet' && (() => {
         const navCtx = getCurrentNavContext(pathname, visibleSections);
 
         // On emoji click: open sidebar and scroll to that section

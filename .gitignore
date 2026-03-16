@@ -20,3 +20,19 @@ scripts/fix-*.js
 scripts/fix-*.py
 scripts/replace-*.py
 scripts/figma-*.js
+
+# Sensitive/internal docs
+AUDIT-RESULTS.md
+COWORK-PROGRESS.md
+VEILLE-API-2026.md
+FREENZY-*.md
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Credentials
+credentials.json
+*.key
+*.pem

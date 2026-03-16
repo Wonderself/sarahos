@@ -274,10 +274,10 @@ export default function StudioPage() {
             📸 Photo
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '6px 16px', fontSize: 12 }}>
-            <div style={{ color: CU.textSecondary }}>Generation image (Nano Banana)</div>
-            <div style={{ color: CU.text, fontWeight: 600, textAlign: 'right' as const }}>~10 credits</div>
-            <div style={{ color: CU.textSecondary }}>Generation image HD</div>
-            <div style={{ color: CU.text, fontWeight: 600, textAlign: 'right' as const }}>~15 credits</div>
+            <div style={{ color: CU.textSecondary }}>Génération image (fal.ai Flux Schnell)</div>
+            <div style={{ color: CU.text, fontWeight: 600, textAlign: 'right' as const }}>8 crédits</div>
+            <div style={{ color: CU.textSecondary }}>Génération image HD (fal.ai Flux Dev)</div>
+            <div style={{ color: CU.text, fontWeight: 600, textAlign: 'right' as const }}>12 crédits</div>
           </div>
         </div>
 

@@ -750,7 +750,7 @@ export default function NewsAIPage() {
               📚 <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>Archives</span>
             </div>
             <div style={{ fontSize: 11, color: C.textMuted }}>
-              Cette veille est generee automatiquement par Freenzy.io
+              Cette veille est générée automatiquement par Freenzy.io
             </div>
           </div>
         </div>

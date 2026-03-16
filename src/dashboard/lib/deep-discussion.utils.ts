@@ -10,7 +10,7 @@ import { ALL_AGENTS, buildSystemPrompt } from './agent-config';
 import type { AgentTypeId } from './agent-config';
 
 export const MAX_DEEP_CONTEXT = 20;
-export const DEEP_DISCUSSION_MODEL = 'claude-opus-4-20250514';
+export const DEEP_DISCUSSION_MODEL = 'claude-opus-4-6';
 
 // ─── Tag Parsing ─────────────────────────────────────────────────────────────
 

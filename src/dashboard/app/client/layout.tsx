@@ -104,6 +104,7 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
       { href: '/client/personal', icon: 'person', label: 'Mes Assistants Perso', visible: true, order: 1 },
       { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser', visible: true, order: 2 },
       { href: '/client/modules', icon: 'inventory_2', label: 'Mes modules', visible: true, order: 3 },
+      { href: '/client/memory', icon: 'psychology', label: 'Mémoire IA', visible: true, order: 4 },
     ],
   },
   {
@@ -119,6 +120,8 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
       { href: '/client/traduction', icon: 'translate', label: 'Traduction', visible: true, order: 4 },
       { href: '/client/qrcode', icon: 'qr_code_2', label: 'QR Codes', visible: true, order: 5 },
       { href: '/client/formations', icon: 'school', label: 'Formations', visible: true, order: 6 },
+      { href: '/client/learn', icon: 'menu_book', label: 'Apprendre', visible: true, order: 7 },
+      { href: '/client/skills', icon: 'bolt', label: 'Skills', visible: true, order: 8 },
     ],
   },
   {
@@ -131,7 +134,8 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
       { href: '/client/crm', icon: 'contacts', label: 'CRM', visible: true, order: 1 },
       { href: '/client/seo', icon: 'search', label: 'SEO Tracker', visible: true, order: 2 },
       { href: '/client/veille', icon: 'newspaper', label: 'Veille / RSS', visible: true, order: 3 },
-      { href: '/client/landing-builder', icon: 'web', label: 'Landing Builder', visible: true, order: 4 },
+      { href: '/client/news-ai', icon: 'auto_awesome', label: 'Actu IA', visible: true, order: 4 },
+      { href: '/client/landing-builder', icon: 'web', label: 'Landing Builder', visible: true, order: 5 },
     ],
   },
   {

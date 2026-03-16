@@ -153,12 +153,12 @@ export default function ReferralsPage() {
           <span style={emojiIcon(48)}>{'🎁'}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, color: CU.text }}>
-              Gagnez 20 EUR de crédits <span className="fz-logo-word">gratuits</span> !
+              Gagnez 20 crédits <span className="fz-logo-word">gratuits</span> !
             </div>
             <div style={{ fontSize: 14, lineHeight: 1.6, color: CU.textSecondary }}>
               Partagez votre lien d&apos;invitation. Pour chaque filleul qualifié, vous recevez
-              <strong style={{ color: CU.text }}> 20 EUR de crédits </strong>
-              (10 EUR/mois sur 2 mois).
+              <strong style={{ color: CU.text }}> 20 crédits </strong>
+              (10 crédits/mois sur 2 mois). Votre filleul reçoit aussi 20 crédits !
             </div>
           </div>
         </div>
@@ -267,7 +267,7 @@ export default function ReferralsPage() {
             { step: '1', emoji: '🔗', title: 'Partagez', desc: 'Envoyez votre lien à vos amis et collègues' },
             { step: '2', emoji: '✍️', title: 'Inscription', desc: 'Votre ami s\'inscrit via votre lien' },
             { step: '3', emoji: '📊', title: 'Utilisation', desc: 'Votre filleul utilise Freenzy.io pendant 2 mois' },
-            { step: '4', emoji: '💰', title: 'Récompense', desc: '20 EUR de crédits pour vous (10 EUR/mois)' },
+            { step: '4', emoji: '💰', title: 'Récompense', desc: '20 crédits pour vous et 20 pour votre filleul' },
           ].map(s => (
             <div key={s.step} style={{ textAlign: 'center', padding: '12px 8px' }}>
               <div style={{
@@ -288,7 +288,7 @@ export default function ReferralsPage() {
           borderRadius: 8, marginTop: 16, padding: '10px 14px',
         }}>
           <div style={{ fontSize: 12, lineHeight: 1.6, color: CU.textMuted }}>
-            <strong style={{ color: CU.textSecondary }}>Condition :</strong> Votre filleul doit dépenser au moins 9 EUR
+            <strong style={{ color: CU.textSecondary }}>Condition :</strong> Votre filleul doit utiliser au moins 5 crédits
             de tokens pendant 2 mois consécutifs pour que la récompense soit validée.
           </div>
         </div>

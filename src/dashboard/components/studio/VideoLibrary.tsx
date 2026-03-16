@@ -178,6 +178,7 @@ export default function VideoLibrary({ highlightedId, onReuseScript }: VideoLibr
               <video
                 src={expandedItem.url}
                 controls
+                aria-label={expandedItem.script ? `Vidéo : ${expandedItem.script.slice(0, 60)}` : 'Vidéo générée par IA'}
                 style={{
                   width: '100%', borderRadius: 10, border: '1px solid #e5e7eb',
                   marginBottom: 12, maxHeight: 240, background: '#000',

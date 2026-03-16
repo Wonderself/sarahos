@@ -1,0 +1,135 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "free": "Free",
+    "credits": "credits",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "noResults": "No results",
+    "seeMore": "See more",
+    "seeLess": "See less"
+  },
+  "nav": {
+    "home": "Home",
+    "chat": "Chat",
+    "agents": "AI Assistants",
+    "documents": "Documents",
+    "studio": "Creative Studio",
+    "discussions": "Deep Discussions",
+    "formations": "Training",
+    "learn": "Learn",
+    "news": "AI News",
+    "settings": "Settings",
+    "account": "My Account",
+    "notifications": "Notifications",
+    "logout": "Log out",
+    "login": "Sign in",
+    "register": "Create account",
+    "try": "Try for free"
+  },
+  "landing": {
+    "hero": {
+      "title1": "Use",
+      "titleHighlight": "AI.",
+      "title2": "Simply.",
+      "subtitle": "Over 100 specialized AI assistants to automate your daily professional tasks. Documents, emails, social media, telephony — everything included.",
+      "cta": "Try for free",
+      "ctaSecondary": "See the demo",
+      "badge": "100% free — 50 credits included"
+    },
+    "features": {
+      "title": "What does it actually do? 🤔",
+      "subtitle": "A glimpse of what your assistants do for you, automatically."
+    },
+    "dashboard": {
+      "title": "Your dashboard, tailored to your profession 🎯",
+      "subtitle": "A smart dashboard that adapts to your profession and goals."
+    },
+    "professions": {
+      "title": "Whatever your profession 🎯",
+      "subtitle": "Freenzy adapts to 50+ professions with dedicated assistants."
+    },
+    "steps": {
+      "title": "Up and running in 2 minutes ⚡",
+      "subtitle": "No training needed, no complex setup."
+    },
+    "formations": {
+      "title": "Learn for free 🎓",
+      "subtitle": "Free AI training courses with quizzes, exercises and certificates."
+    },
+    "news": {
+      "title": "AI news, summarized for you 📰",
+      "subtitle": "Your daily AI briefing, summarized in 2 minutes."
+    },
+    "pricing": {
+      "title": "Transparent and straightforward 💎",
+      "subtitle": "No subscription. Only pay for the AI tokens you consume.",
+      "free": "Free forever",
+      "freeDesc": "50 credits included at signup",
+      "noSub": "No subscription",
+      "noSubDesc": "Only pay for what you use",
+      "commission": "0% commission",
+      "commissionDesc": "For the first 5,000 users, locked for life"
+    },
+    "faq": {
+      "title": "Questions? 💬",
+      "viewAll": "See all 100+ questions"
+    },
+    "cta": {
+      "title": "Ready to transform your workflow?",
+      "subtitle": "Join the entrepreneurs saving 10h per week with AI.",
+      "button": "Start for free"
+    }
+  },
+  "auth": {
+    "loginTitle": "Welcome back 👋",
+    "loginSubtitle": "Sign in to your Freenzy account",
+    "email": "Email address",
+    "password": "Password",
+    "loginButton": "Sign in",
+    "registerButton": "Create account",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "orContinueWith": "or continue with"
+  },
+  "dashboard": {
+    "welcome": "Hello {{name}} 👋",
+    "credits": "{{count}} credits remaining",
+    "quickActions": "Quick actions",
+    "recentActivity": "Recent activity",
+    "agents": "Your assistants"
+  },
+  "chat": {
+    "placeholder": "Ask your question...",
+    "thinking": "Assistant is thinking...",
+    "thinkingDeep": "🧠 Opus is thinking deeply...",
+    "send": "Send",
+    "newChat": "New conversation",
+    "history": "History"
+  },
+  "footer": {
+    "product": "Product",
+    "features": "Features",
+    "useCases": "Use Cases",
+    "legal": "Legal",
+    "madeWith": "Made with ❤️ by Freenzy.io",
+    "copyright": "© 2026 Freenzy.io — All rights reserved"
+  }
+}

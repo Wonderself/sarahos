@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const NAV_LINKS = [
   { href: '/demo', label: 'Démo' },
@@ -214,6 +215,7 @@ export default function PublicNav() {
               {link.label}
             </Link>
           ))}
+          <LanguageSwitcher />
           <div style={{ width: 1, height: 16, background: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)', margin: '0 4px' }} />
           <Link
             href="/login"

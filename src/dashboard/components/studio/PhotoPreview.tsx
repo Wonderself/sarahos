@@ -119,7 +119,7 @@ export default function PhotoPreview({ generationId, onComplete }: PhotoPreviewP
         <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #e5e7eb' }}>
           <img
             src={imageUrl}
-            alt="Generated"
+            alt="Photo générée par IA"
             style={{ width: '100%', display: 'block' }}
           />
         </div>

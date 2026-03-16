@@ -1,0 +1,135 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "back": "Retour",
+    "next": "Suivant",
+    "close": "Fermer",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "yes": "Oui",
+    "no": "Non",
+    "or": "ou",
+    "and": "et",
+    "free": "Gratuit",
+    "credits": "crédits",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "noResults": "Aucun résultat",
+    "seeMore": "Voir plus",
+    "seeLess": "Voir moins"
+  },
+  "nav": {
+    "home": "Accueil",
+    "chat": "Chat",
+    "agents": "Assistants IA",
+    "documents": "Documents",
+    "studio": "Studio Créatif",
+    "discussions": "Discussions",
+    "formations": "Formations",
+    "learn": "Apprendre",
+    "news": "Actu IA",
+    "settings": "Paramètres",
+    "account": "Mon Compte",
+    "notifications": "Notifications",
+    "logout": "Déconnexion",
+    "login": "Se connecter",
+    "register": "Créer un compte",
+    "try": "Tester gratuitement"
+  },
+  "landing": {
+    "hero": {
+      "title1": "Utilisez",
+      "titleHighlight": "l'IA.",
+      "title2": "Simplement.",
+      "subtitle": "Plus de 100 assistants IA spécialisés pour automatiser votre quotidien professionnel. Documents, emails, réseaux sociaux, téléphonie — tout est inclus.",
+      "cta": "Tester gratuitement",
+      "ctaSecondary": "Voir la démo",
+      "badge": "100% gratuit — 50 crédits offerts"
+    },
+    "features": {
+      "title": "Concrètement, ça fait quoi ? 🤔",
+      "subtitle": "Un aperçu de ce que vos assistants font pour vous, automatiquement."
+    },
+    "dashboard": {
+      "title": "Votre dashboard, adapté à votre métier 🎯",
+      "subtitle": "Un tableau de bord intelligent qui s'adapte à votre profession et vos objectifs."
+    },
+    "professions": {
+      "title": "Quel que soit votre métier 🎯",
+      "subtitle": "Freenzy s'adapte à 50+ professions avec des assistants dédiés."
+    },
+    "steps": {
+      "title": "Opérationnel en 2 minutes ⚡",
+      "subtitle": "Pas de formation, pas de configuration compliquée."
+    },
+    "formations": {
+      "title": "Formez-vous gratuitement 🎓",
+      "subtitle": "Des parcours de formation IA gratuits avec quiz, exercices et diplômes."
+    },
+    "news": {
+      "title": "L'actu IA, résumée pour vous 📰",
+      "subtitle": "Votre veille IA quotidienne, résumée en 2 minutes."
+    },
+    "pricing": {
+      "title": "Transparent et sans surprise 💎",
+      "subtitle": "Pas d'abonnement. Payez uniquement les tokens IA consommés.",
+      "free": "Gratuit pour toujours",
+      "freeDesc": "50 crédits offerts à l'inscription",
+      "noSub": "Pas d'abonnement",
+      "noSubDesc": "Payez uniquement ce que vous consommez",
+      "commission": "0% commission",
+      "commissionDesc": "Pour les 5000 premiers utilisateurs, verrouillé à vie"
+    },
+    "faq": {
+      "title": "Des questions ? 💬",
+      "viewAll": "Voir les 100+ questions"
+    },
+    "cta": {
+      "title": "Prêt à transformer votre quotidien ?",
+      "subtitle": "Rejoignez les entrepreneurs qui gagnent 10h par semaine grâce à l'IA.",
+      "button": "Commencer gratuitement"
+    }
+  },
+  "auth": {
+    "loginTitle": "Content de vous revoir 👋",
+    "loginSubtitle": "Connectez-vous à votre espace Freenzy",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "loginButton": "Se connecter",
+    "registerButton": "Créer un compte",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "orContinueWith": "ou continuer avec"
+  },
+  "dashboard": {
+    "welcome": "Bonjour {{name}} 👋",
+    "credits": "{{count}} crédits restants",
+    "quickActions": "Actions rapides",
+    "recentActivity": "Activité récente",
+    "agents": "Vos assistants"
+  },
+  "chat": {
+    "placeholder": "Posez votre question...",
+    "thinking": "L'assistant réfléchit...",
+    "thinkingDeep": "🧠 Opus réfléchit en profondeur...",
+    "send": "Envoyer",
+    "newChat": "Nouvelle conversation",
+    "history": "Historique"
+  },
+  "footer": {
+    "product": "Produit",
+    "features": "Fonctionnalités",
+    "useCases": "Cas d'usage",
+    "legal": "Légal",
+    "madeWith": "Fait avec ❤️ par Freenzy.io",
+    "copyright": "© 2026 Freenzy.io — Tous droits réservés"
+  }
+}

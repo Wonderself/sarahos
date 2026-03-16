@@ -107,6 +107,14 @@ export const NAV_EMOJIS: Record<string, string> = {
   whatsapp: '💚',
   profile: '🪪',
   settings: '⚙️',
+
+  // Nouvelles pages (Sprint Mars 2026 - batch 2)
+  learn: '📚',
+  memory: '🧠',
+  skills: '⚡',
+  'news-ai': '📰',
+  branding: '🎨',
+  prospection: '🎯',
 };
 
 // ─── Page Metadata (title, subtitle, helpText) ──────────────────────────────
@@ -371,12 +379,6 @@ export const PAGE_META: Record<string, PageMeta> = {
     subtitle: 'Configurez vos assistants',
     helpText: 'Ajustez le comportement, le ton et les capacités de chaque assistant.',
   },
-  visio: {
-    emoji: '🎥',
-    title: 'Appel vocal',
-    subtitle: 'Parlez à vos assistants',
-    helpText: 'Démarrez un appel vocal avec n\'importe quel assistant. Transcription en temps réel.',
-  },
   meeting: {
     emoji: '📆',
     title: 'Réunion',
@@ -515,6 +517,48 @@ export const PAGE_META: Record<string, PageMeta> = {
     title: 'Journal Perso',
     subtitle: 'Écrivez pour vous comprendre',
     helpText: 'Journal intime avec prompts guidés, analyse des émotions par l\'IA et bilans périodiques.',
+  },
+  learn: {
+    emoji: '📚',
+    title: 'Apprendre',
+    subtitle: 'Formations et parcours',
+    helpText: 'Suivez des formations IA avec quiz et diplômes',
+  },
+  memory: {
+    emoji: '🧠',
+    title: 'Mémoire IA',
+    subtitle: 'Base de connaissances',
+    helpText: 'Stockez des informations que vos assistants peuvent utiliser',
+  },
+  skills: {
+    emoji: '⚡',
+    title: 'Skills',
+    subtitle: 'Compétences IA',
+    helpText: 'Activez des compétences spécialisées pour vos assistants',
+  },
+  'news-ai': {
+    emoji: '📰',
+    title: 'Actu IA',
+    subtitle: 'Veille quotidienne',
+    helpText: 'Les dernières actualités de l\'intelligence artificielle',
+  },
+  branding: {
+    emoji: '🎨',
+    title: 'Branding',
+    subtitle: 'Identité visuelle',
+    helpText: 'Personnalisez votre logo, couleurs et ton de marque',
+  },
+  prospection: {
+    emoji: '🎯',
+    title: 'Prospection',
+    subtitle: 'Recherche de prospects',
+    helpText: 'Trouvez et qualifiez vos futurs clients',
+  },
+  visio: {
+    emoji: '🎥',
+    title: 'Visioconférence',
+    subtitle: 'Appels vidéo IA',
+    helpText: 'Lancez des visioconférences avec vos assistants IA',
   },
 };
 

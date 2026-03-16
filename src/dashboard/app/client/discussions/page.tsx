@@ -471,6 +471,7 @@ export default function DiscussionsPage() {
           messages: apiMessages,
           maxTokens: 1500,
           agentName: currentAgentId !== 'custom-discussion' ? currentAgentId : 'fz-dg',
+          thinking: { type: 'enabled', budget_tokens: 8192 },
         }),
         signal: controller.signal,
       });
@@ -826,10 +827,10 @@ export default function DiscussionsPage() {
 
   // Loading text based on phase
   const loadingText = loadingPhase === 2
-    ? 'Opus réfléchit en profondeur...'
+    ? '\u{1F9E0} Opus réfléchit en profondeur...'
     : loadingPhase === 1
-      ? 'Analyse approfondie en cours...'
-      : 'En réflexion...';
+      ? '\u{1F9E0} Extended Thinking activé — analyse approfondie...'
+      : '\u{1F9E0} Opus réfléchit en profondeur...';
 
   if (!checkIsAuthenticated()) {
     return (

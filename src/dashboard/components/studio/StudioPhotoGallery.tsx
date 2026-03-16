@@ -181,7 +181,7 @@ export default function StudioPhotoGallery({ onReusePrompt, highlightedUrl }: St
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={expandedEntry.imageUrl}
-                    alt=""
+                    alt={expandedEntry.prompt || 'Image générée par IA'}
                     style={{
                       width: 140, height: 140, objectFit: 'cover',
                       borderRadius: 10, border: '1px solid #e5e7eb', display: 'block',

@@ -7,6 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '../../../../lib/api-auth';
 
 type DocumentType = 'devis' | 'facture' | 'contrat' | 'rapport' | 'attestation';
 
@@ -19,6 +20,9 @@ interface RequestBody {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
   try {
     const body = (await req.json()) as RequestBody;
 

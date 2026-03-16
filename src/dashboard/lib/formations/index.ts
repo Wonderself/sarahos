@@ -36,6 +36,20 @@ import { parcoursComplianceOfficer, parcoursSystemsArchitect } from './formation
 // ─── New formations — Metier ────────────────────────────────
 import { parcoursPlombierIA, parcoursElectricienIA, parcoursAvocatIA, parcoursNotaireIA, parcoursDentisteIA } from './formation-new-metier-1';
 import { parcoursKineIA, parcoursArchitecteIA, parcoursPhotographeIA, parcoursGraphisteIA, parcoursDeveloppeurIA } from './formation-new-metier-2';
+import { parcoursComptableIA, parcoursImmoIA, parcoursCoiffeurIA } from './formation-new-metier-3';
+import { parcoursFleuristeIA, parcoursBoulangerIA, parcoursGaragisteIA } from './formation-new-metier-4';
+
+// ─── New formations — Business ──────────────────────────────
+import { parcoursOpticienIA, parcoursNegociation, parcoursManagement } from './formation-new-business-2';
+
+// ─── New formations — Productivité ──────────────────────────
+import { parcoursGTD, parcoursPomodoroAvance, parcoursNotionMastery } from './formation-new-productivite-1';
+
+// ─── New formations — Créativité ────────────────────────────
+import { parcoursEcritureCreative, parcoursStorytelling, parcoursPodcast } from './formation-new-creativite-1';
+
+// ─── New formations — Quotidien ─────────────────────────────
+import { parcoursCuisineIA, parcoursJardinageIA, parcoursBricolageIA } from './formation-new-quotidien-1';
 
 // ─── New formations — Tech ─────────────────────────────────
 import { parcoursPythonIA, parcoursAPIRest, parcoursBDD, parcoursDockerIA } from './formation-new-tech-1';
@@ -115,6 +129,29 @@ const availableParcours = [
   parcoursParentaliteIA,
   parcoursDevPerso,
   parcoursEcologieIA,
+  // New — Metier batch 3-4 (6)
+  parcoursComptableIA,
+  parcoursImmoIA,
+  parcoursCoiffeurIA,
+  parcoursFleuristeIA,
+  parcoursBoulangerIA,
+  parcoursGaragisteIA,
+  // New — Business (3)
+  parcoursOpticienIA,
+  parcoursNegociation,
+  parcoursManagement,
+  // New — Productivité (3)
+  parcoursGTD,
+  parcoursPomodoroAvance,
+  parcoursNotionMastery,
+  // New — Créativité (3)
+  parcoursEcritureCreative,
+  parcoursStorytelling,
+  parcoursPodcast,
+  // New — Quotidien batch 1 (3)
+  parcoursCuisineIA,
+  parcoursJardinageIA,
+  parcoursBricolageIA,
 ];
 
 // ---------------------------------------------------------------------------

@@ -92,6 +92,14 @@ export async function POST(req: NextRequest) {
         const data = await res.json();
         if (!res.ok) return NextResponse.json(data, { status: res.status });
 
+        // 2FA required — return tempToken without setting auth cookie
+        if (data.requires2FA) {
+          return NextResponse.json({
+            requires2FA: true,
+            tempToken: data.tempToken || data.token,
+          });
+        }
+
         const response = NextResponse.json({
           ...data,
           role: data.role,
@@ -105,6 +113,28 @@ export async function POST(req: NextRequest) {
       }
 
       return NextResponse.json({ error: 'Cle API ou email + mot de passe requis' }, { status: 400 });
+    }
+
+    // ── Verify 2FA ──
+    if (action === 'verify-2fa') {
+      const res = await fetch(`${API_BASE}/auth/verify-2fa`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tempToken: body.tempToken, code: body.code }),
+      });
+      const data = await res.json();
+      if (!res.ok) return NextResponse.json(data, { status: res.status });
+
+      const response = NextResponse.json({
+        ...data,
+        role: data.role,
+        email: data.email ?? '',
+        displayName: data.displayName ?? '',
+        userId: data.userId,
+        tier: data.tier,
+      });
+      if (data.token) setAuthCookie(response, data.token);
+      return response;
     }
 
     // ── Forgot Password ──

@@ -19,6 +19,17 @@ export default function LoginPage() {
   const [selectedAgents, setSelectedAgents] = useState<AgentTypeId[]>(['fz-repondeur']);
   const [registeredSession, setRegisteredSession] = useState<Record<string, unknown> | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [show2FA, setShow2FA] = useState(false);
+  const [tempToken, setTempToken] = useState('');
+  const [totpCode, setTotpCode] = useState('');
+  const [googleEnabled, setGoogleEnabled] = useState(false);
+
+  useEffect(() => {
+    // Check if Google OAuth is configured (env var exposed at build time)
+    fetch('/api/auth/google/status').then(() => setGoogleEnabled(true)).catch(() => {});
+    // Simpler: always show button, Google will show error if not configured
+    setGoogleEnabled(true);
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -26,11 +37,21 @@ export default function LoginPage() {
     const token = params.get('token');
     const emailConfirmed = params.get('emailConfirmed');
     const ref = params.get('ref');
+    const googleError = params.get('error');
 
     if (urlMode === 'register') setMode('register');
     else if (urlMode === 'reset' && token) { setMode('reset'); setResetToken(token); }
     if (emailConfirmed === 'true') setSuccess('Email confirme avec succes ! Vous pouvez maintenant vous connecter.');
     if (ref) setRefCode(ref);
+
+    // Handle Google OAuth errors
+    if (googleError === 'google_auth_failed') setError('Echec de l\'authentification Google. Veuillez reessayer.');
+    else if (googleError === 'google_backend_pending') {
+      const googleEmail = params.get('email');
+      setError('L\'authentification Google n\'est pas encore disponible sur le backend. Connectez-vous avec votre email' + (googleEmail ? ` (${googleEmail})` : '') + '.');
+      if (googleEmail) setEmail(googleEmail);
+    }
+    else if (googleError === 'google_error') setError('Une erreur est survenue avec Google. Veuillez reessayer.');
   }, []);
 
   function toggleAgentSelection(id: AgentTypeId) {
@@ -147,6 +168,14 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? `Erreur ${res.status}`); setLoading(false); return; }
+
+      // 2FA required — show TOTP verification step
+      if (data.requires2FA) {
+        setShow2FA(true);
+        setTempToken(data.tempToken || data.token);
+        setLoading(false);
+        return;
+      }
 
       localStorage.setItem('fz_session', JSON.stringify({
         token: data.token, userId: data.userId,
@@ -320,6 +349,100 @@ export default function LoginPage() {
         </div>
 
         <>
+          {show2FA ? (
+            <div>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A1A', marginBottom: 8, textAlign: 'center' }}>
+                {'Verification en deux etapes \uD83D\uDD10'}
+              </h2>
+              <p style={{ fontSize: 13, color: '#6B6B6B', textAlign: 'center', marginBottom: 24 }}>
+                Entrez le code a 6 chiffres de votre application d&apos;authentification.
+              </p>
+              {error && (
+                <div className="alert alert-danger" role="alert" style={{ marginBottom: 16, fontSize: 13 }}>{error}</div>
+              )}
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                placeholder="000000"
+                value={totpCode}
+                onChange={e => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                style={{
+                  width: '100%', padding: '14px 16px', borderRadius: 8,
+                  border: '1px solid #E5E5E5', fontSize: 24, textAlign: 'center',
+                  letterSpacing: '0.5em', fontWeight: 700, fontFamily: 'monospace',
+                  outline: 'none', boxSizing: 'border-box', marginBottom: 16,
+                }}
+                autoFocus
+              />
+              <button
+                onClick={async () => {
+                  if (totpCode.length !== 6) return;
+                  setLoading(true);
+                  setError('');
+                  try {
+                    const res = await fetch('/api/auth', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ action: 'verify-2fa', tempToken, code: totpCode }),
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.token) {
+                      localStorage.setItem('fz_session', JSON.stringify({
+                        token: data.token, userId: data.userId,
+                        email: data.email ?? email, displayName: data.displayName ?? '',
+                        role: data.role, tier: data.tier,
+                        activeAgents: data.activeAgents ?? ['fz-repondeur'],
+                        userNumber: data.userNumber ?? 0,
+                        commissionRate: data.commissionRate ?? 0,
+                        referralCode: data.referralCode ?? '',
+                      }));
+                      if (data.activeAgents) setActiveAgentIds(data.activeAgents);
+                      localStorage.setItem('fz_welcome_pending', 'true');
+                      const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+                      const safeRedirectPattern = /^\/(?:client|admin|system|infra)(?:\/|$)/;
+                      if (redirectParam && safeRedirectPattern.test(redirectParam) && !redirectParam.includes('//') && !redirectParam.includes('\\')) {
+                        window.location.href = redirectParam;
+                      } else if (data.role === 'admin') {
+                        window.location.href = '/admin';
+                      } else if (data.onboardingCompleted === false) {
+                        window.location.href = '/client/onboarding';
+                      } else {
+                        window.location.href = '/client/dashboard';
+                      }
+                    } else {
+                      setError(data.error || 'Code incorrect');
+                    }
+                  } catch {
+                    setError('Erreur de connexion');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={totpCode.length !== 6 || loading}
+                style={{
+                  width: '100%', padding: '12px', borderRadius: 8,
+                  background: totpCode.length === 6 ? '#1A1A1A' : '#E5E5E5',
+                  color: '#fff', border: 'none', cursor: 'pointer',
+                  fontSize: 14, fontWeight: 600, minHeight: 44,
+                }}
+              >
+                {loading ? 'Verification...' : 'Verifier'}
+              </button>
+              <button
+                onClick={() => { setShow2FA(false); setTotpCode(''); setTempToken(''); setError(''); }}
+                style={{
+                  width: '100%', marginTop: 12, padding: '10px',
+                  background: 'transparent', border: 'none', cursor: 'pointer',
+                  fontSize: 13, color: '#6B6B6B',
+                }}
+              >
+                {'← Retour a la connexion'}
+              </button>
+            </div>
+          ) : (
+          <>
           {success && (
             <div className="alert alert-success mb-16 text-md">{success}</div>
           )}
@@ -381,6 +504,44 @@ export default function LoginPage() {
               <div className="text-lg font-bold">Mot de passe oublie</div>
               <div className="text-md text-tertiary mt-4">Entrez votre email pour recevoir un lien de reinitialisation</div>
             </div>
+          )}
+
+          {/* Google OAuth */}
+          {googleEnabled && (mode === 'login' || mode === 'register') && (
+            <>
+              <button
+                onClick={() => { window.location.href = '/api/auth/google'; }}
+                type="button"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  padding: '12px 16px',
+                  borderRadius: 8,
+                  border: '1px solid #E5E5E5',
+                  background: '#fff',
+                  cursor: 'pointer',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: '#1A1A1A',
+                  fontFamily: 'inherit',
+                  marginBottom: 16,
+                  minHeight: 44,
+                  transition: 'border-color 0.15s',
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Continuer avec Google
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                <div style={{ flex: 1, height: 1, background: '#E5E5E5' }} />
+                <span style={{ fontSize: 12, color: '#9B9B9B' }}>ou</span>
+                <div style={{ flex: 1, height: 1, background: '#E5E5E5' }} />
+              </div>
+            </>
           )}
 
           {/* Form */}
@@ -543,6 +704,8 @@ export default function LoginPage() {
               Voir les tarifs — Tout est gratuit
             </a>
           </div>
+        </>
+          )}
         </>
 
         {/* Agent taglines */}

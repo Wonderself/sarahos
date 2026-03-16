@@ -4,13 +4,13 @@
 
 ---
 
-## Score Global : 87/100
+## Score Global : 85/100
 
 | Catégorie | Score | Détails |
 |-----------|-------|---------|
 | Responsive (iPhone 11) | 88/100 | Excellente base mobile-first |
 | Cohérence design | 93/100 | 7 pages sans CU sur 94 |
-| SEO | En cours | Audit en cours |
+| SEO | 75/100 | JSON-LD excellent, blog articles sans metadata unique |
 | Code qualité | En cours | Audit en cours |
 
 ---
@@ -92,9 +92,28 @@ L'ensemble du dashboard est **bien implémenté** pour mobile. Breakpoints corre
 
 ---
 
-## 3. Audit SEO — En cours
+## 3. Audit SEO — 75/100
 
-_Résultats à venir_
+### Points forts
+- ✅ Root metadata excellent (72+ keywords, OG 1200x630, Twitter cards)
+- ✅ JSON-LD complet (Organization, SoftwareApplication, FAQPage, BreadcrumbList)
+- ✅ 21 canonical URLs sur les pages publiques
+- ✅ PWA manifest + viewport correct
+
+### Issues trouvées
+
+**Haute priorité :**
+- Landing page : styled `<div>` au lieu de `<h1>/<h2>` sémantiques
+- Blog articles : pas de `generateMetadata` → metadata identique pour tous les articles
+- Client pages sans OG tags : discussions, formations, social
+
+**Moyenne priorité :**
+- Images sans alt text dans StudioPhotoGallery, PhotoPreview, AgentAvatar
+- Blog articles sans Article schema JSON-LD
+- Collections sans ItemList schema (agents, marketplace, discussions)
+
+**Basse priorité :**
+- Client pages sans canonical (acceptable car authentifiées)
 
 ---
 

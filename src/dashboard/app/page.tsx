@@ -7,7 +7,7 @@ import PublicFooter from '../components/PublicFooter';
 import { FAQ_CATEGORIES } from '../lib/faq-data';
 
 /* ═══════════════════════════════════════════════════════════
-   FREENZY.IO — Landing Page v4
+   FREENZY.IO — Landing Page v5
    12 sections, inline styles, mobile-first, Notion palette
    ═══════════════════════════════════════════════════════════ */
 
@@ -50,26 +50,167 @@ const FLOAT_EMOJIS = [
   { e: '🎯', top: '55%', left: '15%', size: 50, delay: 9 },
 ];
 
-// ─── Feature carousel columns
-const FEATURE_COLUMNS = [
-  { title: '📝 Documents', items: ['📄 Devis automatiques', '🧾 Factures PDF', '📑 Contrats', '📋 Attestations', '📝 Comptes-rendus', '📊 Rapports'] },
-  { title: '💬 Communication', items: ['📧 Emails professionnels', '⭐ Réponses avis Google', '💬 Messages WhatsApp', '📱 SMS de relance', '📰 Newsletter', '🎧 Support client'] },
-  { title: '📱 Réseaux sociaux', items: ['💼 Posts LinkedIn', '📸 Posts Instagram', '👥 Posts Facebook', '🐦 Threads Twitter', '📱 Stories', '📅 Calendrier éditorial'] },
-  { title: '📊 Analyse', items: ['🔍 Veille concurrentielle', '📈 Analyse de marché', '📊 Reporting', '🔎 SEO audit', '🎯 Prospection', '📋 Scoring leads'] },
-  { title: '🎨 Création', items: ['📸 Photos IA', '🎬 Vidéos avatars', '🎨 Logos et branding', '🛍️ Fiches produits', '📄 CV professionnels', '📊 Présentations'] },
-  { title: '🤖 Automatisation', items: ['☀️ Briefing matinal', '🔔 Rappels RDV', '🔄 Relances auto', '✅ Validation workflows', '📧 Emails séquencés', '🚨 Alertes intelligentes'] },
+// ─── Tool columns for Section 2
+const TOOL_COLUMNS = [
+  { title: '📝 Documents', color: '#3B82F6', tools: [
+    { emoji: '📄', name: 'Devis automatiques', desc: 'Générez des devis professionnels en décrivant le travail. Mentions légales, TVA, numérotation inclus.' },
+    { emoji: '🧾', name: 'Factures PDF', desc: 'Transformez vos devis en factures. Export PDF avec votre branding.' },
+    { emoji: '📑', name: 'Contrats', desc: 'Contrats de prestation, NDA, partenariat — générés et personnalisés par l\'IA.' },
+    { emoji: '📋', name: 'Comptes-rendus', desc: 'Résumés de réunion structurés avec actions et responsables.' },
+    { emoji: '📊', name: 'Rapports', desc: 'Rapports d\'analyse, bilans, études de marché formatés.' },
+    { emoji: '📝', name: 'Business Plan', desc: 'Business plan complet avec analyse de marché et projections financières.' },
+  ]},
+  { title: '💬 Communication', color: '#10B981', tools: [
+    { emoji: '📧', name: 'Emails pro', desc: 'Emails professionnels adaptés au contexte : relance, prospection, support.' },
+    { emoji: '⭐', name: 'Réponses avis Google', desc: 'Répondez aux avis clients en un clic, ton adapté positif ou négatif.' },
+    { emoji: '💬', name: 'WhatsApp Business', desc: 'Messages WhatsApp automatisés : confirmations, rappels, suivi.' },
+    { emoji: '📱', name: 'SMS de relance', desc: 'Relances automatiques J+3, J+7, J+14 pour vos devis en attente.' },
+    { emoji: '📰', name: 'Newsletter', desc: 'Création et envoi de newsletters personnalisées par segment.' },
+    { emoji: '🎧', name: 'Support client', desc: 'Chat support IA qui répond 24/7 à vos clients.' },
+  ]},
+  { title: '📱 Réseaux sociaux', color: '#8B5CF6', tools: [
+    { emoji: '💼', name: 'Posts LinkedIn', desc: 'Posts LinkedIn format hook + story + leçon optimisés pour l\'algorithme.' },
+    { emoji: '📸', name: 'Posts Instagram', desc: 'Légendes Instagram avec hashtags optimisés et appel à l\'action.' },
+    { emoji: '👥', name: 'Posts Facebook', desc: 'Publications Facebook engageantes avec questions et sondages.' },
+    { emoji: '🐦', name: 'Threads Twitter/X', desc: 'Threads viraux en 5-10 tweets avec hooks percutants.' },
+    { emoji: '🎬', name: 'Scripts TikTok', desc: 'Scripts vidéo courts avec hook dans les 3 premières secondes.' },
+    { emoji: '📅', name: 'Calendrier éditorial', desc: 'Planning de publication sur 4 semaines, multi-plateformes.' },
+  ]},
+  { title: '📊 Analyse', color: '#F59E0B', tools: [
+    { emoji: '🔍', name: 'Veille concurrentielle', desc: 'Analyse de vos concurrents : positionnement, prix, forces/faiblesses.' },
+    { emoji: '📈', name: 'Analyse de marché', desc: 'TAM/SAM/SOM, tendances sectorielles, opportunités identifiées.' },
+    { emoji: '📊', name: 'Reporting', desc: 'Tableaux de bord KPI automatisés avec alertes et recommandations.' },
+    { emoji: '🔎', name: 'Audit SEO', desc: 'Audit technique + contenu + backlinks avec plan d\'action priorisé.' },
+    { emoji: '🎯', name: 'Prospection', desc: 'Identification et scoring de leads qualifiés par secteur et zone.' },
+    { emoji: '📋', name: 'Scoring leads', desc: 'Attribution de scores aux prospects basée sur le comportement et le profil.' },
+  ]},
+  { title: '🎨 Création', color: '#EC4899', tools: [
+    { emoji: '📸', name: 'Photos IA', desc: 'Génération de photos professionnelles avec fal.ai Flux (8 crédits).' },
+    { emoji: '🎬', name: 'Vidéos avatars', desc: 'Vidéos avec avatar parlant via D-ID (25 crédits).' },
+    { emoji: '🎨', name: 'Logos et branding', desc: 'Création d\'identité visuelle : logo, palette, typographie.' },
+    { emoji: '🛍️', name: 'Fiches produits', desc: 'Descriptions e-commerce optimisées SEO avec bénéfices et specs.' },
+    { emoji: '📄', name: 'CV professionnels', desc: 'CV structurés avec mise en valeur des compétences clés.' },
+    { emoji: '📊', name: 'Présentations', desc: 'Slides de présentation avec structure narrative et speaker notes.' },
+  ]},
+  { title: '🤖 Automatisation', color: '#0EA5E9', tools: [
+    { emoji: '☀️', name: 'Briefing matinal', desc: 'Chaque matin, un résumé personnalisé : agenda, KPIs, tâches prioritaires.' },
+    { emoji: '🔔', name: 'Rappels RDV', desc: 'Rappels automatiques par SMS/email/WhatsApp avant chaque rendez-vous.' },
+    { emoji: '🔄', name: 'Relances auto', desc: 'Relances clients automatiques avec escalade progressive.' },
+    { emoji: '✅', name: 'Workflows', desc: 'Chaînes d\'actions automatisées : si X alors Y, validation, notification.' },
+    { emoji: '📧', name: 'Emails séquencés', desc: 'Séquences email J+0, J+2, J+5 déclenchées par événement.' },
+    { emoji: '🚨', name: 'Alertes intelligentes', desc: 'Notifications proactives : stock bas, client inactif, échéance proche.' },
+  ]},
+  { title: '🎓 Formation', color: '#6366F1', tools: [
+    { emoji: '📚', name: '59 parcours', desc: '59 formations complètes avec quiz, exercices et diplômes téléchargeables.' },
+    { emoji: '🎮', name: 'Mini-jeux', desc: '10 jeux éducatifs : Motus, Quiz, Memory, 2048, Snake, Tetris...' },
+    { emoji: '🏆', name: 'Badges et XP', desc: 'Système de progression avec 19 badges, niveaux et classement.' },
+    { emoji: '📰', name: 'Veille IA', desc: 'Actualités IA quotidiennes résumées en 2 minutes.' },
+    { emoji: '🧠', name: 'Discussions profondes', desc: '91 sujets de réflexion avec l\'IA Opus en Extended Thinking.' },
+    { emoji: '⏱️', name: 'Pomodoro', desc: 'Timer Pomodoro avec historique, stats et XP.' },
+  ]},
+  { title: '💼 Business', color: '#D97706', tools: [
+    { emoji: '💰', name: 'Facturation', desc: 'Création de factures, devis, gestion clients et TVA automatique.' },
+    { emoji: '📇', name: 'CRM', desc: 'Gestion complète des contacts, deals et pipeline commercial.' },
+    { emoji: '📋', name: 'Kanban', desc: 'Tableaux de bord Kanban avec tâches, priorités et assignation.' },
+    { emoji: '🔍', name: 'SEO Tracker', desc: 'Suivi de positionnement et recommandations d\'optimisation.' },
+    { emoji: '🏗️', name: 'Landing Builder', desc: 'Création de pages d\'atterrissage optimisées conversion.' },
+    { emoji: '📊', name: 'Analytics', desc: 'Tableau de bord analytique avec métriques clés et tendances.' },
+  ]},
 ];
 
-// ─── Profession cards
+// ─── Dashboard carousel profiles for Section 3
+const DASHBOARD_PROFILES = [
+  {
+    label: 'Particulier 🏠',
+    greeting: 'Bonjour Julie 👋',
+    sidebar: ['💰 Budget', '🏋️ Sport', '🍳 Cuisine', '📓 Journal', '🎯 Habitudes'],
+    stats: [
+      { emoji: '💰', label: 'Budget du mois', value: '1 250€', bg: '#F0FFF4' },
+      { emoji: '🏋️', label: 'Séances sport', value: '12', bg: '#F0F7FF' },
+      { emoji: '📓', label: 'Notes', value: '34', bg: '#FFF8F0' },
+    ],
+  },
+  {
+    label: 'Artisan 🔧',
+    greeting: 'Bonjour Marc 👋',
+    sidebar: ['📄 Devis', '🔄 Relances', '📅 Planning', '⭐ Avis Google', '🧾 Factures'],
+    stats: [
+      { emoji: '📄', label: 'Devis envoyés', value: '8', bg: '#F0F7FF' },
+      { emoji: '🔄', label: 'Relances auto', value: '14', bg: '#FFF8F0' },
+      { emoji: '⭐', label: 'Avis traités', value: '6', bg: '#F0FFF4' },
+    ],
+  },
+  {
+    label: 'PME 🏢',
+    greeting: 'Bonjour Sophie 👋',
+    sidebar: ['📇 CRM', '👥 Équipe', '🧑‍💼 RH', '📊 Compta', '📣 Marketing', '💼 Commercial'],
+    stats: [
+      { emoji: '📇', label: 'Leads actifs', value: '47', bg: '#F0F7FF' },
+      { emoji: '👥', label: 'Collaborateurs', value: '12', bg: '#FFF8F0' },
+      { emoji: '📊', label: 'CA mensuel', value: '34k€', bg: '#F0FFF4' },
+    ],
+  },
+];
+
+// ─── Profession cards with detailed use cases
 const PROFILES = [
-  { emoji: '🔧', name: 'Artisan', count: 5, assistants: ['Devis automatique', 'Relance clients', 'Avis Google', 'Planning chantiers'] },
-  { emoji: '🏥', name: 'Santé', count: 5, assistants: ['Prise de RDV', 'Rappels patients', 'Comptes-rendus', 'Ordonnances'] },
-  { emoji: '🎨', name: 'Agence', count: 6, assistants: ['Brief créatif', 'Social media', 'Reporting client', 'Veille tendances'] },
-  { emoji: '🛒', name: 'E-commerce', count: 5, assistants: ['Fiches produits', 'SAV automatisé', 'Relance paniers', 'Analyse ventes'] },
-  { emoji: '🎯', name: 'Coach', count: 4, assistants: ['Planning séances', 'Suivi client', 'Contenu expert', 'Facturation'] },
-  { emoji: '🍽️', name: 'Restaurant', count: 4, assistants: ['Réservations', 'Menu du jour', 'Avis Google', 'Stocks'] },
-  { emoji: '⚖️', name: 'Libéral', count: 5, assistants: ['Contrats IA', 'Veille juridique', 'Facturation', 'Secrétariat'] },
-  { emoji: '🏢', name: 'PME', count: 8, assistants: ['RH complet', 'Comptabilité', 'Commercial', 'Direction'] },
+  { emoji: '🔧', name: 'Artisan', count: 5, assistants: ['Devis automatique', 'Relance clients', 'Avis Google', 'Planning chantiers'], useCases: [
+    { emoji: '📄', title: 'Devis en 3 min', desc: 'Décrivez le travail, l\'IA génère un devis complet avec TVA et mentions légales.' },
+    { emoji: '🔄', title: 'Relances auto J+3/J+7', desc: 'Vos devis non signés sont relancés automatiquement par email et SMS.' },
+    { emoji: '⭐', title: 'Réponse avis Google', desc: 'Répondez à chaque avis client en un clic, ton professionnel garanti.' },
+    { emoji: '📱', title: 'Posts réseaux sociaux', desc: 'Photos de chantier transformées en posts LinkedIn et Instagram.' },
+    { emoji: '🧾', title: 'Factures PDF', desc: 'Convertissez vos devis acceptés en factures en un clic.' },
+    { emoji: '📊', title: 'Reporting mensuel', desc: 'Bilan d\'activité avec CA, taux de conversion devis, avis reçus.' },
+  ]},
+  { emoji: '🏥', name: 'Santé', count: 5, assistants: ['Prise de RDV', 'Rappels patients', 'Comptes-rendus', 'Ordonnances'], useCases: [
+    { emoji: '📅', title: 'Prise de RDV auto', desc: 'Les patients réservent en ligne, confirmation et rappels automatiques.' },
+    { emoji: '🔔', title: 'Rappels patients', desc: 'SMS et email de rappel 24h et 1h avant chaque rendez-vous.' },
+    { emoji: '📋', title: 'Comptes-rendus', desc: 'Dictez vos notes, l\'IA rédige un compte-rendu structuré.' },
+    { emoji: '📄', title: 'Documents patients', desc: 'Attestations, certificats et courriers générés automatiquement.' },
+    { emoji: '⭐', title: 'Avis Google', desc: 'Sollicitez et répondez aux avis pour améliorer votre visibilité.' },
+  ]},
+  { emoji: '🎨', name: 'Agence', count: 6, assistants: ['Brief créatif', 'Social media', 'Reporting client', 'Veille tendances'], useCases: [
+    { emoji: '📝', title: 'Brief créatif IA', desc: 'Transformez les demandes clients en briefs structurés et actionnables.' },
+    { emoji: '📱', title: 'Social media x4', desc: 'Un contenu décliné en posts LinkedIn, Instagram, Facebook et Twitter.' },
+    { emoji: '📊', title: 'Reporting client', desc: 'Rapports mensuels automatiques avec KPIs et recommandations.' },
+    { emoji: '🔍', title: 'Veille tendances', desc: 'Alertes quotidiennes sur les tendances de votre secteur.' },
+    { emoji: '📸', title: 'Visuels IA', desc: 'Génération de visuels professionnels pour vos campagnes.' },
+    { emoji: '📅', title: 'Planning éditorial', desc: 'Calendrier de publication multi-clients sur 4 semaines.' },
+  ]},
+  { emoji: '🛒', name: 'E-commerce', count: 5, assistants: ['Fiches produits', 'SAV automatisé', 'Relance paniers', 'Analyse ventes'], useCases: [
+    { emoji: '🛍️', title: 'Fiches produits SEO', desc: 'Descriptions optimisées avec bénéfices, specs et mots-clés.' },
+    { emoji: '🎧', title: 'SAV automatisé', desc: 'Chat IA qui gère retours, échanges et questions fréquentes.' },
+    { emoji: '🛒', title: 'Relance paniers', desc: 'Emails automatiques pour récupérer les paniers abandonnés.' },
+    { emoji: '📊', title: 'Analyse ventes', desc: 'Tableau de bord avec produits stars, tendances et prévisions.' },
+    { emoji: '📧', title: 'Emails marketing', desc: 'Séquences email personnalisées par segment client.' },
+  ]},
+  { emoji: '🎯', name: 'Coach', count: 4, assistants: ['Planning séances', 'Suivi client', 'Contenu expert', 'Facturation'], useCases: [
+    { emoji: '📅', title: 'Planning séances', desc: 'Réservation en ligne avec synchronisation agenda automatique.' },
+    { emoji: '📈', title: 'Suivi client', desc: 'Tableau de progression par client avec notes et objectifs.' },
+    { emoji: '📝', title: 'Contenu expert', desc: 'Articles, posts et newsletters pour asseoir votre expertise.' },
+    { emoji: '🧾', title: 'Facturation auto', desc: 'Factures générées et envoyées après chaque séance.' },
+  ]},
+  { emoji: '🍽️', name: 'Restaurant', count: 4, assistants: ['Réservations', 'Menu du jour', 'Avis Google', 'Stocks'], useCases: [
+    { emoji: '📅', title: 'Réservations', desc: 'Gestion des réservations avec confirmation automatique par SMS.' },
+    { emoji: '🍽️', title: 'Menu du jour', desc: 'Publication automatique du menu sur Google, réseaux et site.' },
+    { emoji: '⭐', title: 'Avis Google', desc: 'Réponse personnalisée à chaque avis en quelques secondes.' },
+    { emoji: '📦', title: 'Gestion stocks', desc: 'Alertes de stock bas et suggestions de commande fournisseur.' },
+  ]},
+  { emoji: '⚖️', name: 'Libéral', count: 5, assistants: ['Contrats IA', 'Veille juridique', 'Facturation', 'Secrétariat'], useCases: [
+    { emoji: '📑', title: 'Contrats IA', desc: 'Génération de contrats types personnalisés selon le cas.' },
+    { emoji: '🔍', title: 'Veille juridique', desc: 'Alertes sur les évolutions légales de votre domaine.' },
+    { emoji: '🧾', title: 'Facturation', desc: 'Notes d\'honoraires et factures conformes générées automatiquement.' },
+    { emoji: '📧', title: 'Secrétariat IA', desc: 'Gestion des emails, RDV et relances par votre assistante IA.' },
+    { emoji: '📋', title: 'Comptes-rendus', desc: 'Résumés de réunion et procès-verbaux structurés.' },
+  ]},
+  { emoji: '🏢', name: 'PME', count: 8, assistants: ['RH complet', 'Comptabilité', 'Commercial', 'Direction'], useCases: [
+    { emoji: '🧑‍💼', title: 'RH complet', desc: 'Recrutement, onboarding, suivi des congés et entretiens.' },
+    { emoji: '📊', title: 'Comptabilité', desc: 'Suivi financier, préparation comptable et alertes trésorerie.' },
+    { emoji: '💼', title: 'Commercial', desc: 'Pipeline de vente, scoring leads et relances automatiques.' },
+    { emoji: '👔', title: 'Direction', desc: 'Tableaux de bord stratégiques et aide à la décision IA.' },
+    { emoji: '📣', title: 'Marketing', desc: 'Campagnes multi-canal avec analyse de performance.' },
+    { emoji: '🎧', title: 'Support', desc: 'Chat IA interne et externe pour répondre 24/7.' },
+  ]},
 ];
 
 // ─── FAQ selection (10 most common)
@@ -123,27 +264,14 @@ const cardStyle: React.CSSProperties = {
   transition: 'box-shadow 0.2s ease, transform 0.2s ease',
 };
 
-// ─── Dashboard sidebar items
-const SIDEBAR_ITEMS = [
-  '🏠 Tableau de bord',
-  '💬 Chat IA',
-  '🤖 Mes Assistants',
-  '📄 Documents',
-  '🎨 Studio Créatif',
-  '📊 Analytics',
-  '📚 Formations',
-  '📰 News IA',
-  '🔧 Skills',
-  '👥 Mon Équipe',
-  '⚙️ Paramètres',
-];
-
 export default function LandingPage() {
   const [hoveredProfile, setHoveredProfile] = useState<number | null>(null);
+  const [expandedProfile, setExpandedProfile] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [carouselPaused, setCarouselPaused] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const [expandedTools, setExpandedTools] = useState<Record<string, boolean>>({});
+  const [dashProfileIdx, setDashProfileIdx] = useState(0);
+  const dashIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth <= 768);
@@ -152,11 +280,143 @@ export default function LandingPage() {
     return () => window.removeEventListener('resize', handler);
   }, []);
 
-  // Build flat carousel items (duplicate for seamless loop)
-  const carouselItems = FEATURE_COLUMNS.flatMap(col =>
-    col.items.map(item => ({ category: col.title, label: item }))
-  );
-  const duplicatedItems = [...carouselItems, ...carouselItems];
+  // Auto-rotate dashboard profiles
+  useEffect(() => {
+    dashIntervalRef.current = setInterval(() => {
+      setDashProfileIdx(prev => (prev + 1) % DASHBOARD_PROFILES.length);
+    }, 4000);
+    return () => {
+      if (dashIntervalRef.current) clearInterval(dashIntervalRef.current);
+    };
+  }, []);
+
+  const toggleTool = (key: string) => {
+    setExpandedTools(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const selectDashProfile = (idx: number) => {
+    setDashProfileIdx(idx);
+    if (dashIntervalRef.current) clearInterval(dashIntervalRef.current);
+    dashIntervalRef.current = setInterval(() => {
+      setDashProfileIdx(prev => (prev + 1) % DASHBOARD_PROFILES.length);
+    }, 4000);
+  };
+
+  // ─── Mini dashboard mockup component for Section 3
+  const DashMockup = ({ profile, compact }: { profile: typeof DASHBOARD_PROFILES[0]; compact?: boolean }) => {
+    const h = compact ? 280 : 340;
+    return (
+      <div style={{
+        background: C.bg,
+        border: `1px solid ${C.border}`,
+        borderRadius: compact ? 20 : 12,
+        overflow: 'hidden',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+        width: '100%',
+        height: h,
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+      }}>
+        {/* Browser / phone chrome */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: compact ? '8px 12px' : '10px 14px',
+          borderBottom: `1px solid ${C.border}`,
+          background: C.bgSec,
+          flexShrink: 0,
+        }}>
+          {compact ? (
+            <>
+              {/* Phone notch */}
+              <div style={{ margin: '0 auto', width: 40, height: 4, borderRadius: 2, background: C.border }} />
+            </>
+          ) : (
+            <>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5F56' }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFBD2E' }} />
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#27C93F' }} />
+              <span style={{ marginLeft: 'auto', fontSize: 10, color: C.muted, fontFamily: 'monospace' }}>freenzy.io</span>
+            </>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {/* Sidebar (desktop mockup only) */}
+          {!compact && (
+            <div style={{
+              width: 140,
+              borderRight: `1px solid ${C.border}`,
+              padding: '10px 8px',
+              background: C.bgSec,
+              flexShrink: 0,
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.text, marginBottom: 10, padding: '0 4px' }}>FREENZY.IO</div>
+              {profile.sidebar.map((item, i) => (
+                <div key={i} style={{
+                  padding: '5px 6px',
+                  borderRadius: 4,
+                  fontSize: 10,
+                  color: i === 0 ? C.text : C.secondary,
+                  fontWeight: i === 0 ? 600 : 400,
+                  background: i === 0 ? C.bg : 'transparent',
+                  marginBottom: 1,
+                }}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Main content area */}
+          <div style={{ flex: 1, padding: compact ? 10 : 14, overflow: 'hidden' }}>
+            <div style={{ fontSize: compact ? 12 : 14, fontWeight: 700, color: C.text, marginBottom: 10 }}>
+              {profile.greeting}
+            </div>
+
+            {/* Stats */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 10 }}>
+              {profile.stats.map((s, i) => (
+                <div key={i} style={{
+                  background: s.bg,
+                  borderRadius: 6,
+                  padding: compact ? '6px 4px' : '8px 6px',
+                  textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: compact ? 12 : 14, marginBottom: 2 }}>{s.emoji}</div>
+                  <div style={{ fontSize: compact ? 11 : 13, fontWeight: 800, color: C.text }}>{s.value}</div>
+                  <div style={{ fontSize: compact ? 7 : 8, color: C.muted, lineHeight: 1.2 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Actions rapides */}
+            <div style={{ fontSize: compact ? 9 : 10, fontWeight: 600, color: C.text, marginBottom: 6 }}>Actions rapides ⚡</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 4 }}>
+              {profile.sidebar.slice(0, 4).map((item, i) => (
+                <div key={i} style={{
+                  padding: compact ? '4px 6px' : '5px 8px',
+                  background: C.bgSec,
+                  borderRadius: 4,
+                  border: `1px solid ${C.border}`,
+                  fontSize: compact ? 8 : 9,
+                  color: C.secondary,
+                  textAlign: 'center',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -169,10 +429,6 @@ export default function LandingPage() {
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes scroll-features {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
         }
       ` }} />
 
@@ -311,78 +567,180 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Right: Flashboard mockup */}
+            {/* Right: Desktop + Phone mockups */}
             <div style={{
               flex: 1,
-              maxWidth: isMobile ? '100%' : 480,
+              maxWidth: isMobile ? '100%' : 540,
               width: '100%',
+              display: 'flex',
+              gap: 16,
+              alignItems: 'flex-start',
+              justifyContent: 'center',
             }}>
-              <div style={{
-                background: C.bg,
-                border: `1px solid ${C.border}`,
-                borderRadius: 16,
-                padding: 24,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
-              }}>
-                {/* Mockup header */}
+              {/* Desktop mockup */}
+              <div style={{ flex: 1, maxWidth: isMobile ? '65%' : 360 }}>
                 <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  marginBottom: 20,
-                  paddingBottom: 16,
-                  borderBottom: `1px solid ${C.border}`,
+                  background: C.bg,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 12,
+                  overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
                 }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FF5F56' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFBD2E' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27C93F' }} />
-                  <span style={{ marginLeft: 'auto', fontSize: 11, color: C.muted, fontFamily: 'monospace' }}>flashboard</span>
-                </div>
+                  {/* Browser chrome */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '8px 12px',
+                    borderBottom: `1px solid ${C.border}`,
+                    background: C.bgSec,
+                  }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF5F56' }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFBD2E' }} />
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#27C93F' }} />
+                    <span style={{ marginLeft: 'auto', fontSize: 9, color: C.muted, fontFamily: 'monospace' }}>freenzy.io</span>
+                  </div>
 
-                {/* Stats row */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: 12,
-                  marginBottom: 20,
-                }}>
-                  {[
-                    { emoji: '🤖', label: '12 Assistants actifs', bg: '#F0F7FF' },
-                    { emoji: '⚡', label: '23 Actions ce mois', bg: '#FFF8F0' },
-                    { emoji: '💎', label: '47 Crédits', bg: '#F0FFF4' },
-                  ].map((s, i) => (
-                    <div key={i} style={{
-                      background: s.bg,
-                      borderRadius: 10,
-                      padding: '12px 10px',
-                      textAlign: 'center',
-                    }}>
-                      <div style={{ fontSize: 20, marginBottom: 4 }}>{s.emoji}</div>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Mini agent cards */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {[
-                    { name: 'Secrétaire IA', status: true },
-                    { name: 'Devis Pro', status: true },
-                    { name: 'Réputation Google', status: true },
-                  ].map((agent, i) => (
-                    <div key={i} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '10px 14px',
+                  <div style={{ display: 'flex', minHeight: 260 }}>
+                    {/* Sidebar */}
+                    <div style={{
+                      width: 44,
+                      borderRight: `1px solid ${C.border}`,
+                      padding: '10px 4px',
                       background: C.bgSec,
-                      borderRadius: 8,
-                      border: `1px solid ${C.border}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 6,
                     }}>
-                      <span style={{ fontSize: 13, fontWeight: 500, color: C.text }}>{agent.name}</span>
-                      <span style={{ fontSize: 14, color: '#27C93F' }}>✅</span>
+                      {['🏠', '💬', '🤖', '📄', '🎨', '📊', '⚙️'].map((emoji, i) => (
+                        <div key={i} style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: 6,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 14,
+                          background: i === 0 ? C.bg : 'transparent',
+                          cursor: 'default',
+                        }}>
+                          {emoji}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+
+                    {/* Main content */}
+                    <div style={{ flex: 1, padding: 12 }}>
+                      <div style={{ fontSize: 10, color: C.muted, marginBottom: 2 }}>🏠 Accueil</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 10 }}>
+                        Bonjour Emmanuel 👋
+                      </div>
+
+                      {/* Stat cards */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 10 }}>
+                        {[
+                          { value: '47', label: 'crédits', emoji: '💎', bg: '#F0FFF4' },
+                          { value: '12', label: 'agents', emoji: '🤖', bg: '#F0F7FF' },
+                          { value: '3', label: 'docs', emoji: '📄', bg: '#FFF8F0' },
+                        ].map((s, i) => (
+                          <div key={i} style={{
+                            background: s.bg,
+                            borderRadius: 6,
+                            padding: '8px 4px',
+                            textAlign: 'center',
+                          }}>
+                            <div style={{ fontSize: 12, marginBottom: 2 }}>{s.emoji}</div>
+                            <div style={{ fontSize: 14, fontWeight: 800, color: C.text }}>{s.value}</div>
+                            <div style={{ fontSize: 8, color: C.muted }}>{s.label}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Actions rapides */}
+                      <div style={{ fontSize: 10, fontWeight: 600, color: C.text, marginBottom: 6 }}>Actions rapides ⚡</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 4 }}>
+                        {['📄 Nouveau devis', '💬 Chat IA', '📧 Envoyer email', '📊 Voir stats'].map((action, i) => (
+                          <div key={i} style={{
+                            padding: '5px 8px',
+                            background: C.bgSec,
+                            borderRadius: 4,
+                            border: `1px solid ${C.border}`,
+                            fontSize: 9,
+                            color: C.secondary,
+                            textAlign: 'center',
+                          }}>
+                            {action}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Phone mockup */}
+              <div style={{ width: isMobile ? '32%' : 150, flexShrink: 0 }}>
+                <div style={{
+                  background: C.bg,
+                  border: `2px solid ${C.border}`,
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.06)',
+                }}>
+                  {/* Phone notch */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: '6px 0 4px',
+                    background: C.bgSec,
+                    borderBottom: `1px solid ${C.border}`,
+                  }}>
+                    <div style={{ width: 36, height: 4, borderRadius: 2, background: C.border }} />
+                  </div>
+
+                  {/* Phone content */}
+                  <div style={{ padding: 8, minHeight: 220 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: C.text, marginBottom: 8 }}>
+                      Bonjour 👋
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
+                      {[
+                        { value: '47', label: 'crédits', bg: '#F0FFF4' },
+                        { value: '12', label: 'agents', bg: '#F0F7FF' },
+                        { value: '3', label: 'docs', bg: '#FFF8F0' },
+                      ].map((s, i) => (
+                        <div key={i} style={{
+                          background: s.bg,
+                          borderRadius: 4,
+                          padding: '4px 6px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                          <span style={{ fontSize: 8, color: C.muted }}>{s.label}</span>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: C.text }}>{s.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ fontSize: 8, fontWeight: 600, color: C.text, marginBottom: 4 }}>Actions ⚡</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      {['📄 Devis', '💬 Chat IA', '📧 Email'].map((action, i) => (
+                        <div key={i} style={{
+                          padding: '3px 6px',
+                          background: C.bgSec,
+                          borderRadius: 3,
+                          border: `1px solid ${C.border}`,
+                          fontSize: 8,
+                          color: C.secondary,
+                        }}>
+                          {action}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -390,235 +748,198 @@ export default function LandingPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 2 — FEATURES CAROUSEL
+            SECTION 2 — TOOLS GRID
            ══════════════════════════════════════════════════════ */}
-        <section id="features" style={{ ...sectionStyle(C.bgSec), overflow: 'hidden' }}>
+        <section id="features" style={{ ...sectionStyle(C.bgSec) }}>
           <div style={containerStyle}>
-            <h2 style={sectionTitle}>Concrètement, ça fait quoi ? 🤔</h2>
-            <p style={sectionSub}>Un aperçu de ce que vos assistants font pour vous, automatiquement.</p>
+            <h2 style={sectionTitle}>+150 outils IA pour tout automatiser 🛠️</h2>
+            <p style={sectionSub}>Chaque outil est cliquable — découvrez ce qu&apos;il fait en un clic.</p>
           </div>
 
-          {/* Auto-scrolling carousel */}
-          <div
-            ref={carouselRef}
-            onMouseEnter={() => setCarouselPaused(true)}
-            onMouseLeave={() => setCarouselPaused(false)}
-            onTouchStart={() => setCarouselPaused(true)}
-            onTouchEnd={() => setCarouselPaused(false)}
-            style={{
-              overflow: 'hidden',
-              width: '100%',
-              padding: '0 0 8px',
-            }}
-          >
-            <div style={{
-              display: 'flex',
-              gap: 12,
-              animation: 'scroll-features 60s linear infinite',
-              animationPlayState: carouselPaused ? 'paused' : 'running',
-              width: 'max-content',
-            }}>
-              {duplicatedItems.map((item, i) => (
-                <div key={i} style={{
-                  background: C.bg,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 8,
-                  padding: '10px 16px',
-                  whiteSpace: 'nowrap',
-                  fontSize: 13,
-                  color: C.text,
-                  fontWeight: 500,
-                  flexShrink: 0,
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-                }}>
-                  {item.label}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Category labels below */}
+          {/* Tool columns grid */}
           <div style={{
             ...containerStyle,
-            marginTop: 32,
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: 12,
+            display: isMobile ? 'flex' : 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 16,
+            overflowX: isMobile ? 'auto' : undefined,
+            WebkitOverflowScrolling: 'touch',
+            paddingBottom: isMobile ? 12 : 0,
           }}>
-            {FEATURE_COLUMNS.map((col, i) => (
-              <div key={i} style={{
-                padding: '8px 16px',
+            {TOOL_COLUMNS.map((col, ci) => (
+              <div key={ci} style={{
                 background: C.bg,
                 border: `1px solid ${C.border}`,
-                borderRadius: 20,
-                fontSize: 13,
-                fontWeight: 600,
-                color: C.text,
+                borderRadius: 12,
+                overflow: 'hidden',
+                minWidth: isMobile ? 260 : undefined,
+                flexShrink: 0,
               }}>
-                {col.title}
+                {/* Column header */}
+                <div style={{
+                  padding: '14px 16px',
+                  background: col.color,
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                  <span style={{ fontSize: 14, fontWeight: 700 }}>{col.title}</span>
+                  <span style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    background: 'rgba(255,255,255,0.25)',
+                    padding: '2px 8px',
+                    borderRadius: 10,
+                  }}>
+                    {col.tools.length}
+                  </span>
+                </div>
+
+                {/* Tools list */}
+                <div style={{ padding: '8px 0' }}>
+                  {col.tools.map((tool, ti) => {
+                    const toolKey = `${ci}-${ti}`;
+                    const isExpanded = expandedTools[toolKey];
+                    return (
+                      <div key={ti}>
+                        <button
+                          onClick={() => toggleTool(toolKey)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            width: '100%',
+                            padding: '8px 14px',
+                            background: isExpanded ? C.bgSec : 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontSize: 13,
+                            color: C.text,
+                            fontWeight: 500,
+                            transition: 'background 0.15s ease',
+                          }}
+                        >
+                          <span style={{ fontSize: 15, flexShrink: 0 }}>{tool.emoji}</span>
+                          <span style={{ flex: 1 }}>{tool.name}</span>
+                          <span style={{
+                            fontSize: 14,
+                            color: C.muted,
+                            transition: 'transform 0.2s ease',
+                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                            flexShrink: 0,
+                          }}>
+                            ›
+                          </span>
+                        </button>
+                        {isExpanded && (
+                          <div style={{
+                            padding: '4px 14px 10px 37px',
+                            fontSize: 12,
+                            color: C.secondary,
+                            lineHeight: 1.5,
+                            background: C.bgSec,
+                          }}>
+                            {tool.desc}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ))}
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 3 — DASHBOARD SCREENSHOT
+            SECTION 3 — DASHBOARD ADAPTÉ
            ══════════════════════════════════════════════════════ */}
         <section style={sectionStyle(C.bg)}>
           <div style={containerStyle}>
-            <h2 style={sectionTitle}>Votre dashboard, adapté à votre métier 🎯</h2>
-            <p style={sectionSub}>Le menu s&apos;adapte automatiquement selon votre activité et votre profession.</p>
+            <h2 style={sectionTitle}>Un dashboard qui s&apos;adapte à votre activité 🎯</h2>
+            <p style={sectionSub}>Dites-nous ce que vous faites, l&apos;IA organise tout pour vous.</p>
 
-            <div style={{
-              background: C.bg,
-              border: `1px solid ${C.border}`,
-              borderRadius: 16,
-              overflow: 'hidden',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.08)',
-              maxWidth: 900,
-              margin: '0 auto',
-              position: 'relative',
-            }}>
-              {/* Browser chrome */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '12px 16px',
-                borderBottom: `1px solid ${C.border}`,
-                background: C.bgSec,
-              }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FF5F56' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFBD2E' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27C93F' }} />
-                <div style={{
-                  marginLeft: 16,
-                  flex: 1,
-                  background: C.bg,
-                  borderRadius: 6,
-                  padding: '4px 12px',
-                  fontSize: 11,
-                  color: C.muted,
-                  fontFamily: 'monospace',
-                }}>
-                  app.freenzy.io/client/dashboard
-                </div>
-              </div>
-
-              <div style={{
-                display: 'flex',
-                minHeight: isMobile ? 'auto' : 380,
-                flexDirection: isMobile ? 'column' : 'row',
-              }}>
-                {/* Sidebar */}
-                <div style={{
-                  width: isMobile ? '100%' : 220,
-                  borderRight: isMobile ? 'none' : `1px solid ${C.border}`,
-                  borderBottom: isMobile ? `1px solid ${C.border}` : 'none',
-                  padding: '16px 12px',
-                  background: C.bgSec,
-                }}>
-                  <div style={{
+            {/* Profile selector dots */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
+              {DASHBOARD_PROFILES.map((prof, i) => (
+                <button
+                  key={i}
+                  onClick={() => selectDashProfile(i)}
+                  style={{
+                    padding: '8px 20px',
+                    background: dashProfileIdx === i ? C.text : C.bg,
+                    color: dashProfileIdx === i ? '#FFFFFF' : C.text,
+                    border: `1px solid ${dashProfileIdx === i ? C.text : C.border}`,
+                    borderRadius: 20,
                     fontSize: 14,
-                    fontWeight: 700,
-                    color: C.text,
-                    marginBottom: 16,
-                    padding: '0 8px',
-                  }}>
-                    FREENZY.IO
-                  </div>
-                  {SIDEBAR_ITEMS.map((item, i) => (
-                    <div key={i} style={{
-                      padding: '8px 10px',
-                      borderRadius: 6,
-                      fontSize: 13,
-                      color: i === 0 ? C.text : C.secondary,
-                      fontWeight: i === 0 ? 600 : 400,
-                      background: i === 0 ? C.bg : 'transparent',
-                      marginBottom: 2,
-                      cursor: 'default',
-                    }}>
-                      {item}
-                    </div>
-                  ))}
-                </div>
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {prof.label}
+                </button>
+              ))}
+            </div>
 
-                {/* Main content */}
-                <div style={{ flex: 1, padding: isMobile ? 16 : 24 }}>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: C.text, marginBottom: 24 }}>
-                    Bienvenue, Marie 👋
-                  </div>
-
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-                    gap: 12,
-                    marginBottom: 24,
-                  }}>
-                    {[
-                      { label: 'Assistants actifs', value: '12', emoji: '🤖', bg: '#F0F7FF' },
-                      { label: 'Actions ce mois', value: '23', emoji: '⚡', bg: '#FFF8F0' },
-                      { label: 'Crédits restants', value: '47', emoji: '💎', bg: '#F0FFF4' },
-                    ].map((kpi, i) => (
-                      <div key={i} style={{
-                        background: kpi.bg,
-                        borderRadius: 10,
-                        padding: 16,
-                        textAlign: 'center',
-                      }}>
-                        <div style={{ fontSize: 20, marginBottom: 4 }}>{kpi.emoji}</div>
-                        <div style={{ fontSize: 22, fontWeight: 800, color: C.text }}>{kpi.value}</div>
-                        <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{kpi.label}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 8,
-                  }}>
-                    {[
-                      { name: 'Secrétaire IA', action: 'RDV confirmé — mardi 14h', time: 'Il y a 5 min' },
-                      { name: 'Devis Pro', action: 'Devis #047 envoyé à Acme Corp', time: 'Il y a 12 min' },
-                      { name: 'Réputation', action: '3 avis Google traités', time: 'Il y a 1h' },
-                    ].map((activity, i) => (
-                      <div key={i} style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '10px 12px',
-                        background: C.bgSec,
-                        borderRadius: 8,
-                        border: `1px solid ${C.border}`,
-                      }}>
-                        <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{activity.name}</div>
-                          <div style={{ fontSize: 11, color: C.muted }}>{activity.action}</div>
-                        </div>
-                        <div style={{ fontSize: 11, color: C.muted, whiteSpace: 'nowrap' }}>{activity.time}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            {/* Mockups display */}
+            <div style={{
+              display: 'flex',
+              gap: 24,
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              flexDirection: isMobile ? 'column' : 'row',
+              maxWidth: 800,
+              margin: '0 auto',
+            }}>
+              {/* Desktop mockup */}
+              <div style={{ flex: 1, maxWidth: isMobile ? '100%' : 500 }}>
+                <DashMockup profile={DASHBOARD_PROFILES[dashProfileIdx]} />
               </div>
 
-              {/* Label overlay */}
-              <div style={{
-                position: 'absolute',
-                bottom: 16,
-                right: 16,
+              {/* Phone mockup */}
+              {!isMobile && (
+                <div style={{ width: 180 }}>
+                  <DashMockup profile={DASHBOARD_PROFILES[dashProfileIdx]} compact />
+                </div>
+              )}
+            </div>
+
+            {/* Dots indicator */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 24 }}>
+              {DASHBOARD_PROFILES.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => selectDashProfile(i)}
+                  style={{
+                    width: dashProfileIdx === i ? 24 : 8,
+                    height: 8,
+                    borderRadius: 4,
+                    background: dashProfileIdx === i ? C.text : C.border,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Label overlay */}
+            <div style={{
+              textAlign: 'center',
+              marginTop: 20,
+            }}>
+              <span style={{
                 background: C.text,
                 color: '#FFFFFF',
                 fontSize: 12,
                 fontWeight: 600,
                 padding: '6px 14px',
                 borderRadius: 20,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
               }}>
                 ✨ Le menu s&apos;adapte selon votre profil
-              </div>
+              </span>
             </div>
           </div>
         </section>
@@ -636,45 +957,76 @@ export default function LandingPage() {
               gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
               gap: 16,
             }}>
-              {PROFILES.map((p, i) => (
-                <div
-                  key={i}
-                  onMouseEnter={() => setHoveredProfile(i)}
-                  onMouseLeave={() => setHoveredProfile(null)}
-                  style={{
-                    ...cardStyle,
-                    textAlign: 'center',
-                    cursor: 'default',
-                    position: 'relative',
-                    padding: 28,
-                    minHeight: hoveredProfile === i ? 200 : 140,
-                    transition: 'all 0.25s ease',
-                    boxShadow: hoveredProfile === i ? '0 4px 16px rgba(0,0,0,0.08)' : 'none',
-                  }}
-                >
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>{p.emoji}</div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: C.text, marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 13, color: C.muted }}>{p.count} assistants dédiés</div>
+              {PROFILES.map((p, i) => {
+                const isExpanded = expandedProfile === i;
+                return (
+                  <div
+                    key={i}
+                    onClick={() => setExpandedProfile(isExpanded ? null : i)}
+                    onMouseEnter={() => setHoveredProfile(i)}
+                    onMouseLeave={() => setHoveredProfile(null)}
+                    style={{
+                      ...cardStyle,
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      position: 'relative',
+                      padding: 28,
+                      gridColumn: isExpanded && !isMobile ? 'span 2' : undefined,
+                      gridRow: isExpanded && !isMobile ? 'span 2' : undefined,
+                      transition: 'all 0.25s ease',
+                      boxShadow: hoveredProfile === i || isExpanded ? '0 4px 16px rgba(0,0,0,0.08)' : 'none',
+                    }}
+                  >
+                    <div style={{ fontSize: 36, marginBottom: 10 }}>{p.emoji}</div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: C.text, marginBottom: 4 }}>{p.name}</div>
+                    <div style={{ fontSize: 13, color: C.muted, marginBottom: isExpanded ? 14 : 0 }}>{p.count} assistants dédiés</div>
 
-                  {hoveredProfile === i && (
-                    <div style={{
-                      marginTop: 14,
-                      paddingTop: 14,
-                      borderTop: `1px solid ${C.border}`,
-                    }}>
-                      {p.assistants.map((a, ai) => (
-                        <div key={ai} style={{
-                          fontSize: 12,
-                          color: C.secondary,
-                          padding: '3px 0',
-                        }}>
-                          {a}
+                    {isExpanded && p.useCases && (
+                      <div style={{
+                        paddingTop: 14,
+                        borderTop: `1px solid ${C.border}`,
+                        textAlign: 'left',
+                      }}>
+                        {p.useCases.map((uc, ui) => (
+                          <div key={ui} style={{
+                            display: 'flex',
+                            gap: 10,
+                            padding: '8px 0',
+                            borderBottom: ui < p.useCases.length - 1 ? `1px solid ${C.border}` : 'none',
+                          }}>
+                            <span style={{ fontSize: 18, flexShrink: 0, lineHeight: 1.4 }}>{uc.emoji}</span>
+                            <div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 2 }}>{uc.title}</div>
+                              <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.5 }}>{uc.desc}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {!isExpanded && hoveredProfile === i && (
+                      <div style={{
+                        marginTop: 14,
+                        paddingTop: 14,
+                        borderTop: `1px solid ${C.border}`,
+                      }}>
+                        {p.assistants.map((a, ai) => (
+                          <div key={ai} style={{
+                            fontSize: 12,
+                            color: C.secondary,
+                            padding: '3px 0',
+                          }}>
+                            {a}
+                          </div>
+                        ))}
+                        <div style={{ fontSize: 11, color: C.muted, marginTop: 8, fontStyle: 'italic' }}>
+                          Cliquez pour voir le détail →
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

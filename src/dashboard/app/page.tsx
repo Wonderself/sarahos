@@ -532,7 +532,7 @@ export default function LandingPage() {
                 gap: 12,
                 justifyContent: isMobile ? 'center' : 'flex-start',
               }}>
-                <Link href="/login" style={{
+                <Link href="/client/dashboard" style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',

@@ -146,7 +146,7 @@ export default function AgentsPage() {
             Un agent sp&eacute;cialis&eacute; pour chaque besoin de votre entreprise. Commercial, marketing, administratif, strat&eacute;gie : ils travaillent pour vous 24h/24.
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
+            <Link href="/client/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
               Accéder à Freenzy
               <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
             </Link>
@@ -299,7 +299,7 @@ export default function AgentsPage() {
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>pour commencer</div>
             </div>
           </div>
-          <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
+          <Link href="/client/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '14px 32px', borderRadius: 10, fontWeight: 600, fontSize: 16, textDecoration: 'none' }}>
             Cr&eacute;er mon compte gratuit
             <span className="material-symbols-rounded" style={{ fontSize: 20 }}>arrow_forward</span>
           </Link>
@@ -339,7 +339,7 @@ export default function AgentsPage() {
         <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: 32, fontSize: 'clamp(0.95rem, 2vw, 1.1rem)' }}>
           50 cr&eacute;dits offerts — aucune carte bancaire requise.
         </p>
-        <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '16px 40px', borderRadius: 10, fontWeight: 700, fontSize: 17, textDecoration: 'none' }}>
+        <Link href="/client/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: accentGradient, color: '#fff', padding: '16px 40px', borderRadius: 10, fontWeight: 700, fontSize: 17, textDecoration: 'none' }}>
           Accéder à Freenzy
           <span className="material-symbols-rounded" style={{ fontSize: 22 }}>rocket_launch</span>
         </Link>

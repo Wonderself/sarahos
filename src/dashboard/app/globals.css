@@ -1110,12 +1110,9 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── PHONE (<768px) ─── */
 @media (max-width: 767px) {
-  /* Phone: show emoji rail, always visible fixed left */
+  /* Phone: hide standalone emoji rail — sidebar handles everything */
   .emoji-rail {
-    display: flex !important;
-    position: fixed !important;
-    width: 56px;
-    z-index: 200 !important;
+    display: none !important;
   }
 
   /* Hide mobile topbar */
@@ -1123,7 +1120,7 @@ a { color: inherit; text-decoration: none; }
     display: none !important;
   }
 
-  /* Content offset by emoji rail width */
+  /* Content offset by sidebar icon column width */
   .client-main-content {
     margin-left: 56px !important;
     padding-top: 0 !important;
@@ -1132,30 +1129,43 @@ a { color: inherit; text-decoration: none; }
     margin-left: 56px !important;
   }
 
-  /* Sidebar: attached popup right of emoji rail */
+  /* Sidebar: always visible as 56px icon column, expands on click */
   .client-sidebar {
     position: fixed !important;
     top: 0;
-    left: 56px !important;
+    left: 0 !important;
     bottom: 0;
-    width: 240px !important;
-    min-width: 240px !important;
-    max-width: calc(85vw - 56px) !important;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    z-index: 199;
+    width: 56px !important;
+    min-width: 56px !important;
+    transform: translateX(0) !important; /* ALWAYS visible */
+    transition: width 0.25s ease, min-width 0.25s ease;
+    z-index: 200;
+    overflow: hidden;
     background: #fff;
-    box-shadow: 4px 0 16px rgba(0,0,0,0.1);
+    border-right: 1px solid #E5E5E5;
   }
   .client-sidebar.sidebar-expanded {
-    transform: translateX(0);
-    left: 56px !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    box-shadow: 4px 0 16px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    left: 0 !important;
   }
 
-  /* Overlay starts after emoji rail */
+  /* When collapsed: hide ALL sidebar content except phone-collapsed-rail */
+  .client-sidebar:not(.sidebar-expanded) > *:not(.phone-collapsed-rail) {
+    display: none !important;
+  }
+
+  /* Show phone collapsed rail only when not expanded */
+  .client-sidebar.sidebar-expanded .phone-collapsed-rail {
+    display: none !important;
+  }
+
+  /* Overlay starts at left:0 (sidebar overlaps content) */
   .sidebar-overlay {
-    left: 56px !important;
-    z-index: 198;
+    left: 0 !important;
+    z-index: 199;
   }
 
   /* Show section emojis in sidebar */
@@ -1338,6 +1348,20 @@ a { color: inherit; text-decoration: none; }
   .page-container {
     padding-bottom: 16px;
   }
+
+  /* Phone collapsed rail styling */
+  .phone-collapsed-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 4px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-collapsed-rail::-webkit-scrollbar { display: none; }
 }
 
 /* ─── Tablet sidebar enhancements ─── */
@@ -6025,7 +6049,7 @@ img, video, canvas, svg { display: block; max-width: 100%; height: auto; }
   .sidebar, .mobile-topbar, .admin-bottom-tab-bar, .emoji-rail,
   .public-nav-mobile-toggle, .lp-ticker-wrap,
   .cookie-consent, .floating-action, .mobile-fab-menu,
-  nav[style] { display: none !important; }
+  .client-sidebar, nav[style] { display: none !important; }
   .main-content, .client-main-content { margin-left: 0 !important; }
   .page-container { max-width: 100%; padding: 0; }
   body { background: #fff !important; color: #000 !important; }

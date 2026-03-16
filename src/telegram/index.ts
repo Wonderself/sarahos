@@ -37,6 +37,7 @@ import { initChannels } from './channels';
 import { initProactiveNotifications } from './proactive-notifications';
 import { initDailyBrief } from './daily-brief';
 import { registerFunCommands, registerFunCallbacks } from './fun-interactive';
+import { initCoach, registerCoachCommand, registerCoachCallbacks } from './coach';
 
 // ─── Config ───
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -109,6 +110,11 @@ export function startTelegramBot(): TelegramBot {
   registerFunCommands(bot, ADMIN_CHAT_ID);
   registerFunCallbacks(bot, ADMIN_CHAT_ID);
 
+  // 11. Proactive Coach (Feature 13)
+  initCoach(bot, ADMIN_CHAT_ID);
+  registerCoachCommand(bot, ADMIN_CHAT_ID);
+  registerCoachCallbacks(bot, ADMIN_CHAT_ID);
+
   // ─── Startup message ───
   bot.sendMessage(ADMIN_CHAT_ID, [
     '🤖 *Freenzy Admin Bot — Démarré*',
@@ -118,6 +124,7 @@ export function startTelegramBot(): TelegramBot {
     '✅ Validations : /pending /approve /reject',
     '✅ Système : /deploy /backup /report',
     '✅ Fun : /score /streak /quiz /motivation /mood /goals /kpi /dice /tip /gsd',
+    '✅ Coach IA : /coach /poke — 5 check-ins/jour',
     '✅ Notifications proactives : activées',
     '✅ Brief quotidien 8h : activé (+ motivation + tip + GSD)',
     '',
@@ -126,7 +133,7 @@ export function startTelegramBot(): TelegramBot {
 
   console.log('✅ Bot Telegram opérationnel');
   console.log(`   Admin Chat ID: ${ADMIN_CHAT_ID}`);
-  console.log(`   Features: 12/12 actives`);
+  console.log(`   Features: 13/13 actives`);
 
   // Graceful shutdown
   const shutdown = () => {

@@ -88,6 +88,11 @@ _Envoie une photo pour l'analyser_
 /credits \\[email\\] \\[n\\] — Créditer un user
 /user \\[email\\] — Profil d'un user
 
+🧠 *COACH IA* _(parle tout seul 5x/jour)_
+/coach — Déclencher le coach maintenant
+/poke — "Hé, parle-moi !"
+_Écris en texte libre, il répond direct_
+
 🎮 *FUN & GAMIFICATION*
 /score — 🏆 Score Freenzy (gamifié)
 /streak — 🔥 Streak d'activité

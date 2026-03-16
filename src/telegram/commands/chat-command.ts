@@ -3,13 +3,11 @@
  * Claude Sonnet avec historique, contexte projet injecté, streaming live
  */
 import TelegramBot from 'node-telegram-bot-api';
-import * as fs from 'fs';
-import * as path from 'path';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
 import { Memory } from '../memory';
+import { getCoachSystemPrompt, gatherLiveContext } from '../coach';
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
-const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 const MAX_HISTORY = 20;
 
 interface ChatMessage {
@@ -20,54 +18,9 @@ interface ChatMessage {
 // Conversation history per chat
 const conversationHistory = new Map<string, ChatMessage[]>();
 
-function loadProjectContext(): string {
-  try {
-    const claudeMdPath = path.join(PROJECT_ROOT, 'CLAUDE.md');
-    if (fs.existsSync(claudeMdPath)) {
-      const content = fs.readFileSync(claudeMdPath, 'utf-8');
-      // Limit to ~2000 tokens ≈ 8000 chars
-      return content.slice(0, 8000);
-    }
-  } catch { /* */ }
-  return 'Fichier CLAUDE.md non trouvé.';
-}
-
-function loadRecentLogs(): string {
-  try {
-    const logPath = '/root/logs/main.log';
-    if (fs.existsSync(logPath)) {
-      const content = fs.readFileSync(logPath, 'utf-8');
-      const lines = content.split('\n').filter(Boolean);
-      return lines.slice(-5).join('\n');
-    }
-  } catch { /* */ }
-  return 'Pas de logs récents.';
-}
-
-function buildSystemPrompt(memory: string): string {
-  const projectCtx = loadProjectContext();
-  const recentLogs = loadRecentLogs();
-  const now = new Date().toISOString();
-
-  return `Tu es l'assistant de Emmanuel Smadja, fondateur de Freenzy.io.
-
-CONTEXTE PROJET :
-${projectCtx}
-
-MÉMOIRE PROJET :
-${memory.slice(0, 3000)}
-
-LOGS RÉCENTS :
-${recentLogs}
-
-DATE ET HEURE : ${now}
-
-TON RÔLE :
-- Répondre aux questions sur Freenzy avec précision
-- Proposer des idées en accord avec la vision du produit
-- Ne JAMAIS modifier de fichiers en mode /chat (c'est le rôle de /claude)
-- Être direct, concis, stratégique
-- Répondre en français sauf si Emmanuel écrit en anglais`;
+async function buildSystemPrompt(memory: string): Promise<string> {
+  const liveContext = await gatherLiveContext();
+  return getCoachSystemPrompt(memory, liveContext);
 }
 
 export function registerChatCommand(bot: TelegramBot, adminChatId: string): void {
@@ -108,7 +61,7 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
 
   try {
     const memory = await Memory.read();
-    const systemPrompt = buildSystemPrompt(memory);
+    const systemPrompt = await buildSystemPrompt(memory);
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

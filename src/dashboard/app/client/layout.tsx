@@ -399,7 +399,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [gamXPNext, setGamXPNext] = useState(100);
   const [gamStreak, setGamStreak] = useState(0);
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [lowCreditDismissed, setLowCreditDismissed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -526,8 +526,22 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     // Dark mode removed — always light
 
-    // Resize listener — keep isDesktop in sync
-    const onResize = () => setIsDesktop(window.innerWidth >= 768);
+    // Resize listener — keep isDesktop in sync + sidebar state
+    const onResize = () => {
+      const nowDesktop = window.innerWidth >= 768;
+      setIsDesktop(prev => {
+        if (prev !== nowDesktop) {
+          // Transitioning: open sidebar on desktop, close on mobile
+          setSidebarExpanded(nowDesktop);
+        }
+        return nowDesktop;
+      });
+    };
+    // Initial sync on mount
+    if (window.innerWidth < 768) {
+      setIsDesktop(false);
+      setSidebarExpanded(false);
+    }
     window.addEventListener('resize', onResize);
 
     const interval = setInterval(refreshGamification, 30000);
@@ -850,18 +864,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   if (loading) {
     return (
       <div style={{ display: 'flex', minHeight: '100dvh', background: '#fff' }}>
-        {/* Emoji rail skeleton — desktop only */}
-        {isDesktop && (
-          <div style={{
-            position: 'fixed', top: 0, left: 0, bottom: 0, width: 56,
-            background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
-            zIndex: 9999, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', padding: '16px 0',
-          }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
-          </div>
-        )}
-        <div style={{ flex: 1, marginLeft: isDesktop ? 56 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* Emoji rail skeleton — always visible */}
+        <div style={{
+          position: 'fixed', top: 0, left: 0, bottom: 0, width: 56,
+          background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
+          zIndex: 9999, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', padding: '16px 0',
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
+        </div>
+        <div style={{ flex: 1, marginLeft: isDesktop ? 296 : 56, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ fontSize: 14, color: '#9B9B9B' }}>Chargement...</div>
         </div>
       </div>
@@ -921,14 +933,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           className="mobile-menu-btn"
           onClick={() => setSidebarExpanded(e => !e)}
           aria-label="Menu"
-          style={{ display: 'flex', width: 40, height: 40, borderRadius: 8, background: 'transparent', border: 'none', color: '#1A1A1A', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18 }}
+          style={{ display: 'none', width: 40, height: 40, borderRadius: 8, background: 'transparent', border: 'none', color: '#1A1A1A', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18 }}
         >
           {sidebarExpanded ? '✕' : '☰'}
         </button>
       </div>
 
-      {/* Sidebar Overlay — click outside to close */}
-      {sidebarExpanded && (
+      {/* Sidebar Overlay — click outside to close (mobile only) */}
+      {sidebarExpanded && !isDesktop && (
         <div
           className="sidebar-overlay active"
           onClick={() => setSidebarExpanded(false)}
@@ -953,7 +965,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <nav className="emoji-rail" style={{
             position: 'fixed', top: 0, left: 0, bottom: 0,
             width: 56, background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
-            display: isDesktop ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center',
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
             zIndex: 9999, padding: '4px 0',
             overflowY: 'auto', overflowX: 'hidden',
             WebkitOverflowScrolling: 'touch',
@@ -961,7 +973,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="emoji-rail-top">
               <button
                 className="emoji-rail-btn"
-                onClick={() => setSidebarExpanded(e => !e)}
+                onClick={() => { if (!isDesktop) setSidebarExpanded(e => !e); }}
                 title="Menu"
                 style={{ fontSize: 13, fontWeight: 800, fontFamily: 'system-ui', color: '#1A1A1A' }}
               >
@@ -1023,18 +1035,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.02em' }}>freenzy.io</span>
               <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B' }}>Beta Test 1</span>
             </Link>
-            <button
-              onClick={() => setSidebarExpanded(false)}
-              title="Fermer le menu"
-              style={{
-                width: 24, height: 24, borderRadius: '50%', border: '1px solid #E5E5E5',
-                background: '#fff', cursor: 'pointer', display: 'flex',
-                alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
-                color: '#6B6B6B',
-              }}
-            >
-              ✕
-            </button>
+            {!isDesktop && (
+              <button
+                onClick={() => setSidebarExpanded(false)}
+                title="Fermer le menu"
+                style={{
+                  width: 24, height: 24, borderRadius: '50%', border: '1px solid #E5E5E5',
+                  background: '#fff', cursor: 'pointer', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0,
+                  color: '#6B6B6B',
+                }}
+              >
+                ✕
+              </button>
+            )}
           </div>
         </div>
 
@@ -1511,7 +1525,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </nav>
 
       {/* Client Content */}
-      <div className="client-main-content" onClick={() => { if (sidebarExpanded) setSidebarExpanded(false); }}>
+      <div className="client-main-content" onClick={() => { if (sidebarExpanded && !isDesktop) setSidebarExpanded(false); }}>
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (

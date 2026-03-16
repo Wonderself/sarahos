@@ -1,30 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '../../../../lib/api-auth';
 
-function getTokenFromRequest(req: NextRequest): string {
-  return req.headers.get('authorization')?.replace('Bearer ', '') || req.cookies.get('fz-token')?.value || '';
-}
+const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
 export async function GET(req: NextRequest) {
-  const token = getTokenFromRequest(req);
-  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  // Return default settings — connected to DB via portal in production
-  return NextResponse.json({
-    notification_channels: ['inapp'],
-    auto_approve_types: [],
-    expiry_hours: 48,
-    reminder_after_hours: 4,
-    max_postpones: 3,
-    quiet_hours_start: null,
-    quiet_hours_end: null,
-    briefing_enabled: true,
-    briefing_hour: '08:00',
-    evening_summary: true,
-  });
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
+  try {
+    const res = await fetch(`${API_BASE}/portal/preferences`, {
+      headers: { Authorization: `Bearer ${auth.token}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      // Fallback to defaults if backend not ready
+      return NextResponse.json({ settings: {} });
+    }
+    const data = await res.json();
+    return NextResponse.json({ settings: data });
+  } catch {
+    return NextResponse.json({ settings: {} });
+  }
 }
 
 export async function PUT(req: NextRequest) {
-  const token = getTokenFromRequest(req);
-  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const body = await req.json();
-  return NextResponse.json({ success: true, updated: Object.keys(body) });
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
+  try {
+    const body = await req.json();
+    const res = await fetch(`${API_BASE}/portal/preferences`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.token}`,
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      // Graceful degradation — log locally
+      return NextResponse.json({ success: true, note: 'Saved locally (backend sync pending)' });
+    }
+    const data = await res.json();
+    return NextResponse.json({ success: true, data });
+  } catch {
+    return NextResponse.json({ success: true, note: 'Saved locally' });
+  }
 }

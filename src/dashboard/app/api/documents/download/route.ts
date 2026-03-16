@@ -1,26 +1,46 @@
-/**
- * GET /api/documents/download?id=xxx
- * Placeholder for future server-side document storage with 7-day retention.
- * Currently returns 404 — documents are generated client-side.
- */
-
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyCallerAuth } from '../../../../lib/api-auth';
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
-  const id = req.nextUrl.searchParams.get('id') || '';
+const API_BASE = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3010';
 
+export async function GET(req: NextRequest) {
+  const auth = await verifyCallerAuth(req);
+  if (!auth.authenticated) return auth.response;
+
+  const id = req.nextUrl.searchParams.get('id');
   if (!id) {
-    return NextResponse.json(
-      { error: 'Parametre "id" requis.' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Document ID required' }, { status: 400 });
   }
 
-  return NextResponse.json(
-    {
-      error: 'Document storage coming soon. Please use the generate endpoint.',
-      id,
-    },
-    { status: 404 }
-  );
+  try {
+    const res = await fetch(`${API_BASE}/documents/${encodeURIComponent(id)}`, {
+      headers: { Authorization: `Bearer ${auth.token}` },
+      cache: 'no-store',
+    });
+
+    if (!res.ok) {
+      // Backend doesn't have this document — graceful degradation
+      return NextResponse.json(
+        { error: 'Document non trouvé. Les documents sont stockés localement pour le moment.' },
+        { status: 404 },
+      );
+    }
+
+    // Forward the document (could be PDF, HTML, etc.)
+    const contentType = res.headers.get('content-type') || 'application/octet-stream';
+    const disposition = res.headers.get('content-disposition') || `attachment; filename="document-${id}.pdf"`;
+    const blob = await res.arrayBuffer();
+
+    return new NextResponse(blob, {
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': disposition,
+      },
+    });
+  } catch {
+    return NextResponse.json(
+      { error: 'Service de stockage non disponible. Les documents sont stockés localement.' },
+      { status: 503 },
+    );
+  }
 }

@@ -99,6 +99,12 @@ export function validateExternalUrl(url: string): { valid: boolean; error?: stri
       /^fc00:/i, /^fd/i,      // IPv6 private
       /^::1$/,                 // IPv6 loopback
       /^fe80:/i,               // IPv6 link-local
+      // IPv4-mapped IPv6 (bypass for loopback/private)
+      /^::ffff:127\./i,
+      /^::ffff:10\./i,
+      /^::ffff:172\.(1[6-9]|2[0-9]|3[01])\./i,
+      /^::ffff:192\.168\./i,
+      /^::ffff:0\./i,
       /\.local$/i,             // mDNS
       /\.internal$/i,
       /\.corp$/i,

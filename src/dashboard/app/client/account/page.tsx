@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { z } from 'zod';
 import Link from 'next/link';
 import { DEPOSIT_OPTIONS, COMMISSION_TIERS, DEFAULT_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
@@ -32,6 +33,11 @@ const NOTIFICATION_CHANNELS = [
   { key: 'notifyDailyReport', icon: '📊', label: 'Rapport quotidien', comingSoon: false },
   { key: 'notifyWeeklyReport', icon: '📈', label: 'Rapport hebdomadaire', comingSoon: false },
 ];
+
+const AutoTopupSchema = z.object({
+  threshold: z.number().min(1, 'Le seuil doit etre au moins 1').max(1000, 'Le seuil ne peut pas depasser 1000'),
+  amount: z.number().min(5, 'Le montant doit etre au moins 5').max(10000, 'Le montant ne peut pas depasser 10 000'),
+});
 
 export default function AccountPage() {
   const isMobile = useIsMobile();
@@ -229,6 +235,14 @@ export default function AccountPage() {
   async function saveAutoTopup() {
     const token = session.token as string;
     if (!token) return;
+
+    // Validate auto-topup settings
+    const validation = AutoTopupSchema.safeParse({ threshold: autoTopup.threshold, amount: autoTopup.amount });
+    if (!validation.success) {
+      showError(validation.error.issues[0]?.message ?? 'Parametres de recharge invalides');
+      return;
+    }
+
     setAutoTopupLoading(true);
     setAutoTopupSaved(false);
     try {

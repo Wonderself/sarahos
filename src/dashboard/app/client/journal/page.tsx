@@ -5,6 +5,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import { recordEvent } from '../../../lib/gamification';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Journal Personnel
@@ -110,6 +111,7 @@ export default function JournalPage() {
     if (!content.trim()) return;
     const entry: JournalEntry = { id: uid(), date: new Date().toISOString().slice(0, 10), content: content.trim(), mood, tags, createdAt: new Date().toISOString() };
     persist([entry, ...entries]);
+    recordEvent({ type: 'document' }); // +25 XP for journal entry
     setShowNew(false); setContent(''); setMood('😊'); setTags([]); setTagInput('');
     setPrompt(PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
   };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef, type CSSProperties, type ChangeEvent, type DragEvent } from 'react';
+import { z } from 'zod';
 import { useIsMobile } from '@/lib/use-media-query';
 import PageBlogSection from '@/components/blog/PageBlogSection';
 
@@ -38,6 +39,13 @@ const DEFAULT_BRANDING: BrandingConfig = {
   companyPhone: '',
   companyEmail: '',
 };
+
+const BrandingSchema = z.object({
+  companyName: z.string().max(200, 'Nom trop long (200 caracteres max)').optional().or(z.literal('')),
+  siret: z.string().regex(/^(\d{14})?$/, 'SIRET doit avoir 14 chiffres').optional().or(z.literal('')),
+  email: z.string().email('Email invalide').optional().or(z.literal('')),
+  phone: z.string().regex(/^(\+?[0-9\s\-]{10,20})?$/, 'Format telephone invalide').optional().or(z.literal('')),
+});
 
 const FONT_OPTIONS = ['Inter', 'Arial', 'Georgia', 'Roboto'];
 const TON_OPTIONS = ['Formel', 'Decontracte', 'Luxe', 'Artisanal'];
@@ -233,31 +241,93 @@ export default function BrandingPage() {
   const [branding, setBranding] = useState<BrandingConfig>(DEFAULT_BRANDING);
   const [isDragging, setIsDragging] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount, fallback to backend
   useEffect(() => {
+    let hasLocalBranding = false;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as Partial<BrandingConfig>;
         setBranding({ ...DEFAULT_BRANDING, ...parsed });
+        hasLocalBranding = true;
       }
     } catch {
       // ignore parse errors
     }
+
+    // If no local data, try loading from backend
+    if (!hasLocalBranding) {
+      try {
+        const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+        if (session.token) {
+          fetch('/api/portal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: '/portal/preferences', token: session.token, method: 'GET' }),
+          })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+              if (data?.branding) {
+                const merged = { ...DEFAULT_BRANDING, ...data.branding };
+                setBranding(merged);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+              }
+            })
+            .catch(() => {});
+        }
+      } catch { /* silent */ }
+    }
+  }, []);
+
+  // Sync branding to backend (fire-and-forget)
+  const syncToBackend = useCallback((brandingData: BrandingConfig) => {
+    try {
+      const session = JSON.parse(localStorage.getItem('fz_session') || '{}');
+      if (session.token) {
+        fetch('/api/portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            path: '/portal/preferences',
+            token: session.token,
+            method: 'PATCH',
+            data: { branding: brandingData },
+          }),
+        }).catch(() => {}); // Fire-and-forget, don't block UI
+      }
+    } catch { /* silent */ }
   }, []);
 
   // Debounced save
   const scheduleSave = useCallback((config: BrandingConfig) => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
+      // Validate company info before saving
+      const siretClean = config.companySiret.replace(/[\s\-]/g, '');
+      const validation = BrandingSchema.safeParse({
+        companyName: config.companyName,
+        siret: siretClean,
+        email: config.companyEmail,
+        phone: config.companyPhone,
+      });
+      if (!validation.success) {
+        const firstError = validation.error.issues[0]?.message ?? 'Erreur de validation';
+        setValidationError(firstError);
+        setTimeout(() => setValidationError(null), 3000);
+        return;
+      }
+      setValidationError(null);
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+      syncToBackend(config);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     }, 1000);
-  }, []);
+  }, [syncToBackend]);
 
   const updateField = useCallback(<K extends keyof BrandingConfig>(key: K, value: BrandingConfig[K]) => {
     setBranding(prev => {
@@ -303,9 +373,10 @@ export default function BrandingPage() {
   const handleReset = useCallback(() => {
     setBranding({ ...DEFAULT_BRANDING });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_BRANDING));
+    syncToBackend(DEFAULT_BRANDING);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
-  }, []);
+  }, [syncToBackend]);
 
   // ─── Render ─────────────────────────────────────────────────
 
@@ -323,6 +394,7 @@ export default function BrandingPage() {
             <h1 style={styles.title}>
               {'🎨 Mon Branding'}
               {saved && <span style={styles.savedBadge}>Sauvegarde</span>}
+              {validationError && <span style={{ fontSize: 11, color: '#DC2626', marginLeft: 8 }}>{validationError}</span>}
             </h1>
             <p style={styles.subtitle}>Personnalisez l&apos;apparence de vos documents</p>
           </div>

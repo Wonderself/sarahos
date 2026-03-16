@@ -126,29 +126,47 @@ export default function SkillsPage() {
     });
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3010';
-      const token = getSession().token;
-      const res = await fetch(`${baseUrl}/chat`, {
+      const currentSession = getSession();
+      const modelMap: Record<string, string> = {
+        opus: 'claude-opus-4-6',
+        haiku: 'claude-haiku-4-5-20251001',
+        sonnet: 'claude-sonnet-4-20250514',
+      };
+      const modelId = modelMap[skill.model] ?? 'claude-sonnet-4-20250514';
+
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(currentSession.token ? { Authorization: `Bearer ${currentSession.token}` } : {}),
         },
         body: JSON.stringify({
-          message: userInput,
-          systemPrompt: skill.systemPrompt,
-          model: skill.model,
+          model: modelId,
+          messages: [
+            { role: 'system', content: skill.systemPrompt },
+            { role: 'user', content: userInput },
+          ],
+          maxTokens: 4096,
+          agentName: `fz-skill-${skill.id}`,
         }),
       });
 
       if (!res.ok) {
-        setSkillResponse(`Erreur ${res.status} — veuillez réessayer.`);
+        if (res.status === 402) {
+          setSkillResponse('Cr\u00e9dits insuffisants. Rechargez votre solde pour utiliser ce skill.');
+        } else if (res.status === 429) {
+          setSkillResponse('Trop de requ\u00eates. Veuillez patienter quelques instants avant de r\u00e9essayer.');
+        } else if (res.status === 401) {
+          setSkillResponse('Session expir\u00e9e. Veuillez vous reconnecter.');
+        } else {
+          setSkillResponse(`Erreur ${res.status} — veuillez r\u00e9essayer.`);
+        }
       } else {
-        const data = (await res.json()) as { response?: string; message?: string };
-        setSkillResponse(data.response ?? data.message ?? 'Aucune réponse.');
+        const data = (await res.json()) as { response?: string; message?: string; content?: string };
+        setSkillResponse(data.response ?? data.message ?? data.content ?? 'Aucune r\u00e9ponse.');
       }
     } catch {
-      setSkillResponse('Impossible de contacter le serveur. Vérifiez votre connexion.');
+      setSkillResponse('Impossible de contacter le serveur. V\u00e9rifiez votre connexion.');
     } finally {
       setIsRunning(false);
     }

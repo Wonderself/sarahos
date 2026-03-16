@@ -5,6 +5,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import { recordEvent } from '../../../lib/gamification';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Suivi des habitudes
@@ -130,14 +131,19 @@ export default function HabitudesPage() {
 
   const toggleToday = (id: string) => {
     const d = today();
+    let wasCompleted = false;
     const habits = state.habits.map(h => {
       if (h.id !== id) return h;
       const completions = { ...h.completions };
       completions[d] = !completions[d];
       if (!completions[d]) delete completions[d];
+      else wasCompleted = true;
       return { ...h, completions };
     });
     persist({ habits });
+    if (wasCompleted) {
+      recordEvent({ type: 'message' }); // +10 XP for completing a habit
+    }
   };
 
   const addHabit = (name: string, emoji: string, color: string) => {

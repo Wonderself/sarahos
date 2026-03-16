@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
+import { z } from 'zod';
 
 // ─── Notion Palette ───────────────────────────────────────────
 const C = {
@@ -154,6 +155,13 @@ const DEFAULT_SETTINGS: AllSettings = {
   userRole: 'owner',
   hasOrg: false,
 };
+
+// ─── Zod Validation ─────────────────────────────────────────
+const ProfileSchema = z.object({
+  displayName: z.string().min(1, 'Nom requis').max(100, 'Nom trop long (100 caracteres max)'),
+  phone: z.string().regex(/^(\+?[0-9\s\-]{10,20})?$/, 'Format telephone invalide').optional().or(z.literal('')),
+  timezone: z.string().min(1, 'Fuseau horaire requis'),
+});
 
 // ─── Tabs Configuration ──────────────────────────────────────
 interface TabDef {
@@ -480,12 +488,34 @@ function Toggle({
   );
 }
 
+// ─── Webhook URL Validation ───────────────────────────────────
+function isValidWebhookUrl(url: string): { valid: boolean; error?: string } {
+  if (!url) return { valid: true }; // Empty is OK (disabled)
+  try {
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return { valid: false, error: 'URL doit commencer par http:// ou https://' };
+    }
+    if (['localhost', '127.0.0.1', '0.0.0.0', '::1'].includes(parsed.hostname)) {
+      return { valid: false, error: 'URL localhost non autorisee' };
+    }
+    if (parsed.hostname.endsWith('.local') || parsed.hostname.endsWith('.internal')) {
+      return { valid: false, error: 'URL reseau interne non autorisee' };
+    }
+    return { valid: true };
+  } catch {
+    return { valid: false, error: 'URL invalide' };
+  }
+}
+
 // ─── Main Component ───────────────────────────────────────────
 export default function PersonalizationPage() {
   const [settings, setSettings] = useState<AllSettings>(DEFAULT_SETTINGS);
   const [activeTab, setActiveTab] = useState<TabId>('profile');
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [webhookError, setWebhookError] = useState<string | undefined>(undefined);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Fetch settings on mount ───────────────────────────────
@@ -514,6 +544,21 @@ export default function PersonalizationPage() {
     (updated: AllSettings) => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(async () => {
+        // Validate profile fields before saving
+        const profileResult = ProfileSchema.safeParse({
+          displayName: updated.profile.displayName,
+          phone: updated.profile.phone,
+          timezone: updated.profile.timezone,
+        });
+        if (!profileResult.success) {
+          const firstError = profileResult.error.issues[0]?.message ?? 'Erreur de validation';
+          setValidationError(firstError);
+          setSaveStatus('error');
+          setTimeout(() => { setSaveStatus('idle'); setValidationError(null); }, 3000);
+          return;
+        }
+        setValidationError(null);
+
         setSaveStatus('saving');
         try {
           const token = getToken();
@@ -577,6 +622,20 @@ export default function PersonalizationPage() {
   }
 
   function updateIntegrations<K extends keyof IntegrationSettings>(field: K, value: IntegrationSettings[K]) {
+    // Validate webhook URL before saving
+    if (field === 'webhookUrl') {
+      const validation = isValidWebhookUrl(value as string);
+      setWebhookError(validation.error);
+      setSettings(prev => {
+        const next = { ...prev, integrations: { ...prev.integrations, [field]: value } };
+        // Only auto-save if URL is valid (or empty)
+        if (validation.valid) {
+          autoSave(next);
+        }
+        return next;
+      });
+      return;
+    }
     setSettings(prev => {
       const next = { ...prev, integrations: { ...prev.integrations, [field]: value } };
       autoSave(next);
@@ -1002,11 +1061,19 @@ export default function PersonalizationPage() {
               <div style={{ ...S.field, flex: 1 }}>
                 <label style={S.label}>URL du webhook</label>
                 <input
-                  style={S.input}
+                  style={{
+                    ...S.input,
+                    ...(webhookError ? { borderColor: C.danger } : {}),
+                  }}
                   value={i.webhookUrl}
                   onChange={e => updateIntegrations('webhookUrl', e.target.value)}
                   placeholder="https://votre-serveur.com/webhook"
                 />
+                {webhookError && (
+                  <div style={{ fontSize: 11, color: C.danger, marginTop: 4 }}>
+                    {webhookError}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -1208,7 +1275,7 @@ export default function PersonalizationPage() {
         >
           {saveStatus === 'saving' && 'Sauvegarde...'}
           {saveStatus === 'saved' && 'Sauvegarde !'}
-          {saveStatus === 'error' && 'Erreur de sauvegarde'}
+          {saveStatus === 'error' && (validationError ?? 'Erreur de sauvegarde')}
         </div>
       )}
     </div>

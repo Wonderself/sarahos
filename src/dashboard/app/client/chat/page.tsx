@@ -28,6 +28,7 @@ import { useVisitorDraft } from '../../../lib/useVisitorDraft';
 import VoiceInput from '../../../components/VoiceInput';
 import AudioPlayback from '../../../components/AudioPlayback';
 import { MarkdownContent } from '@/lib/markdown';
+import { MemoryService } from '@/lib/memory';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -817,8 +818,17 @@ export default function ChatPage() {
         ? conversationMsgs.slice(-MAX_CONTEXT_MESSAGES)
         : conversationMsgs;
 
+      // Inject user memories into system prompt if available
+      let enrichedSystemPrompt = selectedAgent.systemPrompt;
+      try {
+        const memoryContext = MemoryService.buildContextForAssistant(selectedAgent.id);
+        if (memoryContext) {
+          enrichedSystemPrompt = `${memoryContext}\n\n---\n\n${selectedAgent.systemPrompt}`;
+        }
+      } catch { /* MemoryService error — continue without memory */ }
+
       const apiMessages = [
-        { role: 'user' as const, content: selectedAgent.systemPrompt },
+        { role: 'user' as const, content: enrichedSystemPrompt },
         { role: 'assistant' as const, content: `Compris, je suis ${selectedAgent.name}, ${selectedAgent.role}. Comment puis-je vous aider?` },
         ...(conversationMsgs.length > MAX_CONTEXT_MESSAGES
           ? [{ role: 'user' as const, content: '[Note: messages précédents résumés pour optimiser les tokens. Concentre-toi sur les messages récents ci-dessous.]' },
@@ -949,8 +959,17 @@ export default function ChatPage() {
         ? conversationMsgs.slice(-MAX_CONTEXT_MESSAGES)
         : conversationMsgs;
 
+      // Inject user memories into system prompt if available
+      let enrichedSystemPrompt = selectedAgent.systemPrompt;
+      try {
+        const memoryContext = MemoryService.buildContextForAssistant(selectedAgent.id);
+        if (memoryContext) {
+          enrichedSystemPrompt = `${memoryContext}\n\n---\n\n${selectedAgent.systemPrompt}`;
+        }
+      } catch { /* MemoryService error — continue without memory */ }
+
       const apiMessages = [
-        { role: 'user' as const, content: selectedAgent.systemPrompt },
+        { role: 'user' as const, content: enrichedSystemPrompt },
         { role: 'assistant' as const, content: `Compris, je suis ${selectedAgent.name}, ${selectedAgent.role}. Comment puis-je vous aider?` },
         ...(conversationMsgs.length > MAX_CONTEXT_MESSAGES
           ? [{ role: 'user' as const, content: '[Note: messages précédents résumés pour optimiser les tokens. Concentre-toi sur les messages récents ci-dessous.]' },
@@ -1123,7 +1142,7 @@ export default function ChatPage() {
     const title = firstUserMsg ? firstUserMsg.content.substring(0, 60) + (firstUserMsg.content.length > 60 ? '...' : '') : 'Conversation';
     const entry: ConversationEntry = {
       id, agentId: selectedAgent.id, agentEmoji: selectedAgent.emoji,
-      title, messages, date: new Date().toISOString(), totalTokens,
+      title, messages: messages.slice(-50), date: new Date().toISOString(), totalTokens,
     };
     setHistory(prev => [entry, ...prev.filter(h => h.id !== id)].slice(0, MAX_HISTORY));
     setCurrentConvoId(id);

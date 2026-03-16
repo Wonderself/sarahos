@@ -5,6 +5,7 @@ import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import { recordEvent } from '../../../lib/gamification';
 
 // ═══════════════════════════════════════════════════
 //  Freenzy.io — Pomodoro / Focus Timer
@@ -100,6 +101,7 @@ export default function PomodoroPage() {
           persist(updated);
 
           if (phase === 'work') {
+            recordEvent({ type: 'message' }); // +10 XP for completing a work session
             const newCount = workCount + 1;
             setWorkCount(newCount);
             if (newCount % state.settings.longBreakInterval === 0) {

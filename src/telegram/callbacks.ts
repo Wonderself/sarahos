@@ -253,27 +253,31 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
 
   // ── Handle pending multi-step actions (plain text responses) ──
   bot.on('message', async (msg) => {
-    if (msg.chat.id.toString() !== adminChatId) return;
-    if (!msg.text || msg.text.startsWith('/')) return;
-    if (msg.photo) return;
+    try {
+      if (msg.chat.id.toString() !== adminChatId) return;
+      if (!msg.text || msg.text.startsWith('/')) return;
+      if (msg.photo) return;
 
-    const chatId = msg.chat.id.toString();
-    const pending = pendingActions.get(chatId);
+      const chatId = msg.chat.id.toString();
+      const pending = pendingActions.get(chatId);
 
-    if (pending && Date.now() < pending.expiresAt) {
-      if (pending.type === 'reject_reason') {
-        const id = pending.data.id;
-        const reason = msg.text;
-        await dbQuery(`UPDATE agent_proposals SET status = 'rejected', reviewed_by = 'emmanuel', reviewed_at = NOW(), rejection_reason = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
-        await bot.sendMessage(chatId, `❌ Action \`${id}\` refusée.\nRaison : ${reason}`, { parse_mode: 'Markdown' });
+      if (pending && Date.now() < pending.expiresAt) {
+        if (pending.type === 'reject_reason') {
+          const id = pending.data.id;
+          const reason = msg.text;
+          await dbQuery(`UPDATE agent_proposals SET status = 'rejected', reviewed_by = 'emmanuel', reviewed_at = NOW(), rejection_reason = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
+          await bot.sendMessage(chatId, `❌ Action \`${id}\` refusée.\nRaison : ${reason}`, { parse_mode: 'Markdown' });
+          pendingActions.delete(chatId);
+          return;
+        }
         pendingActions.delete(chatId);
-        return;
       }
-      pendingActions.delete(chatId);
-    }
 
-    // No pending action — treat as /chat message (conversation libre)
-    await handleChat(bot, chatId, msg.text);
+      // No pending action — treat as /chat message (conversation libre)
+      await handleChat(bot, chatId, msg.text);
+    } catch (err) {
+      console.error('[Message handler] Error (bot survived):', err instanceof Error ? err.message : err);
+    }
   });
 
   // Clean up expired pending actions every 5 min

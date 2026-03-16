@@ -51,12 +51,26 @@ function statusIcon(value: string, thresholds: [number, number]): string {
   return n < thresholds[0] ? '🟢' : n < thresholds[1] ? '🟡' : '🔴';
 }
 
+// ─── Safe command wrapper ─────────────────────────────────────
+// Wraps all command handlers to prevent unhandled promise crashes
+function safeHandler(
+  bot: TelegramBot,
+  handler: (msg: TelegramBot.Message, match: RegExpExecArray | null) => Promise<void>,
+): (msg: TelegramBot.Message, match: RegExpExecArray | null) => void {
+  return (msg, match) => {
+    handler(msg, match).catch((err) => {
+      console.error('[Command] Handler error (bot survived):', err instanceof Error ? err.message : err);
+      bot.sendMessage(msg.chat.id, '⚠️ Erreur temporaire. Réessaie dans quelques secondes.').catch(() => {});
+    });
+  };
+}
+
 // ─── Register all commands ─────────────────────────────────────
 
 export function registerBotCommands(bot: TelegramBot, adminChatId: string): void {
 
   // ── /start ──
-  bot.onText(/\/start/, async (msg) => {
+  bot.onText(/\/start/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     await bot.sendMessage(msg.chat.id, `🤖 *Freenzy Admin Bot*
 
@@ -107,20 +121,20 @@ _Écris en texte libre, il répond direct_
 💬 *CONVERSATION*
 /reset — Réinitialiser l'historique
 /help — Cette aide`, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /help (alias /start) ──
-  bot.onText(/\/help/, async (msg) => {
+  bot.onText(/\/help/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     // Simulate /start via processUpdate
     bot.processUpdate({
       update_id: Date.now(),
       message: { ...msg, text: '/start', message_id: Date.now() },
     });
-  });
+  }));
 
   // ── /status ──
-  bot.onText(/\/status/, async (msg) => {
+  bot.onText(/\/status/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const sys = await getSystemStats();
@@ -174,10 +188,10 @@ _Écris en texte libre, il répond direct_
         ]],
       },
     });
-  });
+  }));
 
   // ── /users ──
-  bot.onText(/\/users(?:\s+(\d+))?/, async (msg, _match) => {
+  bot.onText(/\/users(?:\s+(\d+))?/, safeHandler(bot, async (msg, _match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const total = await dbQuery('SELECT COUNT(*) FROM users');
@@ -213,10 +227,10 @@ ${topProfessions.split('\n').map((l: string) => {
 }).filter(Boolean).join('\n') || '• Aucune donnée'}`;
 
     await bot.sendMessage(msg.chat.id, usersMsg, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /revenue ──
-  bot.onText(/\/revenue(?:\s+(\w+))?/, async (msg, match) => {
+  bot.onText(/\/revenue(?:\s+(\w+))?/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const period = match?.[1] || 'today';
 
@@ -243,10 +257,10 @@ ${topProfessions.split('\n').map((l: string) => {
         ]],
       },
     });
-  });
+  }));
 
   // ── /errors ──
-  bot.onText(/\/errors(?:\s+(\d+))?/, async (msg, match) => {
+  bot.onText(/\/errors(?:\s+(\d+))?/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const n = parseInt(match?.[1] || '10', 10);
 
@@ -258,10 +272,10 @@ ${topProfessions.split('\n').map((l: string) => {
 
     const errMsg = `🚨 *Dernières erreurs* (${n})\n\n\`\`\`\n${errors || 'Aucune erreur'}\n\`\`\``;
     await bot.sendMessage(msg.chat.id, errMsg, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /pending ──
-  bot.onText(/\/pending/, async (msg) => {
+  bot.onText(/\/pending/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const pending = await dbQuery(`
@@ -292,20 +306,20 @@ ${topProfessions.split('\n').map((l: string) => {
         },
       });
     }
-  });
+  }));
 
   // ── /approve [id] ──
-  bot.onText(/\/approve (\w+)/, async (msg, match) => {
+  bot.onText(/\/approve (\w+)/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const id = match?.[1];
     if (!id) return;
 
     await dbQuery(`UPDATE agent_proposals SET status = 'approved', reviewed_by = 'emmanuel', reviewed_at = NOW() WHERE id = '${id}'`);
     await bot.sendMessage(msg.chat.id, `✅ Action \`${id}\` approuvée et exécutée.`, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /reject [id] ──
-  bot.onText(/\/reject (\w+)(?:\s+(.+))?/, async (msg, match) => {
+  bot.onText(/\/reject (\w+)(?:\s+(.+))?/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const id = match?.[1];
     const reason = match?.[2] || 'Refusé par admin';
@@ -313,10 +327,10 @@ ${topProfessions.split('\n').map((l: string) => {
 
     await dbQuery(`UPDATE agent_proposals SET status = 'rejected', reviewed_by = 'emmanuel', reviewed_at = NOW(), rejection_reason = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
     await bot.sendMessage(msg.chat.id, `❌ Action \`${id}\` refusée. Raison : ${reason}`, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /deploy ──
-  bot.onText(/\/deploy/, async (msg) => {
+  bot.onText(/\/deploy/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     await bot.sendMessage(msg.chat.id, '⚠️ *Déployer en production ?*', {
       parse_mode: 'Markdown',
@@ -327,17 +341,17 @@ ${topProfessions.split('\n').map((l: string) => {
         ]],
       },
     });
-  });
+  }));
 
   // ── /backup ──
-  bot.onText(/\/backup/, async (msg) => {
+  bot.onText(/\/backup/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     spawn('bash', ['/root/crons/backup-db.sh'], { detached: true, stdio: 'ignore' }).unref();
     await bot.sendMessage(msg.chat.id, '💾 Backup lancé... Tu recevras une notification à la fin.');
-  });
+  }));
 
   // ── /report ──
-  bot.onText(/\/report/, async (msg) => {
+  bot.onText(/\/report/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const sys = await getSystemStats();
@@ -357,10 +371,10 @@ ${topProfessions.split('\n').map((l: string) => {
 ⏰ Uptime : ${sys.uptime}`;
 
     await bot.sendMessage(msg.chat.id, report, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /broadcast [message] ──
-  bot.onText(/\/broadcast (.+)/, async (msg, match) => {
+  bot.onText(/\/broadcast (.+)/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const message = match?.[1];
     if (!message) return;
@@ -376,10 +390,10 @@ ${topProfessions.split('\n').map((l: string) => {
         ]],
       },
     });
-  });
+  }));
 
   // ── /credits [email] [montant] ──
-  bot.onText(/\/credits (\S+) (\d+)/, async (msg, match) => {
+  bot.onText(/\/credits (\S+) (\d+)/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const email = match?.[1];
     const amount = match?.[2];
@@ -394,10 +408,10 @@ ${topProfessions.split('\n').map((l: string) => {
         ]],
       },
     });
-  });
+  }));
 
   // ── /user [email] ──
-  bot.onText(/\/user (\S+)/, async (msg, match) => {
+  bot.onText(/\/user (\S+)/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const email = match?.[1];
     if (!email) return;
@@ -425,10 +439,10 @@ ${topProfessions.split('\n').map((l: string) => {
 🕐 Dernier login : ${lastLogin?.slice(0, 16) || 'jamais'}`;
 
     await bot.sendMessage(msg.chat.id, userMsg, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /backlog ──
-  bot.onText(/\/backlog/, async (msg) => {
+  bot.onText(/\/backlog/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const items = await dbQuery(`
@@ -451,17 +465,17 @@ ${topProfessions.split('\n').map((l: string) => {
     }
 
     await bot.sendMessage(msg.chat.id, backlogMsg, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /reset ──
-  bot.onText(/\/reset/, async (msg) => {
+  bot.onText(/\/reset/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     resetHistory(msg.chat.id.toString());
     await bot.sendMessage(msg.chat.id, '🔄 Historique effacé. Nouvelle conversation.');
-  });
+  }));
 
   // ── /teams ──
-  bot.onText(/\/teams/, async (msg) => {
+  bot.onText(/\/teams/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const teams = await dbQuery(`
@@ -503,10 +517,10 @@ ${topProfessions.split('\n').map((l: string) => {
         ]],
       },
     });
-  });
+  }));
 
   // ── /team [name] ──
-  bot.onText(/\/team (.+)/, async (msg, match) => {
+  bot.onText(/\/team (.+)/, safeHandler(bot, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const search = match?.[1]?.trim();
     if (!search) return;
@@ -584,10 +598,10 @@ ${topProfessions.split('\n').map((l: string) => {
         ]],
       },
     });
-  });
+  }));
 
   // ── /tickets ──
-  bot.onText(/\/tickets/, async (msg) => {
+  bot.onText(/\/tickets/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const tickets = await dbQuery(`
@@ -612,10 +626,10 @@ ${topProfessions.split('\n').map((l: string) => {
     }
 
     await bot.sendMessage(msg.chat.id, ticketsMsg, { parse_mode: 'Markdown' });
-  });
+  }));
 
   // ── /referrals ──
-  bot.onText(/\/referrals/, async (msg) => {
+  bot.onText(/\/referrals/, safeHandler(bot, async (msg) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const stats = await dbQuery(`
@@ -649,5 +663,5 @@ ${topProfessions.split('\n').map((l: string) => {
     }
 
     await bot.sendMessage(msg.chat.id, msg2, { parse_mode: 'Markdown' });
-  });
+  }));
 }

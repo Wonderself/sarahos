@@ -1110,7 +1110,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── PHONE (<768px) ─── */
 @media (max-width: 767px) {
-  /* Phone: hide standalone emoji rail — sidebar handles everything */
+  /* Phone: NO separate emoji rail — sidebar IS the only navigation */
   .emoji-rail {
     display: none !important;
   }
@@ -1120,7 +1120,7 @@ a { color: inherit; text-decoration: none; }
     display: none !important;
   }
 
-  /* Content offset by sidebar icon column width */
+  /* Content always offset by the collapsed sidebar width */
   .client-main-content {
     margin-left: 56px !important;
     padding-top: 0 !important;
@@ -1129,42 +1129,63 @@ a { color: inherit; text-decoration: none; }
     margin-left: 56px !important;
   }
 
-  /* Sidebar: always visible as 56px icon column, expands on click */
+  /* Sidebar: always visible, collapsed to icon-only width */
   .client-sidebar {
     position: fixed !important;
-    top: 0;
+    top: 0 !important;
     left: 0 !important;
-    bottom: 0;
+    bottom: 0 !important;
     width: 56px !important;
     min-width: 56px !important;
+    max-width: 56px !important;
     transform: translateX(0) !important; /* ALWAYS visible */
-    transition: width 0.25s ease, min-width 0.25s ease;
+    transition: width 0.25s ease, min-width 0.25s ease, max-width 0.25s ease;
     z-index: 200;
-    overflow: hidden;
+    overflow: hidden !important;
+    overflow-y: auto !important;
     background: #fff;
     border-right: 1px solid #E5E5E5;
   }
+
+  /* When expanded: full width with text visible */
   .client-sidebar.sidebar-expanded {
     width: 280px !important;
     min-width: 280px !important;
+    max-width: 280px !important;
     box-shadow: 4px 0 16px rgba(0,0,0,0.1);
-    overflow-y: auto;
-    left: 0 !important;
   }
 
-  /* When collapsed: hide ALL sidebar content except phone-collapsed-rail */
-  .client-sidebar:not(.sidebar-expanded) > *:not(.phone-collapsed-rail) {
+  /* When collapsed: hide the text-heavy header, section title text, footer */
+  .client-sidebar:not(.sidebar-expanded) .sidebar-header { display: none !important; }
+  .client-sidebar:not(.sidebar-expanded) .sidebar-footer-wrap { display: none !important; }
+  .client-sidebar:not(.sidebar-expanded) .phone-collapsed-rail { display: none !important; }
+
+  /* Nav links when collapsed: center the icon, minimum touch target */
+  .client-sidebar:not(.sidebar-expanded) .nav-link {
+    padding: 10px 0 !important;
+    justify-content: center !important;
+    min-height: 44px;
+  }
+
+  /* Hide the text label inside nav links when collapsed */
+  .client-sidebar:not(.sidebar-expanded) .nav-link span:not(.material-symbols-outlined) {
     display: none !important;
   }
 
-  /* Show phone collapsed rail only when not expanded */
-  .client-sidebar.sidebar-expanded .phone-collapsed-rail {
-    display: none !important;
+  /* Section titles when collapsed: center the emoji, hide text */
+  .client-sidebar:not(.sidebar-expanded) .nav-section-title {
+    justify-content: center !important;
+    padding: 4px 0 !important;
+    font-size: 0 !important;
+  }
+  .client-sidebar:not(.sidebar-expanded) .nav-section-title .section-emoji-label {
+    display: inline !important;
+    font-size: 14px !important;
   }
 
-  /* Overlay starts at left:0 (sidebar overlaps content) */
+  /* Overlay: starts at sidebar edge so icon column remains clickable */
   .sidebar-overlay {
-    left: 0 !important;
+    left: 56px !important;
     z-index: 199;
   }
 
@@ -1323,13 +1344,13 @@ a { color: inherit; text-decoration: none; }
 
 /* ─── Phone sidebar enhancements ─── */
 @media (max-width: 767px) {
-  /* Touch-friendly nav links (iOS minimum 44px) */
-  .client-sidebar .nav-link {
+  /* Touch-friendly nav links when expanded (iOS minimum 44px) */
+  .client-sidebar.sidebar-expanded .nav-link {
     padding: 12px 16px;
     font-size: 13px;
     min-height: 44px;
   }
-  .client-sidebar .nav-section-title {
+  .client-sidebar.sidebar-expanded .nav-section-title {
     font-size: 10px;
     padding: 10px 12px 2px;
   }
@@ -1348,20 +1369,6 @@ a { color: inherit; text-decoration: none; }
   .page-container {
     padding-bottom: 16px;
   }
-
-  /* Phone collapsed rail styling */
-  .phone-collapsed-rail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    padding: 4px 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .phone-collapsed-rail::-webkit-scrollbar { display: none; }
 }
 
 /* ─── Tablet sidebar enhancements ─── */

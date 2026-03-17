@@ -1030,103 +1030,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       })()}
 
       {/* Client Sidebar (expanded) */}
-      <nav className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`} style={{ background: '#fff', width: 240, borderRight: '1px solid #E5E5E5' }}>
-        {/* Phone collapsed rail: shows section emojis only when sidebar is 56px */}
-        {isPhone && (
-          <div className="phone-collapsed-rail">
-            <button
-              onClick={() => setSidebarExpanded(true)}
-              title="Menu"
-              style={{
-                width: 40, height: 40, borderRadius: 10, border: 'none',
-                background: 'transparent', cursor: 'pointer',
-                fontSize: 13, fontWeight: 800, fontFamily: 'system-ui', color: '#1A1A1A',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: 4, flexShrink: 0,
-              }}
-            >
-              f.
-            </button>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, overflowY: 'auto', scrollbarWidth: 'none' as const }}>
-              {(() => {
-                const phoneNavCtx = getCurrentNavContext(pathname, visibleSections);
-                return visibleSections.map(section => {
-                const sEmoji = SECTION_EMOJIS[section.id] || '\uD83D\uDCCC';
-                const isCurrent = phoneNavCtx?.sectionId === section.id;
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => {
-                      setSidebarExpanded(true);
-                      requestAnimationFrame(() => {
-                        const el = document.getElementById(`nav-section-${section.id}`);
-                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                      });
-                    }}
-                    title={section.title}
-                    style={{
-                      width: 40, height: 40, borderRadius: 10, border: 'none',
-                      background: isCurrent ? 'rgba(0,0,0,0.06)' : 'transparent',
-                      cursor: 'pointer', fontSize: 18,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      position: 'relative' as const, flexShrink: 0,
-                    }}
-                  >
-                    {sEmoji}
-                    {isCurrent && (
-                      <span style={{
-                        position: 'absolute', left: 0, top: 8, bottom: 8,
-                        width: 3, borderRadius: '0 2px 2px 0', background: '#1A1A1A',
-                      }} />
-                    )}
-                  </button>
-                );
-              });
-              })()}
-            </div>
-            <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: '4px 0', paddingBottom: 'max(4px, env(safe-area-inset-bottom, 0px))', flexShrink: 0 }}>
-              <button
-                onClick={() => { setSearchOpen(true); }}
-                title="Rechercher (Ctrl+K)"
-                style={{
-                  width: 40, height: 40, borderRadius: 10, border: 'none',
-                  background: 'transparent', cursor: 'pointer', fontSize: 18,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}
-              >
-                {'\uD83D\uDD0D'}
-              </button>
-              <Link
-                href="/client/account"
-                title="Mon compte"
-                onClick={() => setSidebarExpanded(false)}
-                style={{
-                  width: 40, height: 40, borderRadius: 10, border: 'none',
-                  background: 'transparent', cursor: 'pointer', fontSize: 18,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  textDecoration: 'none',
-                }}
-              >
-                {'\u2699\uFE0F'}
-              </Link>
-              <Link
-                href={session ? '/client/account' : '/login'}
-                title={session ? (session.displayName || 'Mon compte') : 'Se connecter'}
-                onClick={() => setSidebarExpanded(false)}
-                style={{
-                  width: 32, height: 32, borderRadius: '50%',
-                  background: session ? 'rgba(14,165,233,0.1)' : '#1A1A1A',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 11, fontWeight: 700,
-                  color: session ? '#0EA5E9' : '#fff',
-                  cursor: 'pointer', marginTop: 2, textDecoration: 'none',
-                }}
-              >
-                {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '?'}
-              </Link>
-            </div>
-          </div>
-        )}
+      <nav
+        className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`}
+        style={{ background: '#fff', width: 240, borderRight: '1px solid #E5E5E5' }}
+        onClick={(e) => {
+          if (isPhone && !sidebarExpanded) {
+            e.preventDefault();
+            e.stopPropagation();
+            setSidebarExpanded(true);
+          }
+        }}
+      >
         <div className="sidebar-header" style={{ padding: '8px 12px 4px' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,

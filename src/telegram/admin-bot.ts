@@ -10,11 +10,36 @@ export const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/
 
 // ─── DB Helper ─────────────────────────────────────────────────
 // Uses docker exec to reach PostgreSQL inside the container
-const PG_CONTAINER = process.env.PG_CONTAINER || 'freenzy-postgres-ewcwwk0wocw0cw0kccsw4kcw-024742433003';
+// Container name is auto-detected to survive Coolify redeploys
+async function findContainer(namePattern: string): Promise<string> {
+  return new Promise((resolve) => {
+    const proc = spawn('docker', ['ps', '--format', '{{.Names}}', '--filter', `name=${namePattern}`]);
+    let out = '';
+    proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    proc.on('close', () => {
+      const name = out.trim().split('\n')[0];
+      resolve(name || '');
+    });
+    proc.on('error', () => resolve(''));
+  });
+}
+
+let pgContainerCache = '';
+async function getPgContainer(): Promise<string> {
+  if (pgContainerCache) return pgContainerCache;
+  // Try multiple patterns to find the postgres container
+  for (const pattern of ['freenzy-postgres', 'postgres']) {
+    const name = await findContainer(pattern);
+    if (name) { pgContainerCache = name; return name; }
+  }
+  return process.env.PG_CONTAINER || '';
+}
 
 async function dbQuery(sql: string): Promise<string> {
+  const container = await getPgContainer();
+  if (!container) return 'Error: PostgreSQL container not found';
   return new Promise((resolve) => {
-    const proc = spawn('docker', ['exec', PG_CONTAINER, 'psql', '-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql]);
+    const proc = spawn('docker', ['exec', container, 'psql', '-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql]);
     let out = '';
     let err = '';
     proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
@@ -22,7 +47,35 @@ async function dbQuery(sql: string): Promise<string> {
     proc.on('error', (e: Error) => {
       resolve(`Error: ${e.message}`);
     });
-    proc.on('close', () => resolve(out.trim() || err.trim() || 'No result'));
+    proc.on('close', (code) => {
+      if (code !== 0 && err) resolve(`Error: ${err.trim()}`);
+      else resolve(out.trim() || 'No result');
+    });
+  });
+}
+
+// Invalidate container cache on redeploy (every 5 min)
+setInterval(() => { pgContainerCache = ''; }, 300_000);
+
+// Redis check via docker exec
+async function checkRedis(): Promise<string> {
+  const container = await findContainer('freenzy-redis');
+  if (!container) {
+    // Try via redis-cli on host
+    return new Promise((resolve) => {
+      const proc = spawn('redis-cli', ['-p', '6379', 'ping']);
+      let out = '';
+      proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+      proc.on('close', () => resolve(out.trim() === 'PONG' ? '✅ Online' : '🔴 OFFLINE'));
+      proc.on('error', () => resolve('⚠️ Non vérifié'));
+    });
+  }
+  return new Promise((resolve) => {
+    const proc = spawn('docker', ['exec', container, 'redis-cli', 'ping']);
+    let out = '';
+    proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    proc.on('close', () => resolve(out.trim() === 'PONG' ? '✅ Online' : '🔴 OFFLINE'));
+    proc.on('error', () => resolve('⚠️ Non vérifié'));
   });
 }
 
@@ -113,7 +166,9 @@ _Envoie une photo pour l'analyser_
     const totalUsers = await dbQuery('SELECT COUNT(*) FROM users');
     const active24h = await dbQuery("SELECT COUNT(*) FROM users WHERE last_login_at > NOW() - INTERVAL '24 hours'");
     const newToday = await dbQuery("SELECT COUNT(*) FROM users WHERE created_at::date = CURRENT_DATE");
-    const pgStatus = await dbQuery('SELECT 1').then(() => '✅ Online').catch(() => '🔴 OFFLINE');
+    const pgResult = await dbQuery('SELECT 1');
+    const pgStatus = pgResult.startsWith('Error') ? '🔴 OFFLINE' : '✅ Online';
+    const redisStatus = await checkRedis();
 
     // Revenue queries
     const revenueToday = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE created_at::date = CURRENT_DATE AND status = 'completed'");
@@ -130,6 +185,7 @@ _Envoie une photo pour l'analyser_
 • RAM : ${sys.ram}% ${statusIcon(sys.ram, [70, 85])}
 • Disque : ${sys.disk}% ${statusIcon(sys.disk, [70, 80])}
 • PostgreSQL : ${pgStatus}
+• Redis : ${redisStatus}
 • Node.js : ✅ v${process.version.slice(1)}
 
 *Business :*

@@ -171,9 +171,9 @@ _Envoie une photo pour l'analyser_
     const redisStatus = await checkRedis();
 
     // Revenue queries
-    const revenueToday = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE created_at::date = CURRENT_DATE AND status = 'completed'");
-    const revenueWeek = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE created_at > NOW() - INTERVAL '7 days' AND status = 'completed'");
-    const revenueMonth = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE created_at > NOW() - INTERVAL '30 days' AND status = 'completed'");
+    const revenueToday = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at::date = CURRENT_DATE AND type = 'deposit'");
+    const revenueWeek = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at > NOW() - INTERVAL '7 days' AND type = 'deposit'");
+    const revenueMonth = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at > NOW() - INTERVAL '30 days' AND type = 'deposit'");
 
     const lastError = await dbQuery("SELECT EXTRACT(EPOCH FROM NOW() - MAX(created_at))/3600 FROM cron_logs WHERE status = 'error'");
     const lastBackup = await dbQuery("SELECT to_char(MAX(created_at), 'DD/MM HH24:MI') FROM cron_logs WHERE cron_name = 'backup' AND status = 'success'");
@@ -264,8 +264,8 @@ ${topProfessions.split('\n').map((l: string) => {
     if (period === 'week') { periodSql = "created_at > NOW() - INTERVAL '7 days'"; periodLabel = 'Cette semaine'; }
     if (period === 'month') { periodSql = "created_at > NOW() - INTERVAL '30 days'"; periodLabel = 'Ce mois'; }
 
-    const total = await dbQuery(`SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE ${periodSql} AND status = 'completed'`);
-    const count = await dbQuery(`SELECT COUNT(*) FROM transactions WHERE ${periodSql} AND status = 'completed'`);
+    const total = await dbQuery(`SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE ${periodSql} AND type = 'deposit'`);
+    const count = await dbQuery(`SELECT COUNT(*) FROM wallet_transactions WHERE ${periodSql} AND type = 'deposit'`);
 
     const revenueMsg = `💰 *Revenus — ${periodLabel}*
 
@@ -382,7 +382,7 @@ ${topProfessions.split('\n').map((l: string) => {
     const sys = await getSystemStats();
     const total = await dbQuery('SELECT COUNT(*) FROM users');
     const active = await dbQuery("SELECT COUNT(*) FROM users WHERE last_login_at > NOW() - INTERVAL '24 hours'");
-    const revenue = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE created_at > NOW() - INTERVAL '30 days' AND status = 'completed'");
+    const revenue = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at > NOW() - INTERVAL '30 days' AND type = 'deposit'");
     const pendingCount = await dbQuery("SELECT COUNT(*) FROM agent_proposals WHERE status = 'pending'");
     const errors24h = await dbQuery("SELECT COUNT(*) FROM cron_logs WHERE status = 'error' AND created_at > NOW() - INTERVAL '24 hours'");
 

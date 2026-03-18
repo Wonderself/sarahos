@@ -32,15 +32,15 @@ export async function checkCreditCoherence(): Promise<CreditDiscrepancy[]> {
     const result = await dbClient.query(`
       SELECT
         w.user_id,
-        w.balance AS wallet_balance,
+        w.balance_credits AS wallet_balance,
         COALESCE(SUM(
-          CASE WHEN t.type = 'credit' THEN t.amount ELSE -t.amount END
+          CASE WHEN t.type = 'deposit' THEN t.amount ELSE -t.amount END
         ), 0) AS calculated_balance
       FROM wallets w
-      LEFT JOIN credit_transactions t ON t.user_id = w.user_id
-      GROUP BY w.user_id, w.balance
-      HAVING w.balance != COALESCE(SUM(
-        CASE WHEN t.type = 'credit' THEN t.amount ELSE -t.amount END
+      LEFT JOIN wallet_transactions t ON t.user_id = w.user_id
+      GROUP BY w.user_id, w.balance_credits
+      HAVING w.balance_credits != COALESCE(SUM(
+        CASE WHEN t.type = 'deposit' THEN t.amount ELSE -t.amount END
       ), 0)
     `);
 

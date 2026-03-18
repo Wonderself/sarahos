@@ -67,7 +67,7 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
       // ── Approval actions ──
       if (data.startsWith('approve_')) {
         const id = data.replace('approve_', '');
-        await dbQuery(`UPDATE agent_proposals SET status = 'approved', reviewed_by = 'emmanuel', reviewed_at = NOW() WHERE id = '${id}'`);
+        await dbQuery(`UPDATE agent_proposals SET status = 'approved', decided_by = 'emmanuel', decided_at = NOW() WHERE id = '${id}'`);
         await bot.answerCallbackQuery(query.id, { text: '✅ Approuvé' });
         await bot.sendMessage(chatId, `✅ Action \`${id}\` approuvée et exécutée.`, { parse_mode: 'Markdown' });
         return;
@@ -191,8 +191,8 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
         const parts = data.replace('confirm_credits_', '').split('_');
         const email = parts[0] || '';
         const amount = parts[1] || '0';
-        await dbQuery(`UPDATE users SET credits = credits + ${amount} WHERE email = '${email.replace(/'/g, "''")}'`);
-        await dbQuery(`INSERT INTO credit_transactions (user_id, amount, reason, created_at) SELECT id, ${amount}, 'admin manual', NOW() FROM users WHERE email = '${email.replace(/'/g, "''")}'`);
+        await dbQuery(`UPDATE wallets SET balance_credits = balance_credits + ${amount} WHERE user_id = (SELECT id FROM users WHERE email = '${email.replace(/'/g, "''")}')`);
+        await dbQuery(`INSERT INTO wallet_transactions (id, wallet_id, user_id, type, amount, balance_after, description) SELECT gen_random_uuid(), w.id, w.user_id, 'deposit', ${amount}, w.balance_credits + ${amount}, 'admin manual' FROM wallets w JOIN users u ON w.user_id = u.id WHERE u.email = '${email.replace(/'/g, "''")}'`);
         await bot.answerCallbackQuery(query.id, { text: '✅ Crédits ajoutés' });
         await bot.sendMessage(chatId, `✅ ${amount} crédits ajoutés à ${email}`);
         return;
@@ -264,7 +264,7 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
       if (pending.type === 'reject_reason') {
         const id = pending.data.id;
         const reason = msg.text;
-        await dbQuery(`UPDATE agent_proposals SET status = 'rejected', reviewed_by = 'emmanuel', reviewed_at = NOW(), rejection_reason = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
+        await dbQuery(`UPDATE agent_proposals SET status = 'denied', decided_by = 'emmanuel', decided_at = NOW(), decision_notes = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
         await bot.sendMessage(chatId, `❌ Action \`${id}\` refusée.\nRaison : ${reason}`, { parse_mode: 'Markdown' });
         pendingActions.delete(chatId);
         return;

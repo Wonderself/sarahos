@@ -175,8 +175,8 @@ _Envoie une photo pour l'analyser_
     const revenueWeek = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at > NOW() - INTERVAL '7 days' AND type = 'deposit'");
     const revenueMonth = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at > NOW() - INTERVAL '30 days' AND type = 'deposit'");
 
-    const lastError = await dbQuery("SELECT EXTRACT(EPOCH FROM NOW() - MAX(created_at))/3600 FROM cron_logs WHERE status = 'error'");
-    const lastBackup = await dbQuery("SELECT to_char(MAX(created_at), 'DD/MM HH24:MI') FROM cron_logs WHERE cron_name = 'backup' AND status = 'success'");
+    const lastError = await dbQuery("SELECT EXTRACT(EPOCH FROM NOW() - MAX(started_at))/3600 FROM cron_logs WHERE status = 'error'");
+    const lastBackup = await dbQuery("SELECT to_char(MAX(started_at), 'DD/MM HH24:MI') FROM cron_logs WHERE cron_name = 'backup' AND status = 'success'");
 
     const statusMsg = `🖥️ *Status Freenzy* — ${now} UTC
 
@@ -232,8 +232,8 @@ _Envoie une photo pour l'analyser_
 
     const onboardingRate = await dbQuery(`
       SELECT ROUND(
-        COUNT(CASE WHEN onboarding_completed THEN 1 END)::numeric / NULLIF(COUNT(*), 0) * 100, 1
-      ) FROM users
+        COUNT(CASE WHEN onboarding_completed_at IS NOT NULL THEN 1 END)::numeric / NULLIF(COUNT(*), 0) * 100, 1
+      ) FROM user_profiles
     `);
 
     const usersMsg = `👥 *Stats Utilisateurs*
@@ -290,9 +290,9 @@ ${topProfessions.split('\n').map((l: string) => {
     const n = parseInt(match?.[1] || '10', 10);
 
     const errors = await dbQuery(`
-      SELECT to_char(created_at, 'DD/MM HH24:MI') || ' | ' || cron_name || ' | ' || SUBSTRING(error_message, 1, 60)
+      SELECT to_char(started_at, 'DD/MM HH24:MI') || ' | ' || cron_name || ' | ' || COALESCE(errors[1], 'unknown')
       FROM cron_logs WHERE status = 'error'
-      ORDER BY created_at DESC LIMIT ${n}
+      ORDER BY started_at DESC LIMIT ${n}
     `);
 
     const errMsg = `🚨 *Dernières erreurs* (${n})\n\n\`\`\`\n${errors || 'Aucune erreur'}\n\`\`\``;
@@ -304,10 +304,10 @@ ${topProfessions.split('\n').map((l: string) => {
     if (msg.chat.id.toString() !== adminChatId) return;
 
     const pending = await dbQuery(`
-      SELECT id, title, agent_id, to_char(expires_at, 'DD/MM HH24:MI') as expires,
-             CASE WHEN expires_at < NOW() + INTERVAL '2 hours' THEN 'urgent' ELSE 'normal' END as urgency
-      FROM agent_proposals WHERE status = 'pending'
-      ORDER BY expires_at ASC LIMIT 10
+      SELECT id, title, agent_id, to_char(created_at, 'DD/MM HH24:MI') as created,
+             'normal' as urgency
+      FROM agent_proposals WHERE status = 'pending_review'
+      ORDER BY created_at DESC LIMIT 10
     `);
 
     if (!pending || pending === 'No result') {
@@ -339,7 +339,7 @@ ${topProfessions.split('\n').map((l: string) => {
     const id = match?.[1];
     if (!id) return;
 
-    await dbQuery(`UPDATE agent_proposals SET status = 'approved', reviewed_by = 'emmanuel', reviewed_at = NOW() WHERE id = '${id}'`);
+    await dbQuery(`UPDATE agent_proposals SET status = 'approved', decided_by = 'emmanuel', decided_at = NOW() WHERE id = '${id}'`);
     await bot.sendMessage(msg.chat.id, `✅ Action \`${id}\` approuvée et exécutée.`, { parse_mode: 'Markdown' });
   });
 
@@ -350,7 +350,7 @@ ${topProfessions.split('\n').map((l: string) => {
     const reason = match?.[2] || 'Refusé par admin';
     if (!id) return;
 
-    await dbQuery(`UPDATE agent_proposals SET status = 'rejected', reviewed_by = 'emmanuel', reviewed_at = NOW(), rejection_reason = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
+    await dbQuery(`UPDATE agent_proposals SET status = 'denied', decided_by = 'emmanuel', decided_at = NOW(), decision_notes = '${reason.replace(/'/g, "''")}' WHERE id = '${id}'`);
     await bot.sendMessage(msg.chat.id, `❌ Action \`${id}\` refusée. Raison : ${reason}`, { parse_mode: 'Markdown' });
   });
 
@@ -383,8 +383,8 @@ ${topProfessions.split('\n').map((l: string) => {
     const total = await dbQuery('SELECT COUNT(*) FROM users');
     const active = await dbQuery("SELECT COUNT(*) FROM users WHERE last_login_at > NOW() - INTERVAL '24 hours'");
     const revenue = await dbQuery("SELECT COALESCE(SUM(amount), 0) FROM wallet_transactions WHERE created_at > NOW() - INTERVAL '30 days' AND type = 'deposit'");
-    const pendingCount = await dbQuery("SELECT COUNT(*) FROM agent_proposals WHERE status = 'pending'");
-    const errors24h = await dbQuery("SELECT COUNT(*) FROM cron_logs WHERE status = 'error' AND created_at > NOW() - INTERVAL '24 hours'");
+    const pendingCount = await dbQuery("SELECT COUNT(*) FROM agent_proposals WHERE status = 'pending_review'");
+    const errors24h = await dbQuery("SELECT COUNT(*) FROM cron_logs WHERE status = 'error' AND started_at > NOW() - INTERVAL '24 hours'");
 
     const report = `📊 *Rapport Complet Freenzy*
 
@@ -442,9 +442,9 @@ ${topProfessions.split('\n').map((l: string) => {
     if (!email) return;
 
     const userInfo = await dbQuery(`
-      SELECT u.email, u.display_name, u.role, u.created_at, u.last_login_at, u.credits,
-             up.profession, up.city
-      FROM users u LEFT JOIN user_profiles up ON u.id = up.user_id
+      SELECT u.email, u.display_name, u.role, u.created_at, u.last_login_at, COALESCE(w.balance_credits, 0),
+             up.profession, COALESCE(bi.ville, '')
+      FROM users u LEFT JOIN user_profiles up ON u.id = up.user_id LEFT JOIN wallets w ON u.id = w.user_id LEFT JOIN business_info bi ON u.id = bi.user_id
       WHERE u.email = '${email.replace(/'/g, "''")}'
     `);
 
@@ -575,7 +575,7 @@ ${topProfessions.split('\n').map((l: string) => {
     // Get members usage
     const members = await dbQuery(`
       SELECT u.display_name, om.role,
-        (SELECT COUNT(*) FROM agent_usage_logs aul WHERE aul.user_id = u.id AND aul.created_at > NOW() - INTERVAL '7 days') as agent_uses,
+        (SELECT COUNT(*) FROM llm_usage_log lul WHERE lul.user_id = u.id AND lul.created_at > NOW() - INTERVAL '7 days') as agent_uses,
         (SELECT COALESCE(SUM(credits_used), 0) FROM credit_usage_log cul WHERE cul.user_id = u.id AND cul.organization_id = '${orgId}' AND cul.created_at > NOW() - INTERVAL '7 days') as credits_used
       FROM organization_members om
       JOIN users u ON om.user_id = u.id

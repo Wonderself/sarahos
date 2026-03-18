@@ -199,8 +199,8 @@ _Envoie une photo pour l'analyser_
 • Ce mois : ${revenueMonth}€
 
 *Système :*
-• Dernière erreur : il y a ${parseFloat(lastError || '0').toFixed(1)}h
-• Dernier backup : ${lastBackup || 'jamais'}
+• Dernière erreur : ${lastError && lastError !== 'No result' && !isNaN(parseFloat(lastError)) ? `il y a ${parseFloat(lastError).toFixed(1)}h` : 'aucune ✅'}
+• Dernier backup : ${lastBackup && lastBackup !== 'No result' ? lastBackup : 'aucun'}
 • Uptime : ${sys.uptime}`;
 
     await bot.sendMessage(msg.chat.id, statusMsg, {

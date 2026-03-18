@@ -80,10 +80,16 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
 
     const chatId = msg.chat.id.toString();
 
-    // Check if task already running
-    if (activeTasks.has(chatId) && activeTasks.get(chatId)?.status === 'running') {
-      await bot.sendMessage(msg.chat.id, '⚠️ Une tâche est déjà en cours. Attendez qu\'elle se termine.');
-      return;
+    // Check if task already running (with 5min auto-expire for stuck tasks)
+    const existing = activeTasks.get(chatId);
+    if (existing?.status === 'running') {
+      const elapsed = Date.now() - existing.startTime;
+      if (elapsed < 300000) { // Less than 5 min — genuinely running
+        await bot.sendMessage(msg.chat.id, '⚠️ Une tâche est déjà en cours. Attendez qu\'elle se termine.');
+        return;
+      }
+      // Stuck task — clear it
+      activeTasks.delete(chatId);
     }
 
     const state: ClaudeTaskState = {
@@ -101,7 +107,14 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
     try {
       const claude = spawn('bash', ['-c', `source /root/.nvm/nvm.sh && cd ${PROJECT_ROOT} && claude -p "${instruction.replace(/"/g, '\\"')}" --output-format stream-json 2>&1`], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root' },
+        env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
+      });
+
+      // Handle spawn failure
+      claude.on('error', async (err) => {
+        state.status = 'failed';
+        activeTasks.delete(chatId);
+        await streamer.error(`❌ Impossible de lancer Claude Code: ${err.message}`);
       });
 
       let output = '';

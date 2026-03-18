@@ -63,7 +63,7 @@ async function checkRedis(): Promise<string> {
   if (!container) {
     // Try via redis-cli on host
     return new Promise((resolve) => {
-      const proc = spawn('redis-cli', ['-p', '6379', 'ping']);
+      const proc = spawn('redis-cli', ['-p', '6379', '-a', process.env['REDIS_PASSWORD'] || '', 'ping']);
       let out = '';
       proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
       proc.on('close', () => resolve(out.trim() === 'PONG' ? '✅ Online' : '🔴 OFFLINE'));
@@ -71,7 +71,7 @@ async function checkRedis(): Promise<string> {
     });
   }
   return new Promise((resolve) => {
-    const proc = spawn('docker', ['exec', container, 'redis-cli', 'ping']);
+    const proc = spawn('docker', ['exec', container, 'redis-cli', '-a', process.env['REDIS_PASSWORD'] || '', 'ping']);
     let out = '';
     proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
     proc.on('close', () => resolve(out.trim() === 'PONG' ? '✅ Online' : '🔴 OFFLINE'));

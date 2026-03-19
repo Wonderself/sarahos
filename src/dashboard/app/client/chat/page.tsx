@@ -1288,11 +1288,11 @@ export default function ChatPage() {
   return (
     <div className="chat-page">
       {/* ═══ PAGE HEADER — compact ═══ */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px 8px', borderBottom: `1px solid ${CU.border}`, background: CU.bg }}>
-        <span style={emojiIcon(16)}>{PAGE_META.chat.emoji}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8, padding: isMobile ? '8px 10px 6px' : '10px 16px 8px', borderBottom: `1px solid ${CU.border}`, background: CU.bg }}>
+        <span style={emojiIcon(isMobile ? 14 : 16)}>{PAGE_META.chat.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ ...CU.pageTitle, fontSize: 16, margin: 0 }}>{PAGE_META.chat.title}</h1>
-          <p style={{ ...CU.pageSubtitle, fontSize: 11, margin: 0 }}>{PAGE_META.chat.subtitle}</p>
+          <h1 style={{ ...CU.pageTitle, fontSize: isMobile ? 14 : 16, margin: 0 }}>{PAGE_META.chat.title}</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 10 : 11, margin: 0 }}>{PAGE_META.chat.subtitle}</p>
         </div>
         <HelpBubble text={PAGE_META.chat.helpText} />
       </div>

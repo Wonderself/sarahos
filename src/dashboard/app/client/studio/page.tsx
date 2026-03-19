@@ -8,7 +8,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
-import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar } from '../../../lib/page-styles';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, tabBar, pageTitleStyle } from '../../../lib/page-styles';
 import PageBlogSection from '@/components/blog/PageBlogSection';
 
 const ICON_TO_EMOJI: Record<string, string> = {
@@ -65,14 +65,14 @@ export default function StudioPage() {
   return (
     <div style={pageContainer(isMobile)}>
       {/* ─── Page Header ─── */}
-      <div style={headerRow()}>
-        <span style={emojiIcon(24)}>{meta.emoji}</span>
+      <div style={headerRow(isMobile)}>
+        <span style={emojiIcon(isMobile ? 18 : 24)}>{meta.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ ...CU.pageTitle, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h1 style={{ ...pageTitleStyle(isMobile), display: 'flex', alignItems: 'center', gap: 8 }}>
             {meta.title}
             <HelpBubble text={meta.helpText} />
           </h1>
-          <p style={CU.pageSubtitle}>
+          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 13 }}>
             {meta.subtitle}
           </p>
         </div>
@@ -81,24 +81,24 @@ export default function StudioPage() {
 
       {/* ─── Stat cards ─── */}
       <div style={cardGrid(isMobile, 2)}>
-        <div style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={emojiIcon(22)}>📸</span>
+        <div style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12, padding: isMobile ? '10px' : '14px 16px' }}>
+          <span style={emojiIcon(isMobile ? 18 : 22)}>📸</span>
           <div>
-            <div style={CU.statValue}>{availablePhotoCount}/{PHOTO_WORKFLOWS.length}</div>
+            <div style={{ ...CU.statValue, fontSize: isMobile ? 20 : 28 }}>{availablePhotoCount}/{PHOTO_WORKFLOWS.length}</div>
             <div style={CU.statLabel}>Photos disponibles</div>
           </div>
         </div>
-        <div style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={emojiIcon(22)}>🎬</span>
+        <div style={{ ...CU.card, display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12, padding: isMobile ? '10px' : '14px 16px' }}>
+          <span style={emojiIcon(isMobile ? 18 : 22)}>🎬</span>
           <div>
-            <div style={CU.statValue}>{availableVideoCount}/{VIDEO_WORKFLOWS.length}</div>
+            <div style={{ ...CU.statValue, fontSize: isMobile ? 20 : 28 }}>{availableVideoCount}/{VIDEO_WORKFLOWS.length}</div>
             <div style={CU.statLabel}>Vidéos disponibles</div>
           </div>
         </div>
       </div>
 
       {/* ─── Tab Switcher ─── */}
-      <div style={{ ...tabBar(), marginTop: 24 }}>
+      <div style={{ ...tabBar(isMobile), marginTop: isMobile ? 14 : 24 }}>
         {(['photo', 'video'] as const).map(tab => (
           <button
             key={tab}

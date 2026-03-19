@@ -12,6 +12,7 @@ import {
   type FormationParcours,
 } from '@/lib/formations';
 import PageBlogSection from '@/components/blog/PageBlogSection';
+import { CU, pageContainer, pageTitleStyle, sectionTitleStyle, cardStyle, tabBar } from '@/lib/page-styles';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -138,12 +139,12 @@ export default function LearnPage() {
   ];
 
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? '16px 12px' : '24px 20px' }}>
+    <div style={pageContainer(isMobile)}>
       {/* HEADER */}
       <div style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 20, fontWeight: 700, color: '#1A1A1A' }}>🎓 Formation</span>
-          <span style={{ fontSize: 13, color: '#9B9B9B' }}>Développez vos compétences IA</span>
+          <h1 style={pageTitleStyle(isMobile)}>🎓 Formation</h1>
+          <span style={{ fontSize: isMobile ? 11 : 13, color: '#9B9B9B' }}>Développez vos compétences IA</span>
         </div>
 
         {/* Level display */}
@@ -172,34 +173,10 @@ export default function LearnPage() {
       </div>
 
       {/* CATEGORY TABS */}
-      <div style={{
-        display: 'flex',
-        gap: 4,
-        overflowX: 'auto',
-        whiteSpace: 'nowrap' as const,
-        borderBottom: '1px solid #E5E5E5',
-        marginBottom: 12,
-        WebkitOverflowScrolling: 'touch',
-        msOverflowStyle: 'none',
-        scrollbarWidth: 'none',
-      }}>
+      <div style={{ ...tabBar(isMobile), overflowX: 'auto', scrollbarWidth: 'none' }}>
         <button
           onClick={() => setActiveCat('all')}
-          style={{
-            minHeight: 44,
-            padding: '8px 14px',
-            fontSize: 13,
-            fontWeight: activeCat === 'all' ? 600 : 400,
-            color: activeCat === 'all' ? '#1A1A1A' : '#6B6B6B',
-            borderBottom: activeCat === 'all' ? '2px solid #1A1A1A' : '2px solid transparent',
-            background: 'none',
-            border: 'none',
-            borderBottomStyle: 'solid',
-            borderBottomWidth: 2,
-            borderBottomColor: activeCat === 'all' ? '#1A1A1A' : 'transparent',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap' as const,
-          }}
+          style={activeCat === 'all' ? CU.tabActive : CU.tab}
         >
           Tous
         </button>
@@ -207,20 +184,7 @@ export default function LearnPage() {
           <button
             key={cat.id}
             onClick={() => setActiveCat(cat.id)}
-            style={{
-              minHeight: 44,
-              padding: '8px 14px',
-              fontSize: 13,
-              fontWeight: activeCat === cat.id ? 600 : 400,
-              color: activeCat === cat.id ? '#1A1A1A' : '#6B6B6B',
-              background: 'none',
-              border: 'none',
-              borderBottomStyle: 'solid',
-              borderBottomWidth: 2,
-              borderBottomColor: activeCat === cat.id ? '#1A1A1A' : 'transparent',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap' as const,
-            }}
+            style={activeCat === cat.id ? CU.tabActive : CU.tab}
           >
             {cat.emoji} {cat.title}
           </button>
@@ -268,9 +232,8 @@ export default function LearnPage() {
                 if (!isComingSoon) router.push(`/client/learn/${p.id}`);
               }}
               style={{
-                border: '1px solid #E5E5E5',
-                borderRadius: 8,
-                padding: 14,
+                ...CU.card,
+                padding: isMobile ? '10px' : '14px',
                 cursor: isComingSoon ? 'default' : 'pointer',
                 opacity: isComingSoon ? 0.5 : 1,
                 display: 'flex',

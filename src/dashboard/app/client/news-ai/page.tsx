@@ -10,6 +10,7 @@ import {
   type NewsCategory,
   type NewsStats,
 } from '@/lib/news-ai';
+import { CU, pageContainer, pageTitleStyle } from '@/lib/page-styles';
 
 // ─── Constants ──────────────────────────────────────────────
 
@@ -17,13 +18,13 @@ const TODAY = '2026-03-16';
 const DATE_DISPLAY = 'Dimanche 16 mars 2026';
 
 const C = {
-  text: '#1A1A1A',
-  textSecondary: '#6B6B6B',
-  textMuted: '#9B9B9B',
-  border: '#E5E5E5',
-  bg: '#FFFFFF',
-  bgSecondary: '#FAFAFA',
-  accent: '#1A1A1A',
+  text: CU.text,
+  textSecondary: CU.textSecondary,
+  textMuted: CU.textMuted,
+  border: CU.border,
+  bg: CU.bg,
+  bgSecondary: CU.bgSecondary,
+  accent: CU.accent,
   danger: '#DC2626',
   warning: '#F59E0B',
   success: '#059669',
@@ -567,19 +568,19 @@ export default function NewsAIPage() {
   );
 
   return (
-    <div style={{ padding: isMobile ? 16 : 24, maxWidth: 1200, margin: '0 auto' }}>
+    <div style={pageContainer(isMobile)}>
       {/* ─── Header ──────────────────────────────── */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+      <div style={{ marginBottom: isMobile ? 12 : 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: isMobile ? 6 : 12 }}>
           <div>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: C.text, margin: 0 }}>
+            <h1 style={pageTitleStyle(isMobile)}>
               📰 News IA
             </h1>
-            <p style={{ fontSize: 13, color: C.textMuted, margin: '4px 0 0' }}>
+            <p style={{ fontSize: isMobile ? 11 : 13, color: C.textMuted, margin: '4px 0 0' }}>
               L'essentiel de l'actualite IA, 2 fois par jour
             </p>
           </div>
-          <div style={{ fontSize: 13, color: C.textSecondary }}>
+          <div style={{ fontSize: isMobile ? 11 : 13, color: C.textSecondary }}>
             📅 {DATE_DISPLAY}
           </div>
         </div>
@@ -616,9 +617,9 @@ export default function NewsAIPage() {
       </div>
 
       {/* ─── Layout: Main + Sidebar ──────────────── */}
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: isMobile ? 12 : 24, alignItems: 'flex-start', flexDirection: isMobile ? 'column' : 'row' }}>
         {/* Main content */}
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: isMobile ? 12 : 24 }}>
 
           {/* ─── Hero: High impact ───────────────── */}
           {heroArticles.length > 0 && (

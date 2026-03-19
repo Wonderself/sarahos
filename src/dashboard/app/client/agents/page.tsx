@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { DEFAULT_AGENTS, PERSONAL_AGENTS } from '../../../lib/agent-config';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { PAGE_META } from '../../../lib/emoji-map';
-import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, pageTitleStyle } from '../../../lib/page-styles';
 import HelpBubble from '../../../components/HelpBubble';
 import PageExplanation from '../../../components/PageExplanation';
 import PageBlogSection from '@/components/blog/PageBlogSection';
@@ -76,11 +76,11 @@ export default function AgentsPage() {
   return (
     <div className="client-page-scrollable" style={pageContainer(isMobile)}>
       {/* Page Header — compact */}
-      <div style={headerRow()}>
-        <span style={emojiIcon(18)}>{PAGE_META.agents.emoji}</span>
+      <div style={headerRow(isMobile)}>
+        <span style={emojiIcon(isMobile ? 15 : 18)}>{PAGE_META.agents.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={{ ...CU.pageTitle, fontSize: 18 }}>🤖 Assistants</h1>
-          <p style={{ ...CU.pageSubtitle, fontSize: 12 }}>Votre équipe de 150+ assistants</p>
+          <h1 style={pageTitleStyle(isMobile)}>🤖 Assistants</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 12 }}>Votre équipe de 150+ assistants</p>
         </div>
         <HelpBubble text={PAGE_META.agents.helpText} />
         <Link href="/client/agents/create" style={{ ...CU.btnPrimary, textDecoration: 'none', fontSize: 12, height: 30, padding: '0 12px' }}>

@@ -8,7 +8,7 @@ import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
 import { useVisitorDraftObject } from '../../../lib/useVisitorDraft';
-import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar } from '../../../lib/page-styles';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, toolbar, tabBar, pageTitleStyle } from '../../../lib/page-styles';
 import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Types ───────────────────────────────────────────────
@@ -774,11 +774,11 @@ export default function SocialMediaPage() {
   return (
     <div style={pageContainer(isMobile)}>
       {/* Page Header */}
-      <div style={headerRow()}>
-        <span style={emojiIcon(24)}>{PAGE_META.social.emoji}</span>
+      <div style={headerRow(isMobile)}>
+        <span style={emojiIcon(isMobile ? 18 : 24)}>{PAGE_META.social.emoji}</span>
         <div>
-          <h1 style={CU.pageTitle}>{PAGE_META.social.title}</h1>
-          <p style={CU.pageSubtitle}>
+          <h1 style={pageTitleStyle(isMobile)}>{PAGE_META.social.title}</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 13 }}>
             {PAGE_META.social.subtitle}
           </p>
         </div>
@@ -787,14 +787,14 @@ export default function SocialMediaPage() {
       <PageExplanation pageId="social" text={PAGE_META.social?.helpText} />
 
       {/* Tab Navigation */}
-      <div style={tabBar()}>
+      <div style={{ ...tabBar(isMobile), overflowX: 'auto', scrollbarWidth: 'none' }}>
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             style={activeTab === tab.id ? CU.tabActive : CU.tab}
           >
-            <span style={{ fontSize: 16 }}>{tab.emoji}</span>
+            <span style={{ fontSize: isMobile ? 14 : 16 }}>{tab.emoji}</span>
             {tab.label}
           </button>
         ))}

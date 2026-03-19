@@ -26,7 +26,7 @@ import HelpBubble from '../../../components/HelpBubble';
 import { PAGE_META } from '../../../lib/emoji-map';
 import PageExplanation from '../../../components/PageExplanation';
 import { useIsMobile } from '../../../lib/use-media-query';
-import { CU, pageContainer, headerRow, emojiIcon, cardGrid } from '../../../lib/page-styles';
+import { CU, pageContainer, headerRow, emojiIcon, cardGrid, pageTitleStyle } from '../../../lib/page-styles';
 import PageBlogSection from '@/components/blog/PageBlogSection';
 
 // ─── Icon-to-Emoji mapping for dynamic game/badge icons ─────────────────────
@@ -101,12 +101,12 @@ export default function GamesHubPage() {
       <BadgeUnlockPopup />
 
       {/* Page Header */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={emojiIcon(24)}>{PAGE_META.games.emoji}</span>
+      <div style={{ marginBottom: isMobile ? 12 : 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 10 }}>
+          <span style={emojiIcon(isMobile ? 18 : 24)}>{PAGE_META.games.emoji}</span>
           <div>
-            <h1 style={CU.pageTitle}>{PAGE_META.games.title}</h1>
-            <p style={CU.pageSubtitle}>{PAGE_META.games.subtitle}</p>
+            <h1 style={pageTitleStyle(isMobile)}>{PAGE_META.games.title}</h1>
+            <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 13 }}>{PAGE_META.games.subtitle}</p>
           </div>
           <HelpBubble text={PAGE_META.games.helpText} />
         </div>
@@ -117,8 +117,8 @@ export default function GamesHubPage() {
       <div
         style={{
           ...CU.card,
-          padding: 24,
-          marginBottom: 20,
+          padding: isMobile ? 14 : 24,
+          marginBottom: isMobile ? 12 : 20,
           border: borderColor
             ? isGradient
               ? '2px solid transparent'
@@ -131,12 +131,12 @@ export default function GamesHubPage() {
           } as React.CSSProperties : {}),
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20, flexWrap: 'wrap' }}>
           {/* Level badge */}
           <div
             style={{
-              width: 64,
-              height: 64,
+              width: isMobile ? 48 : 64,
+              height: isMobile ? 48 : 64,
               borderRadius: '50%',
               background: CU.accent,
               display: 'flex',
@@ -145,12 +145,12 @@ export default function GamesHubPage() {
               flexShrink: 0,
             }}
           >
-            <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>{profile.level}</span>
+            <span style={{ fontSize: isMobile ? 18 : 24, fontWeight: 800, color: '#fff' }}>{profile.level}</span>
           </div>
 
-          <div style={{ flex: 1, minWidth: 200 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 4 }}>
-              <span style={{ fontSize: 20, fontWeight: 700, color: CU.text }}>{levelInfo.title}</span>
+          <div style={{ flex: 1, minWidth: isMobile ? 120 : 200 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: isMobile ? 6 : 10, marginBottom: 4 }}>
+              <span style={{ fontSize: isMobile ? 16 : 20, fontWeight: 700, color: CU.text }}>{levelInfo.title}</span>
               <span style={{ fontSize: 13, color: CU.textMuted }}>Niv. {profile.level}</span>
             </div>
 
@@ -190,9 +190,9 @@ export default function GamesHubPage() {
 
       {/* Badge Showcase */}
       <div style={{ marginBottom: 20 }}>
-        <div style={{ ...headerRow(), marginBottom: 12 }}>
-          <span style={emojiIcon(20)}>🏆</span>
-          <span style={CU.sectionTitle}>
+        <div style={{ ...headerRow(isMobile), marginBottom: isMobile ? 8 : 12 }}>
+          <span style={emojiIcon(isMobile ? 16 : 20)}>🏆</span>
+          <span style={{ ...CU.sectionTitle, fontSize: isMobile ? 13 : 15 }}>
             Badges ({profile.badges.length}/{badges.filter(b => !b.secret).length})
           </span>
         </div>
@@ -294,9 +294,9 @@ export default function GamesHubPage() {
       {leaderboard.length > 0 && (
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ ...headerRow() }}>
-              <span style={emojiIcon(20)}>🏆</span>
-              <span style={CU.sectionTitle}>Classement</span>
+            <div style={{ ...headerRow(isMobile) }}>
+              <span style={emojiIcon(isMobile ? 16 : 20)}>🏆</span>
+              <span style={{ ...CU.sectionTitle, fontSize: isMobile ? 13 : 15 }}>Classement</span>
             </div>
             <div style={{ display: 'flex', gap: 4 }}>
               {(['all', 'weekly'] as const).map((mode) => (

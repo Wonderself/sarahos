@@ -6,7 +6,7 @@ import { ALL_AGENTS } from '../../../lib/agent-config';
 import { useToast } from '../../../components/Toast';
 import { useIsMobile } from '../../../lib/use-media-query';
 import { useAuthGuard } from '../../../lib/useAuthGuard';
-import { CU, pageContainer, headerRow, emojiIcon } from '../../../lib/page-styles';
+import { CU, pageContainer, headerRow, emojiIcon, pageTitleStyle } from '../../../lib/page-styles';
 import PageBlogSection from '@/components/blog/PageBlogSection';
 import {
   MAX_DEEP_CONTEXT,
@@ -857,14 +857,14 @@ export default function DiscussionsPage() {
         padding: isMobile ? '14px 12px 10px' : '16px 24px 14px',
         borderBottom: `1px solid ${CU.border}`,
         background: CU.bg,
-        ...headerRow(), flexShrink: 0,
+        ...headerRow(isMobile), flexShrink: 0,
       }}>
-        <span style={emojiIcon(24)}>{PAGE_META.discussions.emoji}</span>
+        <span style={emojiIcon(isMobile ? 18 : 24)}>{PAGE_META.discussions.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={CU.pageTitle}>
+          <h1 style={pageTitleStyle(isMobile)}>
             {PAGE_META.discussions.title}
           </h1>
-          <p style={CU.pageSubtitle}>
+          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 13 }}>
             {PAGE_META.discussions.subtitle}
           </p>
         </div>

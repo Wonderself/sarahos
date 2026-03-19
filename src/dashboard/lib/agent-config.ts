@@ -34,7 +34,8 @@ export type ToolsAgentTypeId =
   | 'fz-calendrier' | 'fz-email' | 'fz-facturation' | 'fz-veille'
   | 'fz-qrcode' | 'fz-signature' | 'fz-meteo' | 'fz-photos'
   | 'fz-focus' | 'fz-notes' | 'fz-habitudes' | 'fz-journal'
-  | 'fz-landing' | 'fz-templates' | 'fz-kanban' | 'fz-wellness';
+  | 'fz-landing' | 'fz-templates' | 'fz-kanban' | 'fz-wellness'
+  | 'fz-traducteur-technique' | 'fz-seo-analyst' | 'fz-crm-ops' | 'fz-coach-productivite';
 
 export type AgentTypeId = BusinessAgentTypeId | PersonalAgentTypeId | ToolsAgentTypeId;
 

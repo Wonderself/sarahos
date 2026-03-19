@@ -1,24 +1,13 @@
 /**
  * FEATURE 3 — /think : Extended Thinking visible
- * Appelle Claude Opus avec extended thinking, affiche le raisonnement
+ * Uses Claude Code CLI (Max subscription) instead of API credits
  */
 import TelegramBot from 'node-telegram-bot-api';
+import { spawn } from 'child_process';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
 import { Memory } from '../memory';
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
-
-interface ThinkingBlock {
-  type: 'thinking';
-  thinking: string;
-}
-
-interface TextBlock {
-  type: 'text';
-  text: string;
-}
-
-type ContentBlock = ThinkingBlock | TextBlock;
+const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 
 // Store last think result for callbacks
 const lastThinkResults = new Map<string, { question: string; answer: string }>();
@@ -32,32 +21,15 @@ export function registerThinkCommand(bot: TelegramBot, adminChatId: string): voi
       return;
     }
 
-    if (!ANTHROPIC_API_KEY) {
-      await bot.sendMessage(msg.chat.id, '⚠️ `ANTHROPIC_API_KEY` non configurée.', { parse_mode: 'Markdown' });
-      return;
-    }
-
     const chatId = msg.chat.id.toString();
     const streamer = new TelegramStreamer(bot);
     await streamer.init(chatId, '🧠 Réflexion approfondie en cours... (30-60s)');
 
     try {
-      // Load memory for context
       const memory = await Memory.read();
+      const memorySlice = memory.slice(0, 3000);
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-beta': 'interleaved-thinking-2025-05-14',
-        },
-        body: JSON.stringify({
-          model: 'claude-opus-4-6',
-          max_tokens: 16000,
-          thinking: { type: 'enabled', budget_tokens: 10000 },
-          system: `Tu es l'assistant stratégique de Freenzy.io.
+      const prompt = `Tu es l'assistant stratégique de Freenzy.io.
 Tu connais tout du projet : stack (Next.js/PostgreSQL/Coolify/Hetzner),
 positionnement (SaaS israélien PME françaises/belges, 0% commission),
 les 120 agents, le système d'onboarding personnalisé, les automatisations.
@@ -65,87 +37,75 @@ Propriétaire : Emmanuel Smadja, Netanya, entrepreneur serial.
 Sois direct, stratégique, et actionnable. Pas de fioriture.
 
 MÉMOIRE PROJET :
-${memory.slice(0, 3000)}`,
-          messages: [{ role: 'user', content: question }],
-        }),
+${memorySlice}
+
+QUESTION (réfléchis en profondeur avant de répondre) :
+${question}`;
+
+      // Use Claude Code CLI with Max subscription
+      const assistantText = await new Promise<string>((resolve) => {
+        const proc = spawn('bash', ['-c', `source /root/.nvm/nvm.sh && claude -p "${prompt.replace(/"/g, '\\"').replace(/\$/g, '\\$')}" 2>&1`], {
+          cwd: PROJECT_ROOT,
+          env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
+          timeout: 180000,
+        });
+        let output = '';
+        proc.stdout.on('data', (d: Buffer) => { output += d.toString(); });
+        proc.stderr.on('data', (d: Buffer) => { output += d.toString(); });
+        proc.on('close', () => resolve(output.trim() || 'Pas de réponse.'));
+        proc.on('error', () => resolve('Erreur: impossible de lancer Claude Code.'));
       });
-
-      if (!response.ok) {
-        const errBody = await response.text();
-        throw new Error(`API ${response.status}: ${errBody.slice(0, 200)}`);
-      }
-
-      const data = await response.json() as { content: ContentBlock[]; usage?: { input_tokens?: number; output_tokens?: number } };
-
-      // Parse thinking and text blocks
-      let thinkingText = '';
-      let answerText = '';
-      let thinkingTokens = 0;
-
-      for (const block of data.content) {
-        if (block.type === 'thinking') {
-          thinkingText += block.thinking;
-          thinkingTokens += block.thinking.length; // approximate
-        } else if (block.type === 'text') {
-          answerText += block.text;
-        }
-      }
-
-      // Estimate thinking tokens more accurately
-      thinkingTokens = Math.round(thinkingTokens / 4);
 
       // Store for callbacks
       const resultId = Date.now().toString();
-      lastThinkResults.set(chatId, { question, answer: answerText });
+      lastThinkResults.set(chatId, { question, answer: assistantText });
 
-      // Message 1 — Raisonnement (résumé)
-      const thinkingSummary = thinkingText.slice(0, 300) + (thinkingText.length > 300 ? '...' : '');
-      const thinkMsg = [
-        '🧠 *Raisonnement de Claude*',
-        '',
-        thinkingSummary,
-        '',
-        `_(Pensée complète : ~${thinkingTokens} tokens)_`,
-      ].join('\n');
-
-      await streamer.finish(thinkMsg);
-
-      // Message 2+ — Réponse finale (split if needed)
+      // Send response
       const answerFull = [
         `💡 *Analyse :* ${question}`,
         '',
-        answerText,
+        assistantText,
         '',
         `---`,
-        `_Modèle : claude-opus-4-6 • Tokens thinking : ~${thinkingTokens}_`,
+        `_Via Claude Code (Max subscription)_`,
       ].join('\n');
 
       const parts = splitMessage(answerFull);
+      await streamer.finish(`🧠 *Réflexion terminée*\n\n_(${parts.length} partie${parts.length > 1 ? 's' : ''})_`);
+
       for (let i = 0; i < parts.length; i++) {
         const isLast = i === parts.length - 1;
         const partLabel = parts.length > 1 ? `\n_(${i + 1}/${parts.length})_` : '';
         const text = parts[i] + partLabel;
 
         if (isLast) {
-          await bot.sendMessage(chatId, text, {
-            parse_mode: 'Markdown',
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  { text: '📋 Implémenter', callback_data: `implement_think_${resultId}` },
-                  { text: '💾 Sauvegarder', callback_data: `save_memory_think_${resultId}` },
-                  { text: '🔄 Approfondir', callback_data: `deepen_think_${resultId}` },
+          try {
+            await bot.sendMessage(chatId, text, {
+              parse_mode: 'Markdown',
+              reply_markup: {
+                inline_keyboard: [
+                  [
+                    { text: '📋 Implémenter', callback_data: `implement_think_${resultId}` },
+                    { text: '💾 Sauvegarder', callback_data: `save_memory_think_${resultId}` },
+                    { text: '🔄 Approfondir', callback_data: `deepen_think_${resultId}` },
+                  ],
                 ],
-              ],
-            },
-          });
+              },
+            });
+          } catch {
+            await bot.sendMessage(chatId, text);
+          }
         } else {
-          await bot.sendMessage(chatId, text, { parse_mode: 'Markdown' });
+          try {
+            await bot.sendMessage(chatId, text, { parse_mode: 'Markdown' });
+          } catch {
+            await bot.sendMessage(chatId, text);
+          }
         }
       }
 
     } catch (err) {
-      await streamer.error(`Erreur Extended Thinking : ${err instanceof Error ? err.message : String(err)}`);
+      await streamer.error(`Erreur : ${err instanceof Error ? err.message : String(err)}`);
     }
   });
 }

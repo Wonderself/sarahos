@@ -84,11 +84,6 @@ export function registerChatCommand(bot: TelegramBot, adminChatId: string): void
  * Handle a chat message (can be called from /chat or fallback text handler)
  */
 export async function handleChat(bot: TelegramBot, chatId: string, message: string): Promise<void> {
-  if (!ANTHROPIC_API_KEY) {
-    await bot.sendMessage(chatId, '⚠️ `ANTHROPIC_API_KEY` non configurée.', { parse_mode: 'Markdown' });
-    return;
-  }
-
   // Get or create history
   if (!conversationHistory.has(chatId)) {
     conversationHistory.set(chatId, []);
@@ -110,31 +105,24 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
     const memory = await Memory.read();
     const systemPrompt = buildSystemPrompt(memory);
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
-        system: systemPrompt,
-        messages: history,
-      }),
+    // Build context with recent history for Claude Code CLI
+    const historyContext = history.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+    const fullPrompt = `${systemPrompt}\n\nHistorique récent:\n${historyContext}\n\nRéponds au dernier message de l'utilisateur. Sois concis et utile. Ne modifie aucun fichier.`;
+
+    // Use Claude Code CLI (uses Max subscription, not API credits)
+    const assistantText = await new Promise<string>((resolve) => {
+      const { spawn: spawnProc } = require('child_process');
+      const proc = spawnProc('bash', ['-c', `source /root/.nvm/nvm.sh && claude -p "${fullPrompt.replace(/"/g, '\\"').replace(/\$/g, '\\$')}" 2>&1`], {
+        cwd: PROJECT_ROOT,
+        env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
+        timeout: 120000,
+      });
+      let output = '';
+      proc.stdout.on('data', (d: Buffer) => { output += d.toString(); });
+      proc.stderr.on('data', (d: Buffer) => { output += d.toString(); });
+      proc.on('close', () => resolve(output.trim() || 'Pas de réponse.'));
+      proc.on('error', () => resolve('Erreur: impossible de lancer Claude Code.'));
     });
-
-    if (!response.ok) {
-      const errBody = await response.text();
-      throw new Error(`API ${response.status}: ${errBody.slice(0, 200)}`);
-    }
-
-    const data = await response.json() as { content: { type: string; text: string }[] };
-    const assistantText = data.content
-      .filter((b: { type: string }) => b.type === 'text')
-      .map((b: { text: string }) => b.text)
-      .join('');
 
     // Add assistant response to history
     history.push({ role: 'assistant', content: assistantText });

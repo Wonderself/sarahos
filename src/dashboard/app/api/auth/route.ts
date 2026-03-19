@@ -38,6 +38,8 @@ export async function POST(req: NextRequest) {
           displayName: body.displayName,
           password: body.password,
           apiKey: autoApiKey,
+          activeAgents: body.activeAgents,
+          referredBy: body.referredBy,
         }),
       });
       const data = await res.json();

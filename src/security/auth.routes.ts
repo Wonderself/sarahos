@@ -38,6 +38,26 @@ export function createAuthRouter(): Router {
         if (!valid) { res.status(401).json({ error: 'Email ou mot de passe incorrect' }); return; }
 
         await userRepository.updateLastLogin(user.id);
+
+        // Check if 2FA is enabled
+        let totpEnabled = false;
+        try {
+          const { dbClient: db } = await import('../infra');
+          if (db.isConnected()) {
+            const totpResult = await db.query('SELECT totp_enabled FROM users WHERE id = $1', [user.id]);
+            const totpRow = totpResult.rows[0] as { totp_enabled: boolean } | undefined;
+            totpEnabled = !!totpRow?.totp_enabled;
+          }
+        } catch { /* best effort */ }
+
+        if (totpEnabled) {
+          // Return a temporary token that requires 2FA verification
+          const tempToken = authService.generateToken(user.email, user.role, { userId: user.id, tier: user.tier });
+          auditLog({ actor: user.email, action: 'login_2fa_required', resourceType: 'user', resourceId: user.id, ip: req.ip });
+          res.json({ requires2FA: true, tempToken });
+          return;
+        }
+
         const token = authService.generateToken(user.email, user.role, { userId: user.id, tier: user.tier });
 
         // Check onboarding status (best-effort)
@@ -411,6 +431,81 @@ export function createAuthRouter(): Router {
     } catch (e) {
       logger.error('2FA confirm failed', { error: e instanceof Error ? e.message : String(e) });
       res.status(500).json({ error: 'Erreur serveur' });
+    }
+  });
+
+  // ── 2FA: verify during login ──
+  router.post('/auth/verify-2fa', loginRateLimit, async (req, res) => {
+    const { tempToken, code } = req.body as { tempToken?: string; code?: string };
+    if (!tempToken || !code) {
+      res.status(400).json({ error: 'tempToken et code requis' });
+      return;
+    }
+
+    try {
+      // Decode the temp token to get user info
+      const decoded = authService.verifyToken(tempToken);
+      if (!decoded) {
+        res.status(401).json({ error: 'Token invalide ou expire' });
+        return;
+      }
+
+      const { verifyTotp } = await import('../utils/totp');
+      const { dbClient: db } = await import('../infra');
+      const { userRepository } = await import('../users/user.repository');
+
+      if (!db.isConnected()) { res.status(503).json({ error: 'DB unavailable' }); return; }
+
+      const userId = decoded.userId;
+      const result = await db.query('SELECT totp_secret, totp_backup_codes FROM users WHERE id = $1', [userId]);
+      const row = result.rows[0] as { totp_secret: string | null; totp_backup_codes: string[] | null } | undefined;
+      if (!row?.totp_secret) {
+        res.status(400).json({ error: '2FA non active' });
+        return;
+      }
+
+      const validTotp = verifyTotp(row.totp_secret, code);
+      const validBackup = row.totp_backup_codes?.includes(code.trim().toUpperCase());
+      if (!validTotp && !validBackup) {
+        res.status(401).json({ error: 'Code 2FA invalide' });
+        return;
+      }
+
+      // If backup code was used, remove it
+      if (validBackup && row.totp_backup_codes) {
+        const remaining = row.totp_backup_codes.filter((c: string) => c !== code.trim().toUpperCase());
+        await db.query('UPDATE users SET totp_backup_codes = $1 WHERE id = $2', [remaining, userId]);
+      }
+
+      // Generate full token (no pending2FA)
+      const user = await userRepository.findById(userId!);
+      if (!user) { res.status(401).json({ error: 'Utilisateur introuvable' }); return; }
+
+      const token = authService.generateToken(user.email, user.role, { userId: user.id, tier: user.tier });
+
+      // Check onboarding status (best-effort)
+      let onboardingCompleted = false;
+      try {
+        const { userPreferencesRepository } = await import('../users/user-preferences.repository');
+        const profile = await userPreferencesRepository.getCompanyProfile(user.id);
+        onboardingCompleted = !!(profile && (profile as Record<string, string>)['companyName']);
+      } catch { /* best effort */ }
+
+      auditLog({ actor: user.email, action: 'login_2fa_verified', resourceType: 'user', resourceId: user.id, ip: req.ip });
+
+      res.json({
+        token, expiresIn: '24h', role: user.role,
+        userId: user.id, tier: user.tier,
+        email: user.email, displayName: user.displayName,
+        activeAgents: user.activeAgents,
+        userNumber: user.userNumber,
+        commissionRate: user.commissionRate,
+        referralCode: user.referralCode,
+        onboardingCompleted,
+      });
+    } catch (e) {
+      logger.error('2FA verification failed', { error: e instanceof Error ? e.message : String(e) });
+      res.status(401).json({ error: 'Token invalide ou expire' });
     }
   });
 

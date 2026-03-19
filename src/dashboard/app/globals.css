@@ -856,226 +856,44 @@ a { color: inherit; text-decoration: none; }
 .avatar-sm { width: 24px; height: 24px; font-size: 10px; }
 .avatar-lg { width: 40px; height: 40px; font-size: 16px; }
 
-/* ─── Emoji Rail (always visible, all screen sizes) ─── */
-/* NOTE: Primary styles are INLINE in layout.tsx for iOS Safari compatibility */
-/* This CSS is a fallback only */
+/* ─── Emoji Rail — REMOVED (Notion-style: sidebar only, no separate rail) ─── */
 .emoji-rail {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  bottom: 0 !important;
-  width: 56px;
-  background: #FFFFFF !important;
-  border-right: 1px solid #E5E5E5;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  padding: 4px 0;
-  z-index: 9999 !important;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  /* iOS safe area */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-left: env(safe-area-inset-left, 0px);
-  /* Prevent any parent transform from breaking fixed positioning */
-  transform: none !important;
-  will-change: auto !important;
-  contain: layout !important;
-}
-.emoji-rail::-webkit-scrollbar { display: none; }
-
-.emoji-rail-top { margin-bottom: 4px; }
-
-.emoji-rail-sections {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-.emoji-rail-sections::-webkit-scrollbar { display: none; }
-
-.emoji-rail-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: none !important;
 }
 
-.emoji-rail-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-  color: inherit;
-  text-decoration: none;
-  position: relative;
-}
-.emoji-rail-btn:hover {
-  background: var(--fz-bg-hover, rgba(0,0,0,0.04));
-}
-.emoji-rail-btn.active {
-  background: rgba(0,0,0,0.06);
-  position: relative;
-}
-.emoji-rail-btn.active::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-  background: #1A1A1A;
-}
-
-/* Tree breadcrumb child emoji */
-.emoji-rail-child {
-  width: 30px;
-  height: 30px;
-  margin-left: 10px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: var(--fz-accent-subtle, rgba(14,165,233,0.06));
-  position: relative;
-  margin-top: 1px;
-  margin-bottom: 2px;
-}
-/* Connecting line for tree effect */
-.emoji-rail-child::before {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: 6px;
-  width: 1px;
-  height: 4px;
-  background: var(--fz-border, #E2E8F0);
-}
-.emoji-rail-child::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 6px;
-  width: 5px;
-  height: 1px;
-  background: var(--fz-border, #E2E8F0);
-}
-
-.emoji-rail-bottom {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 4px 0;
-  padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
-}
-
-.emoji-rail-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--fz-accent-light, rgba(14,165,233,0.1));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--fz-accent, #0EA5E9);
-  cursor: pointer;
-  margin-top: 2px;
-}
-
-/* ─── Client Layout Classes ─── */
+/* ═══ SIDEBAR — Desktop (default) ═══ */
 .client-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: 240px;
   min-width: 240px;
   background: #FFFFFF;
   border-right: 1px solid #E5E5E5;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 56px;
-  bottom: 0;
-  z-index: 55;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  transform: translateX(0);
+  z-index: 100;
   transition: transform 0.25s ease;
 }
-.client-sidebar.sidebar-expanded {
-  transform: translateX(0);
-  left: 56px;
-}
+
 .client-main-content {
-  margin-left: 296px;
+  margin-left: 240px;
   flex: 1;
   min-height: 100vh;
   min-width: 0;
   max-width: 1100px;
   transition: margin-left 0.25s ease;
 }
-/* Desktop: sidebar always visible, content shifted */
 
-/* ─── Mobile Nav ─── */
-.mobile-menu-btn {
+.mobile-topbar {
   display: none;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-size: 20px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  touch-action: manipulation;
 }
 
 .sidebar-overlay {
   display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 56px;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 54;
-}
-.sidebar-overlay.active { display: block; }
-
-.mobile-topbar {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 56px;
-  right: 0;
-  height: 48px;
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E5E5;
-  z-index: 58;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px 0 16px;
-  gap: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
 .table-responsive {
@@ -1108,90 +926,79 @@ a { color: inherit; text-decoration: none; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ─── PHONE (<768px) ─── */
-@media (max-width: 767px) {
-  /* Phone: NO separate emoji rail — sidebar IS the only navigation */
-  .emoji-rail {
-    display: none !important;
-  }
-
-  /* Hide mobile topbar */
-  .mobile-topbar {
-    display: none !important;
-  }
-
-  /* Content always offset by the collapsed sidebar width */
-  .client-main-content {
-    margin-left: 56px !important;
-    padding-top: 0 !important;
-  }
-  .main-content {
-    margin-left: 56px !important;
-  }
-
-  /* Sidebar: always visible, collapsed to icon-only width */
+/* ═══ SIDEBAR — Tablet (768px-1024px) ═══ */
+@media (max-width: 1024px) {
   .client-sidebar {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    width: 56px !important;
-    min-width: 56px !important;
-    max-width: 56px !important;
-    transform: translateX(0) !important; /* ALWAYS visible */
-    transition: width 0.25s ease, min-width 0.25s ease, max-width 0.25s ease;
-    z-index: 200;
-    overflow: hidden !important;
-    overflow-y: auto !important;
-    background: #fff;
-    border-right: 1px solid #E5E5E5;
+    width: 220px;
+    min-width: 220px;
   }
+  .client-main-content {
+    margin-left: 220px;
+  }
+  .client-sidebar .nav-link {
+    font-size: 12px;
+    padding: 8px 12px;
+    min-height: 40px;
+  }
+  .client-sidebar .nav-section-title {
+    font-size: 9px;
+  }
+}
 
-  /* When expanded: full width with text visible */
+/* ═══ SIDEBAR — Phone (<768px) ═══ */
+@media (max-width: 767px) {
+  .client-sidebar {
+    width: 280px;
+    min-width: 280px;
+    transform: translateX(-100%);
+    z-index: 300;
+    box-shadow: none;
+  }
   .client-sidebar.sidebar-expanded {
-    width: 280px !important;
-    min-width: 280px !important;
-    max-width: 280px !important;
-    box-shadow: 4px 0 16px rgba(0,0,0,0.1);
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
   }
-
-  /* When collapsed: hide the text-heavy header, section title text, footer */
-  .client-sidebar:not(.sidebar-expanded) .sidebar-header { display: none !important; }
-  .client-sidebar:not(.sidebar-expanded) .sidebar-footer-wrap { display: none !important; }
-  .client-sidebar:not(.sidebar-expanded) .phone-collapsed-rail { display: none !important; }
-
-  /* Nav links when collapsed: center the icon, minimum touch target */
-  .client-sidebar:not(.sidebar-expanded) .nav-link {
-    padding: 10px 0 !important;
-    justify-content: center !important;
-    min-height: 44px;
+  .client-main-content {
+    margin-left: 0 !important;
+    padding-top: 52px;
   }
-
-  /* Hide the text label inside nav links when collapsed */
-  .client-sidebar:not(.sidebar-expanded) .nav-link span:not(.material-symbols-outlined) {
-    display: none !important;
+  .mobile-topbar {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
+    background: #fff;
+    border-bottom: 1px solid #E5E5E5;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 200;
+    gap: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
-
-  /* Section titles when collapsed: center the emoji, hide text */
-  .client-sidebar:not(.sidebar-expanded) .nav-section-title {
-    justify-content: center !important;
-    padding: 4px 0 !important;
-    font-size: 0 !important;
-  }
-  .client-sidebar:not(.sidebar-expanded) .nav-section-title .section-emoji-label {
-    display: inline !important;
-    font-size: 14px !important;
-  }
-
-  /* Overlay: starts at sidebar edge so icon column remains clickable */
   .sidebar-overlay {
-    left: 56px !important;
-    z-index: 199;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 299;
+    transition: opacity 0.25s ease;
   }
 
-  /* Show section emojis in sidebar */
-  .client-sidebar .section-emoji-label {
-    display: inline !important;
+  /* Touch-friendly nav */
+  .client-sidebar .nav-link {
+    padding: 12px 16px;
+    font-size: 13px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  .client-sidebar .nav-section-title {
+    font-size: 10px;
+    padding: 10px 12px 2px;
   }
 
   /* Grids */
@@ -1199,7 +1006,7 @@ a { color: inherit; text-decoration: none; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
 
-  .page-container { padding: 16px 12px; }
+  .page-container { padding: 16px 12px; padding-bottom: 16px; }
   .page-header { flex-direction: column; align-items: flex-start !important; gap: 12px; }
   .page-actions { flex-wrap: wrap; gap: 6px; }
 
@@ -1215,59 +1022,34 @@ a { color: inherit; text-decoration: none; }
   /* Improve button touch targets */
   .btn { min-height: 44px; touch-action: manipulation; }
   .btn-sm { min-height: 34px; }
-  .nav-link { touch-action: manipulation; }
+
+  /* Compact sidebar footer */
+  .sidebar-footer { padding: 8px 12px; }
+
+  /* Scrollable tabs */
+  .tabs, .agent-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .tabs::-webkit-scrollbar, .agent-tabs::-webkit-scrollbar { display: none; }
 }
 
-/* ─── TABLET/iPad (768px-1024px) ─── */
-@media (min-width: 768px) and (max-width: 1024px) {
-  /* Full sidebar always open on tablet, no emoji rail */
-  .emoji-rail {
-    display: none !important;
-  }
-
-  .mobile-topbar {
-    display: none !important;
-  }
-
-  .client-sidebar {
-    position: fixed !important;
-    top: 0;
-    left: 0 !important;
-    bottom: 0;
-    width: 260px !important;
-    min-width: 260px !important;
-    transform: translateX(0) !important;
-    z-index: 55;
-    background: #fff;
-    border-right: 1px solid #E5E5E5;
-  }
-  .client-sidebar.sidebar-expanded {
-    transform: translateX(0) !important;
-    left: 0 !important;
-  }
-
-  .client-main-content {
-    margin-left: 260px !important;
-  }
-  .main-content {
-    margin-left: 260px !important;
-  }
-
-  /* Show section emojis in sidebar on tablet too */
-  .client-sidebar .section-emoji-label {
-    display: inline !important;
-  }
-
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
-  .grid-3 { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Small Phone (<=480px) */
+/* ═══ SIDEBAR — Small phone (<=480px) ═══ */
 @media (max-width: 480px) {
+  .client-sidebar.sidebar-expanded {
+    width: 85vw;
+    min-width: 85vw;
+    max-width: 300px;
+  }
+
   .grid-4, .grid-3, .grid-5 { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
 
-  .page-container { padding: 10px 8px 12px; }
+  .page-container { padding: 10px 8px 12px; word-break: break-word; overflow-wrap: break-word; hyphens: none; -webkit-hyphens: none; }
   .page-title { font-size: 20px; }
   .page-subtitle { font-size: 13px; }
   .stat-value { font-size: 22px; }
@@ -1277,7 +1059,6 @@ a { color: inherit; text-decoration: none; }
   .welcome-card { padding: 20px 16px; word-break: break-word; overflow-wrap: break-word; hyphens: none; -webkit-hyphens: none; }
   .plan-card { padding: 20px; }
   .section-title { font-size: 14px; }
-  .page-container { word-break: break-word; overflow-wrap: break-word; hyphens: none; -webkit-hyphens: none; }
 
   .btn { padding: 8px 14px; font-size: 12px; min-height: 44px; touch-action: manipulation; }
   .btn-sm { padding: 5px 10px; font-size: 11px; min-height: 38px; }
@@ -1286,17 +1067,14 @@ a { color: inherit; text-decoration: none; }
   /* Prevent iOS auto-zoom on input focus (requires font-size >= 16px) */
   input, textarea, select, .input, .select { font-size: max(16px, 1rem) !important; }
 
-  /* Dashboard-specific responsive: KPIs 2x2 on phones */
+  /* Dashboard-specific responsive */
   .dash-kpis { grid-template-columns: repeat(2, 1fr) !important; }
-  /* Taches + Priorites stack on phones */
   .dash-tasks-grid { grid-template-columns: 1fr !important; }
-  /* Quick actions 2-col on phones */
   .dash-quick-actions { grid-template-columns: repeat(2, 1fr) !important; }
-  /* Team scroll: smaller items */
   .dash-team-scroll a { min-width: 110px !important; }
 }
 
-/* Extra-small phones (iPhone SE, 320px) */
+/* ═══ Extra-small phones (iPhone SE, 320px) ═══ */
 @media (max-width: 374px) {
   .page-title { font-size: 18px !important; }
   .stat-value { font-size: 18px !important; }
@@ -1309,28 +1087,6 @@ a { color: inherit; text-decoration: none; }
   .page-subtitle { font-size: 12px; }
 }
 
-/* ─── Scrollable tabs on phone ─── */
-@media (max-width: 767px) {
-  .tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    max-width: 100%;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .tabs::-webkit-scrollbar { display: none; }
-  .agent-tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    max-width: 100%;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .agent-tabs::-webkit-scrollbar { display: none; }
-}
-
 /* ─── Accessibility: focus-visible on buttons ─── */
 .btn:focus-visible {
   outline: 2px solid var(--accent);
@@ -1340,47 +1096,6 @@ a { color: inherit; text-decoration: none; }
   outline: 2px solid var(--accent);
   outline-offset: -2px;
   border-radius: var(--radius-md);
-}
-
-/* ─── Phone sidebar enhancements ─── */
-@media (max-width: 767px) {
-  /* Touch-friendly nav links when expanded (iOS minimum 44px) */
-  .client-sidebar.sidebar-expanded .nav-link {
-    padding: 12px 16px;
-    font-size: 13px;
-    min-height: 44px;
-  }
-  .client-sidebar.sidebar-expanded .nav-section-title {
-    font-size: 10px;
-    padding: 10px 12px 2px;
-  }
-
-  /* Smoother overlay */
-  .sidebar-overlay {
-    transition: opacity 0.3s ease;
-  }
-
-  /* Compact sidebar footer */
-  .sidebar-footer {
-    padding: 8px 12px;
-  }
-
-  /* Compact bottom padding */
-  .page-container {
-    padding-bottom: 16px;
-  }
-}
-
-/* ─── Tablet sidebar enhancements ─── */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .client-sidebar .nav-link {
-    font-size: 12px;
-    padding: 8px 12px;
-    min-height: 40px;
-  }
-  .client-sidebar .nav-section-title {
-    font-size: 9px;
-  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -4306,14 +4021,18 @@ img, video, canvas, svg { display: block; max-width: 100%; height: auto; }
 }
 
 /* ── Safe Areas ── */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .mobile-topbar {
-    padding-top: max(8px, env(safe-area-inset-top));
+    padding-top: max(0px, env(safe-area-inset-top));
+    height: calc(52px + env(safe-area-inset-top, 0px));
+  }
+  .client-main-content {
+    padding-top: calc(52px + env(safe-area-inset-top, 0px));
   }
 }
 
 /* ── Landscape on mobile ── */
-@media (max-width: 768px) and (orientation: landscape) {
+@media (max-width: 767px) and (orientation: landscape) {
   .mobile-topbar { height: 44px; }
   .client-page { height: calc(100vh - 44px); height: calc(100dvh - 44px); }
 }

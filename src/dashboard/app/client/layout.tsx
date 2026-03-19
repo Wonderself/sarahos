@@ -339,26 +339,6 @@ function getNavEmoji(href: string): string {
   return NAV_EMOJIS[slug] || NAV_EMOJIS[slug.split('-')[0]] || '📎';
 }
 
-// ─── Nav context for emoji rail breadcrumb ───────────────────────────────────
-
-function getCurrentNavContext(
-  pathname: string,
-  sections: SectionConfig[],
-): { sectionId: string; sectionEmoji: string; pageEmoji: string } | null {
-  for (const section of sections) {
-    for (const item of section.items) {
-      if (item.visible && (pathname === item.href || (item.href !== '/client/dashboard' && pathname.startsWith(item.href)))) {
-        return {
-          sectionId: section.id,
-          sectionEmoji: SECTION_EMOJIS[section.id] || '📌',
-          pageEmoji: getNavEmoji(item.href),
-        };
-      }
-    }
-  }
-  return null;
-}
-
 // ─── Level titles ─────────────────────────────────────────────────────────────
 
 const LEVEL_TITLES: Record<number, string> = {
@@ -414,9 +394,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   // Menu customization
   const [menuSections, setMenuSections] = useState<SectionConfig[]>([]);
-  const [deviceType, setDeviceType] = useState<'phone' | 'tablet' | 'desktop'>('desktop');
-  const isDesktop = deviceType === 'desktop' || deviceType === 'tablet';
-  const isPhone = deviceType === 'phone';
+  const [isMobile, setIsMobile] = useState(false);
   const [isPro, setIsPro] = useState(false);
   const [notifUnreadCount, setNotifUnreadCount] = useState(0);
   const [customizeOpen, setCustomizeOpen] = useState(false);
@@ -446,10 +424,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     const w = window.innerWidth;
-    const dt = w < 768 ? 'phone' : w <= 1024 ? 'tablet' : 'desktop';
-    setDeviceType(dt);
-    const desktop = dt !== 'phone';
-    setCustomizeTab(desktop ? 'desktop' : 'mobile');
+    const mobile = w < 768;
+    setIsMobile(mobile);
+    setCustomizeTab(mobile ? 'mobile' : 'desktop');
 
     const proStored = localStorage.getItem('fz_is_pro') === 'true';
     setIsPro(proStored);
@@ -462,7 +439,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setNotifUnreadCount(unread);
     } catch { /* */ }
 
-    setMenuSections(loadMenuSections(desktop, proStored));
+    setMenuSections(loadMenuSections(!mobile, proStored));
 
     const stored = localStorage.getItem('fz_session');
     if (stored) {
@@ -530,25 +507,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     // Dark mode removed — always light
 
-    // Resize listener — keep deviceType in sync + sidebar state
+    // Resize listener — keep isMobile in sync + sidebar state
     const onResize = () => {
-      const w2 = window.innerWidth;
-      const newDt = w2 < 768 ? 'phone' as const : w2 <= 1024 ? 'tablet' as const : 'desktop' as const;
-      setDeviceType(prev => {
-        if (prev !== newDt) {
-          // Phone: sidebar closed; tablet/desktop: sidebar open
-          setSidebarExpanded(newDt !== 'phone');
+      const newMobile = window.innerWidth < 768;
+      setIsMobile(prev => {
+        if (prev !== newMobile) {
+          setSidebarExpanded(!newMobile);
         }
-        return newDt;
+        return newMobile;
       });
     };
     // Initial sync on mount
     if (window.innerWidth < 768) {
-      setDeviceType('phone');
+      setIsMobile(true);
       setSidebarExpanded(false);
-    } else if (window.innerWidth <= 1024) {
-      setDeviceType('tablet');
-      setSidebarExpanded(true);
     }
     window.addEventListener('resize', onResize);
 
@@ -599,24 +571,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('storage', onFavChange);
   }, []);
 
-  // Close sidebar on navigation (phone only)
-  useEffect(() => { if (deviceType === 'phone') setSidebarExpanded(false); }, [pathname, deviceType]);
+  // Close sidebar on navigation (mobile only)
+  useEffect(() => { if (isMobile) setSidebarExpanded(false); }, [pathname, isMobile]);
 
-  // Close sidebar on scroll (phone only)
+  // Close sidebar on scroll (mobile only)
   useEffect(() => {
-    if (deviceType !== 'phone') return;
-    const mainEl = document.querySelector('.client-main-content');
-    if (!mainEl) return;
+    if (!isMobile) return;
     const handleScroll = () => {
       if (sidebarExpanded) setSidebarExpanded(false);
     };
-    mainEl.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      mainEl.removeEventListener('scroll', handleScroll);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [deviceType, sidebarExpanded]);
+  }, [isMobile, sidebarExpanded]);
 
   // SSE — real-time notifications
   useEffect(() => {
@@ -707,7 +675,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   // ─── Menu customization handlers ──────────────────────────────────────────
 
   function openCustomize() {
-    const tab = isDesktop ? 'desktop' : 'mobile';
+    const tab = isMobile ? 'mobile' : 'desktop';
     setCustomizeTab(tab);
     setEditSections(JSON.parse(JSON.stringify(loadMenuSections(tab === 'desktop', isPro))));
     setCustomizeOpen(true);
@@ -720,7 +688,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   function saveCustomize() {
     saveMenuSections(editSections, customizeTab === 'desktop');
-    if ((customizeTab === 'desktop') === isDesktop) {
+    if ((customizeTab === 'desktop') === !isMobile) {
       setMenuSections(JSON.parse(JSON.stringify(editSections)));
     }
     setCustomizeOpen(false);
@@ -862,7 +830,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         if (s.id !== sectionId) return s;
         return { ...s, items: s.items.map(item => item.href === href ? { ...item, visible: true } : item) };
       });
-      saveMenuSections(next, isDesktop);
+      saveMenuSections(next, !isMobile);
       return next;
     });
   }
@@ -870,7 +838,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   function restoreSection(sectionId: string) {
     setMenuSections(prev => {
       const next = prev.map(s => s.id === sectionId ? { ...s, visible: true } : s);
-      saveMenuSections(next, isDesktop);
+      saveMenuSections(next, !isMobile);
       return next;
     });
   }
@@ -889,16 +857,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   if (loading) {
     return (
       <div style={{ display: 'flex', minHeight: '100dvh', background: '#fff' }}>
-        {/* Emoji rail skeleton — always visible */}
-        <div style={{
-          position: 'fixed', top: 0, left: 0, bottom: 0, width: 56,
-          background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
-          zIndex: 9999, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', padding: '16px 0',
-        }}>
-          <div style={{ fontSize: 13, fontWeight: 800, color: '#1A1A1A' }}>f.</div>
-        </div>
-        <div style={{ flex: 1, marginLeft: deviceType === 'desktop' ? 296 : deviceType === 'tablet' ? 260 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ fontSize: 14, color: '#9B9B9B' }}>Chargement...</div>
         </div>
       </div>
@@ -943,113 +902,54 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
     )}
     <div style={{ display: 'flex', minHeight: '100dvh', paddingTop: isImpersonating ? 40 : 0 }}>
-      {/* Sidebar Overlay — click outside to close (phone only) */}
-      {sidebarExpanded && isPhone && (
+      {/* Mobile Topbar */}
+      {isMobile && (
+        <div className="mobile-topbar">
+          <button
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+            style={{
+              background: 'none', border: 'none', fontSize: 18, fontWeight: 700,
+              cursor: 'pointer', padding: '8px 12px', color: '#1A1A1A',
+              fontFamily: 'system-ui', minHeight: 44, display: 'flex', alignItems: 'center',
+            }}
+          >
+            {sidebarExpanded ? '\u2715' : '\u2630'}
+          </button>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A1A', flex: 1, textAlign: 'center' }}>freenzy.io</span>
+          <button
+            onClick={() => setSearchOpen(true)}
+            style={{
+              background: 'none', border: 'none', fontSize: 16, cursor: 'pointer',
+              padding: '8px 12px', color: '#6B6B6B', minHeight: 44,
+              display: 'flex', alignItems: 'center',
+            }}
+          >
+            🔍
+          </button>
+        </div>
+      )}
+
+      {/* Sidebar Overlay — click outside to close (mobile only) */}
+      {isMobile && sidebarExpanded && (
         <div
-          className="sidebar-overlay active"
+          className="sidebar-overlay"
           onClick={() => setSidebarExpanded(false)}
         />
       )}
 
-      {/* Emoji Rail — visible on desktop only (hidden on tablet via CSS, phone uses sidebar) */}
-      {deviceType === 'desktop' && (() => {
-        const navCtx = getCurrentNavContext(pathname, visibleSections);
-
-        // On emoji click: open sidebar and scroll to that section
-        function handleEmojiClick(sectionId: string) {
-          setSidebarExpanded(true);
-          // Scroll to section after sidebar renders
-          requestAnimationFrame(() => {
-            const el = document.getElementById(`nav-section-${sectionId}`);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          });
-        }
-
-        return (
-          <nav className="emoji-rail" style={{
-            position: 'fixed', top: 0, left: 0, bottom: 0,
-            width: 56, background: '#FFFFFF', borderRight: '1px solid #E5E5E5',
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
-            zIndex: 9999, padding: '4px 0',
-            overflowY: 'auto', overflowX: 'hidden',
-            WebkitOverflowScrolling: 'touch',
-          }}>
-            <div className="emoji-rail-top">
-              <button
-                className="emoji-rail-btn"
-                onClick={() => { if (!isDesktop) setSidebarExpanded(e => !e); }}
-                title="Menu"
-                style={{ fontSize: 13, fontWeight: 800, fontFamily: 'system-ui', color: '#1A1A1A' }}
-              >
-                f.
-              </button>
-            </div>
-            <div className="emoji-rail-sections">
-              {visibleSections.map(section => {
-                const sEmoji = SECTION_EMOJIS[section.id] || '📌';
-                const isCurrent = navCtx?.sectionId === section.id;
-                return (
-                  <div className="emoji-rail-section" key={section.id}>
-                    <button
-                      className={`emoji-rail-btn${isCurrent ? ' active' : ''}`}
-                      onClick={() => handleEmojiClick(section.id)}
-                      title={section.title}
-                    >
-                      {sEmoji}
-                    </button>
-                    {isCurrent && navCtx?.pageEmoji && (
-                      <div className="emoji-rail-child" title={(() => {
-                        const slug = pathname.replace('/client/', '').replace(/\//g, '-').replace(/-$/, '');
-                        const meta = PAGE_META[slug] || PAGE_META[slug.split('-')[0]];
-                        return meta?.title || '';
-                      })()}>
-                        {navCtx.pageEmoji}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="emoji-rail-bottom">
-              <button className="emoji-rail-btn" onClick={() => setSearchOpen(true)} title="Rechercher (Ctrl+K)">🔍</button>
-              <Link href="/client/account" className="emoji-rail-btn" style={{ textDecoration: 'none' }} title="Mon compte" onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
-                ⚙️
-              </Link>
-              <Link href="/client/notifications" className="emoji-rail-btn" style={{ textDecoration: 'none', position: 'relative' }} onClick={() => { setNotifUnreadCount(0); if (isPhone) setSidebarExpanded(false); }}>
-                🔔
-                {notifUnreadCount > 0 && (
-                  <span style={{ position: 'absolute', top: 0, right: 0, minWidth: 16, height: 16, borderRadius: 8, background: '#ef4444', color: '#fff', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{notifUnreadCount}</span>
-                )}
-              </Link>
-              <Link href={session ? '/client/account' : '/login'} className="emoji-rail-avatar" title={session ? (session.displayName || 'Mon compte') : 'Se connecter'} style={{ textDecoration: 'none', background: session ? undefined : '#1A1A1A', color: session ? undefined : '#fff' }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
-                {session ? (session.displayName || session.email || '?').slice(0, 2).toUpperCase() : '?'}
-              </Link>
-            </div>
-          </nav>
-        );
-      })()}
-
-      {/* Client Sidebar (expanded) */}
+      {/* Client Sidebar */}
       <nav
         className={`client-sidebar${sidebarExpanded ? ' sidebar-expanded' : ''}`}
-        style={{ background: '#fff', width: 240, borderRight: '1px solid #E5E5E5' }}
-        onClick={(e) => {
-          if (isPhone && !sidebarExpanded) {
-            e.preventDefault();
-            e.stopPropagation();
-            setSidebarExpanded(true);
-          }
-        }}
       >
         <div className="sidebar-header" style={{ padding: '8px 12px 4px' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, height: 44,
           }}>
-            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4, flex: 1 }} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.02em' }}>freenzy.io</span>
               <span style={{ fontSize: 9, fontStyle: 'italic', color: '#9B9B9B' }}>Beta Test 1</span>
             </Link>
-            {isPhone && (
+            {isMobile && (
               <button
                 onClick={() => setSidebarExpanded(false)}
                 title="Fermer le menu"
@@ -1118,7 +1018,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   key={agId}
                   href={`/client/chat?agent=${agId}`}
                   title={ag.name}
-                  onClick={() => { if (isPhone) setSidebarExpanded(false); }}
+                  onClick={() => { if (isMobile) setSidebarExpanded(false); }}
                   style={{
                     width: 32, height: 32, borderRadius: '50%',
                     background: '#FAFAFA', border: '1px solid #E5E5E5',
@@ -1310,7 +1210,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   const isNotifications = item.href === '/client/notifications';
                   return (
                     <Link key={item.href} href={item.href} className={`nav-link${isActive ? ' nav-link-active' : ''}`}
-                      onClick={() => { if (isNotifications) setNotifUnreadCount(0); if (isPhone) setSidebarExpanded(false); }}
+                      onClick={() => { if (isNotifications) setNotifUnreadCount(0); if (isMobile) setSidebarExpanded(false); }}
                       style={{
                         minHeight: 32, fontSize: 13, fontWeight: isActive ? 500 : 400,
                         color: isActive ? '#1A1A1A' : '#6B6B6B',
@@ -1360,12 +1260,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <span className="section-emoji-label" style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
               </div>
               {customAgents.map(agent => (
-                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+                  <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>🤖</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{agent.name}</span>
                   </Link>
               ))}
-              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+              <Link href="/client/agents/create" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
                 <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Créer un assistant</span>
               </Link>
@@ -1382,13 +1282,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 const href = `/client/modules/${mod.slug}`;
                 const isActive = pathname === href;
                 return (
-                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+                  <Link key={mod.id} href={href} className={`nav-link${isActive ? ' nav-link-active' : ''}`} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
                     <span className="nav-icon"><span style={{ fontSize: 16 }}>📦</span></span>
                     <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.name}</span>
                   </Link>
                 );
               })}
-              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+              <Link href="/client/modules/builder" className="nav-link" style={{ opacity: 0.7 }} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
                 <span className="nav-icon"><span style={{ fontSize: 16 }}>➕</span></span>
                 <span style={{ flex: 1 }}>Nouveau module</span>
               </Link>
@@ -1401,7 +1301,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
               <span className="section-emoji-label" style={{ fontSize: 12 }}>📊</span> Statut
             </div>
-            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+            <Link href="/client/account" className={`nav-link${pathname === '/client/account' ? ' nav-link-active' : ''}`} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
               <span className="nav-icon"><span style={{ fontSize: 16 }}>💳</span></span>
               <span style={{ flex: 1 }}>Crédits</span>
               <span style={{
@@ -1411,7 +1311,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 {walletBalance !== null ? (walletBalance / 1_000_000).toFixed(1) : '—'}
               </span>
             </Link>
-            <Link href="/client/account" className="nav-link" onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+            <Link href="/client/account" className="nav-link" onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
               <span className="nav-icon">
                 <span style={{
                   display: 'inline-flex', width: 16, height: 16, borderRadius: 4,
@@ -1442,12 +1342,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 }}
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                onClick={() => { if (isPhone) setSidebarExpanded(false); }}
+                onClick={() => { if (isMobile) setSidebarExpanded(false); }}
               >
                 Ouvrir un compte gratuit
               </Link>
               <div style={{ textAlign: 'center', marginTop: 6 }}>
-                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+                <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none' }} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
                   Déjà un compte ? Se connecter
                 </Link>
               </div>
@@ -1507,7 +1407,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <span style={{ fontSize: 13, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1A1A1A' }}>
                 {session.displayName}
               </span>
-              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>⚙️</Link>
+              <Link href="/client/account" title="Paramètres" style={{ fontSize: 16, textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>⚙️</Link>
               <button onClick={logout} title="Déconnexion" style={{
                 flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: 14, color: '#9B9B9B', padding: '4px',
@@ -1529,11 +1429,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   fontSize: 12, fontWeight: 600, color: '#1A1A1A',
                   textDecoration: 'none', flex: 1,
                 }}
-                onClick={() => { if (isPhone) setSidebarExpanded(false); }}
+                onClick={() => { if (isMobile) setSidebarExpanded(false); }}
               >
                 Ouvrir un compte
               </Link>
-              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (isPhone) setSidebarExpanded(false); }}>
+              <Link href="/login" style={{ fontSize: 11, color: '#9B9B9B', textDecoration: 'none', flexShrink: 0 }} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>
                 Connexion
               </Link>
             </>
@@ -1542,7 +1442,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </nav>
 
       {/* Client Content */}
-      <div className="client-main-content" onClick={() => { if (sidebarExpanded && isPhone) setSidebarExpanded(false); }}>
+      <div className="client-main-content" onClick={() => { if (sidebarExpanded && isMobile) setSidebarExpanded(false); }}>
         <OfflineBanner />
         <PushPermissionBanner />
         {!hasOnboarding && pathname !== '/client/onboarding' && (
@@ -1583,7 +1483,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </div>
       </div>
 
-      {/* Bottom Tab Bar removed — emoji rail replaces it */}
+      {/* Bottom Tab Bar removed — sidebar is the only navigation */}
 
       {/* Ctrl+K Search Modal */}
       {searchOpen && (

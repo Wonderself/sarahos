@@ -1055,7 +1055,7 @@ export class CronService {
     try {
       // Find users who need J+2 email (created 2 days ago, not yet sent)
       const j2Users = await dbClient.query(
-        `SELECT id, email, name FROM users
+        `SELECT id, email, display_name as name FROM users
          WHERE is_active = TRUE
            AND created_at >= NOW() - INTERVAL '3 days'
            AND created_at < NOW() - INTERVAL '2 days'
@@ -1066,7 +1066,7 @@ export class CronService {
 
       // Find users who need J+5 email (created 5 days ago, not yet sent)
       const j5Users = await dbClient.query(
-        `SELECT id, email, name FROM users
+        `SELECT id, email, display_name as name FROM users
          WHERE is_active = TRUE
            AND created_at >= NOW() - INTERVAL '6 days'
            AND created_at < NOW() - INTERVAL '5 days'

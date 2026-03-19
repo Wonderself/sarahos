@@ -209,11 +209,11 @@ export class ReferralService {
    */
   static async getLeaderboard(): Promise<LeaderboardEntry[]> {
     const result = await dbQuery(`
-      SELECT u.name, COUNT(r.id) AS cnt, COALESCE(SUM(r.reward_referrer), 0) AS earned
+      SELECT u.display_name as name, COUNT(r.id) AS cnt, COALESCE(SUM(r.reward_referrer), 0) AS earned
       FROM referrals r
       JOIN users u ON u.id = r.referrer_id
       WHERE r.status = 'rewarded'
-      GROUP BY u.id, u.name
+      GROUP BY u.id, u.display_name
       ORDER BY cnt DESC
       LIMIT 10
     `);
@@ -240,7 +240,7 @@ export class ReferralService {
    */
   static async getReferrerInfoByCode(code: string): Promise<{ anonymizedName: string; rewardAmount: number } | null> {
     const result = await dbQuery(
-      `SELECT u.name, r.reward_referred FROM referrals r JOIN users u ON u.id = r.referrer_id WHERE r.referral_code = '${escapeSQL(code)}' LIMIT 1`
+      `SELECT u.display_name as name, r.reward_referred FROM referrals r JOIN users u ON u.id = r.referrer_id WHERE r.referral_code = '${escapeSQL(code)}' LIMIT 1`
     );
     if (!result) return null;
 

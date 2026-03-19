@@ -331,7 +331,7 @@ export class OrganizationService {
         SELECT
           om.*,
           u.email,
-          u.name,
+          u.display_name as name,
           COALESCE(cul.total_used, 0) AS total_credits_used
         FROM organization_members om
         JOIN users u ON u.id = om.user_id

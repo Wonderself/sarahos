@@ -265,14 +265,14 @@ export class CreditPoolService {
       SELECT
         cul.user_id,
         u.email,
-        u.name,
+        u.display_name as name,
         SUM(cul.credits_used)::bigint AS total_used,
         COUNT(*)::int AS request_count
       FROM credit_usage_log cul
       JOIN users u ON u.id = cul.user_id
       WHERE cul.organization_id = '${esc(orgId)}'
       ${whereClause}
-      GROUP BY cul.user_id, u.email, u.name
+      GROUP BY cul.user_id, u.email, u.display_name
       ORDER BY total_used DESC
     `);
   }

@@ -327,7 +327,7 @@ export const CU = {
 
 export function pageContainer(isMobile: boolean): CSSProperties {
   return {
-    padding: isMobile ? 16 : 28,
+    padding: isMobile ? '10px 8px' : 28,
     maxWidth: 1100,
     margin: '0 auto',
     minHeight: '100vh',
@@ -335,12 +335,12 @@ export function pageContainer(isMobile: boolean): CSSProperties {
   };
 }
 
-export function headerRow(): CSSProperties {
+export function headerRow(isMobile = false): CSSProperties {
   return {
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
-    marginBottom: 4,
+    gap: isMobile ? 6 : 10,
+    marginBottom: isMobile ? 2 : 4,
   };
 }
 
@@ -356,26 +356,26 @@ export function cardGrid(isMobile: boolean, cols = 3): CSSProperties {
   return {
     display: 'grid',
     gridTemplateColumns: isMobile ? '1fr' : `repeat(${cols}, 1fr)`,
-    gap: 12,
+    gap: isMobile ? 6 : 12,
   };
 }
 
-export function toolbar(): CSSProperties {
+export function toolbar(isMobile = false): CSSProperties {
   return {
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
+    gap: isMobile ? 6 : 8,
     flexWrap: 'wrap' as const,
-    marginBottom: 16,
+    marginBottom: isMobile ? 10 : 16,
   };
 }
 
-export function tabBar(): CSSProperties {
+export function tabBar(isMobile = false): CSSProperties {
   return {
     display: 'flex',
     gap: 0,
     borderBottom: '1px solid #E5E5E5',
-    marginBottom: 20,
+    marginBottom: isMobile ? 12 : 20,
     overflowX: 'auto' as const,
   };
 }
@@ -385,5 +385,49 @@ export function searchInput(isMobile: boolean): CSSProperties {
     ...CU.input,
     maxWidth: isMobile ? '100%' : 280,
     flexShrink: 0,
+  };
+}
+
+// ─── Mobile Compact Helpers ──────────────────────────────────
+// Use these to get tighter values on mobile (Notion-style density)
+
+/** Page title style — smaller on mobile */
+export function pageTitleStyle(isMobile: boolean): CSSProperties {
+  return {
+    ...CU.pageTitle,
+    fontSize: isMobile ? 17 : 20,
+  };
+}
+
+/** Section title style — tighter on mobile */
+export function sectionTitleStyle(isMobile: boolean): CSSProperties {
+  return {
+    ...CU.sectionTitle,
+    fontSize: isMobile ? 13 : 15,
+  };
+}
+
+/** Card style — less padding on mobile */
+export function cardStyle(isMobile: boolean): CSSProperties {
+  return {
+    ...CU.card,
+    padding: isMobile ? '10px 10px' : '14px 16px',
+  };
+}
+
+/** Empty state — compact on mobile */
+export function emptyStateStyle(isMobile: boolean): CSSProperties {
+  return {
+    ...CU.emptyState,
+    padding: isMobile ? '24px 12px' : '48px 24px',
+  };
+}
+
+/** Empty emoji — smaller on mobile */
+export function emptyEmojiStyle(isMobile: boolean): CSSProperties {
+  return {
+    ...CU.emptyEmoji,
+    fontSize: isMobile ? 32 : 48,
+    marginBottom: isMobile ? 8 : 12,
   };
 }

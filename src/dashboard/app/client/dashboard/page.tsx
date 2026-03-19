@@ -291,13 +291,13 @@ export default function ClientDashboard() {
       )}
 
       {/* ── Greeting Header — compact single row ── */}
-      <div style={headerRow()}>
-        <span style={emojiIcon(18)}>👋</span>
+      <div style={headerRow(isMobile)}>
+        <span style={emojiIcon(isMobile ? 15 : 18)}>👋</span>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ ...CU.pageTitle, fontSize: 18, lineHeight: 1.2 }}>
+          <span style={{ ...CU.pageTitle, fontSize: isMobile ? 16 : 18, lineHeight: 1.2 }}>
             {greeting}{userName ? `, ${userName}` : ''}
           </span>
-          <span style={{ ...CU.pageSubtitle, fontSize: 12 }}>
+          <span style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 12 }}>
             {todayStr}
           </span>
         </div>
@@ -324,38 +324,38 @@ export default function ClientDashboard() {
       <div style={{
         display: 'grid',
         gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)',
-        gap: 8,
-        marginBottom: 12,
+        gap: isMobile ? 5 : 8,
+        marginBottom: isMobile ? 8 : 12,
       }}>
         <Link href="/client/account" style={{
-          ...CU.cardHoverable, textDecoration: 'none', padding: '8px 12px',
-          display: 'flex', alignItems: 'center', gap: 8,
+          ...CU.cardHoverable, textDecoration: 'none', padding: isMobile ? '6px 8px' : '8px 12px',
+          display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8,
         }}>
-          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>💰</span>
+          <span style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1, flexShrink: 0 }}>💰</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 11, color: CU.textMuted }}>Crédits</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{credits.toFixed(1)} <span style={{ fontSize: 10, fontWeight: 400, color: CU.textMuted }}>{daysLeft > 0 ? `~${daysLeft}j` : ''}</span></div>
           </div>
         </Link>
-        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>💬</span>
+        <div style={{ ...CU.card, padding: isMobile ? '6px 8px' : '8px 12px', display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8 }}>
+          <span style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1, flexShrink: 0 }}>💬</span>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 11, color: CU.textMuted }}>Messages</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{stats.totalMessages}</div>
+            <div style={{ fontSize: isMobile ? 10 : 11, color: CU.textMuted }}>Messages</div>
+            <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{stats.totalMessages}</div>
           </div>
         </div>
         <Link href="/client/agents" style={{
-          ...CU.cardHoverable, textDecoration: 'none', padding: '8px 12px',
-          display: 'flex', alignItems: 'center', gap: 8,
+          ...CU.cardHoverable, textDecoration: 'none', padding: isMobile ? '6px 8px' : '8px 12px',
+          display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8,
         }}>
-          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>🤖</span>
+          <span style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1, flexShrink: 0 }}>🤖</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 11, color: CU.textMuted }}>Assistants</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{activeAgents.length} <span style={{ fontSize: 10, fontWeight: 400, color: CU.textMuted }}>actifs</span></div>
           </div>
         </Link>
-        <div style={{ ...CU.card, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>{stats.streak > 0 ? '🔥' : '✨'}</span>
+        <div style={{ ...CU.card, padding: isMobile ? '6px 8px' : '8px 12px', display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8 }}>
+          <span style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1, flexShrink: 0 }}>{stats.streak > 0 ? '🔥' : '✨'}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 11, color: CU.textMuted }}>{stats.streak > 0 ? 'Streak' : 'Activité'}</div>
             <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{stats.streak > 0 ? `${stats.streak}j` : 'Nouveau'}</div>
@@ -364,7 +364,7 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── AI Briefing — compact ── */}
-      <div style={{ ...CU.card, padding: '10px 14px', marginBottom: 12 }}>
+      <div style={{ ...CU.card, padding: isMobile ? '8px 10px' : '10px 14px', marginBottom: isMobile ? 8 : 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: 14 }}>🧠</span>
@@ -410,8 +410,8 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Quick Actions — compact ── */}
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+      <div style={{ marginBottom: isMobile ? 10 : 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 4 : 6, marginBottom: isMobile ? 5 : 8 }}>
           <span style={{ fontSize: 14 }}>⚡</span>
           <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>Actions rapides</span>
           <HelpBubble text="Accédez directement aux fonctionnalités les plus utilisées." />
@@ -433,9 +433,9 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Todos & Priorities — compact ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 8, marginBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 5 : 8, marginBottom: isMobile ? 10 : 16 }}>
         {/* Todos */}
-        <div style={{ ...CU.card, padding: '10px 14px' }}>
+        <div style={{ ...CU.card, padding: isMobile ? '8px 10px' : '10px 14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <span style={{ fontSize: 14 }}>✅</span>
             <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>
@@ -491,7 +491,7 @@ export default function ClientDashboard() {
         </div>
 
         {/* Priorities */}
-        <div style={{ ...CU.card, padding: '10px 14px' }}>
+        <div style={{ ...CU.card, padding: isMobile ? '8px 10px' : '10px 14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <span style={{ fontSize: 14 }}>🎯</span>
             <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>3 priorités</span>
@@ -521,13 +521,13 @@ export default function ClientDashboard() {
       </div>
 
       {/* ── Feature Sections Grid — compact Notion rows ── */}
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+      <div style={{ marginBottom: isMobile ? 10 : 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 4 : 6, marginBottom: isMobile ? 5 : 8 }}>
           <span style={{ fontSize: 14 }}>🧭</span>
           <span style={{ ...CU.sectionTitle, flex: 1, fontSize: 14 }}>Toutes vos fonctionnalités</span>
           <HelpBubble text="Retrouvez ici l'ensemble des outils disponibles dans votre espace Freenzy." />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 5 : 8 }}>
           {FEATURE_SECTIONS.map(section => (
             <div key={section.id} style={{
               ...CU.card, padding: 0, overflow: 'hidden',
@@ -555,13 +555,13 @@ export default function ClientDashboard() {
                 {section.items.map(item => (
                   <Link key={item.id} href={item.href} style={{
                     textDecoration: 'none',
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    padding: '6px 12px',
+                    display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8,
+                    padding: isMobile ? '4px 8px' : '6px 12px',
                     borderBottom: `1px solid ${CU.border}`,
                     transition: 'background 0.15s ease',
                     color: 'inherit',
                   }}>
-                    <span style={{ fontSize: 18, flexShrink: 0 }}>{item.emoji}</span>
+                    <span style={{ fontSize: isMobile ? 15 : 18, flexShrink: 0 }}>{item.emoji}</span>
                     <div>
                       <div style={{ fontSize: 12, fontWeight: 600, color: CU.text }}>{item.label}</div>
                       <div style={{ fontSize: 10, color: CU.textMuted }}>{item.desc}</div>
@@ -578,7 +578,7 @@ export default function ClientDashboard() {
       {!isDismissed('referral') && (
         <div style={{
           ...CU.card,
-          display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', marginBottom: 12,
+          display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 8, padding: isMobile ? '6px 10px' : '8px 14px', marginBottom: isMobile ? 8 : 12,
           background: CU.bgSecondary,
         }}>
           <Link href="/client/referrals" style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, textDecoration: 'none', color: 'inherit' }}>

@@ -66,11 +66,11 @@ export function startTelegramBot(): TelegramBot {
     console.error('[Bot error]', err.message);
   });
 
-  // Security: ignore all messages from non-admin
+  // Debug: log all received messages
   bot.on('message', (msg) => {
+    console.log(`[Bot] Message reçu: chat_id=${msg.chat.id} text="${msg.text?.slice(0, 50)}"`);
     if (msg.chat.id.toString() !== ADMIN_CHAT_ID) {
       console.log(`[Security] Message ignoré de chat_id=${msg.chat.id} (non admin)`);
-      return;
     }
   });
 

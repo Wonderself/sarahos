@@ -485,7 +485,7 @@ ${topProfessions.split('\n').map((l: string) => {
     const lines = items.split('\n').filter(Boolean);
     let backlogMsg = '📋 *Backlog Produit*\n\n';
     for (const line of lines) {
-      const [_id, title, priority, effort, impact] = line.split('|');
+      const [, title, priority, effort, impact] = line.split('|');
       backlogMsg += `• [${priority}] *${title}* — Effort: ${effort}, Impact: ${impact}\n`;
     }
 

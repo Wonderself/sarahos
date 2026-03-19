@@ -20,16 +20,31 @@ interface PendingAction {
 
 const pendingActions = new Map<string, PendingAction>();
 
-// DB helper — uses docker exec to reach PostgreSQL
-const PG_CONTAINER = process.env.PG_CONTAINER || 'freenzy-postgres-ewcwwk0wocw0cw0kccsw4kcw-024742433003';
-
-async function dbQuery(sql: string): Promise<string> {
+// DB helper — uses dynamic container detection
+async function findPgContainer(): Promise<string> {
   return new Promise((resolve) => {
-    const proc = spawn('docker', ['exec', PG_CONTAINER, 'psql', '-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql]);
+    const proc = spawn('docker', ['ps', '--format', '{{.Names}}', '--filter', 'name=freenzy-postgres']);
     let out = '';
     proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    proc.on('close', () => resolve(out.trim().split('\n')[0] || ''));
+    proc.on('error', () => resolve(''));
+  });
+}
+
+async function dbQuery(sql: string): Promise<string> {
+  const container = await findPgContainer();
+  if (!container) return 'Error: PostgreSQL container not found';
+  return new Promise((resolve) => {
+    const proc = spawn('docker', ['exec', container, 'psql', '-U', 'freenzy', '-d', 'freenzy', '-t', '-A', '-c', sql]);
+    let out = '';
+    let err = '';
+    proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    proc.stderr.on('data', (d: Buffer) => { err += d.toString(); });
     proc.on('error', (e: Error) => { resolve(`Error: ${e.message}`); });
-    proc.on('close', () => resolve(out.trim() || 'OK'));
+    proc.on('close', (code) => {
+      if (code !== 0 && err) resolve(`Error: ${err.trim()}`);
+      else resolve(out.trim() || 'OK');
+    });
   });
 }
 

@@ -83,6 +83,8 @@ export async function extractTextWithSections(buffer: Buffer, mimeType: string, 
     const lines = fullText.split('\n');
     let currentTitle = filename ? `Document: ${filename}` : 'Section 1';
     let currentContent: string[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let sectionIdx = 1;
     for (const line of lines) {
       // Detect headings (lines that look like titles)
       const isHeading = /^(#{1,3}\s|[A-Z][A-Z\s]{5,}$|^\d+[\.\)]\s+[A-Z])/.test(line.trim());
@@ -93,7 +95,7 @@ export async function extractTextWithSections(buffer: Buffer, mimeType: string, 
         }
         currentTitle = line.trim().replace(/^#+\s*/, '');
         currentContent = [];
-        // new section
+        sectionIdx++;
       } else {
         currentContent.push(line);
       }

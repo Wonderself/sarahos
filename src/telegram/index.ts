@@ -13,7 +13,7 @@
  *   TELEGRAM_ALERTS_CHANNEL  — Canal alertes critiques
  *   TELEGRAM_BUSINESS_CHANNEL — Canal business
  *   TELEGRAM_TECH_CHANNEL    — Canal technique
- *   ANTHROPIC_API_KEY        — Pour /think, /chat, /photo
+ *   (Claude Code CLI via Max subscription — pas besoin d'ANTHROPIC_API_KEY)
  *   COOLIFY_WEBHOOK_URL      — Pour /deploy auto
  *   STRIPE_SECRET_KEY        — Pour /revenue réel
  *   DB_PASSWORD              — Mot de passe PostgreSQL

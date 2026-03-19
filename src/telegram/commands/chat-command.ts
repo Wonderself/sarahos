@@ -8,7 +8,6 @@ import * as path from 'path';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
 import { Memory } from '../memory';
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
 const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 const MAX_HISTORY = 20;
 

@@ -1,11 +1,16 @@
 /**
  * FEATURE 5 — /photo : Analyse d'image et action
  * Détecte automatiquement les photos, analyse avec Claude Vision
+ * Uses Claude Code CLI (Max subscription) instead of direct API calls
  */
 import TelegramBot from 'node-telegram-bot-api';
+import { spawn } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
+const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 
 // Store last analysis for callbacks
 const lastAnalysis = new Map<string, { type: string; analysis: string }>();
@@ -22,11 +27,6 @@ export function registerPhotoCommand(bot: TelegramBot, adminChatId: string): voi
     const photo = photos[photos.length - 1]!;
     const caption = msg.caption || '';
 
-    if (!ANTHROPIC_API_KEY) {
-      await bot.sendMessage(chatId, '⚠️ `ANTHROPIC_API_KEY` non configurée.', { parse_mode: 'Markdown' });
-      return;
-    }
-
     const streamer = new TelegramStreamer(bot);
     await streamer.init(chatId, '📸 Analyse de l\'image en cours...');
 
@@ -39,61 +39,43 @@ export function registerPhotoCommand(bot: TelegramBot, adminChatId: string): voi
       if (!imageResponse.ok) throw new Error('Impossible de télécharger l\'image');
 
       const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-      const base64Image = imageBuffer.toString('base64');
 
-      // Detect media type from file extension
+      // Save image to temp file for Claude Code CLI
       const ext = file.file_path?.split('.').pop()?.toLowerCase() || 'jpg';
-      const mediaType = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
+      const tmpDir = os.tmpdir();
+      const tmpFile = path.join(tmpDir, `freenzy-photo-${Date.now()}.${ext}`);
+      fs.writeFileSync(tmpFile, imageBuffer);
 
       const prompt = caption || `Analyse cette image dans le contexte de Freenzy.io.
 Identifie :
 1. Ce que montre l'image (bug, maquette, screenshot, erreur, concurrent...)
 2. Ce qu'il faudrait faire concrètement
-3. Si c'est un bug → propose le code de correction
-4. Si c'est une maquette → génère le composant React correspondant
-5. Si c'est un screenshot concurrent → compare avec Freenzy et identifie les opportunités
-Sois précis et actionnable.`;
+3. Si c'est un bug, propose le code de correction
+4. Si c'est une maquette, genere le composant React correspondant
+5. Si c'est un screenshot concurrent, compare avec Freenzy et identifie les opportunites
+Sois precis et actionnable.`;
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4096,
-          messages: [{
-            role: 'user',
-            content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: mediaType,
-                  data: base64Image,
-                },
-              },
-              {
-                type: 'text',
-                text: prompt,
-              },
-            ],
-          }],
-        }),
+      // Use Claude Code CLI with image file (Max subscription, not API credits)
+      const escapedPrompt = prompt.replace(/"/g, '\\"').replace(/\$/g, '\\$');
+      const analysis = await new Promise<string>((resolve) => {
+        const proc = spawn('bash', ['-c', `source /root/.nvm/nvm.sh && claude -p "${escapedPrompt}" --files "${tmpFile}" 2>&1`], {
+          cwd: PROJECT_ROOT,
+          env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
+          timeout: 120000,
+        });
+        let output = '';
+        proc.stdout.on('data', (d: Buffer) => { output += d.toString(); });
+        proc.stderr.on('data', (d: Buffer) => { output += d.toString(); });
+        proc.on('close', () => {
+          // Clean up temp file
+          try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
+          resolve(output.trim() || 'Pas de réponse.');
+        });
+        proc.on('error', () => {
+          try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
+          resolve('❌ Erreur : impossible de lancer Claude Code.');
+        });
       });
-
-      if (!response.ok) {
-        const errBody = await response.text();
-        throw new Error(`API ${response.status}: ${errBody.slice(0, 200)}`);
-      }
-
-      const data = await response.json() as { content: { type: string; text: string }[] };
-      const analysis = data.content
-        .filter((b: { type: string }) => b.type === 'text')
-        .map((b: { text: string }) => b.text)
-        .join('');
 
       // Detect type of image
       const analysisLower = analysis.toLowerCase();

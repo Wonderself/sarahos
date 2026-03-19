@@ -138,6 +138,18 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
         return;
       }
 
+      if (data.startsWith('save_memory_photo_')) {
+        const analysis = getLastAnalysis(chatId);
+        if (analysis) {
+          await Memory.save('photo_analysis', analysis.analysis.slice(0, 300));
+          await bot.answerCallbackQuery(query.id, { text: '💾 Sauvegardé' });
+          await bot.sendMessage(chatId, '💾 Analyse photo sauvegardée dans MEMORY.md');
+        } else {
+          await bot.answerCallbackQuery(query.id, { text: '⚠️ Analyse expirée' });
+        }
+        return;
+      }
+
       if (data.startsWith('save_memory_')) {
         const result = getLastThinkResult(chatId);
         const lastMsg = getLastAssistantMessage(chatId);
@@ -219,23 +231,107 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
         return;
       }
 
+      // ── Chat actions ──
+      if (data === 'chat_continue') {
+        await bot.answerCallbackQuery(query.id, { text: '💬 Continue la conversation...' });
+        await bot.sendMessage(chatId, '💬 Envoie ton prochain message, je suis prêt !');
+        return;
+      }
+
       // ── Photo actions ──
       if (data.startsWith('fix_now_') || data.startsWith('generate_component_')) {
         const analysis = getLastAnalysis(chatId);
         if (analysis) {
-          await bot.answerCallbackQuery(query.id, { text: 'Lancement...' });
+          await bot.answerCallbackQuery(query.id, { text: '🔧 Lancement...' });
           const brief = analysis.type === 'bug'
             ? `Corrige ce bug: ${analysis.analysis.slice(0, 200)}`
             : `Génère le composant React: ${analysis.analysis.slice(0, 200)}`;
           simulateCommand(bot, chatId, `/claude ${brief}`, query.from);
+        } else {
+          await bot.answerCallbackQuery(query.id, { text: '⚠️ Analyse expirée' });
+          await bot.sendMessage(chatId, '⚠️ L\'analyse photo a expiré. Renvoie la photo pour une nouvelle analyse.');
         }
         return;
       }
 
+      if (data.startsWith('analyze_competitor_')) {
+        const analysis = getLastAnalysis(chatId);
+        if (analysis) {
+          await bot.answerCallbackQuery(query.id, { text: '📊 Analyse en cours...' });
+          simulateCommand(bot, chatId, `/think Analyse concurrentielle complète : ${analysis.analysis.slice(0, 300)}. Compare avec Freenzy.io et identifie les opportunités.`, query.from);
+        } else {
+          await bot.answerCallbackQuery(query.id, { text: '⚠️ Analyse expirée' });
+        }
+        return;
+      }
+
+      if (data.startsWith('respond_competitor_')) {
+        const analysis = getLastAnalysis(chatId);
+        if (analysis) {
+          await bot.answerCallbackQuery(query.id, { text: '💡 Réflexion...' });
+          simulateCommand(bot, chatId, `/think Propose une stratégie pour répondre à ce concurrent : ${analysis.analysis.slice(0, 300)}. Quelles fonctionnalités de Freenzy améliorer ?`, query.from);
+        } else {
+          await bot.answerCallbackQuery(query.id, { text: '⚠️ Analyse expirée' });
+        }
+        return;
+      }
+
+      if (data.startsWith('backlog_photo_')) {
+        const analysis = getLastAnalysis(chatId);
+        if (analysis) {
+          const title = analysis.analysis.slice(0, 100).replace(/'/g, "''");
+          await dbQuery(`INSERT INTO product_improvements (id, title, status, effort, impact, priority_score) VALUES (gen_random_uuid(), '${title}', 'proposed', 'M', 'M', 50)`);
+          await bot.answerCallbackQuery(query.id, { text: '📋 Ajouté au backlog' });
+          await bot.sendMessage(chatId, '📋 Ajouté au backlog produit.');
+        } else {
+          await bot.answerCallbackQuery(query.id, { text: '⚠️ Analyse expirée' });
+        }
+        return;
+      }
+
+      // ── Claude task actions ──
+      if (data.startsWith('claude_details_')) {
+        await bot.answerCallbackQuery(query.id);
+        // Show git diff of recent changes
+        const gitDiff = await new Promise<string>((resolve) => {
+          const proc = spawn('bash', ['-c', `cd ${PROJECT_ROOT} && git diff --stat HEAD~1 2>&1 | head -30`]);
+          let out = '';
+          proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+          proc.stderr.on('data', (d: Buffer) => { out += d.toString(); });
+          proc.on('close', () => resolve(out.trim() || 'Aucun changement détecté'));
+          proc.on('error', () => resolve('❌ Impossible de lire les détails'));
+        });
+        await bot.sendMessage(chatId, `📊 *Détails du dernier changement :*\n\n\`\`\`\n${gitDiff.slice(0, 800)}\n\`\`\``, { parse_mode: 'Markdown' });
+        return;
+      }
+
+      if (data.startsWith('retry_claude_')) {
+        const instruction = decodeURIComponent(data.replace('retry_claude_', ''));
+        await bot.answerCallbackQuery(query.id, { text: '🔄 Relancement...' });
+        simulateCommand(bot, chatId, `/claude ${instruction}`, query.from);
+        return;
+      }
+
+      // ── Revenue actions ──
       if (data.startsWith('revenue_')) {
         const period = data.replace('revenue_', '');
         await bot.answerCallbackQuery(query.id);
         simulateCommand(bot, chatId, `/revenue ${period}`, query.from);
+        return;
+      }
+
+      // ── Status actions ──
+      if (data === 'status_details') {
+        await bot.answerCallbackQuery(query.id);
+        // Show detailed docker/system info
+        const details = await new Promise<string>((resolve) => {
+          const proc = spawn('bash', ['-c', `docker ps --format "{{.Names}}\\t{{.Status}}\\t{{.Size}}" 2>&1 | head -20`]);
+          let out = '';
+          proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+          proc.on('close', () => resolve(out.trim() || 'Aucun container'));
+          proc.on('error', () => resolve('❌ Docker indisponible'));
+        });
+        await bot.sendMessage(chatId, `🐳 *Containers Docker :*\n\n\`\`\`\n${details.slice(0, 800)}\n\`\`\``, { parse_mode: 'Markdown' });
         return;
       }
 
@@ -245,9 +341,25 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
         return;
       }
 
+      // ── Daily brief actions ──
       if (data === 'handle_pending') {
         await bot.answerCallbackQuery(query.id);
         simulateCommand(bot, chatId, '/pending', query.from);
+        return;
+      }
+
+      if (data === 'implement_quickwin') {
+        await bot.answerCallbackQuery(query.id, { text: '🔧 Recherche du quick win...' });
+        const quickWin = await dbQuery(`
+          SELECT title FROM product_improvements
+          WHERE status IN ('proposed', 'approved') AND effort IN ('XS', 'S')
+          ORDER BY priority_score DESC LIMIT 1
+        `);
+        if (quickWin && quickWin !== 'OK' && !quickWin.startsWith('Error')) {
+          simulateCommand(bot, chatId, `/claude Implémente ce quick win: ${quickWin}`, query.from);
+        } else {
+          await bot.sendMessage(chatId, '✅ Aucun quick win en attente.');
+        }
         return;
       }
 
@@ -257,8 +369,34 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
         return;
       }
 
+      // ── Teams actions ──
+      if (data === 'teams_details' || data === 'teams_usage') {
+        await bot.answerCallbackQuery(query.id);
+        simulateCommand(bot, chatId, '/teams', query.from);
+        return;
+      }
+
+      if (data.startsWith('team_add_credits_')) {
+        const orgId = data.replace('team_add_credits_', '');
+        await bot.answerCallbackQuery(query.id);
+        await bot.sendMessage(chatId, `💳 Pour ajouter des crédits à l'équipe, utilise :\n\`/credits [email_owner] [montant]\`\n\nID Orga : \`${orgId}\``, { parse_mode: 'Markdown' });
+        return;
+      }
+
+      if (data.startsWith('team_members_') || data.startsWith('team_settings_')) {
+        const orgId = data.replace(/^team_(members|settings)_/, '');
+        await bot.answerCallbackQuery(query.id);
+        const members = await dbQuery(`
+          SELECT u.display_name || ' (' || om.role || ')'
+          FROM organization_members om JOIN users u ON om.user_id = u.id
+          WHERE om.organization_id = '${orgId}'
+        `);
+        await bot.sendMessage(chatId, `👥 *Membres de l'équipe :*\n\n${members || 'Aucun membre'}`, { parse_mode: 'Markdown' });
+        return;
+      }
+
       // Unknown callback
-      await bot.answerCallbackQuery(query.id, { text: '❓ Action inconnue' });
+      await bot.answerCallbackQuery(query.id, { text: '❓ Action non reconnue' });
 
     } catch (err) {
       console.error('[Callbacks] Error:', err instanceof Error ? err.message : err);

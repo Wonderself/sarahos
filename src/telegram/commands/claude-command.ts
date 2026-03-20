@@ -133,6 +133,7 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
 
       claude.stdout.on('data', (data: Buffer) => {
         const text = data.toString();
+        console.log(`[/claude] STDOUT chunk: ${text.length} chars, first 100: ${text.slice(0, 100).replace(/\n/g, '\\n')}`);
         output += text;
 
         // Parse stream-json lines
@@ -175,11 +176,17 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
       });
 
       claude.stderr.on('data', (data: Buffer) => {
-        output += data.toString();
+        const text = data.toString();
+        console.log(`[/claude] STDERR: ${text.slice(0, 200)}`);
+        output += text;
+      });
+
+      claude.on('exit', (code: number | null, signal: string | null) => {
+        console.log(`[/claude] Process EXIT code=${code} signal=${signal}`);
       });
 
       claude.on('close', async (code) => {
-        console.log(`[/claude] Process closed with code=${code}`);
+        console.log(`[/claude] Process CLOSE code=${code} lastSummary=${lastSummary.length} chars`);
         const elapsed = Math.round((Date.now() - state.startTime) / 1000);
 
         if (code === 0) {

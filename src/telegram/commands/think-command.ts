@@ -47,31 +47,32 @@ ${memorySlice}
 QUESTION (réfléchis en profondeur avant de répondre) :
 ${question}`;
 
-      // Use Claude Code CLI — execFile (no shell escaping issues)
+      // Use Claude Code CLI via spawn + stdin pipe
       console.log(`[/think] Calling Claude Code CLI for: "${question.slice(0, 60)}"`);
       const assistantText = await new Promise<string>((resolve) => {
-        const { execFile } = require('child_process');
-        const claudePath = '/root/.nvm/versions/node/v22.22.1/bin/claude';
+        const { spawn: spawnProc } = require('child_process');
         const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
-        const child = execFile(claudePath, ['-p', prompt], {
+        const proc = spawnProc(nvmBin + '/claude', ['-p', '-'], {
           cwd: PROJECT_ROOT,
           env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}` },
           timeout: 180000,
-          maxBuffer: 1024 * 1024,
-        }, (err: Error | null, stdout: string, stderr: string) => {
-          if (err) {
-            console.error('[/think] Claude Code execFile error:', err.message);
-            if (stderr) console.error('[/think] stderr:', stderr.slice(0, 500));
-            resolve(stderr || stdout || 'Erreur Claude Code.');
-          } else {
-            console.log(`[/think] Claude Code response: ${stdout.length} chars`);
-            resolve(stdout.trim() || 'Pas de réponse.');
-          }
+          stdio: ['pipe', 'pipe', 'pipe'],
         });
-        child.on('error', (spawnErr: Error) => {
-          console.error('[/think] execFile spawn error:', spawnErr.message);
-          resolve(`Erreur lancement Claude: ${spawnErr.message}`);
+        let stdout = '';
+        let stderr = '';
+        proc.stdout.on('data', (d: Buffer) => { stdout += d.toString(); });
+        proc.stderr.on('data', (d: Buffer) => { stderr += d.toString(); });
+        proc.on('close', (code: number) => {
+          console.log(`[/think] Claude Code exited code=${code} stdout=${stdout.length} chars`);
+          resolve(stdout.trim() || stderr.trim() || 'Pas de réponse.');
         });
+        proc.on('error', (err: Error) => {
+          console.error('[/think] spawn error:', err.message);
+          resolve('Erreur lancement Claude Code.');
+        });
+        // Send prompt via stdin
+        proc.stdin.write(prompt);
+        proc.stdin.end();
       });
 
       // Store for callbacks

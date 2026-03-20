@@ -55,27 +55,27 @@ Identifie :
 5. Si c'est un screenshot concurrent, compare avec Freenzy et identifie les opportunites
 Sois precis et actionnable.`;
 
-      // Use Claude Code CLI with image file (Max subscription, not API credits)
-      const escapedPrompt = prompt.replace(/"/g, '\\"').replace(/\$/g, '\\$');
+      // Use Claude Code CLI with image file — execFile (no shell escaping issues)
       const analysis = await new Promise<string>((resolve) => {
-        const proc = spawn('bash', ['-c', `source /root/.nvm/nvm.sh && claude -p "${escapedPrompt}" --files "${tmpFile}" 2>&1`], {
+        const { execFile } = require('child_process');
+        const claudePath = '/root/.nvm/versions/node/v22.22.1/bin/claude';
+        execFile(claudePath, ['-p', prompt, '--files', tmpFile], {
           cwd: PROJECT_ROOT,
-          env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
+          env: { ...process.env, HOME: '/root' },
           timeout: 120000,
-        });
-        let output = '';
-        proc.stdout.on('data', (d: Buffer) => { output += d.toString(); });
-        proc.stderr.on('data', (d: Buffer) => { output += d.toString(); });
-        proc.on('close', () => {
+          maxBuffer: 1024 * 1024,
+        }, (err: Error | null, stdout: string, stderr: string) => {
           // Clean up temp file
           try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
-          resolve(output.trim() || 'Pas de réponse.');
-        });
-        proc.on('error', () => {
-          try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
-          resolve('❌ Erreur : impossible de lancer Claude Code.');
+          if (err) {
+            console.error('[Photo] Claude Code error:', err.message);
+            resolve(stderr || stdout || 'Erreur analyse photo.');
+          } else {
+            resolve(stdout.trim() || 'Pas de réponse.');
+          }
         });
       });
+      // (old spawn error handler removed — now handled in execFile callback)
 
       // Detect type of image
       const analysisLower = analysis.toLowerCase();

@@ -108,19 +108,23 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
     const historyContext = history.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
     const fullPrompt = `${systemPrompt}\n\nHistorique récent:\n${historyContext}\n\nRéponds au dernier message de l'utilisateur. Sois concis et utile. Ne modifie aucun fichier.`;
 
-    // Use Claude Code CLI (uses Max subscription, not API credits)
+    // Use Claude Code CLI — spawn directly with args (no shell escaping needed)
     const assistantText = await new Promise<string>((resolve) => {
-      const { spawn: spawnProc } = require('child_process');
-      const proc = spawnProc('bash', ['-c', `source /root/.nvm/nvm.sh && claude -p "${fullPrompt.replace(/"/g, '\\"').replace(/\$/g, '\\$')}" 2>&1`], {
+      const { execFile } = require('child_process');
+      const claudePath = '/root/.nvm/versions/node/v22.22.1/bin/claude';
+      execFile(claudePath, ['-p', fullPrompt], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
+        env: { ...process.env, HOME: '/root' },
         timeout: 120000,
+        maxBuffer: 1024 * 1024,
+      }, (err: Error | null, stdout: string, stderr: string) => {
+        if (err) {
+          console.error('[Chat] Claude Code error:', err.message);
+          resolve(stderr || stdout || 'Erreur Claude Code.');
+        } else {
+          resolve(stdout.trim() || 'Pas de réponse.');
+        }
       });
-      let output = '';
-      proc.stdout.on('data', (d: Buffer) => { output += d.toString(); });
-      proc.stderr.on('data', (d: Buffer) => { output += d.toString(); });
-      proc.on('close', () => resolve(output.trim() || 'Pas de réponse.'));
-      proc.on('error', () => resolve('Erreur: impossible de lancer Claude Code.'));
     });
 
     // Add assistant response to history

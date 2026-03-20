@@ -4,7 +4,7 @@
  * Uses Claude Code CLI (Max subscription) instead of direct API calls
  */
 import TelegramBot from 'node-telegram-bot-api';
-import { spawn } from 'child_process';
+// child_process used via require('child_process').execFile inline
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';

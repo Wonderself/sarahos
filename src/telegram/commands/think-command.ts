@@ -3,7 +3,6 @@
  * Uses Claude Code CLI (Max subscription) instead of API credits
  */
 import TelegramBot from 'node-telegram-bot-api';
-import { spawn } from 'child_process';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
 import { Memory } from '../memory';
 

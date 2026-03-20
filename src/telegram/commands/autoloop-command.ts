@@ -259,7 +259,7 @@ Lance Claude Code en mode autonome pour une session longue durée (max 3h).
         `source /root/.nvm/nvm.sh && cd ${PROJECT_ROOT} && timeout ${timeoutSeconds}s claude -p "${escapedInstruction}. Fais tout sans demander de permission. Commit automatiquement chaque changement significatif avec un message descriptif. À la fin, fais un git push origin main." --output-format stream-json 2>&1`
       ], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root' },
+        env: { ...process.env, HOME: '/root', ANTHROPIC_API_KEY: '' },
       });
 
       state.process = claude;

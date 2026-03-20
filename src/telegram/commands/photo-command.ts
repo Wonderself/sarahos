@@ -63,7 +63,7 @@ Sois precis et actionnable.`;
         const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
         const child = execFile(claudePath, ['-p', prompt, '--files', tmpFile], {
           cwd: PROJECT_ROOT,
-          env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}` },
+          env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
           timeout: 120000,
           maxBuffer: 1024 * 1024,
         }, (err: Error | null, stdout: string, stderr: string) => {

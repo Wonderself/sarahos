@@ -86,7 +86,7 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
       const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
       const proc = spawnProc(nvmBin + '/claude', ['-p', '-'], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}` },
+        env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
         timeout: 120000,
         stdio: ['pipe', 'pipe', 'pipe'],
       });

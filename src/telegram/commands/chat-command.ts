@@ -3,6 +3,8 @@
  * Claude Sonnet avec historique, contexte projet injecté, streaming live
  */
 import TelegramBot from 'node-telegram-bot-api';
+import * as fs from 'fs';
+import * as path from 'path';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
 
 const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
@@ -16,20 +18,27 @@ interface ChatMessage {
 // Conversation history per chat
 const conversationHistory = new Map<string, ChatMessage[]>();
 
+// Cache the context file (reloaded every 5 min)
+let contextCache = '';
+let contextLoadedAt = 0;
+
+function loadContext(): string {
+  const now = Date.now();
+  if (contextCache && now - contextLoadedAt < 300000) return contextCache; // 5 min cache
+  try {
+    const ctxPath = path.join(PROJECT_ROOT, 'TELEGRAM-CONTEXT.md');
+    if (fs.existsSync(ctxPath)) {
+      contextCache = fs.readFileSync(ctxPath, 'utf-8').trim();
+      contextLoadedAt = now;
+      return contextCache;
+    }
+  } catch { /* ignore */ }
+  return 'Freenzy.io = OS IA multi-agents. 136 agents, Next.js, PostgreSQL, Hetzner.';
+}
+
 function buildSystemPrompt(): string {
-  return `Tu es l'assistant Telegram d'Emmanuel Smadja, CEO de Freenzy.io.
-
-PROJET : Freenzy.io = OS IA multi-agents pour PME. 136 agents spécialisés (commercial, marketing, juridique, RH, etc.). Chaque agent a un rôle, un prompt système, des capabilities. Hiérarchie L1 (Haiku, exécution), L2 (Sonnet, analyse), L3 (Opus, stratégie).
-
-TECH : Next.js 14 (207 pages) + Express 5 + PostgreSQL 16 + Redis 7 + Docker/Coolify sur Hetzner EU. TypeScript strict, 0 any. Twilio (téléphonie), ElevenLabs (TTS), fal.ai (images), Stripe (paiement).
-
-BUSINESS : Entreprise israélienne, cible francophone (FR+BE). 0% commission pour 5000 premiers users (verrouillé à vie), 5% après. 50 crédits offerts. Pas d'abonnement, pay-per-use. Token $FRNZ prévu sur Base (Web3, DAO, IA comme DG).
-
-FEATURES : 59 formations, 50 marketplace templates, 10 jeux arcade, deep discussions (Opus), studio photo/vidéo, CRM, kanban, répondeur IA, social media manager, 260 articles SEO.
-
-ADMIN : smadja99@gmail.com. Domaines : app.freenzy.io (dashboard), api.freenzy.io (backend).
-
-RÈGLES : Sois direct, concis, stratégique, en français. Pour modifier du code → /claude. Pour réfléchir en profondeur → /think.`;
+  const context = loadContext();
+  return `Tu es l'assistant Telegram d'Emmanuel Smadja, CEO de Freenzy.io.\n\n${context}\n\nRègles : Sois direct, concis, stratégique, en français. Pour modifier du code → /claude. Pour réfléchir → /think.`;
 }
 
 export function registerChatCommand(bot: TelegramBot, adminChatId: string): void {

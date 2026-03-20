@@ -112,10 +112,12 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
     }
 
     try {
-      console.log(`[/claude] Spawning bash with claude CLI for: "${instruction.slice(0, 60)}"`);
-      const claude = spawn('bash', ['-c', `source /root/.nvm/nvm.sh && cd ${PROJECT_ROOT} && claude -p "${instruction.replace(/"/g, '\\"')}" --output-format stream-json 2>&1`], {
+      console.log(`[/claude] Spawning claude CLI for: "${instruction.slice(0, 60)}"`);
+      // Spawn claude directly (no bash, no shell escaping issues)
+      const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
+      const claude = spawn(nvmBin + '/claude', ['-p', instruction, '--output-format', 'stream-json'], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin`, ANTHROPIC_API_KEY: '' },
+        env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
       });
 
       // Handle spawn failure

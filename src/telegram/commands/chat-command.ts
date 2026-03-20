@@ -43,7 +43,7 @@ function buildSystemPrompt(): string {
 
 export function registerChatCommand(bot: TelegramBot, adminChatId: string): void {
   // /chat [message] command
-  bot.onText(/\/chat (.+)/, async (msg, match) => {
+  bot.onText(/\/chat (.+)/i, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const message = match?.[1]?.trim();
     if (!message) return;

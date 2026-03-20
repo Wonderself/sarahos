@@ -12,7 +12,7 @@ const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos
 const lastThinkResults = new Map<string, { question: string; answer: string }>();
 
 export function registerThinkCommand(bot: TelegramBot, adminChatId: string): void {
-  bot.onText(/\/think (.+)/, async (msg, match) => {
+  bot.onText(/\/think (.+)/i, async (msg, match) => {
     if (msg.chat.id.toString() !== adminChatId) return;
     const question = match?.[1]?.trim();
     if (!question) {

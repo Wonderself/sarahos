@@ -31,6 +31,7 @@ export const parcoursDroitIANiv2: FormationParcours = {
     {
       id: 'droit-ia-m1',
       title: 'IA Act europeen en pratique',
+      description: 'Appliquez le règlement européen sur l\'IA à vos cas concrets.',
       emoji: '\uD83C\uDDEA\uD83C\uDDFA',
       duration: '10 min',
       xpReward: 125,
@@ -137,6 +138,7 @@ Ce que vous n'avez PAS besoin de faire (si vous etes en risque limite) : pas d'a
     {
       id: 'droit-ia-m2',
       title: 'Droit d\'auteur et IA',
+      description: 'Comprenez les droits d\'auteur sur les contenus générés par l\'IA.',
       emoji: '\u00A9\uFE0F',
       duration: '10 min',
       xpReward: 125,
@@ -255,6 +257,7 @@ Midjourney accorde une licence commerciale aux abonnes payants. Les utilisateurs
     {
       id: 'droit-ia-m3',
       title: 'Video IA et deepfakes',
+      description: 'Maîtrisez le cadre légal des vidéos IA et de la lutte anti-deepfakes.',
       emoji: '\uD83C\uDFAC',
       duration: '10 min',
       xpReward: 125,
@@ -369,6 +372,7 @@ En 2024-2025, les premieres condamnations sont tombees en France : un homme cond
     {
       id: 'droit-ia-m4',
       title: 'RGPD avance : DPO pratique',
+      description: 'Approfondissez le RGPD avec les pratiques concrètes du DPO.',
       emoji: '\uD83D\uDD12',
       duration: '10 min',
       xpReward: 125,
@@ -479,6 +483,7 @@ L'assistant vous guidera etape par etape et vous donnera un feedback personnalis
     {
       id: 'droit-ia-m5',
       title: 'Contrats et IA',
+      description: 'Rédigez des contrats adaptés aux projets impliquant l\'IA.',
       emoji: '\uD83D\uDCDD',
       duration: '10 min',
       xpReward: 125,
@@ -599,6 +604,7 @@ Si vous cochez tout ca, vous etes dans les regles. Et surtout, vous inspirez con
     {
       id: 'droit-ia-m6',
       title: 'Cas pratiques et jurisprudence',
+      description: 'Étudiez des cas réels et la jurisprudence en matière d\'IA.',
       emoji: '\uD83D\uDCDA',
       duration: '10 min',
       xpReward: 125,

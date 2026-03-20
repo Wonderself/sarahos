@@ -1272,8 +1272,8 @@ export default function ChatPage() {
       <div style={{ padding: isMobile ? '16px 12px' : '24px 32px', maxWidth: 800, margin: '0 auto', background: CU.bg }}>
         <VisitorEmptyState
           icon="💬"
-          title="Connectez-vous pour discuter avec vos assistants"
-          description="Chattez en temps réel avec plus de 150+ assistants spécialisés. Chaque assistant comprend votre contexte métier et vous accompagne dans vos tâches quotidiennes."
+          title="Chat IA — 150+ assistants specialises"
+          description="Chattez en temps réel avec vos assistants IA. Créez un compte gratuit pour commencer."
           features={[
             { icon: '🤖', label: 'Agents spécialisés', desc: 'Juridique, comptable, marketing, RH et plus' },
             { icon: '🧠', label: 'Mémoire contextuelle', desc: 'L\'agent retient vos préférences et votre historique' },
@@ -1301,7 +1301,7 @@ export default function ChatPage() {
       {/* ═══ MODE SWITCHER TABS ═══ */}
       <div className="cu-tabs" style={{ padding: '0 16px' }}>
         <button className={`cu-tab ${chatMode === 'ai' ? 'cu-tab-active' : ''}`} onClick={() => setChatMode('ai')}>
-          <span style={{ fontSize: 16 }}>{'\u{1F916}'}</span> Assistants IA
+          <span style={{ fontSize: 16 }}>{'\u{1F916}'}</span> Outils IA
         </button>
         <button className={`cu-tab ${chatMode === 'team' ? 'cu-tab-active' : ''}`} onClick={() => setChatMode('team')}>
           <span style={{ fontSize: 16 }}>{'\u{1F465}'}</span> Équipe

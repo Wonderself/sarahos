@@ -76,7 +76,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     color: '#1A1A1A',
     questions: [
       {
-        q: "Combien d'agents IA sont disponibles ?",
+        q: "Combien d'outils IA sont disponibles ?",
         a: "Freenzy.io met à votre disposition plus de 100 agents IA spécialisés, répartis en trois catégories. Les 22 agents Business couvrent tous les départements d'une entreprise : Répondeur (accueil téléphonique IA 24/7), Assistante (gestion administrative), Commercial (prospection, devis, relance), Marketing (réseaux sociaux, contenu, SEO), RH (recrutement, offres d'emploi), Communication (relations presse, communiqués), Finance (comptabilité, facturation, reporting), Dev (code, debugging, documentation technique), Juridique (contrats, conformité, RGPD), DG (stratégie avec Extended Thinking), Vidéo (clips, avatars parlants), Photo (visuels, illustrations), Qualité (ISO, audits, Six Sigma), Data (analytics, dashboards, ML), Produit (roadmap, backlog, Agile), Succès Client (NPS, rétention, onboarding), RSE (bilan carbone, CSRD, ESG), Opérations (supply chain, Lean, BPM), Design (UX/UI, design system, accessibilité), Formation (e-learning, plans de formation), Innovation (Design Sprint, Lean Startup, MVP) et International (expansion, export, interculturel). Les 12 agents Personnels gèrent votre vie personnelle : Budget familial, Négociateur, Impôts, Comptable perso, Chasseur immobilier, Portfolio d'investissement, CV et lettre de motivation, Contradicteur (devil's advocate), Écrivain, Cinéaste, Coach bien-être et Déconnexion numérique. Enfin, le marketplace propose 50 templates supplémentaires pour des métiers spécifiques."
       },
       {

@@ -1144,8 +1144,8 @@ Utilise ces informations pour personnaliser le document si pertinent.
       <div style={{ ...pageContainer(isMobile), maxWidth: 800 }}>
         <VisitorEmptyState
           icon="📄"
-          title="Connectez-vous pour générer des documents"
-          description="Créez des documents professionnels en quelques secondes grâce à l'IA. Contrats, emails, rapports, business plans — plus de 50 modèles disponibles."
+          title="Documents IA — 50+ modeles professionnels"
+          description="Créez un compte gratuit pour générer contrats, emails, rapports et business plans en quelques secondes."
           features={[
             { icon: '📝', label: 'Contrats & juridique', desc: 'CGV, NDA, contrats de travail, statuts' },
             { icon: '📧', label: 'Emails & courriers', desc: 'Prospection, relance, réclamation, formel' },

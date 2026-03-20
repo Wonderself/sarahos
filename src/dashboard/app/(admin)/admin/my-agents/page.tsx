@@ -28,15 +28,15 @@ export default function MyAgentsPage() {
   return (
     <div className="space-y-6 admin-page-scrollable">
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Mes Agents</h1>
-        <p className="text-neutral-500 mt-1">34 agents IA disponibles — 22 business + 12 personnels</p>
+        <h1 className="text-2xl font-bold text-neutral-900">Mes Outils IA</h1>
+        <p className="text-neutral-500 mt-1">34 outils IA disponibles — 22 business + 12 personnels</p>
       </div>
 
       {/* Filters */}
       <div className="flex items-center gap-4">
         <input
           type="text"
-          placeholder="Rechercher un agent..."
+          placeholder="Rechercher un outil..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="px-4 py-2 bg-[#F7F7F7] border border-neutral-200 rounded-lg text-neutral-900 text-sm w-64 focus:border-neutral-400 focus:outline-none"

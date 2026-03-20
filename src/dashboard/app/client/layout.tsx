@@ -96,12 +96,12 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
   },
   {
     id: 'assistants',
-    title: 'Assistants IA',
+    title: 'Outils IA',
     visible: true,
     order: 3,
     items: [
-      { href: '/client/agents', icon: 'smart_toy', label: 'Mes assistants IA', visible: true, order: 0 },
-      { href: '/client/personal', icon: 'person', label: 'Mes Assistants Perso', visible: true, order: 1 },
+      { href: '/client/agents', icon: 'smart_toy', label: 'Mes outils IA', visible: true, order: 0 },
+      { href: '/client/personal', icon: 'person', label: 'Mes Outils Perso', visible: true, order: 1 },
       { href: '/client/agents/customize', icon: 'palette', label: 'Personnaliser', visible: true, order: 2 },
       { href: '/client/modules', icon: 'inventory_2', label: 'Mes modules', visible: true, order: 3 },
       { href: '/client/memory', icon: 'psychology', label: 'Mémoire IA', visible: true, order: 4 },
@@ -189,7 +189,7 @@ const DEVELOPPEUR_SECTION: SectionConfig = {
 
 const AGENTS_PERSONNELS_SECTION: SectionConfig = {
   id: 'agents-perso',
-  title: 'Assistants Personnels',
+  title: 'Outils Personnels',
   visible: true,
   order: 1,
   items: [
@@ -1222,9 +1222,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                     >
                       <span className="nav-icon"><span style={{ fontSize: 16 }}>{getNavEmoji(item.href)}</span></span>
                       <span style={{ flex: 1 }}>{item.label}</span>
-                      {!session && AUTH_REQUIRED_HREFS.has(item.href) && (
-                        <span style={{ fontSize: 10, opacity: 0.5, marginLeft: 2 }} title="Connexion requise">🔒</span>
-                      )}
+                      {/* Lock icons removed — visitors can browse everything */}
                       {isNotifications && notifUnreadCount > 0 && (
                         <span style={{
                           minWidth: 18, height: 18, borderRadius: 9, padding: '0 5px',
@@ -1257,7 +1255,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {session && customAgents.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-title" style={{ fontSize: 11, fontWeight: 600, color: '#9B9B9B', textTransform: 'none', letterSpacing: 'normal' }}>
-                <span className="section-emoji-label" style={{ fontSize: 12 }}>🤖</span> Mes assistants IA
+                <span className="section-emoji-label" style={{ fontSize: 12 }}>🤖</span> Mes outils IA
               </div>
               {customAgents.map(agent => (
                   <Link key={agent.id} href="/client/agents" className={`nav-link${pathname === '/client/agents' ? ' nav-link-active' : ''}`} onClick={() => { if (isMobile) setSidebarExpanded(false); }}>

@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Chat Multi-Agents',
+  title: 'Chat IA',
   description:
-    'Chat multi-agents IA Freenzy.io — Conversez avec vos agents spécialisés en temps réel. Streaming SSE, contexte persistant.',
+    'Chat IA Freenzy.io — Utilisez vos outils IA spécialisés en temps réel. Streaming SSE, contexte persistant.',
   openGraph: {
-    title: 'Chat Multi-Agents IA — Freenzy.io',
+    title: 'Chat IA — Freenzy.io',
     description:
-      'Conversez avec vos agents IA spécialisés en temps réel. Streaming SSE, contexte persistant. Explorez gratuitement.',
+      'Utilisez vos outils IA spécialisés en temps réel. Streaming SSE, contexte persistant. Explorez gratuitement.',
     url: 'https://freenzy.io/client/chat',
     type: 'website',
     locale: 'fr_FR',

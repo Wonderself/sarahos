@@ -29,6 +29,7 @@ export const parcoursContentNiv2: FormationParcours = {
     {
       id: 'cs2-m1',
       title: 'Stratégie éditoriale multi-plateforme',
+      description: 'Construisez une stratégie éditoriale cohérente sur toutes vos plateformes.',
       emoji: '🌐',
       duration: '10 min',
       xpReward: 125,
@@ -113,6 +114,7 @@ Un tip concret : demande à l'assistant Freenzy de rédiger le même message dan
     {
       id: 'cs2-m2',
       title: 'Calendrier de contenu automatisé',
+      description: 'Planifiez et automatisez votre calendrier éditorial mensuel.',
       emoji: '📅',
       duration: '10 min',
       xpReward: 125,
@@ -192,6 +194,7 @@ Le calendrier n'est pas gravé dans le marbre. Garde 20% de flexibilité pour l'
     {
       id: 'cs2-m3',
       title: 'A/B testing de contenu',
+      description: 'Testez et optimisez vos titres, visuels et horaires de publication.',
       emoji: '🧪',
       duration: '10 min',
       xpReward: 125,
@@ -278,6 +281,7 @@ Enfin, n'oublie pas que les algorithmes évoluent. Un résultat valide aujourd'h
     {
       id: 'cs2-m4',
       title: 'SEO avancé',
+      description: 'Maîtrisez les clusters de mots-clés, le linking interne et E-E-A-T.',
       emoji: '🔍',
       duration: '10 min',
       xpReward: 125,
@@ -359,6 +363,7 @@ Le SEO avancé est un jeu de patience. Les résultats ne sont pas immédiats mai
     {
       id: 'cs2-m5',
       title: 'Branding visuel cross-platform',
+      description: 'Créez une identité visuelle cohérente avec des templates réutilisables.',
       emoji: '🎨',
       duration: '10 min',
       xpReward: 125,
@@ -442,6 +447,7 @@ La cohérence visuelle paie sur le long terme. Après 3 à 6 mois de publication
     {
       id: 'cs2-m6',
       title: 'Analytics contenu',
+      description: 'Analysez vos KPIs, taux d\'engagement et créez des reportings efficaces.',
       emoji: '📊',
       duration: '10 min',
       xpReward: 125,

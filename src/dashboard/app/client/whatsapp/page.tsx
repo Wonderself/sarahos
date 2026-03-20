@@ -447,7 +447,7 @@ export default function WhatsAppPage() {
           {/* Top Agents — Bonding */}
           {topAgents.length > 0 && (
             <div style={{ ...CU.card, marginBottom: 16 }}>
-              <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>Mes assistants preferes</h3>
+              <h3 style={{ ...CU.sectionTitle, marginBottom: 12 }}>Mes outils preferes</h3>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {topAgents.map(bond => {
                   const agentDef = DEFAULT_AGENTS.find(a => a.id === bond.agentId);

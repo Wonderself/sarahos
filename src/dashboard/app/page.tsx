@@ -513,7 +513,7 @@ export default function LandingPage() {
                 marginLeft: isMobile ? 'auto' : undefined,
                 marginRight: isMobile ? 'auto' : undefined,
               }}>
-                +150 assistants IA sur mesure pour vous
+                +150 outils IA sur mesure pour vous
               </p>
               <p style={{
                 fontSize: 11,
@@ -950,7 +950,7 @@ export default function LandingPage() {
         <section style={sectionStyle(C.bgSec)}>
           <div style={containerStyle}>
             <h2 style={sectionTitle}>Quel que soit votre métier 🎯</h2>
-            <p style={sectionSub}>Freenzy s&apos;adapte à votre activité avec des assistants spécialisés.</p>
+            <p style={sectionSub}>Freenzy s&apos;adapte à votre activité avec des outils IA spécialisés.</p>
 
             <div style={{
               display: 'grid',
@@ -979,7 +979,7 @@ export default function LandingPage() {
                   >
                     <div style={{ fontSize: 36, marginBottom: 10 }}>{p.emoji}</div>
                     <div style={{ fontSize: 16, fontWeight: 600, color: C.text, marginBottom: 4 }}>{p.name}</div>
-                    <div style={{ fontSize: 13, color: C.muted, marginBottom: isExpanded ? 14 : 0 }}>{p.count} assistants dédiés</div>
+                    <div style={{ fontSize: 13, color: C.muted, marginBottom: isExpanded ? 14 : 0 }}>{p.count} outils dédiés</div>
 
                     {isExpanded && p.useCases && (
                       <div style={{
@@ -1047,7 +1047,7 @@ export default function LandingPage() {
               {[
                 { emoji: '🎯', step: '1', title: 'Testez gratuitement', desc: 'Pas de carte bancaire. 5 messages gratuits pour découvrir.' },
                 { emoji: '⚙️', step: '2', title: 'On configure tout', desc: 'Quiz rapide de 2 minutes. Dashboard personnalisé selon votre métier.' },
-                { emoji: '🚀', step: '3', title: 'Vos assistants travaillent', desc: 'Briefings, relances, documents — tout se fait automatiquement.' },
+                { emoji: '🚀', step: '3', title: 'Vos outils IA travaillent', desc: 'Briefings, relances, documents — tout se fait automatiquement.' },
               ].map((s, i) => (
                 <div key={i} style={{
                   ...cardStyle,

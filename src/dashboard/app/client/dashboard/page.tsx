@@ -333,7 +333,7 @@ export default function ClientDashboard() {
         }}>
           <span style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1, flexShrink: 0 }}>💰</span>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 11, color: CU.textMuted }}>Crédits</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, display: 'flex', alignItems: 'center', gap: 2 }}>Crédits <HelpBubble text="50 crédits offerts a l'inscription. 1 credit = 1 action IA (message, document, image...)." size={12} /></div>
             <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{credits.toFixed(1)} <span style={{ fontSize: 10, fontWeight: 400, color: CU.textMuted }}>{daysLeft > 0 ? `~${daysLeft}j` : ''}</span></div>
           </div>
         </Link>
@@ -350,7 +350,7 @@ export default function ClientDashboard() {
         }}>
           <span style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1, flexShrink: 0 }}>🤖</span>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 11, color: CU.textMuted }}>Assistants</div>
+            <div style={{ fontSize: 11, color: CU.textMuted, display: 'flex', alignItems: 'center', gap: 2 }}>Assistants <HelpBubble text="Vos assistants IA actifs. Activez-en plus depuis la page Agents." size={12} /></div>
             <div style={{ fontSize: 16, fontWeight: 700, color: CU.text, lineHeight: 1.2 }}>{activeAgents.length} <span style={{ fontSize: 10, fontWeight: 400, color: CU.textMuted }}>actifs</span></div>
           </div>
         </Link>

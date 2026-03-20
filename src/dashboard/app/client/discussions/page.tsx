@@ -837,8 +837,8 @@ export default function DiscussionsPage() {
       <div style={{ padding: isMobile ? '16px 12px' : '16px 24px', maxWidth: 800, margin: '0 auto' }}>
         <VisitorEmptyState
           icon="🧠"
-          title="Connectez-vous pour démarrer une discussion approfondie"
-          description="Explorez des sujets complexes avec Claude Opus, le modèle IA le plus avancé. Philosophie, stratégie, éthique, science — 85+ templates dans 12 catégories."
+          title="Discussions profondes — Claude Opus"
+          description="Créez un compte gratuit pour explorer des sujets complexes avec le modele IA le plus avance."
           features={[
             { icon: '💡', label: '85+ templates', desc: 'Philosophie, éthique, tech, science, business' },
             { icon: '⚡', label: 'Extended Thinking', desc: 'Claude Opus réfléchit en profondeur avant de répondre' },

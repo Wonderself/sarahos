@@ -36,7 +36,7 @@ const EXAMPLE_QUESTIONS = [
 
 // ─── Feature cards
 const FEATURES = [
-  { emoji: '🤖', title: '100+ Assistants IA', desc: 'Commercial, marketing, juridique, RH... Un agent spécialisé pour chaque besoin métier.' },
+  { emoji: '🤖', title: '100+ Outils IA', desc: 'Commercial, marketing, juridique, RH... Un outil spécialisé pour chaque besoin métier.' },
   { emoji: '📄', title: 'Documents automatisés', desc: 'Contrats, devis, factures, rapports — générés en quelques secondes par l\'IA.' },
   { emoji: '📱', title: 'Réseaux sociaux IA', desc: 'Posts LinkedIn, Instagram, Twitter créés et planifiés automatiquement.' },
   { emoji: '🎨', title: 'Studio Créatif', desc: 'Génération de photos et vidéos par IA. Visuels pro sans compétences design.' },
@@ -298,7 +298,7 @@ export default function DemoPage() {
           maxWidth: 540,
           margin: '0 auto',
         }}>
-          Testez notre IA en temps réel. Posez vos questions, explorez les fonctionnalités et voyez pourquoi +100 agents IA changent la donne.
+          Testez notre IA en temps réel. Posez vos questions, explorez les fonctionnalités et voyez pourquoi +100 outils IA changent la donne.
         </p>
       </section>
 

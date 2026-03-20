@@ -31,6 +31,7 @@ export const parcoursComplianceOfficer: FormationParcours = {
     {
       id: 'compliance-m1',
       title: 'Audit IA complet',
+      description: 'Réalisez un audit IA complet : cadrage, inventaire et classification.',
       emoji: '🔍',
       duration: '15 min',
       xpReward: 165,
@@ -151,6 +152,7 @@ La matrice resultante (Impact x Probabilite x Detectabilite) vous donne un score
     {
       id: 'compliance-m2',
       title: 'Conformite internationale (EU/US/Chine)',
+      description: 'Comparez les cadres réglementaires IA en Europe, aux USA et en Chine.',
       emoji: '🌍',
       duration: '15 min',
       xpReward: 165,
@@ -265,6 +267,7 @@ Automatisez ce qui peut l'etre : les checks de conformite, le monitoring des bia
     {
       id: 'compliance-m3',
       title: 'AIPD avancee (Analyse d\'Impact IA)',
+      description: 'Menez une analyse d\'impact avancée sur vos systèmes IA.',
       emoji: '📊',
       duration: '15 min',
       xpReward: 165,
@@ -387,6 +390,7 @@ Attention : corriger un type de biais peut en agraver un autre. C'est un equilib
     {
       id: 'compliance-m4',
       title: 'Gouvernance IA en entreprise',
+      description: 'Mettez en place un comité et une charte de gouvernance IA.',
       emoji: '🏛️',
       duration: '15 min',
       xpReward: 165,
@@ -509,6 +513,7 @@ Soyez accessibles : Pas de jargon juridique incomprehensible. Vos collaborateurs
     {
       id: 'compliance-m5',
       title: 'Incidents et notifications CNIL',
+      description: 'Gérez les incidents IA et les notifications obligatoires à la CNIL.',
       emoji: '🚨',
       duration: '15 min',
       xpReward: 165,
@@ -639,6 +644,7 @@ Si des personnes sont a risque eleve (donnees bancaires, donnees de sante), vous
     {
       id: 'compliance-m6',
       title: 'Veille reglementaire permanente',
+      description: 'Organisez une veille réglementaire continue sur le droit de l\'IA.',
       emoji: '📡',
       duration: '15 min',
       xpReward: 175,
@@ -794,6 +800,7 @@ export const parcoursSystemsArchitect: FormationParcours = {
     {
       id: 'architect-m1',
       title: 'Architecture multi-agents',
+      description: 'Concevez des architectures multi-agents robustes et scalables.',
       emoji: '🤖',
       duration: '15 min',
       xpReward: 165,
@@ -912,6 +919,7 @@ Memoire a long terme (pgvector) : Les connaissances accumulees, les patterns det
     {
       id: 'architect-m2',
       title: 'Infrastructure et performance',
+      description: 'Optimisez l\'infrastructure pour des performances IA maximales.',
       emoji: '⚡',
       duration: '15 min',
       xpReward: 165,
@@ -1047,6 +1055,7 @@ Regle d'or du caching : cachez tout ce qui est « immutable ou lentement mutable
     {
       id: 'architect-m3',
       title: 'Securite des systemes IA',
+      description: 'Sécurisez vos systèmes IA contre les attaques et injections.',
       emoji: '🔒',
       duration: '15 min',
       xpReward: 165,
@@ -1167,6 +1176,7 @@ Implementez des variables d'environnement separees, des comptes de service dedie
     {
       id: 'architect-m4',
       title: 'Monitoring et observabilite',
+      description: 'Mettez en place le monitoring et l\'observabilité de vos agents IA.',
       emoji: '📊',
       duration: '15 min',
       xpReward: 165,
@@ -1299,6 +1309,7 @@ Attention : l'automatisation doit etre prudente et reversible. Un script qui red
     {
       id: 'architect-m5',
       title: 'Migration et integration',
+      description: 'Planifiez la migration et l\'intégration de systèmes IA existants.',
       emoji: '🔄',
       duration: '15 min',
       xpReward: 165,
@@ -1430,6 +1441,7 @@ Rate limiting : Protegez vos endpoints avec des limites par utilisateur et par I
     {
       id: 'architect-m6',
       title: 'Vision long terme et evolutions',
+      description: 'Anticipez les évolutions technologiques et préparez votre roadmap IA.',
       emoji: '🔮',
       duration: '15 min',
       xpReward: 175,

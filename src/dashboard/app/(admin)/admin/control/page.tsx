@@ -166,7 +166,7 @@ const ROUTE_SECTIONS: RouteSection[] = [
       },
       {
         path: '/client/agents/customize',
-        label: 'Personnaliser les Agents',
+        label: 'Personnaliser les Outils',
         icon: '🎨',
         status: 'fonctionnel',
         description: 'Wizard 6 étapes : identité, personnalité (6 curseurs), expertise, instructions, contexte, aperçu & test.',

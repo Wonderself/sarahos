@@ -77,7 +77,7 @@ export const REWARD_ACTIONS: RewardAction[] = [
   {
     id: 'first_chat',
     label: 'Premier message',
-    description: 'Envoyez votre premier message à un agent IA',
+    description: 'Envoyez votre premier message à un outil IA',
     icon: 'chat_bubble', credits: 5, category: 'engagement', oneTime: true,
   },
   {
@@ -329,7 +329,7 @@ export function getTotalPossibleCredits(): number {
 export function getShareUrl(referralCode: string, platform: string): string {
   const baseUrl = 'https://freenzy.io';
   const url = `${baseUrl}/?ref=${referralCode}&utm_source=${platform}&utm_medium=referral`;
-  const text = encodeURIComponent('Découvrez Freenzy.io — 100+ agents IA pour gérer votre entreprise. 0% de commission, gratuit pour les premiers utilisateurs !');
+  const text = encodeURIComponent('Découvrez Freenzy.io — 100+ outils IA pour gérer votre entreprise. 0% de commission, gratuit pour les premiers utilisateurs !');
 
   switch (platform) {
     case 'twitter':

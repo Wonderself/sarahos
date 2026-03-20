@@ -36,8 +36,8 @@ export default function PlansLayout({ children }: { children: React.ReactNode })
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: 'Freenzy.io — Plateforme IA Multi-Agents',
-            description: 'Plateforme IA avec 100+ agents spécialisés. Système de crédits à la consommation, 0% de commission. Téléphonie IA, WhatsApp Business, génération de documents, réseaux sociaux.',
+            name: 'Freenzy.io — Plateforme IA Multi-Outils',
+            description: 'Plateforme IA avec 100+ outils IA spécialisés. Système de crédits à la consommation, 0% de commission. Téléphonie IA, WhatsApp Business, génération de documents, réseaux sociaux.',
             brand: { '@type': 'Brand', name: 'Freenzy.io' },
             url: 'https://freenzy.io/plans',
             offers: [

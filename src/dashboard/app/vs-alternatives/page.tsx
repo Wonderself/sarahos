@@ -28,7 +28,7 @@ const COMPARISON_ROWS: ComparisonRow[] = [
   {
     label: "Nombre d'agents / fonctions",
     icon: '🤖',
-    values: ['24 agents spécialisés', '1 assistant généraliste', 'Scénarios limités', 'Variable selon contrat'],
+    values: ['24 outils spécialisés', '1 assistant généraliste', 'Scénarios limités', 'Variable selon contrat'],
     freenzyBest: true,
   },
   {
@@ -78,9 +78,9 @@ const COMPARISON_ROWS: ComparisonRow[] = [
 const UNIQUE_FEATURES = [
   {
     icon: '🤖',
-    title: '24 agents spécialisés coordonnés',
+    title: '24 outils IA spécialisés coordonnés',
     description:
-      'Pas un chatbot généraliste, mais 24 experts IA qui collaborent : commercial, juridique, RH, marketing, comptabilité et plus encore.',
+      'Pas un chatbot généraliste, mais 24 outils IA experts qui collaborent : commercial, juridique, RH, marketing, comptabilité et plus encore.',
   },
   {
     icon: '📞',

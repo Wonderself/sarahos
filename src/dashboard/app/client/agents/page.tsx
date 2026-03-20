@@ -79,8 +79,8 @@ export default function AgentsPage() {
       <div style={headerRow(isMobile)}>
         <span style={emojiIcon(isMobile ? 15 : 18)}>{PAGE_META.agents.emoji}</span>
         <div style={{ flex: 1 }}>
-          <h1 style={pageTitleStyle(isMobile)}>🤖 Assistants</h1>
-          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 12 }}>Votre équipe de 150+ assistants</p>
+          <h1 style={pageTitleStyle(isMobile)}>🤖 Outils IA</h1>
+          <p style={{ ...CU.pageSubtitle, fontSize: isMobile ? 11 : 12 }}>Vos 150+ outils IA spécialisés</p>
         </div>
         <HelpBubble text={PAGE_META.agents.helpText} />
         <Link href="/client/agents/create" style={{ ...CU.btnPrimary, textDecoration: 'none', fontSize: 12, height: 30, padding: '0 12px' }}>
@@ -119,7 +119,7 @@ export default function AgentsPage() {
       <section style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ fontSize: 14 }}>✨</span>
-          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Mes assistants personnalisés</h2>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Mes outils personnalisés</h2>
           <span style={{ ...CU.badge, background: `${CU.accent}18`, color: CU.accent, fontSize: 10 }}>
             {customAgents.length}
           </span>
@@ -140,14 +140,14 @@ export default function AgentsPage() {
           }}>
             <div style={CU.emptyState}>
               <div style={CU.emptyEmoji}>🤖</div>
-              <div style={CU.emptyTitle}>Aucun assistant personnalisé</div>
+              <div style={CU.emptyTitle}>Aucun outil personnalisé</div>
               <div style={CU.emptyDesc}>
-                Créez votre premier <span className="fz-logo-word">assistant</span> sur mesure en quelques minutes
+                Créez votre premier <span className="fz-logo-word">outil IA</span> sur mesure en quelques minutes
               </div>
               <Link href="/client/agents/create" style={{
                 ...CU.btnPrimary, textDecoration: 'none', padding: '0 20px',
               }}>
-                ✨ Créer mon premier assistant
+                ✨ Créer mon premier outil
               </Link>
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function AgentsPage() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, color: CU.text }}>{agent.name}</div>
                   <div style={{ fontSize: 10, color: CU.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const, display: 'flex', gap: 6, alignItems: 'center' }}>
-                    {agent.role ?? 'Assistant personnalisé'}
+                    {agent.role ?? 'Outil personnalisé'}
                     {agent.domain && <span style={{ ...CU.badge, fontSize: 9, padding: '0 4px', background: CU.accentLight, color: CU.textSecondary }}>{DOMAIN_LABELS[agent.domain] ?? agent.domain}</span>}
                     <span style={{ fontSize: 9, color: agent.is_active ? '#1A1A1A' : CU.textMuted }}>{agent.is_active ? '✅' : '⬜'}</span>
                   </div>
@@ -193,7 +193,7 @@ export default function AgentsPage() {
       <section style={{ marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <span style={{ fontSize: 14 }}>💼</span>
-          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Assistants business</h2>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Outils business</h2>
           <span style={{ ...CU.badge, fontSize: 10 }}>{businessAgents.length}</span>
           <div style={{ flex: 1 }} />
         </div>
@@ -222,7 +222,7 @@ export default function AgentsPage() {
       <section>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <span style={{ fontSize: 14 }}>👤</span>
-          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Assistants personnels</h2>
+          <h2 style={{ ...CU.sectionTitle, fontSize: 14 }}>Outils personnels</h2>
           <span style={{ ...CU.badge, fontSize: 10 }}>{personalAgents.length}</span>
           <div style={{ flex: 1 }} />
         </div>

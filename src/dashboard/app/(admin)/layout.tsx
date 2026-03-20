@@ -86,7 +86,7 @@ const navSections = [
     links: [
       { href: '/admin/chat', label: 'Chat IA', icon: 'chat' },
       { href: '/admin/my-studio', label: 'Studio Créatif', icon: 'movie' },
-      { href: '/admin/my-agents', label: 'Mes Agents', icon: 'smart_toy' },
+      { href: '/admin/my-agents', label: 'Mes Outils IA', icon: 'smart_toy' },
       { href: '/admin/my-documents', label: 'Mes Documents', icon: 'description' },
       { href: '/admin/my-strategy', label: "Plan d'attaque", icon: 'target' },
     ],

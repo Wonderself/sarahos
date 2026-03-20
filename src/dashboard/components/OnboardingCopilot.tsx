@@ -468,7 +468,7 @@ export default function OnboardingCopilot() {
     } else if (lower.includes('aide') || lower.includes('help') || lower.includes('comment')) {
       answer = '📡 Tour de controle a l\'ecoute ! Commencez par remplir votre profil (dites "briefing"), puis testez le Chat. Je suis la sur chaque page avec des conseils.';
     } else if (lower.includes('assistant') || lower.includes('agent') || lower.includes('equipe')) {
-      answer = '👥 Votre equipage compte plus de 30 assistants specialises. Direction "Mes Assistants" pour activer ceux dont vous avez besoin !';
+      answer = '👥 Plus de 30 outils IA specialises vous attendent. Direction "Mes Outils" pour activer ceux dont vous avez besoin !';
     } else if (lower.includes('studio') || lower.includes('photo') || lower.includes('video')) {
       answer = '🎬 Le Studio est votre atelier creatif ! Decrivez ce que vous voulez et l\'IA genere le resultat. Photos ~8 credits, videos ~20.';
     } else if (lower.includes('merci') || lower.includes('super') || lower.includes('genial') || lower.includes('top')) {

@@ -46,7 +46,7 @@ export function AgentsClientView({ agents }: { agents: AgentEntry[] }) {
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Rechercher un agent…"
+          placeholder="Rechercher un outil…"
           className="input"
           style={{ flex: 1, minWidth: 200 }}
         />

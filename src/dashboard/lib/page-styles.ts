@@ -321,6 +321,22 @@ export const CU = {
     color: '#9B9B9B',
     marginTop: 4,
   } as CSSProperties,
+
+  // ─── Help Bubble ──────────────────────────────────────
+  helpBubble: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 18,
+    height: 18,
+    borderRadius: '50%',
+    border: '1px solid #E5E5E5',
+    color: '#9B9B9B',
+    fontSize: 11,
+    cursor: 'pointer',
+    marginLeft: 6,
+    position: 'relative' as const,
+  } as CSSProperties,
 };
 
 // ─── Layout Helpers ───────────────────────────────────────

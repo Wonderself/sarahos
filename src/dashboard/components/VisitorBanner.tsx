@@ -51,18 +51,18 @@ export default function VisitorBanner({ compact }: VisitorBannerProps) {
           ? 'linear-gradient(135deg, #f0ebff 0%, #e8f4fd 100%)'
           : 'linear-gradient(135deg, #f0ebff 0%, #e8f4fd 50%, #fef3e2 100%)',
         border: '1px solid rgba(124, 58, 237, 0.15)',
-        borderRadius: 12,
-        padding: compact ? '12px 16px' : '16px 20px',
-        margin: compact ? '0 0 16px' : '0 0 20px',
+        borderRadius: 10,
+        padding: compact ? '8px 12px' : '10px 14px',
+        margin: compact ? '0 0 12px' : '0 0 14px',
         display: 'flex',
-        alignItems: compact ? 'center' : 'flex-start',
-        gap: compact ? 12 : 16,
+        alignItems: 'center',
+        gap: compact ? 8 : 10,
         flexWrap: 'wrap',
         position: 'relative',
       }}>
         {/* Icon */}
         <span style={{
-          fontSize: compact ? 20 : 28,
+          fontSize: compact ? 16 : 18,
           lineHeight: 1,
           flexShrink: 0,
         }}>
@@ -72,21 +72,21 @@ export default function VisitorBanner({ compact }: VisitorBannerProps) {
         {/* Content */}
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{
-            fontSize: compact ? 13 : 15,
+            fontSize: compact ? 12 : 13,
             fontWeight: 600,
             color: '#1A1A1A',
-            lineHeight: 1.4,
+            lineHeight: 1.3,
           }}>
-            Bienvenue sur Freenzy.io !
+            Mode visiteur
           </div>
           <div style={{
-            fontSize: compact ? 12 : 13,
+            fontSize: compact ? 11 : 12,
             color: '#6B6B6B',
-            marginTop: 2,
-            lineHeight: 1.5,
+            marginTop: 1,
+            lineHeight: 1.4,
           }}>
-            Vous explorez le dashboard en mode visiteur.
-            {!compact && ' Créez un compte gratuit pour accéder à toutes les fonctionnalités.'}
+            Explorez librement.
+            {!compact && ' Créez un compte gratuit pour tout débloquer.'}
           </div>
         </div>
 
@@ -94,13 +94,13 @@ export default function VisitorBanner({ compact }: VisitorBannerProps) {
         <button
           onClick={() => setLoginOpen(true)}
           style={{
-            height: compact ? 32 : 36,
-            padding: compact ? '0 14px' : '0 20px',
-            borderRadius: 8,
+            height: compact ? 26 : 28,
+            padding: compact ? '0 10px' : '0 14px',
+            borderRadius: 6,
             border: 'none',
             background: 'var(--accent)',
             color: '#fff',
-            fontSize: compact ? 12 : 13,
+            fontSize: compact ? 11 : 12,
             fontWeight: 600,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
@@ -108,7 +108,7 @@ export default function VisitorBanner({ compact }: VisitorBannerProps) {
             flexShrink: 0,
           }}
         >
-          Ouvrir un compte gratuit
+          Creer un compte
         </button>
 
         {/* Dismiss */}
@@ -117,12 +117,12 @@ export default function VisitorBanner({ compact }: VisitorBannerProps) {
           aria-label="Fermer"
           style={{
             position: 'absolute',
-            top: compact ? 8 : 10,
-            right: compact ? 8 : 10,
+            top: compact ? 4 : 6,
+            right: compact ? 4 : 6,
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            fontSize: 16,
+            fontSize: 14,
             color: '#9B9B9B',
             padding: '0 4px',
             lineHeight: 1,
@@ -165,108 +165,78 @@ export function VisitorEmptyState({
   title,
   description,
   features,
-  ctaLabel = 'Ouvrir un compte gratuit',
+  ctaLabel = 'Creer un compte gratuit',
 }: VisitorEmptyStateProps) {
   const [loginOpen, setLoginOpen] = useState(false);
 
   return (
     <>
+      {/* Compact inline banner — does NOT block the page */}
       <div style={{
-        textAlign: 'center',
-        padding: '48px 24px',
-        maxWidth: 640,
-        margin: '0 auto',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '10px 14px',
+        marginBottom: 16,
+        background: 'linear-gradient(135deg, #f0ebff 0%, #e8f4fd 100%)',
+        border: '1px solid rgba(124, 58, 237, 0.12)',
+        borderRadius: 8,
       }}>
-        {/* Hero icon */}
-        <div style={{
-          fontSize: 56,
-          marginBottom: 16,
-          filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.08))',
-        }}>
-          {icon}
-        </div>
-
-        {/* Title */}
-        <h2 style={{
-          fontSize: 22,
-          fontWeight: 700,
-          color: '#1A1A1A',
-          margin: '0 0 8px',
-          lineHeight: 1.3,
-        }}>
-          {title}
-        </h2>
-
-        {/* Description */}
-        <p style={{
-          fontSize: 15,
-          color: '#6B6B6B',
-          margin: '0 0 32px',
-          lineHeight: 1.6,
-          maxWidth: 480,
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}>
-          {description}
-        </p>
-
-        {/* Feature previews */}
-        {features && features.length > 0 && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: features.length <= 3 ? `repeat(${features.length}, 1fr)` : 'repeat(auto-fill, minmax(160px, 1fr))',
-            gap: 12,
-            marginBottom: 32,
-            textAlign: 'left',
-          }}>
-            {features.map((f, i) => (
-              <div key={i} style={{
-                background: '#fff',
-                border: '1px solid #E5E5E5',
-                borderRadius: 10,
-                padding: '14px 16px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 10,
-              }}>
-                <span style={{ fontSize: 22, flexShrink: 0, lineHeight: 1 }}>{f.icon}</span>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A', marginBottom: 2 }}>{f.label}</div>
-                  <div style={{ fontSize: 11, color: '#9B9B9B', lineHeight: 1.4 }}>{f.desc}</div>
-                </div>
-              </div>
-            ))}
+        <span style={{ fontSize: 18, flexShrink: 0, lineHeight: 1 }}>{icon}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A1A', lineHeight: 1.3 }}>
+            {title}
           </div>
-        )}
-
-        {/* CTA */}
+          <div style={{ fontSize: 11, color: '#6B6B6B', lineHeight: 1.4, marginTop: 1 }}>
+            {description.length > 100 ? description.slice(0, 100) + '...' : description}
+          </div>
+        </div>
         <button
           onClick={() => setLoginOpen(true)}
           style={{
-            height: 44,
-            padding: '0 28px',
-            borderRadius: 10,
+            height: 28,
+            padding: '0 14px',
+            borderRadius: 6,
             border: 'none',
             background: 'var(--accent)',
             color: '#fff',
-            fontSize: 15,
+            fontSize: 12,
             fontWeight: 600,
             cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
           }}
         >
           {ctaLabel}
         </button>
-
-        <div style={{
-          marginTop: 12,
-          fontSize: 12,
-          color: '#9B9B9B',
-        }}>
-          50 crédits offerts à l'inscription — aucune carte requise
-        </div>
       </div>
+
+      {/* Feature chips — compact horizontal row */}
+      {features && features.length > 0 && (
+        <div style={{
+          display: 'flex',
+          gap: 8,
+          marginBottom: 16,
+          flexWrap: 'wrap',
+        }}>
+          {features.map((f, i) => (
+            <div key={i} style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '4px 10px',
+              background: '#FAFAFA',
+              border: '1px solid #E5E5E5',
+              borderRadius: 6,
+              fontSize: 11,
+              color: '#6B6B6B',
+            }}>
+              <span style={{ fontSize: 14 }}>{f.icon}</span>
+              {f.label}
+            </div>
+          ))}
+        </div>
+      )}
 
       <LoginModal
         open={loginOpen}

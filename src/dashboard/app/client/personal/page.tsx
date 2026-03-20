@@ -297,7 +297,7 @@ export default function PersonalAgentsPage() {
         <input
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          placeholder="🔍 Rechercher un assistant par nom ou role..."
+          placeholder="🔍 Rechercher un outil par nom ou rôle..."
           style={searchInput(isMobile)}
         />
       </div>
@@ -316,7 +316,7 @@ export default function PersonalAgentsPage() {
           <div>
             <h2 style={CU.sectionTitle}>Mon équipe</h2>
             <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
-              {activeBusinessAgents.length} assistant{activeBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise actif{activeBusinessAgents.length > 1 ? 's' : ''} sur {teamAgents.length}
+              {activeBusinessAgents.length} outil{activeBusinessAgents.length > 1 ? 's' : ''} business actif{activeBusinessAgents.length > 1 ? 's' : ''} sur {teamAgents.length}
             </p>
           </div>
         </div>
@@ -324,8 +324,8 @@ export default function PersonalAgentsPage() {
         {activeBusinessAgents.length === 0 && (
           <div style={CU.emptyState}>
             <div style={CU.emptyEmoji}>🏢</div>
-            <p style={CU.emptyTitle}>Aucun assistant d&apos;entreprise actif</p>
-            <p style={CU.emptyDesc}>Recrutez des assistants dans la section ci-dessous</p>
+            <p style={CU.emptyTitle}>Aucun outil business actif</p>
+            <p style={CU.emptyDesc}>Ajoutez des outils dans la section ci-dessous</p>
           </div>
         )}
 
@@ -355,9 +355,9 @@ export default function PersonalAgentsPage() {
             👥
           </div>
           <div>
-            <h2 style={CU.sectionTitle}>Mes assistants personnalises</h2>
+            <h2 style={CU.sectionTitle}>Mes outils personnels</h2>
             <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
-              {activePersonalIds.length} assistant{activePersonalIds.length > 1 ? 's' : ''} perso actif{activePersonalIds.length > 1 ? 's' : ''} sur {PERSONAL_AGENTS.length}
+              {activePersonalIds.length} outil{activePersonalIds.length > 1 ? 's' : ''} perso actif{activePersonalIds.length > 1 ? 's' : ''} sur {PERSONAL_AGENTS.length}
             </p>
           </div>
         </div>
@@ -429,9 +429,9 @@ export default function PersonalAgentsPage() {
             🚀
           </div>
           <div>
-            <h2 style={CU.sectionTitle}>Recruter de nouveaux assistants</h2>
+            <h2 style={CU.sectionTitle}>Ajouter de nouveaux outils</h2>
             <p style={{ fontSize: 12, color: CU.textMuted, margin: '2px 0 0' }}>
-              {inactiveBusinessAgents.length} assistant{inactiveBusinessAgents.length > 1 ? 's' : ''} d&apos;entreprise disponible{inactiveBusinessAgents.length > 1 ? 's' : ''}
+              {inactiveBusinessAgents.length} outil{inactiveBusinessAgents.length > 1 ? 's' : ''} business disponible{inactiveBusinessAgents.length > 1 ? 's' : ''}
             </p>
           </div>
         </div>
@@ -439,9 +439,9 @@ export default function PersonalAgentsPage() {
         {inactiveBusinessAgents.length === 0 && (
           <div style={CU.emptyState}>
             <div style={CU.emptyEmoji}>🎉</div>
-            <p style={CU.emptyTitle}>Équipe au complet !</p>
+            <p style={CU.emptyTitle}>Tous les outils sont actifs !</p>
             <p style={CU.emptyDesc}>
-              Tous les assistants d&apos;entreprise sont actifs dans votre équipe.
+              Tous les outils business sont actifs dans votre espace.
             </p>
           </div>
         )}
@@ -467,9 +467,9 @@ export default function PersonalAgentsPage() {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <h3 style={{ ...CU.sectionTitle, marginBottom: 4 }}>Vos assistants sont prêts</h3>
+            <h3 style={{ ...CU.sectionTitle, marginBottom: 4 }}>Vos outils IA sont prêts</h3>
             <p style={{ fontSize: 13, color: CU.textSecondary, margin: 0 }}>
-              Discutez avec votre équipe IA ou personnalisez leurs comportements en profondeur.
+              Utilisez vos outils IA ou personnalisez leurs comportements en profondeur.
             </p>
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -477,13 +477,13 @@ export default function PersonalAgentsPage() {
               ...CU.btnPrimary,
               textDecoration: 'none',
             }}>
-              💬 Discuter avec mes assistants
+              💬 Utiliser mes outils IA
             </Link>
             <Link href="/client/agents/customize" style={{
               ...CU.btnGhost,
               textDecoration: 'none',
             }}>
-              🎨 Personnaliser mes assistants
+              🎨 Personnaliser mes outils
             </Link>
           </div>
         </div>
@@ -501,7 +501,7 @@ export default function PersonalAgentsPage() {
             </span>
             <input
               type="text"
-              placeholder="Rechercher un assistant..."
+              placeholder="Rechercher un outil..."
               value={mpSearch}
               onChange={e => setMpSearch(e.target.value)}
               style={{

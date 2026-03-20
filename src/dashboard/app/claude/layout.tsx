@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Freenzy.io propulsé par Claude AI d\'Anthropic',
-    description: 'Architecture IA 3 niveaux : Claude Haiku (exécution rapide), Claude Sonnet (gestion quotidienne), Claude Opus avec Extended Thinking (décisions stratégiques). 34 agents spécialisés.',
+    description: 'Architecture IA 3 niveaux : Claude Haiku (exécution rapide), Claude Sonnet (gestion quotidienne), Claude Opus avec Extended Thinking (décisions stratégiques). 34 outils IA spécialisés.',
     type: 'article',
     url: 'https://freenzy.io/claude',
     locale: 'fr_FR',

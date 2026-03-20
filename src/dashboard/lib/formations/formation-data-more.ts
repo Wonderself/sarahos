@@ -25,6 +25,7 @@ export const parcoursContenuPro: FormationParcours = {
     {
       id: 'contenu-pro-m1',
       title: 'Posts LinkedIn qui cartonnent',
+      description: 'Maîtrisez l\'algorithme LinkedIn et créez des posts engageants.',
       emoji: '💼',
       duration: '30 min',
       xpReward: 300,
@@ -100,6 +101,7 @@ Enfin, les « pods d'engagement » (groupes qui se likent mutuellement) sont dé
     {
       id: 'contenu-pro-m2',
       title: 'Réseaux sociaux visuels',
+      description: 'Créez du contenu visuel percutant pour Instagram, TikTok et Pinterest.',
       emoji: '📸',
       duration: '30 min',
       xpReward: 300,
@@ -180,6 +182,7 @@ Utilisez les statistiques natives de chaque plateforme (Instagram Insights, Face
     {
       id: 'contenu-pro-m3',
       title: 'Emails marketing efficaces',
+      description: 'Rédigez des emails marketing qui convertissent grâce à l\'IA.',
       emoji: '📧',
       duration: '30 min',
       xpReward: 300,
@@ -249,6 +252,7 @@ Personnalisez au-delà du prénom : segmentez par comportement (a ouvert le dern
     {
       id: 'contenu-pro-m4',
       title: 'Répondre aux avis Google',
+      description: 'Gérez vos avis Google avec des réponses professionnelles et stratégiques.',
       emoji: '⭐',
       duration: '30 min',
       xpReward: 300,
@@ -326,6 +330,7 @@ Règle d'or : répondez dans les 24 heures. Plus vous répondez vite, plus l'imp
     {
       id: 'contenu-pro-m5',
       title: 'Studio photo IA',
+      description: 'Générez des photos professionnelles avec le studio IA de Freenzy.',
       emoji: '🖼️',
       duration: '30 min',
       xpReward: 300,
@@ -395,6 +400,7 @@ Cas d'usage professionnels : photos de profil LinkedIn, visuels pour posts rése
     {
       id: 'contenu-pro-m6',
       title: 'Studio vidéo IA',
+      description: 'Créez des vidéos professionnelles avec D-ID et les outils IA.',
       emoji: '🎬',
       duration: '30 min',
       xpReward: 300,
@@ -492,6 +498,7 @@ export const parcoursSecuriteRgpd: FormationParcours = {
     {
       id: 'securite-rgpd-m1',
       title: 'RGPD : les bases',
+      description: 'Comprenez les droits, obligations et sanctions du RGPD.',
       emoji: '📜',
       duration: '30 min',
       xpReward: 300,
@@ -584,6 +591,7 @@ Le principe d'accountability (responsabilité) oblige l'entreprise à pouvoir d�
     {
       id: 'securite-rgpd-m2',
       title: 'IA et données personnelles',
+      description: 'Découvrez comment l\'IA traite et protège vos données personnelles.',
       emoji: '🤖',
       duration: '30 min',
       xpReward: 300,
@@ -671,6 +679,7 @@ Les logs sont anonymisés : les informations personnelles identifiables (PII) so
     {
       id: 'securite-rgpd-m3',
       title: 'Protéger son entreprise',
+      description: 'Mettez en place mots de passe forts, 2FA et chiffrement.',
       emoji: '🛡️',
       duration: '30 min',
       xpReward: 300,
@@ -746,6 +755,7 @@ Activez la 2FA sur TOUS vos comptes critiques : email, banque, réseaux sociaux,
     {
       id: 'securite-rgpd-m4',
       title: 'Obligations légales',
+      description: 'Maîtrisez les CGU, mentions légales, cookies et exigences CNIL.',
       emoji: '⚖️',
       duration: '30 min',
       xpReward: 300,
@@ -830,6 +840,7 @@ La CNIL publie régulièrement des référentiels sectoriels (santé, RH, commer
     {
       id: 'securite-rgpd-m5',
       title: 'Bonnes pratiques quotidiennes',
+      description: 'Adoptez les réflexes de sécurité email, cloud et réseau au quotidien.',
       emoji: '✅',
       duration: '30 min',
       xpReward: 300,
@@ -909,6 +920,7 @@ Réseau : utilisez un VPN sur les réseaux Wi-Fi publics (hôtels, cafés, aéro
     {
       id: 'securite-rgpd-m6',
       title: 'Audit de sécurité',
+      description: 'Réalisez un audit de sécurité complet de votre environnement numérique.',
       emoji: '🔍',
       duration: '30 min',
       xpReward: 300,
@@ -1015,6 +1027,7 @@ export const parcoursMaitriserAssistants: FormationParcours = {
     {
       id: 'maitriser-assistants-m1',
       title: 'Les 12 assistants business',
+      description: 'Exploitez les 12 assistants business pour automatiser votre activité.',
       emoji: '💼',
       duration: '30 min',
       xpReward: 300,
@@ -1117,6 +1130,7 @@ Astuce : vous pouvez mentionner plusieurs assistants dans une même conversation
     {
       id: 'maitriser-assistants-m2',
       title: 'Les 12 assistants personnels',
+      description: 'Découvrez les assistants personnels pour votre vie quotidienne.',
       emoji: '👤',
       duration: '30 min',
       xpReward: 300,
@@ -1196,6 +1210,7 @@ Les assistants Culture, Langues, Éducation, Relations, Productivité et Bien-ê
     {
       id: 'maitriser-assistants-m3',
       title: 'Le studio créatif',
+      description: 'Maîtrisez le studio créatif pour générer photos et vidéos IA.',
       emoji: '🎨',
       duration: '30 min',
       xpReward: 300,
@@ -1265,6 +1280,7 @@ Fonctionnalités avancées : galerie photo avec filtres par date et par agent de
     {
       id: 'maitriser-assistants-m4',
       title: 'Les discussions profondes',
+      description: 'Explorez les discussions profondes avec l\'IA Opus et Extended Thinking.',
       emoji: '🧠',
       duration: '30 min',
       xpReward: 300,
@@ -1342,6 +1358,7 @@ Vous pouvez partager vos discussions sur Twitter, LinkedIn, Facebook, WhatsApp e
     {
       id: 'maitriser-assistants-m5',
       title: 'L\'arcade et la gamification',
+      description: 'Apprenez en jouant avec l\'arcade, les badges et le système XP.',
       emoji: '🎮',
       duration: '30 min',
       xpReward: 300,
@@ -1423,6 +1440,7 @@ La gamification n'est pas un gadget : elle augmente de 60% le taux de rétention
     {
       id: 'maitriser-assistants-m6',
       title: 'Automatisations et crons',
+      description: 'Configurez des automatisations et tâches planifiées avec Autopilot.',
       emoji: '⚙️',
       duration: '30 min',
       xpReward: 300,

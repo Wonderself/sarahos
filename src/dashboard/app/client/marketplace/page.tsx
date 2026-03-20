@@ -116,7 +116,7 @@ export default function MarketplacePage() {
       {/* ── Featured Section ── */}
       <div style={{ marginBottom: 40 }}>
         <h2 style={{ ...CU.sectionTitle, fontSize: 18, marginBottom: 16 }}>
-          ⭐ Assistants vedettes
+          ⭐ Outils vedettes
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: 12 }}>
           {featuredAgents.map((agent) => (
@@ -172,7 +172,7 @@ export default function MarketplacePage() {
           </span>
           <input
             type="text"
-            placeholder="Rechercher un assistant..."
+            placeholder="Rechercher un outil..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{

@@ -268,7 +268,7 @@ export default function AgentPermissions({
         <input
           type="text"
           style={styles.searchInput}
-          placeholder="Rechercher un agent..."
+          placeholder="Rechercher un outil..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />

@@ -339,7 +339,7 @@ export default function AdminChatPage() {
           <div style={{ padding: 8 }}>
             <input
               type="text"
-              placeholder="Rechercher un agent..."
+              placeholder="Rechercher un outil..."
               value={searchAgent}
               onChange={e => setSearchAgent(e.target.value)}
               style={{

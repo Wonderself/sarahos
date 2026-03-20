@@ -253,13 +253,13 @@ Lance Claude Code en mode autonome pour une session longue durée (max 3h).
 
     try {
       const timeoutSeconds = duration * 60;
-      const escapedInstruction = instruction.replace(/"/g, '\\"').replace(/\$/g, '\\$');
+      const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
+      const fullInstruction = `${instruction}. Fais tout sans demander de permission. Commit automatiquement chaque changement significatif avec un message descriptif. À la fin, fais un git push origin main.`;
 
-      const claude = spawn('bash', ['-c',
-        `source /root/.nvm/nvm.sh && cd ${PROJECT_ROOT} && timeout ${timeoutSeconds}s claude -p "${escapedInstruction}. Fais tout sans demander de permission. Commit automatiquement chaque changement significatif avec un message descriptif. À la fin, fais un git push origin main." --output-format stream-json 2>&1`
-      ], {
+      const claude = spawn(nvmBin + '/claude', ['-p', fullInstruction, '--output-format', 'stream-json', '--verbose'], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root', ANTHROPIC_API_KEY: '' },
+        env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
+        timeout: timeoutSeconds * 1000,
       });
 
       state.process = claude;

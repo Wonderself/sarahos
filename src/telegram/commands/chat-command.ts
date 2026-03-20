@@ -3,10 +3,7 @@
  * Claude Sonnet avec historique, contexte projet injecté, streaming live
  */
 import TelegramBot from 'node-telegram-bot-api';
-import * as fs from 'fs';
-import * as path from 'path';
 import { TelegramStreamer, splitMessage } from '../utils/streaming';
-import { Memory } from '../memory';
 
 const PROJECT_ROOT = process.env.PROJECT_ROOT || '/root/projects/freenzy/sarahos';
 const MAX_HISTORY = 20;
@@ -19,54 +16,8 @@ interface ChatMessage {
 // Conversation history per chat
 const conversationHistory = new Map<string, ChatMessage[]>();
 
-function loadProjectContext(): string {
-  try {
-    const claudeMdPath = path.join(PROJECT_ROOT, 'CLAUDE.md');
-    if (fs.existsSync(claudeMdPath)) {
-      const content = fs.readFileSync(claudeMdPath, 'utf-8');
-      // Limit to ~2000 tokens ≈ 8000 chars
-      return content.slice(0, 8000);
-    }
-  } catch (e) { console.error('[loadProjectContext] Error:', e instanceof Error ? e.message : e); }
-  return 'Fichier CLAUDE.md non trouvé.';
-}
-
-function loadRecentLogs(): string {
-  try {
-    const logPath = '/root/logs/main.log';
-    if (fs.existsSync(logPath)) {
-      const content = fs.readFileSync(logPath, 'utf-8');
-      const lines = content.split('\n').filter(Boolean);
-      return lines.slice(-5).join('\n');
-    }
-  } catch (e) { console.error('[loadRecentLogs] Error:', e instanceof Error ? e.message : e); }
-  return 'Pas de logs récents.';
-}
-
-function buildSystemPrompt(memory: string): string {
-  const projectCtx = loadProjectContext();
-  const recentLogs = loadRecentLogs();
-  const now = new Date().toISOString();
-
-  return `Tu es l'assistant de Emmanuel Smadja, fondateur de Freenzy.io.
-
-CONTEXTE PROJET :
-${projectCtx}
-
-MÉMOIRE PROJET :
-${memory.slice(0, 3000)}
-
-LOGS RÉCENTS :
-${recentLogs}
-
-DATE ET HEURE : ${now}
-
-TON RÔLE :
-- Répondre aux questions sur Freenzy avec précision
-- Proposer des idées en accord avec la vision du produit
-- Ne JAMAIS modifier de fichiers en mode /chat (c'est le rôle de /claude)
-- Être direct, concis, stratégique
-- Répondre en français sauf si Emmanuel écrit en anglais`;
+function buildSystemPrompt(): string {
+  return `Tu es l'assistant Telegram de Emmanuel Smadja, fondateur de Freenzy.io (OS IA multi-agents, 136 agents, Next.js/PostgreSQL/Coolify/Hetzner). Sois direct, concis, stratégique. Réponds en français. Ne modifie aucun fichier (c'est le rôle de /claude).`;
 }
 
 export function registerChatCommand(bot: TelegramBot, adminChatId: string): void {
@@ -122,12 +73,11 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
   }
 
   try {
-    const memory = await Memory.read();
-    const systemPrompt = buildSystemPrompt(memory);
+    const systemPrompt = buildSystemPrompt();
 
-    // Build context with recent history for Claude Code CLI
-    const historyContext = history.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
-    const fullPrompt = `${systemPrompt}\n\nHistorique récent:\n${historyContext}\n\nRéponds au dernier message de l'utilisateur. Sois concis et utile. Ne modifie aucun fichier.`;
+    // Build compact prompt — only last 3 messages for context
+    const recentHistory = history.slice(-3).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content.slice(0, 200)}`).join('\n');
+    const fullPrompt = `${systemPrompt}\n\n${recentHistory ? `Historique:\n${recentHistory}\n\n` : ''}Réponds au dernier message. Sois concis.`;
 
     // Use Claude Code CLI — spawn directly with args (no shell escaping needed)
     console.log('[handleChat] Calling Claude Code CLI...');

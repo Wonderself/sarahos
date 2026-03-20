@@ -113,86 +113,51 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
 
     try {
       console.log(`[/claude] Spawning claude CLI for: "${instruction.slice(0, 60)}"`);
-      // Spawn claude directly (no bash, no shell escaping issues)
       const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
-      const claude = spawn(nvmBin + '/claude', ['-p', instruction, '--output-format', 'stream-json', '--verbose', '--max-turns', '3'], {
-        cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
-      });
 
-      // Handle spawn failure
-      claude.on('error', async (err) => {
-        console.error('[/claude] spawn ERROR:', err.message);
-        state.status = 'failed';
-        activeTasks.delete(chatId);
-        await streamer.error(`❌ Impossible de lancer Claude Code: ${err.message}`);
-      });
-
-      let output = '';
-      let lastSummary = '';
-
-      claude.stdout.on('data', (data: Buffer) => {
-        const text = data.toString();
-        console.log(`[/claude] STDOUT chunk: ${text.length} chars, first 100: ${text.slice(0, 100).replace(/\n/g, '\\n')}`);
-        output += text;
-
-        // Parse stream-json lines
-        for (const line of text.split('\n').filter(Boolean)) {
-          try {
-            const parsed = JSON.parse(line);
-            // Detect tool use
-            if (parsed.type === 'assistant' && parsed.message?.content) {
-              for (const block of parsed.message.content) {
-                if (block.type === 'tool_use') {
-                  const step = detectStep(`${block.name} ${JSON.stringify(block.input || {}).slice(0, 100)}`);
-                  if (step && state.steps[state.steps.length - 1] !== step) {
-                    state.steps.push(step);
-                  }
-                }
-                if (block.type === 'text' && block.text) {
-                  lastSummary = block.text.slice(0, 500);
-                }
-              }
-            }
-            // Detect result
-            if (parsed.type === 'result') {
-              lastSummary = (parsed.result || '').slice(0, 500);
-            }
-          } catch {
-            // Not JSON — detect steps from raw text
-            const step = detectStep(line);
-            if (step && state.steps[state.steps.length - 1] !== step) {
-              state.steps.push(step);
-            }
+      // Use spawn + stdin pipe (same pattern as /chat — reliable)
+      const result = await new Promise<{ stdout: string; code: number }>((resolve) => {
+        const proc = spawn(nvmBin + '/claude', ['-p', '-', '--verbose', '--max-turns', '3'], {
+          cwd: PROJECT_ROOT,
+          env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
+          timeout: 600000,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
+        let stdout = '';
+        let stderr = '';
+        proc.stdout.on('data', (d: Buffer) => {
+          const chunk = d.toString();
+          stdout += chunk;
+          // Update progress with latest output
+          const step = detectStep(chunk);
+          if (step && state.steps[state.steps.length - 1] !== step) {
+            state.steps.push(step);
+            streamer.update(formatProgress(state)).catch(() => {});
           }
-        }
-
-        // Count modified files from output
-        const fileMatches = output.match(/(?:Writing|Creating|Editing|Edit)\s+(?:file\s+)?[`"]?([^\s`"]+)/gi);
-        state.filesModified = fileMatches ? new Set(fileMatches).size : 0;
-
-        // Update progress message
-        streamer.update(formatProgress(state)).catch(() => {});
+        });
+        proc.stderr.on('data', (d: Buffer) => { stderr += d.toString(); });
+        proc.on('close', (code: number) => {
+          console.log(`[/claude] Process closed code=${code} stdout=${stdout.length} chars`);
+          resolve({ stdout: stdout.trim() || stderr.trim() || 'Pas de réponse.', code: code ?? 1 });
+        });
+        proc.on('error', (err: Error) => {
+          console.error('[/claude] spawn error:', err.message);
+          resolve({ stdout: `Erreur: ${err.message}`, code: 1 });
+        });
+        // Send instruction via stdin
+        proc.stdin.write(instruction);
+        proc.stdin.end();
       });
 
-      claude.stderr.on('data', (data: Buffer) => {
-        const text = data.toString();
-        console.log(`[/claude] STDERR: ${text.slice(0, 200)}`);
-        output += text;
-      });
+      const elapsed = Math.round((Date.now() - state.startTime) / 1000);
+      const output = result.stdout;
+      const hasGitPush = output.includes('git push') || output.includes('Pushed to');
+      const fileMatches = output.match(/(?:Writing|Creating|Editing|Edit)\s+(?:file\s+)?[`"]?([^\s`"]+)/gi);
+      state.filesModified = fileMatches ? new Set(fileMatches).size : 0;
 
-      claude.on('exit', (code: number | null, signal: string | null) => {
-        console.log(`[/claude] Process EXIT code=${code} signal=${signal}`);
-      });
-
-      claude.on('close', async (code) => {
-        console.log(`[/claude] Process CLOSE code=${code} lastSummary=${lastSummary.length} chars`);
-        const elapsed = Math.round((Date.now() - state.startTime) / 1000);
-
-        if (code === 0) {
+      if (result.code === 0) {
           state.status = 'completed';
-          const hasGitPush = output.includes('git push') || output.includes('Pushed to');
-          const summary = lastSummary || output.slice(-400).trim();
+          const summary = output.slice(0, 800);
 
           const finalMsg = [
             '✅ *Tâche terminée !*',
@@ -242,17 +207,6 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
         }
 
         activeTasks.delete(chatId);
-      });
-
-      // Timeout 10 min
-      setTimeout(() => {
-        if (state.status === 'running') {
-          claude.kill('SIGTERM');
-          state.status = 'failed';
-          streamer.error('⏰ Timeout (10 min). Tâche annulée.').catch(() => {});
-          activeTasks.delete(chatId);
-        }
-      }, 600000);
 
     } catch (err) {
       console.error('[/claude] CATCH block error:', err instanceof Error ? err.stack : err);

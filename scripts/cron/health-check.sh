@@ -3,6 +3,7 @@
 # Freenzy.io — Service Health Check (Docker/Coolify)
 # Runs: every 5 minutes
 # Checks containers health via Docker
+# Uses dynamic container name detection (survives Coolify redeploys)
 # ═══════════════════════════════════════
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,29 +12,34 @@ ALERT_FILE="/tmp/freenzy-health-alert"
 
 SERVICES_DOWN=""
 
-# Check PostgreSQL container
-PG_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' freenzy-postgres-ewcwwk0wocw0cw0kccsw4kcw-152128093928 2>/dev/null || echo "not_found")
-if [ "$PG_HEALTH" != "healthy" ]; then
-  SERVICES_DOWN="${SERVICES_DOWN}\n❌ PostgreSQL (${PG_HEALTH})"
-fi
+# Dynamic container name detection (matches partial name)
+find_container() {
+  docker ps --format '{{.Names}}' --filter "name=$1" 2>/dev/null | head -1
+}
 
-# Check Redis container
-REDIS_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' freenzy-redis-ewcwwk0wocw0cw0kccsw4kcw-152128112636 2>/dev/null || echo "not_found")
-if [ "$REDIS_HEALTH" != "healthy" ]; then
-  SERVICES_DOWN="${SERVICES_DOWN}\n❌ Redis (${REDIS_HEALTH})"
-fi
+check_health() {
+  local pattern="$1"
+  local label="$2"
+  local container=$(find_container "$pattern")
+  if [ -z "$container" ]; then
+    SERVICES_DOWN="${SERVICES_DOWN}\n❌ ${label} (not_found)"
+    return
+  fi
+  local health=$(docker inspect --format='{{.State.Health.Status}}' "$container" 2>/dev/null || echo "unknown")
+  if [ "$health" != "healthy" ] && [ "$health" != "" ]; then
+    # Some containers don't have health checks — check if running
+    local state=$(docker inspect --format='{{.State.Status}}' "$container" 2>/dev/null || echo "unknown")
+    if [ "$state" != "running" ]; then
+      SERVICES_DOWN="${SERVICES_DOWN}\n❌ ${label} (${state})"
+    fi
+  fi
+}
 
-# Check Backend container
-BACKEND_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' backend-ewcwwk0wocw0cw0kccsw4kcw-152128124068 2>/dev/null || echo "not_found")
-if [ "$BACKEND_HEALTH" != "healthy" ]; then
-  SERVICES_DOWN="${SERVICES_DOWN}\n❌ Backend (${BACKEND_HEALTH})"
-fi
-
-# Check Dashboard container
-DASH_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' dashboard-ewcwwk0wocw0cw0kccsw4kcw-152128170233 2>/dev/null || echo "not_found")
-if [ "$DASH_HEALTH" != "healthy" ]; then
-  SERVICES_DOWN="${SERVICES_DOWN}\n❌ Dashboard (${DASH_HEALTH})"
-fi
+# Check all services with dynamic names
+check_health "freenzy-postgres" "PostgreSQL"
+check_health "freenzy-redis" "Redis"
+check_health "backend-" "Backend"
+check_health "dashboard-" "Dashboard"
 
 if [ -n "$SERVICES_DOWN" ]; then
   if [ ! -f "$ALERT_FILE" ] || [ $(( $(date +%s) - $(stat -c %Y "$ALERT_FILE" 2>/dev/null || echo 0) )) -gt 900 ]; then

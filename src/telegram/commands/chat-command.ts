@@ -27,7 +27,7 @@ function loadProjectContext(): string {
       // Limit to ~2000 tokens ≈ 8000 chars
       return content.slice(0, 8000);
     }
-  } catch { /* */ }
+  } catch (e) { console.error('[loadProjectContext] Error:', e instanceof Error ? e.message : e); }
   return 'Fichier CLAUDE.md non trouvé.';
 }
 
@@ -39,7 +39,7 @@ function loadRecentLogs(): string {
       const lines = content.split('\n').filter(Boolean);
       return lines.slice(-5).join('\n');
     }
-  } catch { /* */ }
+  } catch (e) { console.error('[loadRecentLogs] Error:', e instanceof Error ? e.message : e); }
   return 'Pas de logs récents.';
 }
 
@@ -75,7 +75,15 @@ export function registerChatCommand(bot: TelegramBot, adminChatId: string): void
     if (msg.chat.id.toString() !== adminChatId) return;
     const message = match?.[1]?.trim();
     if (!message) return;
-    await handleChat(bot, msg.chat.id.toString(), message);
+    console.log(`[/chat command] message="${message.slice(0, 50)}"`);
+    try {
+      await handleChat(bot, msg.chat.id.toString(), message);
+    } catch (err) {
+      console.error('[/chat command] handleChat CRASHED:', err instanceof Error ? err.stack : err);
+      try {
+        await bot.sendMessage(msg.chat.id, `❌ Erreur /chat: ${err instanceof Error ? err.message : String(err)}`);
+      } catch { /* last resort */ }
+    }
   });
 }
 
@@ -83,6 +91,8 @@ export function registerChatCommand(bot: TelegramBot, adminChatId: string): void
  * Handle a chat message (can be called from /chat or fallback text handler)
  */
 export async function handleChat(bot: TelegramBot, chatId: string, message: string): Promise<void> {
+  console.log(`[handleChat] CALLED — chatId=${chatId} message="${message.slice(0, 80)}"`);
+
   // Get or create history
   if (!conversationHistory.has(chatId)) {
     conversationHistory.set(chatId, []);
@@ -98,7 +108,18 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
   }
 
   const streamer = new TelegramStreamer(bot, 800);
-  await streamer.init(chatId, '💬 ...');
+  try {
+    await streamer.init(chatId, '💬 ...');
+  } catch (initErr) {
+    console.error('[handleChat] streamer.init FAILED:', initErr instanceof Error ? initErr.message : initErr);
+    // Try to send a plain message as fallback
+    try {
+      await bot.sendMessage(chatId, '💬 Traitement en cours...');
+    } catch (sendErr) {
+      console.error('[handleChat] Even plain sendMessage failed:', sendErr instanceof Error ? sendErr.message : sendErr);
+    }
+    return;
+  }
 
   try {
     const memory = await Memory.read();
@@ -109,21 +130,30 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
     const fullPrompt = `${systemPrompt}\n\nHistorique récent:\n${historyContext}\n\nRéponds au dernier message de l'utilisateur. Sois concis et utile. Ne modifie aucun fichier.`;
 
     // Use Claude Code CLI — spawn directly with args (no shell escaping needed)
+    console.log('[handleChat] Calling Claude Code CLI...');
     const assistantText = await new Promise<string>((resolve) => {
       const { execFile } = require('child_process');
       const claudePath = '/root/.nvm/versions/node/v22.22.1/bin/claude';
-      execFile(claudePath, ['-p', fullPrompt], {
+      console.log(`[handleChat] execFile: ${claudePath} -p [prompt ${fullPrompt.length} chars]`);
+      const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
+      const child = execFile(claudePath, ['-p', fullPrompt], {
         cwd: PROJECT_ROOT,
-        env: { ...process.env, HOME: '/root' },
+        env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}` },
         timeout: 120000,
         maxBuffer: 1024 * 1024,
       }, (err: Error | null, stdout: string, stderr: string) => {
         if (err) {
-          console.error('[Chat] Claude Code error:', err.message);
+          console.error('[handleChat] Claude Code execFile error:', err.message);
+          if (stderr) console.error('[handleChat] stderr:', stderr.slice(0, 500));
           resolve(stderr || stdout || 'Erreur Claude Code.');
         } else {
+          console.log(`[handleChat] Claude Code response: ${stdout.length} chars`);
           resolve(stdout.trim() || 'Pas de réponse.');
         }
+      });
+      child.on('error', (spawnErr: Error) => {
+        console.error('[handleChat] execFile spawn error:', spawnErr.message);
+        resolve(`Erreur lancement Claude: ${spawnErr.message}`);
       });
     });
 
@@ -175,7 +205,15 @@ export async function handleChat(bot: TelegramBot, chatId: string, message: stri
       }
     }
   } catch (err) {
-    await streamer.error(`Erreur chat : ${err instanceof Error ? err.message : String(err)}`);
+    console.error('[handleChat] CATCH block error:', err instanceof Error ? err.stack : err);
+    try {
+      await streamer.error(`Erreur chat : ${err instanceof Error ? err.message : String(err)}`);
+    } catch (streamerErr) {
+      console.error('[handleChat] streamer.error also failed:', streamerErr);
+      try {
+        await bot.sendMessage(chatId, `❌ Erreur chat : ${err instanceof Error ? err.message : String(err)}`);
+      } catch { /* last resort failed */ }
+    }
   }
 }
 

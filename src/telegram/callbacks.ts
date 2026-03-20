@@ -426,7 +426,15 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
     }
 
     // No pending action — treat as /chat message (conversation libre)
-    await handleChat(bot, chatId, msg.text);
+    console.log(`[Callbacks] Fallback → handleChat for: "${msg.text.slice(0, 50)}"`);
+    try {
+      await handleChat(bot, chatId, msg.text);
+    } catch (chatErr) {
+      console.error('[Callbacks] handleChat CRASHED:', chatErr instanceof Error ? chatErr.stack : chatErr);
+      try {
+        await bot.sendMessage(chatId, `❌ Erreur handleChat: ${chatErr instanceof Error ? chatErr.message : String(chatErr)}`);
+      } catch { /* last resort */ }
+    }
   });
 
   // Clean up expired pending actions every 5 min

@@ -56,23 +56,32 @@ Identifie :
 Sois precis et actionnable.`;
 
       // Use Claude Code CLI with image file — execFile (no shell escaping issues)
+      console.log(`[/photo] Calling Claude Code CLI with image: ${tmpFile}`);
       const analysis = await new Promise<string>((resolve) => {
         const { execFile } = require('child_process');
         const claudePath = '/root/.nvm/versions/node/v22.22.1/bin/claude';
-        execFile(claudePath, ['-p', prompt, '--files', tmpFile], {
+        const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
+        const child = execFile(claudePath, ['-p', prompt, '--files', tmpFile], {
           cwd: PROJECT_ROOT,
-          env: { ...process.env, HOME: '/root' },
+          env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}` },
           timeout: 120000,
           maxBuffer: 1024 * 1024,
         }, (err: Error | null, stdout: string, stderr: string) => {
           // Clean up temp file
           try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
           if (err) {
-            console.error('[Photo] Claude Code error:', err.message);
+            console.error('[/photo] Claude Code execFile error:', err.message);
+            if (stderr) console.error('[/photo] stderr:', stderr.slice(0, 500));
             resolve(stderr || stdout || 'Erreur analyse photo.');
           } else {
+            console.log(`[/photo] Claude Code response: ${stdout.length} chars`);
             resolve(stdout.trim() || 'Pas de réponse.');
           }
+        });
+        child.on('error', (spawnErr: Error) => {
+          console.error('[/photo] execFile spawn error:', spawnErr.message);
+          try { fs.unlinkSync(tmpFile); } catch { /* ignore */ }
+          resolve(`Erreur lancement Claude: ${spawnErr.message}`);
         });
       });
       // (old spawn error handler removed — now handled in execFile callback)

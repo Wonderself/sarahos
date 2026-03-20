@@ -25,6 +25,14 @@ import * as dotenv from 'dotenv';
 // Load .env
 dotenv.config();
 
+// Global error handlers — NEVER let errors go silent
+process.on('unhandledRejection', (reason) => {
+  console.error('[UNHANDLED REJECTION]', reason instanceof Error ? reason.stack : reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err.stack || err.message);
+});
+
 // ─── Imports ───
 import { registerBotCommands } from './admin-bot';
 import { registerClaudeCommand } from './commands/claude-command';

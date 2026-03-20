@@ -77,6 +77,7 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
       await bot.sendMessage(msg.chat.id, '⚠️ Usage : `/claude [instruction]`', { parse_mode: 'Markdown' });
       return;
     }
+    console.log(`[/claude command] CALLED — instruction="${instruction.slice(0, 80)}"`);
 
     const chatId = msg.chat.id.toString();
 
@@ -102,9 +103,16 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
     activeTasks.set(chatId, state);
 
     const streamer = new TelegramStreamer(bot, 2000);
-    await streamer.init(chatId, formatProgress(state));
+    try {
+      await streamer.init(chatId, formatProgress(state));
+    } catch (initErr) {
+      console.error('[/claude] streamer.init FAILED:', initErr instanceof Error ? initErr.message : initErr);
+      activeTasks.delete(chatId);
+      return;
+    }
 
     try {
+      console.log(`[/claude] Spawning bash with claude CLI for: "${instruction.slice(0, 60)}"`);
       const claude = spawn('bash', ['-c', `source /root/.nvm/nvm.sh && cd ${PROJECT_ROOT} && claude -p "${instruction.replace(/"/g, '\\"')}" --output-format stream-json 2>&1`], {
         cwd: PROJECT_ROOT,
         env: { ...process.env, HOME: '/root', PATH: `${process.env['PATH']}:/root/.nvm/versions/node/v22.22.1/bin` },
@@ -112,6 +120,7 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
 
       // Handle spawn failure
       claude.on('error', async (err) => {
+        console.error('[/claude] spawn ERROR:', err.message);
         state.status = 'failed';
         activeTasks.delete(chatId);
         await streamer.error(`❌ Impossible de lancer Claude Code: ${err.message}`);
@@ -168,6 +177,7 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
       });
 
       claude.on('close', async (code) => {
+        console.log(`[/claude] Process closed with code=${code}`);
         const elapsed = Math.round((Date.now() - state.startTime) / 1000);
 
         if (code === 0) {
@@ -233,9 +243,17 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
       }, 600000);
 
     } catch (err) {
+      console.error('[/claude] CATCH block error:', err instanceof Error ? err.stack : err);
       state.status = 'failed';
       activeTasks.delete(chatId);
-      await streamer.error(`Impossible de lancer Claude Code : ${err instanceof Error ? err.message : String(err)}`);
+      try {
+        await streamer.error(`Impossible de lancer Claude Code : ${err instanceof Error ? err.message : String(err)}`);
+      } catch (streamerErr) {
+        console.error('[/claude] streamer.error also failed:', streamerErr);
+        try {
+          await bot.sendMessage(chatId, `❌ Erreur /claude : ${err instanceof Error ? err.message : String(err)}`);
+        } catch { /* last resort */ }
+      }
     }
   });
 }

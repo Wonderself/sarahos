@@ -22,8 +22,14 @@ export function registerThinkCommand(bot: TelegramBot, adminChatId: string): voi
     }
 
     const chatId = msg.chat.id.toString();
+    console.log(`[/think] CALLED — question="${question.slice(0, 60)}"`);
     const streamer = new TelegramStreamer(bot);
-    await streamer.init(chatId, '🧠 Réflexion approfondie en cours... (30-60s)');
+    try {
+      await streamer.init(chatId, '🧠 Réflexion approfondie en cours... (30-60s)');
+    } catch (initErr) {
+      console.error('[/think] streamer.init FAILED:', initErr instanceof Error ? initErr.message : initErr);
+      return;
+    }
 
     try {
       const memory = await Memory.read();
@@ -43,21 +49,29 @@ QUESTION (réfléchis en profondeur avant de répondre) :
 ${question}`;
 
       // Use Claude Code CLI — execFile (no shell escaping issues)
+      console.log(`[/think] Calling Claude Code CLI for: "${question.slice(0, 60)}"`);
       const assistantText = await new Promise<string>((resolve) => {
         const { execFile } = require('child_process');
         const claudePath = '/root/.nvm/versions/node/v22.22.1/bin/claude';
-        execFile(claudePath, ['-p', prompt], {
+        const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
+        const child = execFile(claudePath, ['-p', prompt], {
           cwd: PROJECT_ROOT,
-          env: { ...process.env, HOME: '/root' },
+          env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}` },
           timeout: 180000,
           maxBuffer: 1024 * 1024,
         }, (err: Error | null, stdout: string, stderr: string) => {
           if (err) {
-            console.error('[Think] Claude Code error:', err.message);
+            console.error('[/think] Claude Code execFile error:', err.message);
+            if (stderr) console.error('[/think] stderr:', stderr.slice(0, 500));
             resolve(stderr || stdout || 'Erreur Claude Code.');
           } else {
+            console.log(`[/think] Claude Code response: ${stdout.length} chars`);
             resolve(stdout.trim() || 'Pas de réponse.');
           }
+        });
+        child.on('error', (spawnErr: Error) => {
+          console.error('[/think] execFile spawn error:', spawnErr.message);
+          resolve(`Erreur lancement Claude: ${spawnErr.message}`);
         });
       });
 
@@ -110,7 +124,15 @@ ${question}`;
       }
 
     } catch (err) {
-      await streamer.error(`Erreur : ${err instanceof Error ? err.message : String(err)}`);
+      console.error('[/think] CATCH block error:', err instanceof Error ? err.stack : err);
+      try {
+        await streamer.error(`Erreur : ${err instanceof Error ? err.message : String(err)}`);
+      } catch (streamerErr) {
+        console.error('[/think] streamer.error also failed:', streamerErr);
+        try {
+          await bot.sendMessage(chatId, `❌ Erreur /think : ${err instanceof Error ? err.message : String(err)}`);
+        } catch { /* last resort */ }
+      }
     }
   });
 }

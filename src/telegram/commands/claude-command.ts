@@ -201,7 +201,8 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
           await streamer.finish(finalMsg, {
             inline_keyboard: [
               [
-                { text: '📊 Voir détails', callback_data: `claude_details_${Date.now()}` },
+                { text: '📊 Détails', callback_data: `claude_details_${Date.now()}` },
+                { text: '🔍 Vérifier', callback_data: `claude_verify_${Date.now()}` },
                 { text: '🚀 Déployer', callback_data: `confirm_deploy` },
               ],
             ],
@@ -217,7 +218,9 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
             `📋 ${instruction}`,
             `⏱ Durée : ${elapsed}s`,
             '',
-            `Erreur :\n${errorMsg.slice(0, 600)}`,
+            `🔴 Erreur :\n${errorMsg.slice(0, 600)}`,
+            '',
+            '_Utilise 🔄 Réessayer ou reformule l\'instruction._',
           ].join('\n');
 
           await streamer.finish(finalMsg, {

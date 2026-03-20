@@ -33,6 +33,7 @@ const SECTION_MAP: Record<string, string> = {
   rejected: '## Features rejetées et pourquoi',
   insight: '## Insights utilisateurs',
   strategic: '## Notes stratégiques',
+  photo_analysis: '## Analyses photo',
 };
 
 function ensureFile(): void {

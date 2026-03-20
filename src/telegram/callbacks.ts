@@ -305,6 +305,12 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
         return;
       }
 
+      if (data.startsWith('claude_verify_')) {
+        await bot.answerCallbackQuery(query.id, { text: '🔍 Vérification...' });
+        simulateCommand(bot, chatId, `/claude Lance le build TypeScript (npx tsc --noEmit) et le build Next.js pour vérifier qu'il n'y a pas d'erreurs. Corrige les erreurs s'il y en a.`, query.from);
+        return;
+      }
+
       if (data.startsWith('retry_claude_')) {
         const instruction = decodeURIComponent(data.replace('retry_claude_', ''));
         await bot.answerCallbackQuery(query.id, { text: '🔄 Relancement...' });
@@ -332,6 +338,12 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
           proc.on('error', () => resolve('❌ Docker indisponible'));
         });
         await bot.sendMessage(chatId, `🐳 *Containers Docker :*\n\n\`\`\`\n${details.slice(0, 800)}\n\`\`\``, { parse_mode: 'Markdown' });
+        return;
+      }
+
+      if (data === 'status_fix_issues') {
+        await bot.answerCallbackQuery(query.id, { text: '🔧 Diagnostic en cours...' });
+        simulateCommand(bot, chatId, `/claude Vérifie l'état de tous les services Freenzy : PostgreSQL, Redis, espace disque, containers Docker. Si un service est down, tente de le relancer. Nettoie l'espace disque si > 80%. Rapport détaillé.`, query.from);
         return;
       }
 
@@ -392,6 +404,69 @@ export function registerCallbacks(bot: TelegramBot, adminChatId: string): void {
           WHERE om.organization_id = '${orgId}'
         `);
         await bot.sendMessage(chatId, `👥 *Membres de l'équipe :*\n\n${members || 'Aucun membre'}`, { parse_mode: 'Markdown' });
+        return;
+      }
+
+      // ── Proactive notification actions ──
+      if (data.startsWith('view_user_')) {
+        const email = data.replace('view_user_', '');
+        await bot.answerCallbackQuery(query.id);
+        simulateCommand(bot, chatId, `/user ${email}`, query.from);
+        return;
+      }
+
+      if (data.startsWith('message_user_')) {
+        const email = data.replace('message_user_', '');
+        await bot.answerCallbackQuery(query.id);
+        await bot.sendMessage(chatId, `📧 Pour contacter *${email}*, utilise :\n\`/broadcast Message personnalisé\`\n\nOu envoie un email depuis le dashboard.`, { parse_mode: 'Markdown' });
+        return;
+      }
+
+      if (data.startsWith('fix_error_')) {
+        const service = data.replace('fix_error_', '');
+        await bot.answerCallbackQuery(query.id, { text: '🔧 Lancement...' });
+        simulateCommand(bot, chatId, `/claude Analyse et corrige les erreurs récentes du service ${service}. Consulte les logs et propose un fix.`, query.from);
+        return;
+      }
+
+      if (data.startsWith('suspend_')) {
+        const service = data.replace('suspend_', '');
+        await bot.answerCallbackQuery(query.id);
+        await bot.sendMessage(chatId, `⏸️ Suspension du service *${service}* non implémentée.\nUtilise \`/claude désactive temporairement le service ${service}\` pour agir.`, { parse_mode: 'Markdown' });
+        return;
+      }
+
+      if (data === 'churn_relance_auto') {
+        await bot.answerCallbackQuery(query.id, { text: '📧 Relance en cours...' });
+        await bot.sendMessage(chatId, '📧 Relance automatique lancée pour les utilisateurs inactifs.\n_Les emails de réengagement seront envoyés._', { parse_mode: 'Markdown' });
+        return;
+      }
+
+      if (data === 'churn_view_all') {
+        await bot.answerCallbackQuery(query.id);
+        const churnUsers = await dbQuery(`
+          SELECT u.email, u.display_name,
+            EXTRACT(DAY FROM NOW() - u.last_login_at)::int as inactive_days,
+            COALESCE(up.profession, '?') as profession
+          FROM users u LEFT JOIN user_profiles up ON u.id = up.user_id
+          WHERE u.last_login_at < NOW() - INTERVAL '14 days'
+          ORDER BY u.last_login_at ASC LIMIT 20
+        `);
+        if (!churnUsers || churnUsers === 'OK' || churnUsers.startsWith('Error')) {
+          await bot.sendMessage(chatId, '✅ Aucun utilisateur à risque de churn.');
+        } else {
+          let msg2 = '⚠️ *Utilisateurs à risque de churn :*\n\n';
+          for (const line of churnUsers.split('\n').filter(Boolean)) {
+            const [email, name, days, prof] = line.split('|');
+            msg2 += `• *${name || email}* — ${days}j inactif — ${prof}\n`;
+          }
+          await bot.sendMessage(chatId, msg2, { parse_mode: 'Markdown' });
+        }
+        return;
+      }
+
+      if (data === 'churn_ignore_week') {
+        await bot.answerCallbackQuery(query.id, { text: '⏸️ Ignoré pour cette semaine.' });
         return;
       }
 

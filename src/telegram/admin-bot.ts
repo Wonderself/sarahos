@@ -113,36 +113,47 @@ export function registerBotCommands(bot: TelegramBot, adminChatId: string): void
     if (msg.chat.id.toString() !== adminChatId) return;
     await bot.sendMessage(msg.chat.id, `🤖 *Freenzy Admin Bot*
 
-📊 *INFORMATIONS*
-/status — État VPS et métriques
-/users — Stats utilisateurs
-/revenue — Revenus Stripe
-/errors — Dernières erreurs
+━━━━━━━━━━━━━━━━━━━━
 
-⚡ *ACTIONS RAPIDES*
-/claude \\[instruction\\] — Donner une tâche à Claude
-/autoloop \\[instruction\\] \\[durée\\] — Session autonome longue
-/think \\[question\\] — Analyse approfondie
+📊 *MONITORING*
+/status — État complet VPS + services
+/users — Statistiques utilisateurs
+/revenue — Revenus (today/week/month)
+/errors — Dernières erreurs système
+/tickets — Tickets support ouverts
+
+👥 *GESTION*
+/user \\[email\\] — Profil d'un utilisateur
+/credits \\[email\\] \\[n\\] — Créditer un user
+/teams — Toutes les équipes
+/team \\[nom\\] — Détails d'une équipe
+/referrals — Stats parrainages
+
+🤖 *IA & TÂCHES*
+/claude \\[instruction\\] — Exécuter une tâche code
+/autoloop \\[instruction\\] \\[min\\] — Session autonome
+/think \\[question\\] — Analyse stratégique
 /chat \\[message\\] — Conversation libre
-_Envoie une photo pour l'analyser_
+📸 _Envoie une photo pour l'analyser_
 
 ✅ *VALIDATIONS*
 /pending — Actions en attente
-/approve \\[id\\] — Approuver
-/reject \\[id\\] — Refuser
-/backlog — Améliorations produit
+/approve \\[id\\] — Approuver une action
+/reject \\[id\\] — Refuser une action
+/backlog — Backlog produit
 
-🔧 *SYSTÈME*
-/deploy — Déployer en prod
-/backup — Backup DB maintenant
+⚙️ *SYSTÈME*
+/deploy — Déployer en production
+/backup — Lancer un backup DB
 /report — Rapport complet
-/broadcast \\[msg\\] — Message à tous
-/credits \\[email\\] \\[n\\] — Créditer un user
-/user \\[email\\] — Profil d'un user
+/broadcast \\[msg\\] — Message à tous les users
 
 💬 *CONVERSATION*
-/reset — Réinitialiser l'historique
-/help — Cette aide`, { parse_mode: 'Markdown' });
+/reset — Effacer l'historique chat
+/help — Afficher ce menu
+
+━━━━━━━━━━━━━━━━━━━━
+_Tape un message texte pour discuter librement._`, { parse_mode: 'Markdown' });
   });
 
   // ── /help (alias /start) ──
@@ -203,15 +214,26 @@ _Envoie une photo pour l'analyser_
 • Dernier backup : ${lastBackup && lastBackup !== 'No result' ? lastBackup : 'aucun'}
 • Uptime : ${sys.uptime}`;
 
+    // Detect issues for "Fix" button
+    const hasIssues =
+      pgStatus.includes('OFFLINE') ||
+      redisStatus.includes('OFFLINE') ||
+      parseFloat(sys.disk) > 80 ||
+      parseFloat(sys.cpu) > 80 ||
+      parseFloat(sys.ram) > 85;
+
+    const buttons: TelegramBot.InlineKeyboardButton[][] = [[
+      { text: '🔄 Rafraîchir', callback_data: 'refresh_status' },
+      { text: '📊 Détails', callback_data: 'status_details' },
+      { text: '🚨 Erreurs', callback_data: 'show_errors' },
+    ]];
+    if (hasIssues) {
+      buttons.push([{ text: '🔧 Diagnostiquer et corriger', callback_data: 'status_fix_issues' }]);
+    }
+
     await bot.sendMessage(msg.chat.id, statusMsg, {
       parse_mode: 'Markdown',
-      reply_markup: {
-        inline_keyboard: [[
-          { text: '🔄 Rafraîchir', callback_data: 'refresh_status' },
-          { text: '📊 Détails', callback_data: 'status_details' },
-          { text: '🚨 Erreurs', callback_data: 'show_errors' },
-        ]],
-      },
+      reply_markup: { inline_keyboard: buttons },
     });
   });
 

@@ -117,7 +117,7 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
 
       // Use spawn + stdin pipe (same pattern as /chat — reliable)
       const result = await new Promise<{ stdout: string; code: number }>((resolve) => {
-        const proc = spawn(nvmBin + '/claude', ['-p', '-', '--verbose', '--max-turns', '3'], {
+        const proc = spawn(nvmBin + '/claude', ['-p', '-', '--verbose', '--max-turns', '10'], {
           cwd: PROJECT_ROOT,
           env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
           timeout: 600000,

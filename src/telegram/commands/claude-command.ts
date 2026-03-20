@@ -115,7 +115,7 @@ Donne une instruction à Claude Code pour exécuter une tâche sur le projet.
       console.log(`[/claude] Spawning claude CLI for: "${instruction.slice(0, 60)}"`);
       // Spawn claude directly (no bash, no shell escaping issues)
       const nvmBin = '/root/.nvm/versions/node/v22.22.1/bin';
-      const claude = spawn(nvmBin + '/claude', ['-p', instruction, '--output-format', 'stream-json'], {
+      const claude = spawn(nvmBin + '/claude', ['-p', instruction, '--output-format', 'stream-json', '--verbose'], {
         cwd: PROJECT_ROOT,
         env: { ...process.env, HOME: '/root', PATH: `${nvmBin}:${process.env['PATH'] || '/usr/bin:/bin'}`, ANTHROPIC_API_KEY: '' },
       });

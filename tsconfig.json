@@ -19,14 +19,13 @@
     "noFallthroughCasesInSwitch": true,
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": true,
-    "baseUrl": "./src",
     "paths": {
-      "@agents/*": ["agents/*"],
-      "@core/*": ["core/*"],
-      "@utils/*": ["utils/*"],
-      "@avatar/*": ["avatar/*"],
-      "@financial/*": ["financial/*"],
-      "@security/*": ["security/*"]
+      "@agents/*": ["./src/agents/*"],
+      "@core/*": ["./src/core/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@avatar/*": ["./src/avatar/*"],
+      "@financial/*": ["./src/financial/*"],
+      "@security/*": ["./src/security/*"]
     }
   },
   "include": ["src/**/*"],

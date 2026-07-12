@@ -1,5 +1,9 @@
 version: '3.9'
 
+# ⚠️ FICHIER DEV LOCAL UNIQUEMENT — la prod Coolify utilise docker-compose.yaml
+# Usage : docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# Les ports DB/Redis sont liés à 127.0.0.1 : jamais exposés publiquement.
+
 services:
   # ── PostgreSQL + pgvector ──
   postgres:
@@ -11,7 +15,7 @@ services:
       POSTGRES_USER: ${DB_USER:-freenzy}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-freenzy_secret}
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
@@ -32,7 +36,7 @@ services:
     container_name: freenzy-redis
     restart: unless-stopped
     ports:
-      - '6379:6379'
+      - '127.0.0.1:6379:6379'
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru

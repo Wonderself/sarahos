@@ -73,7 +73,7 @@ export class ImprovementEngine {
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6-20250514',
+          model: 'claude-sonnet-4-6',
           max_tokens: 4096,
           system: `Tu es le Chief Product Officer de Freenzy.io, un SaaS B2B d'agents IA pour PME françaises/belges.
 Analyse les métriques quotidiennes et propose des améliorations concrètes.
